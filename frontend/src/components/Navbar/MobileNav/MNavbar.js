@@ -215,14 +215,14 @@ const MNavbar = ({ user }) => {
                     <div className='my-auto grid grid-flow-col auto-cols-max'>
                         <div className='flex '>
                             <AiOutlineMenu color='red' className='text-3xl text-[#282c3f]' onClick={() => (handleShow(), classchange())} />
-                           <Link to='/'> <h1 className='text-[#282c3f] text-xl py-1 ml-2'>Myntra</h1></Link>
+                           <Link to='/'> <h1 className='text-[#282c3f] text-xl py-1 ml-2'>E-Commerce</h1></Link>
                         </div>
 
                         <div className='absolute right-6'>
                         <Link to='/bag'><BsHandbag color='red' className='float-right text-2xl ml-4' /></Link>
                            <Link to='/my_wishlist'> <BsHeart color='red' className='float-right text-2xl ml-4' /></Link>
                             <FiSearch color='red' className='float-right text-2xl ml-4' onClick={()=>setserdiv('block')}/>
-                            <GoDiffAdded color='red' className='float-right text-2xl ml-4' />
+                            {/* <GoDiffAdded color='red' className='float-right text-2xl ml-4' /> */}
                         </div>
                     </div>
                     
@@ -284,21 +284,21 @@ const MNavbar = ({ user }) => {
                                         </li>
                                     </Ripples>
                                     <MWoMen WoMen={Menu2} fun1={handleClose} fun2={classunchange} />
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="re" className='w-full'>
                                         <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Kids</span>
                                             <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} />
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="red" className='w-full'>
                                         <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Home&nbsp;&&nbsp;Living</span>
                                             <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="red" className='w-full'>
                                         <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Beauty</span>
                                             <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
@@ -310,9 +310,9 @@ const MNavbar = ({ user }) => {
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    <h1 className='my-5'>Myntra&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
-                                    <h1 className='my-5'>Myntra&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
-                                    <h1 className='my-5'>Myntra&nbsp;Insider</h1>
+                                    <h1 className='my-5'>E - Com&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>E - Com&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>E - Com&nbsp;Insider</h1>
                                     <h1 className='my-5'>Gift&nbsp;Cards</h1>
                                     <h1 className='my-5'>Contact&nbsp;Us</h1>
                                     <h1 className='my-5'>FAQs</h1>
