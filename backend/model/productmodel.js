@@ -1,22 +1,18 @@
 import mongoose from 'mongoose'
 
-const productmodelSchema = new mongoose.Schema({
-    brand:{
-        type:String,
-
-    },
+const productModelSchema = new mongoose.Schema({
     title:{
         type:String
     },
-    sellingPrice:{
+    salePrice:{
         type:Number
     },
-    mrp:{
+    price:{
         type:Number
     },
-    size:{
-        type:String
-    },
+    size:[
+        {type:Object,default:[]}
+    ],
     bulletPoints:[
         {
             point:{
@@ -24,7 +20,7 @@ const productmodelSchema = new mongoose.Schema({
             }
         }
     ],
-    productDetails:{
+    description:{
         type:String
     },
     material:{
@@ -32,9 +28,8 @@ const productmodelSchema = new mongoose.Schema({
     },
     specification:[
         {
-            point:{
-                type:String
-        }
+            header:String,
+            point:String
         }
     ],
     category:{
@@ -43,32 +38,21 @@ const productmodelSchema = new mongoose.Schema({
     style_no:{
         type:String
     },
-    images:[
-        {
-            url:{
-                type:String
-            }
-        }
-           
+    image:[{type:String,default:[]}],
+    color:[
+        {type:Object,default:[]}
     ],
-    createDate:{
-        type:Date,
-        default: Date.now
+    brand:{
+        type:String,
+
     },
-    color:{
-        type:String
-    },
-    gender:{
-        type:String
-    },
-    stock:{
-        type:Number
-    }
+    quantity:{type: Number, required: true},
+    totalStock:{type: Number, required: true},
+    avgRating:Number,
 
+},{timestamps:true})
 
-})
+productModelSchema.index({title: 1})
 
-productmodelSchema.index({title: 1})
-
-const ProductModel = mongoose.model('myntraproduct', productmodelSchema)
+const ProductModel = mongoose.model('product', productModelSchema)
 export default ProductModel;

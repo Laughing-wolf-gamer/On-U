@@ -145,7 +145,7 @@ const Allproductpage = () => {
             <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2"><span className='text-slate-400 font-light'>Home</span>
                 <span className='font-light text-slate-400 capitalize'>{window.location.pathname}</span> </div>
             <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 "> <span className=" font1  text-sm capitalize">NO OF ITEMS</span>
-                <span className="text-slate-400 font-light">- { loading === false ? pro?.length : '...'} items</span>  </div>
+                <span className="text-slate-400 font-light">- { loading === false ? product?.length : '...'} items</span>  </div>
 
             {/* Filter__titile div *********************************** */}
             <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-slate-200 py-2 items-center">
@@ -201,7 +201,7 @@ const Allproductpage = () => {
                                 loading === false &&
                                 <Fragment>
                                     <ul className='grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-10 xl:gap-10 lg:gap-10 '>
-                                        {product && product.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
+                                        {product && product?.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
                                        
                                     </ul>
                                     {
@@ -237,7 +237,6 @@ const Allproductpage = () => {
                                         <button className=' ml-10 text-lg flex items-center border-[1px] border-slate-300 py-1 px-5 rounded-[4px]
                                         hover:border-[black]' onClick={()=>(setCurrentPage(currentPage+1), setCurrentPageNo(currentPage+1))}><h1>Next</h1> <IoIosArrowForward/> </button>
                                     }
-                                   
                                  </div> 
                                  : ""
                                     }

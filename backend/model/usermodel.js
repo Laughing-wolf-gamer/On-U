@@ -3,12 +3,7 @@ import validator from 'validator'
 import jwt from 'jsonwebtoken'
 
 
-const usermodelSchema = new mongoose.Schema({
-    phonenumber : {
-        type:Number,
-        unique:true,
-        require:[true, "Error: Enter Phone Number Above"]
-    },
+const userModelSchema = new mongoose.Schema({
     verify : {
         type: String,
         required: true,
@@ -17,7 +12,6 @@ const usermodelSchema = new mongoose.Schema({
     email:{
         type:String,
         validate:[validator.isEmail, 'Please enter valid Email ID ']
-        
     },
 
     password:{
@@ -38,37 +32,39 @@ const usermodelSchema = new mongoose.Schema({
     name:{
         type:String
     },
-   gender:{
-       type:String
-   },
-   DOB:{
-       type:Date
-   },
-   address:{
-       pincode:{
-           type:Number
-       },
-       
-       address1:{
-           type:String
-       },
-       address2:{
+    gender:{
         type:String
+    },
+    DOB:{
+        type:Date
+    },
+    address:{
+        pincode:{
+            type:Number
         },
-        citystate:{
+        
+        address1:{
             type:String
-        },  
-   },
-   TOA:{
-       type:String
-   }
-    
-
+        },
+        address2:{
+            type:String
+            },
+            citystate:{
+                type:String
+            },  
+    },
+    TOA:{
+        type:String
+    },
+    role:{
+        type:String,
+        default:'user'
+    }
 })
 
-usermodelSchema.methods.getJWTToken = function () {
+userModelSchema.methods.getJWTToken = function () {
     return jwt.sign({id:this._id}, process.env.SECRETID, {expiresIn: '2d'})
 }
 
-const User = mongoose.model('MynUser', usermodelSchema)
+const User = mongoose.model('user', userModelSchema)
 export default User;

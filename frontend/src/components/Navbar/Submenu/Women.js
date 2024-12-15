@@ -26,19 +26,19 @@ const Women = ({show, CMenu, parentCallback}) => {
           <div className='grid grid-cols-5 px-8 py-4 cursor-pointer'>
 
             <div className=" h-[418px]">
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Indian&nbsp;&&nbsp;Fusion Wear</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Indian&nbsp;&&nbsp;Fusion Wear</h1>
               {Indian_FusionWear.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 font-thin hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
 
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Belts,&nbsp;Scarves&nbsp;&&nbsp;More</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Belts,&nbsp;Scarves&nbsp;&&nbsp;More</h1>
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Watches&nbsp;&&nbsp;Wearables</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Watches&nbsp;&&nbsp;Wearables</h1>
             </div>
 
             <div className=" h-[418px] ">
-              <h1 className='text-[#fb56c1] text-sm  font-semibold py-1'>Western&nbsp;Wear</h1>
+              <h1 className='text-red-500 text-sm  font-semibold py-1'>Western&nbsp;Wear</h1>
               {Western_Wear.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5  hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
@@ -46,25 +46,25 @@ const Women = ({show, CMenu, parentCallback}) => {
             </div>
 
             <div className=" h-[418px] ">
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Shop&nbsp;By&nbsp;Occassion</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Shop&nbsp;By&nbsp;Occassion</h1>
               {Shop_Occassion.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Plus&nbsp;Size</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Plus&nbsp;Size</h1>
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Maternity</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Maternity</h1>
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Sunglasses&nbsp;&&nbsp;Frames</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Sunglasses&nbsp;&&nbsp;Frames</h1>
             </div>
 
             <div className=" h-[418px] ">
-            <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Footwear</h1>
+            <h1 className='text-red-500 text-sm font-semibold py-1'>Footwear</h1>
               {WFootwear.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Sports&nbsp;&&nbsp;Active&nbsp;Wear</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Sports&nbsp;&&nbsp;Active&nbsp;Wear</h1>
               {Sports_ActiveWear.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
@@ -72,12 +72,12 @@ const Women = ({show, CMenu, parentCallback}) => {
             </div>
 
             <div className=" h-[418px] ">
-            <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Lingerie&nbsp;&&nbsp;Sleepwear</h1>
+            <h1 className='text-red-500 text-sm font-semibold py-1'>Lingerie&nbsp;&&nbsp;Sleepwear</h1>
               {Lingerie_Sleepwear.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}
               <hr className='py-1' />
-              <h1 className='text-[#fb56c1] text-sm font-semibold py-1'>Beauty&nbsp;&&nbsp;Personal&nbsp;Care</h1>
+              <h1 className='text-red-500 text-sm font-semibold py-1'>Beauty&nbsp;&&nbsp;Personal&nbsp;Care</h1>
               {Beauty_Personal_Care.map((data) =>
                 <Link to='/products'><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
               )}

@@ -112,11 +112,10 @@ const MPpage = () => {
                     <div>
                         <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                             {
-                                product.images.map((im) => (
+                                product && product.length && product?.image.map((im,i) => (
                                     <div className=''>
-                                        <img src={im.url} alt='product' />
+                                        <img src={im} alt={`product ${i}`} />
                                         <div className='h-[30px] bg-white'>
-
                                         </div>
                                     </div>
 
@@ -126,22 +125,33 @@ const MPpage = () => {
                         </Carousel>
                         <div className=''>
                             <div className='bg-[#e9e9e9] '>
-                                <h1 className='text-lg text-[#808080e8] font-light font1 bg-white px-4'>{product.title}</h1>
+                                <h1 className='text-lg text-[#808080e8] font-light font1 bg-white px-4'>{product?.title}</h1>
                                 <div className='border-b-[1px] border-slate-200  pb-6 pt-2 bg-white px-4'>
                                     <h1 className='font1 text-lg font-semibold text-slate-800'>
-                                        <span className="mr-4 font-bold">&#8377;&nbsp;{Math.round(product.sellingPrice)}</span>
-                                        <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product.mrp}</span>
-                                        <span className="text-[#ff3f6c]">( {-Math.round(product.sellingPrice / product.mrp * 100 - 100)}% OFF )</span> </h1>
+                                        <span className="mr-4 font-bold">&#8377;&nbsp;{Math.round(product?.salePrice)}</span>
+                                        <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product?.price}</span>
+                                        {product && product.salePrice &&
+                                            <span className="text-[#ff3f6c]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> 
+                                        }
+                                    </h1>
                                     <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                                     <h1 className='font1 text-base font-semibold mt-2 mb-2'>SELECT SIZE</h1>
-                                    <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{product.size}</button>
+                                    <div className='w-auto max-h-fit justify-center items-start space-x-2'>
+                                        {
+                                            product && product.size && product.size.map((e) =>
+                                                // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
+                                                <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</button>
+                                            )
+                                        }
+                                    </div>
+                                    {/* <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{product?.size[0]?.label}</button> */}
                                     <br />
 
 
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 bg-white px-4'>
                                     {
-                                        product && product.bulletPoints.map((e) =>
+                                        product && product.bulletPoints && product.bulletPoints.map((e) =>
                                             <div className=' font1 font-extralight text-slate-500'>
                                                 {e.point}
                                             </div>
@@ -161,7 +171,7 @@ const MPpage = () => {
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-[#ff3f6c]'>&nbsp;&#8377;&nbsp; {Math.round(product.sellingPrice)}</span></h1>
+                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-[#ff3f6c]'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice)}</span></h1>
                                     <li className='list-none text-slate-500 text-sm'>Applicable on: Orders above &#8377;&nbsp; 1599 (only on first purchase)</li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>MYNTRA250</span></li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
@@ -187,14 +197,14 @@ const MPpage = () => {
 
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
-                                    <li className='list-none mt-2'>Product Code:&nbsp;{product.style_no.toUpperCase()}</li>
-                                    <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#ff3f6c] font-bold'>{product.brand.toUpperCase()}</span></li>
+                                    <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
+                                    <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#ff3f6c] font-bold'>{product?.brand?.toUpperCase()}</span></li>
                                 </div>
 
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
                                     <ul className='grid grid-cols-2 gap-2'>
-                                    {similar && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
+                                    {similar && similar?.length && similar?.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
                                     </ul>
                                 </div>
                             </div>

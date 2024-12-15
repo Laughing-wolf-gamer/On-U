@@ -6,9 +6,6 @@ class Apifeature {
     }
 
     filter(){
-
-        
-        
         const querycopy = {...this.req_query}
        
         const removeField = ['page', 'keyword']
@@ -26,12 +23,12 @@ class Apifeature {
         const sellinglow = this.req_query.low
             
         if (sellinglow !== undefined) {
-            this.Product_find = this.Product_find.sort({'sellingPrice': no})
+            this.Product_find = this.Product_find.sort({'salePrice': no})
             return this;
         }
         const datesort = this.req_query.date
         if (datesort !== undefined) {
-            this.Product_find = this.Product_find.sort({'createDate': no1})
+            this.Product_find = this.Product_find.sort({'createdAt': no1})
             return this;
         }
 

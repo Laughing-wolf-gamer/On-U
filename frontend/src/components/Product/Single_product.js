@@ -5,11 +5,12 @@ import { BiRupee } from 'react-icons/bi'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { capitalizeFirstLetterOfEachWord } from '../../config'
 
 
 
 const Single_product = ({ pro }) => {
-
+    console.log('Single Product', pro);
 
     let slideIndex = 1;
 
@@ -78,21 +79,17 @@ const Single_product = ({ pro }) => {
     return (
         <Fragment>
             {
-                pro.images[0].url &&
-
+                pro && pro.image.length > 0 &&
                 <Fragment>
                     <Link to={`/products/${pro._id}`} target='_blank' >
-                        <li className=' w-full border-[1px] 
-            border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none 
-              relative ' onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())}>
-
+                        <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())}>
                             <div className="slideshow-container min-h-[200px]">
 
                                 {
-                                    pro.images.map((im) => (
+                                    pro?.image?.map((im) => (
 
                                         <div className={`${pro.style_no} fade relative `} >
-                                            <LazyLoadImage src={im.url}  className="w-full" width='100%'  alt='product' effect='blur' />
+                                            <LazyLoadImage src={im}  className="w-full" width='100%'  alt='product' effect='blur' />
                                             {/* <div className='absolute bottom-2 left-2 bg-white rounded-full px-2 text-[10px] font1 flex py-[2px] items-center'>
                                                 3.6&nbsp;<AiFillStar className='text-[#0db7af]' />&nbsp;|&nbsp;2k</div> */}
                                         </div>
@@ -102,28 +99,49 @@ const Single_product = ({ pro }) => {
                             </div>
 
                             <div className='relative pb-6'>
-                                <p className='font1 text-base px-2'>{pro.brand}</p>
-                                <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro.title}</p>
-                                <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro.sellingPrice)}</span >&nbsp;
-                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro.mrp)}</span>&nbsp;&nbsp;
-                                    <span className='flex items-center text-xs font-medium text-[#f26a10]'>( {-Math.round(pro.sellingPrice / pro.mrp * 100 - 100)}% OFF )</span></p>
+                                <p className='font1 text-base px-2'>{capitalizeFirstLetterOfEachWord(pro?.brand)}</p>
+                                <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro?.title}</p>
+                                <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro?.salePrice)}</span >&nbsp;
+                                    {
+                                        pro && pro?.salePrice && (
+                                            <>
+                                                <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro?.price)}</span>&nbsp;&nbsp;
+                                                <span className='flex items-center text-xs font-medium text-[#f26a10]'>( {-Math.round(pro?.salePrice / pro?.price * 100 - 100)}% OFF )</span>
+                                            </>
+                                        )   
+                                    }
+                                </p>
                             </div>
 
                             <div className={`${pro.style_no}hover hidden absolute pb-6 bottom-0 w-full bg-[#ffffff]  mx-auto `}>
                                 <div className='text-center mb-2'>
-                                    {pro.images.map((img, i) => (
+                                    {pro && pro.image.length > 0 && pro.image.map((img, i) => (
                                         <span className={`${pro.style_no}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
-
                                     ))}
                                 </div>
 
                                 <div className='w-12/12 text-center flex items-center justify-center py-1 font1 border-[1px] border-slate-300 cursor-pointer' >
                                     <IoIosHeartEmpty className='text-lg mr-1' /><span>WISHLIST</span></div>
                                 <div className='relative '>
-                                    <p className='font1 text-xm px-2 text-[#5f5f5f9e]'>Sizes: {pro.size}</p>
-                                    <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro.sellingPrice)}</span >&nbsp;
-                                        <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro.mrp)}</span>&nbsp;&nbsp;
-                                        <span className='flex items-center text-xs font-medium text-[#f26a10]'>({Math.round(pro.sellingPrice / pro.mrp * 100 - 100)}% OFF)</span></p>
+                                    <div className='justify-start items-center w-auto h-auto flex-row flex'>
+                                        <p className='font1 text-xm px-2 text-[#5f5f5f9e]'>Sizes: </p>
+                                        {
+                                            pro && pro.size && pro.size.length > 0 && pro.size.map((item,i)=>(
+                                                <span key={i} className='font1 text-xm px-2 text-[#5f5f5f9e]'>{item.label}</span>
+                                            ))
+                                        }
+
+                                    </div>
+                                    <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro?.salePrice)}</span >&nbsp;
+                                        {
+                                            pro && pro.salePrice &&(
+                                                <>
+                                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro?.price)}</span>&nbsp;&nbsp;
+                                                    <span className='flex items-center text-xs font-medium text-[#f26a10]'>({Math.round(pro.salePrice / pro.price * 100 - 100)}% OFF)</span>
+                                                </>
+                                            )
+                                        }
+                                    </p>
                                 </div>
 
                             </div>

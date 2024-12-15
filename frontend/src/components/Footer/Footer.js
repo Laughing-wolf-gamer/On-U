@@ -16,7 +16,7 @@ const Footer = () => {
       <div className='w-10/12 mx-auto grid grid-cols-12 mt-12 font1'>
        <div className="col-span-2">
          <h1 className=' text-sm font-semibold '>ONLINE&nbsp;SHOPPING</h1>
-         <ul className=' text-sm text-slate-500 pt-6'>
+         <ul className=' text-sm text-[#F45050] pt-6'>
            <li>Men</li>
            <li>Women</li>
            <li>Kids</li>
@@ -29,7 +29,7 @@ const Footer = () => {
 
        <div className="col-span-2">
        <h1 className='text-sm font-semibold col-span-2'>USEFUL LINKS</h1>
-       <ul className='text-sm text-slate-500 pt-6'>
+       <ul className='text-sm text-[#F45050] pt-6'>
          <li className="">Contact Us</li>
          <li className="">FAQ</li>
          <li className="">T&C</li>
@@ -56,24 +56,24 @@ const Footer = () => {
         <h1 className='text-sm font-semibold col-span-2 mt-6'>KEEP IN TOUCH</h1>
         <br />
         <div className='flex'>
-        <span className='text-2xl text-[grey] mr-4'><AiFillFacebook/></span>
-        <span className='text-2xl text-[grey] mr-4'><ImTwitter/></span>
-        <span className='text-2xl text-[grey] mr-4'><AiFillYoutube/></span>
-        <span className='text-2xl text-[grey] mr-4'><ImInstagram/></span>
+        <span className='text-2xl text-[grey] mr-4'><AiFillFacebook color='red'/></span>
+        <span className='text-2xl text-[grey] mr-4'><ImTwitter color='red'/></span>
+        <span className='text-2xl text-[grey] mr-4'><AiFillYoutube color='red'/></span>
+        <span className='text-2xl text-[grey] mr-4'><ImInstagram color='red'/></span>
         </div>
        
        </div>
        <div className="col-span-4">
-            <div className='grid grid-cols-6 '>
+            <div className='grid grid-cols-6 text-[#F45050]'>
                   <div className="col-span-1"><img src={g3} alt="" className='w-14' /></div>
                   <div className="col-span-5">
                     
-                  <span className='font-semibold'>100% ORIGINAL</span>  guarantee <br />
+                  <span className='font-semibold text-[#F45050]'>100% ORIGINAL</span>  guarantee <br />
                   for all products at myntra.com
                     </div>
             </div>
             <br />
-            <div className='grid grid-cols-6 '>
+            <div className='grid grid-cols-6 text-[#F45050]'>
                   <div className="col-span-1"><img src={g4} alt="" className='w-12' /></div>
                   <div className="col-span-5">
                     
@@ -84,14 +84,14 @@ const Footer = () => {
        </div>
 
       </div>
-      <div className='w-10/12 mx-auto font1 text-base text-slate-600'>
+      <div className='w-10/12 mx-auto font1 text-base text-[#F45050]'>
         <h1 className='font-semibold text-black mb-4 mt-4 text-sm'>POPULAR SEARCHES</h1>
         <h1>
         Makeup | Dresses For Girls | T-Shirts | Sandals | Headphones | Babydolls | Blazers For Men | Handbags | Ladies Watches | Bags | Sport Shoes | Reebok Shoes | Puma Shoes | Boxers | Wallets | Tops | Earrings | Fastrack Watches | Kurtis | Nike | Smart Watches | Titan Watches | Designer Blouse | Gowns | Rings | Cricket Shoes | Forever 21 | Eye Makeup | Photo Frames | Punjabi Suits | Bikini | Myntra Fashion Show | Lipstick | Saree | Watches | Dresses | Lehenga | Nike Shoes | Goggles | Bras | Suit | Chinos | Shoes | Adidas Shoes | Woodland Shoes | Jewellery | Designers Sarees
         </h1>
       </div>
-      <div className='relative w-10/12 mx-auto text-slate-600'>
-        <span className='absolute right-0'> © 2022 www.myntra.com. All rights reserved.</span> 
+      <div className='relative w-10/12 mx-auto text-[#F45050]'>
+        <span className='absolute right-0'> © 2022 www.e-commerce.com. All rights reserved.</span> 
       </div>
     </Fragment>
 
@@ -111,7 +111,7 @@ const Footer = () => {
        </div>
 
        <div className="mt-4">
-       <h1 className='text-base font-semibold '>EXPERIENCE MYNTRA APP ON MOBILE</h1>
+       <h1 className='text-base font-semibold '>EXPERIENCE E-Commerce APP ON MOBILE</h1>
         <div className='grid grid-cols-2 gap-4 pt-2 w-[80%]'>
           <img src={g1} alt="" />
           <img src={g2} alt="" />
@@ -129,7 +129,7 @@ const Footer = () => {
 
        <div className="mt-4 w-full">
        <h1 className='text-base font-semibold'>USEFUL LINKS</h1>
-       <div className='text-sm text-slate-500 pt-2 leading-7 w-[100%] overflow-clip'>
+       <div className='text-sm text-[#F45050] pt-2 leading-7 w-[100%] overflow-clip'>
          <a className="mr-2 leading-7">Contact Us</a>|
          <a className="mr-2 leading-7 ml-2">FAQ</a>|
          <a className="mr-2 leading-7 ml-2">T&C</a>|
@@ -148,7 +148,7 @@ const Footer = () => {
        </div>
 
        <div className='flex mx-auto text-slate-400 mt-4 mb-20'>
-        <div className=' text-xs float-left'> © 2022 www.myntra.com All rights reserved</div>
+        <div className=' text-xs float-left'> © 2022 www.e-commerce.com All rights reserved</div>
       </div>
       </div>
      

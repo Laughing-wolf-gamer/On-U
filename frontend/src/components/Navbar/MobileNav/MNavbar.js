@@ -214,27 +214,27 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='my-auto grid grid-flow-col auto-cols-max'>
                         <div className='flex '>
-                            <AiOutlineMenu className='text-3xl text-[#282c3f]' onClick={() => (handleShow(), classchange())} />
+                            <AiOutlineMenu color='red' className='text-3xl text-[#282c3f]' onClick={() => (handleShow(), classchange())} />
                            <Link to='/'> <h1 className='text-[#282c3f] text-xl py-1 ml-2'>Myntra</h1></Link>
                         </div>
 
                         <div className='absolute right-6'>
-                        <Link to='/bag'><BsHandbag className='float-right text-2xl ml-4' /></Link>
-                           <Link to='/my_wishlist'> <BsHeart className='float-right text-2xl ml-4' /></Link>
-                            <FiSearch className='float-right text-2xl ml-4' onClick={()=>setserdiv('block')}/>
-                            <GoDiffAdded className='float-right text-2xl ml-4' />
+                        <Link to='/bag'><BsHandbag color='red' className='float-right text-2xl ml-4' /></Link>
+                           <Link to='/my_wishlist'> <BsHeart color='red' className='float-right text-2xl ml-4' /></Link>
+                            <FiSearch color='red' className='float-right text-2xl ml-4' onClick={()=>setserdiv('block')}/>
+                            <GoDiffAdded color='red' className='float-right text-2xl ml-4' />
                         </div>
                     </div>
                     
                 </div>
                 <div className={`${serdiv} z-20 absolute w-full h-full top-0 bg-white`}>
                     <div className='grid grid-cols-12 py-3 px-[6px]'>
-                        <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=>setserdiv('hidden')}><MdArrowBack/></div>
+                        <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=>setserdiv('hidden')}><MdArrowBack color='red'/></div>
                         <div className="col-span-10">
                         <input type="text" placeholder='Search for brands & products' 
                         className=' msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=>setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
                         </div>
-                        <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch className='text-2xl text-[#ff2459]' /></div>
+                        <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='red' strokeWidth={.9} className='text-2xl text-[#ff2459]' /></div>
                     </div>
                 </div>
                 </div>

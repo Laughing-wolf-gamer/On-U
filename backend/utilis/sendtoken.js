@@ -1,6 +1,7 @@
+import jwt from 'jsonwebtoken'
 const sendtoken = (user, statuscode, res) =>{
     
-    const token = user.getJWTToken();
+    /* const token = user.getJWTToken();
     const option = {
         expire: new Date(
             Date.now() + 5 * 24*60*60*1000
@@ -12,7 +13,16 @@ const sendtoken = (user, statuscode, res) =>{
         success: true,
         user,
         token
+    }) */
+    const token = jwt.sign({
+        id:user._id,
+        role:user.role,
+        email:user.email,
+        userName:user.userName,
+    },process.env.SECRETID,{
+        expiresIn: '1h',
     })
+    return token;
 }
 
 export default sendtoken

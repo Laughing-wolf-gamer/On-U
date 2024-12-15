@@ -1,4 +1,4 @@
-import React, { Fragment, CSSProperties, useState, useEffect } from 'react'
+import React, { Fragment, CSSProperties, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
@@ -381,7 +381,7 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8'>DEAL OF THE DAY</h1>
               <div className='grid grid-cols-8'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={d1} alt="" className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={d1} alt="" className="min-h-[150px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d2} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d3} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d4} alt="" className="min-h-[200px]" /></Link>
@@ -392,7 +392,7 @@ const Home = () => {
               </div>
             </div>
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF MYNTRA EXCLUSIVE BRANDS</h1>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF E-COMMERCE EXCLUSIVE BRANDS</h1>
               <div className='grid grid-cols-8 gap-1'>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a1} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a2} alt="" className="min-h-[200px]" /></Link>
@@ -580,7 +580,7 @@ const Home = () => {
             </div>
 
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER 2022- FIRST ON MYNTRA</h1>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER 2022- FIRST ON E-COM</h1>
               <div className='grid grid-cols-8 '>
                 <Link to='/products'><LazyLoadImage effect='blur' src={k1} alt=""  className='min-h-[200px]'/></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={k2} alt=""  className='min-h-[200px]'/></Link>

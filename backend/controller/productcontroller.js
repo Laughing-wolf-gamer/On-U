@@ -34,7 +34,7 @@ export const getallproducts = A(async (req, res, next)=>{
     const pro = await apifeature1.Product_find;
     const productlength = await apifeature3.Product_find;
     let length = productlength.length
-    console.log("Product length: " + productlength, "Pro: " ,pro,"Products: " ,products)
+    // console.log("Product length: " + productlength, "Pro: " ,pro,"Products: " ,products)
     res.status(200).json({
         products,
         pro,

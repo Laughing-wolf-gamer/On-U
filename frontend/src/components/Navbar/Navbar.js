@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useCallback } from 'react'
 import './Navbar.css'
-import myntra from '../images/myntra.svg'
+import myntra from '../images/app_logo.svg'
 import { FaRegUser } from 'react-icons/fa'
 import { BsHeart } from 'react-icons/bs'
 import { BsHandbag } from 'react-icons/bs'
@@ -111,7 +111,7 @@ const Navbar = ({user}) => {
             <li className='w-max flex justify-center items-center border-4 border-transparent cborder6'
               onMouseEnter={() => (setMenu6('block'), setShow6(true))} onMouseLeave={() => (setMenu6('hidden'), setShow6(false))}
             >
-              <h1 className='px-3 relative'>STUDIO<span className='text-[#fb56c1] text-[10px] absolute -top-1/2'>new</span></h1>
+              <h1 className='px-3 relative'>STUDIO<span className='text-red-500 text-[10px] absolute -top-1/2'>new</span></h1>
             </li>
           </ul>
 
@@ -123,15 +123,15 @@ const Navbar = ({user}) => {
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer cborder1'
                onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
               >
-                <h1 className='px-3 text-center text-xs relative'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser /></span> <span className='block'>Profile</span> </h1>
+                <h1 className='px-3 text-center text-xs relative'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='red' /></span> <span className='block'>Profile</span> </h1>
               </li>
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
 
-                <Link to='/my_wishlist'><h1 className='px-3 text-xs text-center relative'> <span className='text-lg absolute -top-5 left-1/3'><BsHeart /></span>Wishlist</h1></Link>
+                <Link to='/my_wishlist'><h1 className='px-3 text-xs text-center relative'> <span className='text-lg absolute -top-5 left-1/3'><BsHeart color='red' className='w-full h-full'/></span>Wishlist</h1></Link>
               </li>
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
 
-               <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag /></span>Bag</h1></Link>
+               <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='red' /></span>Bag</h1></Link>
               </li>
             </ul>
           </div>

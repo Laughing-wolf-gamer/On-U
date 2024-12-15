@@ -3,26 +3,31 @@ import User from '../model/usermodel.js';
 import { sendMessage } from 'fast-two-sms';
 import Errorhandler from '../utilis/errorhandel.js';
 import sendtoken from '../utilis/sendtoken.js';
+import bcrypt from 'bcryptjs';
 
-export const registermobile = A(async (req, res, next) => {
+
+export const registerUser = A(async (req, res, next) => {
   
-  const { phonenumber } = req.body
+  /* const { userName,email,password,phonenumber } = req.body
 
-  console.log(phonenumber)
-  const userr = await findOne({"phonenumber": phonenumber})
+  console.log("Authenticating with: ",userName,email,password,phonenumber )
+  const existingUser = await User.findOne({phonenumber})
 
-  if (!userr) {
+  if (!existingUser) {
     const user = await User.create({
+      userName,
+      email,
+      password,
       phonenumber,
     })
    
   }
 
-  const user = await findOne({"phonenumber": phonenumber})
+  const user = await User.findOne({phonenumber})
 
   let otp = Math.floor((1 + Math.random()) * 90000)
 
-  let options = { authorization: process.env.YOUR_API_KEY, message: `This Website is made by Vikas Verma Thank You to use my Website Your OTP: is ${otp}`, numbers: [phonenumber] }
+  let options = { authorization: process.env.YOUR_API_KEY, message: `This Website is made by Abhishek Thank You to use my Website Your OTP: is ${otp}`, numbers: [phonenumber] }
  
   sendMessage(options).then(response => {
   
@@ -48,17 +53,30 @@ export const registermobile = A(async (req, res, next) => {
       })
       
     }
-  })
+  }) */
+    try {
+      const {userName,email,password} = req.body;
+      console.log("Authenticating with: ",userName,email,password )
+      let user = await User.findOne({email: email});
+      if(user){
+        return res.status(401).json({Success:false,message: 'User already exists'});
+      }
+      /* const salt = await bcrypt.getSalt(10);
+      console.log(salt); */
+      const hashedPassword = await bcrypt.hash(password,12);
+      user = new User({userName,email,password:hashedPassword});
+      await user.save();
+      res.status(200).json({Success:true,message: 'User registered successfully'});
+  } catch (error) {
+      console.error(`Error registering user `,error);
+      res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
 
 })
 
 export const getuser = A(async(req, res, next)=>{
-      const user = await User.findOne({"phonenumber": req.params.id})
-      
-      res.status(200).json({
-        success:true,
-        user
-      })
+    const user = req.user;
+    res.status(200).json({Success:true,message: 'User is Authenticated',user});
 })
 
 export const optverify = A(async (req, res, next)=>{
@@ -91,7 +109,7 @@ export const optverify = A(async (req, res, next)=>{
 
 export const resendotp = A(async (req, res, next)=>{
   console.log(req.params.id)
-  const user = await findOne({"phonenumber": req.params.id})
+  const user = await User.findOne({"phonenumber": req.params.id})
   let otp = Math.floor((1 + Math.random()) * 90000)
   console.log(user, otp)
   let options = { authorization: process.env.YOUR_API_KEY, message: `This website is made my Vikas Verma Thank You to use my Website Your OTP: is ${otp}`, numbers: [req.params.id] }
@@ -119,6 +137,32 @@ export const resendotp = A(async (req, res, next)=>{
   })
 
 })
+export const logInUser = async (req,res) =>{
+  try {
+      const {email,password} = req.body;
+      if(!email) return res.status(401).json({Success:false,message: 'Please enter a valid email'});
+      if(!password) return res.status(401).json({Success:false,message: 'Please enter a valid password'});
+      const user = await User.findOne({email});
+      if(!user){
+        return res.status(404).json({Success:false,message: 'User not found'});
+      }
+      const isPasswordCorrect = await bcrypt.compare(password,user?.password || '');
+      if(!isPasswordCorrect){
+        return res.status(401).json({Success:false,message: 'Incorrect Password'});
+      }
+      const token = sendtoken(user);
+      res.status(200).json({Success:true,message: 'User logged in successfully',user:{
+          userName:user.userName,
+          email:user.email,
+          role: user.role,
+          id: user._id,
+          
+      },token})
+  } catch (error) {
+      console.error(`Error Logging in user ${error.message}`);
+      res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
 
 export const updateuser =A( async(req,res,next)=>{
   console.log(req.body)

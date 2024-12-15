@@ -11,5 +11,4 @@ route.put('/update_bag', updateqtybag)
 route.put('/delete_bag', deletebag)
 route.put('/delete_wish', deletewish)
 
-// module.exports = route
 export default route;

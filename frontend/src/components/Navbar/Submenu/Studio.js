@@ -29,10 +29,8 @@ const Studio = ({show, CMenu, parentCallback}) => {
                 <br />
                 <img src={img} alt="banner" className='mx-auto' />
                 <br />
-                <button className=' font1 font-light border-[1px] ml-[33.33%] px-3 py-2 border-[#d4d5d8] '>EXPLORE&nbsp;STUDIO&nbsp;> </button>
+                <button className=' font1 font-light border-[1px] ml-[33.33%] px-3 py-2 border-slate-400 '>EXPLORE&nbsp;STUDIO&nbsp;> </button>
             </div>
-           
-
           </div>
 
         </div>
