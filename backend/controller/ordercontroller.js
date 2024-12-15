@@ -1,21 +1,20 @@
-const A = require('../Middelwares/resolveandcatch')
-const Order = require('../model/ordermodel')
-const Wishlist = require('../model/wishlist')
-const Bag = require('../model/bag')
-const Errorhandler = require('../utilis/errorhandel')
+import A from '../Middelwares/resolveandcatch.js'
+import WhishList from '../model/wishlist.js'
+import Bag from '../model/bag.js'
+import Errorhandler from '../utilis/errorhandel.js'
 
 
-exports.createorder = A(async (req, res, next) => {
+export const createorder = A(async (req, res, next) => {
     
     const {} = req.body
   
   })
 
-exports.createwishlist = A(async (req, res, next) => {
+export const createwishlist = A(async (req, res, next) => {
    const {user, orderItems} = req.body
-   const Finduser = await Wishlist.find({user: user})
+   const Finduser = await WhishList.find({user: user})
     if (Finduser.length !== 0 ) {
-      const product = await Wishlist.find({user:user})
+      const product = await WhishList.find({user:user})
       function f (data){
         return data.product ==  orderItems[0].product
       }
@@ -23,7 +22,7 @@ exports.createwishlist = A(async (req, res, next) => {
      
         return next(new Errorhandler("Product all ready added in Wishlist", 404));
       }else{
-        await Wishlist.updateOne({user: user}, {$push:{
+        await WhishList.updateOne({user: user}, {$push:{
           orderItems: [orderItems[0]]
         }})
       
@@ -31,7 +30,7 @@ exports.createwishlist = A(async (req, res, next) => {
       
     }else{
        console.log('else')
-      const wishlist = await Wishlist.create(req.body)
+      const wishlist = await WhishList.create(req.body)
 
     }
     
@@ -42,9 +41,9 @@ exports.createwishlist = A(async (req, res, next) => {
   
   })
 
-exports.getwishlist = A(async (req, res, next) => {
+export const getwishlist = A(async (req, res, next) => {
     
-    const wishlist = await Wishlist.findOne({user: req.params.id}).populate('orderItems.product')
+    const wishlist = await WhishList.findOne({user: req.params.id}).populate('orderItems.product')
 
     res.status(200).json({
       success:true,
@@ -54,7 +53,7 @@ exports.getwishlist = A(async (req, res, next) => {
   
 })
 
-exports.createbag = A(async (req, res, next) => {
+export const createbag = A(async (req, res, next) => {
   // console.log(req.body)
   const {user, orderItems} = req.body
   console.log(orderItems)
@@ -91,7 +90,7 @@ exports.createbag = A(async (req, res, next) => {
  
  })
 
- exports.getbag = A(async (req, res, next) => {
+export const getbag = A(async (req, res, next) => {
     
   const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
 
@@ -104,7 +103,7 @@ exports.createbag = A(async (req, res, next) => {
 
 })
 
-exports.updateqtybag = A(async (req, res, next) => {
+export const updateqtybag = A(async (req, res, next) => {
  
   const {id, qty} = req.body
   
@@ -119,7 +118,7 @@ exports.updateqtybag = A(async (req, res, next) => {
  
  })
 
- exports.deletebag = A(async (req, res, next) => {
+export const deletebag = A(async (req, res, next) => {
   console.log(req.body)
   const {user, product} = req.body
 
@@ -134,11 +133,11 @@ exports.updateqtybag = A(async (req, res, next) => {
  
  })
 
- exports.deletewish = A(async (req, res, next) => {
+export const deletewish = A(async (req, res, next) => {
   console.log(req.body)
   const {user, product} = req.body
 
-  const users =  await Wishlist.updateOne({user: user}, {$pull:{
+  const users =  await updateOne({user: user}, {$pull:{
         orderItems: {product:product}
       }})
 

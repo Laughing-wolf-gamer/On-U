@@ -15,6 +15,7 @@
     "validator": "^13.7.0"
   },
   "name": "myntra",
+  "type": "module",
   "version": "1.0.0",
   "main": "backend/services.js",
   "scripts": {

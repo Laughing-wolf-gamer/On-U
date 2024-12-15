@@ -1,13 +1,13 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const orders = new mongoose.Schema({
+const ordersSchema = new mongoose.Schema({
     user:{
-        type:mongoose.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"MynUser",
         required:true
     },
     orderItems: [{
-        type:mongoose.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"myntraproduct",
         qty:{type:Number},
         required:true
@@ -23,4 +23,6 @@ const orders = new mongoose.Schema({
 
 })
 
-module.exports = mongoose.model('MynOrder', orders)
+const Order = mongoose.model('MynOrder', ordersSchema)
+
+export default Order

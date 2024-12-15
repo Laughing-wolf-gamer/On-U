@@ -1,6 +1,6 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const productmodel = new mongoose.Schema({
+const productmodelSchema = new mongoose.Schema({
     brand:{
         type:String,
 
@@ -68,6 +68,7 @@ const productmodel = new mongoose.Schema({
 
 })
 
-productmodel.index({title: 1})
+productmodelSchema.index({title: 1})
 
-module.exports = mongoose.model('myntraproduct', productmodel)
+const ProductModel = mongoose.model('myntraproduct', productmodelSchema)
+export default ProductModel;

@@ -22,15 +22,12 @@ const Allproductpage = () => {
         setCurrentPage(e)
         dispatch(getproduct(e))
     }
-
-
     function pricefun(e) {
         let url = window.location.search
 
         if (url.includes('?')) {
 
             if (url.includes('low')) {
-
                 if (url.includes('&low')) {
                     let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null
                     let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null
@@ -68,9 +65,6 @@ const Allproductpage = () => {
 
             Redirect(`?low=${e}`)
             dispatch(getproduct())
-
-
-
         }
 
     }
@@ -126,17 +120,13 @@ const Allproductpage = () => {
     useEffect(() => {
       
         if (state1 === false) {
-           
-                dispatch(getproduct())
-            
+            dispatch(getproduct())
             setstate1(true)
         }
 
         if (error) {
             dispatch(clearErrors())
         }
-       
-
         if (state === false) {
             if (loading === false) {
                 if (window.scroll > 0) {
@@ -149,15 +139,13 @@ const Allproductpage = () => {
      
         
     }, [dispatch, error, state, loading, state1]);
-
+    console.log("Products: ",product,length)
     return (
         <Fragment>
-            
-
             <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2"><span className='text-slate-400 font-light'>Home</span>
                 <span className='font-light text-slate-400 capitalize'>{window.location.pathname}</span> </div>
             <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 "> <span className=" font1  text-sm capitalize">NO OF ITEMS</span>
-                <span className="text-slate-400 font-light">- { loading === false ? pro.length : '...'} items</span>  </div>
+                <span className="text-slate-400 font-light">- { loading === false ? pro?.length : '...'} items</span>  </div>
 
             {/* Filter__titile div *********************************** */}
             <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-slate-200 py-2 items-center">
@@ -166,7 +154,7 @@ const Allproductpage = () => {
                 <div className="col-span-3 relative cursor-pointer">
                     <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-slate-300 w-[260px] absolute top-[-22px] bg-white'>
                         <div className=' text-sm w-max pl-4 pr-24 py-2 float-right  relative items-center' >
-                            Sort by :  <span className='font1 font-semibold '>{sortvalue}</span> <span className='absolute right-4 font-serif text-lg'><IoIosArrowDown /></span>
+                            Sort by :<span className='font1 font-semibold '>{sortvalue}</span> <span className='absolute right-4 font-serif text-lg'><IoIosArrowDown /></span>
                         </div>
 
                         <div className=' text-sm w-max pl-5  py-2 mt-12' onClick={() => (datefun(1), setsortvalue('What`s New'))} >
@@ -187,14 +175,8 @@ const Allproductpage = () => {
                         <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (setsortvalue('Customer Rating'))} >
                             <span className='font1'>Customer Rating</span>
                         </div>
-
                     </div>
-
-
-
                 </div>
-
-
             </div>
 
 
@@ -223,7 +205,7 @@ const Allproductpage = () => {
                                        
                                     </ul>
                                     {
-                                        window.screen.width >= 1024 && length > 50 ?
+                                        window.screen.width >= 1024 && length &&  length > 50 ?
                                         <div className='paginationBox font1 border-t-[1px] border-slate-200 py-4 hidden 2xl:block xl:block lg:block relative'>
                                         <span className='left-0 absolute text-sm text-[grey]'>Page {currentPage} of {Math.ceil(length / 50)}</span>
                                         {
@@ -251,7 +233,7 @@ const Allproductpage = () => {
                                         activeLinkClass="pageLinkActive"
                                     />
                                     {
-                                        currentPage === Math.ceil(pro.length / 50) ? '' : 
+                                        currentPage === Math.ceil(pro?.length / 50) ? '' : 
                                         <button className=' ml-10 text-lg flex items-center border-[1px] border-slate-300 py-1 px-5 rounded-[4px]
                                         hover:border-[black]' onClick={()=>(setCurrentPage(currentPage+1), setCurrentPageNo(currentPage+1))}><h1>Next</h1> <IoIosArrowForward/> </button>
                                     }

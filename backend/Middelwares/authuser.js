@@ -1,9 +1,9 @@
-const jwt = require('jsonwebtoken')
-const ErrorHandler = require('../utilis/errorhandel')
-const User = require('../model/usermodel')
-const A = require('./resolveandcatch')
+import jwt from 'jsonwebtoken'
+import ErrorHandler from '../utilis/errorhandel.js';
+import User from '../model/usermodel.js'
+import A from './resolveandcatch.js'
 
-exports.isAuthenticateuser = A(async(req, res, next)=>{
+export const isAuthenticateuser = A(async(req, res, next)=>{
     const { token } = req.cookies;
 
     if (!token) {

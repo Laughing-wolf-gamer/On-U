@@ -1,5 +1,5 @@
-const express = require('express');
-const { createorder, createwishlist, getwishlist, createbag, getbag, updateqtybag, deletebag, deletewish } = require('../controller/ordercontroller');
+import express from 'express';
+import { createorder, createwishlist, getwishlist, createbag, getbag, updateqtybag, deletebag, deletewish } from "../controller/ordercontroller.js";
 const route = express.Router();
 
 route.post('/create_order', createorder)
@@ -11,4 +11,5 @@ route.put('/update_bag', updateqtybag)
 route.put('/delete_bag', deletebag)
 route.put('/delete_wish', deletewish)
 
-module.exports = route
+// module.exports = route
+export default route;

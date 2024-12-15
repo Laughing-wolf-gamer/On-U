@@ -1,6 +1,6 @@
-const ErrorHandler = require('../utilis/errorhandel.js')
+import ErrorHandler from '../utilis/errorhandel.js';
 
-module.exports =(err, req, res, next)=>{
+export default(err, req, res, next)=>{
     err.statusCode = err.statusCode || 500;
     err.message = err.message || "Internal Server Error";
 

@@ -13,15 +13,14 @@ export const Allproducts = (state = {product:{}}, action) =>{
         case REQUEST_PRODUCTS:
             return {
                 loading: true,
-                
             };
 
         case SUCCESS_PRODUCTS:
             return {
                 loading: false,
-                product:action.payload,
-                pro: action.pro,
-                length:action.length
+                product:action?.payload,
+                pro: action?.pro,
+                length:action?.length || 0
             };
 
         case FAIL_PRODUCTS:

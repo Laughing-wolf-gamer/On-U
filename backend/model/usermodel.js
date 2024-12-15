@@ -1,9 +1,9 @@
-const mongoose = require('mongoose')
-const validator = require('validator')
-const jwtToken = require('jsonwebtoken')
+import mongoose from 'mongoose'
+import validator from 'validator'
+import jwt from 'jsonwebtoken'
 
 
-const usermodel = new mongoose.Schema({
+const usermodelSchema = new mongoose.Schema({
     phonenumber : {
         type:Number,
         unique:true,
@@ -66,9 +66,9 @@ const usermodel = new mongoose.Schema({
 
 })
 
-usermodel.methods.getJWTToken = function () {
-   
-    return jwtToken.sign({id:this._id}, process.env.SECRETID, {expiresIn: '2d'})
+usermodelSchema.methods.getJWTToken = function () {
+    return jwt.sign({id:this._id}, process.env.SECRETID, {expiresIn: '2d'})
 }
 
-module.exports = mongoose.model('MynUser', usermodel)
+const User = mongoose.model('MynUser', usermodelSchema)
+export default User;

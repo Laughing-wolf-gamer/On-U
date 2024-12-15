@@ -1,7 +1,7 @@
-const app = require('./app.js')
-const connectdatabse = require('./database/Database.js')
-const dotenv = require('dotenv')
-dotenv.config();
+import App from './app.js';
+import connectdatabse from './database/Database.js';
+import { config } from 'dotenv';
+config();
 
 process.on('uncaughtException', (err)=>{
     console.log(`Error: ${err.message}`)
@@ -9,7 +9,7 @@ process.on('uncaughtException', (err)=>{
     process.exit(1)
 })
 const PORT = process.env.PORT || 8000;
-const server = app.listen(process.env.PORT, ()=>{
+const server = App.listen(process.env.PORT, ()=>{
     console.log(`Server on http://localhost:${PORT}`)
 })
 

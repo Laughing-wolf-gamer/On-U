@@ -1,7 +1,7 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const connectdatabse = ()=>{
-    mongoose.connect("mongodb+srv://laughingwolfgamer:Amsp99@cluster0.i72pe.mongodb.net/e-commerce-New?retryWrites=true&w=majority&appName=Cluster0", {useNewUrlParser: true,
+const connectdatabse = async ()=>{
+    await mongoose.connect(process.env.DB_URI, {useNewUrlParser: true,
          useUnifiedTopology:true,
         }).then((data)=>{
         console.log(`Database connected ${data.connection.host}`)
@@ -9,4 +9,4 @@ const connectdatabse = ()=>{
 
 }
 
-module.exports = connectdatabse
+export default connectdatabse

@@ -1,5 +1,5 @@
-const express = require('express');
-const { createProduct, imagekits, getallproducts, SendSingleProduct } = require('../controller/productcontroller');
+import express from 'express';
+import { createProduct, imagekits, getallproducts, SendSingleProduct } from "../controller/productcontroller.js";
 const route = express.Router();
 
 route.post('/create_product', createProduct)
@@ -7,4 +7,5 @@ route.get('/get', imagekits)
 route.get('/products', getallproducts)
 route.get('/products/:id',SendSingleProduct)
 
-module.exports = route
+// module.exports = route
+export default route;

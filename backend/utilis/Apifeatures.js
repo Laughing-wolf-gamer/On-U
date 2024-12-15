@@ -68,4 +68,4 @@ class Apifeature {
     }
 }
 
-module.exports = Apifeature
+export default Apifeature

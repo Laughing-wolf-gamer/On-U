@@ -32,11 +32,11 @@ export const registermobile = (userData) => async (dispatch) => {
         const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.post('/api/v1/registermobile', userData, config)
         
-        dispatch({ type: SUCCESS_USER_NO, payload: data.user, message: data.message })
+        dispatch({ type: SUCCESS_USER_NO, payload: data?.user, message: data?.message })
 
     } catch (error) {
 
-        dispatch({ type: FAIL_USER_NO, payload: error.response.data.message })
+        dispatch({ type: FAIL_USER_NO, payload: error.response?.data?.message })
 
     }
 }
@@ -55,7 +55,7 @@ export const getuser = () => async (dispatch) => {
 
     } catch (error) {
 
-        dispatch({ type: FAIL_USER, payload: error.response.data.message })
+        dispatch({ type: FAIL_USER, payload: error.response?.data?.message })
 
     }
 }

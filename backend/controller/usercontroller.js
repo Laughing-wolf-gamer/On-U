@@ -1,15 +1,15 @@
-const A = require('../Middelwares/resolveandcatch')
-const User = require('../model/usermodel')
-const {sendMessage} = require('fast-two-sms')
-const Errorhandler = require('../utilis/errorhandel')
-const sendtoken = require('../utilis/sendtoken')
+import A from '../Middelwares/resolveandcatch.js';
+import User from '../model/usermodel.js';
+import { sendMessage } from 'fast-two-sms';
+import Errorhandler from '../utilis/errorhandel.js';
+import sendtoken from '../utilis/sendtoken.js';
 
-exports.registermobile = A(async (req, res, next) => {
+export const registermobile = A(async (req, res, next) => {
   
   const { phonenumber } = req.body
 
   console.log(phonenumber)
-  const userr = await User.findOne({"phonenumber": phonenumber})
+  const userr = await findOne({"phonenumber": phonenumber})
 
   if (!userr) {
     const user = await User.create({
@@ -18,7 +18,7 @@ exports.registermobile = A(async (req, res, next) => {
    
   }
 
-  const user = await User.findOne({"phonenumber": phonenumber})
+  const user = await findOne({"phonenumber": phonenumber})
 
   let otp = Math.floor((1 + Math.random()) * 90000)
 
@@ -52,7 +52,7 @@ exports.registermobile = A(async (req, res, next) => {
 
 })
 
-exports.getuser = A(async(req, res, next)=>{
+export const getuser = A(async(req, res, next)=>{
       const user = await User.findOne({"phonenumber": req.params.id})
       
       res.status(200).json({
@@ -61,7 +61,7 @@ exports.getuser = A(async(req, res, next)=>{
       })
 })
 
-exports.optverify = A(async (req, res, next)=>{
+export const optverify = A(async (req, res, next)=>{
   console.log(req.body)
   
     const {otp} = req.body
@@ -89,9 +89,9 @@ exports.optverify = A(async (req, res, next)=>{
 
 })
 
-exports.resendotp = A(async (req, res, next)=>{
+export const resendotp = A(async (req, res, next)=>{
   console.log(req.params.id)
-  const user = await User.findOne({"phonenumber": req.params.id})
+  const user = await findOne({"phonenumber": req.params.id})
   let otp = Math.floor((1 + Math.random()) * 90000)
   console.log(user, otp)
   let options = { authorization: process.env.YOUR_API_KEY, message: `This website is made my Vikas Verma Thank You to use my Website Your OTP: is ${otp}`, numbers: [req.params.id] }
@@ -120,11 +120,11 @@ exports.resendotp = A(async (req, res, next)=>{
 
 })
 
-exports.updateuser =A( async(req,res,next)=>{
+export const updateuser =A( async(req,res,next)=>{
   console.log(req.body)
 
-  const users = await User.updateOne({phonenumber: req.params.id}, req.body)
-  const user = await User.findOne({phonenumber: req.params.id})
+  const users = await updateOne({phonenumber: req.params.id}, req.body)
+  const user = await findOne({phonenumber: req.params.id})
 
   if(!user){
     return next( new Errorhandler('mobile incorrect', 400))
@@ -134,11 +134,11 @@ exports.updateuser =A( async(req,res,next)=>{
   
 })
 
-exports.updateuserdetails =A( async(req,res,next)=>{
+export const updateuserdetails =A( async(req,res,next)=>{
   console.log(req.body)
 const {name, pincode, address1, address2, citystate, phonenumber} = req.body
   
-  const user = await User.updateOne({_id: req.params.id}, 
+  const user = await updateOne({_id: req.params.id}, 
     {
       name,
       phonenumber,
@@ -156,7 +156,7 @@ const {name, pincode, address1, address2, citystate, phonenumber} = req.body
 })
 
 
-exports.logout = A( async(req, res, next)=>{
+export const logout = A( async(req, res, next)=>{
   
   res.cookie('token', null,{
     expire:new Date(Date.now()),

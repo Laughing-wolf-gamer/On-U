@@ -15,4 +15,4 @@ const sendtoken = (user, statuscode, res) =>{
     })
 }
 
-module.exports = sendtoken
+export default sendtoken

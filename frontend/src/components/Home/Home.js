@@ -317,7 +317,6 @@ const Home = () => {
     <Fragment>
       {
         window.screen.width > 1024 ?
-
           <Fragment>
             <div className='mt-8 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} autoPlay={6000} infiniteLoop={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
@@ -325,7 +324,6 @@ const Home = () => {
 
                   <Link to='/products'><LazyLoadImage effect='blur' src={b1} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                   <div className='h-[50px]'>
-
                   </div>
 
 

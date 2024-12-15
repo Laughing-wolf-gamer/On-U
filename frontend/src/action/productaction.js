@@ -23,11 +23,11 @@ export const Allproduct = (e=1) => async (dispatch) => {
     //    let link1 = link ? link +=  `&width=${window.screen.width}` : 
         const { data } = await axios.get(`/api/v1/products${link}`)
 
-        dispatch({ type: SUCCESS_PRODUCTS, payload: data.products, pro:data.pro, length:data.length })
+        dispatch({ type: SUCCESS_PRODUCTS, payload: data?.products, pro:data?.pro, length:data?.length })
 
     } catch (error) {
 
-        dispatch({ type: FAIL_PRODUCTS, payload: error.response.data.message })
+        dispatch({ type: FAIL_PRODUCTS, payload: error.response?.data?.message })
 
     }
 }
@@ -38,18 +38,16 @@ export const singleProduct = (id) => async (dispatch) => {
         dispatch({ type: REQUEST_SINGLE_PRODUCTS })
 
         const { data } = await axios.get(`/api/v1/products/${id}`)
-
-        dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data.product, similar: data.similar_product})
+        dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data?.product, similar: data?.similar_product})
 
     } catch (error) {
 
-        dispatch({ type: FAIL_SINGLE_PRODUCTS, payload: error.response.data.message })
+        dispatch({ type: FAIL_SINGLE_PRODUCTS, payload: error.response?.data?.message })
     }
 }
 
 export const clearErrors = () => async (dispatch) => {
     dispatch({
         type: CLEAR_ERRORS
-
     })
 }

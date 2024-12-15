@@ -30,7 +30,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
    <Fragment>
      
        { transitions((styles, item) => item && <animated.div style={styles}>
-        <div className={`container absolute  top-20 right-4  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white `}
+        <div className={`container absolute  top-20 right-4  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white cursor-pointer`}
           onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
         >
           <div className='px-8 py-8 '>
@@ -61,7 +61,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
                 <div className='flex'>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Myntra Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Myntra Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
                 </div>
                
 

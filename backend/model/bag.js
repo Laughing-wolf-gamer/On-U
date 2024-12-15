@@ -1,14 +1,14 @@
-const mongoose = require('mongoose')
+import mongoose from 'mongoose'
 
-const Bag = new mongoose.Schema({
+const BagSchema = new mongoose.Schema({
     user:{
-        type:mongoose.ObjectId,
+        type:mongoose.Schema.Types.ObjectId,
         ref:"MynUser",
         required:true
     },
     orderItems: [{
         product:{
-            type:mongoose.ObjectId,
+            type:mongoose.Schema.Types.ObjectId,
             ref:"myntraproduct",
             
             required:true,
@@ -22,4 +22,6 @@ const Bag = new mongoose.Schema({
    
 })
 
-module.exports = mongoose.model('Bag', Bag)
+const Bag = mongoose.model('Bag', BagSchema)
+
+export default Bag

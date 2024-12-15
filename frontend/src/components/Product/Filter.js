@@ -10,34 +10,82 @@ const [colorulbtn, setcolorulbtn] = useState('block')
   let spARRAY =[]
 
   function categoriesarray() {
-    for (let i = 0; i < product.length; i++) {
-
-      category.push(product[i].category)
+    const categories = [];
+  
+    if (!Array.isArray(product)) {
+      console.error("Invalid input: product must be an array.");
+      return categories; // Return an empty array for invalid input
     }
+
+    for (let i = 0; i < product.length; i++) {
+      const category = product[i]?.category;
+      if (category !== undefined) {
+        categories.push(category);
+      }
+    }
+
+    return categories;
 
   }
 
   function genderarray() {
-    for (let i = 0; i < product.length; i++) {
+    /* for (let i = 0; i < product.length; i++) {
 
       gender.push(product[i].gender)
+    } */
+    const genderSet = new Set(); // Use a Set to ensure uniqueness
+
+    if (!Array.isArray(product)) {
+      console.error("Invalid input: product must be an array.");
+      return [];
     }
+  
+    for (let i = 0; i < product.length; i++) {
+      const gender = product[i]?.gender;
+      if (gender) {
+        genderSet.add(gender); // Add only non-null and non-undefined genders
+      }
+    }
+  
+    return [...genderSet]; // Convert the Set to an array before returning
 
   }
 
   function colorarray() {
-    for (let i = 0; i < product.length; i++) {
+    const colorSet = new Set(); // Use a Set to ensure uniqueness
 
-      color.push(product[i].color)
+    if (!Array.isArray(product)) {
+      console.error("Invalid input: product must be an array.");
+      return [];
     }
+
+    for (let i = 0; i < product.length; i++) {
+      const color = product[i]?.color;
+      if (color) {
+        colorSet.add(color); // Add only non-null, non-undefined colors
+      }
+    }
+
+    return [...colorSet]; // Convert the Set to an array before returning
 
   }
   
   function sparray() {
-    for (let i = 0; i < product.length; i++) {
+    const priceSet = new Set(); // Use a Set to ensure uniqueness
 
-      spARRAY.push(product[i].sellingPrice)
+    if (!Array.isArray(product)) {
+      console.error("Invalid input: product must be an array.");
+      return [];
     }
+
+    for (let i = 0; i < product.length; i++) {
+      const price = product[i]?.sellingPrice;
+      if (price !== undefined) {
+        priceSet.add(price); // Add only non-undefined selling prices
+      }
+    }
+
+    return [...priceSet]; // Convert the Set to an array before returning
 
   }
   categoriesarray()
@@ -194,23 +242,21 @@ function genderfun(e){
 }
 
 function check() {
-  const params = new URLSearchParams(window.location.search)
-  let categoriesarray = []
- 
-  for (const param of params) {
-    if (!categoriesarray.includes(param[1])) {
-      categoriesarray.push(param[1])
-    }
-   
-  }
-  for (let i = 0; i < categoriesarray.length; i++) {
-    let div1 = document.getElementById(`id${categoriesarray[i]}`)
-    if(div1) {
-      let div = document.getElementById(`id${categoriesarray[i]}`)
-    div.checked = 'checked'
+  const params = new URLSearchParams(window.location.search);
+  const categoriesArray = [];
+
+  for (const [key, value] of params.entries()) {
+    if (!categoriesArray.includes(value)) {
+      categoriesArray.push(value);
     }
   }
 
+  categoriesArray.forEach(category => {
+    const checkbox = document.getElementById(`id${category}`);
+    if (checkbox) {
+      checkbox.checked = true; // Correct way to check a checkbox
+    }
+  });
 }
 
 
