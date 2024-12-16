@@ -5,5 +5,5 @@ export function capitalizeFirstLetterOfEachWord(str) {
     }
     return str.split(' ').map(word =>word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 }
-export const isDevelopment = true;
+export const isDevelopment = false;
 export const BASE_URL = isDevelopment ?  'http://localhost:8080':'https://myntra-clone-new.onrender.com';
