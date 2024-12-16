@@ -1,3 +1,4 @@
+import { BASE_URL } from '../config'
 import {
     REQUEST_USER_NO,
     SUCCESS_USER_NO,

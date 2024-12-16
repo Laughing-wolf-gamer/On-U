@@ -23,6 +23,7 @@ REQUEST_UPDATE_QTY_BAG,
       FAIL_DELETE_WISH,
     CLEAR_ERRORS
 } from '../const/orderconst'
+import { BASE_URL } from '../config'
 
 export const createwishlist = (option) => async (dispatch) => {
     console.log(option)

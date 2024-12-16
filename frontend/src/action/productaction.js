@@ -1,3 +1,4 @@
+import { BASE_URL } from '../config'
 import {
     REQUEST_PRODUCTS,
     SUCCESS_PRODUCTS,
