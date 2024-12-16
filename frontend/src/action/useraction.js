@@ -1,4 +1,4 @@
-import { BASE_URL } from '../config'
+import { BASE_API_URL } from '../config'
 import {
     REQUEST_USER_NO,
     SUCCESS_USER_NO,
@@ -31,7 +31,7 @@ export const registermobile = (userData) => async (dispatch) => {
         dispatch({ type: REQUEST_USER_NO })
 
         const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.post(`${BASE_URL}/api/auth/registermobile`, userData, config)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData, config)
         
         dispatch({ type: SUCCESS_USER_NO, payload: data?.user, message: data?.message })
 
@@ -50,7 +50,7 @@ export const getuser = () => async (dispatch) => {
         const mobile = JSON.parse(localStorage.getItem('mobileno'))
         const mobileno = Number(mobile.phonenumber)
 
-        const { data } = await axios.get(`${BASE_URL}/api/auth/user/${mobileno}`)
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/${mobileno}`)
 
         dispatch({ type: SUCCESS_USER, payload: data.user })
 
@@ -70,7 +70,7 @@ export const otpverifie = (otp) => async (dispatch) => {
         const mobileno = Number(mobile.phonenumber)
 
 
-        const { data } = await axios.put(`${BASE_URL}/api/auth/otpverify/${mobileno}`, otp)
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/otpverify/${mobileno}`, otp)
         console.log(data)
 
         dispatch({ type: SUCCESS_VERIFY_OTP, payload: data.user })
@@ -90,7 +90,7 @@ export const resendotp = () => async (dispatch) => {
         const mobile = JSON.parse(localStorage.getItem('mobileno'))
         const mobileno = Number(mobile.phonenumber)
 
-        const { data } = await axios.get(`${BASE_URL}/api/auth/resendotp/${mobileno}`)
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp/${mobileno}`)
 
         dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
 
@@ -108,7 +108,7 @@ export const updateuser = (userdata) => async (dispatch) => {
         const mobileno = Number(mobile.phonenumber)
         const config = { headers: { "Content-Type": "application/json" } }
 
-        const { data } = await axios.put(`${BASE_URL}/api/auth/updateuser/${mobileno}`, userdata,config )
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser/${mobileno}`, userdata,config )
 
         dispatch({ type: SUCCESS_UPDATE_USER, payload: data.user })
 
@@ -127,7 +127,7 @@ export const updatedetailsuser = (userdata, id) => async (dispatch) => {
         
         const config = { headers: { "Content-Type": "application/json" } }
 
-        const { data } = await axios.put(`${BASE_URL}/api/auth/user/${id}`, userdata,config )
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/user/${id}`, userdata,config )
 
         dispatch({ type: SUCCESS_UPDATE_DETAILS_USER, payload: data.success })
 
@@ -144,7 +144,7 @@ export const logout = () => async (dispatch) => {
     try {
         console.log("logout")
 
-        const { data } = await axios.get(`${BASE_URL}/api/v1/logout` )
+        const { data } = await axios.get(`${BASE_API_URL}/api/v1/logout` )
 
         dispatch({ type: SUCCESS_LOGOUT, payload: data.success })
 
