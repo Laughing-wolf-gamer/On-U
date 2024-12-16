@@ -13,6 +13,10 @@ const userModelSchema = new mongoose.Schema({
         type:String,
         validate:[validator.isEmail, 'Please enter valid Email ID ']
     },
+    phoneNumber:{
+        type:Number,
+        validate:[validator.isEmail, 'Please enter valid Phone Number ID ']
+    },
 
     password:{
         type:String

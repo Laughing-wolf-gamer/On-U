@@ -18,8 +18,8 @@ export const Allproducts = (state = {product:[]}, action) =>{
         case SUCCESS_PRODUCTS:
             return {
                 loading: false,
-                product:action?.payload,
-                pro: action?.pro,
+                product:action.payload,
+                pro: action.pro,
                 length:action?.length || 0
             };
 

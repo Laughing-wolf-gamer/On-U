@@ -1,3 +1,6 @@
+import ProductModel from "../../model/productmodel.js";
+import { handleImageUpload } from "../../utilis/cloudinaryUtils.js";
+
 export const uploadImage = async (req, res) =>{
     try {
         // Convert the buffer into a base64 string
@@ -30,6 +33,8 @@ export const addNewProduct = async (req, res) => {
             clothsize,
             color,
             description,
+            material,
+            bulletPoints,
             image,
             category,
             price,
@@ -41,13 +46,14 @@ export const addNewProduct = async (req, res) => {
         if(!title || !color || !description || !image || !category || !quantity || !brand || !totalStock){
             return res.status(400).json({Success:false,message:"All fields are required"});
         }
-        // console.log(clothsize,footwearsize);
-
-        const newProduct = new Product({
+        // console.log("All fields ",req.body);
+        const newProduct = new ProductModel({
             title,
             color,
             description,
-            image,
+            bulletPoints,
+            material,
+            image: image.filter(i => i !== ''),
             category,
             price,
             salePrice,
@@ -59,7 +65,7 @@ export const addNewProduct = async (req, res) => {
             newProduct.size = !clothsize || clothsize?.length <= 0 ? [...footwearsize]:[...clothsize];
         }
         await newProduct.save();
-        console.log(newProduct);
+        // console.log(newProduct);
         res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
     } catch (error) {
         console.error('Error while adding new product:', error);
@@ -68,7 +74,7 @@ export const addNewProduct = async (req, res) => {
 }
 export const fetchAllProducts = async (req, res) => {
     try {
-        const allProducts = await Product.find({});
+        const allProducts = await ProductModel.find({});
         if(!allProducts) res.status(404).json({Success:false,message:"No products found"});
         res.status(200).json({Success: true, message: 'All products fetched successfully!', result: allProducts});
     } catch (error) {
@@ -80,7 +86,7 @@ export const editProduct = async (req, res) => {
     try {
         const {id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
-        const updatedProduct = await Product.findByIdAndUpdate(id, req.body, {new: true});
+        const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.body, {new: true});
         if(!updatedProduct) res.status(404).json({Success:false,message:"Product Update Failed"});
         res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedProduct});
     } catch (error) {
@@ -92,7 +98,7 @@ export const deleteProduct = async (req, res) => {
     try {
         const{id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
-        const deletedProduct = await Product.findByIdAndDelete(id);
+        const deletedProduct = await ProductModel.findByIdAndDelete(id);
         if(!deletedProduct) res.status(404).json({Success:false,message:"Product not found"});
         res.status(200).json({Success: true, message: 'Product deleted successfully!', result: deletedProduct});
     } catch (error) {

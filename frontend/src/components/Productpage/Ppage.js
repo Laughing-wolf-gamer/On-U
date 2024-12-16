@@ -99,7 +99,7 @@ const Ppage = () => {
       dispatch(clearErrors())
     }
   }, [dispatch, param, error, alert, werror]);
-
+  console.log("Product: ",product);
   return (
     <Fragment>
       {
@@ -138,9 +138,19 @@ const Ppage = () => {
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-xl font-semibold text-slate-800'>
-                    <span className="mr-4 font-bold">Rs. {Math.round(product?.salePrice)}</span>
-                    <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
-                    <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> </h1>
+                    <span className="mr-4 font-bold">Rs. {Math.round(product?.price)}</span>
+                    {
+                      product && product.salePrice && product.salePrice > 0 &&(
+                        <>
+                          <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
+                          <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> :
+                          <span className="text-[#0db7af]">Rs. {product?.price}</span>
+                        </>
+                      )
+                    }
+                    {/* <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
+                    <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>  */}
+                    </h1>
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {

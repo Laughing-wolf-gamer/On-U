@@ -17,7 +17,7 @@ connectdatabse()
 
 process.on('unhandledRejection', (err)=>{
     console.log(`Error ${err.message}`);
-    console.log(`shutting down server due  unhandle promise rejection`)
+    console.log(`shutting down server due unhandled promise rejection`)
 
     server.close(()=>{
         process.exit(1);

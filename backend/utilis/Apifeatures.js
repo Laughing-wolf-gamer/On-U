@@ -2,7 +2,6 @@ class Apifeature {
     constructor(Product_find, req_query){
         this.Product_find = Product_find;
         this.req_query = req_query
-
     }
 
     filter(){

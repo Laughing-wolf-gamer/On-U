@@ -15,9 +15,8 @@ const productModelSchema = new mongoose.Schema({
     ],
     bulletPoints:[
         {
-            point:{
-                type:String
-            }
+            header:{type:String},
+            body:{type:String},
         }
     ],
     description:{

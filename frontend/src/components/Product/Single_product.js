@@ -86,7 +86,7 @@ const Single_product = ({ pro }) => {
                             <div className="slideshow-container min-h-[200px]">
 
                                 {
-                                    pro?.image?.map((im) => (
+                                    pro.image.map((im) => (
 
                                         <div className={`${pro.style_no} fade relative `} >
                                             <LazyLoadImage src={im}  className="w-full" width='100%'  alt='product' effect='blur' />
@@ -101,9 +101,9 @@ const Single_product = ({ pro }) => {
                             <div className='relative pb-6'>
                                 <p className='font1 text-base px-2'>{capitalizeFirstLetterOfEachWord(pro?.brand)}</p>
                                 <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro?.title}</p>
-                                <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro?.salePrice)}</span >&nbsp;
+                                <p className='flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{pro.price}</span >&nbsp;
                                     {
-                                        pro && pro?.salePrice && (
+                                        pro.salePrice !== null && (
                                             <>
                                                 <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro?.price)}</span>&nbsp;&nbsp;
                                                 <span className='flex items-center text-xs font-medium text-[#f26a10]'>( {-Math.round(pro?.salePrice / pro?.price * 100 - 100)}% OFF )</span>
@@ -116,7 +116,7 @@ const Single_product = ({ pro }) => {
                             <div className={`${pro.style_no}hover hidden absolute pb-6 bottom-0 w-full bg-[#ffffff]  mx-auto `}>
                                 <div className='text-center mb-2'>
                                     {pro && pro.image.length > 0 && pro.image.map((img, i) => (
-                                        <span className={`${pro.style_no}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
+                                        <span className={`${pro?.style_no}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
                                     ))}
                                 </div>
 
@@ -126,17 +126,17 @@ const Single_product = ({ pro }) => {
                                     <div className='justify-start items-center w-auto h-auto flex-row flex'>
                                         <p className='font1 text-xm px-2 text-[#5f5f5f9e]'>Sizes: </p>
                                         {
-                                            pro && pro.size && pro.size.length > 0 && pro.size.map((item,i)=>(
-                                                <span key={i} className='font1 text-xm px-2 text-[#5f5f5f9e]'>{item.label}</span>
+                                            pro && pro.size && pro.size.map((item,i)=>(
+                                                <span key={i} className='font1 text-xm px-2 text-[#5f5f5f9e]'>{item.label} {i} </span>
                                             ))
                                         }
 
                                     </div>
-                                    <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro?.salePrice)}</span >&nbsp;
+                                    <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro.price)}</span >&nbsp;
                                         {
                                             pro && pro.salePrice &&(
                                                 <>
-                                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro?.price)}</span>&nbsp;&nbsp;
+                                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro.price)}</span>&nbsp;&nbsp;
                                                     <span className='flex items-center text-xs font-medium text-[#f26a10]'>({Math.round(pro.salePrice / pro.price * 100 - 100)}% OFF)</span>
                                                 </>
                                             )

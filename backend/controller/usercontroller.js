@@ -8,7 +8,7 @@ import bcrypt from 'bcryptjs';
 
 export const registerUser = A(async (req, res, next) => {
   
-  /* const { userName,email,password,phonenumber } = req.body
+  const { userName,email,password,phonenumber } = req.body
 
   console.log("Authenticating with: ",userName,email,password,phonenumber )
   const existingUser = await User.findOne({phonenumber})
@@ -53,25 +53,7 @@ export const registerUser = A(async (req, res, next) => {
       })
       
     }
-  }) */
-    try {
-      const {userName,email,password} = req.body;
-      console.log("Authenticating with: ",userName,email,password )
-      let user = await User.findOne({email: email});
-      if(user){
-        return res.status(401).json({Success:false,message: 'User already exists'});
-      }
-      /* const salt = await bcrypt.getSalt(10);
-      console.log(salt); */
-      const hashedPassword = await bcrypt.hash(password,12);
-      user = new User({userName,email,password:hashedPassword});
-      await user.save();
-      res.status(200).json({Success:true,message: 'User registered successfully'});
-  } catch (error) {
-      console.error(`Error registering user `,error);
-      res.status(500).json({Success:false,message: 'Internal Server Error'});
-  }
-
+  })
 })
 
 export const getuser = A(async(req, res, next)=>{
@@ -138,8 +120,8 @@ export const resendotp = A(async (req, res, next)=>{
 
 })
 export const logInUser = async (req,res) =>{
-  try {
-      const {email,password} = req.body;
+  /* try {
+      const {phonenumber} = req.body;
       if(!email) return res.status(401).json({Success:false,message: 'Please enter a valid email'});
       if(!password) return res.status(401).json({Success:false,message: 'Please enter a valid password'});
       const user = await User.findOne({email});
@@ -161,14 +143,14 @@ export const logInUser = async (req,res) =>{
   } catch (error) {
       console.error(`Error Logging in user ${error.message}`);
       res.status(500).json({Success:false,message: 'Internal Server Error'});
-  }
+  } */
 }
 
 export const updateuser =A( async(req,res,next)=>{
   console.log(req.body)
 
-  const users = await updateOne({phonenumber: req.params.id}, req.body)
-  const user = await findOne({phonenumber: req.params.id})
+  const users = await User.updateOne({phonenumber: req.params.id}, req.body)
+  const user = await User.findOne({phonenumber: req.params.id})
 
   if(!user){
     return next( new Errorhandler('mobile incorrect', 400))
@@ -180,9 +162,9 @@ export const updateuser =A( async(req,res,next)=>{
 
 export const updateuserdetails =A( async(req,res,next)=>{
   console.log(req.body)
-const {name, pincode, address1, address2, citystate, phonenumber} = req.body
+  const {name, pincode, address1, address2, citystate, phonenumber} = req.body
   
-  const user = await updateOne({_id: req.params.id}, 
+  const user = await User.updateOne({_id: req.params.id}, 
     {
       name,
       phonenumber,

@@ -3,6 +3,7 @@ import Product from '../model/productmodel.js';
 import Errorhandler from '../utilis/errorhandel.js';
 import ImageKit from "imagekit";
 import Apifeature from '../utilis/Apifeatures.js';
+import ProductModel from '../model/productmodel.js';
 
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
@@ -27,9 +28,10 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = A(async (req, res, next)=>{
     const {low,date, width} = req.query
-    const apifeature = new Apifeature(find(), req.query).filter().sort(low, date).pagination(width).search()
-    const apifeature1 = new Apifeature(find(), req.query).search()
-    const apifeature3 = new Apifeature(find(), req.query).filter().sort(low, date).search()
+    // console.log("req.Query:",req.query)
+    const apifeature = new Apifeature(ProductModel.find(), req.query).filter().sort(low, date).pagination(width).search()
+    const apifeature1 = new Apifeature(ProductModel.find(), req.query).search()
+    const apifeature3 = new Apifeature(ProductModel.find(), req.query).filter().sort(low, date).search()
     const products = await apifeature.Product_find;
     const pro = await apifeature1.Product_find;
     const productlength = await apifeature3.Product_find;
@@ -43,12 +45,13 @@ export const getallproducts = A(async (req, res, next)=>{
 })
 
 export const SendSingleProduct = A(async (req, res, next)=>{
-    const product = await Product.findById(req.params.id)
+    const product = await ProductModel.findById(req.params.id)
     if (!product) {
         return next(new Errorhandler("product not found", 404));
     }
     
-    const similar_product = await find({category: product.category, brand: product.brand}).limit(15)
+    const similar_product = await ProductModel.find({category: product.category, brand: product.brand}).limit(15)
+    console.log("Product Single: ",product, "Similar Product: ",similar_product);
     
     res.status(200).json({
         success:true,

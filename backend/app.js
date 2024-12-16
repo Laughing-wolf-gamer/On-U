@@ -2,6 +2,7 @@ import express from 'express';
 import bodyparser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import adminRoute from './routes/adminRoutes/admin.route.js'
 import User from './routes/userroutes.js';
 import Product from './routes/productroute.js';
 import Order from './routes/orderroutes.js';
@@ -43,8 +44,9 @@ app.use(cors({
     credentials: true,
   }
 ))
+app.use('/admin',adminRoute)
 app.use('/api/auth', User)
-app.use('/api', Product)
+app.use('/api/shop', Product)
 app.use('/api/shop', Order)
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));

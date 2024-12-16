@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useCallback } from 'react'
 import './Navbar.css'
-import myntra from '../images/app_logo.svg'
+import onUlogo from '../images/applogo.png'
 import { FaRegUser } from 'react-icons/fa'
 import { BsHeart } from 'react-icons/bs'
 import { BsHandbag } from 'react-icons/bs'
@@ -77,7 +77,12 @@ const Navbar = ({user}) => {
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch' to="/">
             <li className='w-max flex items-stretch'  >
-              <img src={myntra} alt="Myntra Logo" className='w-14' />
+              
+              <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
+                <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' />
+                <Link to='/'> <h1 className='text-pink-700 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+              </div>
+              
             </li>
             </Link>
             <Link className='w-max px-3 flex items-stretch' to="/">

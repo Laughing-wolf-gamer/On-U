@@ -214,8 +214,8 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='my-auto grid grid-flow-col auto-cols-max'>
                         <div className='flex '>
-                            <AiOutlineMenu color='red' className='text-3xl text-[#282c3f]' onClick={() => (handleShow(), classchange())} />
-                           <Link to='/'> <h1 className='text-[#282c3f] text-xl py-1 ml-2'>E-Commerce</h1></Link>
+                            <AiOutlineMenu color='red' className='text-3xl text-pink-700' onClick={() => (handleShow(), classchange())} />
+                           <Link to='/'> <h1 className='text-pink-700 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
                         </div>
 
                         <div className='absolute right-6'>
@@ -271,35 +271,35 @@ const MNavbar = ({ user }) => {
                                 
                                 <ul>
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Men</span>
                                             <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MMen Men={Menul} fun1={handleClose} fun2={classunchange} />
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Women</span>
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MWoMen WoMen={Menu2} fun1={handleClose} fun2={classunchange} />
                                     <Ripples color="re" className='w-full'>
-                                        <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Kids</span>
                                             <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} />
                                     <Ripples color="red" className='w-full'>
-                                        <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Home&nbsp;&&nbsp;Living</span>
                                             <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
                                     <Ripples color="red" className='w-full'>
-                                        <li className='text-[#282c3f] font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Beauty</span>
                                             <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>

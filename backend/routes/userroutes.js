@@ -8,8 +8,8 @@ route.post('/login', logInUser)
 route.get('/check-auth',isAuthenticateuser, getuser)
 route.put('/otpverify/:id', optverify)
 route.get('/resendotp/:id', resendotp)
-route.put('/updateuser/:id', updateuser)
-route.put('/user/:id', updateuserdetails)
+route.put('/updateuser/:id',isAuthenticateuser, updateuser)
+route.put('/user/:id',isAuthenticateuser, updateuserdetails)
 route.get('/logout', logout)
 
 export default route

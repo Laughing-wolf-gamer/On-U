@@ -103,7 +103,7 @@ function categoryfun(e){
   let url = document.URL
  
   if (url.includes('?')) {
-    let nexttext1 = e.replace(' ', '%20')
+    let nexttext1 = e?.replace(' ', '%20')
     let newtext = nexttext1.replace(' ', '%20')
    
   
@@ -131,7 +131,7 @@ function colorfun(e){
   let url = document.URL
 
   if (url.includes('?')) {
-    let newtext = e.replace(' ', '%20')
+    let newtext = e?.replace(' ', '%20')
     if (url.includes(`${newtext}`)) {
       let newurl = url.includes(`&color=${newtext}`) ? url.replace(`&color=${newtext}`,'') : null
       let newurl2 = url.replace(`?color=${newtext}`,'')
@@ -219,7 +219,7 @@ function genderfun(e){
   let url = document.URL
 
   if (url.includes('?')) {
-    let newtext = e.replace(' ', '%20')
+    let newtext = e?.replace(' ', '%20')
       if (url.includes(`${newtext}`)) {
        let newurl = url.includes(`&gender=${newtext}`) ? url.replace(`&gender=${newtext}`,'') : null
        let newurl2 = url.replace(`?gender=${newtext}`,'')

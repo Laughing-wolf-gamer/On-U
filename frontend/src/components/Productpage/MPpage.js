@@ -16,6 +16,7 @@ import Single_product from '../Product/Single_product'
 import {createbag, createwishlist} from '../../action/orderaction'
 import {useAlert} from 'react-alert'
 import Footer from '../Footer/Footer'
+import { capitalizeFirstLetterOfEachWord } from '../../config'
 
 const MPpage = () => {
     const param = useParams()
@@ -102,7 +103,8 @@ const MPpage = () => {
          }else{
            alert.error('You have To Login To Add This Product Into Bag')
          }
-      }
+    }
+    console.log("Mpage Product: ",product)
       
 
     return (
@@ -112,8 +114,8 @@ const MPpage = () => {
                     <div>
                         <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                             {
-                                product && product.length && product?.image.map((im,i) => (
-                                    <div className=''>
+                                product && product.image.length > 0 && product.image?.map((im,i) => (
+                                    <div className='' key={i}>
                                         <img src={im} alt={`product ${i}`} />
                                         <div className='h-[30px] bg-white'>
                                         </div>
@@ -128,23 +130,27 @@ const MPpage = () => {
                                 <h1 className='text-lg text-[#808080e8] font-light font1 bg-white px-4'>{product?.title}</h1>
                                 <div className='border-b-[1px] border-slate-200  pb-6 pt-2 bg-white px-4'>
                                     <h1 className='font1 text-lg font-semibold text-slate-800'>
-                                        <span className="mr-4 font-bold">&#8377;&nbsp;{Math.round(product?.salePrice)}</span>
-                                        <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product?.price}</span>
-                                        {product && product.salePrice &&
-                                            <span className="text-[#ff3f6c]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> 
+                                        <span className="mr-4 font-bold">&#8377;&nbsp;{Math.round(product?.price)}</span>
+                                        {
+                                            product && product.salePrice &&(
+                                                <Fragment>
+                                                    <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product?.price}</span>
+                                                    <span className="text-[#F72C5B]">( {-Math.round(product.salePrice / product.price * 100 - 100)}% OFF )</span> 
+                                                </Fragment>
+                                            )
                                         }
                                     </h1>
                                     <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                                     <h1 className='font1 text-base font-semibold mt-2 mb-2'>SELECT SIZE</h1>
                                     <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                                         {
-                                            product && product.size && product.size.map((e) =>
+                                            product && product.size.length > 0 && product.size.map((e) =>
                                                 // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                                                <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</button>
+                                                <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-[#F72C5B]'>{e.label}</button>
                                             )
                                         }
                                     </div>
-                                    {/* <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{product?.size[0]?.label}</button> */}
+                                    {/* <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-[#F72C5B]'>{product?.size[0]?.label}</button> */}
                                     <br />
 
 
@@ -153,7 +159,7 @@ const MPpage = () => {
                                     {
                                         product && product.bulletPoints && product.bulletPoints.map((e) =>
                                             <div className=' font1 font-extralight text-slate-500'>
-                                                {e.point}
+                                                {e.body}
                                             </div>
                                         )
                                     }
@@ -165,15 +171,15 @@ const MPpage = () => {
                                     </div>
                                     <div className='col-span-9'>
                                         <h1 className='text-sm font1 font-semibold'>Flat 300 Off + Free Shipping on first order</h1>
-                                        <h1 className='text-sm font1 text-slate-500 mt-2'>Applicable on your first order. <br />  Use code: MYNTRA300</h1>
+                                        <h1 className='text-sm font1 text-slate-500 mt-2'>Applicable on your first order. <br />  Use code: ONU300</h1>
                                     </div>
 
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-[#ff3f6c]'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice)}</span></h1>
+                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-[#F72C5B]'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice || product?.price)}</span></h1>
                                     <li className='list-none text-slate-500 text-sm'>Applicable on: Orders above &#8377;&nbsp; 1599 (only on first purchase)</li>
-                                    <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>MYNTRA250</span></li>
+                                    <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>ONU250</span></li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3'>
@@ -192,19 +198,19 @@ const MPpage = () => {
                                 </div>
                                 <div className='pb-2 pt-2 bg-white px-2 grid grid-cols-2 sticky bottom-0 '>
                                     <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
-                                    <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-[#ff3f6c] text-white ml-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;BAG</span></button>
+                                    <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-[#F72C5B] text-white ml-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;BAG</span></button>
                                 </div>
 
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
                                     <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
-                                    <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#ff3f6c] font-bold'>{product?.brand?.toUpperCase()}</span></li>
+                                    <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                                 </div>
 
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
                                     <ul className='grid grid-cols-2 gap-2'>
-                                    {similar && similar?.length && similar?.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
+                                    {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
                                     </ul>
                                 </div>
                             </div>
