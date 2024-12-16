@@ -8,12 +8,11 @@ import MNavbar from "./components/Navbar/MobileNav/MNavbar.js";
 import Login from "./components/Login/Login";
 import Otpverify from "./components/Login/otpverify";
 import Registeruser  from "./components/Login/Registeruser";
-import { getuser, clearErrors } from "./action/useraction";
+import { getuser } from "./action/useraction";
 import Overview from "./components/Login/Dashboard/overview";
 import Allproductpage from "./components/Product/Allproduct";
 import Ppage from "./components/Productpage/Ppage";
 import MPpage from "./components/Productpage/MPpage";
-import Footer from "./components/Footer/Footer";
 import Coupon from "./components/Coupon/Coupon";
 import Wishlist from "./components/Wishlist/Wishlist";
 import Bag from './components/Bag/Bag'
