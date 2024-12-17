@@ -29,31 +29,35 @@ export const addNewProduct = async (req, res) => {
     try {
         const {
             title,
-            footwearsize,
-            clothsize,
+            size,
             color,
             description,
             material,
             bulletPoints,
             image,
+            gender,
             category,
+            subCategory,
             price,
             salePrice,
             quantity,
             totalStock,
-            subCategory,
         } = req.body;
-        if(!title || !color || !description || !image || !category || !quantity || !subCategory || !totalStock){
+        if(!title || !color || !description ||!size || !image || !quantity || !gender || !category || !subCategory || !totalStock){
             return res.status(400).json({Success:false,message:"All fields are required"});
         }
-        // console.log("All fields ",req.body);
+        console.log("All fields ",req.body);
+        let imageArray = image.filter(i => i !== '')
+
         const newProduct = new ProductModel({
             title,
             color,
+            size,
             description,
             bulletPoints,
             material,
             image: image.filter(i => i !== ''),
+            gender,
             category,
             price,
             salePrice,
@@ -61,9 +65,9 @@ export const addNewProduct = async (req, res) => {
             totalStock,
             subCategory,
         });
-        if(clothsize || footwearsize){
+        /* if(clothsize || footwearsize){
             newProduct.size = !clothsize || clothsize?.length <= 0 ? [...footwearsize]:[...clothsize];
-        }
+        } */
         await newProduct.save();
         // console.log(newProduct);
         res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
@@ -86,6 +90,23 @@ export const editProduct = async (req, res) => {
     try {
         const {id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
+        const {
+            title,
+            size,
+            color,
+            description,
+            material,
+            bulletPoints,
+            image,
+            gender,
+            category,
+            subCategory,
+            price,
+            salePrice,
+            quantity,
+            totalStock,
+        } = req.body;
+        // returngin....
         const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.body, {new: true});
         if(!updatedProduct) res.status(404).json({Success:false,message:"Product Update Failed"});
         res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedProduct});

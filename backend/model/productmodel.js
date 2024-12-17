@@ -31,6 +31,9 @@ const productModelSchema = new mongoose.Schema({
             point:String
         }
     ],
+    gender:{
+        type:String
+    },
     category:{
         type:String
     },
