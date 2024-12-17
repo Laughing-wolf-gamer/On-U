@@ -23,7 +23,7 @@ const Footer = () => {
            <li>Home & Living</li>
            <li>Beauty</li>
            <li>Gift Cards</li>
-           <li>Myntra Insider</li>
+           <li>ONU Insider</li>
          </ul>
        </div>
 
@@ -48,7 +48,7 @@ const Footer = () => {
        </div>
 
        <div className="col-span-4">
-       <h1 className='text-sm font-semibold col-span-2'>EXPERIENCE MYNTRA APP ON MOBILE</h1>
+       <h1 className='text-sm font-semibold col-span-2'>EXPERIENCE ONU APP ON MOBILE</h1>
         <div className='grid grid-cols-2 gap-4 pt-6 w-[70%]'>
           <img src={g1} alt="" />
           <img src={g2} alt="" />
@@ -69,7 +69,7 @@ const Footer = () => {
                   <div className="col-span-5">
                     
                   <span className='font-semibold text-[#F45050]'>100% ORIGINAL</span>  guarantee <br />
-                  for all products at myntra.com
+                  for all products at on_u.com
                     </div>
             </div>
             <br />
@@ -87,7 +87,7 @@ const Footer = () => {
       <div className='w-10/12 mx-auto font1 text-base text-[#F45050]'>
         <h1 className='font-semibold text-black mb-4 mt-4 text-sm'>POPULAR SEARCHES</h1>
         <h1>
-        Makeup | Dresses For Girls | T-Shirts | Sandals | Headphones | Babydolls | Blazers For Men | Handbags | Ladies Watches | Bags | Sport Shoes | Reebok Shoes | Puma Shoes | Boxers | Wallets | Tops | Earrings | Fastrack Watches | Kurtis | Nike | Smart Watches | Titan Watches | Designer Blouse | Gowns | Rings | Cricket Shoes | Forever 21 | Eye Makeup | Photo Frames | Punjabi Suits | Bikini | Myntra Fashion Show | Lipstick | Saree | Watches | Dresses | Lehenga | Nike Shoes | Goggles | Bras | Suit | Chinos | Shoes | Adidas Shoes | Woodland Shoes | Jewellery | Designers Sarees
+        Makeup | Dresses For Girls | T-Shirts | Sandals | Headphones | Babydolls | Blazers For Men | Handbags | Ladies Watches | Bags | Sport Shoes | Reebok Shoes | Puma Shoes | Boxers | Wallets | Tops | Earrings | Fastrack Watches | Kurtis | Nike | Smart Watches | Titan Watches | Designer Blouse | Gowns | Rings | Cricket Shoes | Forever 21 | Eye Makeup | Photo Frames | Punjabi Suits | Bikini | Onu Fashion Show | Lipstick | Saree | Watches | Dresses | Lehenga | Nike Shoes | Goggles | Bras | Suit | Chinos | Shoes | Adidas Shoes | Woodland Shoes | Jewellery | Designers Sarees
         </h1>
       </div>
       <div className='relative w-10/12 mx-auto text-[#F45050]'>

@@ -61,13 +61,13 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
                 <div className='flex'>
-                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Myntra Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
                 </div>
                
 
                 <hr className='my-4' />
 
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Myntra Credit</h1>
+                <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Coupons</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Cards</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>

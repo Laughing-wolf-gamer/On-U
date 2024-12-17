@@ -15,7 +15,8 @@ import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { capitalizeFirstLetterOfEachWord } from '../../config'
+import { capitalizeFirstLetterOfEachWord, getRandomItem, getRandomItems } from '../../config'
+import ImageZoom from './ImageZoom'
 
 const Ppage = () => {
   const param = useParams()
@@ -25,7 +26,7 @@ const Ppage = () => {
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
   const {error:werror} = useSelector(state => state.wishlist)
-  const [img, setimg] = useState('')
+  const [firstImage, setFirstImage] = useState('')
   function Addclass() {
     var foo1 = document.querySelector(`.imgfulldiv`)
     elementClass(foo1).add('visible')
@@ -99,13 +100,13 @@ const Ppage = () => {
       dispatch(clearErrors())
     }
   }, [dispatch, param, error, alert, werror]);
-  console.log("Product: ",product);
+  // console.log("First Image: ",getRandomItem(product?.image));
   return (
     <Fragment>
       {
         loading === false ?
           <div>
-            <div className='hidden fixed top-0 z-10 w-full h-screen imgfulldiv overflow-scroll ' >
+            {/* <div className='hidden fixed top-0 z-10 w-full h-screen imgfulldiv overflow-scroll ' >
               <div className='flex'>
               <div className='w-[10%] bg-[#2b2b2b6d] h-screen fixed top-0 left-0'onClick={Removeclass}></div>
                 <div className='min-h-screen w-[80%] mx-auto relative '>
@@ -115,19 +116,23 @@ const Ppage = () => {
                 <div className='w-[10%] bg-[#2b2b2b6d] h-screen fixed right-0 top-0'onClick={Removeclass}></div>
               </div>
               
-            </div>
+            </div> */}
             <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
-              {/* Image div for large screen */}
               <div className='h-max col-span-7'>
-                <div className='grid grid-cols-2 gap-2 '>
-                  {
-                    product && product.image && product?.image?.map((e) =>
-                      <div className='w-full overflow-hidden' onClick={()=>(Addclass(),setimg(e))}>
-                        <img src={e} className='w-full border-[0.5px] border-slate-100 hover:-translate-y-1 hover:scale-110 duration-300 cursor-zoom-in ' alt="productImage" />
-                      </div>
-
-                    )
-                  }
+                <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
+                  {/* <img src={firstImage || getRandomItem(product?.image)} alt="Product Image" className='h-full w-full border-[0.5px] border-slate-100 hover:-translate-y-1 hover:scale-110 duration-300 cursor-zoom-in'/> */}
+                  <ImageZoom imageSrc={firstImage || getRandomItem(product?.image)}/>
+                </div>
+                <div className='h-20 justify-start items-center flex-row flex col-span-7'>
+                  <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
+                    {
+                      product && product.image && product.image.map((e) =>
+                        <div className='w-full h-full overflow-hidden' onClick={()=>(Addclass(),setFirstImage(e))}>
+                          <img src={e} className='w-full h-full object-contain outline outline-2 outline-red-600' alt="productImage" />
+                        </div>
+                      )
+                    }
+                  </div>
                 </div>
               </div>
               {/* Content div for large screen */}
@@ -154,12 +159,31 @@ const Ppage = () => {
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {
-                          product && product.size && product.size.length > 0 && product.size.map((e) =>
-                              // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                              <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</button>
-                          )
+                        product && product.size && product.size.length > 0 && product.size.map((e) =>
+                            // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
+                            <button type='button' className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</button>
+                        )
                       }
                   </div>
+                  <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
+                    {product?.color?.length > 0 ? (
+                      product.color.map((color, i) => (
+                        <button
+                          key={i}
+                          style={{
+                            backgroundColor: color?.label || color, // Use the label or raw color value
+                            width: "30px",
+                            height: "30px",
+                          }}
+                          className="rounded-full border border-gray-200 shadow-md"
+                          title={color?.name || color?.label || "Color"} // Optional tooltip
+                        />
+                      ))
+                    ) : (
+                      <p className="text-black">No colors available</p>
+                    )}
+                  </div>
+
                   <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-[#ff3f6c] text-white mr-6  mt-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO BAG</span></button>
                   <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-slate-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
                 </div>
@@ -193,7 +217,7 @@ const Ppage = () => {
                   <h1 className='font1 flex items-center mt-8 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Best Price:&nbsp; <span className='text-[#f26a10e1]'>&nbsp;Rs. {Math.round(product?.salePrice)}</span></h1>
                   <li className='list-disc mt-2'>Applicable on: Orders above Rs. 1599 (only on first purchase)</li>
-                  <li className='list-disc mt-2'>Coupon code: <span className='font-semibold'>MYNTRA250</span></li>
+                  <li className='list-disc mt-2'>Coupon code: <span className='font-semibold'>ONU250</span></li>
                   <li className='list-disc mt-2'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
 
                 </div>
@@ -207,7 +231,7 @@ const Ppage = () => {
                     <li className='list-none '>Warranty provided by Brand Owner / Manufacturer</li>
                   </h1>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
-                  <div className='w-auto max-h-fit justify-center items-start space-x-2'>
+                  <div className='w-auto max-h-fit justify-center items-start space-x-4'>
                       {
                           product && Array.isArray(product?.size) && product.size.length > 0 && product.size.map((e,i) =>
                               // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
@@ -218,7 +242,7 @@ const Ppage = () => {
                   </div>
                   {/* <li className='list-none mt-2'>{product?.size}</li> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
-                  <li className='list-none mt-2'>{product?.color?.length}</li>
+                    {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
                   <div className='mt-2'>
                     Wipe your jewellery with a soft cloth after every use

@@ -15,7 +15,7 @@ import Footer from '../Footer/Footer'
 const Allproductpage = () => {
     const dispatch = useDispatch()
     const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
-    const [sortvalue, setsortvalue] = useState('Recommended')
+    const [sortvalue, setSortValue] = useState('Recommended')
     const Redirect = useNavigate()
     const [currentPage, setCurrentPage] = useState(1)
     const setCurrentPageNo = (e)=>{
@@ -139,7 +139,7 @@ const Allproductpage = () => {
      
         
     }, [dispatch, error, state, loading, state1]);
-    console.log("Products: ",product,length)
+    console.log("Products: ",product,pro,length)
     return (
         <Fragment>
             <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2"><span className='text-slate-400 font-light'>Home</span>
@@ -157,22 +157,22 @@ const Allproductpage = () => {
                             Sort by :<span className='font1 font-semibold '>{sortvalue}</span> <span className='absolute right-4 font-serif text-lg'><IoIosArrowDown /></span>
                         </div>
 
-                        <div className=' text-sm w-max pl-5  py-2 mt-12' onClick={() => (datefun(1), setsortvalue('What`s New'))} >
+                        <div className=' text-sm w-max pl-5  py-2 mt-12' onClick={() => (datefun(1), setSortValue('What`s New'))} >
                             <span className='font1 '>What`s New</span>
                         </div>
-                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (setsortvalue('Popularity'))} >
+                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (setSortValue('Popularity'))} >
                             <span className='font1'>Popularity</span>
                         </div>
-                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(-1), setsortvalue('Better Discount'))}>
+                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(-1), setSortValue('Better Discount'))}>
                             <span className='font1'>Better Discount</span>
                         </div>
-                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(-1), setsortvalue('Price: High To Low'))}>
+                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(-1), setSortValue('Price: High To Low'))}>
                             <span className='font1'>Price: High To Low</span>
                         </div>
-                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(1), setsortvalue('Price: Low To High'))} >
+                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (pricefun(1), setSortValue('Price: Low To High'))} >
                             <span className='font1'>Price: Low To High</span>
                         </div>
-                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (setsortvalue('Customer Rating'))} >
+                        <div className=' text-sm w-max pl-5  py-2 ' onClick={() => (setSortValue('Customer Rating'))} >
                             <span className='font1'>Customer Rating</span>
                         </div>
                     </div>
@@ -241,7 +241,8 @@ const Allproductpage = () => {
                                  : ""
                                     }
                                     
-                                </Fragment>)
+                                </Fragment>
+                            )
                     }
                    
                 </div>

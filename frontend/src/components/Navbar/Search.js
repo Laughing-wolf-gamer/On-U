@@ -21,10 +21,10 @@ const Search = () => {
     }
     return (
         <Fragment>
-            <form className=" self-center mt-[5%] " onSubmit={searchenter}>
-                <span className='search_div h-full  justify-center items-center lg:w-72'>
+            <form className="self-center mt-[5%] " onSubmit={searchenter}>
+                <span className='search_div h-full justify-center items-center '>
                     <button className='searchbtn' onClick={searchenter}><FiSearch color='red'  /></button>
-                <input type="text" placeholder='Search for products, brands and more' className=' search bg-red-600' onChange={(e)=>setstate(e.target.value)}/>
+                <input type="text" placeholder='Search for products, brands and more' className='rounded-xl search bg-red-600' onChange={(e)=>setstate(e.target.value)}/>
                 </span>
             </form>
         </Fragment>

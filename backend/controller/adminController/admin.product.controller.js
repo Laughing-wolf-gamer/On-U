@@ -41,9 +41,9 @@ export const addNewProduct = async (req, res) => {
             salePrice,
             quantity,
             totalStock,
-            brand,
+            subCategory,
         } = req.body;
-        if(!title || !color || !description || !image || !category || !quantity || !brand || !totalStock){
+        if(!title || !color || !description || !image || !category || !quantity || !subCategory || !totalStock){
             return res.status(400).json({Success:false,message:"All fields are required"});
         }
         // console.log("All fields ",req.body);
@@ -59,7 +59,7 @@ export const addNewProduct = async (req, res) => {
             salePrice,
             quantity,
             totalStock,
-            brand,
+            subCategory,
         });
         if(clothsize || footwearsize){
             newProduct.size = !clothsize || clothsize?.length <= 0 ? [...footwearsize]:[...clothsize];

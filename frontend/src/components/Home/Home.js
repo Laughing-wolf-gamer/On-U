@@ -533,7 +533,7 @@ const Home = () => {
             </div>
 
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>MYNTRA LUXE</h1>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>ONU LUXE</h1>
               <div className='grid grid-cols-8 gap-1'>
                 <Link to='/products'><LazyLoadImage effect='blur' src={h1} alt=""  className='min-h-[200px]'/></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={h2} alt=""  className='min-h-[200px]'/></Link>
@@ -825,7 +825,7 @@ const Home = () => {
             </div>
 
             <div>
-              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>BEST OF MYNTRA EXCLUSIVE BRANDS</h1>
+              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>BEST OF ONU EXCLUSIVE BRANDS</h1>
               <ul className='flex overflow-x-scroll '>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a1} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a2} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>

@@ -10,12 +10,11 @@ import { capitalizeFirstLetterOfEachWord } from '../../config'
 
 
 const Single_product = ({ pro }) => {
-    console.log('Single Product', pro);
+    console.log('Single Product, Normal Screen', pro);
 
     let slideIndex = 1;
 
     const currentSlide = (n) => {
-
         showSlides(slideIndex = n);
     }
 
@@ -99,7 +98,7 @@ const Single_product = ({ pro }) => {
                             </div>
 
                             <div className='relative pb-6'>
-                                <p className='font1 text-base px-2'>{capitalizeFirstLetterOfEachWord(pro?.brand)}</p>
+                                <p className='font1 text-base px-2'>{capitalizeFirstLetterOfEachWord(pro?.subCategory)}</p>
                                 <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro?.title}</p>
                                 <p className='flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{pro.price}</span >&nbsp;
                                     {

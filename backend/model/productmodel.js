@@ -41,9 +41,8 @@ const productModelSchema = new mongoose.Schema({
     color:[
         {type:Object,default:[]}
     ],
-    brand:{
+    subCategory:{
         type:String,
-
     },
     quantity:{type: Number, required: true},
     totalStock:{type: Number, required: true},
