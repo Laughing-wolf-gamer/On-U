@@ -214,8 +214,8 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='my-auto grid grid-flow-col auto-cols-max'>
                         <div className='flex '>
-                            <AiOutlineMenu color='red' className='text-3xl text-pink-700' onClick={() => (handleShow(), classchange())} />
-                           <Link to='/'> <h1 className='text-pink-700 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+                            <AiOutlineMenu color='red' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
+                            <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
                         </div>
 
                         <div className='absolute right-6'>

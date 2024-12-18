@@ -22,6 +22,9 @@ const Allproductpage = () => {
         setCurrentPage(e)
         dispatch(getproduct(e))
     }
+    const dispatchFetchAllProduct = ()=>{
+        dispatch(getproduct(currentPage))
+    }
     function pricefun(e) {
         let url = window.location.search
 
@@ -184,8 +187,8 @@ const Allproductpage = () => {
                 {/* Filter ******************** */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-slate-200 h-max sticky top-0 ">
                     {
-                        loading === false &&
-                        <Filter product={product} />
+                        loading === false && pro && pro.length > 0 &&
+                        <Filter product={pro} dispatchFetchAllProduct = {dispatchFetchAllProduct}/>
                     }
 
                 </div>

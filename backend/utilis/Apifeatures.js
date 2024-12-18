@@ -36,7 +36,6 @@ class Apifeature {
     }
 
     pagination(width){
-
         if (Number(width) >= 1024) {
             const resultperpage = 50
             const currentpage = Number(this.req_query.page) || 1;

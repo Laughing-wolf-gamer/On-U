@@ -80,7 +80,7 @@ const Navbar = ({user}) => {
               
               <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
                 {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
-                <Link to='/'> <h1 className='text-black text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+                <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
               </div>
               
             </li>
@@ -120,11 +120,11 @@ const Navbar = ({user}) => {
             </li> */}
           </ul>
 
-          <div className=' h-full justify-center items-center '>
-            <ul className='flex float-right  h-full  text-[#282c3f] tracking-[.3px] sent'>
-              <li className='mr-6 w-full'>
+          <div className=' h-full flex flex-row items-center '>
+            <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>
+              <div className='w-full h-full justify-start items-center'>
                 <Search />
-              </li>
+              </div>
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer cborder1'
                onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
               >
@@ -132,7 +132,7 @@ const Navbar = ({user}) => {
               </li>
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
 
-                <Link to='/my_wishlist'><h1 className='px-3 text-xs text-center relative'> <span className='text-lg absolute -top-5 left-1/3'><BsHeart color='red' className='w-full h-full'/></span>Wishlist</h1></Link>
+                <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='red' className='w-full h-full flex'/></span>Wishlist</h1></Link>
               </li>
               <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
 
@@ -140,7 +140,6 @@ const Navbar = ({user}) => {
               </li>
             </ul>
           </div>
-
         </div>
         <Men show={show1} CMenu={Menu1} parentCallback={callback} />
         <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />

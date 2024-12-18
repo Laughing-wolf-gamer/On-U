@@ -22,5 +22,18 @@ export function getRandomItem(array) {
     const randomIndex = Math.floor(Math.random() * array.length);
     return array[randomIndex];
 }
+export function hexToRgba(hex, alpha = 1) {
+    // Remove '#' if present in hex string
+    hex = hex.replace('#', '');
+
+    // Parse the red, green, and blue values
+    let r = parseInt(hex.substring(0, 2), 16);
+    let g = parseInt(hex.substring(2, 4), 16);
+    let b = parseInt(hex.substring(4, 6), 16);
+
+    // Return the rgba string
+    return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+
 export const isDevelopment = false;
 export const BASE_API_URL = isDevelopment ?  'http://localhost:8000':'https://myntra-clone-backend-kf7m.onrender.com';

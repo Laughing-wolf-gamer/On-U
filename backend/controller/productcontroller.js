@@ -27,21 +27,51 @@ export const imagekits = A(async (req, res, next)=>{
 })
 
 export const getallproducts = A(async (req, res, next)=>{
-    const {low,date, width} = req.query
-    // console.log("req.Query:",req.query)
-    const apifeature = new Apifeature(ProductModel.find(), req.query).filter().sort(low, date).pagination(width).search()
-    const apifeature1 = new Apifeature(ProductModel.find(), req.query).search()
-    const apifeature3 = new Apifeature(ProductModel.find(), req.query).filter().sort(low, date).search()
+    // Build the query filter based on incoming request parameters
+    const filter = {};
+
+    // Color filter (match any of the colors in the list)
+    if (req.query.color) {
+      filter.color = { $in: req.query.color.split(',') }; // If multiple colors, expect them as a comma-separated string
+    }
+
+    // Category filter
+    if (req.query.category) {
+      filter.category = req.query.category;
+    }
+
+    // Gender filter
+    if (req.query.gender) {
+      filter.gender = req.query.gender;
+    }
+
+    // Selling price range filter
+    if (req.query.sellingPrice) {
+      const priceRange = req.query.sellingPrice.split('-');
+      if (priceRange.length === 2) {
+        filter.sellingPrice = {
+          $gte: parseFloat(priceRange[0]),
+          $lte: parseFloat(priceRange[1])
+        };
+      }
+    }
+
+    // Find products using the built query filter
+    const products = await ProductModel.find(filter);
+    /* const apifeature = new Apifeature(ProductModel.find({}), req.query).filter().sort(low, date).pagination(width).search()
+    const apifeature1 = new Apifeature(ProductModel.find({}), req.query).search()
+    const apifeature3 = new Apifeature(ProductModel.find({}), req.query).filter().sort(low, date).search()
     const products = await apifeature.Product_find;
     const pro = await apifeature1.Product_find;
     const productlength = await apifeature3.Product_find;
     let length = productlength.length
-    console.log("Product length: " + productlength, "Pro: " ,pro,"Products: " ,products)
+    */
+   // console.log("Product length: " + productlength, "Products: " ,products," Pro: " ,pro,)
     res.status(200).json({
-        products,
-        pro,
-        length
-    })
+        products:products,
+        pro:products,
+        length:products.length,
+    }) 
 })
 
 export const SendSingleProduct = A(async (req, res, next)=>{

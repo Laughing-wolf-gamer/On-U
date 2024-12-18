@@ -127,7 +127,7 @@ const Ppage = () => {
                   <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
                     {
                       product && product.image && product.image.map((e) =>
-                        <div className='w-full h-full overflow-hidden' onClick={()=>(Addclass(),setFirstImage(e))}>
+                        <div className='w-full h-full overflow-hidden cursor-pointer' onClick={()=>(Addclass(),setFirstImage(e))}>
                           <img src={e} className='w-full h-full object-contain outline outline-2 outline-red-600' alt="productImage" />
                         </div>
                       )
@@ -138,18 +138,18 @@ const Ppage = () => {
               {/* Content div for large screen */}
               <div className='col-span-5'>
                 <div className='border-b-[1px] border-slate-300  pb-6 pt-4'>
-                  <h1 className='font1 text-2xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.brand)}</h1>
+                  <h1 className='font1 text-2xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.gender)}</h1>
                   <h1 className='text-xl text-[#808080e8] font-light'>{product?.title}</h1>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-xl font-semibold text-slate-800'>
-                    <span className="mr-4 font-bold">Rs. {Math.round(product?.price)}</span>
+                    <span className="mr-4 font-bold">Rs. {Math.round(product?.salePrice ? product?.salePrice : product?.price)}</span>
                     {
                       product && product.salePrice && product.salePrice > 0 &&(
                         <>
                           <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
                           <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> :
-                          <span className="text-[#0db7af]">Rs. {product?.price}</span>
+                          <span className="text-[#0db7af]">Rs. {product?.salePrice}</span>
                         </>
                       )
                     }
@@ -245,11 +245,11 @@ const Ppage = () => {
                     {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
                   <div className='mt-2'>
-                    Wipe your jewellery with a soft cloth after every use
-                    Always store your jewellery in a flat box to avoid accidental scratches
-                    Keep sprays and perfumes away from your jewellery
-                    Do not soak your jewellery in water
-                    Clean your jewellery using a soft brush, dipped in jewellery cleaning solution only
+                    Wipe your jewelry with a soft cloth after every use
+                    Always store your jewelry in a flat box to avoid accidental scratches
+                    Keep sprays and perfumes away from your jewelry
+                    Do not soak your jewelry in water
+                    Clean your jewelry using a soft brush, dipped in jewelry cleaning solution only
                   </div>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
                   {

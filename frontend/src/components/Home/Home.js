@@ -2,7 +2,6 @@ import React, { Fragment, CSSProperties, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
-import b1 from '../images/banner1.webp'
 import b2 from '../images/banner2.webp'
 import b3 from '../images/banner3.jpg'
 import b4 from '../images/banner4.jpg'
@@ -320,14 +319,14 @@ const Home = () => {
           <Fragment>
             <div className='mt-8 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} autoPlay={6000} infiniteLoop={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                <div>
+                {/* <div>
 
                   <Link to='/products'><LazyLoadImage effect='blur' src={b1} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                   <div className='h-[50px]'>
                   </div>
 
 
-                </div>
+                </div> */}
                 <div>
                   <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                   <div className='h-[50px]'>

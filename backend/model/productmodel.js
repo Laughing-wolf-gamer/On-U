@@ -38,7 +38,7 @@ const productModelSchema = new mongoose.Schema({
         type:String
     },
     style_no:{
-        type:String
+        type:String,default:'1'
     },
     image:[{type:String,default:[]}],
     color:[

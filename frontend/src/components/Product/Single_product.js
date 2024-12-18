@@ -6,6 +6,7 @@ import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { capitalizeFirstLetterOfEachWord } from '../../config'
+import AutoSlidingCarousel from './AutoSlidingCarousel'
 
 
 
@@ -19,10 +20,9 @@ const Single_product = ({ pro }) => {
     }
 
     const showSlides = (n) => {
-
         let i;
-        let slides = document.getElementsByClassName(pro.style_no);
-        let dots = document.getElementsByClassName(`${pro.style_no}1`);
+        let slides = document.getElementsByClassName(`${pro._id}`);
+        let dots = document.getElementsByClassName(`${pro._id}1`);
 
         if (n > slides.length) { slideIndex = 1 }
         if (n < 1) { slideIndex = slides.length }
@@ -39,15 +39,15 @@ const Single_product = ({ pro }) => {
     }
 
     const showdiv = () => {
-        let dotsdiv = document.getElementsByClassName(`${pro.style_no}hover`);
+        let dotsdiv = document.getElementsByClassName(`${pro._id}hover`);
         dotsdiv[0].className += " 2xl:block lg:block xl:block";
     }
 
     const notshowdiv = () => {
 
-        document.querySelector(`.${pro.style_no}hover`).classList.remove('2xl:block')
-        document.querySelector(`.${pro.style_no}hover`).classList.remove('lg:block')
-        document.querySelector(`.${pro.style_no}hover`).classList.remove('xl:block')
+        document.querySelector(`.${pro._id}hover`).classList.remove('2xl:block')
+        document.querySelector(`.${pro._id}hover`).classList.remove('lg:block')
+        document.querySelector(`.${pro._id}hover`).classList.remove('xl:block')
     }
     // showSlides(slideIndex);
     var timer;
@@ -56,7 +56,7 @@ const Single_product = ({ pro }) => {
         let i = 1;
         timer = setInterval(function () {
 
-            let slides = document.getElementsByClassName(pro.style_no);
+            let slides = document.getElementsByClassName(pro._id);
             if (i > slides.length) { i = 0 }
             i++
             currentSlide(i)
@@ -72,35 +72,21 @@ const Single_product = ({ pro }) => {
 
     useEffect(() => {
         showSlides(slideIndex)
-
     }, [showSlides]);
 
     return (
         <Fragment>
             {
-                pro && pro.image.length > 0 &&
+                pro && pro.image &&
                 <Fragment>
                     <Link to={`/products/${pro._id}`} target='_blank' >
-                        <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())}>
-                            <div className="slideshow-container min-h-[200px]">
-
-                                {
-                                    pro.image.map((im) => (
-
-                                        <div className={`${pro.style_no} fade relative `} >
-                                            <LazyLoadImage src={im}  className="w-full" width='100%'  alt='product' effect='blur' />
-                                            {/* <div className='absolute bottom-2 left-2 bg-white rounded-full px-2 text-[10px] font1 flex py-[2px] items-center'>
-                                                3.6&nbsp;<AiFillStar className='text-[#0db7af]' />&nbsp;|&nbsp;2k</div> */}
-                                        </div>
-                                    ))
-                                }
-
-                            </div>
+                        <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' /* onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())} */>
+                            <AutoSlidingCarousel pro={pro}/>
 
                             <div className='relative pb-6'>
                                 <p className='font1 text-base px-2'>{capitalizeFirstLetterOfEachWord(pro?.subCategory)}</p>
                                 <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro?.title}</p>
-                                <p className='flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{pro.price}</span >&nbsp;
+                                <p className='flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{pro?.salePrice ? pro.salePrice : pro?.price}</span >&nbsp;
                                     {
                                         pro.salePrice !== null && (
                                             <>
@@ -112,10 +98,10 @@ const Single_product = ({ pro }) => {
                                 </p>
                             </div>
 
-                            <div className={`${pro.style_no}hover hidden absolute pb-6 bottom-0 w-full bg-[#ffffff]  mx-auto `}>
+                            <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-[#ffffff]  mx-auto `}>
                                 <div className='text-center mb-2'>
                                     {pro && pro.image.length > 0 && pro.image.map((img, i) => (
-                                        <span className={`${pro?.style_no}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
+                                        <span className={`${pro?._id}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
                                     ))}
                                 </div>
 

@@ -106,10 +106,38 @@ export const editProduct = async (req, res) => {
             quantity,
             totalStock,
         } = req.body;
-        // returngin....
-        const updatedProduct = await ProductModel.findByIdAndUpdate(id, req.body, {new: true});
-        if(!updatedProduct) res.status(404).json({Success:false,message:"Product Update Failed"});
-        res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedProduct});
+        console.log("Editing: ",req.body);
+        // Define an object to store fields that need updating
+        const updateFields = {};
+
+        // Check each property and add it to the updateFields object if it exists in req.body
+        if (title) updateFields.title = title;
+        if (size) updateFields.size = size;
+        if (color) updateFields.color = color;
+        if (description) updateFields.description = description;
+        if (material) updateFields.material = material;
+        if (bulletPoints) updateFields.bulletPoints = bulletPoints;
+        if (image.length > 0) updateFields.image = image;
+        if (gender) updateFields.gender = gender;
+        if (category) updateFields.category = category;
+        if (subCategory) updateFields.subCategory = subCategory;
+        if (price) updateFields.price = price;
+        if (salePrice) updateFields.salePrice = salePrice;
+        if (quantity) updateFields.quantity = quantity;
+        if (totalStock) updateFields.totalStock = totalStock;
+        if (Object.keys(updateFields).length > 0) {
+            const updatedProduct = await ProductModel.findByIdAndUpdate(
+                id, 
+                updateFields, 
+                { new: true }
+            );
+            if(!updatedProduct) res.status(404).json({Success:false,message:"Product Update Failed"});
+            return res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedProduct});
+        }
+        return res.status(400).json({
+            success: false,
+            message: "No fields provided for update"
+        });
     } catch (error) {
         console.error('Error while Editing a product:', error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
