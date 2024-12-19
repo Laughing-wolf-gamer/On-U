@@ -36,4 +36,4 @@ export function hexToRgba(hex, alpha = 1) {
 }
 
 export const isDevelopment = false;
-export const BASE_API_URL = isDevelopment ?  'http://localhost:8000':'https://on-u-backend-new.onrender.com';
+export const BASE_API_URL = isDevelopment ?  'http://192.168.1.2:8000':'https://on-u-backend-new.onrender.com';
