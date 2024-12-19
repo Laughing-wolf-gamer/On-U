@@ -310,9 +310,9 @@ const MNavbar = ({ user }) => {
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    <h1 className='my-5'>E - Com&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
-                                    <h1 className='my-5'>E - Com&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
-                                    <h1 className='my-5'>E - Com&nbsp;Insider</h1>
+                                    <h1 className='my-5'>On-U&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>On-U&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>On-U&nbsp;Insider</h1>
                                     <h1 className='my-5'>Gift&nbsp;Cards</h1>
                                     <h1 className='my-5'>Contact&nbsp;Us</h1>
                                     <h1 className='my-5'>FAQs</h1>

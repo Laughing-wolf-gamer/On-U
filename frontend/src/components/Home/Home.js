@@ -766,13 +766,13 @@ const Home = () => {
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma2} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma3} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma4} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma6} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
+                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="" className="w-[18vw] min-h-[70px]" /></li></Link> */}
+                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma6} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma7} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma8} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma9} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma10} alt=""className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma11} alt=""className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma11} alt=""className="w-[18vw] min-h-[70px]" /></li></Link> */}
               </ul>
             </div>
 

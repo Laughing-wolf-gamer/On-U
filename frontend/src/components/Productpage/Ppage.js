@@ -165,7 +165,7 @@ const Ppage = () => {
                         )
                       }
                   </div>
-                  <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
+                  <div className="w-auto h-auto flex flex-wrap bg-black justify-start items-center p-4 gap-2">
                     {product?.color?.length > 0 ? (
                       product.color.map((color, i) => (
                         <button
