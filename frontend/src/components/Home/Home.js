@@ -391,7 +391,7 @@ const Home = () => {
               </div>
             </div>
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF E-COMMERCE EXCLUSIVE BRANDS</h1>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF ON-U EXCLUSIVE BRANDS</h1>
               <div className='grid grid-cols-8 gap-1'>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a1} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a2} alt="" className="min-h-[200px]" /></Link>

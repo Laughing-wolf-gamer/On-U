@@ -3,6 +3,7 @@ import bodyparser from 'body-parser';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
 import adminRoute from './routes/adminRoutes/admin.route.js'
+import commonRoute from './routes/common.Routes/common.routes.js'
 import User from './routes/userroutes.js';
 import Product from './routes/productroute.js';
 import Order from './routes/orderroutes.js';
@@ -30,7 +31,7 @@ const allowedOrigins = [
 app.use(cors({
     origin: (origin, callback) => {
         // Allow requests with no origin (like mobile apps or Postman)
-        console.log("Origin: " + origin,allowedOrigins.includes(origin))
+        // console.log("Origin: " + origin,allowedOrigins.includes(origin))
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.includes(origin)) {
@@ -45,6 +46,7 @@ app.use(cors({
   }
 ))
 app.use('/admin',adminRoute)
+app.use('/api/common',commonRoute)
 app.use('/api/auth', User)
 app.use('/api/shop', Product)
 app.use('/api/shop', Order)

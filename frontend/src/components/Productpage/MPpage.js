@@ -66,43 +66,41 @@ const MPpage = () => {
     }
     const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
 
-    function addtowishlist() {
+    function addtowishlist(e) {
+        e.preventDefault();
         if (user) {
-         const option ={
-            user:user._id,
-            orderItems:[
-              {product:param.id}
-            ]
-           
-          }
-          console.log(option)
-          dispatch(createwishlist(option))
-    
-        alert.success('Product added successfully in wishlist')
-          
-        }else{
-          alert.error('You have To Login To Add This Product Into Wishlist')
-        }
-      }
-
-    function addtobag() {
-        if (user) {
-    
-          const option ={
-             user:user._id,
-             orderItems:[
-               {product:param.id, qty:1}
-             ]
+            const option ={
+                user:user._id,
+                orderItems:[
+                    {product:param.id}
+                ]
             
-           }
-         
-           dispatch(createbag(option))
-           
-          alert.success('Product added successfully in Bag')
-    
-         }else{
-           alert.error('You have To Login To Add This Product Into Bag')
-         }
+            }
+            console.log(option)
+            dispatch(createwishlist(option))
+        
+            alert.success('Product added successfully in wishlist')
+        
+        }else{
+            alert.error('You have To Login To Add This Product Into Wishlist')
+        }
+    }
+
+    function addtobag(e) {
+        e.preventDefault();
+        if (user) {
+            const option ={
+                user:user._id,
+                orderItems:[
+                    {product:param.id, qty:1}
+                ]
+            
+            }
+            dispatch(createbag(option))
+            alert.success('Product added successfully in Bag')
+        }else{
+            alert.error('You have To Login To Add This Product Into Bag')
+        }
     }
     console.log("Mpage Product: ",product)
       
@@ -146,9 +144,27 @@ const MPpage = () => {
                                         {
                                             product && product.size.length > 0 && product.size.map((e) =>
                                                 // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                                                <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-[#F72C5B]'>{e.label}</button>
+                                                <button className='px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-pink-400 hover:border-pink-700'>{e.label}</button>
                                             )
                                         }
+                                    </div>
+                                    <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
+                                        {product && product.color && product.color.length > 0 ? (
+                                            product.color.map((color, i) => (
+                                                <button
+                                                    key={i}
+                                                    style={{
+                                                        backgroundColor: color?.label || color.id, // Use the label or raw color value
+                                                        width: "30px",
+                                                        height: "30px",
+                                                    }}
+                                                    className="rounded-full border border-pink-200 shadow-md hover:border-pink-800"
+                                                    title={color?.name || color?.label || "Color"} // Optional tooltip
+                                                />
+                                            ))
+                                        ) : (
+                                            <p className="text-black font-bold">No colors available</p>
+                                        )}
                                     </div>
                                     {/* <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-[#F72C5B]'>{product?.size[0]?.label}</button> */}
                                     <br />
@@ -197,7 +213,7 @@ const MPpage = () => {
                                     </div>
                                 </div>
                                 <div className='pb-2 pt-2 bg-white px-2 grid grid-cols-2 sticky bottom-0 '>
-                                    <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
+                                    <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                                     <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-[#F72C5B] text-white ml-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;BAG</span></button>
                                 </div>
 
@@ -210,7 +226,7 @@ const MPpage = () => {
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
                                     <ul className='grid grid-cols-2 gap-2'>
-                                    {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
+                                        {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
                                     </ul>
                                 </div>
                             </div>

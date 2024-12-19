@@ -213,28 +213,27 @@ const MNavbar = ({ user }) => {
                 <div className='relative w-full h-full'>
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='my-auto grid grid-flow-col auto-cols-max'>
-                        <div className='flex '>
-                            <AiOutlineMenu color='red' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
-                            <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+                        <div className='flex flex-row justify-center items-center'>
+                            <AiOutlineMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
+                            <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
                         </div>
 
-                        <div className='absolute right-6'>
-                        <Link to='/bag'><BsHandbag color='red' className='float-right text-2xl ml-4' /></Link>
-                           <Link to='/my_wishlist'> <BsHeart color='red' className='float-right text-2xl ml-4' /></Link>
-                            <FiSearch color='red' className='float-right text-2xl ml-4' onClick={()=>setserdiv('block')}/>
-                            {/* <GoDiffAdded color='red' className='float-right text-2xl ml-4' /> */}
+                        <div className='absolute right-6 flex-row justify-center items-center'>
+                            <Link to='/bag'><BsHandbag color='black' className='float-right text-2xl ml-4' /></Link>
+                            <Link to='/my_wishlist'> <BsHeart color='black' className='float-right text-2xl ml-4' /></Link>
+                            <FiSearch color='black' className='float-right text-2xl ml-4' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
                     
                 </div>
                 <div className={`${serdiv} z-20 absolute w-full h-full top-0 bg-white`}>
                     <div className='grid grid-cols-12 py-3 px-[6px]'>
-                        <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=>setserdiv('hidden')}><MdArrowBack color='red'/></div>
+                        <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=> setserdiv('hidden')}><MdArrowBack color='black'/></div>
                         <div className="col-span-10">
                         <input type="text" placeholder='Search for brands & products' 
-                        className=' msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=>setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
+                            className=' msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
                         </div>
-                        <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='red' strokeWidth={.9} className='text-2xl text-[#ff2459]' /></div>
+                        <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='black' strokeWidth={.9} className='text-2xl text-black' /></div>
                     </div>
                 </div>
                 </div>
@@ -248,10 +247,8 @@ const MNavbar = ({ user }) => {
                             className='absolute canvas  h-[100vh] top-0 z-20 translate-x-0 bg-white focus:outline-0 overflow-y-scroll'
                             onTouchEnd={touchend} onTouchMove={touchhandler} onTouchStart={touchstart}
                         >
-
                             <Offcanvas.Body className='border-none'>
                                 <img src={Mbanner} alt="Banner" className='min-h-[150px]'/>
-                               
                                     {
                                         user ?
 
@@ -260,58 +257,54 @@ const MNavbar = ({ user }) => {
                                 
                                         </div>
                                         :
-                                        <Link to='/Login'> <div className='text-[#ee5f73] font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
+                                        <Link to='/Login'> 
+                                            <div className='text-[#ee5f73] font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
                                                 <span>SIGN UP.</span>
                                                 <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
-                                            </div>  </Link>
-                                            
-                                
+                                            </div>
+                                        </Link>
                                     }
-
-                                
                                 <ul>
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Men</span>
                                             <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MMen Men={Menul} fun1={handleClose} fun2={classunchange} />
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Women</span>
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MWoMen WoMen={Menu2} fun1={handleClose} fun2={classunchange} />
                                     <Ripples color="re" className='w-full'>
-                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Kids</span>
                                             <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} />
-                                    <Ripples color="red" className='w-full'>
-                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
+                                    <Ripples color="black" className='w-full'>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Home&nbsp;&&nbsp;Living</span>
                                             <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
-                                    <Ripples color="red" className='w-full'>
-                                        <li className='text-pink-700 font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
+                                    <Ripples color="black" className='w-full'>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Beauty</span>
                                             <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
                                     <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/>
-
-
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    <h1 className='my-5'>On-U&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
-                                    <h1 className='my-5'>On-U&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-[#ee5f73] border-[#ee5f73] rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>On-U&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-black border-slate-300 rounded-lg' >NEW</span></h1>
+                                    <h1 className='my-5'>On-U&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-black border-slate-300 rounded-lg' >NEW</span></h1>
                                     <h1 className='my-5'>On-U&nbsp;Insider</h1>
                                     <h1 className='my-5'>Gift&nbsp;Cards</h1>
                                     <h1 className='my-5'>Contact&nbsp;Us</h1>

@@ -5,7 +5,6 @@ import {useDispatch } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 
 const Search = () => {
-    
     const [state, setstate] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate ()
@@ -21,19 +20,11 @@ const Search = () => {
     }
     return (
         <Fragment>
-            <form className="flex flex-row w-full h-10 mt-3 px-4 justify-between items-center gap-2" onSubmit={searchenter}>
-                <button
-                    className="rounded-xl w-10 justify-center items-center h-full bg-[#ECEBDE]"
-                    onClick={searchenter}
-                >
-                    <div className="w-full h-full justify-center flex items-center">
-                    <FiSearch color="red" />
-                    </div>
-                </button>
+            <form className="flex flex-row w-full h-full justify-between items-center gap-2" onSubmit={searchenter}>
                 <input
                     type="text"
                     placeholder="Search for products, brands and more"
-                    className="rounded-xl w-full h-full pl-4"
+                    className="rounded-3xl w-full h-full pl-4"
                     style={{ backgroundColor: "#ECEBDE" }}
                     onChange={(e) => setstate(e.target.value)}
                 />

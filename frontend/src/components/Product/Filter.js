@@ -78,93 +78,109 @@ const Filter = ({ product,dispatchFetchAllProduct }) => {
 
   }
 
-  function colorfun(e){
-    let url = document.URL
+  function colorfun(e) {
+      // Create a URL object for easier manipulation
+      let url = new URL(window.location.href);
+      let colorKey = "color";
+      let colorValue = e.trim().replace(" ", "%20"); // Sanitize and encode the color value
 
+      if (url.searchParams.has(colorKey)) {
+          // If the color parameter already exists
+          if (url.searchParams.get(colorKey) === colorValue) {
+              // If it matches the provided value, remove it
+              url.searchParams.delete(colorKey);
+          } else {
+              // Otherwise, update it with the new value
+              url.searchParams.set(colorKey, colorValue);
+          }
+      } else {
+          // If the color parameter does not exist, add it
+          url.searchParams.append(colorKey, colorValue);
+      }
+
+      // Update the URL in the address bar without reloading the page
+      window.history.replaceState(null, "", url.toString());
+      if(dispatchFetchAllProduct){
+        dispatchFetchAllProduct();
+      }
+  }
+
+
+
+  function price1fun(e){
+    let url = document.URL
     if (url.includes('?')) {
-      let newtext = e.replace(' ', '%20')
-      if (url.includes(`${newtext}`)) {
-        let newurl = url.includes(`&color=${newtext}`) ? url.replace(`&color=${newtext}`,'') : null
-        let newurl2 = url.replace(`?color=${newtext}`,'')
+      if (url.includes(`${e+1}`)) {
+        let newurl = url.includes(`&sellingPrice[$lte]=${e+1}`) ? url.replace(`&sellingPrice[$lte]=${e+1}`,'') : null
+        let newurl2 = url.replace(`?sellingPrice[$lte]=${e+1}`,'')
         let newurlsuccess =  (newurl === null ? newurl2 : newurl)
-      
         window.location = newurlsuccess 
       }else{
-        url += `&color=${e}`
+        url += `&sellingPrice[$lte]=${e+1}`
         window.location = url
       }
-      
-    
-    
-    }else{
-      url += `?color=${e}`
-      window.location = url
 
+    }else{
+      url += `?sellingPrice[$lte]=${e+1}`
+      window.location = url
     }
   }
 
 
-    function price1fun(e){
-      let url = document.URL
-      if (url.includes('?')) {
-        if (url.includes(`${e+1}`)) {
-          let newurl = url.includes(`&sellingPrice[$lte]=${e+1}`) ? url.replace(`&sellingPrice[$lte]=${e+1}`,'') : null
-          let newurl2 = url.replace(`?sellingPrice[$lte]=${e+1}`,'')
-          let newurlsuccess =  (newurl === null ? newurl2 : newurl)
-          window.location = newurlsuccess 
-        }else{
-          url += `&sellingPrice[$lte]=${e+1}`
-          window.location = url
+  function price2fun(e, f) {
+      let url = new URL(window.location.href);
+      let lowerBoundKey = "sellingPrice[$gte]";
+      let upperBoundKey = "sellingPrice[$lte]";
+      let lowerBoundValue = e + 1;
+      let upperBoundValue = f + 1;
+
+      // Check if the current URL already includes the desired parameters
+      if (
+          url.searchParams.get(lowerBoundKey) == lowerBoundValue &&
+          url.searchParams.get(upperBoundKey) == upperBoundValue
+      ) {
+          // If the parameters exist with matching values, remove them
+          url.searchParams.delete(lowerBoundKey);
+          url.searchParams.delete(upperBoundKey);
+      } else {
+          // Otherwise, update or add the parameters
+          url.searchParams.set(lowerBoundKey, lowerBoundValue);
+          url.searchParams.set(upperBoundKey, upperBoundValue);
+      }
+
+      // Update the URL in the browser without reloading the page
+      window.history.replaceState(null, "", url.toString());
+      if(dispatchFetchAllProduct){
+        dispatchFetchAllProduct();
+      }
+  }
+
+
+  function price3fun(e) {
+    let url = new URL(window.location.href);
+    let paramKey = `sellingPrice[$gte]`;
+    let paramValue = e + 1;
+
+    if (url.searchParams.has(paramKey)) {
+        if (url.searchParams.get(paramKey) == paramValue) {
+            // Remove the parameter if it matches the current value
+            url.searchParams.delete(paramKey);
+        } else {
+            // Update the parameter value
+            url.searchParams.set(paramKey, paramValue);
         }
+    } else {
+        // Add the parameter if it doesn't exist
+        url.searchParams.append(paramKey, paramValue);
+    }
 
-      }else{
-        url += `?sellingPrice[$lte]=${e+1}`
-        window.location = url
-    
-      }
-  }
-
-
-  function price2fun(e,f){
-  
-    let url = document.URL
-    if (url.includes('?')) {
-      if (url.includes(`${e+1}`)) {
-        let newurl = url.includes(`&sellingPrice[$gte]=${e+1}&sellingPrice[$lte]=${f+1}`) ? url.replace(`&sellingPrice[$gte]=${e+1}&sellingPrice[$lte]=${f+1}`,'') : null
-        let newurl2 = url.replace(`?sellingPrice[$gte]=${e+1}&sellingPrice[$lte]=${f+1}`,'')
-        let newurlsuccess =  (newurl === null ? newurl2 : newurl)
-        window.location = newurlsuccess 
-      }else{
-        url += `&sellingPrice[$gte]=${e+1}&sellingPrice[$lte]=${f+1}`
-        window.location = url
-      }
-
-    }else{
-      url += `?sellingPrice[$gte]=${e+1}&sellingPrice[$lte]=${f+1}`
-      window.location = url
-
+    // Update the URL without reloading the page
+    window.history.replaceState(null, "", url.toString());
+    if(dispatchFetchAllProduct){
+      dispatchFetchAllProduct();
     }
   }
 
-  function price3fun(e){
-    let url = document.URL
-    if (url.includes('?')) {
-      if (url.includes(`${e+1}`)) {
-        let newurl = url.includes(`&sellingPrice[$gte]=${e+1}`) ? url.replace(`&sellingPrice[$gte]=${e+1}`,'') : null
-        let newurl2 = url.replace(`?sellingPrice[$gte]=${e+1}`,'')
-        let newurlsuccess =  (newurl === null ? newurl2 : newurl)
-        window.location = newurlsuccess 
-      }else{
-        url += `&sellingPrice[$gte]=${e+1}`
-        window.location = url
-      }
-
-    }else{
-      url += `?sellingPrice[$gte]=${e+1}`
-      window.location = url
-
-    }
-  }
 
   function genderfun(e) {
     let url = document.URL;

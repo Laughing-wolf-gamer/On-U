@@ -71,12 +71,12 @@ const Navbar = ({user}) => {
 
   return (
     <Fragment>
-      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto max-w-[100%] h-[80px] bg-[#fff] contenthide z-10 ">
-        <div className='2xl:grid xl:grid grid-cols-2 lg:flex h-full mx-6  '>
+      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide z-10 ">
+        <div className='flex-row flex justify-between items-center w-screen h-full'>
 
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch' to="/">
-            <li className='w-max flex items-stretch'  >
+            <li className='w-max flex items-stretch'>
               
               <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
                 {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
@@ -119,38 +119,38 @@ const Navbar = ({user}) => {
               <h1 className='px-3 relative'>STUDIO<span className='text-red-500 text-[10px] absolute -top-1/2'>new</span></h1>
             </li> */}
           </ul>
+          <div className="w-full flex justify-center h-14 mt-1 items-center">
+            <div className="flex flex-row w-full h-full mx-6 py-1">
+              <Search />
+            </div>
+          </div>
 
-          <div className=' h-full flex flex-row items-center '>
+          <div className=' h-full mt-3 max-w-fit flex flex-row items-center justify-end'>
             <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>
-              <div className='w-full h-full justify-start items-center'>
-                <Search />
-              </div>
-              <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer cborder1'
-               onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
-              >
-                <h1 className='px-3 text-center text-xs relative'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='red' /></span> <span className='block'>Profile</span> </h1>
-              </li>
-              <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
-
-                <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='red' className='w-full h-full flex'/></span>Wishlist</h1></Link>
-              </li>
-              <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
-
-               <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='red' /></span>Bag</h1></Link>
-              </li>
+                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer cborder1'
+                  onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
+                >
+                  <h1 className='px-3 text-center text-xs relative'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='black' /></span> <span className='block'>Profile</span> </h1>
+                </li>
+                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
+                  <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='black' className='w-full h-full flex'/></span>Wishlist</h1></Link>
+                </li>
+                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
+                  <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='black' /></span>Bag</h1></Link>
+                </li>
             </ul>
           </div>
         </div>
         <Men show={show1} CMenu={Menu1} parentCallback={callback} />
         <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
         <Kids show={show3} CMenu={Menu3} parentCallback={Callbackmenu3} />
-        {/* <Home show={show4} CMenu={Menu4} parentCallback={Callbackmenu4} /> */}
+        {/* <Home show={show4} CMenu={Menu4} parentCallback={Callbackmenu4} />  */}
         {/* <Beauty show={show5} CMenu={Menu5} parentCallback={Callbackmenu5} /> */}
         {/* <Studio show={show6} CMenu={Menu6} parentCallback={Callbackmenu6} /> */}
         {/* <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> */}
 
       </div>
-
+      
 
     </Fragment>
   )

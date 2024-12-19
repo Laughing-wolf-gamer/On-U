@@ -73,7 +73,9 @@ const Wishlist = () => {
                     setstate(true)
                     
                 } else {
-                    dispatch(getwishlist(user._id))
+                    if(user){
+                        dispatch(getwishlist(user?._id))
+                    }
                     setstate(true)
                 }
 

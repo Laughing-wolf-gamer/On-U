@@ -26,9 +26,11 @@ export const imagekits = A(async (req, res, next)=>{
     });
 })
 
-export const getallproducts = A(async (req, res, next)=>{
+export const getallproducts = A(async (req, res)=>{
+    console.log("Query ", req.query);
     // Build the query filter based on incoming request parameters
     const filter = {};
+    const sort = {};
 
     // Color filter (match any of the colors in the list)
     if (req.query.color) {
@@ -39,7 +41,14 @@ export const getallproducts = A(async (req, res, next)=>{
     if (req.query.category) {
       filter.category = req.query.category;
     }
-
+    if(req.query.low){
+      sort.price = req.query.low;
+    }
+    if(req.query.date){
+      sort.date = req.query.date;
+    }
+    // Date filter
+    
     // Gender filter
     if (req.query.gender) {
       filter.gender = req.query.gender;
@@ -57,8 +66,8 @@ export const getallproducts = A(async (req, res, next)=>{
     }
 
     // Find products using the built query filter
-    const products = await ProductModel.find(filter);
-    /* const apifeature = new Apifeature(ProductModel.find({}), req.query).filter().sort(low, date).pagination(width).search()
+    const products = await ProductModel.find(filter).sort(sort);
+    /* const apifeature = new Apifeature(ProductModel.find({}), req.query).filter().sort(req.query.low, date).pagination(width).search()
     const apifeature1 = new Apifeature(ProductModel.find({}), req.query).search()
     const apifeature3 = new Apifeature(ProductModel.find({}), req.query).filter().sort(low, date).search()
     const products = await apifeature.Product_find;
@@ -73,6 +82,56 @@ export const getallproducts = A(async (req, res, next)=>{
         length:products.length,
     }) 
 })
+function sortProducts(sortby) {
+  const sort = {};
+
+  switch(sortby) {
+      case "price-high-to-low":
+          sort.price = -1;  // Sort by price descending
+          break;
+      case "price-low-to-high":
+          sort.price = 1;   // Sort by price ascending
+          break;
+      case "title-a-2-z":
+          sort.title = 1;   // Sort by title A-Z
+          break;
+      case "title-z-2-a":
+          sort.title = -1;  // Sort by title Z-A
+          break;
+      case "rating-high-to-low":
+          sort.rating = -1; // Sort by rating descending
+          break;
+      case "rating-low-to-high":
+          sort.rating = 1;  // Sort by rating ascending
+          break;
+      case "newest-first":
+          sort.date = -1;   // Sort by date descending (newest first)
+          break;
+      case "oldest-first":
+          sort.date = 1;    // Sort by date ascending (oldest first)
+          break;
+      case "best-sellers":
+          sort.sales = -1;  // Sort by best-selling (descending)
+          break;
+      case "most-popular":
+          sort.popularity = -1; // Sort by popularity descending
+          break;
+      case "best-reviewed":
+          sort.reviews = -1;  // Sort by reviews descending
+          break;
+      case "discount-high-to-low":
+          sort.discount = -1; // Sort by discount percentage descending
+          break;
+      case "discount-low-to-high":
+          sort.discount = 1;  // Sort by discount percentage ascending
+          break;
+      default:
+          sort.price = 1;    // Default sort by price ascending
+          break;
+  }
+
+  return sort;  // Return the sorting configuration object
+}
 
 export const SendSingleProduct = A(async (req, res, next)=>{
     const product = await ProductModel.findById(req.params.id)
