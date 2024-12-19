@@ -212,16 +212,16 @@ const MNavbar = ({ user }) => {
             <div className='MNavbar hidden sticky top-0 bg-white overflow-x-hidden h-max z-10 ' >
                 <div className='relative w-full h-full'>
                 <div className=' border-b-2 h-14 px-3 py-3 '>
-                    <div className='my-auto grid grid-flow-col auto-cols-max'>
+                    <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row justify-center items-center'>
                             <AiOutlineMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
                             <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
                         </div>
 
-                        <div className='absolute right-6 flex-row justify-center items-center'>
-                            <Link to='/bag'><BsHandbag color='black' className='float-right text-2xl ml-4' /></Link>
-                            <Link to='/my_wishlist'> <BsHeart color='black' className='float-right text-2xl ml-4' /></Link>
-                            <FiSearch color='black' className='float-right text-2xl ml-4' onClick={()=> setserdiv('block')}/>
+                        <div className='absolute right-2 flex-row justify-center items-center'>
+                            <Link to='/bag'><BsHandbag size={26} color='black' className='float-right m-2 pb-0.5' /></Link>
+                            <Link to='/my_wishlist'> <BsHeart size={25} color='black' className='float-right m-2 pt-0.5' /></Link>
+                            <FiSearch size={25} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
                     
