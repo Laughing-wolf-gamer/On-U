@@ -35,5 +35,7 @@ export function hexToRgba(hex, alpha = 1) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 
+
+
 export const isDevelopment = false;
 export const BASE_API_URL = isDevelopment ?  'http://localhost:8000':'https://myntra-clone-backend-kf7m.onrender.com';
