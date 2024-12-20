@@ -40,7 +40,7 @@ export const indian_festive = [
         title: 'Kurtas & Kurta Sets',
         url: '#'
     },
-    {
+    /* {
         title: 'Sherwanis',
         url: '#'
     },
@@ -51,7 +51,7 @@ export const indian_festive = [
     {
         title: 'Dhotis',
         url: '#'
-    }
+    } */
     
 
 ]
@@ -65,7 +65,7 @@ export const bottomwear = [
         title: 'Casual Trousers',
         url: '#'
     },
-    {
+    /* {
         title: 'Formal Trousers',
         url: '#'
     },
@@ -76,7 +76,7 @@ export const bottomwear = [
     {
         title: 'Track Pants & Joggers',
         url: '#'
-    }
+    } */
     
 
 ]
@@ -90,7 +90,7 @@ export const Innerwear_Sleepwear = [
         title: 'Boxers',
         url: '#'
     },
-    {
+    /* {
         title: 'Vests',
         url: '#'
     },
@@ -101,7 +101,7 @@ export const Innerwear_Sleepwear = [
     {
         title: 'Thermals',
         url: '#'
-    }
+    } */
     
 
 ]
@@ -144,7 +144,7 @@ export const Sports_Active_Wear = [
         title: 'Sports Shoes',
         url: '#'
     },
-    {
+    /* {
         title: 'Sports Sandals',
         url: '#'
     },
@@ -171,13 +171,13 @@ export const Sports_Active_Wear = [
     {
         title: 'Swimwear',
         url: '#'
-    }
+    } */
     
 
 ]
 
 export const Gadgets = [
-    {
+    /* {
         title: 'Smart Wearables',
         url: '#'
     },
@@ -192,13 +192,13 @@ export const Gadgets = [
     {
         title: 'Speakers',
         url: '#'
-    }
+    } */
     
 
 ]
 
 export const Fashion_Accessories = [
-    {
+    /* {
         title: 'Wallets',
         url: '#'
     },
@@ -245,7 +245,7 @@ export const Fashion_Accessories = [
     {
         title: 'Helmets',
         url: '#'
-    }
+    } */
     
 
 ]
@@ -253,7 +253,7 @@ export const Fashion_Accessories = [
 // *************************************Women****************************************
 
 export const Indian_FusionWear = [
-    {
+    /* {
         title: 'Kurtas & Suits',
         url: '#'
     },
@@ -292,7 +292,7 @@ export const Indian_FusionWear = [
     {
         title: 'Jackets',
         url: '#'
-    }
+    } */
 ]
 
 export const Western_Wear= [
@@ -312,7 +312,7 @@ export const Western_Wear= [
         title: 'Jeans',
         url: '#'
     },
-    {
+    /* {
         title: 'Trousers & Capris',
         url: '#'
     },
@@ -347,7 +347,7 @@ export const Western_Wear= [
     {
         title: 'Blazers & Waistcoats',
         url: '#'
-    }
+    } */
    
 ]
 
@@ -356,7 +356,7 @@ export const Shop_Occassion = [
         title: 'Office',
         url: '#'
     },
-    {
+   /*  {
         title: 'Casual outing',
         url: '#'
     },
@@ -379,7 +379,7 @@ export const Shop_Occassion = [
     {
         title: 'At Home',
         url: '#'
-    }
+    } */
 ]
 
 export const WFootwear = [
@@ -387,7 +387,7 @@ export const WFootwear = [
         title: 'Flats',
         url: '#'
     },
-    {
+    /* {
         title: 'Casual Shoes',
         url: '#'
     },
@@ -402,7 +402,7 @@ export const WFootwear = [
     {
         title: 'Sports Shoes & Floaters',
         url: '#'
-    },
+    }, */
 
 ]
 
@@ -411,7 +411,7 @@ export const Sports_ActiveWear = [
         title: 'Clothing',
         url: '#'
     },
-    {
+    /* {
         title: 'Footwear',
         url: '#'
     },
@@ -422,7 +422,7 @@ export const Sports_ActiveWear = [
     {
         title: 'Sports Equipment',
         url: '#'
-    },
+    }, */
 
 ]
 
@@ -431,7 +431,7 @@ export const Lingerie_Sleepwear = [
         title: 'Bra',
         url: '#'
     },
-    {
+    /* {
         title: 'Briefs',
         url: '#'
     },
@@ -450,11 +450,11 @@ export const Lingerie_Sleepwear = [
     {
         title: 'Camisoles & Thermals',
         url: '#'
-    },
+    }, */
 
 ]
 export const Beauty_Personal_Care = [
-    {
+    /* {
         title: 'Makeup',
         url: '#'
     },
@@ -473,7 +473,7 @@ export const Beauty_Personal_Care = [
     {
         title: 'Fragrances',
         url: '#'
-    },
+    }, */
 
 ]
 
@@ -487,7 +487,7 @@ export const Boys_Clothing = [
         title: 'Shirts',
         url: '#'
     },
-    {
+    /* {
         title: 'Shorts',
         url: '#'
     },
@@ -531,7 +531,7 @@ export const Boys_Clothing = [
     {
         title: 'Value Packs',
         url: '#'
-    },
+    }, */
     
 
 ]
@@ -607,7 +607,7 @@ export const KFootwear = [
         title: 'Casual Shoes',
         url: '#'
     },
-    {
+    /* {
         title: 'Flipflops',
         url: '#'
     },
@@ -634,13 +634,13 @@ export const KFootwear = [
     {
         title: 'Socks',
         url: '#'
-    },
+    }, */
   
 
 ]
 
 export const Toys = [
-    {
+    /* {
         title: 'Learning & Development',
         url: '#'
     },
@@ -655,7 +655,7 @@ export const Toys = [
     {
         title: 'Action Figure / Play set',
         url: '#'
-    },
+    }, */
   
 
 ]
@@ -665,7 +665,7 @@ export const Infants = [
         title: 'Bodysuits',
         url: '#'
     },
-    {
+    /* {
         title: 'Rompers & Sleepsuits',
         url: '#'
     },
@@ -696,7 +696,7 @@ export const Infants = [
     {
         title: 'Infant Care',
         url: '#'
-    },
+    }, */
   
 
 ]
@@ -706,7 +706,7 @@ export const Kids_Accessories = [
         title: 'Bags & Backpacks',
         url: '#'
     },
-    {
+    /* {
         title: 'Watches',
         url: '#'
     },
@@ -725,13 +725,13 @@ export const Kids_Accessories = [
     {
         title: 'Caps & Hats',
         url: '#'
-    },
+    }, */
   
 
 ]
 
 export const KBrands = [
-    {
+    /* {
         title: 'H&M',
         url: '#'
     },
@@ -758,7 +758,7 @@ export const KBrands = [
     {
         title: 'Mothercare',
         url: '#'
-    },
+    }, */
    
   
 
@@ -768,7 +768,7 @@ export const KBrands = [
 // *********************************Home & Living ********************************
 
 export const BedLinenFurnishing = [
-    {
+    /* {
         title: 'Bedsheets',
         url: '#'
     },
@@ -800,11 +800,11 @@ export const BedLinenFurnishing = [
     {
         title: 'Sofa Covers',
         url: '#'
-    },
+    }, */
 ]
 
 export const Flooring = [
-    {
+    /* {
         title: 'Carpets',
         url: '#'
     },
@@ -815,10 +815,10 @@ export const Flooring = [
     {
         title: 'Door Mats',
         url: '#'
-    },
+    }, */
 ]
 export const Bath = [
-    {
+    /* {
         title: 'Bath Towels',
         url: '#'
     },
@@ -850,15 +850,14 @@ export const Bath = [
     {
         title: 'Shower Curtains',
         url: '#'
-    },
+    }, */
 ]
 export const LampsLighting = [
     {
         title: 'Floor Lamps',
         url: '#'
     },
-
-    {
+    /* {
         title: 'Ceiling Lamps',
         url: '#'
     },
@@ -877,7 +876,7 @@ export const LampsLighting = [
     {
         title: 'String Lights',
         url: '#'
-    },
+    }, */
     
 ]
 export const HomeDécor = [
@@ -898,7 +897,7 @@ export const HomeDécor = [
         title: 'Mirrors',
         url: '#'
     },
-    {
+    /* {
         title: 'Wall Décor',
         url: '#'
     },
@@ -921,10 +920,10 @@ export const HomeDécor = [
     {
         title: 'Showpieces & Vases',
         url: '#'
-    },
+    }, */
 ]
 export const KitchenTable = [
-    {
+    /* {
         title: 'Dinnerware & Serveware',
         url: '#'
     },
@@ -948,11 +947,11 @@ export const KitchenTable = [
     {
         title: 'Table Covers & Furnishings',
         url: '#'
-    },
+    }, */
    
 ]
 export const Storage = [
-    {
+    /* {
         title: 'Organisers',
         url: '#'
     },
@@ -963,14 +962,14 @@ export const Storage = [
     {
         title: 'Laundry Bags',
         url: '#'
-    },
+    }, */
 ]
 export const HBrands = [
     {
         title: 'Home Centre',
         url: '#'
     },
-    {
+    /* {
         title: 'Spaces',
         url: '#'
     },
@@ -1029,7 +1028,7 @@ export const HBrands = [
     {
         title: 'SEJ by Nisha Gupta',
         url: '#'
-    },
+    }, */
 ]
 
 //*********************************************Beauty****************************
@@ -1043,7 +1042,7 @@ export const Makeup = [
         title: 'Lip Gloss',
         url: '#'
     },
-    {
+    /* {
         title: 'Lip Liner',
         url: '#'
     },
@@ -1082,7 +1081,7 @@ export const Makeup = [
     {
         title: 'Nail Polish',
         url: '#'
-    },
+    }, */
    
 
 ]
@@ -1096,7 +1095,7 @@ export const SkincareBathBody = [
         title: 'Cleanser',
         url: '#'
     },
-    {
+    /* {
         title: 'Masks & Peel',
         url: '#'
     },
@@ -1135,7 +1134,7 @@ export const SkincareBathBody = [
     {
         title: 'Hand Cream',
         url: '#'
-    },
+    }, */
 ]
 
 export const Haircare = [
@@ -1147,7 +1146,7 @@ export const Haircare = [
         title: 'Conditioner',
         url: '#'
     },
-    {
+    /* {
         title: 'Hair Cream',
         url: '#'
     },
@@ -1170,7 +1169,7 @@ export const Haircare = [
     {
         title: 'Hair Accessory',
         url: '#'
-    },
+    }, */
     
 ]
 
@@ -1179,7 +1178,7 @@ export const Fragrances = [
         title: 'Perfume',
         url: '#'
     },
-    {
+    /* {
         title: 'Deodorant',
         url: '#'
     },
@@ -1190,24 +1189,24 @@ export const Fragrances = [
     {
         title: 'Appliances',
         url: '#'
-    },
+    }, */
     
 ]
 
 export const HairStraightener = [
-    {
+    /* {
         title: 'Hair Dryer',
         url: '#'
     },
     {
         title: 'Epilator',
         url: '#'
-    },
+    }, */
     
 ]
 
 export const MenGrooming = [
-    {
+    /* {
         title: 'Trimmers',
         url: '#'
     },
@@ -1218,18 +1217,18 @@ export const MenGrooming = [
     {
         title: 'Hair Wax',
         url: '#'
-    },
+    }, */
 ]
 
 export const BeautyGiftMakeupSet = [
-    {
+    /* {
         title: 'Beauty Gift',
         url: '#'
     },
     {
         title: 'Makeup Kit',
         url: '#'
-    },
+    }, */
    
 ]
 
@@ -1242,7 +1241,7 @@ export const BTopBrands = [
         title: 'Maybelline',
         url: '#'
     },
-    {
+    /* {
         title: 'LOreal',
         url: '#'
     },
@@ -1293,7 +1292,7 @@ export const BTopBrands = [
     {
         title: 'Forest Essentials',
         url: '#'
-    },
+    }, */
    
 ]
 

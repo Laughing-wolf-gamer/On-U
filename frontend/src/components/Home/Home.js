@@ -324,8 +324,6 @@ const Home = () => {
                   <Link to='/products'><LazyLoadImage effect='blur' src={b1} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                   <div className='h-[50px]'>
                   </div>
-
-
                 </div> */}
                 <div>
                   <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
@@ -773,9 +771,9 @@ const Home = () => {
               </ul>
             </div>
 
-            <div>
+            {/* <div>
               <LazyLoadImage effect='blur' src={mm3} alt=""  className='mt-2 min-h-[100px]'/>
-            </div>
+            </div> */}
 
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
@@ -879,7 +877,7 @@ const Home = () => {
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c2 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c3 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c4 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c5 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                {/* <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c5 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c6 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c7 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c8 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
@@ -898,7 +896,7 @@ const Home = () => {
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c21} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c22} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c23} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c24} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c24} alt="categoryToBag" className="min-h-[100px]" /></li></Link> */}
                
               </ul>
             </div>

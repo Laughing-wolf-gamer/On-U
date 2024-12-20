@@ -52,7 +52,7 @@ const MWoMen = ({ WoMen, fun1, fun2 }) => {
           </Ripples>
         )}
 
-        <Ripples color="#fb56c1" className='w-full'>
+        {/* <Ripples color="#fb56c1" className='w-full'>
           <li className='text-[#282c3f]  pl-8 pr-5 py-4 relative w-full flex ' onClick={() => setIndian(Indian ? (false) : (true))}>
             <span className='float-left'>Shop&nbsp;By&nbsp;Occassion</span>
             <span className='absolute mx-5 right-0'>{Indian ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
@@ -128,7 +128,7 @@ const MWoMen = ({ WoMen, fun1, fun2 }) => {
           <Ripples color="#fb56c1" className='w-full'>
             <li className='text-[#282c3f]  pl-12 pr-5 py-4 relative w-full flex'onClick={()=>(fun1(), fun2())}>{data.title}</li>
           </Ripples>
-        )}
+        )} */}
 
       </ul>
     </Fragment>

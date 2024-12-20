@@ -8,7 +8,7 @@ const overview = ({user}) => {
           <div>
               <div className=' py-4 border-b-[1px] mx-auto w-[90%]  mt-5 2xl:w-[70%] xl:w-[70%] lg:w-[70%]'>
                   <h1 className='font-semibold text-lg font1'>Account</h1>
-                  <p className='text-xs'>{user.name}</p>
+                  <p className='text-xs'>{user?.name}</p>
               </div>
               <div className='flex w-[90%] h-auto mx-auto 2xl:w-[70%] xl:w-[70%] lg:w-[70%]'>
               <div className='w-[30%] border-r-2 2xl:w-[20%] xl:w-[20%] lg:w-[20%]'>
@@ -27,12 +27,12 @@ const overview = ({user}) => {
                 <h1 className='my-4 ml-[4px]'>Location</h1>
                 </div>
                 <div className='w-[60%]'>
-                <h1 className='my-4'>{user.name}</h1>
-                <h1 className='my-4'>{user.phonenumber}</h1>
-                <h1 className='my-4'>{user.email}</h1>
-                <h1 className='my-4'>{user.gender}</h1>
-                <h1 className='my-4'>{user.dob ? user.dob : "Not Set"}</h1>
-                <h1 className='my-4'>{user.address.citystate}</h1>
+                <h1 className='my-4'>{user?.name}</h1>
+                <h1 className='my-4'>{user?.phonenumber}</h1>
+                <h1 className='my-4'>{user?.email}</h1>
+                <h1 className='my-4'>{user?.gender}</h1>
+                <h1 className='my-4'>{user?.dob ? user?.dob : "Not Set"}</h1>
+                <h1 className='my-4'>{user?.address?.citystate}</h1>
                 </div>
                 </div>
                

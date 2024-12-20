@@ -1,7 +1,11 @@
 import React,{Fragment} from 'react'
 import {
   Topwear, indian_festive, bottomwear,
-  Innerwear_Sleepwear, /* Footwear,
+  Innerwear_Sleepwear,
+  Footwear,
+  Sports_Active_Wear,
+  Fashion_Accessories,
+  Gadgets, /* Footwear,
   Sports_Active_Wear, Gadgets, Fashion_Accessories, */
   } from '../NavbarSub.js'
   import { useTransition, animated } from 'react-spring'
@@ -55,7 +59,7 @@ const Men = ({show, CMenu, parentCallback}) => {
 
             </div>
 
-            {/* <div className=" h-[418px] ">
+            <div className=" h-[418px] ">
               <h1 className='text-red-600 text-sm font-semibold py-1'>Footwear</h1>
               {Footwear.map((data) =>
                 <Link to="/products"><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
@@ -66,8 +70,8 @@ const Men = ({show, CMenu, parentCallback}) => {
               <h1 className='text-red-600 text-sm font-semibold py-1'>Sunglasses&nbsp;&&nbsp;Frames</h1>
               <hr className='py-1' />
               <h1 className='text-red-600 text-sm font-semibold py-1'>Watches</h1>
-            </div> */}
-            {/* <div className=" h-[418px] ">
+            </div>
+            <div className=" h-[418px] ">
             <h1 className='text-red-600 text-sm font-semibold py-1'>Sports&nbsp;&&nbsp;Active&nbsp;Wear</h1>
               {Sports_Active_Wear.map((data) =>
                 <Link to="/products"><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
@@ -88,7 +92,7 @@ const Men = ({show, CMenu, parentCallback}) => {
               <h1 className='text-red-600 text-sm font-semibold py-1'>Bags&nbsp;&&nbsp;Backpacks</h1>
               <hr className='py-1' />
               <h1 className='text-red-600 text-sm font-semibold py-1'>Luggages&nbsp;&&nbsp;Trolleys</h1>
-            </div> */}
+            </div> 
 
           </div>
 

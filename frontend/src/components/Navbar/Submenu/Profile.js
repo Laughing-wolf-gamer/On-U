@@ -48,8 +48,8 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 :
                      
                    <Link className='dec' to="/Login">
-                   <button className=' font1 font-smibold text-[#ff3f6c] text-sm border-[1px] px-3 py-2 
-                   border-[#d4d5d8] hover:border-[#ff3f6c] '>LOGIN/&nbsp;SIGNUP</button>
+                   <button className=' font1 font-semibold text-slate-800 text-sm border-[1px] px-3 py-2 
+                   border-slate-600 hover:border-slate-700 '>LOGIN/&nbsp;SIGNUP</button>
                    </Link>
  
                   }
