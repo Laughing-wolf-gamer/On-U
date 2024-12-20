@@ -258,14 +258,14 @@ import mm1_1 from '../images/mm1-1.gif'
 import mm1_2 from '../images/mm1-2.gif'
 import mm2_1 from '../images/mm2-1.gif'
 import mm2_2 from '../images/mm2-2.gif'
-import mc1 from '../images/mc1.webp'
-import mc2 from '../images/mc2.webp'
-import mc3 from '../images/mc3.webp'
+import mc1 from '../images/mc1.jpg'
+import mc2 from '../images/mc2.jpg'
+import mc3 from '../images/mc3.jpg'
 import mc4 from '../images/mc4.jpg'
-import mc5 from '../images/mc5.webp'
-import mc6 from '../images/mc6.webp'
-import mc7 from '../images/mc7.webp'
-import mc8 from '../images/mc8.webp'
+import mc5 from '../images/mc5.jpg'
+import mc6 from '../images/mc6.jpg'
+import mc7 from '../images/mc7.jpg'
+import mc8 from '../images/mc8.jpg'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Footer from '../Footer/Footer'
 
@@ -755,17 +755,14 @@ const Home = () => {
             <Footer/>
 
           </Fragment>
-
           :
-
           <Fragment>
-
-            <div className='bg-white '>
+            <div className='bg-white '>{/* Category */}
               <ul className='flex overflow-x-scroll '>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma1} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma2} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma3} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma4} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma1} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma2} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma3} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma4} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
                 {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="" className="w-[18vw] min-h-[70px]" /></li></Link> */}
                 {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma6} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma7} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
@@ -812,36 +809,36 @@ const Home = () => {
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>DEAL OF THE DAY</h1>
               <ul className='flex overflow-x-scroll '>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d2} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d3} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d4} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d5} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d6} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
               </ul>
             </div>
 
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>BEST OF ONU EXCLUSIVE BRANDS</h1>
               <ul className='flex overflow-x-scroll '>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a1} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a2} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a3} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a4} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a5} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a6} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a7} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a8} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a9} alt=""  className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a10} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a11} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a12} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a13} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a14} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a15} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a16} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a1} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a2} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a3} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a4} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a5} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a6} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a7} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a8} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a9} alt="bestof"  className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a10} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a11} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a12} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a13} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a14} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a15} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={a16} alt="bestof" className="w-[50vw] min-h-[200px]" /></li></Link>
 
               </ul>
             </div>
@@ -850,18 +847,18 @@ const Home = () => {
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>TOP PICKS</h1>
               <ul className='flex overflow-x-scroll '>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb1} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb2} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb3} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb4} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb5} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb6} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb7} alt="" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb1} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb2} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb3} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb4} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb5} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb6} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={bb7} alt="top-picks" className="w-[50vw] min-h-[200px]" /></li></Link>
                
               </ul>
             </div>
 
-            <div className='mt-4 grid grid-cols-2 min-h-[200px]'>
+            {/* <div className='mt-4 grid grid-cols-2 min-h-[200px]'>
               <LazyLoadImage effect='blur' src={mm1_1} alt="" />
               <LazyLoadImage effect='blur' src={mm1_2} alt="" />
             </div>
@@ -873,35 +870,35 @@ const Home = () => {
             <div className='mt-4 grid grid-cols-2 min-h-[200px]'>
               <LazyLoadImage effect='blur' src={mm2_1} alt="" />
               <LazyLoadImage effect='blur' src={mm2_2} alt="" />
-            </div>
+            </div> */}
 
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>CATEGORIES TO BAG</h1>
               <ul className='grid grid-cols-3 '>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c1 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c2 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c3 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c4 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c5 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c6 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c7 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c8 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c9 } alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c10} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c11} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c12} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c13} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c14} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c15} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c16} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c17} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c18} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c19} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c20} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c21} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c22} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c23} alt="" className="min-h-[100px]" /></li></Link>
-                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c24} alt="" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c1 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c2 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c3 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c4 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c5 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c6 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c7 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c8 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c9 } alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c10} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c11} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c12} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c13} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c14} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c15} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c16} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c17} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c18} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c19} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c20} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c21} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c22} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c23} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
+                <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={c24} alt="categoryToBag" className="min-h-[100px]" /></li></Link>
                
               </ul>
             </div>
