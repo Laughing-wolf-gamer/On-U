@@ -286,12 +286,13 @@ const MNavbar = ({ user }) => {
                                         </li>
                                     </Ripples>
                                     <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} />
-                                    {/* <Ripples color="black" className='w-full'>
+                                    <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Home&nbsp;&&nbsp;Living</span>
+                                            <span className='float-left'>Premium&nbsp;Products</span>
                                             <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
+                                    {/* 
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
                                     <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
