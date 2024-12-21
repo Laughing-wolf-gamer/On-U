@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.0ed658a5.css",
-    "main.js": "/static/js/main.81b5c89a.js",
+    "main.css": "/static/css/main.75759ceb.css",
+    "main.js": "/static/js/main.85fe8776.js",
     "static/media/sudio-nav-banner.png": "/static/media/sudio-nav-banner.9baa9d1a811409ff9813.png",
     "static/media/banner5.jpg": "/static/media/banner5.b0d73c3f5b9328de362e.jpg",
     "static/media/banner2.webp": "/static/media/banner2.59e179797c6e0a3a42f0.webp",
@@ -274,17 +274,16 @@
     "static/media/ma8.webp": "/static/media/ma8.d9225338bd57a4ccd090.webp",
     "static/media/ma11.webp": "/static/media/ma11.6a59972a819d4cf13bc8.webp",
     "static/media/ma3.webp": "/static/media/ma3.6ce78f18d096e7c5b0bb.webp",
-    "static/media/ma10.webp": "/static/media/ma10.9e537f49cbebe3a9bef8.webp",
     "static/media/ma5.webp": "/static/media/ma5.76073c8bceba9551cd04.webp",
     "static/media/gen.PNG": "/static/media/gen.fa2b20a1896583169e2c.PNG",
     "static/media/ma1.webp": "/static/media/ma1.8fcbed9b49ee8fdca23d.webp",
     "static/media/ship-free.webp": "/static/media/ship-free.99f57f70bf8f4cef5f67.webp",
     "index.html": "/index.html",
-    "main.0ed658a5.css.map": "/static/css/main.0ed658a5.css.map",
-    "main.81b5c89a.js.map": "/static/js/main.81b5c89a.js.map"
+    "main.75759ceb.css.map": "/static/css/main.75759ceb.css.map",
+    "main.85fe8776.js.map": "/static/js/main.85fe8776.js.map"
   },
   "entrypoints": [
-    "static/css/main.0ed658a5.css",
-    "static/js/main.81b5c89a.js"
+    "static/css/main.75759ceb.css",
+    "static/js/main.85fe8776.js"
   ]
 }

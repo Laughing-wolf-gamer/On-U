@@ -27,7 +27,7 @@
   },
   "author": "abhishek",
   "license": "ISC",
-  "description": "E-commerce website",
+  "description": "ON-U website",
   "devDependencies": {
     "nodemon": "^3.1.9"
   }

@@ -250,7 +250,7 @@ import ma6 from '../images/ma6.webp'
 import ma7 from '../images/ma7.webp'
 import ma8 from '../images/ma8.webp'
 import ma9 from '../images/ma9.webp'
-import ma10 from'../images/ma10.webp'
+import ma10 from'../images/ma10.jpg'
 import ma11 from'../images/ma11.webp'
 import mm3 from'../images/mm3.jpg'
 import mad1 from '../images/mad1.jpg'
@@ -433,7 +433,7 @@ const Home = () => {
                 <Link to='/products'><LazyLoadImage effect='blur' src={c4 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c5 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c6 } alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={c7 } alt="" className="min-h-[200px]" /></Link>
+                {/* <Link to='/products'><LazyLoadImage effect='blur' src={c7 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c8 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c9 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c10} alt="" className="min-h-[200px]" /></Link>
@@ -450,7 +450,7 @@ const Home = () => {
                 <Link to='/products'><LazyLoadImage effect='blur' src={c21} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c22} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c23} alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={c24} alt="" className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={c24} alt="" className="min-h-[200px]" /></Link> */}
 
               </div>
             </div>
@@ -761,13 +761,15 @@ const Home = () => {
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma2} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma3} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma4} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
-                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="" className="w-[18vw] min-h-[70px]" /></li></Link> */}
+                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>  */}
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma11} alt="categoryIcons"className="w-[18vw] min-h-[70px]" /></li></Link>
+                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma10} alt="categoryIcons"className="w-[18vw] min-h-[70px]" /></li></Link>
                 {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma6} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma7} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma8} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma9} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma10} alt=""className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma11} alt=""className="w-[18vw] min-h-[70px]" /></li></Link> */}
+                
+                 */}
               </ul>
             </div>
 

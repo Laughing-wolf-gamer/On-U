@@ -292,7 +292,6 @@ const MNavbar = ({ user }) => {
                                             <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    {/* 
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
                                     <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
@@ -300,7 +299,7 @@ const MNavbar = ({ user }) => {
                                             <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/> */}
+                                    <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/>
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
