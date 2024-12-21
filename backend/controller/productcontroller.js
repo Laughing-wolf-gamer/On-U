@@ -27,60 +27,84 @@ export const imagekits = A(async (req, res, next)=>{
 })
 
 export const getallproducts = A(async (req, res)=>{
-    console.log("Query ", req.query);
-    // Build the query filter based on incoming request parameters
-    const filter = {};
-    const sort = {};
+    try {
+        console.log("Query ", req.query);
 
-    // Color filter (match any of the colors in the list)
-    if (req.query.color) {
-      filter.color = { $in: req.query.color.split(',') }; // If multiple colors, expect them as a comma-separated string
-    }
+        // Build the query filter based on incoming request parameters
+        const filter = {};
+        const sort = {};
 
-    // Category filter
-    if (req.query.category) {
-      filter.category = req.query.category;
-    }
-    if(req.query.low){
-      sort.price = req.query.low;
-    }
-    if(req.query.date){
-      sort.date = req.query.date;
-    }
-    // Date filter
-    
-    // Gender filter
-    if (req.query.gender) {
-      filter.gender = req.query.gender;
-    }
+        // Color filter (match any of the colors in the list)
+        if (req.query.color) {
+            const colorNames = req.query.color.split(','); // Split the color query into an array of color names
+            filter.color = {
+              $elemMatch: {
+                id: { $in: colorNames } // Check if any object in the 'colors' array has a matching 'name' field
+              }
+            };
+        }
 
-    // Selling price range filter
-    if (req.query.sellingPrice) {
-      const priceRange = req.query.sellingPrice.split('-');
-      if (priceRange.length === 2) {
-        filter.sellingPrice = {
-          $gte: parseFloat(priceRange[0]),
-          $lte: parseFloat(priceRange[1])
-        };
-      }
-    }
+        // Category filter
+        if (req.query.category) {
+            filter.category = req.query.category;
+        }
 
-    // Find products using the built query filter
-    const products = await ProductModel.find(filter).sort(sort);
-    /* const apifeature = new Apifeature(ProductModel.find({}), req.query).filter().sort(req.query.low, date).pagination(width).search()
-    const apifeature1 = new Apifeature(ProductModel.find({}), req.query).search()
-    const apifeature3 = new Apifeature(ProductModel.find({}), req.query).filter().sort(low, date).search()
-    const products = await apifeature.Product_find;
-    const pro = await apifeature1.Product_find;
-    const productlength = await apifeature3.Product_find;
-    let length = productlength.length
-    */
-   // console.log("Product length: " + productlength, "Products: " ,products," Pro: " ,pro,)
-    res.status(200).json({
-        products:products,
+        // Sorting logic (price and date)
+        if (req.query.low) {
+            sort.price = req.query.low === 'asc' ? 1 : -1; // Ensure it's either ascending or descending
+        }
+
+        if (req.query.date) {
+            sort.date = req.query.date === 'asc' ? 1 : -1; // Sort by date if specified
+        }
+
+        // Gender filter
+        if (req.query.gender) {
+            filter.gender = req.query.gender;
+        }
+
+        console.log("Filter: ", filter);
+
+        // Selling price range filter
+        /* if (req.query.sellingPrice) {
+            const priceRange = req.query.sellingPrice.split(':');
+            if (priceRange.length === 2) {
+                filter.sellingPrice = {
+                    $gte: parseFloat(priceRange[0]),
+                    $lte: parseFloat(priceRange[1])
+                };
+            }
+        } */
+
+        // Date filter (if applicable)
+        if (req.query.dateRange) {
+        const dateRange = req.query.dateRange.split('-');
+        if (dateRange.length === 2) {
+            filter.date = {
+                $gte: new Date(dateRange[0]),
+                $lte: new Date(dateRange[1])
+            };
+        }
+        }
+
+        // Find products using the built query filter
+        const products = await ProductModel.find(filter).sort(sort);
+        console.log("Fetched Products: ", products);
+
+        // Send response with products
+        res.status(200).json({
+        products: products,
         pro:products,
-        length:products.length,
-    }) 
+        length: products.length
+        });
+    } catch (error) {
+        console.error("Error Fetching Products: ",error);
+        res.status(500).json({success:false,message:'Internal server Error',result:{
+            products:[],
+            pro:null,
+            length:-1,
+        }})
+    }
 })
 function sortProducts(sortby) {
   const sort = {};

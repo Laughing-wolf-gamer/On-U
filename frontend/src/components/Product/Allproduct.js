@@ -257,7 +257,7 @@ const Allproductpage = () => {
             }
 
             
-<Footer/>
+            <Footer/>
         </Fragment>
 
     )

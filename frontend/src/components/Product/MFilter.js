@@ -11,7 +11,8 @@ import Slider from '@mui/material/Slider';
 
 
 
-const MFilter = ({ product }) => {
+const MFilter = ({ product ,dispatchFetchAllProduct}) => {
+  console.log("MFillter Product: ",product);
   const dispatch = useDispatch()
   const Redirect = useNavigate()
 
@@ -117,14 +118,16 @@ const MFilter = ({ product }) => {
   }
 
   function colorarray() {
-    for (let i = 0; i < product.length; i++) {
-      color.push(product[i].color)
+    for (const Pro of product) {
+      for (const col of Pro?.color) {
+        color.push(col)
+      }
     }
   }
 
   function sparray() {
     for (let i = 0; i < product.length; i++) {
-      spARRAY.push(product[i].sellingPrice)
+      spARRAY.push(product[i].salePrice ? product[i].salePrice : product[i].price);
     }
   }
   categoriesarray()
@@ -139,6 +142,7 @@ const MFilter = ({ product }) => {
   const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
   const [MMainlink, setMMainlink] = useState(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
   const priceHandler = (event, newPrice)=>{
+    console.log("Price: ",newPrice)
     setPrice(newPrice)
     setMMainlink(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
 }
@@ -194,21 +198,30 @@ function price2fun(e,f){
   }
 
   function colorfun(e) {
-    if (MMainlink.includes('?')) {
-      let newtext = e?.replace(/ /g, '%20')
-      if (MMainlink.includes(`${newtext}`)) {
-        let newurl = MMainlink.includes(`&color=${newtext}`) ? MMainlink?.replace(`&color=${newtext}`, '') : null
-        let newurl2 = MMainlink?.replace(`?color=${newtext}`, '')
-        let newurlsuccess = (newurl === null ? newurl2 : newurl)
-        setMMainlink(newurlsuccess)
+      // Create a URL object for easier manipulation
+      let url = new URL(window.location.href);
+      let colorKey = "color";
+      let colorValue = e.trim().replace(" ", "%20"); // Sanitize and encode the color value
+
+      if (url.searchParams.has(colorKey)) {
+          // If the color parameter already exists
+          if (url.searchParams.get(colorKey) === colorValue) {
+              // If it matches the provided value, remove it
+              url.searchParams.delete(colorKey);
+          } else {
+              // Otherwise, update it with the new value
+              url.searchParams.set(colorKey, colorValue);
+          }
       } else {
-        let newtext = e?.replace(/ /g, '%20')
-        setMMainlink(`${MMainlink}&color=${newtext}`)
+          // If the color parameter does not exist, add it
+          url.searchParams.append(colorKey, colorValue);
       }
-    } else {
-      let newtext = e?.replace(/ /g, '%20')
-      setMMainlink(`${MMainlink}?color=${newtext}`)
-    }
+
+      // Update the URL in the address bar without reloading the page
+      window.history.replaceState(null, "", url.toString());
+      if(dispatchFetchAllProduct){
+        dispatchFetchAllProduct();
+      }
   }
 
   function addclass1(e) {
@@ -341,15 +354,16 @@ console.log(MMainlink)
                   )
                 }
               </ul>
+              
               <ul className={`hidden overflow-scroll h-[86%] ulco ul3`}>
                 {
                   colornewarray && colornewarray.map((e) =>
                     <>
                       {
-                        e && e.replace && <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e?.replace(/ /g, "")} relative`}
-                            onClick={() => (colorfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e?.replace(/ /g, "")}`}></span>
-                          <span className={`text-sm`}>{e}</span> <span className={`absolute right-6 text-xs`}>{color?.filter((f) => f === e).length}</span></li>
-                      }
+                        e && e.id.replace && <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.id.replace(/ /g, "")} relative`}
+                            onClick={() => (colorfun(e.id), addclass1(e.id), addclass2(e.id))} ><span className={`rightdiv mr-4 tick${e.id.replace(/ /g, "")}`}></span>
+                            <span className={`text-sm`}>{e.id}</span> <span className={`absolute right-6 text-xs`}>{color?.filter((f) => f.id === e.id).length}</span></li>
+                        }
                     </>
                     
 

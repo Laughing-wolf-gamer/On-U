@@ -34,5 +34,5 @@ export function hexToRgba(hex, alpha = 1) {
     // Return the rgba string
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
-
-export const BASE_API_URL = import.meta.env.VITE_BASE_API
+export const IsDevelopment = false;
+export const BASE_API_URL = IsDevelopment ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";

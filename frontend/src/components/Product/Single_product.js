@@ -20,10 +20,9 @@ const Single_product = ({ pro }) => {
     }
 
     const showSlides = (n) => {
-        let i;
+        /* let i;
         let slides = document.getElementsByClassName(`${pro._id}`);
         let dots = document.getElementsByClassName(`${pro._id}1`);
-
         if (n > slides.length) { slideIndex = 1 }
         if (n < 1) { slideIndex = slides.length }
         for (i = 0; i < slides.length; i++) {
@@ -35,24 +34,24 @@ const Single_product = ({ pro }) => {
         }
 
         slides[slideIndex - 1].style.display = "block";
-        dots[slideIndex - 1].className += " active";
+        dots[slideIndex - 1].className += " active"; */
     }
 
     const showdiv = () => {
-        let dotsdiv = document.getElementsByClassName(`${pro._id}hover`);
-        dotsdiv[0].className += " 2xl:block lg:block xl:block";
+        // let dotsdiv = document.getElementsByClassName(`${pro._id}hover`);
+        // dotsdiv[0].className += " 2xl:block lg:block xl:block";
     }
 
     const notshowdiv = () => {
 
-        document.querySelector(`.${pro._id}hover`).classList.remove('2xl:block')
-        document.querySelector(`.${pro._id}hover`).classList.remove('lg:block')
-        document.querySelector(`.${pro._id}hover`).classList.remove('xl:block')
+        // document.querySelector(`.${pro._id}hover`).classList.remove('2xl:block')
+        // document.querySelector(`.${pro._id}hover`).classList.remove('lg:block')
+        // document.querySelector(`.${pro._id}hover`).classList.remove('xl:block')
     }
     // showSlides(slideIndex);
     var timer;
 
-    const changeimg = () => {
+    /* const changeimg = () => {
         let i = 1;
         timer = setInterval(function () {
 
@@ -68,11 +67,11 @@ const Single_product = ({ pro }) => {
     function stopchangeimg() {
         clearInterval(timer);
         currentSlide(1)
-    }
+    } */
 
-    useEffect(() => {
+    /* useEffect(() => {
         showSlides(slideIndex)
-    }, [showSlides]);
+    }, [showSlides]); */
 
     return (
         <Fragment>
@@ -99,14 +98,14 @@ const Single_product = ({ pro }) => {
                             </div>
 
                             <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-[#ffffff]  mx-auto `}>
-                                <div className='text-center mb-2'>
+                                {/* <div className='text-center mb-2'>
                                     {pro && pro.image.length > 0 && pro.image.map((img, i) => (
                                         <span className={`${pro?._id}1 dot `} onClick={() => (currentSlide(i + 1))} ></span>
                                     ))}
-                                </div>
+                                </div> */}
 
                                 <div className='w-12/12 text-center flex items-center justify-center py-1 font1 border-[1px] border-slate-300 cursor-pointer' >
-                                    <IoIosHeartEmpty className='text-lg mr-1' /><span>WISHLIST</span></div>
+                                    <IoIosHeartEmpty className='text-lg mr-1' /><span>CART</span></div>
                                 <div className='relative '>
                                     <div className='justify-start items-center w-auto h-auto flex-row flex'>
                                         <p className='font1 text-xm px-2 text-[#5f5f5f9e]'>Sizes: </p>
@@ -117,16 +116,26 @@ const Single_product = ({ pro }) => {
                                         }
 
                                     </div>
-                                    <p className=' flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{Math.round(pro.price)}</span >&nbsp;
+                                    <p className='flex px-2'>
+                                        <span className='flex items-center text-sm font-medium'>
+                                            <BiRupee />{Math.round(pro.price)}
+                                        </span>
+                                        &nbsp;
                                         {
-                                            pro && pro.salePrice &&(
+                                            pro && pro.salePrice && (
                                                 <>
-                                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'><BiRupee />{Math.round(pro.price)}</span>&nbsp;&nbsp;
-                                                    <span className='flex items-center text-xs font-medium text-[#f26a10]'>({Math.round(pro.salePrice / pro.price * 100 - 100)}% OFF)</span>
+                                                    <span className='flex items-center text-sm font-medium text-slate-400 line-through'>
+                                                        <BiRupee />{Math.round(pro.price)}
+                                                    </span>
+                                                    &nbsp;&nbsp;
+                                                    <span className='flex items-center text-xs font-medium text-[#f26a10]'>
+                                                        ({Math.round(((pro.price - pro.salePrice) / pro.price) * 100)}% OFF)
+                                                    </span>
                                                 </>
                                             )
                                         }
                                     </p>
+
                                 </div>
 
                             </div>

@@ -38,7 +38,7 @@ const AutoSlidingCarousel = ({ pro }) => {
   const startAutoSliding = () => {
     const newTimer = setInterval(() => {
       setSlideIndex((prevIndex) => (prevIndex % pro?.image?.length) + 1); // Loop through slides
-    }, 3000); // Change slide every 3 seconds
+    }, 7000); // Change slide every 3 seconds
     setTimer(newTimer);
   };
 
@@ -65,10 +65,10 @@ const AutoSlidingCarousel = ({ pro }) => {
     >
       {pro?.image?.map((im, i) => (
         <div
-			key={i}
-			className={`${pro._id} fade w-full`}
-			style={{
-				display: i + 1 === slideIndex ? "block" : "none", // Show only the current slide
+        key={i}
+        className={`${pro._id} fade w-full`}
+        style={{
+          display: i + 1 === slideIndex ? "block" : "none", // Show only the current slide
 			}}
         >
           <LazyLoadImage
@@ -85,14 +85,16 @@ const AutoSlidingCarousel = ({ pro }) => {
       <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
         {pro?.image?.map((_, i) => (
           <div
-			key={i}
-				className={`${pro._id} inline-block w-10 h-10 mx-1 rounded-full bg-white opacity-50 cursor-pointer`}
-				onClick={() => currentSlide(i + 1)}
-				style={{
-				backgroundColor: slideIndex === i + 1 ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 1)",
-			}
-			}
-          ></div>
+            key={i}
+              className={`${pro._id} inline-block w-2 h-2 mx-1 rounded-full bg-white opacity-50 cursor-pointer`}
+              onClick={() => currentSlide(i + 1)}
+              style={{
+                backgroundColor: slideIndex === i + 1 ? hexToRgba('#9AA6B2',0.5) : hexToRgba('#9AA6B2',1),
+              }
+            }
+          >
+
+          </div>
         ))}
       </div>
     </div>

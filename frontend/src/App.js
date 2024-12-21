@@ -59,7 +59,7 @@ function App() {
     }
     
    }, [dispatch, isAuthentication]);
-   console.log("Base Server API",BASE_API_URL)
+   console.log("Base Server API",BASE_API_URL);
   return (
     <Router>
       <Navbar user={user}/>
