@@ -1,26 +1,9 @@
 import mongoose from 'mongoose'
 
 const bannerImagesSchema = new mongoose.Schema({
-	ScreenType:String,// Wide,Mobile
+	CategoryType:String,// Wide,Mobile
 	Size:String,
-	HomeCarousal:[
-		{
-			type:String,
-			default:[]
-		}
-	],
-	DealsOfDay:[
-		{
-			type:String,
-			default:[]
-		}
-	],
-	BestOfOnU:[
-		{
-			type:String,
-			default:[]
-		}
-	]
+	Url:[],
 
 },{timestamps:true})
 

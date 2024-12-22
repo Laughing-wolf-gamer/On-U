@@ -3,6 +3,7 @@
 # dependencies
 /.pnp
 .pnp.js
+.env
 
 # testing
 /coverage
@@ -11,6 +12,8 @@
 /build
 /node_modules
 /backend/config/config.env
+# Ignore .env files
+.env
 
 # misc
 .DS_Store

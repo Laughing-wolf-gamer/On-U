@@ -19,7 +19,6 @@ const app = express();
 if (process.env.NODE_ENV !== "PRODUCTION") {
   dotenv.config(/* { path: "backend/config/config.env" } */);
 }
-
 app.use(express.json())
 app.use(cookieParser())
 app.use(bodyparser.urlencoded({extended:true}))
@@ -29,22 +28,23 @@ const allowedOrigins = [
   process.env.CLIENT_URL_ADMIN,
 ];
 app.use(cors({
-    origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or Postman)
-        console.log("Origin: " + origin,allowedOrigins.includes(origin))
-        if (!origin) return callback(null, true);
+  origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or Postman)
+      console.log("Origin: " + origin,allowedOrigins.includes(origin))
+      if (!origin) return callback(null, true);
 
-        if (allowedOrigins.includes(origin)) {
-          callback(null, true);
-        } else {
-          callback(new Error('Not allowed by CORS'));
-        }
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization','Cache-Control','Expires','Pragma'],
-    credentials: true,
-  }
-))
+      if (allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error('Not allowed by CORS'));
+      }
+  },
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  allowedHeaders: ['Content-Type', 'Authorization','Cache-Control','Expires','Pragma'],
+  credentials: true,
+}))
+/*  */
+
 app.use('/admin',adminRoute)
 app.use('/api/common',commonRoute)
 app.use('/api/auth', User)
