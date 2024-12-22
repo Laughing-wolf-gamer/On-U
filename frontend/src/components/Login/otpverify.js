@@ -12,20 +12,17 @@ const Otpverify = () => {
   const redirect = useNavigate()
   const alert = useAlert()
   const [otp, setotp] = useState('')
-  const mobile = JSON.parse(localStorage.getItem('mobileno'))
   const dispatch = useDispatch()
-  const { user, error, loading } = useSelector(state => state.userdetails)
+  const { user, error, loading } = useSelector(state => state.Registeruser)
 
   const H = window.innerHeight
   const Hpx = H - 56
 
   const continues = (e) => {
     e.preventDefault();
-    const myForm = {
-      otp: Number(otp)
-    }
+    console.log(otp, user)
 
-    dispatch(otpverifie(myForm))
+    dispatch(otpverifie({otp:otp,mobileno:user?.user?.phoneNumber}))
   
     if (error) {
       let par = document.getElementById('error')
@@ -43,26 +40,11 @@ const Otpverify = () => {
 
   useEffect(() => {
     if (loading === false) {
-      if (user) {
-        if (user.verify === 'verified') {
-          dispatch(getuser())
-          if(!user.name){
-            
-            redirect('/registeruser')
-          }
-          if(user.name){
-            alert.show('Logged In Successfully')
-            redirect('/dashboard')
-          }
-          } 
-        
-      }
       
-     
     }
    
   }, [user, loading, redirect,alert]);
-
+  console.log("User: ",user);
 
   return (
 
@@ -77,7 +59,7 @@ const Otpverify = () => {
             <div className='mx-auto w-[330px] my-8'>
 
               <h1 className='font1 text-2xl font-medium '>Verify With OTP</h1>
-              <p className='text-xs text-slate-600 mb-5'>Sent to {mobile.phonenumber}</p>
+              <p className='text-xs text-slate-600 mb-5'>Sent to {user?.user?.phonenumber}</p>
 
               <input type="number" name="phonenumber" className='w-full h-10 border-[1px] 
                 focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none'
@@ -85,7 +67,7 @@ const Otpverify = () => {
               <p id='error' className='text-xs text-red-500 '></p>
 
               <h1 onClick={Resndotp} className='font1 text-sm mt-5 text-[#ee5f73] cursor-pointer'>Resend OTP</h1>
-              <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {loading !== false ? 'VERIFY': 'Loading...'} </button>
+              <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {!loading ? 'VERIFY': 'Loading...'} </button>
               <h1 className='font1 text-sm my-5'>Have trouble loggging in? <span className='text-[#ee5f73]'>Get help</span></h1>
             </div>
           </div>

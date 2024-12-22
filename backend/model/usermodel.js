@@ -14,24 +14,14 @@ const userModelSchema = new mongoose.Schema({
         validate:[validator.isEmail, 'Please enter valid Email ID ']
     },
     phoneNumber:{
-        type:Number,
-        validate:[validator.isEmail, 'Please enter valid Phone Number ID ']
+        type:String,
     },
 
     password:{
         type:String
     },
 
-    otp:{
-        type:Number,
-        createdAt: {
-            type: Date,
-            required: true,
-            default: Date.now,
-            index: { expires: '1m' }
-          }
-        
-    },
+    otp:String,
 
     name:{
         type:String
@@ -42,21 +32,7 @@ const userModelSchema = new mongoose.Schema({
     DOB:{
         type:Date
     },
-    address:{
-        pincode:{
-            type:Number
-        },
-        
-        address1:{
-            type:String
-        },
-        address2:{
-            type:String
-            },
-            citystate:{
-                type:String
-            },  
-    },
+    addresses:[],
     TOA:{
         type:String
     },

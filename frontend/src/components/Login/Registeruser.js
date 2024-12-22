@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import './Login.css'
-import { clearErrors, updateuser, getuser } from '../../action/useraction'
+import { clearErrors, updateuser, getuser, registerUser } from '../../action/useraction'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
@@ -13,11 +13,12 @@ import {useAlert} from 'react-alert'
 const Registeruser = () => {
     const Alert =useAlert()
     const redirect = useNavigate()
-    const mobile = JSON.parse(localStorage.getItem('mobileno'))
-    const { user, error, loading } = useSelector(state => state.updateuser)
+    // const mobile = JSON.parse(localStorage.getItem('mobileno'))
+    const { user, error, loading } = useSelector(state => state.Registeruser)
     const H = window.innerHeight
     const Hpx = H - 56
     const [name, setname] = useState('')
+    const [phoneNumber, setPhoneNumber] = useState('')
     const [gender, setgender] = useState('')
     const [email, setemail] = useState('')
     const [address1, setaddress1] = useState('')
@@ -27,18 +28,17 @@ const Registeruser = () => {
     const dispatch = useDispatch()
 
     const signin_google = (response) => {
-        const myForm = {
+        /* const myForm = {
             name: response.profileObj.name,
             email: response.profileObj.email,
         }
-        dispatch(updateuser(myForm))
-        
-
+        dispatch(updateuser(myForm)) */
     }
 
     const onsubmit = (e) => {
         e.preventDefault();
         const myForm = {
+            phonenumber:phoneNumber,
             name: name,
             gender: gender,
             email: email,
@@ -50,7 +50,8 @@ const Registeruser = () => {
 
             }
         }
-        dispatch(updateuser(myForm))
+        dispatch(registerUser(myForm))
+        redirect('/verifying')
     }
 
 
@@ -63,14 +64,22 @@ const Registeruser = () => {
         Alert.success('Login successfully')
     }
 
-
+    
     useEffect(() => {
-        
+        /* if(loading === false){
+            console.log("User: ",user,"LOading, ",loading);
+            if(user){
+                if(user.otp){
+                    redirect('/verifying')
+                }
+            }
+        } */
         if(error){
             dispatch(clearErrors())
         }
         
     }, [ error, dispatch]);
+    
 
     return (
        
@@ -84,12 +93,9 @@ const Registeruser = () => {
 
                         <div className='mx-auto w-[330px] my-8'>
 
-                            <p className='text-sm z-0 text-slate-600 font-light '>Mobile&nbsp;Number</p>
-                            <p className='text-xl z-0 text-slate-600 mb-5 font-normal '>{mobile?.phonenumber}
-                                <span className='float-right right-5 text-[#0db7af] top-1'><GoVerified /></span></p>
-                            <input type="text" name="name" className='w-full h-10 border-[1px] 
-                            focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'
-                                placeholder='Full Name*' onChange={(e) => setname(e.target.value)} />
+                            {/* <span className='float-right right-5 text-[#0db7af] top-1'><GoVerified /></span></p> */}
+                            <input type="text" name="PhoneNumber" className='w-full h-10 border-[1px] focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5' placeholder='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
+                            <input type="text" name="name" className='w-full h-10 border-[1px] focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5' placeholder='Full Name' value={name} onChange={(e) => setname(e.target.value)} />
 
                             <label className='font1 text-base mr-4 mb-5'>Gender</label>
                             <input type="radio" name="gender" value="Men" className='mb-5 accent-pink-500' onClick={() => setgender('men')} />

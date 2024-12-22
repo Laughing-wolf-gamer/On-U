@@ -379,63 +379,66 @@ const Home = () => {
                   <div className='h-[50px]'>
                   </div>
                 </div> */}
-                {/* <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b3} width='100%' className='min-h-[320px]' alt='Banner_Image' /><br /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b4} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b5} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b6} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b7} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b8} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div>
-                <div>
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b9} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-
-                  </div>
-                </div> */}
                 {
-                  b_banners && b_banners.length > 0 && b_banners.map((b, index) => (
+                  b_banners && b_banners.length > 0 ? b_banners.map((b, index) => (
                     <div key={`b_${index}`}>
                       <Link to='/products'><LazyLoadImage effect='blur' src={b} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                       <div className='h-[50px]'>
 
                       </div>
                     </div>
-                  ))
+                  )):(
+                    <>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b3} width='100%' className='min-h-[320px]' alt='Banner_Image' /><br /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b4} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b5} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b6} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b7} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b8} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                      <div>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={b9} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                        <div className='h-[50px]'>
+
+                        </div>
+                      </div>
+                    </>
+                  )
                 }
               </Carousel>
             </div>

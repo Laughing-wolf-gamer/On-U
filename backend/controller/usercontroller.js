@@ -6,21 +6,31 @@ import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
 
 export const registermobile = A(async (req, res, next) => {
+  try {
+    const {email,name,address,gender, phonenumber } = req.body
   
-  const {email,fullName,Address,gender, phonenumber } = req.body
-
-  console.log("Authenticating with: ",phonenumber )
-  const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
-  if(existingUser){
-    return next(new Errorhandler('User already exist', 400))
+    console.log("Authenticating with: ",req.body )
+    const existingUser = await User.findOne({phoneNumber:phonenumber})
+    if(existingUser){
+      console.log("Existing: ",existingUser)
+      return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:existingUser.otp,user:existingUser}})
+    }
+    const otp = Math.floor((1 + Math.random()) * 90000)
+    const user = await User.create({
+      name,
+      email,
+      phoneNumber:phonenumber,
+      addresses:[address],
+      gender,
+      otp:otp.toString(),
+      role:'user',
+    })
+    console.log("New User: ",user)
+    res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
+  } catch (error) {
+    console.log(error)
+    res.status(500).json({success:true,message:"Internal server Error"})
   }
-  const user = await User.create({
-    fullName,
-    email,
-    Address
-  })
-  let otp = Math.floor((1 + Math.random()) * 90000)
-  res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
 
 })
 export const loginMobileNumber = A(async(req, res, next) => {
@@ -83,30 +93,20 @@ export const getuser = A(async(req, res, next)=>{
 })
 
 export const optverify = A(async (req, res, next)=>{
-  console.log(req.body)
-  
-    const {otp} = req.body
-    const user = await User.findOne({"phonenumber": req.params.id})
+    // const {otp} = req.body
+    const{id,otp} = req.params;
+    console.log("OTP: ",otp,id)
+    const user = await User.findOne({phoneNumber: id})
     if (!user.otp) {
       return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
     }
-    if (user.otp !== otp) {
+    if (user.otp.toString() !== otp) {
       return next( new Errorhandler("You entered expire or wrong OTP", 400))
     }
-    if(otp === user.otp){
-      user.verify = 'verified'
-      user.otp =null
-      await user.save({ validateBeforeSave: false })
-      if (user.name) {
-        sendtoken(user, 200, res)
-      }else{
-        console.log('yes')
-        res.status(200).json({
-          success:true,
-          user
-        })
-      }
-    }
+    user.otp = null;
+    user.verify = 'verified';
+    await user.save()
+    res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user})
 
 })
 

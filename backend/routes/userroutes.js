@@ -8,10 +8,10 @@ route.post('/login', logInUser)
 route.post('/registermobile',registermobile)
 route.post('/loginmobile',loginMobileNumber)
 route.get('/check-auth',isAuthenticateuser, getuser)
-route.put('/otpverify/:id', optverify)
+route.post('/otpverify/:id/:otp', optverify)
 route.get('/resendotp/:id', resendotp)
-route.put('/updateuser/:id',isAuthenticateuser, updateuser)
-route.put('/user/:id',isAuthenticateuser, updateuserdetails)
+// route.put('/updateuser/:id',isAuthenticateuser, updateuser)
+// route.put('/user/:id',isAuthenticateuser, updateuserdetails)
 route.get('/logout', logout)
 
 export default route

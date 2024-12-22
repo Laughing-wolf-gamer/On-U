@@ -18,24 +18,30 @@ import {REQUEST_USER_NO,
         REQUEST_UPDATE_DETAILS_USER,
         SUCCESS_UPDATE_DETAILS_USER,
         FAIL_UPDATE_DETAILS_USER,
-        CLEAR_ERRORS
+        CLEAR_ERRORS,
+        REGISTER_USER_DATA,
+        SUCCESS_REGISTER_USER,
+        FAIL_REGISTER_USER,
+        FAIL_LOGIN_USER,
+        SUCCESS_LOGIN_USER,
+        LOGIN_USER_DATA
 } from '../const/userconst'
 
 export const registeruser = (state = {user:{}}, action) =>{
         switch (action.type) {
-            case REQUEST_USER_NO:
+            case REGISTER_USER_DATA:
                 return {
                     loading: true,
                 };
 
-            case SUCCESS_USER_NO:
+            case SUCCESS_REGISTER_USER:
                 return {
                     loading: false,
                     user:action.payload, 
                     message:action.message
                 };
 
-            case FAIL_USER_NO:
+            case FAIL_REGISTER_USER:
                     return {
                         loading: null,
                         user:action.payload
@@ -52,19 +58,19 @@ export const registeruser = (state = {user:{}}, action) =>{
 }
 export const loginuser = (state = {user:{}}, action) =>{
     switch (action.type) {
-        case REQUEST_USER_NO:
+        case LOGIN_USER_DATA:
             return {
                 loading: true,
             };
 
-        case SUCCESS_USER_NO:
+        case SUCCESS_LOGIN_USER:
             return {
                 loading: false,
                 user:action.payload, 
                 message:action.message
             };
 
-        case FAIL_USER_NO:
+        case FAIL_LOGIN_USER:
                 return {
                     loading: null,
                     user:action.payload

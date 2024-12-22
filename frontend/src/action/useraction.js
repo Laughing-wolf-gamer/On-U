@@ -20,7 +20,13 @@ import {
     REQUEST_UPDATE_DETAILS_USER,
     SUCCESS_UPDATE_DETAILS_USER,
     FAIL_UPDATE_DETAILS_USER,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REGISTER_USER_DATA,
+    SUCCESS_REGISTER_USER,
+    FAIL_REGISTER_USER,
+    LOGIN_USER_DATA,
+    SUCCESS_LOGIN_USER,
+    FAIL_LOGIN_USER
 } from '../const/userconst'
 import axios from 'axios'
 
@@ -28,32 +34,33 @@ export const loginmobile = (userData) => async (dispatch) => {
 
     try {
         console.log("logIn Data: ", userData)
-        dispatch({ type: REQUEST_USER_NO })
+        dispatch({ type: LOGIN_USER_DATA })
 
         const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, userData, config)
         
-        dispatch({ type: SUCCESS_USER_NO, payload: data?.result, message: data?.message })
+        dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
 
     } catch (error) {
 
-        dispatch({ type: FAIL_USER_NO, payload: error.response?.data?.message })
+        dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
 
     }
 }
 export const registerUser = (userData) => async (dispatch) => {
     try {
         console.log("registermobile Data: ", userData)
-        dispatch({ type: REQUEST_USER_NO })
+        dispatch({ type: REGISTER_USER_DATA })
 
-        const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData, config)
+        // const config = { headers: { "Content-Type": "application/json" } }
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData)
+        console.log("Data: ", data)
         
-        dispatch({ type: SUCCESS_USER_NO, payload: data?.result, message: data?.message })
+        dispatch({ type: SUCCESS_REGISTER_USER, payload: data?.result, message: data?.message })
 
     } catch (error) {
 
-        dispatch({ type: FAIL_USER_NO, payload: error.response?.data?.message })
+        dispatch({ type: FAIL_REGISTER_USER, payload: error.response?.data?.message })
 
     }
 }
@@ -63,12 +70,11 @@ export const getuser = () => async (dispatch) => {
     try {
 
         dispatch({ type: REQUEST_USER })
-        const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber)
+        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
+        // const mobileno = Number(mobile.phonenumber)
+        /* const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth/${mobileno}/`)
 
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/${mobileno}`)
-
-        dispatch({ type: SUCCESS_USER, payload: data.user })
+        dispatch({ type: SUCCESS_USER, payload: data.user }) */
 
     } catch (error) {
 
@@ -77,19 +83,20 @@ export const getuser = () => async (dispatch) => {
     }
 }
 
-export const otpverifie = (otp) => async (dispatch) => {
+export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
 
     try {
 
         dispatch({ type: REQUEST_VERIFY_OTP })
-        const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber)
+        console.log("Otp: ",otp)
+        /* const mobile = JSON.parse(localStorage.getItem('mobileno'))
+        const mobileno = Number(mobile.phonenumber) */
 
 
-        const { data } = await axios.put(`${BASE_API_URL}/api/auth/otpverify/${mobileno}`, otp)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify/${mobileno}/${otp}`)
         console.log(data)
 
-        dispatch({ type: SUCCESS_VERIFY_OTP, payload: data.user })
+        dispatch({ type: SUCCESS_VERIFY_OTP, payload: data?.result })
 
     } catch (Error) {
       
