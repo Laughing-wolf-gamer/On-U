@@ -31,3 +31,6 @@ code {
     
 }
 
+
+/* index.css or similar */
+@import url('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');

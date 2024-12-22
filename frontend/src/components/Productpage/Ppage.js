@@ -156,6 +156,15 @@ const Ppage = () => {
                     {/* <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
                     <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>  */}
                     </h1>
+                    <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
+                      {
+                        product && product.bulletPoints.map((e) =>
+                          <div className='mb-2 font-extralight text-slate-600'>
+                            {e.point}
+                          </div>
+                        )
+                      }
+                    </div>
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {

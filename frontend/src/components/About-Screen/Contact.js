@@ -51,7 +51,7 @@ const Contact = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
 
@@ -66,7 +66,7 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
           </div>
@@ -82,14 +82,14 @@ const Contact = () => {
               onChange={handleChange}
               rows="6"
               required
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
             ></textarea>
           </div>
 
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-8 py-3 bg-gray-600 text-white text-lg font-semibold rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="px-8 py-3 bg-gray-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               Send Message
             </button>
@@ -104,8 +104,8 @@ const Contact = () => {
           You can also reach us through the following contact details:
         </p>
         <div className="mt-8 text-lg text-gray-700 space-y-4">
-          <p>Email: <span className="text-gray-600">support@on-u.com</span></p>
-          <p>Phone: <span className="text-gray-600">(123) 456-7890</span></p>
+          <p>Email: <span className="text-blue-600">support@on-u.com</span></p>
+          <p>Phone: <span className="text-blue-600">(123) 456-7890</span></p>
           <p>Address: 123 ON-U St., Suite 100, City, Country</p>
         </div>
       </section>
