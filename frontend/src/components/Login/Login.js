@@ -2,7 +2,7 @@ import React, { Fragment, useState, useEffect } from 'react'
 import img from '../images/login.webp'
 import './Login.css'
 import { useDispatch, useSelector } from 'react-redux'
-import { clearErrors, loginmobile } from '../../action/useraction'
+import { loginmobile } from '../../action/useraction'
 import { Link, useNavigate } from 'react-router-dom'
 import {useAlert} from 'react-alert'
 
@@ -10,44 +10,34 @@ const Login = () => {
   const [mobileno, setmobileno] = useState('')
   const Redirect = useNavigate()
   const dispatch = useDispatch()
-  const {loading, message, user} = useSelector(state => state.Registeruser)
+  const {user} = useSelector(state => state.loginuser)
   const Alert = useAlert()
   let par = document.getElementById('error')
 
-  const continues = () => {
+  const continues = async () => {
  
     if (mobileno.length > 10) {
       par.innerHTML = 'Error: Pls note you enter wrong mobile no'
     }
     if (mobileno.length === 10) {
-      par.innerHTML = ''
-      const myForm = {
-        "phonenumber": mobileno
+      await dispatch(loginmobile({phonenumber:mobileno}))
+      if(user){
+        Alert.success('Login Successfully')
+        Redirect('/')
       }
-      dispatch(loginmobile(myForm))
-      localStorage.setItem("mobileno", JSON.stringify(myForm));
-      
-     
-    
-    }
-    if (mobileno.length === 0) {
-      par.innerHTML = 'Error: Pls enter mobile no'
-    }
-    if (mobileno.length < 10 && mobileno.length > 0) {
-      par.innerHTML = 'Error: Pls note you enter wrong mobile no'
     }
   }
+  if(user){
+    console.log("User: ",user)
+    Redirect('/')
+  }
 
-  useEffect(() => {
-    
-    if (message && user) {
-      Alert.show(message)
+  /* useEffect(() => {  
+    if(user){
+      console.log("User: ",user)
       Redirect('/')
     }
-  
-  
-  }, [Redirect, Alert, message]);
-
+  }, [Redirect]); */
   return (
 
     <Fragment>
@@ -64,7 +54,7 @@ const Login = () => {
             <p id='error' className='text-xs text-red-500 '></p>
 
             <h1 className='font1 text-sm mt-5'>By Continuing, I agree to the <span className='text-[#ee5f73]'>Terms of Use</span>  & <span className='text-[#ee5f73]'> Privacy Policy</span></h1>
-            <button type='submit' onClick={continues} className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5'>{loading !== true ? 'CONTINUE' : 'Loading...' }  </button>
+            <button type='submit' onClick={continues} className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5'>LOG IN</button>
             <Link to='/registeruser' className='text-[#ee5f73] text-center block'>New User? Register</Link>
             {/* <h1 className='font1 text-sm'>No Account? <span className='text-[#ee5f73]'>Register User</span></h1> */}
           </div>

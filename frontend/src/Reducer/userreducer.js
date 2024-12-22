@@ -27,7 +27,7 @@ import {REQUEST_USER_NO,
         LOGIN_USER_DATA
 } from '../const/userconst'
 
-export const registeruser = (state = {user:{}}, action) =>{
+export const registeruser = (state = {user:null}, action) =>{
         switch (action.type) {
             case REGISTER_USER_DATA:
                 return {
@@ -37,8 +37,8 @@ export const registeruser = (state = {user:{}}, action) =>{
             case SUCCESS_REGISTER_USER:
                 return {
                     loading: false,
-                    user:action.payload, 
-                    message:action.message
+                    user:action?.payload, 
+                    message:action?.message
                 };
 
             case FAIL_REGISTER_USER:
@@ -56,7 +56,7 @@ export const registeruser = (state = {user:{}}, action) =>{
                 return state;
         }
 }
-export const loginuser = (state = {user:{}}, action) =>{
+export const loginuser = (state = {user:null}, action) =>{
     switch (action.type) {
         case LOGIN_USER_DATA:
             return {
@@ -66,14 +66,14 @@ export const loginuser = (state = {user:{}}, action) =>{
         case SUCCESS_LOGIN_USER:
             return {
                 loading: false,
-                user:action.payload, 
-                message:action.message
+                user:action.payload || null, 
+                message:action?.message
             };
 
         case FAIL_LOGIN_USER:
                 return {
                     loading: null,
-                    user:action.payload
+                    user:null
                 };
         case CLEAR_ERRORS:
                     return {

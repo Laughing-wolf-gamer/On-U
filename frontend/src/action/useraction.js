@@ -30,56 +30,49 @@ import {
 } from '../const/userconst'
 import axios from 'axios'
 
-export const loginmobile = (userData) => async (dispatch) => {
-
+export const loginmobile = ({phonenumber}) => async (dispatch) => {
     try {
-        console.log("logIn Data: ", userData)
+        console.log("logIn Data: ", phonenumber)
         dispatch({ type: LOGIN_USER_DATA })
-
-        const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, userData, config)
-        
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {phonenumber})
+        const token = data?.result?.token
+        sessionStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
-
     } catch (error) {
-
         dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
-
     }
 }
 export const registerUser = (userData) => async (dispatch) => {
     try {
         console.log("registermobile Data: ", userData)
         dispatch({ type: REGISTER_USER_DATA })
-
-        // const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData)
-        console.log("Data: ", data)
-        
         dispatch({ type: SUCCESS_REGISTER_USER, payload: data?.result, message: data?.message })
-
     } catch (error) {
-
-        dispatch({ type: FAIL_REGISTER_USER, payload: error.response?.data?.message })
-
+        dispatch({ type: FAIL_REGISTER_USER, payload: null ,message: "Error Occurred"})
     }
 }
 
 export const getuser = () => async (dispatch) => {
-
     try {
-
+        const token = sessionStorage.getItem('token');
+        console.log(token);
         dispatch({ type: REQUEST_USER })
-        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        // const mobileno = Number(mobile.phonenumber)
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth`)
-
+        if(!token){
+            dispatch({ type: FAIL_USER, payload: null})
+            return;
+        }
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth`,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
+        console.log("Check-Auth Data: ", data)
         dispatch({ type: SUCCESS_USER, payload: data.user })
-
     } catch (error) {
-
         dispatch({ type: FAIL_USER, payload: error.response?.data?.message })
-
     }
 }
 
@@ -94,8 +87,6 @@ export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
 
 
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify/${mobileno}/${otp}`)
-        console.log(data)
-
         dispatch({ type: SUCCESS_VERIFY_OTP, payload: data?.result })
 
     } catch (Error) {
@@ -107,11 +98,11 @@ export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
 
 export const resendotp = () => async (dispatch) => {
 
-    try {
+    /* try {
 
         dispatch({ type: REQUEST_RESEND_OTP })
-        const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber)
+        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
+        // const mobileno = Number(mobile.phonenumber)
 
         const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp/${mobileno}`)
 
@@ -121,14 +112,14 @@ export const resendotp = () => async (dispatch) => {
     
         dispatch({ type: FAIL_RESEND_OTP, payload: Error.response.data.message })
 
-    }
+    } */
 }
 
 export const updateuser = (userdata) => async (dispatch) => {
-    try {
+    /* try {
         dispatch({ type: REQUEST_UPDATE_USER })
-        const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber)
+        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
+        // const mobileno = Number(mobile.phonenumber)
         const config = { headers: { "Content-Type": "application/json" } }
 
         const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser/${mobileno}`, userdata,config )
@@ -139,7 +130,7 @@ export const updateuser = (userdata) => async (dispatch) => {
     
         dispatch({ type: FAIL_UPDATE_USER, payload: Error.response.data.message })
 
-    }
+    } */
 }
 
 export const updatedetailsuser = (userdata, id) => async (dispatch) => {
@@ -167,9 +158,9 @@ export const logout = () => async (dispatch) => {
     try {
         console.log("logout")
 
-        const { data } = await axios.get(`${BASE_API_URL}/api/v1/logout` )
-
-        dispatch({ type: SUCCESS_LOGOUT, payload: data.success })
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/logout` )
+        sessionStorage.clear();
+        dispatch({ type: SUCCESS_LOGOUT, payload: null })
 
     } catch (Error) {
     

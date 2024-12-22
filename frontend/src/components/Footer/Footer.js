@@ -5,6 +5,7 @@ import g3 from '../images/original.png'
 import g4 from '../images/return.png'
 import {AiFillFacebook, AiFillYoutube} from 'react-icons/ai'
 import {ImTwitter, ImInstagram} from 'react-icons/im'
+import { Link } from 'react-router-dom'
 
 const Footer = () => {
   return (
@@ -30,7 +31,8 @@ const Footer = () => {
        <div className="col-span-2">
        <h1 className='text-sm font-extrabold col-span-2'>USEFUL LINKS</h1>
        <ul className='text-sm text-black pt-6'>
-         <li className="">Contact Us</li>
+         <Link to='/about'><li className="hover:underline">About Us</li></Link>
+         <Link to='/contact'><li className="hover:underline">Contact Us</li></Link>
          <li className="">FAQ</li>
          <li className="">T&C</li>
          <li className="">Terms Of Use</li>

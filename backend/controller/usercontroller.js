@@ -13,6 +13,9 @@ export const registermobile = A(async (req, res, next) => {
     const existingUser = await User.findOne({phoneNumber:phonenumber})
     if(existingUser){
       console.log("Existing: ",existingUser)
+      if(existingUser.verify === 'verified'){
+        return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
+      }
       return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:existingUser.otp,user:existingUser}})
     }
     const otp = Math.floor((1 + Math.random()) * 90000)
@@ -39,8 +42,12 @@ export const loginMobileNumber = A(async(req, res, next) => {
   if(!user){
     return next( new Errorhandler('Mobile Number not found', 404))
   }
-  return res.status(200).json({success:true,message: 'Mobile Number Found',result:user})
+  const token = sendtoken(user);
+  return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
 })
+
+
+
 export const registerUser = A(async (req, res, next) => {
   
   const { userName,email,password,phonenumber } = req.body
@@ -207,14 +214,13 @@ export const updateuserdetails =A( async(req,res,next)=>{
 
 
 export const logout = A( async(req, res, next)=>{
-  
   res.cookie('token', null,{
-    expire:new Date(Date.now()),
-    httpOnly:true
-});
-res.status(200).json({
-    success:true,
-    message:"Log Out sucessfully"
-})
+      expire:new Date(Date.now()),
+      httpOnly:true
+  });
+  res.status(200).json({
+      success:true,
+      message:"Log Out sucessfully"
+  })
 })
 

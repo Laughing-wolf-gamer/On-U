@@ -271,6 +271,7 @@ import Footer from '../Footer/Footer'
 import { useDispatch, useSelector } from 'react-redux'
 import { featchallbanners } from '../../action/banner.action'
 import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
+import { getuser } from '../../action/useraction'
 
 
 const Home = () => {
@@ -313,7 +314,8 @@ const Home = () => {
     );
   }
   useEffect(()=>{
-    dispatch(featchallbanners())
+    dispatch(getuser());
+    dispatch(featchallbanners());
   },[dispatch])
 
   useEffect(() => {

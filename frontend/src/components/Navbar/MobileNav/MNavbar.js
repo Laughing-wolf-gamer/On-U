@@ -22,6 +22,7 @@ import { useAlert } from 'react-alert'
 import {registermobile} from '../../../action/useraction'
 import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
+import { Alert } from '@mui/material'
 
 
 const MNavbar = ({ user }) => {
@@ -135,9 +136,9 @@ const MNavbar = ({ user }) => {
         var position = xm - total;
         var x = startX - xm;
         var y = startY - ym
-        console.log("x:", x)
+        /* console.log("x:", x)
         console.log("y:", y)
-        console.log("P:", -position)
+        console.log("P:", -position) */
         if (x >= 0 && y >= 0) { // + + down
             if (x > 20 && x > y) {
 
@@ -170,11 +171,10 @@ const MNavbar = ({ user }) => {
 
     const logoutBTN = () =>{
         dispatch(logout())
-        localStorage.removeItem('mobileno')
-        dispatch(getuser())
-        alert.show('Logout Successfully')
+        // Alert.show('Logout Successfully')
+        /* dispatch(getuser())
         dispatch(loginmobile())
-        dispatch(otpverifie())
+        dispatch(otpverifie()) */
       }
 
       const [serdiv, setserdiv] = useState('hidden')

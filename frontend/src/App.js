@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import { useSelector, useDispatch} from 'react-redux'
 import './App.css';
 import Navbar from './components/Navbar/Navbar.js'
@@ -19,6 +19,8 @@ import Bag from './components/Bag/Bag'
 import Address from "./components/Bag/Address";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BASE_API_URL } from "./config/index.js";
+import About from "./components/About-Screen/About.js";
+import Contact from "./components/About-Screen/Contact.js";
 
 
 function App() {
@@ -27,7 +29,7 @@ function App() {
 
  const [state, setstate] = useState(false)
   
-  React.useEffect(() => {
+  useEffect(() => {
     if (state ===  false) {
       dispatch(getuser())
       setstate(true)
@@ -42,7 +44,7 @@ function App() {
       }
     }
 
-    if(isAuthentication === true){
+    if(isAuthentication){
       console.log(url)
         if (url === window.location.protocol+"//" + window.location.host + '/Login') {
           
@@ -60,12 +62,11 @@ function App() {
     
    }, [dispatch, isAuthentication]);
    console.log("Base Server API",BASE_API_URL);
-   console.log("Base Server API Env",process.env.REACT_APP_BASE_API);
+  console.log("User Logged In: ",user);
   return (
     <Router>
       <Navbar user={user}/>
       <MNavbar user={user}/>
-
       <Coupon />
       <Routes>
         <Route path="/" element={<Home/>}/>
@@ -81,6 +82,8 @@ function App() {
         <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
         <Route path='/bag' element={<Bag user={user}/>}/>
         <Route path='/address/bag' element={<Address user={user}/>}/>
+        <Route path='/about' element={<About />}/>
+        <Route path='/contact' element={<Contact />}/>
       </Routes>
       
       

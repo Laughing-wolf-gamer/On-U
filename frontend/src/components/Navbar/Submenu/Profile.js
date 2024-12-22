@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import { getuser, loginmobile, logout } from '../../../action/useraction'
 import { useDispatch} from 'react-redux'
 import { useAlert } from 'react-alert'
-import {registerUser, otpverifie} from '../../../action/useraction'
 
 const Profile = ({show, CMenu, parentCallback, user}) => {
   const dispatch = useDispatch()
@@ -19,11 +18,9 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
 
   const logoutBTN = () =>{
     dispatch(logout())
-    localStorage.removeItem('mobileno')
-    dispatch(getuser())
+    sessionStorage.clear();
+    
     alert.show('Logout Successfully')
-    dispatch(loginmobile())
-    dispatch(otpverifie())
   }
     
   return (
@@ -41,7 +38,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 {
                 user ? 
                 <div>
-                    {`${user.name}`} <br />
+                    {`${user?.name}`} <br />
                     <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
                 </div>
                 
@@ -75,12 +72,8 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
 
                 {
                   user ? 
-
-                  
                    <button className=' font1 font-smibold text-[#ff3f6c] text-sm border-[1px] px-3 py-2 
                    border-[#d4d5d8] hover:border-[#ff3f6c] ' onClick={logoutBTN}>LOGOUT</button>
-                
-
                 :
 
                 ""

@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken'
-const sendtoken = (user, statuscode, res) =>{
+const sendtoken = (user) =>{
     
     /* const token = user.getJWTToken();
     const option = {
@@ -17,8 +17,7 @@ const sendtoken = (user, statuscode, res) =>{
     const token = jwt.sign({
         id:user._id,
         role:user.role,
-        email:user.email,
-        userName:user.userName,
+        user:user,        
     },process.env.SECRETID,{
         expiresIn: '1h',
     })

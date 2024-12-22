@@ -116,7 +116,7 @@ export const editProduct = async (req, res) => {
         if (color) updateFields.color = color;
         if (description) updateFields.description = description;
         if (material) updateFields.material = material;
-        if (bulletPoints) updateFields.bulletPoints = bulletPoints;
+        if (bulletPoints || bulletPoints.length > 0) updateFields.bulletPoints = bulletPoints;
         if (image.length > 0) updateFields.image = image;
         if (gender) updateFields.gender = gender;
         if (category) updateFields.category = category;

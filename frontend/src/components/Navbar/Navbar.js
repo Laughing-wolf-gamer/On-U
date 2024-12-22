@@ -16,6 +16,7 @@ import {Link} from 'react-router-dom'
 
 
 const Navbar = ({user}) => {
+  console.log("Navbar User: ", user)
   const [Menu1, setMenu1] = useState('hidden')
   const [Menu2, setMenu2] = useState('hidden')
   const [Menu3, setMenu3] = useState('hidden')
@@ -144,10 +145,11 @@ const Navbar = ({user}) => {
         <Men show={show1} CMenu={Menu1} parentCallback={callback} />
         <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
         <Kids show={show3} CMenu={Menu3} parentCallback={Callbackmenu3} />
+        <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
         {/* <Home show={show4} CMenu={Menu4} parentCallback={Callbackmenu4} />  */}
         {/* <Beauty show={show5} CMenu={Menu5} parentCallback={Callbackmenu5} /> */}
         {/* <Studio show={show6} CMenu={Menu6} parentCallback={Callbackmenu6} /> */}
-        {/* <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> */}
+        {/* */}
 
       </div>
       

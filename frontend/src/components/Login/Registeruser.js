@@ -1,6 +1,6 @@
 import React, { Fragment, useState, useEffect } from 'react'
 import './Login.css'
-import { clearErrors, updateuser, getuser, registerUser } from '../../action/useraction'
+import { clearErrors,getuser, registerUser } from '../../action/useraction'
 import { useSelector, useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { FcGoogle } from 'react-icons/fc'
@@ -13,7 +13,6 @@ import {useAlert} from 'react-alert'
 const Registeruser = () => {
     const Alert =useAlert()
     const redirect = useNavigate()
-    // const mobile = JSON.parse(localStorage.getItem('mobileno'))
     const { user, error, loading } = useSelector(state => state.Registeruser)
     const H = window.innerHeight
     const Hpx = H - 56
@@ -35,7 +34,7 @@ const Registeruser = () => {
         dispatch(updateuser(myForm)) */
     }
 
-    const onsubmit = (e) => {
+    const onsubmit = async (e) => {
         e.preventDefault();
         const myForm = {
             phonenumber:phoneNumber,
@@ -50,36 +49,34 @@ const Registeruser = () => {
 
             }
         }
-        dispatch(registerUser(myForm))
-        redirect('/verifying')
+        await dispatch(registerUser(myForm))
+        if(user){
+            Alert.success('User Registered Successfully')
+            console.log("Registering User: ", user?.token)
+            redirect('/Login')
+        }
+        // redirect('/verifying')
     }
 
 
     const [state, setstate] = useState(false)
 
-    if (state === false && user?.name) {
-        dispatch(getuser())
+    /* if (state === false && user?.user?.name) {
+        // dispatch(getuser())
         setstate(true)
-        redirect('/Login')
-        Alert.success('Login successfully')
-    }
+        // redirect('/Login')
+        Alert.success('Register successfully')
+    } */
 
     
     useEffect(() => {
-        /* if(loading === false){
-            console.log("User: ",user,"LOading, ",loading);
-            if(user){
-                if(user.otp){
-                    redirect('/verifying')
-                }
-            }
-        } */
         if(error){
             dispatch(clearErrors())
         }
-        
+        if(user){
+            console.log("User: ", user?.token)
+        }
     }, [ error, dispatch]);
-    
 
     return (
        
@@ -134,7 +131,7 @@ const Registeruser = () => {
 
                             <p id='error' className='text-xs text-red-500 '></p>
 
-                            <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {loading !== false? 'CREATE ACCOUNT': 'Loading...'} </button>
+                            <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {!loading? 'CREATE ACCOUNT': 'Loading...'} </button>
 
                         </div>
                     </div>
