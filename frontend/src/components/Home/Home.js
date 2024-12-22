@@ -973,14 +973,14 @@ const Home = () => {
                     </div>
                   </div>
                 </Link>
-                <Link to='/products'>
+                {/* <Link to='/products'>
                   <div>
                     <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
                     <div className='h-[30px]'>
 
                     </div>
                   </div>
-                </Link>
+                </Link> */}
                 <Link to='/products'>
                   <div>
                     <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
@@ -1090,7 +1090,7 @@ const Home = () => {
               </ul>
             </div>
 
-            <div>
+            {/* <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>DEALS ON LATEST ARRIVALS</h1>
               <ul className='grid grid-cols-1 '>
                 <Link to='/products'><li className=''><LazyLoadImage effect='blur' src={j1 } alt="" className="min-h-[100px]" /></li></Link>
@@ -1100,7 +1100,7 @@ const Home = () => {
                 
                
               </ul>
-            </div>
+            </div> */}
 
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>

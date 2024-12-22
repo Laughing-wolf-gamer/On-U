@@ -72,9 +72,9 @@ export const getuser = () => async (dispatch) => {
         dispatch({ type: REQUEST_USER })
         // const mobile = JSON.parse(localStorage.getItem('mobileno'))
         // const mobileno = Number(mobile.phonenumber)
-        /* const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth/${mobileno}/`)
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth`)
 
-        dispatch({ type: SUCCESS_USER, payload: data.user }) */
+        dispatch({ type: SUCCESS_USER, payload: data.user })
 
     } catch (error) {
 

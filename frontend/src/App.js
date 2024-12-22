@@ -23,7 +23,7 @@ import { BASE_API_URL } from "./config/index.js";
 
 function App() {
   const dispatch = useDispatch()
-  const {loading, user, isAuthentication, error} = useSelector(state => state.user)
+  const {loading, user, isAuthentication} = useSelector(state => state.user)
 
  const [state, setstate] = useState(false)
   

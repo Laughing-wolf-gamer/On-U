@@ -40,10 +40,10 @@ const Login = () => {
 
   useEffect(() => {
     
-     if (message && user) {
-    Alert.show(message)
-    Redirect('/verifying')
-  }
+    if (message && user) {
+      Alert.show(message)
+      Redirect('/')
+    }
   
   
   }, [Redirect, Alert, message]);

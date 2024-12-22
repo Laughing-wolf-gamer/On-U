@@ -35,7 +35,11 @@ export const registermobile = A(async (req, res, next) => {
 })
 export const loginMobileNumber = A(async(req, res, next) => {
   const { phonenumber } = req.body
-  const user = await User.findOne({});
+  const user = await User.findOne({phoneNumber:phonenumber});
+  if(!user){
+    return next( new Errorhandler('Mobile Number not found', 404))
+  }
+  return res.status(200).json({success:true,message: 'Mobile Number Found',result:user})
 })
 export const registerUser = A(async (req, res, next) => {
   
