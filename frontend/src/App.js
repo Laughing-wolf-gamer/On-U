@@ -71,15 +71,15 @@ function App() {
         <Route path="/Login" element={<Login/>}/>
         <Route path="/verifying" element={<Otpverify/>}/>
         <Route path='/registeruser' element={<Registeruser/>}/>
-        {/* <Route path='/dashboard' element={<Overview user={user}/>}/> */}
+        <Route path='/dashboard' element={<Overview user={user}/>}/>
         {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
         {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
         <Route path='/products' element={<Allproductpage/>}/>
-       {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
-      {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
-      <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
-      <Route path='/bag' element={<Bag user={user}/>}/>
-      <Route path='/address/bag' element={<Address user={user}/>}/>
+        {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
+        {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
+        <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
+        <Route path='/bag' element={<Bag user={user}/>}/>
+        <Route path='/address/bag' element={<Address user={user}/>}/>
       </Routes>
       
       

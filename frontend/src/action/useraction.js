@@ -24,16 +24,32 @@ import {
 } from '../const/userconst'
 import axios from 'axios'
 
-export const registermobile = (userData) => async (dispatch) => {
+export const loginmobile = (userData) => async (dispatch) => {
 
     try {
+        console.log("logIn Data: ", userData)
+        dispatch({ type: REQUEST_USER_NO })
 
+        const config = { headers: { "Content-Type": "application/json" } }
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, userData, config)
+        
+        dispatch({ type: SUCCESS_USER_NO, payload: data?.result, message: data?.message })
+
+    } catch (error) {
+
+        dispatch({ type: FAIL_USER_NO, payload: error.response?.data?.message })
+
+    }
+}
+export const registerUser = (userData) => async (dispatch) => {
+    try {
+        console.log("registermobile Data: ", userData)
         dispatch({ type: REQUEST_USER_NO })
 
         const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData, config)
         
-        dispatch({ type: SUCCESS_USER_NO, payload: data?.user, message: data?.message })
+        dispatch({ type: SUCCESS_USER_NO, payload: data?.result, message: data?.message })
 
     } catch (error) {
 

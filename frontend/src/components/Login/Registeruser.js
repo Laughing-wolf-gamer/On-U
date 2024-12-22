@@ -56,10 +56,10 @@ const Registeruser = () => {
 
     const [state, setstate] = useState(false)
 
-    if (state === false && user.name) {
+    if (state === false && user?.name) {
         dispatch(getuser())
         setstate(true)
-        redirect('/dashboard')
+        redirect('/Login')
         Alert.success('Login successfully')
     }
 
@@ -85,7 +85,7 @@ const Registeruser = () => {
                         <div className='mx-auto w-[330px] my-8'>
 
                             <p className='text-sm z-0 text-slate-600 font-light '>Mobile&nbsp;Number</p>
-                            <p className='text-xl z-0 text-slate-600 mb-5 font-normal '>{mobile.phonenumber}
+                            <p className='text-xl z-0 text-slate-600 mb-5 font-normal '>{mobile?.phonenumber}
                                 <span className='float-right right-5 text-[#0db7af] top-1'><GoVerified /></span></p>
                             <input type="text" name="name" className='w-full h-10 border-[1px] 
                             focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'

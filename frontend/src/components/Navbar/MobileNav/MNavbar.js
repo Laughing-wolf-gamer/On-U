@@ -16,7 +16,7 @@ import MKids from './Msubmenu/Kids'
 import Mhome from './Msubmenu/Home'
 import Mbeauty from './Msubmenu/Beauty'
 import { Link, useNavigate } from 'react-router-dom'
-import {logout, getuser, otpverifie} from '../../../action/useraction'
+import {logout, getuser, otpverifie, loginmobile} from '../../../action/useraction'
 import { useDispatch} from 'react-redux'
 import { useAlert } from 'react-alert'
 import {registermobile} from '../../../action/useraction'
@@ -173,7 +173,7 @@ const MNavbar = ({ user }) => {
         localStorage.removeItem('mobileno')
         dispatch(getuser())
         alert.show('Logout Successfully')
-        dispatch(registermobile())
+        dispatch(loginmobile())
         dispatch(otpverifie())
       }
 

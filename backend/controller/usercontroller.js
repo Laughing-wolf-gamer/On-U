@@ -5,7 +5,28 @@ import Errorhandler from '../utilis/errorhandel.js';
 import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
 
+export const registermobile = A(async (req, res, next) => {
+  
+  const {email,fullName,Address,gender, phonenumber } = req.body
 
+  console.log("Authenticating with: ",phonenumber )
+  const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
+  if(existingUser){
+    return next(new Errorhandler('User already exist', 400))
+  }
+  const user = await User.create({
+    fullName,
+    email,
+    Address
+  })
+  let otp = Math.floor((1 + Math.random()) * 90000)
+  res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
+
+})
+export const loginMobileNumber = A(async(req, res, next) => {
+  const { phonenumber } = req.body
+  const user = await User.findOne({});
+})
 export const registerUser = A(async (req, res, next) => {
   
   const { userName,email,password,phonenumber } = req.body
@@ -120,10 +141,9 @@ export const resendotp = A(async (req, res, next)=>{
 
 })
 export const logInUser = async (req,res) =>{
-  /* try {
+  try {
       const {phonenumber} = req.body;
-      if(!email) return res.status(401).json({Success:false,message: 'Please enter a valid email'});
-      if(!password) return res.status(401).json({Success:false,message: 'Please enter a valid password'});
+      if(!phonenumber) return res.status(401).json({Success:false,message: 'Please enter a valid Phone Number'});
       const user = await User.findOne({email});
       if(!user){
         return res.status(404).json({Success:false,message: 'User not found'});
@@ -134,16 +154,16 @@ export const logInUser = async (req,res) =>{
       }
       const token = sendtoken(user);
       res.status(200).json({Success:true,message: 'User logged in successfully',user:{
-          userName:user.userName,
-          email:user.email,
-          role: user.role,
-          id: user._id,
+        userName:user.userName,
+        email:user.email,
+        role: user.role,
+        id: user._id,
           
       },token})
   } catch (error) {
       console.error(`Error Logging in user ${error.message}`);
       res.status(500).json({Success:false,message: 'Internal Server Error'});
-  } */
+  }
 }
 
 export const updateuser =A( async(req,res,next)=>{

@@ -1,10 +1,10 @@
 import React,{Fragment} from 'react'
 import { useTransition, animated } from 'react-spring'
 import {Link} from 'react-router-dom'
-import { getuser, logout } from '../../../action/useraction'
+import { getuser, loginmobile, logout } from '../../../action/useraction'
 import { useDispatch} from 'react-redux'
 import { useAlert } from 'react-alert'
-import {registermobile, otpverifie} from '../../../action/useraction'
+import {registerUser, otpverifie} from '../../../action/useraction'
 
 const Profile = ({show, CMenu, parentCallback, user}) => {
   const dispatch = useDispatch()
@@ -22,7 +22,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
     localStorage.removeItem('mobileno')
     dispatch(getuser())
     alert.show('Logout Successfully')
-    dispatch(registermobile())
+    dispatch(loginmobile())
     dispatch(otpverifie())
   }
     

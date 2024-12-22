@@ -1,6 +1,6 @@
 export const REQUEST_USER_NO = "REQUEST_USER_NO"
 export const SUCCESS_USER_NO = "SUCCESS_USER_NO"
-export const FAIL_USER_NO    = "FAIL_USER_NO   "
+export const FAIL_USER_NO    = "FAIL_USER_NO"
 export const REQUEST_USER = "REQUEST_USER"
 export const SUCCESS_USER = "SUCCESS_USER"
 export const FAIL_USER    = "FAIL_USER   "

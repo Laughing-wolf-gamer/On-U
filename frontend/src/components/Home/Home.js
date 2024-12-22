@@ -576,7 +576,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BRANDS AT SLASHED PRICES</h1>
               <div className='grid grid-cols-7 gap-1'>
                 {
@@ -602,9 +602,9 @@ const Home = () => {
                 
 
               </div>
-            </div>
+            </div> */}
 
-            <div>
+           {/*  <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST BUYS</h1>
               <div className='grid grid-cols-8 gap-1'>
                 {
@@ -632,9 +632,9 @@ const Home = () => {
                 
 
               </div>
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>ONU LUXE</h1>
               <div className='grid grid-cols-8 gap-1'>
                 {
@@ -663,7 +663,7 @@ const Home = () => {
                 
 
               </div>
-            </div>
+            </div> */}
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>GIFTING CARDS</h1>
@@ -751,7 +751,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TRENDS FOR HER</h1>
               <div className='grid grid-cols-8 '>
                 
@@ -773,9 +773,9 @@ const Home = () => {
                 }
 
               </div>
-            </div>
+            </div> */}
 
-            <div>
+           {/*  <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TRENDS FOR HIM</h1>
               <div className='grid grid-cols-8 '>
                 
@@ -797,7 +797,7 @@ const Home = () => {
                 }
 
               </div>
-            </div>
+            </div> */}
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF KIDSWEAR</h1>
@@ -822,7 +822,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>NEW IN TOP BRANDS</h1>
               <div className='grid grid-cols-8 '>
                 {
@@ -844,7 +844,7 @@ const Home = () => {
                 
 
               </div>
-            </div>
+            </div> */}
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER SEASON CHECKLIST</h1>
@@ -892,7 +892,7 @@ const Home = () => {
               </div>
             </div>
 
-            <div>
+            {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>LATEST IN BEAUTY & GROOMING</h1>
               <div className='grid grid-cols-4 '>
                 {
@@ -913,7 +913,7 @@ const Home = () => {
                 }
 
               </div>
-            </div>
+            </div> */}
 
 
             <div>

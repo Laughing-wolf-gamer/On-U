@@ -50,7 +50,35 @@ export const registeruser = (state = {user:{}}, action) =>{
                 return state;
         }
 }
+export const loginuser = (state = {user:{}}, action) =>{
+    switch (action.type) {
+        case REQUEST_USER_NO:
+            return {
+                loading: true,
+            };
 
+        case SUCCESS_USER_NO:
+            return {
+                loading: false,
+                user:action.payload, 
+                message:action.message
+            };
+
+        case FAIL_USER_NO:
+                return {
+                    loading: null,
+                    user:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+    
+        default:
+            return state;
+    }
+}
 export const getuser = (state = {user:{}}, action) =>{
     switch (action.type) {
         case REQUEST_USER:
