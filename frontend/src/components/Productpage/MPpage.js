@@ -102,9 +102,7 @@ const MPpage = () => {
             alert.error('You have To Login To Add This Product Into Bag')
         }
     }
-    console.log("Mpage Product: ",product)
-      
-
+    // console.log("Mpage Product: ",product)
     return (
         <Fragment>
             {

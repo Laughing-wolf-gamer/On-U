@@ -268,10 +268,14 @@ import mc7 from '../images/mc7.jpg'
 import mc8 from '../images/mc8.jpg'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import Footer from '../Footer/Footer'
+import { useDispatch, useSelector } from 'react-redux'
+import { featchallbanners } from '../../action/banner.action'
+import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 
 
 const Home = () => {
-
+  const { banners} = useSelector(state => state.banners)
+  const dispatch = useDispatch();
   const indicatorStyles: CSSProperties = {
     background: '#CFCECD',
     width: 7,
@@ -308,10 +312,60 @@ const Home = () => {
       />
     );
   }
+  useEffect(()=>{
+    dispatch(featchallbanners())
+  },[dispatch])
 
   useEffect(() => {
     document.documentElement.scrollTo = 0;
   }, []);
+  console.log("All Banners: ",banners);
+  let b_banners = [];
+  let c_banners = [];
+  let bb_banners = [];
+  let d_banners = [];
+  let a_banners = [];
+  let ma_banners = [];
+  let e_banners = [];
+  let f_banners = [];
+  let g_banners = [];
+  let h_banners = [];
+  let m_banners = [];
+  let n_banners = [];
+  let o_banners = [];
+  let p_banners = [];
+  let q_banners = [];
+  let r_banners = [];
+  let s_banners = [];
+  let i_banners = [];
+  let j_banners = [];
+  let k_banners = [];
+  if(banners){
+    b_banners = banners.find((b_cat)=> b_cat?.CategoryType === "banner")?.Url || [];
+    bb_banners = banners.find((b_cat)=> b_cat?.CategoryType === "bb")?.Url || [];
+    d_banners = banners.find((b_cat)=> b_cat?.CategoryType === "d")?.Url || []
+    ma_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "ma")?.Url || []
+    a_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "a")?.Url || []
+    c_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "c")?.Url || []
+    e_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "e")?.Url || []
+    f_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "f")?.Url || []
+    g_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "g")?.Url || []
+    h_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "h")?.Url || []
+    m_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "m")?.Url || []
+    o_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "o")?.Url || []
+    p_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "p")?.Url || []
+    q_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "q")?.Url || []
+    r_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "r")?.Url || []
+    s_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "s")?.Url || []
+    n_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "n")?.Url || []
+    i_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "i")?.Url || []
+    j_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "j")?.Url || []
+    k_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "k")?.Url || []
+  }
+  // console.log("b_Banners: ",b_banners);
+  // console.log("d_Banners: ",d_banners);
+  // console.log("ma_Banners: ",ma_banners);
+  // console.log("a_Banners: ",a_banners);
   return (
     <Fragment>
       {
@@ -325,7 +379,7 @@ const Home = () => {
                   <div className='h-[50px]'>
                   </div>
                 </div> */}
-                <div>
+                {/* <div>
                   <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
                   <div className='h-[50px]'>
 
@@ -372,26 +426,46 @@ const Home = () => {
                   <div className='h-[50px]'>
 
                   </div>
-                </div>
+                </div> */}
+                {
+                  b_banners && b_banners.length > 0 && b_banners.map((b, index) => (
+                    <div key={`b_${index}`}>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={b} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
+                      <div className='h-[50px]'>
+
+                      </div>
+                    </div>
+                  ))
+                }
               </Carousel>
             </div>
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8'>DEAL OF THE DAY</h1>
               <div className='grid grid-cols-8'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={d1} alt="" className="min-h-[150px]" /></Link>
+                {
+                  d_banners && d_banners.length > 0 && d_banners.map((d, index) => (
+                    <Link key={`d_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={d} alt="" className="min-h-[200px] " /></Link>
+                  ))
+                }
+                {/* <Link to='/products'><LazyLoadImage effect='blur' src={d1} alt="" className="min-h-[150px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d2} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d3} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d4} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d5} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d6} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={d7} alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={d8} alt="" className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={d8} alt="" className="min-h-[200px]" /></Link> */}
               </div>
             </div>
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF ON-U EXCLUSIVE BRANDS</h1>
               <div className='grid grid-cols-8 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={a1} alt="" className="min-h-[200px]" /></Link>
+                {
+                  a_banners && a_banners.length > 0 && a_banners.map((a, index) => (
+                    <Link key={`a_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={a} alt="" className="min-h-[200px]" /></Link>
+                  ))
+                }
+                {/* <Link to='/products'><LazyLoadImage effect='blur' src={a1} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a2} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a3} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a4} alt="" className="min-h-[200px]" /></Link>
@@ -406,20 +480,25 @@ const Home = () => {
                 <Link to='/products'><LazyLoadImage effect='blur' src={a13} alt=""className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a14} alt=""className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={a15} alt=""className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={a16} alt=""className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={a16} alt=""className="min-h-[200px]" /></Link> */}
               </div>
             </div>
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TOP PICKS</h1>
               <div className='grid grid-cols-7 gap-2'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={bb1} alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={bb2} alt="" className="min-h-[200px]" /></Link>
+                {
+                  bb_banners && bb_banners.length > 0 && bb_banners.map((bb, index) => (
+                    <Link key={`bb_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={bb} alt="" className="min-h-[200px]" /></Link>
+
+                  ))
+                }
+                {/* <Link to='/products'><LazyLoadImage effect='blur' src={bb2} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={bb3} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={bb4} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={bb5} alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={bb6} alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={bb7} alt="" className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={bb7} alt="" className="min-h-[200px]" /></Link> */}
 
               </div>
             </div>
@@ -427,12 +506,17 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>CATEGORIES TO BAG</h1>
               <div className='grid grid-cols-8 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={c1 } alt="" className="min-h-[200px]" /></Link>
+                {
+                  c_banners && c_banners.length > 0 && c_banners.map((c, index) => (
+                    <Link key={`c_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={c} alt="" className="min-h-[200px]" /></Link>
+                  ))
+                }
+                {/* <Link to='/products'><LazyLoadImage effect='blur' src={c1 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c2 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c3 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c4 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c5 } alt="" className="min-h-[200px]" /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={c6 } alt="" className="min-h-[200px]" /></Link>
+                <Link to='/products'><LazyLoadImage effect='blur' src={c6 } alt="" className="min-h-[200px]" /></Link> */}
                 {/* <Link to='/products'><LazyLoadImage effect='blur' src={c7 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c8 } alt="" className="min-h-[200px]" /></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={c9 } alt="" className="min-h-[200px]" /></Link>
@@ -458,50 +542,64 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>DEALS ON TOP BRANDS</h1>
               <div className='grid grid-cols-8 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e1} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e2} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e3} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e4} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e5} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e6} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e7} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e8} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e9} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e10} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e11} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e12} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e13} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e14} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e15} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e16} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e17} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e18} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e19} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e20} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e21} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e22} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e23} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={e24} alt="" className='min-h-[200px]' /></Link>
+                {
+                  e_banners && e_banners.length > 0 ? e_banners.map((e, index) => (
+                    <Link key={`e_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={e} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <><Link to='/products'><LazyLoadImage effect='blur' src={e1} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e2} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e3} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e4} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e5} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e6} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e7} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e8} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e9} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e10} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e11} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e12} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e13} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e14} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e15} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e16} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e17} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e18} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e19} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e20} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e21} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e22} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e23} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={e24} alt="" className='min-h-[200px]' /></Link></>
+                  )
+                }
+                
               </div>
             </div>
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BRANDS AT SLASHED PRICES</h1>
               <div className='grid grid-cols-7 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f1} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f2} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f3} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f4} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f5} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f6} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f7} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f8} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f9} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f10} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f11} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f12} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f13} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={f14} alt="" className='min-h-[200px]' /></Link>
+                {
+                  f_banners && f_banners.length > 0 ? f_banners.map((f, index) => (
+                    <Link key={`f_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={f} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <><Link to='/products'><LazyLoadImage effect='blur' src={f1} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f2} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f3} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f4} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f5} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f6} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f7} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f8} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f9} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f10} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f11} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f12} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f13} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={f14} alt="" className='min-h-[200px]' /></Link></>
+                  )
+                }
+                
 
               </div>
             </div>
@@ -509,22 +607,29 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST BUYS</h1>
               <div className='grid grid-cols-8 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g1} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g2} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g3} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g4} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g5} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g6} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g7} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g8} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g9} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g10} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g11} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g12} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g13} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g14} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g15} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={g16} alt="" className='min-h-[200px]' /></Link>
+                {
+                  g_banners && g_banners.length > 0 ? g_banners.map((g, index) => (
+                    <Link key={`g_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={g} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <><Link to='/products'><LazyLoadImage effect='blur' src={g1} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g2} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g3} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g4} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g5} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g6} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g7} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g8} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g9} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g10} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g11} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g12} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g13} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g14} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g15} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={g16} alt="" className='min-h-[200px]' /></Link></>
+                  )
+                }
+                
 
               </div>
             </div>
@@ -532,22 +637,30 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>ONU LUXE</h1>
               <div className='grid grid-cols-8 gap-1'>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h1} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h2} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h3} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h4} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h5} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h6} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h7} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h8} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h9} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h10} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h11} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h12} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h13} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h14} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h15} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={h16} alt="" className='min-h-[200px]' /></Link>
+                {
+                  h_banners && h_banners.length > 0 ? h_banners.map((h, index) => (
+                    <Link key={`h_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={h} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <><Link to='/products'><LazyLoadImage effect='blur' src={h1} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h2} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h3} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h4} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h5} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h6} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h7} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h8} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h9} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h10} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h11} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h12} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h13} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h14} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h15} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={h16} alt="" className='min-h-[200px]' /></Link> 
+                    </>
+                  )
+                }
+                
 
               </div>
             </div>
@@ -555,11 +668,20 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>GIFTING CARDS</h1>
               <div className='grid grid-cols-5 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={i1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={i2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={i3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={i4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={i5} alt="" className='min-h-[200px]'/></Link>
+                {
+                  i_banners && i_banners.length > 0 ? i_banners.map((i, index) => (
+                    <Link key={`i_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={i} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={i1} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={i2} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={i3} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={i4} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={i5} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
+                
 
               </div>
             </div>
@@ -567,11 +689,19 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>DEALS ON LATEST ARRIVALS</h1>
               <div className='grid grid-cols-2 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px]'/></Link>
-
+                
+                {
+                  j_banners && j_banners.length > 0 ? j_banners.map((j, index) => (
+                    <Link key={`j_banners_${index}`} to='/products' className='m-1'><LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -579,28 +709,35 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER 2022- FIRST ON E-COM</h1>
               <div className='grid grid-cols-8 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k1} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k2} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k3} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k4} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k5} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k6} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k7} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k8} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k9} alt=""  className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k10} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k11} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k12} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k13} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k14} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k15} alt="" className='min-h-[200px]' /></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={k16} alt="" className='min-h-[200px]' /></Link>
+                
+                {
+                  k_banners && k_banners.length > 0 ? k_banners.map((k, index) => (
+                    <Link key={`k_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={k} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <><Link to='/products'><LazyLoadImage effect='blur' src={k1} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k2} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k3} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k4} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k5} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k6} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k7} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k8} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k9} alt=""  className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k10} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k11} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k12} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k13} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k14} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k15} alt="" className='min-h-[200px]' /></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={k16} alt="" className='min-h-[200px]' /></Link> </>
+                  )
+                }
 
               </div>
             </div>
 
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>STYLECAST HOTTEST FINDS</h1>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>STYLE-CAST HOTTEST FINDS</h1>
               <div className='grid grid-cols-7 '>
                 <Link to='/products'><LazyLoadImage effect='blur' src={l1} alt="" className='min-h-[200px]'/></Link>
                 <Link to='/products'><LazyLoadImage effect='blur' src={l2} alt="" className='min-h-[200px]'/></Link>
@@ -617,14 +754,23 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TRENDS FOR HER</h1>
               <div className='grid grid-cols-8 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={m8} alt="" className='min-h-[200px]'/></Link>
+                
+                {
+                  m_banners && m_banners.length > 0 ? m_banners.map((m, index) => (
+                    <Link key={`m_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={m} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m4} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m5} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m6} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m7} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={m8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -632,14 +778,23 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TRENDS FOR HIM</h1>
               <div className='grid grid-cols-8 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={n8} alt="" className='min-h-[200px]'/></Link>
+                
+                {
+                  n_banners && n_banners.length > 0 ? n_banners.map((n, index) => (
+                    <Link key={`n_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={n} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n4} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n5} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n6} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n7} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={n8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -647,14 +802,22 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF KIDSWEAR</h1>
               <div className='grid grid-cols-7 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={o7} alt="" className='min-h-[200px]'/></Link>
-
+                
+                {
+                  o_banners && o_banners.length > 0 ? o_banners.map((o, index) => (
+                    <Link key={`o_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={o} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                      <>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o1} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o2} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o3} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o4} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o5} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o6} alt="" className='min-h-[200px]'/></Link>
+                        <Link to='/products'><LazyLoadImage effect='blur' src={o7} alt="" className='min-h-[200px]'/></Link>
+                      </>
+                  )
+                }
 
               </div>
             </div>
@@ -662,14 +825,23 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>NEW IN TOP BRANDS</h1>
               <div className='grid grid-cols-8 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={p8} alt="" className='min-h-[200px]'/></Link>
+                {
+                  p_banners && p_banners.length > 0 ? p_banners.map((p, index) => (
+                    <Link key={`p_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={p} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p4} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p5} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p6} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p7} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={p8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
+                
 
               </div>
             </div>
@@ -677,14 +849,22 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER SEASON CHECKLIST</h1>
               <div className='grid grid-cols-8 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={q8} alt="" className='min-h-[200px]'/></Link>
+                {
+                  q_banners && q_banners.length > 0 ? q_banners.map((q, index) => (
+                    <Link key={`q_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={q} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q4} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q5} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q6} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q7} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={q8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -692,14 +872,22 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>NEWNESS FOR EVERY OCCASION</h1>
               <div className='grid grid-cols-4 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={r8} alt="" className='min-h-[200px]'/></Link>
+                {
+                  r_banners && r_banners.length > 0 ? r_banners.map((r, index) => (
+                    <Link key={`r_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={r} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r1} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r2} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r3} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r4} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r5} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r6} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r7} alt="" className='min-h-[200px]'/></Link>
+                      <Link to='/products'><LazyLoadImage effect='blur' src={r8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -707,14 +895,22 @@ const Home = () => {
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>LATEST IN BEAUTY & GROOMING</h1>
               <div className='grid grid-cols-4 '>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s1} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s2} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s3} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s4} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s5} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s6} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s7} alt="" className='min-h-[200px]'/></Link>
-                <Link to='/products'><LazyLoadImage effect='blur' src={s8} alt="" className='min-h-[200px]'/></Link>
+                {
+                  s_banners && s_banners.length > 0 ? s_banners.map((s, index) => (
+                    <Link key={`s_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={s} alt="" className="min-h-[200px]" /></Link>
+                  )):(
+                    <>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s1} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s2} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s3} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s4} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s5} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s6} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s7} alt="" className='min-h-[200px]'/></Link>
+                    <Link to='/products'><LazyLoadImage effect='blur' src={s8} alt="" className='min-h-[200px]'/></Link>
+                    </>
+                  )
+                }
 
               </div>
             </div>
@@ -757,19 +953,7 @@ const Home = () => {
           <Fragment>
             <div className='bg-white '>{/* Category */}
               <ul className='flex overflow-x-scroll '>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma1} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma2} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma3} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma4} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>
-                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma5} alt="categoryIcons" className="w-[18vw] min-h-[70px]" /></li></Link>  */}
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma11} alt="categoryIcons"className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma10} alt="categoryIcons"className="w-[18vw] min-h-[70px]" /></li></Link>
-                {/* <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma6} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma7} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma8} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={ma9} alt="" className="w-[18vw] min-h-[70px]" /></li></Link>
-                
-                 */}
+                <DraggingScrollView images={ma_banners}/>
               </ul>
             </div>
 

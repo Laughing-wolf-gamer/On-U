@@ -3,7 +3,7 @@ import BannerModel from "../../model/banner.model.js";
 export const getHomeBanners = async (req,res)=>{
 	try {
 		const banners = await BannerModel.find();
-		console.log("Banners: ",banners)
+		// console.log("Banners: ",banners)
 		return res.status(200).json({Success: true,message:"Successfully Fetched Banners", result:banners});
 	} catch (error) {
 		console.error(`Error getting Banners: `,error);
