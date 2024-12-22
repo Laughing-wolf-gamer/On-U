@@ -18,6 +18,7 @@ import Wishlist from "./components/Wishlist/Wishlist";
 import Bag from './components/Bag/Bag'
 import Address from "./components/Bag/Address";
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { BASE_API_URL } from "./config/index.js";
 
 
 function App() {
@@ -58,7 +59,7 @@ function App() {
     }
     
    }, [dispatch, isAuthentication]);
- 
+   console.log("Base Server API",BASE_API_URL)
   return (
     <Router>
       <Navbar user={user}/>
