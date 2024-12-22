@@ -60,6 +60,7 @@ function App() {
     
    }, [dispatch, isAuthentication]);
    console.log("Base Server API",BASE_API_URL);
+   console.log("Base Server API Env",process.env.REACT_APP_BASE_API);
   return (
     <Router>
       <Navbar user={user}/>

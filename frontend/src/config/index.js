@@ -36,4 +36,4 @@ export function hexToRgba(hex, alpha = 1) {
 }
 // export const IsDevelopment = true;
 // export const BASE_API_URL = IsDevelopment ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";̥
-export const BASE_API_URL = process.env.REACT_APP_API_URL;
+export const BASE_API_URL = process.env.REACT_APP_BASE_API;
