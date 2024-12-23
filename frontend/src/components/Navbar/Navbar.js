@@ -108,7 +108,7 @@ const Navbar = ({user}) => {
               <Link to={'/about'}><h1 className='px-3'>ABOUT</h1></Link>
             </li>
             <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-              <Link to={'/about'}><h1 className='px-3'>CONTACT</h1></Link>
+              <Link to={'/contact'}><h1 className='px-3'>CONTACT</h1></Link>
             </li>
             {/* <li className='w-46 flex justify-center items-center border-4 border-transparent cborder4'
               onMouseEnter={() => (setMenu4('block'), setShow4(true))} onMouseLeave={() => (setMenu4('hidden'), setShow4(false))}
