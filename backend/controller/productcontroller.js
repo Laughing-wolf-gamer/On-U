@@ -28,7 +28,7 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = A(async (req, res)=>{
     try {
-        console.log("Query ", req.query);
+        // console.log("Query ", req.query);
 
         // Build the query filter based on incoming request parameters
         const filter = {};
@@ -78,24 +78,24 @@ export const getallproducts = A(async (req, res)=>{
 
         // Date filter (if applicable)
         if (req.query.dateRange) {
-        const dateRange = req.query.dateRange.split('-');
-        if (dateRange.length === 2) {
-            filter.date = {
-                $gte: new Date(dateRange[0]),
-                $lte: new Date(dateRange[1])
-            };
-        }
+            const dateRange = req.query.dateRange.split('-');
+            if (dateRange.length === 2) {
+                filter.date = {
+                    $gte: new Date(dateRange[0]),
+                    $lte: new Date(dateRange[1])
+                };
+            }
         }
 
         // Find products using the built query filter
         const products = await ProductModel.find(filter).sort(sort);
-        console.log("Fetched Products: ", products);
+        // console.log("Fetched Products: ", products);
 
         // Send response with products
         res.status(200).json({
-        products: products,
-        pro:products,
-        length: products.length
+            products: products,
+            pro:products,
+            length: products.length
         });
     } catch (error) {
         console.error("Error Fetching Products: ",error);

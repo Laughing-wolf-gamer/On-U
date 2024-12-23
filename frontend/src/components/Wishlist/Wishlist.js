@@ -93,7 +93,7 @@ const Wishlist = () => {
             <Fragment>{
                 loading === false &&
                 <Fragment>
-                    {(wishlist !== null && wishlist.orderItems.length > 0)  ?
+                    {(wishlist && wishlist.orderItems && wishlist.orderItems.length > 0)  ?
                         <Fragment>
                             <h1 className='font1 text-lg font-semibold px-4'>My Wishlist <span className='font-sans font-normal'> {wishlist.orderItems.length} items</span></h1>
                             <br />

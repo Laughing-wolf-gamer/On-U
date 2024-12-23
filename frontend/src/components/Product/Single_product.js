@@ -78,7 +78,7 @@ const Single_product = ({ pro }) => {
             {
                 pro && pro.image &&
                 <Fragment>
-                    <Link to={`/products/${pro._id}`} target='_blank' >
+                    <Link to={`/products/${pro._id}`} /* target='_blank'  */>
                         <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' /* onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())} */>
                             <AutoSlidingCarousel pro={pro}/>
 

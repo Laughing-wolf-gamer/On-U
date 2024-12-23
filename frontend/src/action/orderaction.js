@@ -57,7 +57,7 @@ export const getwishlist = (userid) => async (dispatch) => {
 export const createbag = (option) => async (dispatch) => {
     console.log(option)
     try {
-
+        console.log(option)
         dispatch({ type: REQUEST_CREATE_BAG })
         const config = { headers: { "Content-Type": "application/json" } }
 

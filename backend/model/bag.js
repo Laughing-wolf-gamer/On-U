@@ -3,15 +3,20 @@ import mongoose from 'mongoose'
 const BagSchema = new mongoose.Schema({
     user:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"MynUser",
+        ref:"user",
         required:true
     },
     orderItems: [{
         product:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:"myntraproduct",
-            
+            ref:"product",
             required:true,
+        },
+        color:{
+            type:String,
+        },
+        size:{
+            type:String,
         },
         qty:{
             type:Number, 

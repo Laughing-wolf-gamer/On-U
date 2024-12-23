@@ -22,6 +22,8 @@ const MPpage = () => {
     const param = useParams()
     const alert = useAlert()
     const dispatch = useDispatch()
+    const [currentColor,setCurrentColorColor] = useState({})
+    const[currentSize,setCurrentSize] = useState({})
     const { product, loading, similar } = useSelector(state => state.Sproduct)
 
     useEffect(() => {
@@ -88,21 +90,25 @@ const MPpage = () => {
 
     function addtobag(e) {
         e.preventDefault();
+        console.log("User: ",user)
         if (user) {
             const option ={
-                user:user._id,
+                user:user.id,
                 orderItems:[
                     {product:param.id, qty:1}
-                ]
-            
+                ],
+                color:currentColor,
+                size:currentSize,
             }
-            dispatch(createbag(option))
-            alert.success('Product added successfully in Bag')
+            console.log("Order Options: ",option)
+            /* dispatch(createbag(option))
+            alert.success('Product added successfully in Bag') */
         }else{
             alert.error('You have To Login To Add This Product Into Bag')
         }
     }
     // console.log("Mpage Product: ",product)
+    console.log("user",user)
     return (
         <Fragment>
             {
@@ -140,9 +146,13 @@ const MPpage = () => {
                                     <h1 className='font1 text-base font-semibold mt-2 mb-2'>SELECT SIZE</h1>
                                     <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                                         {
-                                            product && product.size.length > 0 && product.size.map((e) =>
+                                            product && product.size.length > 0 && product.size.map((S) =>
                                                 // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                                                <button className='px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-pink-400 hover:border-pink-700'>{e.label}</button>
+                                                <button  onClick={(e)=> {
+                                                    e.preventDefault();
+                                                    setCurrentSize(S);
+                        
+                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === S?.id ? "border bg-slate-200 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{S.label}</button>
                                             )
                                         }
                                     </div>
@@ -150,14 +160,18 @@ const MPpage = () => {
                                         {product && product.color && product.color.length > 0 ? (
                                             product.color.map((color, i) => (
                                                 <button
+                                                    onClick={(e)=> {
+                                                        e.preventDefault();
+                                                        setCurrentColorColor(color);
+                                                    }}
                                                     key={i}
                                                     style={{
                                                         backgroundColor: color?.label || color.id, // Use the label or raw color value
                                                         width: "30px",
                                                         height: "30px",
                                                     }}
-                                                    className="rounded-full border border-pink-200 shadow-md hover:border-pink-800"
-                                                    title={color?.name || color?.label || "Color"} // Optional tooltip
+                                                    className={`rounded-full border-2 border-black ${currentColor?.id === color?.id ? "border" : ""} border-pink-400 border-4 shadow-sm`}
+                                                    title={color?.id || color?.label || "Color"} // Optional tooltip
                                                 />
                                             ))
                                         ) : (
@@ -212,7 +226,7 @@ const MPpage = () => {
                                 </div>
                                 <div className='pb-2 pt-2 bg-white px-2 grid grid-cols-2 sticky bottom-0 '>
                                     <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
-                                    <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-[#F72C5B] text-white ml-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;BAG</span></button>
+                                    <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-slate-500 text-white ml-4 rounded-md hover:bg-gray-900" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;CART</span></button>
                                 </div>
 
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>

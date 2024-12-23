@@ -90,7 +90,7 @@ const Navbar = ({user}) => {
             <li className='w-max flex  justify-center items-center border-4 border-transparent cborder1 cursor-pointer'
               onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
             >
-              <h1 className='px-3 ' >MEN</h1>
+              <h1 className='px-3'>MEN</h1>
             </li>
             </Link>
             <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
@@ -103,6 +103,12 @@ const Navbar = ({user}) => {
               onMouseEnter={() => (setMenu3('block'), setShow3(true))} onMouseLeave={() => (setMenu3('hidden'), setShow3(false))}
             >
               <h1 className='px-3'>KIDS</h1>
+            </li>
+            <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
+              <Link to={'/about'}><h1 className='px-3'>ABOUT</h1></Link>
+            </li>
+            <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
+              <Link to={'/about'}><h1 className='px-3'>CONTACT</h1></Link>
             </li>
             {/* <li className='w-46 flex justify-center items-center border-4 border-transparent cborder4'
               onMouseEnter={() => (setMenu4('block'), setShow4(true))} onMouseLeave={() => (setMenu4('hidden'), setShow4(false))}

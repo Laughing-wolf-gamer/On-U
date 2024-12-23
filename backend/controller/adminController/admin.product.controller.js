@@ -47,8 +47,6 @@ export const addNewProduct = async (req, res) => {
             return res.status(400).json({Success:false,message:"All fields are required"});
         }
         console.log("All fields ",req.body);
-        let imageArray = image.filter(i => i !== '')
-
         const newProduct = new ProductModel({
             title,
             color,
@@ -111,20 +109,20 @@ export const editProduct = async (req, res) => {
         const updateFields = {};
 
         // Check each property and add it to the updateFields object if it exists in req.body
-        if (title) updateFields.title = title;
-        if (size) updateFields.size = size;
-        if (color) updateFields.color = color;
-        if (description) updateFields.description = description;
-        if (material) updateFields.material = material;
+        if (title && title.length > 0) updateFields.title = title;
+        if (size || size.length > 0) updateFields.size = size;
+        if (color || size.length > 0) updateFields.color = color;
+        if (description && description.length > 0) updateFields.description = description;
+        if (material && material.length > 0) updateFields.material = material;
         if (bulletPoints || bulletPoints.length > 0) updateFields.bulletPoints = bulletPoints;
         if (image.length > 0) updateFields.image = image;
-        if (gender) updateFields.gender = gender;
-        if (category) updateFields.category = category;
-        if (subCategory) updateFields.subCategory = subCategory;
-        if (price) updateFields.price = price;
+        if (gender && gender.length > 0) updateFields.gender = gender;
+        if (category && category.length > 0) updateFields.category = category;
+        if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
+        if (price >= 0) updateFields.price = price;
         if (salePrice) updateFields.salePrice = salePrice;
-        if (quantity) updateFields.quantity = quantity;
-        if (totalStock) updateFields.totalStock = totalStock;
+        if (quantity >= 0) updateFields.quantity = quantity;
+        if (totalStock >= 0) updateFields.totalStock = totalStock;
         if (Object.keys(updateFields).length > 0) {
             const updatedProduct = await ProductModel.findByIdAndUpdate(
                 id, 

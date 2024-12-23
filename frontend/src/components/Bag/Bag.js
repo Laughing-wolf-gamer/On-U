@@ -40,13 +40,13 @@ const [ds, setds] = useState(0)
 
 if (bagloading === false && state1 === false && bag !== null ) {
     setstate1(true)
-    console.log(bag.orderItems.length)
+    console.log(bag?.orderItems?.length)
     let va = 0
     let ss = 0
-    for (let i = 0; i < bag.orderItems.length; i++) {
-        va += bag.orderItems[i].product.mrp * bag.orderItems[i].qty
-       ss += bag.orderItems[i].product.sellingPrice * bag.orderItems[i].qty
-    }
+    /* for (let i = 0; i < bag.orderItems.length; i++) {
+        va += bag.orderItems[i].product.price * bag.orderItems[i].qty
+       ss += bag.orderItems[i].product.salePrice * bag.orderItems[i].qty
+    } */
     setmrp(va)
     setsp(ss)
     let dd = va - ss
@@ -142,7 +142,7 @@ useEffect(() => {
 
             <Fragment>
             {
-                (bag !== null  && bag.orderItems.length > 0) ?
+                (bag && bag.orderItems && bag.orderItems.length > 0) ?
                 <Fragment >
                 <div className='relative h-max border-[0.5px] border-b-slate-100 py-5 select-none'>
                     <div className='mx-auto text-[#696B79] w-max'>

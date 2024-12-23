@@ -22,6 +22,9 @@ const Ppage = () => {
   const param = useParams()
   const alert  =useAlert()
   const dispatch = useDispatch()
+  const [currentColor,setCurrentColorColor] = useState({})
+  const[currentSize,setCurrentSize] = useState({})
+
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
@@ -37,6 +40,7 @@ const Ppage = () => {
   }
 
   function addtobag() {
+    console.log("User", user)
     if (user) {
 
       const option ={
@@ -168,9 +172,13 @@ const Ppage = () => {
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {
-                        product && product.size && product.size.length > 0 && product.size.map((e) =>
+                        product && product.size && product.size.length > 0 && product.size.map((s) =>
                             // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                            <button type='button' className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</button>
+                            <button onClick={(e)=> {
+                              e.preventDefault();
+                              setCurrentSize(s);
+  
+                            }} type='button' className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === s?.id ? "border bg-slate-700 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{s.label}</button>
                         )
                       }
                   </div>
@@ -178,14 +186,20 @@ const Ppage = () => {
                     {product?.color?.length > 0 ? (
                       product.color.map((color, i) => (
                         <button
+                          onClick={(e)=> {
+                            e.preventDefault();
+                            setCurrentColorColor(color);
+
+                          }}
                           key={i}
                           style={{
                             backgroundColor: color?.label || color.id, // Use the label or raw color value
                             width: "30px",
                             height: "30px",
                           }}
+                          type='button'
                           className="rounded-full border border-gray-200 shadow-md"
-                          title={color?.name || color?.label || "Color"} // Optional tooltip
+                          title={color?.id || color?.label || "Color"} // Optional tooltip
                         />
                       ))
                     ) : (
@@ -193,8 +207,8 @@ const Ppage = () => {
                     )}
                   </div>
 
-                  <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-400 text-white mr-6  mt-4 rounded-md hover:bg-[#f64871]" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
-                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-slate-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
+                  <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-400 text-white mr-6  mt-4 rounded-md hover:bg-gray-700" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
+                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-base font-semibold text-slate-800'>

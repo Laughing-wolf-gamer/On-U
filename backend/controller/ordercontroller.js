@@ -54,7 +54,7 @@ export const getwishlist = A(async (req, res, next) => {
 })
 
 export const createbag = A(async (req, res, next) => {
-  // console.log(req.body)
+  console.log("Bag Body",req.body)
   const {user, orderItems} = req.body
   console.log(orderItems)
   const Finduser = await Bag.find({user: user})
