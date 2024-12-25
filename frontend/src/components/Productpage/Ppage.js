@@ -42,16 +42,16 @@ const Ppage = () => {
   function addtobag() {
     console.log("User", user)
     if (user) {
-
-      const option ={
-         user:user._id,
-         orderItems:[
-           {product:param.id, qty:1}
-         ]
-        
-       }
-     
-       dispatch(createbag(option))
+      const orderData ={
+        userId:user.id,
+        productId:param.id, 
+        quantity:1,
+        color:currentColor,
+        size:currentSize,
+      }
+      console.log("Order Data: ",orderData)
+      dispatch(createbag(orderData))
+      alert.success('Product added successfully in Bag')
        
       alert.success('Product added successfully in Bag')
 
@@ -110,69 +110,55 @@ const Ppage = () => {
       {
         loading === false ?
           <div>
-            {/* <div className='hidden fixed top-0 z-10 w-full h-screen imgfulldiv overflow-scroll ' >
-              <div className='flex'>
-              <div className='w-[10%] bg-[#2b2b2b6d] h-screen fixed top-0 left-0'onClick={Removeclass}></div>
-                <div className='min-h-screen w-[80%] mx-auto relative '>
-                  <div className='absolute top-5 right-5 bg-white border-[1px] border-slate-200 font-thin text-[50px] text-slate-300 rounded-md cursor-pointer' onClick={Removeclass}><VscChromeClose/></div>
-                    <img src={img} alt="Product Image" className='min-h-screen w-full '/>
-                </div>
-                <div className='w-[10%] bg-[#2b2b2b6d] h-screen fixed right-0 top-0'onClick={Removeclass}></div>
-              </div>
-              
-            </div> */}
             <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
               <div className='h-max col-span-7'>
                 <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
-                  {/* <img src={firstImage || getRandomItem(product?.image)} alt="Product Image" className='h-full w-full border-[0.5px] border-slate-100 hover:-translate-y-1 hover:scale-110 duration-300 cursor-zoom-in'/> */}
                   <ImageZoom imageSrc={firstImage || getRandomItem(product?.image)}/>
                 </div>
                 <div className='h-20 justify-start items-center flex-row flex col-span-7'>
-                  <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
-                    {
-                      product && product.image && product.image.map((e) =>
-                        <div className='w-full h-full overflow-hidden cursor-pointer' onClick={()=>(Addclass(),setFirstImage(e))}>
-                          <img src={e} className='w-full h-full object-contain outline outline-2 outline-red-600' alt="productImage" />
-                        </div>
-                      )
-                    }
-                  </div>
-                </div>
-              </div>
-              {/* Content div for large screen */}
-              <div className='col-span-5'>
-                <div className='border-b-[1px] border-slate-300  pb-6 pt-4'>
-                  <h1 className='font1 text-2xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.gender)}</h1>
-                  <h1 className='text-xl text-[#808080e8] font-light'>{product?.title}</h1>
-                </div>
-                <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
-                  <h1 className='font1 text-xl font-semibold text-slate-800'>
-                    <span className="mr-4 font-bold">Rs. {Math.round(product?.salePrice ? product?.salePrice : product?.price)}</span>
-                    {
-                      product && product.salePrice && product.salePrice > 0 &&(
-                        <>
-                          <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
-                          <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> :
-                        </>
-                      )
-                    }
-                    {/* <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
-                    <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>  */}
-                    </h1>
-                    <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
+                    <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
                       {
-                        product && product.bulletPoints.map((e) =>
-                          <div className='mb-2 font-extralight text-slate-600'>
-                            {e.point}
+                        product && product.image && product.image.map((e, index) =>
+                          <div
+                            key={index} // Ensure each element has a unique key
+                            className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
+                            onMouseEnter={() => (Addclass(), setFirstImage(e))}
+                            onClick={() => (Addclass(), setFirstImage(e))}
+                          >
+                            <img
+                              src={e}
+                              className='w-full h-full object-contain  hover:scale-110'
+                              alt="productImage"
+                            />
                           </div>
                         )
                       }
                     </div>
+                  </div>
+
+              </div>
+              {/* Content div for large screen */}
+              <div className='col-span-5'>
+                <div className='border-b-[1px] border-slate-300  pb-6 pt-4'>
+                  <h1 className='font1 text-2xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.title)}</h1>
+                  <h1 className='text-xl text-[#808080e8] font-light'>{capitalizeFirstLetterOfEachWord(product?.gender)}</h1>
+                </div>
+                <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
+                  <h1 className='font1 text-xl font-semibold text-slate-800'>
+                    <span className="mr-4 font-bold">₹ {Math.round(product?.salePrice ? product?.salePrice : product?.price)}</span>
+                    {
+                      product && product.salePrice && product.salePrice > 0 &&(
+                        <>
+                          <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
+                          <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>
+                        </>
+                      )
+                    }
+                    </h1>
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {
                         product && product.size && product.size.length > 0 && product.size.map((s) =>
-                            // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
                             <button onClick={(e)=> {
                               e.preventDefault();
                               setCurrentSize(s);

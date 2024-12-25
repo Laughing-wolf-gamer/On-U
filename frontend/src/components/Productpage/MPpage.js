@@ -90,8 +90,6 @@ const MPpage = () => {
 
     function addtobag(e) {
         e.preventDefault();
-        // console.log("User: ",user)
-
         if (user) {
             const orderData ={
                 userId:user.id,
@@ -137,7 +135,7 @@ const MPpage = () => {
                                             product && product.salePrice &&(
                                                 <Fragment>
                                                     <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product?.price}</span>
-                                                    <span className="text-gray-700">( {-Math.round(product.salePrice / product.price * 100 - 100)}% OFF )</span> 
+                                                    <span className="text-gray-700">( {-Math.round(product.salePrice / product.price * 100 - 100)}% OFF)</span> 
                                                 </Fragment>
                                             )
                                         }
@@ -151,7 +149,6 @@ const MPpage = () => {
                                                 <button  onClick={(e)=> {
                                                     e.preventDefault();
                                                     setCurrentSize(S);
-                        
                                                 }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === S?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{S.label}</button>
                                             )
                                         }
@@ -179,6 +176,9 @@ const MPpage = () => {
                                         )}
                                     </div>
                                     <br />
+                                </div>
+                                <div className='mt-2 pb-6 pt-4 bg-white px-4'>
+                                    <h1 className='font1 flex items-center mt-2 font-semibold'>bulletPoints<BsTag className='ml-2' /></h1>
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 bg-white px-4'>
                                     {

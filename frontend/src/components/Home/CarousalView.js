@@ -9,7 +9,6 @@ const CarousalView = ({b_banners,indicator}) => {
     const [animate, setAnimate] = useState(false); // State to trigger the animation
     const sectionRef = useRef(null); // Ref to track the div that will animate
     const handleBeforeChange = (oldIndex, newIndex) => {
-      console.log("Index Change On Carousel: ", newIndex);
       setAnimate(false); // Reset the animation when the index changes
       setTimeout(() => {
         // setCurrentIndex(newIndex); // Update the current index after animation

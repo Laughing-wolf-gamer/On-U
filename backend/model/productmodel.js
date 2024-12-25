@@ -47,8 +47,8 @@ const productModelSchema = new mongoose.Schema({
     subCategory:{
         type:String,
     },
-    quantity:{type: Number, required: true},
-    totalStock:{type: Number, required: true},
+    // quantity:{type: Number, required: true},
+    // totalStock:{type: Number, required: true},
     avgRating:Number,
 
 },{timestamps:true})

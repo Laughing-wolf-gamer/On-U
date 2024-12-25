@@ -40,10 +40,8 @@ export const addNewProduct = async (req, res) => {
             subCategory,
             price,
             salePrice,
-            quantity,
-            totalStock,
         } = req.body;
-        if(!title || !color || !description ||!size || !image || !quantity || !gender || !category || !subCategory || !totalStock){
+        if(!title || !color || !description ||!size || !image || !gender || !category || !subCategory){
             return res.status(400).json({Success:false,message:"All fields are required"});
         }
         console.log("All fields ",req.body);
@@ -59,15 +57,15 @@ export const addNewProduct = async (req, res) => {
             category,
             price,
             salePrice,
-            quantity,
-            totalStock,
+            // quantity,
+            // totalStock,
             subCategory,
         });
         /* if(clothsize || footwearsize){
             newProduct.size = !clothsize || clothsize?.length <= 0 ? [...footwearsize]:[...clothsize];
         } */
         await newProduct.save();
-        // console.log(newProduct);
+        console.log("New Products Data: ",newProduct);
         res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
     } catch (error) {
         console.error('Error while adding new product:', error);

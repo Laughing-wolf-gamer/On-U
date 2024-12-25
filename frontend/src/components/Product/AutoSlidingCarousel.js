@@ -13,8 +13,8 @@ const AutoSlidingCarousel = ({ pro }) => {
 
   // Show the slides based on slideIndex
   const showSlides = () => {
-    let slides = document.getElementsByClassName(`${pro._id} fade`);
-    let dots = document.getElementsByClassName(`${pro._id} dot`);
+    let slides = document.getElementsByClassName(`${pro?._id} fade`);
+    let dots = document.getElementsByClassName(`${pro?._id} dot`);
 
     // Hide all slides and remove 'active' class from dots
     Array.from(slides).forEach((slide) => {

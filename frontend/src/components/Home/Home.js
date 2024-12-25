@@ -272,16 +272,18 @@ import { useDispatch, useSelector } from 'react-redux'
 import { featchallbanners } from '../../action/banner.action'
 import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 import { getuser } from '../../action/useraction'
-import {ChevronLeft, ChevronRight } from 'lucide-react'
 import CarousalView from './CarousalView'
 import HomeProductsPreview from './HomeProductsPreview'
 import { Allproduct } from '../../action/productaction'
 import { generateArrayOfRandomItems } from '../../config'
+import ProductPreviewFull from './ProductPreviewFull'
+import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 
 
 const Home = () => {
-  const { product, loading, error, length } = useSelector(state => state.Allproducts)
+  const { product} = useSelector(state => state.Allproducts)
   const { banners} = useSelector(state => state.banners)
+
   const dispatch = useDispatch();
   const indicatorStyles: CSSProperties = {
     background: '#CFCECD',
@@ -292,16 +294,8 @@ const Home = () => {
     margin: '0 4px 0 4px',
     zIndex: 8
   };
-  const [previewProducts, setSelectedPreviewProducts] = useState([]);
-  const getRandomArrayOfProducts = (e)=>{
-    if(e){
-      e.preventDefault();
-    }
-    if(product){
-      const randomitems = generateArrayOfRandomItems(product, 6); 
-      setSelectedPreviewProducts(randomitems)
-    }
-  }
+  
+  
   // #CFCECD
   function indicator(onClickHandler, isSelected, index, label) {
     if (isSelected) {
@@ -334,9 +328,7 @@ const Home = () => {
     dispatch(featchallbanners());
     dispatch(Allproduct())
   },[dispatch])
-  useEffect(()=>{
-    getRandomArrayOfProducts();
-  },[dispatch])
+  
   useEffect(() => {
     document.documentElement.scrollTo = 0;
   }, []);
@@ -391,6 +383,47 @@ const Home = () => {
           <Fragment>
             <div className='mt-8 w-[100vw] relative'>
                 {b_banners && b_banners.length > 0 ? <CarousalView b_banners={b_banners} indicator = {indicator}/>: <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator = {indicator}/>}
+            </div>
+            <div className='w-full flex justify-center items-center my-10 px-4 md:px-8 h-auto'>
+              <div className='w-fit  h-auto flex justify-center gap-10 items-center flex-wrap'>
+                <div className='px-4 flex w-72  flex-row gap-x-1 justify-center items-center'>
+                  <Truck  size={5} className='w-16 h-16 text-black'/>
+                  <div className='h-full w-1 bg-black'/>
+                  <div className='w-full text-left h-auto justify-center items-center'>
+                    <h3 className='font-medium text-left text-[20px] text-black'>FREE SHIPPING</h3>
+                    <span className='font-light text-left text-[15px] text-gray-400'>On all orders over $75.00</span>
+                  </div>
+                </div>
+                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                  <CircleDollarSign  size={5} className='w-16 h-16 text-black'/>
+                  <div className='h-full w-1 bg-black'/>
+                  <div className='w-full text-left h-auto justify-center items-center'>
+                    <h3 className='font-medium text-left [20px] text-black'>SUPPORT 24/7</h3>
+                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
+                  </div>
+                </div>
+                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                  <Clock  size={5} className='w-16 h-16 text-black'/>
+                  <div className='h-full w-1 bg-black'/>
+                  <div className='w-full text-left h-auto justify-center items-center'>
+                    <h3 className='font-medium text-left text-[20px] text-black'>Money Return</h3>
+                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
+                  </div>
+                </div>
+                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                  <BadgeIndianRupee size={5} className='w-16 h-16 text-black'/>
+                  <div className='h-full w-1 bg-black'/>
+                  <div className='w-full text-left h-auto justify-center items-center'>
+                    <h3 className='font-medium text-left [20px] text-black'>Order Discount</h3>
+                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className=' py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
+              {product && product.length && <ProductPreviewFull product = {product}/>}
+
             </div>
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>CATEGORIES TO BAG</h1>
@@ -493,6 +526,7 @@ const Home = () => {
                 <Link to='/products'><LazyLoadImage effect='blur' src={a16} alt=""className="min-h-[200px]" /></Link> */}
               </div>
             </div>
+            
             {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>DEALS ON TOP BRANDS</h1>
               <div className='grid grid-cols-8 gap-1'>
@@ -689,32 +723,7 @@ const Home = () => {
 
               </div>
             </div>
-            <div className=' py-8 flex flex-col justify-center space-y-5 items-center'>
-              <div className='w-fit h-auto  justify-center items-center space-x-7 flex flex-row'>
-                <div className='w-20 h-0.5 bg-black rounded-xl'/>
-                <h1 className='text-3xl text-black font-bold font1 tracking-widest'>Daily Deals</h1>
-                <div className='w-20 h-0.5 bg-black rounded-xl'/>
-              </div>
-              <div className='w-fit h-auto justify-center items-center space-x-7 flex flex-row'>
-                <h3 className='text-xl text-black font-thin cursor-pointer hover:underline underline-offset-4 tracking-widest' onClick={getRandomArrayOfProducts}>Top arrivals</h3>
-                <h3 className='text-xl text-black font-thin cursor-pointer hover:underline underline-offset-4 tracking-widest' onClick={getRandomArrayOfProducts}>Best sellers</h3>
-                <h3 className='text-xl text-black font-thin cursor-pointer hover:underline underline-offset-4 tracking-widest' onClick={getRandomArrayOfProducts}>Sale items</h3>
-              </div>
-              <div className="w-screen h-auto justify-center items-center flex flex-row">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 justify-center items-center">
-                  {previewProducts && previewProducts.length > 0 && previewProducts.map((p, index) => (
-                    <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center">
-                      <HomeProductsPreview product={p} />
-                      <div className="w-full p-2 bg-white flex flex-col justify-center items-center">
-                        <h2 className="font-semiBold text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center">{p?.title}</h2>
-                        <span className="text-sm font-normal">₹ {p.salePrice && p.salePrice > 0 ? p.salePrice : p.price}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-            </div>
+            
 
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>STYLE-CAST HOTTEST FINDS</h1>
@@ -896,7 +905,7 @@ const Home = () => {
             </div> */}
 
 
-            <div>
+           {/*  <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>UNMISSABLE THIS SEASON</h1>
               <div className='grid grid-cols-8 '>
                 <Link to='/products'><LazyLoadImage effect='blur' src={t1} alt="" className='min-h-[200px]'/></Link>
@@ -924,7 +933,7 @@ const Home = () => {
                 <Link to='/products'><LazyLoadImage effect='blur' src={u8} alt="" className='min-h-[200px]'/></Link>
 
               </div>
-            </div>
+            </div> */}
 
             <Footer/>
 
@@ -982,6 +991,10 @@ const Home = () => {
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
                 <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
               </ul>
+            </div>
+            
+            <div className='flex flex-col justify-center space-y-5 my-auto items-center'>
+              {product && product.length && <ProductPreviewFull product = {product}/>}
             </div>
 
             {/* <div>
