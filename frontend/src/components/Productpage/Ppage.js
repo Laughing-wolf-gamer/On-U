@@ -153,7 +153,6 @@ const Ppage = () => {
                         <>
                           <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
                           <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> :
-                          <span className="text-[#0db7af]">Rs. {product?.salePrice}</span>
                         </>
                       )
                     }

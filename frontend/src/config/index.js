@@ -34,5 +34,36 @@ export function hexToRgba(hex, alpha = 1) {
     // Return the rgba string
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+export const calculateDiscount = (originalPrice, salePrice) => {
+    // Ensure prices are valid (greater than 0)
+    if (originalPrice <= 0 || salePrice < 0) {
+        throw new Error("Invalid price values");
+    }
+
+    // Calculate the discount amount
+    const discountAmount = originalPrice - salePrice;
+
+    // Calculate the discount percentage
+    const discountPercentage = ((discountAmount / originalPrice) * 100).toFixed(0);
+
+    return {
+        discountAmount,
+        discountPercentage,
+    };
+};
+export const generateArrayOfRandomItems = (array,numItems)=>{
+    if (!Array.isArray(array) || array.length === 0 || numItems <= 0) {
+        return [];
+    }
+
+    // Fisher-Yates Shuffle algorithm
+    const shuffled = [...array]; // Create a copy of the original array
+    for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1)); // Get a random index from 0 to i
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]; // Swap the elements
+    }
+
+    return shuffled.slice(0, numItems); // Return the first `numItems` elements
+}
 export const IsDevelopment = false;
 export const BASE_API_URL = IsDevelopment ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";

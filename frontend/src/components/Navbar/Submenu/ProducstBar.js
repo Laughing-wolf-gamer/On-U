@@ -33,7 +33,7 @@ const ProductsBar = ({show, CMenu, parentCallback}) => {
 						)}
 
 					<hr className='py-1' />
-					<h1 className='text-red-600 text-sm font-semibold py-1'>Womens</h1>
+					<h1 className='text-red-600 text-sm font-semibold py-1'>Women</h1>
 						{Women_Category.map((data) =>
 							<Link to="/products"><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
 						)}

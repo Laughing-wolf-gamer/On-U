@@ -64,15 +64,15 @@ const CarousalView = ({b_banners,indicator}) => {
       </Carousel>
         <div
           ref={sectionRef}
-          className={`absolute top-20 left-32 transform z-10 transition-all duration-700 ease-in-out ${
+          className={`absolute top-20 left-32 transform z-20 transition-all duration-700 ease-in-out ${
             animate ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
           }`}
         >
-          <div className="flex flex-col space-y-6 justify-center items-start">
-            <h3 className="text-xl px-8 font-medium font1 tracking-widest text-slate-800 mt-8">SMART PRODUCTS</h3>
+          <div className="flex flex-col space-y-4 justify-center items-start">
+            <h3 className="text-xl px-8 font-medium font1 tracking-widest text-slate-800 mt-8">Smart Products</h3>
             <div className="flex flex-col space-y-2">
-              <h1 className="text-[42px] px-8 font-bold tracking-widest text-slate-800">WINTER OFFERS</h1>
-              <h2 className="text-[42px] px-8 font-semibold tracking-widest text-slate-800">2024 COLLECTIONS</h2>
+              <h1 className="text-[42px] px-8 font-bold tracking-widest text-slate-800">Winter Offers</h1>
+              <h2 className="text-[42px] px-8 font-semibold tracking-widest text-slate-800">2024 Collections</h2>
             </div>
             <div className="border-[1px] text-center flex justify-center items-center border-slate-400 hover:bg-slate-800 ml-8 text-black hover:text-white mt-9 w-44 h-16">
               <button className="text-sm font1 font-thin tracking-widest">SHOP NOW</button>
@@ -102,7 +102,7 @@ const CarousalView = ({b_banners,indicator}) => {
             }}
           >
             
-            <ChevronRight  size={50}/>
+            <ChevronRight size={50}/>
           </button>
         </div>
     </Fragment>

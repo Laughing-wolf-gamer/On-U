@@ -28,7 +28,7 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = A(async (req, res)=>{
     try {
-        // console.log("Query ", req.query);
+        console.log("Query ", req.query);
 
         // Build the query filter based on incoming request parameters
         const filter = {};
@@ -42,6 +42,22 @@ export const getallproducts = A(async (req, res)=>{
                 id: { $in: colorNames } // Check if any object in the 'colors' array has a matching 'name' field
               }
             };
+        }
+        if(req.query.keyword){
+            
+            const regx = new RegExp(req.query.keyword, 'i');
+            const createSearchQuery = {
+                $or: [
+                    { title: regx },
+                    { description: regx },
+                    { category: regx },
+                    { subCategory: regx },
+                    { material: regx },
+                    { specification: regx },
+                    { gender: regx },
+                ]
+            };
+            Object.assign(filter, createSearchQuery);  // Merge search query with the filter
         }
 
         // Category filter
@@ -89,7 +105,7 @@ export const getallproducts = A(async (req, res)=>{
 
         // Find products using the built query filter
         const products = await ProductModel.find(filter).sort(sort);
-        // console.log("Fetched Products: ", products);
+        console.log("Fetched Products: ", products);
 
         // Send response with products
         res.status(200).json({
