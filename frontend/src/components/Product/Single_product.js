@@ -11,7 +11,7 @@ import AutoSlidingCarousel from './AutoSlidingCarousel'
 
 
 const Single_product = ({ pro }) => {
-    console.log('Single Product, Normal Screen', pro);
+    // console.log('Single Product, Normal Screen', pro);
 
     let slideIndex = 1;
 

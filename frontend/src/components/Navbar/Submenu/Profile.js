@@ -37,23 +37,23 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 
                 {
                 user ? 
-                <div>
-                    {`${user?.name}`} <br />
-                    <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
-                </div>
+                  <div>
+                      {`${user?.name}`} <br />
+                      <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
+                  </div>
                 
                 :
                      
                    <Link className='dec' to="/Login">
-                   <button className=' font1 font-semibold text-slate-800 text-sm border-[1px] px-3 py-2 
-                   border-slate-600 hover:border-slate-700 '>LOGIN/&nbsp;SIGNUP</button>
+                    <button className=' font1 font-semibold text-slate-800 text-sm border-[1px] px-3 py-2 
+                    border-slate-600 hover:border-slate-700 '>LOGIN/&nbsp;SIGNUP</button>
                    </Link>
  
                   }
                
                
                 <hr className='my-4' />
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Orders</h1>
+                <Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Orders</Link>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Wishlist</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>

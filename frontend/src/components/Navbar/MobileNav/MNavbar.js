@@ -23,6 +23,7 @@ import {registermobile} from '../../../action/useraction'
 import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
 import { Alert } from '@mui/material'
+import MProductsBar from './Msubmenu/ProductsBar'
 
 
 const MNavbar = ({ user }) => {
@@ -266,40 +267,40 @@ const MNavbar = ({ user }) => {
                                     }
                                 <ul>
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Men</span>
-                                            <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))} */>
+                                            <Link to="/"><span className='float-left'>Home</span></Link>
+                                            {/* <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
-                                    <MMen Men={Menul} fun1={handleClose} fun2={classunchange} />
+                                    {/* <MMen Men={Menul} fun1={handleClose} fun2={classunchange} /> */}
                                     <Ripples color="#fb56c1" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Women</span>
+                                            <span className='float-left'>Products</span>
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    <MWoMen WoMen={Menu2} fun1={handleClose} fun2={classunchange} />
+                                    <MProductsBar showPrducts={Menu2}/>
                                     <Ripples color="re" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Kids</span>
-                                            <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))} */>
+                                            <Link to='/products'><span className='float-left'>About Us</span></Link>
+                                            {/* <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
-                                    <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} />
+                                    {/* <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} /> */}
                                     <Ripples color="black" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Premium&nbsp;Products</span>
-                                            <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))} */>
+                                            <Link to='/contact'><span className='float-left'>Contact</span></Link>
+                                            {/* <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
-                                    <Ripples color="black" className='w-full'>
+                                    {/* <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Beauty</span>
                                             <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/>
+                                    <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/> */}
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>

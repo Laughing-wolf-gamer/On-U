@@ -90,19 +90,19 @@ const MPpage = () => {
 
     function addtobag(e) {
         e.preventDefault();
-        console.log("User: ",user)
+        // console.log("User: ",user)
+
         if (user) {
-            const option ={
-                user:user.id,
-                orderItems:[
-                    {product:param.id, qty:1}
-                ],
+            const orderData ={
+                userId:user.id,
+                productId:param.id, 
+                quantity:1,
                 color:currentColor,
                 size:currentSize,
             }
-            console.log("Order Options: ",option)
-            /* dispatch(createbag(option))
-            alert.success('Product added successfully in Bag') */
+            console.log("Order Data: ",orderData)
+            dispatch(createbag(orderData))
+            alert.success('Product added successfully in Bag')
         }else{
             alert.error('You have To Login To Add This Product Into Bag')
         }
@@ -137,7 +137,7 @@ const MPpage = () => {
                                             product && product.salePrice &&(
                                                 <Fragment>
                                                     <span className="line-through mr-4 font-extralight text-slate-500">&#8377;&nbsp;{product?.price}</span>
-                                                    <span className="text-[#F72C5B]">( {-Math.round(product.salePrice / product.price * 100 - 100)}% OFF )</span> 
+                                                    <span className="text-gray-700">( {-Math.round(product.salePrice / product.price * 100 - 100)}% OFF )</span> 
                                                 </Fragment>
                                             )
                                         }
@@ -152,7 +152,7 @@ const MPpage = () => {
                                                     e.preventDefault();
                                                     setCurrentSize(S);
                         
-                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === S?.id ? "border bg-slate-200 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{S.label}</button>
+                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === S?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{S.label}</button>
                                             )
                                         }
                                     </div>
@@ -170,7 +170,7 @@ const MPpage = () => {
                                                         width: "30px",
                                                         height: "30px",
                                                     }}
-                                                    className={`rounded-full border-2 border-black ${currentColor?.id === color?.id ? "border" : ""} border-pink-400 border-4 shadow-sm`}
+                                                    className={`rounded-full border-2 border-black ${currentColor?.id === color?.id ? "border outline" : ""} border-gray-400 border-[2px] shadow-sm`}
                                                     title={color?.id || color?.label || "Color"} // Optional tooltip
                                                 />
                                             ))
@@ -178,14 +178,11 @@ const MPpage = () => {
                                             <p className="text-black font-bold">No colors available</p>
                                         )}
                                     </div>
-                                    {/* <button className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#F72C5B] border-[1px] border-[#F72C5B]'>{product?.size[0]?.label}</button> */}
                                     <br />
-
-
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 bg-white px-4'>
                                     {
-                                        product && product.bulletPoints && product.bulletPoints.map((e) =>
+                                        product && product?.bulletPoints && product?.bulletPoints.map((e) =>
                                             <div className=' font1 font-extralight text-slate-500'>
                                                 {e.body}
                                             </div>
@@ -205,7 +202,7 @@ const MPpage = () => {
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-[#F72C5B]'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice || product?.price)}</span></h1>
+                                    <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-slate-500'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice || product?.price)}</span></h1>
                                     <li className='list-none text-slate-500 text-sm'>Applicable on: Orders above &#8377;&nbsp; 1599 (only on first purchase)</li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>ONU250</span></li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>

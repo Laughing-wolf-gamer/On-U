@@ -1,4 +1,4 @@
-import React, { Fragment, CSSProperties, useEffect } from 'react'
+import React, { Fragment, CSSProperties, useEffect, useState, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
@@ -272,6 +272,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import { featchallbanners } from '../../action/banner.action'
 import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 import { getuser } from '../../action/useraction'
+import {ChevronLeft, ChevronRight } from 'lucide-react'
+import CarousalView from './CarousalView'
 
 
 const Home = () => {
@@ -317,11 +319,9 @@ const Home = () => {
     dispatch(getuser());
     dispatch(featchallbanners());
   },[dispatch])
-
   useEffect(() => {
     document.documentElement.scrollTo = 0;
   }, []);
-  console.log("All Banners: ",banners);
   let b_banners = [];
   let c_banners = [];
   let bb_banners = [];
@@ -364,85 +364,13 @@ const Home = () => {
     j_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "j")?.Url || []
     k_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "k")?.Url || []
   }
-  // console.log("b_Banners: ",b_banners);
-  // console.log("d_Banners: ",d_banners);
-  // console.log("ma_Banners: ",ma_banners);
-  // console.log("a_Banners: ",a_banners);
   return (
     <Fragment>
       {
         window.screen.width > 1024 ?
           <Fragment>
-            <div className='mt-8 w-[100vw]'>
-              <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} autoPlay={6000} infiniteLoop={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                {/* <div>
-
-                  <Link to='/products'><LazyLoadImage effect='blur' src={b1} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                  <div className='h-[50px]'>
-                  </div>
-                </div> */}
-                {
-                  b_banners && b_banners.length > 0 ? b_banners.map((b, index) => (
-                    <div key={`b_${index}`}>
-                      <Link to='/products'><LazyLoadImage effect='blur' src={b} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                      <div className='h-[50px]'>
-
-                      </div>
-                    </div>
-                  )):(
-                    <>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b2} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b3} width='100%' className='min-h-[320px]' alt='Banner_Image' /><br /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b4} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b5} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b6} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b7} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b8} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                      <div>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={b9} width='100%' className='min-h-[320px]' alt='Banner_Image' /></Link>
-                        <div className='h-[50px]'>
-
-                        </div>
-                      </div>
-                    </>
-                  )
-                }
-              </Carousel>
+            <div className='mt-8 w-[100vw] relative'>
+                {b_banners && b_banners.length > 0 ? <CarousalView b_banners={b_banners} indicator = {indicator}/>: <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator = {indicator}/>}
             </div>
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>CATEGORIES TO BAG</h1>

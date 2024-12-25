@@ -20,7 +20,7 @@ const MMen = ({ Men, fun1, fun2 }) => {
       <ul className={`${Men} `}>
         <Ripples color="#fb56c1" className='w-full'>
           <li className='text-[#282c3f]  pl-8 pr-5 py-4 relative w-full flex ' onClick={() => setMTopwear(MTopwear ? (false) : (true))}>
-            <span className='float-left'>Topwear</span>
+            <span className='float-left'>Mens</span>
             <span className='absolute mx-5 right-0'>{MTopwear ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
           </li>
         </Ripples>
@@ -31,7 +31,7 @@ const MMen = ({ Men, fun1, fun2 }) => {
         )}
         <Ripples color="#fb56c1" className='w-full'>
           <li className='text-[#282c3f]  pl-8 pr-5 py-4 relative w-full flex ' onClick={() => setIndian(Indian ? (false) : (true))}>
-            <span className='float-left'>Indian&nbsp;&&nbsp;Festive&nbsp;Wear</span>
+            <span className='float-left'>Women</span>
             <span className='absolute mx-5 right-0'>{Indian ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
           </li>
         </Ripples>

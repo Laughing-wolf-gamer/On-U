@@ -53,40 +53,30 @@ export const getwishlist = A(async (req, res, next) => {
   
 })
 
-export const createbag = A(async (req, res, next) => {
-  console.log("Bag Body",req.body)
-  const {user, orderItems} = req.body
-  console.log(orderItems)
-  const Finduser = await Bag.find({user: user})
-   if (Finduser.length !== 0 ) {
-    
-    const product = await Bag.find({user:user})
-    function f (data){
-      return data.product ==  orderItems[0].product
+export const addItemsToBag = A(async (req, res) => {
+    try {
+      console.log("Bag Body",req.body)
+      const {userId,productId,quantity,color,size} = req.body
+      const FindUserBag = await Bag.findOne({userId});
+      if(!FindUserBag){
+        const bag = new Bag({userId,orderItems:[{productId,quantity,color,size}]})
+        
+        await bag.save()
+      }else{
+        const userBag = await Bag.findOne({userId})
+        const product = userBag.orderItems.find(p => p.productId == productId)
+        if(product){
+          product.quantity = product.quantity + quantity
+        }
+        await userBag.save()
+      }
+      const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
+      console.log("Bag Items: ",bag)
+      res.status(200).json({success:true,message:"Successfully added Items to Bag",bag})
+    } catch (error) {
+      console.error("Error Occurred during creating bag", error)
+      res.status(500).json({message: "Internal Server Error"})
     }
-    
-    if ( product[0].orderItems.filter(f).length > 0 ) {
-
-      return next(new Errorhandler("Product all ready added in Bag", 404));
-
-    }else{
-
-      await Bag.updateOne({user: user}, {$push:{
-        orderItems: [orderItems[0]]
-      }})
-    
-    }
-     
-   }else{
-
-     await Bag.create(req.body)
-
-   }
-   
-   res.status(200).json({
-     success:true,
-     
- })
  
  })
 

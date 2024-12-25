@@ -13,6 +13,7 @@ import Beauty from './Submenu/Beauty'
 import Studio from './Submenu/Studio'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
+import ProductsBar from './Submenu/ProducstBar.js'
 
 
 const Navbar = ({user}) => {
@@ -77,54 +78,33 @@ const Navbar = ({user}) => {
 
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch' to="/">
-            <li className='w-max flex items-stretch'>
-              
-              <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
-                {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
-                <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
-              </div>
-              
-            </li>
+              <li className='w-max flex items-stretch'>
+                
+                <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
+                  {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
+                  <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+                </div>
+                
+              </li>
             </Link>
             <Link className='w-max px-3 flex items-stretch' to="/">
-            <li className='w-max flex  justify-center items-center border-4 border-transparent cborder1 cursor-pointer'
-              onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
-            >
-              <h1 className='px-3'>MEN</h1>
-            </li>
+              <li className='w-max flex  justify-center items-center border-4 border-transparent cborder1 cursor-pointer'
+                onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
+              >
+                <h1 className='px-3'>HOME</h1>
+              </li>
             </Link>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
-              onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
-            >
-
-              <h1 className='px-3'>WOMEN</h1>
-            </li>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'
-              onMouseEnter={() => (setMenu3('block'), setShow3(true))} onMouseLeave={() => (setMenu3('hidden'), setShow3(false))}
-            >
-              <h1 className='px-3'>KIDS</h1>
-            </li>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
+                onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
+              >
+                <Link to={"/products"}><h1 className='px-3'>PRODUCTS</h1></Link>
+              </li>
             <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
               <Link to={'/about'}><h1 className='px-3'>ABOUT</h1></Link>
             </li>
             <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
               <Link to={'/contact'}><h1 className='px-3'>CONTACT</h1></Link>
             </li>
-            {/* <li className='w-46 flex justify-center items-center border-4 border-transparent cborder4'
-              onMouseEnter={() => (setMenu4('block'), setShow4(true))} onMouseLeave={() => (setMenu4('hidden'), setShow4(false))}
-            >
-              <h1 className='px-3'>HOME&nbsp;&&nbsp;LIVING</h1>
-            </li>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder5'
-              onMouseEnter={() => (setMenu5('block'), setShow5(true))} onMouseLeave={() => (setMenu5('hidden'), setShow5(false))}
-            >
-              <h1 className='px-3'>BEAUTY</h1>
-            </li>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder6'
-              onMouseEnter={() => (setMenu6('block'), setShow6(true))} onMouseLeave={() => (setMenu6('hidden'), setShow6(false))}
-            >
-              <h1 className='px-3 relative'>STUDIO<span className='text-red-500 text-[10px] absolute -top-1/2'>new</span></h1>
-            </li> */}
           </ul>
           <div className="w-full flex justify-center h-14 mt-1 items-center">
             <div className="flex flex-row w-full h-full mx-6 py-1">
@@ -148,14 +128,14 @@ const Navbar = ({user}) => {
             </ul>
           </div>
         </div>
-        <Men show={show1} CMenu={Menu1} parentCallback={callback} />
-        <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
-        <Kids show={show3} CMenu={Menu3} parentCallback={Callbackmenu3} />
+        {/* <Men show={show1} CMenu={Menu1} parentCallback={callback} /> */}
+        {/* <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} /> */}
+        <ProductsBar show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
+        {/* <Kids show={show3} CMenu={Menu3} parentCallback={Callbackmenu3} /> */}
         <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
         {/* <Home show={show4} CMenu={Menu4} parentCallback={Callbackmenu4} />  */}
         {/* <Beauty show={show5} CMenu={Menu5} parentCallback={Callbackmenu5} /> */}
         {/* <Studio show={show6} CMenu={Menu6} parentCallback={Callbackmenu6} /> */}
-        {/* */}
 
       </div>
       

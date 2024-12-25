@@ -57,17 +57,23 @@ export const getwishlist = (userid) => async (dispatch) => {
 export const createbag = (option) => async (dispatch) => {
     console.log(option)
     try {
+        const token = sessionStorage.getItem('token');
+        // console.log(token);
         console.log(option)
         dispatch({ type: REQUEST_CREATE_BAG })
-        const config = { headers: { "Content-Type": "application/json" } }
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/create_bag`,option, {
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
 
-        const { data } = await axios.post(`${BASE_API_URL}/api/create_bag`, option, config)
-
-        dispatch({ type: SUCCESS_CREATE_BAG, payload: data.success,})
+        dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
 
     } catch (error) {
 
-        dispatch({ type: FAIL_CREATE_BAG, payload: error.response.data.message })
+        dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
 
     }
 }
@@ -75,8 +81,16 @@ export const createbag = (option) => async (dispatch) => {
 export const getbag = (userid) => async (dispatch) => {
 
     try {
+        const token = sessionStorage.getItem('token');
+        // console.log(token);
         dispatch({ type: REQUEST_GET_BAG })
-        const { data } = await axios.get(`${BASE_API_URL}/api/bag/${userid}`)
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/bag/${userid}`,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        });
         dispatch({ type: SUCCESS_GET_BAG, payload: data.bag,})
     } catch (error) {
         dispatch({ type: FAIL_GET_BAG, payload: error.response.data.message })
@@ -100,7 +114,7 @@ export const deletebag = (fdata) => async (dispatch) => {
     try {
         dispatch({ type: SUCCESS_DELETE_BAG })
         const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}/api/delete_bag`,fdata, config )
+        const { data } = await axios.put(`${BASE_API_URL}api/shop/delete_bag`,fdata, config )
         dispatch({ type: REQUEST_DELETE_BAG, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_BAG, payload: error.response.data.message })
