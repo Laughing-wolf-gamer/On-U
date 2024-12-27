@@ -3,7 +3,6 @@ import Single_product from './Single_product'
 import { useDispatch, useSelector } from 'react-redux'
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction'
 import Loader from '../Loader/Loader'
-import Filter from './Filter'
 import { IoIosArrowDown } from 'react-icons/io'
 import { useNavigate } from 'react-router-dom'
 import Pagination from 'react-js-pagination'
@@ -11,6 +10,7 @@ import './allproduct.css'
 import {IoIosArrowBack, IoIosArrowForward} from 'react-icons/io'
 import MFilter from './MFilter'
 import Footer from '../Footer/Footer'
+import Filter from './Filter'
 
 const Allproductpage = () => {
     const dispatch = useDispatch()
@@ -142,7 +142,7 @@ const Allproductpage = () => {
      
         
     }, [dispatch, error, state, loading, state1]);
-    console.log("Products: ",product,pro,length)
+    console.log("All Products: ",product)
     return (
         <Fragment>
             <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2"><span className='text-slate-400 font-light'>Home</span>
@@ -187,8 +187,8 @@ const Allproductpage = () => {
                 {/* Filter ******************** */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-slate-200 h-max sticky top-0 ">
                     {
-                        loading === false && pro && pro.length > 0 &&
-                        <Filter product={pro} dispatchFetchAllProduct = {dispatchFetchAllProduct}/>
+                        loading === false && product && product.length > 0 && <Filter product={product} dispatchFetchAllProduct = {dispatchFetchAllProduct}/>
+                        // <Filter product={pro} dispatchFetchAllProduct = {dispatchFetchAllProduct}/>
                     }
 
                 </div>
@@ -208,38 +208,38 @@ const Allproductpage = () => {
                                        
                                     </ul>
                                     {
-                                        window.screen.width >= 1024 && length &&  length > 50 ?
+                                        window.screen.width >= 1024 && length &&  length > 1 ?
                                         <div className='paginationBox font1 border-t-[1px] border-slate-200 py-4 hidden 2xl:block xl:block lg:block relative'>
-                                        <span className='left-0 absolute text-sm text-[grey]'>Page {currentPage} of {Math.ceil(length / 50)}</span>
+                                        <span className='left-0 absolute text-sm text-[grey]'>Page {currentPage} of {Math.ceil(length / 1)}</span>
                                         {
                                             currentPage === 1 ? "" :
                                             <button className=' mr-10  text-lg flex items-center border-[1px] border-slate-300 py-1 px-5 rounded-[4px]
                                             hover:border-[black]' onClick={()=>(setCurrentPage(currentPage-1), setCurrentPageNo(currentPage-1))} ><IoIosArrowBack/><h1>Previous</h1>  </button>
                                         }
                                        
-                                    <Pagination
-                                        activePage={currentPage}
-                                        itemsCountPerPage={50}
-                                        totalItemsCount={length}
-                                        onChange={setCurrentPageNo}
-                                        nextPageText={false}
-                                        prevPageText={false}
-                                        firstPageText={false}
-                                        lastPageText={false}
-                                        itemClassFirst='hidden'
-                                        itemClassPrev='hidden'
-                                        itemClassNext='hidden'
-                                        itemClassLast='hidden'
-                                        itemClass="page-item"
-                                        linkClass="page-link"
-                                        activeClass="pageItemActive"
-                                        activeLinkClass="pageLinkActive"
-                                    />
-                                    {
-                                        currentPage === Math.ceil(pro?.length / 50) ? '' : 
-                                        <button className=' ml-10 text-lg flex items-center border-[1px] border-slate-300 py-1 px-5 rounded-[4px]
-                                        hover:border-[black]' onClick={()=>(setCurrentPage(currentPage+1), setCurrentPageNo(currentPage+1))}><h1>Next</h1> <IoIosArrowForward/> </button>
-                                    }
+                                        <Pagination
+                                            activePage={currentPage}
+                                            itemsCountPerPage={1}
+                                            totalItemsCount={length}
+                                            onChange={setCurrentPageNo}
+                                            nextPageText={false}
+                                            prevPageText={false}
+                                            firstPageText={false}
+                                            lastPageText={false}
+                                            itemClassFirst='hidden'
+                                            itemClassPrev='hidden'
+                                            itemClassNext='hidden'
+                                            itemClassLast='hidden'
+                                            itemClass="page-item"
+                                            linkClass="page-link"
+                                            activeClass="pageItemActive"
+                                            activeLinkClass="pageLinkActive"
+                                        />
+                                        {
+                                            currentPage ===  Math.ceil(length / 1) ? '' : 
+                                            <button className=' ml-10 text-lg flex items-center border-[1px] border-slate-300 py-1 px-5 rounded-[4px]
+                                            hover:border-[black]' onClick={()=>(setCurrentPage(currentPage+1), setCurrentPageNo(currentPage+1))}><h1>Next</h1> <IoIosArrowForward/> </button>
+                                        }
                                  </div> 
                                  : ""
                                     }
@@ -253,10 +253,8 @@ const Allproductpage = () => {
             </div>
             {
                ( window.screen.width < 1024 && pro) &&
-                <MFilter product={pro} />
+                <MFilter product={pro} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
             }
-
-            
             <Footer/>
         </Fragment>
 

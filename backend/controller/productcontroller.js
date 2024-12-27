@@ -35,12 +35,29 @@ export const getallproducts = A(async (req, res)=>{
         const sort = {};
 
         // Color filter (match any of the colors in the list)
-        if (req.query.color) {
+        /* if (req.query.color) {
             const colorNames = req.query.color.split(','); // Split the color query into an array of color names
             filter.color = {
               $elemMatch: {
                 id: { $in: colorNames } // Check if any object in the 'colors' array has a matching 'name' field
               }
+            };
+        } */
+        if (req.query.color) {
+            const colorNames = req.query.color.split(','); // Split the color query into an array of color names
+            console.log("Color Names: ", colorNames);
+
+            // Filtering for products that have at least one size with a matching color label
+            filter.color = {
+                size: {
+                    $elemMatch: {
+                        colors: {
+                            $elemMatch: {
+                                label: { $in: colorNames }  // Matching color labels in each size's colors array
+                            }
+                        }
+                    }
+                }
             };
         }
         if(req.query.keyword){
@@ -59,16 +76,43 @@ export const getallproducts = A(async (req, res)=>{
             };
             Object.assign(filter, createSearchQuery);  // Merge search query with the filter
         }
+        /* if(req.query.price){
+            filter.price = req.query.price ? { $gte: req.query.price } : { $gte: 0 };
+        } */
 
         // Category filter
         if (req.query.category) {
             filter.category = req.query.category;
         }
-
-        // Sorting logic (price and date)
-        if (req.query.low) {
-            sort.price = req.query.low === 'asc' ? 1 : -1; // Ensure it's either ascending or descending
+        if (req.query.price) {
+            const priceRange = req.query.price.split(',');
+            if (priceRange.length === 2) {
+                filter.price = {
+                    $gte: parseFloat(priceRange[0]),
+                    $lte: parseFloat(priceRange[1])
+                };
+            }
         }
+        /* // Sorting logic (price and date)
+        if (req.query.price) {
+            const queryPrice = req.query.price.split(':');
+            // Parse the price range into numbers
+            const minPrice = Number(queryPrice[0]);
+            const maxPrice = Number(queryPrice[1]);
+
+            console.log("Price Sort: ", minPrice, maxPrice);
+            
+            // Ensure that both minPrice and maxPrice are valid numbers before applying the filter
+            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
+                filter.salePrice = {
+                    $gte: parseFloat(minPrice),  // Minimum price filter
+                    $lte: parseFloat(maxPrice)   // Maximum price filter
+                };
+            } else {
+                // Handle invalid price range (optional)
+                console.error("Invalid price range values");
+            }
+        } */
 
         if (req.query.date) {
             sort.date = req.query.date === 'asc' ? 1 : -1; // Sort by date if specified
@@ -102,13 +146,41 @@ export const getallproducts = A(async (req, res)=>{
                 };
             }
         }
+        // const { page = 1} = req.query; // Default to page 1 and limit 10
 
+        // Parse page and limit as integers
+        if(Number(req.query.width) >= 1024){
+            let itemsPerPage = 1;
+            const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+
+            // Calculate the number of items to skip
+            const skip = (currentPage - 1) * itemsPerPage;
+
+            // Get total count of products matching the filter
+            const totalProducts = await ProductModel.countDocuments(filter);
+
+            // Calculate total pages
+            const totalPages = Math.ceil(totalProducts / itemsPerPage);
+            console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
+
+            // Fetch paginated products
+            const products = await ProductModel.find(filter)
+                .sort(sort)
+                .limit(itemsPerPage)
+                .skip(skip);
+            console.log("Fetched Products: ", products);
+            return res.status(200).json({
+                products: products,
+                pro:products,
+                length: totalProducts
+            });
+        }
         // Find products using the built query filter
         const products = await ProductModel.find(filter).sort(sort);
         console.log("Fetched Products: ", products);
 
         // Send response with products
-        res.status(200).json({
+        return res.status(200).json({
             products: products,
             pro:products,
             length: products.length

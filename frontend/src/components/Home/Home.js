@@ -432,27 +432,6 @@ const Home = () => {
             </div>
             <DraggableImageSlider images={c_banners} headers={"CATEGORIES TO BAG"}/>
             <DraggableImageSlider images={bb_banners} headers={"TOP PICKS"}/>
-            
-              {/* <div>
-                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>TOP PICKS</h1>
-                <div className='grid grid-cols-7 gap-2'>
-                  {
-                    bb_banners && bb_banners.length > 0 ? bb_banners.map((bb, index) => (
-                      <Link key={`bb_banners_${index}`} to='/products' className='mx-1'><LazyLoadImage effect='blur' src={bb} alt="" className="min-h-[200px]" /></Link>
-
-                    )):(
-                      <>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb2} alt="" className="min-h-[200px]" /></Link>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb3} alt="" className="min-h-[200px]" /></Link>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb4} alt="" className="min-h-[200px]" /></Link>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb5} alt="" className="min-h-[200px]" /></Link>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb6} alt="" className="min-h-[200px]" /></Link>
-                        <Link to='/products'><LazyLoadImage effect='blur' src={bb7} alt="" className="min-h-[200px]" /></Link>
-                      </>
-                    )
-                  }
-                </div>
-              </div> */}
             {d_banners && d_banners.length > 0 ? <DraggableImageSlider images={d_banners} headers={"DEAL OF THE DAY"}/>: <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>}
             {e_banners && e_banners.length > 0 ? <DraggableImageSlider images={e_banners} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>: <DraggableImageSlider images={[a1, 
               a2, 

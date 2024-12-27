@@ -73,9 +73,9 @@ const CarousalView = ({b_banners,indicator}) => {
               <h1 className="text-[42px] px-8 font-bold tracking-widest text-slate-800">Winter Offers</h1>
               <h2 className="text-[42px] px-8 font-semibold tracking-widest text-slate-800">2024 Collections</h2>
             </div>
-            <div className="border-[1px] text-center flex justify-center items-center border-slate-400 hover:bg-slate-800 ml-8 text-black hover:text-white mt-9 w-44 h-16">
+            <Link to={"/products"} className="border-[1px] text-center flex justify-center items-center border-slate-400 hover:bg-slate-800 ml-8 text-black hover:text-white mt-9 w-44 h-16">
               <button className="text-sm font1 font-thin tracking-widest">SHOP NOW</button>
-            </div>
+            </Link>
           </div>
         </div>
         {/* Left and Right Buttons */}
