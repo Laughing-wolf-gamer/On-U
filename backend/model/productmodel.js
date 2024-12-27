@@ -2,13 +2,22 @@ import mongoose from 'mongoose'
 
 const productModelSchema = new mongoose.Schema({
     title:{
-        type:String
+        type:String,
+        required:[true,'Please enter product title'],
     },
+    shortTitle:String,
     salePrice:{
-        type:Number
+        type:Number,
+        default:-1
     },
+    brand:{
+        type:String,
+        default:'On-U'
+    },
+
     price:{
-        type:Number
+        type:Number,
+        default:0
     },
     size:[
         {type:Object,default:[]}
@@ -40,10 +49,10 @@ const productModelSchema = new mongoose.Schema({
     style_no:{
         type:String,default:'1'
     },
-    image:[{type:String,default:[]}],
-    color:[
+    // image:[{type:String,default:[]}],
+    /* color:[
         {type:Object,default:[]}
-    ],
+    ], */
     subCategory:{
         type:String,
     },

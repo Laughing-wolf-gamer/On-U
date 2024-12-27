@@ -53,8 +53,10 @@ const ProductPreviewFull = ({product}) => {
                         <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center">
                             <HomeProductsPreview product={p} />
                             <div className="w-full p-2 bg-white flex flex-col justify-center items-center">
-                                <h2 className="font-semiBold text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center">{p?.title}</h2>
-                                <span className="text-sm font-normal">₹ {p.salePrice && p.salePrice > 0 ? p.salePrice : p.price}</span>
+                                <h2 className="font-semiBold text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
+                                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}` : p?.title}
+                                </h2>
+                                <span className="text-[20px] font-normal">₹ {p.salePrice && p.salePrice > 0 ? p.salePrice : p.price}</span>
                             </div>
                         </div>
                     ))}

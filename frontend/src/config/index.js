@@ -65,5 +65,5 @@ export const generateArrayOfRandomItems = (array,numItems)=>{
 
     return shuffled.slice(0, numItems); // Return the first `numItems` elements
 }
-export const DevMode = false;
+export const DevMode = true;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";
