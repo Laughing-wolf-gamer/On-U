@@ -55,8 +55,11 @@ export const getwishlist = A(async (req, res, next) => {
 
 export const addItemsToBag = A(async (req, res) => {
     try {
-      console.log("Bag Body",req.body)
+      // console.log("Bag Body",req.body)
       const {userId,productId,quantity,color,size} = req.body
+      if(!userId || !productId || !quantity || !color || !size){
+        return res.status(400).json({message: "Please provide all the required fields"})
+      }
       const FindUserBag = await Bag.findOne({userId});
       if(!FindUserBag){
         const bag = new Bag({userId,orderItems:[{productId,quantity,color,size}]})
@@ -80,31 +83,48 @@ export const addItemsToBag = A(async (req, res) => {
  
  })
 
-export const getbag = A(async (req, res, next) => {
+export const getbag = async (req, res) => {
+  try {
+    // console.log("Get Bag Prams: ",req.params)
+    const{userId} = req.params;
+    const bag = await Bag.findOne({userId}).populate('orderItems.productId')
+    // console.log("Bag Items: ",bag)
     
-  const bag = await Bag.findOne({user: req.params.id}).populate('orderItems.product')
-
-  
-  res.status(200).json({
-    success:true,
-    bag
+    res.status(200).json({
+      success:true,
+      bag
+    })
     
-})
+  } catch (error) {
+    console.error("Error Occurred during getting bag ", error.message)
+    // res.status(500).json({message: "Internal Server Error"})
+  }
 
-})
+}
 
 export const updateqtybag = A(async (req, res, next) => {
- 
-  const {id, qty} = req.body
-  
-  const bag = await Bag.updateOne({'orderItems._id':id},{
-    $set:{'orderItems.$.qty': qty}
-  })
+  try {
+    // console.log("Update Bag User: ",req.user)
+    const {id, qty} = req.body
+    const bag = await Bag.findOne({userId: req.user.id});
+    const product = bag.orderItems.find(p => p.productId == id)
+    product.quantity = qty
+    await bag.save()
+    res.status(200).json({success:true,message:"Successfully updated Bag",bag})
+    
+  } catch (error) {
+    console.error("Error Occurred during updating bag ", error.message)
+    res.status(500).json({message: "Internal Server Error"}) 
+    
+  }
+    /* const bag = await Bag.updateOne({'orderItems._id':id},{
+      $set:{'orderItems.$.qty': qty}
+    })
 
-   res.status(200).json({
-     success:true
-     
- })
+    res.status(200).json({
+        success:true
+        
+    }) */
  
  })
 

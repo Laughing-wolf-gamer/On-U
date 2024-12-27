@@ -273,7 +273,6 @@ import { featchallbanners } from '../../action/banner.action'
 import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 import { getuser } from '../../action/useraction'
 import CarousalView from './CarousalView'
-import HomeProductsPreview from './HomeProductsPreview'
 import { Allproduct } from '../../action/productaction'
 import { generateArrayOfRandomItems } from '../../config'
 import ProductPreviewFull from './ProductPreviewFull'
@@ -388,7 +387,7 @@ const Home = () => {
             <div className='w-full flex justify-center items-center my-10 px-4 md:px-8 h-auto'>
               <div className='w-fit  h-auto flex justify-center gap-10 items-center flex-wrap'>
                 <div className='px-4 flex w-72  flex-row gap-x-1 justify-center items-center'>
-                  <Truck  size={5} className='w-16 h-16 text-black'/>
+                  <Truck  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
                   <div className='h-full w-1 bg-black'/>
                   <div className='w-full text-left h-auto justify-center items-center'>
                     <h3 className='font-medium text-left text-[20px] text-black'>FREE SHIPPING</h3>
@@ -396,7 +395,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <CircleDollarSign  size={5} className='w-16 h-16 text-black'/>
+                  <CircleDollarSign  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
                   <div className='h-full w-1 bg-black'/>
                   <div className='w-full text-left h-auto justify-center items-center'>
                     <h3 className='font-medium text-left [20px] text-black'>SUPPORT 24/7</h3>
@@ -404,7 +403,7 @@ const Home = () => {
                   </div>
                 </div>
                 <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <Clock  size={5} className='w-16 h-16 text-black'/>
+                  <Clock  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
                   <div className='h-full w-1 bg-black'/>
                   <div className='w-full text-left h-auto justify-center items-center'>
                     <h3 className='font-medium text-left text-[20px] text-black'>Money Return</h3>
@@ -412,7 +411,13 @@ const Home = () => {
                   </div>
                 </div>
                 <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <BadgeIndianRupee size={5} className='w-16 h-16 text-black'/>
+                  <BadgeIndianRupee size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
+                  {/* <div className="flex justify-center items-center h-screen bg-gray-100">
+                    <BadgeIndianRupee
+                        size={5}
+                        className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrate"
+                    />
+                </div> */}
                   <div className='h-full w-1 bg-black'/>
                   <div className='w-full text-left h-auto justify-center items-center'>
                     <h3 className='font-medium text-left [20px] text-black'>Order Discount</h3>

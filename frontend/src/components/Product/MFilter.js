@@ -118,11 +118,11 @@ const MFilter = ({ product ,dispatchFetchAllProduct}) => {
   }
 
   function colorarray() {
-    for (const Pro of product) {
+    /* for (const Pro of product) {
       for (const col of Pro?.color) {
         color.push(col)
       }
-    }
+    } */
   }
 
   function sparray() {

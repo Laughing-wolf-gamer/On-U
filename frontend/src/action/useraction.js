@@ -26,7 +26,13 @@ import {
     FAIL_REGISTER_USER,
     LOGIN_USER_DATA,
     SUCCESS_LOGIN_USER,
-    FAIL_LOGIN_USER
+    FAIL_LOGIN_USER,
+    REQUEST_UPDATE_ADDRESS,
+    SUCCESS_UPDATE_ADDRESS,
+    FAIL_UPDATE_ADDRESS,
+    REQUEST_ALL_ADDRESS,
+    FAIL_ALL_ADDRESS,
+    SUCCESS_ALL_ADDRESS
 } from '../const/userconst'
 import axios from 'axios'
 
@@ -73,6 +79,45 @@ export const getuser = () => async (dispatch) => {
         dispatch({ type: SUCCESS_USER, payload: data.user })
     } catch (error) {
         dispatch({ type: FAIL_USER, payload: error.response?.data?.message })
+    }
+}
+export const updateAddress = (address) => async (dispatch) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        console.log("Address Data: ", address)
+        dispatch({ type: REQUEST_UPDATE_ADDRESS })
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
+        console.log("Updated Data: ", data)
+        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data.success })
+    } catch (error) {
+        dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
+    }
+}
+export const getAddress = () => async (dispatch) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        // console.log(token);
+        dispatch({ type: REQUEST_ALL_ADDRESS })
+        if(!token){
+            dispatch({ type: FAIL_ALL_ADDRESS, payload: null})
+            return;
+        }
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/getAddress`,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
+        dispatch({ type: SUCCESS_ALL_ADDRESS, payload: data.allAddresses})
+    } catch (error) {
+        dispatch({ type: FAIL_ALL_ADDRESS, payload: error.response?.data?.message })
     }
 }
 

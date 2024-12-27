@@ -43,7 +43,7 @@ const ProductPreviewFull = ({product}) => {
             <div className='w-fit sm:w-fit md:min-h-fit h-auto justify-center items-center space-x-7 flex flex-wrap md:flex-row'>
                 {
                     previewHeader && previewHeader.length > 0 && previewHeader.map((h, index) => (
-                        <h3 key={index} className={`text-black text-[20px] font-normal text-center m-2 cursor-pointer hover:text-gray-500 underline-offset-4 tracking-widest ${activePreview === h?.id ? "text-gray-700":''}`}onClick={(e)=> getRandomArrayOfProducts(e,h?.id)}>{h?.title}</h3>
+                        <h3 key={index} className={`text-black text-[20px] transition-transform duration-150 hover:animate-vibrateScale font-normal text-center m-2 cursor-pointer hover:text-gray-500 underline-offset-4 tracking-widest ${activePreview === h?.id ? "text-gray-700":''}`}onClick={(e)=> getRandomArrayOfProducts(e,h?.id)}>{h?.title}</h3>
                     ))
                 }
             </div>
@@ -53,10 +53,29 @@ const ProductPreviewFull = ({product}) => {
                         <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center">
                             <HomeProductsPreview product={p} />
                             <div className="w-full p-2 bg-white flex flex-col justify-center items-center">
-                                <h2 className="font-semiBold text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
+                                <h2 className="font-normal text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
                                     {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}` : p?.title}
                                 </h2>
-                                <span className="text-[20px] font-normal">₹ {p.salePrice && p.salePrice > 0 ? p.salePrice : p.price}</span>
+                                <div className='flex flex-row justify-between items-center'>
+                                    <span className="text-[20px] font-mono">
+                                        
+                                        {p.salePrice && p.salePrice > 0 ? (
+                                            <span className="line-through text-gray-500 hover:animate-bounce">
+                                                ₹ {p.price}
+                                                </span>
+                                            ) : (
+                                                p.price
+                                            )}
+                                        </span>
+
+                                        {p.salePrice && p.salePrice > 0 && (
+                                            <span className="ml-2 text-[20px] font-bold text-red-500 hover:animate-vibrateScale">
+                                                ₹ {p.salePrice}
+                                            </span>
+                                        )
+                                    }
+                                </div>
+
                             </div>
                         </div>
                     ))}

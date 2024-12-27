@@ -13,6 +13,12 @@ export function getRandomItems(array, numItems) {
     const shuffled = array.slice().sort(() => Math.random() - 0.5); // Shuffle the array
     return shuffled.slice(0, numItems); // Return the first `numItems` elements
 }
+export function getImagesArrayFromProducts(product){
+    const sizeRandom = getRandomItem(product.size)
+    const randomColor = getRandomItem(sizeRandom.colors);
+    return randomColor.images || [];
+    
+}
 
 export function getRandomItem(array) {
     if (!Array.isArray(array) || array.length === 0) {
@@ -65,5 +71,6 @@ export const generateArrayOfRandomItems = (array,numItems)=>{
 
     return shuffled.slice(0, numItems); // Return the first `numItems` elements
 }
-export const DevMode = true;
+
+export const DevMode = false;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";

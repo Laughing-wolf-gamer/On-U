@@ -24,7 +24,13 @@ import {REQUEST_USER_NO,
         FAIL_REGISTER_USER,
         FAIL_LOGIN_USER,
         SUCCESS_LOGIN_USER,
-        LOGIN_USER_DATA
+        LOGIN_USER_DATA,
+        REQUEST_UPDATE_ADDRESS,
+        SUCCESS_UPDATE_ADDRESS,
+        FAIL_UPDATE_ADDRESS,
+        REQUEST_ALL_ADDRESS,
+        SUCCESS_ALL_ADDRESS,
+        FAIL_ALL_ADDRESS
 } from '../const/userconst'
 
 export const registeruser = (state = {user:null}, action) =>{
@@ -154,10 +160,66 @@ export const otpverifie = (state = {userdetails:{}}, action) =>{
 
     default:
         return state;
+    }
 }
+export const addressupdate = (state = {updatedAddress:null}, action) =>{
+    switch (action.type) {
+        case REQUEST_UPDATE_ADDRESS:
+            return {
+                loading: true,
+            };
+
+        case SUCCESS_UPDATE_ADDRESS:
+            return {
+                loading: false,
+                updatedAddress:action.payload
+            };
+
+        case FAIL_UPDATE_ADDRESS:
+            return {
+                loading: false,
+                error:action.payload
+            };
+
+        case CLEAR_ERRORS:
+                return {
+                    ...state,
+                    error: null
+            };
+    
+        default:
+            return state;
+    }
 }
+export const getAddress = (state = {allAddresses:[]}, action) =>{
+    switch (action.type) {
+        case REQUEST_ALL_ADDRESS:
+            return {
+                loading: true,
+            };
 
+        case SUCCESS_ALL_ADDRESS:
+            return {
+                loading: false,
+                allAddresses:action.payload || []
+            };
 
+        case FAIL_ALL_ADDRESS:
+            return {
+                loading: false,
+                error:action.payload
+            };
+
+        case CLEAR_ERRORS:
+                return {
+                    ...state,
+                    error: null
+            };
+    
+        default:
+            return state;
+    }
+}
 export const resendotp = (state = {}, action) =>{
     switch (action.type) {
         

@@ -211,6 +211,34 @@ export const updateuserdetails =A( async(req,res,next)=>{
   })
   
 })
+export const updateAddress = A(async(req, res, next) => {
+  try {
+    const user = req.user;
+    console.log("Updating Address: ",user)
+    if(!user) return next(new Errorhandler('User not found', 404));
+    const { name, phonenumber, pincode, address1, address2, citystate } = req.body;
+    const userToUpdate = await User.findById(user.id);
+    if(!userToUpdate) return next(new Errorhandler('User not found', 500));
+    userToUpdate.addresses.push({ name, phonenumber, pincode:Number(pincode), address1, address2, citystate });
+    await userToUpdate.save();
+    res.status(200).json({success:true,message: 'Address Updated Successfully', user: userToUpdate});
+  } catch (error) {
+    console.error(`Error updating address `,error);
+    res.status(500).json({success:false,message: `Internal Server Error ${error.message}`});
+  }
+})
+export const getAllAddress = A(async(req, res, next) => {
+  try {
+    const user = req.user;
+    if(!user) return next(new Errorhandler('User not found', 404));
+    const userAddresses = await User.findById(user.id);
+    if(!userAddresses) return next(new Errorhandler('User not found', 500));
+    res.status(200).json({success:true,message: 'Address Found Successfully',allAddresses: userAddresses.addresses || []});
+  } catch (error) {
+    console.error("Error getting all address ", error.message)
+    res.status(500).json({message: "Internal Server Error"})
+  }
+})
 
 
 export const logout = A( async(req, res, next)=>{

@@ -60,14 +60,6 @@ const Registeruser = () => {
 
 
     const [state, setstate] = useState(false)
-
-    /* if (state === false && user?.user?.name) {
-        // dispatch(getuser())
-        setstate(true)
-        // redirect('/Login')
-        Alert.success('Register successfully')
-    } */
-
     
     useEffect(() => {
         if(error){

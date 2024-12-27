@@ -101,7 +101,7 @@ export const create_bag_reducer = (state = {bag:{}}, action) =>{
     }
 }
 
-export const get_bag_reducer = (state = {bag:{}}, action) =>{
+export const get_bag_reducer = (state = {bag:null}, action) =>{
     switch (action.type) {
         case REQUEST_GET_BAG:
             return {

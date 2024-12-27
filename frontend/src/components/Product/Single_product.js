@@ -5,13 +5,14 @@ import { BiRupee } from 'react-icons/bi'
 import { IoIosHeartEmpty } from 'react-icons/io'
 import { Link } from 'react-router-dom'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { capitalizeFirstLetterOfEachWord } from '../../config'
+import { capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config'
 import AutoSlidingCarousel from './AutoSlidingCarousel'
 
 
 
 const Single_product = ({ pro }) => {
-    // console.log('Single Product, Normal Screen', pro);
+    const imageArray = getImagesArrayFromProducts(pro)
+    console.log('Single Product, Normal Screen', imageArray);
 
     let slideIndex = 1;
 
@@ -76,7 +77,7 @@ const Single_product = ({ pro }) => {
     return (
         <Fragment>
             {
-                pro && pro.image &&
+                imageArray && imageArray.length > 0 &&
                 <Fragment>
                     <Link to={`/products/${pro._id}`} /* target='_blank'  */>
                         <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' /* onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())} */>

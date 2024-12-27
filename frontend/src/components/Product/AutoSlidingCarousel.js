@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { hexToRgba } from "../../config";
+import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 
 const AutoSlidingCarousel = ({ pro }) => {
+  const imageArray = getImagesArrayFromProducts(pro)
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [timer, setTimer] = useState(null); // Timer for auto sliding
 
@@ -37,7 +38,7 @@ const AutoSlidingCarousel = ({ pro }) => {
   // Function to start the auto sliding
   const startAutoSliding = () => {
     const newTimer = setInterval(() => {
-      setSlideIndex((prevIndex) => (prevIndex % pro?.image?.length) + 1); // Loop through slides
+      setSlideIndex((prevIndex) => (prevIndex % imageArray.length) + 1); // Loop through slides
     }, 7000); // Change slide every 3 seconds
     setTimer(newTimer);
   };
@@ -63,7 +64,7 @@ const AutoSlidingCarousel = ({ pro }) => {
       onMouseEnter={stopAutoSliding}
       onMouseLeave={startAutoSliding}
     >
-      {pro?.image?.map((im, i) => (
+      {imageArray.map((im, i) => (
         <div
         key={i}
         className={`${pro._id} fade w-full`}
@@ -83,7 +84,7 @@ const AutoSlidingCarousel = ({ pro }) => {
 
       {/* Navigation Dots */}
       <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
-        {pro?.image?.map((_, i) => (
+        {imageArray.map((_, i) => (
           <div
             key={i}
               className={`${pro._id} inline-block w-2 h-2 mx-1 rounded-full bg-white opacity-50 cursor-pointer`}

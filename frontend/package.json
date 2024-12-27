@@ -14,6 +14,8 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.0",
     "caniuse-lite": "^1.0.30001689",
+    "color-name-list": "^11.2.0",
+    "color-namer": "^1.4.0",
     "crypto-browserify": "^3.12.0",
     "dotenv": "^16.4.7",
     "element-class": "^0.2.2",

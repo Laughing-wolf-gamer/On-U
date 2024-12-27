@@ -1,7 +1,7 @@
 import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly';
-import { registeruser, getuser, resendotp, updateuser, otpverifie, updatedetailsuserreducer, loginuser } from './Reducer/userreducer';
+import { registeruser, getuser, resendotp, updateuser, otpverifie, updatedetailsuserreducer, loginuser, addressupdate, getAddress } from './Reducer/userreducer';
 import {Allproducts, singleProduct} from './Reducer/productreducer'
 import { create_bag_reducer, create_wishlist_reducer, delete_bag_reducer, delete_wish_reducer, get_bag_reducer, get_wishlist_reducer, update_qty_bag_reducer } from './Reducer/orderreducer';
 import { fetch_banners_reducer } from './Reducer/bannerreducer';
@@ -11,11 +11,13 @@ const reducer = combineReducers({
       Registeruser: registeruser,
       loginuser: loginuser,
       user : getuser,
+      updateAddress:addressupdate,
       resendotp: resendotp,
       updateuser: updateuser,
       userdetails: otpverifie,
       Allproducts:Allproducts,
       Sproduct: singleProduct,
+      getAllAddress:getAddress,
       banners:fetch_banners_reducer,
       wishlist:create_wishlist_reducer,
       wishlist_data:get_wishlist_reducer,

@@ -17,8 +17,14 @@ import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
 import { capitalizeFirstLetterOfEachWord, getRandomItem, getRandomItems } from '../../config'
 import ImageZoom from './ImageZoom'
+import namer from 'color-namer';
 
 const Ppage = () => {
+	const[selectedSize, setSelectedSize] = useState(null);
+	const[selectedColor, setSelectedColor] = useState([]);
+	const [selectedImage, setSelectedImage] = useState(null);
+	const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
+	const[selectedColorId,setSelectedColorId] = useState(null);
   const param = useParams()
   const alert  =useAlert()
   const dispatch = useDispatch()
@@ -29,7 +35,6 @@ const Ppage = () => {
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
   const {error:werror} = useSelector(state => state.wishlist)
-  const [firstImage, setFirstImage] = useState('')
   function Addclass() {
     var foo1 = document.querySelector(`.imgfulldiv`)
     elementClass(foo1).add('visible')
@@ -104,7 +109,39 @@ const Ppage = () => {
       dispatch(clearErrors())
     }
   }, [dispatch, param, error, alert, werror]);
-  // console.log("First Image: ",getRandomItem(product?.image));
+    const handleImageClick = (imageUrl) => {
+      setSelectedImage(imageUrl);
+    };
+    const handleSetNewImageArray = (size)=>{
+      console.log("selected color: ",size.colors[0].images[0]);
+      setSelectedSize(size);
+      setSelectedColor(size.colors);
+      setSelectedColorId(size.colors[0].id);
+    }
+    const handelSetColorImages = (color) => {
+      setSelectedSize_color_Image_Array(color.images)
+      setSelectedImage(color.images[0]);
+      setSelectedColorId(color.id);
+    }
+  useEffect(()=>{
+    if(product){
+      setSelectedSize(product.size[0]);
+      setSelectedColor(product.size[0].colors);
+      const color = product.size[0].colors[0];
+      setSelectedSize_color_Image_Array(color.images);
+      setSelectedColorId(color.id);
+      setSelectedImage(color.images[0]);
+    }
+		if(selectedSize){
+			setSelectedColor(selectedSize.colors);
+			const color = selectedSize.colors[0];
+			setSelectedSize_color_Image_Array(color.images);
+			setSelectedColorId(color.id);
+			console.log("Colors: ",color);
+			setSelectedImage(color.images[0]);
+		}
+	},[product,dispatch])
+	console.log("Selected : ",selectedSize,selectedColor);
   return (
     <Fragment>
       {
@@ -113,17 +150,17 @@ const Ppage = () => {
             <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
               <div className='h-max col-span-7'>
                 <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
-                  <ImageZoom imageSrc={firstImage || getRandomItem(product?.image)}/>
+                  <ImageZoom imageSrc={selectedImage || getRandomItem(selectedSize_color_Image_Array)}/>
                 </div>
                 <div className='h-20 justify-start items-center flex-row flex col-span-7'>
                     <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
                       {
-                        product && product.image && product.image.map((e, index) =>
+                        selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((e, index) =>
                           <div
                             key={index} // Ensure each element has a unique key
                             className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
-                            onMouseEnter={() => (Addclass(), setFirstImage(e))}
-                            onClick={() => (Addclass(), setFirstImage(e))}
+                            onMouseEnter={() => (Addclass(), setSelectedImage(e))}
+                            onClick={() => (Addclass(), setSelectedImage(e))}
                           >
                             <img
                               src={e}
@@ -149,7 +186,7 @@ const Ppage = () => {
                     {
                       product && product.salePrice && product.salePrice > 0 &&(
                         <>
-                          <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
+                          <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
                           <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>
                         </>
                       )
@@ -158,32 +195,37 @@ const Ppage = () => {
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                       {
-                        product && product.size && product.size.length > 0 && product.size.map((s) =>
+                        product && product.size && product.size.length > 0 && product.size.map((size) =>
                             <button onClick={(e)=> {
                               e.preventDefault();
-                              setCurrentSize(s);
+                              setCurrentSize(size);
+                              // setSelectedSize(s);
+                              handleSetNewImageArray(size);
   
-                            }} type='button' className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === s?.id ? "border bg-slate-700 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{s.label}</button>
+                            }} type='button' className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-700 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size.label}</button>
                         )
                       }
                   </div>
                   <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
-                    {product?.color?.length > 0 ? (
-                      product.color.map((color, i) => (
+                  {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
+                      selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
                         <button
                           onClick={(e)=> {
                             e.preventDefault();
                             setCurrentColorColor(color);
-
+                            handelSetColorImages(color)
                           }}
-                          key={i}
+                          key={`color-${color?.id}`}
                           style={{
                             backgroundColor: color?.label || color.id, // Use the label or raw color value
                             width: "30px",
                             height: "30px",
                           }}
                           type='button'
-                          className="rounded-full border border-gray-200 shadow-md"
+                          //
+                          className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 duration-300 ease-in-out shadow-md
+														${selectedColorId === color?.id ? "outline outline-2 outline-offset-1 outline-black scale-110 shadow-md" : ""}
+													`}
                           title={color?.id || color?.label || "Color"} // Optional tooltip
                         />
                       ))
@@ -193,7 +235,7 @@ const Ppage = () => {
                   </div>
 
                   <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-400 text-white mr-6  mt-4 rounded-md hover:bg-gray-700" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
-                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>WISHLIST</span></button>
+                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-base font-semibold text-slate-800'>
@@ -210,16 +252,19 @@ const Ppage = () => {
                       )
                     }
                     </h1>
-                  <h1 className='font1 '>Seller: <span className='text-[#ff3f6c] font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span> </h1>
+                  <h1 className='font1 '>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span> </h1>
                 </div>
 
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
 
                   {
                     product && product.bulletPoints && product.bulletPoints.map((e) =>
-                      <div className='mb-2 font-extralight text-slate-600'>
-                        {e.point}
-                      </div>
+                      <Fragment>
+                        <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
+                        <span className='mt-4'>
+                          <li className='list-disc mt-2'>{e.body}</li>
+                        </span>
+                      </Fragment>
                     )
                   }
                   <h1 className='font1 flex items-center mt-8 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
@@ -240,17 +285,18 @@ const Ppage = () => {
                   </h1>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
                   <div className='w-auto max-h-fit justify-center items-start space-x-4'>
-                      {
-                          product && Array.isArray(product?.size) && product.size.length > 0 && product.size.map((e,i) =>
-                              // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                              // <li className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</li>
-                              <span key={e?.id || i} className='list-none mt-2'>{e.label}</span>
-                          )
-                      }
+                    {
+                      product && Array.isArray(product?.size) && product.size.length > 0 && product.size.map((e,i) =>
+                        // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
+                        // <li className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</li>
+                        <span key={e?.id || i} className='list-none mt-2'>{e.label}</span>
+                      )
+                    }
                   </div>
                   {/* <li className='list-none mt-2'>{product?.size}</li> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
                     {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
+                    <p>{product?.material}</p>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
                   <div className='mt-2'>
                     Wipe your jewelry with a soft cloth after every use
@@ -269,7 +315,7 @@ const Ppage = () => {
 
                 <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
                   <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
-                  <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#ff3f6c] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
+                  <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
                 </div>
 
               </div>
@@ -288,5 +334,17 @@ const Ppage = () => {
     </Fragment>
   )
 }
+const getColorNameFromHex = (hexCode) => {
+  try {
+    // Use the color-namer library to get color names
+    const names = namer(hexCode);
+
+    // Get the closest name (e.g., Pantone, HTML, or Crayola categories)
+    return names.html[0].name; // `html` gives common names like CSS color names
+  } catch (error) {
+    console.error("Invalid color hex code:", error);
+    return "Unknown Color"; // Fallback if hexCode is invalid
+  }
+};
 
 export default Ppage

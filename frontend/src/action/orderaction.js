@@ -78,31 +78,41 @@ export const createbag = (option) => async (dispatch) => {
     }
 }
 
-export const getbag = (userid) => async (dispatch) => {
+export const getbag = ({userId}) => async (dispatch) => {
 
     try {
         const token = sessionStorage.getItem('token');
-        // console.log(token);
         dispatch({ type: REQUEST_GET_BAG })
-        const { data } = await axios.get(`${BASE_API_URL}/api/shop/bag/${userid}`,{
+        // console.log("Asking Bag: ",userId);
+        const res = await axios.get(`${BASE_API_URL}/api/shop/bag/${userId}`,{
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
                 "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
         });
-        dispatch({ type: SUCCESS_GET_BAG, payload: data.bag,})
+        // console.log("Bag Data: ",res.data);
+        dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})
     } catch (error) {
-        dispatch({ type: FAIL_GET_BAG, payload: error.response.data.message })
+        console.error("error: ",error);
+        dispatch({ type: FAIL_GET_BAG, payload: error.message})
     }
 }
 
 export const getqtyupdate = (qtydata) => async (dispatch) => {
 
     try {
+        const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
-        const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}/api/update_bag`,qtydata, config )
+        // const config = { headers: { "Content-Type": "application/json" } }
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, {
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        });
+        console.log("Update Bag: ",data)
         dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
@@ -112,9 +122,16 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
 export const deletebag = (fdata) => async (dispatch) => {
 
     try {
+        const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
-        const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}api/shop/delete_bag`,fdata, config )
+        // const config = { headers: { "Content-Type": "application/json" } }
+        const { data } = await axios.put(`${BASE_API_URL}api/shop/delete_bag`,fdata,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        });
         dispatch({ type: REQUEST_DELETE_BAG, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_BAG, payload: error.response.data.message })

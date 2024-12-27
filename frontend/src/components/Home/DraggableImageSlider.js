@@ -80,26 +80,27 @@ const DraggableImageSlider = ({ images, headers }) => {
                 >
                     {images.map((c, index) => (
                         <div
-                        key={`q_banners_${index}`}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            if(isDragging){
-                                navigation('/products');
-                            }
-                        }}
-                        className="m-2"
+                            key={`q_banners_${index}`}
+                            onClick={(e) => {
+                                e.preventDefault();
+                                if (isDragging) {
+                                    navigation('/products');
+                                }
+                            }}
+                            className="m-2"
                         >
-                        <li>
-                            <LazyLoadImage
-                            effect="blur"
-                            src={c}
-                            alt="banners"
-                            className="min-h-[100px] min-w-[200px]"
-                            onDragStart={handleDragStart} // Prevent image drag
-                            />
-                        </li>
+                            <li>
+                                <LazyLoadImage
+                                    effect="blur"
+                                    src={c}
+                                    alt="banners"
+                                    className="min-h-[100px] min-w-[200px] transform transition-transform duration-500 ease-in-out hover:scale-110"
+                                    onDragStart={handleDragStart} // Prevent image drag
+                                />
+                            </li>
                         </div>
                     ))}
+
                 </ul>
             </div>
         </div>

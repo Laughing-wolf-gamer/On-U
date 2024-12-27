@@ -17,6 +17,7 @@ import {createbag, createwishlist} from '../../action/orderaction'
 import {useAlert} from 'react-alert'
 import Footer from '../Footer/Footer'
 import { capitalizeFirstLetterOfEachWord } from '../../config'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const MPpage = () => {
     const param = useParams()
@@ -24,6 +25,13 @@ const MPpage = () => {
     const dispatch = useDispatch()
     const [currentColor,setCurrentColorColor] = useState({})
     const[currentSize,setCurrentSize] = useState({})
+
+    const[selectedSize, setSelectedSize] = useState(null);
+    const[selectedColor, setSelectedColor] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
+    const[selectedColorId,setSelectedColorId] = useState(null);
+
     const { product, loading, similar } = useSelector(state => state.Sproduct)
 
     useEffect(() => {
@@ -105,7 +113,41 @@ const MPpage = () => {
             alert.error('You have To Login To Add This Product Into Bag')
         }
     }
-    // console.log("Mpage Product: ",product)
+    const handleImageClick = (imageUrl) => {
+        setSelectedImage(imageUrl);
+    };
+    const handleSetNewImageArray = (size)=>{
+        console.log("selected color: ",size.colors[0].images[0]);
+        setSelectedSize(size);
+        setSelectedColor(size.colors);
+        setSelectedColorId(size.colors[0].id);
+    }
+    const handelSetColorImages = (color) => {
+        setSelectedSize_color_Image_Array(color.images)
+        setSelectedImage(color.images[0]);
+        setSelectedColorId(color.id);
+    }
+    useEffect(()=>{
+    if(product){
+        setSelectedSize(product.size[0]);
+        setSelectedColor(product.size[0].colors);
+        const color = product.size[0].colors[0];
+        setSelectedSize_color_Image_Array(color.images);
+        setSelectedColorId(color.id);
+        setSelectedImage(color.images[0]);
+    }
+        if(selectedSize){
+            setSelectedColor(selectedSize.colors);
+            const color = selectedSize.colors[0];
+            setSelectedSize_color_Image_Array(color.images);
+            setSelectedColorId(color.id);
+            console.log("Colors: ",color);
+            setSelectedImage(color.images[0]);
+        }
+    },[product,dispatch])
+    console.log("Selected : ",selectedSize,selectedColor);
+
+
     console.log("user",user)
     return (
         <Fragment>
@@ -114,23 +156,25 @@ const MPpage = () => {
                     <div>
                         <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                             {
-                                product && product.image.length > 0 && product.image?.map((im,i) => (
+                                selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((im,i) => (
                                     <div className='' key={i}>
-                                        <img src={im} alt={`product ${i}`} />
-                                        <div className='h-[30px] bg-white'>
+                                        <LazyLoadImage src={im} alt={`product ${i}`} />
+                                            <div className='h-[30px] bg-white'>
                                         </div>
                                     </div>
 
                                 ))
                             }
-
                         </Carousel>
                         <div className=''>
-                            <div className='bg-[#e9e9e9] '>
-                                <h1 className='text-lg text-[#808080e8] font-light font1 bg-white px-4'>{product?.title}</h1>
-                                <div className='border-b-[1px] border-slate-200  pb-6 pt-2 bg-white px-4'>
+                            <div className='bg-white '>
+                                <div className='border-b-[1px] border-slate-300  pb-6 pt-4'>
+                                    <h1 className='font1 text-xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.title)}</h1>
+                                    <h1 className='text-xl text-[#808080e8] font-light'>{capitalizeFirstLetterOfEachWord(product?.gender)}</h1>
+                                </div>
+                                <div className='border-b-[1px] border-white  pb-6 pt-2 bg-white px-4'>
                                     <h1 className='font1 text-lg font-semibold text-slate-800'>
-                                        <span className="mr-4 font-bold">&#8377;&nbsp;{Math.round(product?.price)}</span>
+                                        <span className="mr-4 font-bold">&nbsp;₹ {Math.round(product?.salePrice ? product?.salePrice : product?.price)}</span>
                                         {
                                             product && product.salePrice &&(
                                                 <Fragment>
@@ -144,30 +188,35 @@ const MPpage = () => {
                                     <h1 className='font1 text-base font-semibold mt-2 mb-2'>SELECT SIZE</h1>
                                     <div className='w-auto max-h-fit justify-center items-start space-x-2'>
                                         {
-                                            product && product.size.length > 0 && product.size.map((S) =>
+                                            product && product.size.length > 0 && product.size.map((size) =>
                                                 // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
                                                 <button  onClick={(e)=> {
                                                     e.preventDefault();
-                                                    setCurrentSize(S);
-                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === S?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{S.label}</button>
+                                                    setCurrentSize(size);
+                                                    // setSelectedSize(s);
+                                                    handleSetNewImageArray(size);
+                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size.label}</button>
                                             )
                                         }
                                     </div>
                                     <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
-                                        {product && product.color && product.color.length > 0 ? (
-                                            product.color.map((color, i) => (
+                                        {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
+                                            selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
                                                 <button
                                                     onClick={(e)=> {
                                                         e.preventDefault();
                                                         setCurrentColorColor(color);
+                                                        handelSetColorImages(color)
                                                     }}
-                                                    key={i}
+                                                    key={`color-${color?.id}`}
                                                     style={{
                                                         backgroundColor: color?.label || color.id, // Use the label or raw color value
                                                         width: "30px",
                                                         height: "30px",
                                                     }}
-                                                    className={`rounded-full border-2 border-black ${currentColor?.id === color?.id ? "border outline" : ""} border-gray-400 border-[2px] shadow-sm`}
+                                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 duration-300 ease-in-out shadow-md
+														${selectedColorId === color?.id ? "outline outline-2 outline-offset-1 outline-black scale-110 shadow-md" : ""}
+													`}
                                                     title={color?.id || color?.label || "Color"} // Optional tooltip
                                                 />
                                             ))
@@ -182,10 +231,13 @@ const MPpage = () => {
                                 </div>
                                 <div className='mt-2 pb-6 pt-4 bg-white px-4'>
                                     {
-                                        product && product?.bulletPoints && product?.bulletPoints.map((e) =>
-                                            <div className=' font1 font-extralight text-slate-500'>
-                                                {e.body}
-                                            </div>
+                                        product && product.bulletPoints && product.bulletPoints.map((e) =>
+                                            <Fragment>
+                                            <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
+                                            <span className='mt-4'>
+                                                <li className='list-disc mt-2'>{e.body}</li>
+                                            </span>
+                                            </Fragment>
                                         )
                                     }
                                 </div>
