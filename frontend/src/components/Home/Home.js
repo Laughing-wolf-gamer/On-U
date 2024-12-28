@@ -390,7 +390,7 @@ const Home = () => {
     mc_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "mc")?.Url || []
   }
   
-  console.log("product: ",product);
+  // console.log("mb banners",mb_banners);
   return (
     <Fragment>
       {
@@ -881,13 +881,8 @@ const Home = () => {
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                 {
                   mb_banners && mb_banners.length > 0 ? mb_banners.map((mb, index) => (
-                    <div key={`mb_banners_${index}`}>
-                    <LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                    <div className='h-[30px]'>
-                    </div>
-                  </div>
-                  )):(
-                    <>
+                    <Link key={`mb_banners_${index}`} to='/products'><div><LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]'/></div></Link>
+                  )):(<>
                       <Link to='/products'>
                         <div>
                           <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
@@ -911,12 +906,12 @@ const Home = () => {
                           </div>
                         </div>
                       </Link>
-                    </>
-                  )
+                  </>)
                 }
 
               </Carousel>
             </div>
+
 
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>DEAL OF THE DAY</h1>

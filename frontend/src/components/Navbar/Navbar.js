@@ -79,7 +79,7 @@ const Navbar = ({user}) => {
         <div className='flex-row flex justify-between items-center w-screen h-full'>
 
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
-            <Link className='w-max px-3 flex items-stretch' to="/">
+            <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
               <li className='w-max flex items-stretch'>
                 
                 <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
@@ -89,24 +89,31 @@ const Navbar = ({user}) => {
                 
               </li>
             </Link>
-            <Link className='w-max px-3 flex items-stretch' to="/">
+            <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
               <li className='w-max flex  justify-center items-center border-4 border-transparent cborder1 cursor-pointer'
                 onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
               >
                 <h1 className='px-3'>HOME</h1>
               </li>
             </Link>
-              <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
-                onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
-              >
-                <Link to={"/products"}><h1 className='px-3'>PRODUCTS</h1></Link>
+              <Link to={"/products"} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
+                <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
+                  onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
+                >
+                  <h1 className='px-3'>PRODUCTS</h1>
+                </li>
+              </Link>
+
+            <Link to={'/about'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
+                <h1 className='px-3'>ABOUT</h1>
               </li>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-              <Link to={'/about'}><h1 className='px-3'>ABOUT</h1></Link>
-            </li>
-            <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-              <Link to={'/contact'}><h1 className='px-3'>CONTACT</h1></Link>
-            </li>
+            </Link>
+            <Link to={'/contact'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
+                <h1 className='px-3'>CONTACT</h1>
+              </li>
+            </Link>
           </ul>
           <div className="w-full flex justify-center h-14 mt-1 items-center">
             <div className="flex flex-row w-full h-full mx-6 py-1">
@@ -116,16 +123,17 @@ const Navbar = ({user}) => {
 
           <div className=' h-full mt-3 max-w-fit flex flex-row items-center justify-end'>
             <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>
-                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer cborder1'
+                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer'
+                  onClick={() => (setMenu7(Menu7 === 'block' ? "hidden" : "block"), setShow7(!show7))}
                   onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
                 >
-                  <Link to="/Login" className='px-3 text-center text-xs relative'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='black' /></span> <span className='block'>Profile</span> </Link>
+                  <l1 className='px-3  text-center text-xs relative hover:animate-vibrateScale'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='black' /></span> <span className='block'>PROFILE</span> </l1>
                 </li>
                 {/* <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
                   <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='black' className='w-full h-full flex'/></span>Wishlist</h1></Link>
                 </li> */}
                 <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
-                  <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='black' /></span>Cart</h1></Link>
+                  <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='black' /></span>BAG</h1></Link>
                 </li>
             </ul>
           </div>

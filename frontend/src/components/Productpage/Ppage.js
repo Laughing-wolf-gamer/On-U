@@ -28,8 +28,8 @@ const Ppage = () => {
   const param = useParams()
   const alert  =useAlert()
   const dispatch = useDispatch()
-  const [currentColor,setCurrentColorColor] = useState({})
-  const[currentSize,setCurrentSize] = useState({})
+  const [currentColor,setCurrentColorColor] = useState(null)
+  const[currentSize,setCurrentSize] = useState(null)
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
@@ -77,7 +77,7 @@ const Ppage = () => {
       console.log(option)
       dispatch(createwishlist(option))
 
-        alert.success('Product added successfully in wishlist')
+      alert.success('Product added successfully in wishlist')
       
       
     }else{
@@ -125,19 +125,20 @@ const Ppage = () => {
   useEffect(()=>{
     if(product){
       setSelectedSize(product.size[0]);
+      setCurrentSize(product.size[0]);
       setSelectedColor(product.size[0].colors);
-      const color = product.size[0].colors[0];
-      setSelectedSize_color_Image_Array(color.images);
-      setSelectedColorId(color.id);
-      setSelectedImage(color.images[0]);
+      const currentColor = product.size[0].colors[0];
+      setSelectedSize_color_Image_Array(currentColor.images);
+      setSelectedColorId(currentColor.id);
+      setSelectedImage(currentColor.images[0]);
     }
 		if(selectedSize){
 			setSelectedColor(selectedSize.colors);
-			const color = selectedSize.colors[0];
-			setSelectedSize_color_Image_Array(color.images);
-			setSelectedColorId(color.id);
-			console.log("Colors: ",color);
-			setSelectedImage(color.images[0]);
+			const currentColor = selectedSize.colors[0];
+			setSelectedSize_color_Image_Array(currentColor.images);
+			setSelectedColorId(currentColor.id);
+			console.log("Colors: ",currentColor);
+			setSelectedImage(currentColor.images[0]);
 		}
 	},[product,dispatch])
   console.log("Radnom Images: ",);
@@ -233,7 +234,7 @@ const Ppage = () => {
                     )}
                   </div>
 
-                  <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-400 text-white mr-6  mt-4 rounded-md hover:bg-gray-700" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
+                  <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
                   <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>

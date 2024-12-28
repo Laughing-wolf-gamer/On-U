@@ -1,3 +1,4 @@
+import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
 
 const FAQ = () => {
@@ -64,10 +65,14 @@ const FAQ = () => {
             <div key={index} className="border-b border-gray-200">
               <button
                 onClick={() => toggleFAQ(index)}
-                className="w-full text-left py-4 text-lg font-semibold text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full text-left py-4 text-lg font-semibold text-gray-800 hover:bg-gray-100 focus:outline-none justify-between items-end flex rounded-md transition-all duration-300"
               >
                 {faq.question}
+                {
+                  openFAQ === index ? <ChevronDown/> :<ChevronRight/>
+                }
               </button>
+              
               {openFAQ === index && (
                 <div className="py-4 text-gray-600">
                   <p>{faq.answer}</p>

@@ -15,11 +15,13 @@ const Footer = () => {
           {/* Online Shopping */}
           <div className="border-r border-gray-300 pr-8">
             <h1 className="text-lg font-bold mb-4 text-gray-800">ONLINE SHOPPING</h1>
-            <ul className="text-sm space-y-2">
-              <li className="hover:underline text-gray-400">Men</li>
-              <li className="hover:underline text-gray-400">Women</li>
-              <li className="hover:underline text-gray-400">Kids</li>
-            </ul>
+            <Link to="/products">
+              <ul className="text-sm space-y-2">
+                <li className="hover:underline text-gray-400">Men</li>
+                <li className="hover:underline text-gray-400">Women</li>
+                <li className="hover:underline text-gray-400">Kids</li>
+              </ul>
+            </Link>
           </div>
 
           {/* Useful Links */}

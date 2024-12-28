@@ -1,0 +1,5 @@
+.carousel .carousel-slider {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}

@@ -27,7 +27,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
    <Fragment>
      
        { transitions((styles, item) => item && <animated.div style={styles}>
-        <div className={`container absolute  top-20 right-4  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white cursor-pointer`}
+        <div className={`container absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white cursor-pointer`}
           onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
         >
           <div className='px-8 py-8 '>

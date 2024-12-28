@@ -49,3 +49,13 @@ export const getuser = (async(req, res, next)=>{
   console.log("user",user);
   res.status(200).json({Success:true,message: 'User is Authenticated',user});
 })
+
+export const setAboutData = async(req,res)=>{
+    try {
+      const {about} = req.body;
+      console.log("About Data: ",about)
+    } catch (error) {
+        console.error(`Error setting about data `,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
