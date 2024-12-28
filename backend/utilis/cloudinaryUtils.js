@@ -23,6 +23,20 @@ async function handleImageUpload(file){
         throw new Error('Cloudinary upload failed');
     }
 }
+async function handleMultipleImageUpload(files) {
+    try {
+        const uploadPromises = files.map(file =>
+            cloudinary.uploader.upload(file, {
+                resource_type: 'auto',
+            })
+        );
+        const results = await Promise.all(uploadPromises);
+        return results; // Return an array of results with image URLs, public_ids, etc.
+    } catch (error) {
+        console.error('Error uploading multiple files to Cloudinary:', error);
+        throw new Error('Cloudinary multiple upload failed');
+    }
+}
 
 const upload = multer({storage});
-export {handleImageUpload,upload};
+export {handleImageUpload,handleMultipleImageUpload,upload};

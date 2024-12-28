@@ -87,8 +87,10 @@ export const getbag = async (req, res) => {
   try {
     // console.log("Get Bag Prams: ",req.params)
     const{userId} = req.params;
-    const bag = await Bag.findOne({userId}).populate('orderItems.productId')
-    // console.log("Bag Items: ",bag)
+    const bag = await Bag.findOne({ userId })
+    .populate('orderItems.productId')
+    .exec();
+    console.log("Bag Items: ",bag)
     
     res.status(200).json({
       success:true,

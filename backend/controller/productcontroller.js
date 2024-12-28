@@ -45,18 +45,12 @@ export const getallproducts = A(async (req, res)=>{
         } */
         if (req.query.color) {
             const colorNames = req.query.color.split(','); // Split the color query into an array of color names
-            console.log("Color Names: ", colorNames);
+            console.log("Color Names:", colorNames);
 
-            // Filtering for products that have at least one size with a matching color label
-            filter.color = {
-                size: {
-                    $elemMatch: {
-                        colors: {
-                            $elemMatch: {
-                                label: { $in: colorNames }  // Matching color labels in each size's colors array
-                            }
-                        }
-                    }
+            // Filter for products that have at least one color in AllColors matching the query
+            filter.AllColors = {
+                $elemMatch: {
+                    label: { $in: colorNames }  // Matching color labels in AllColors array
                 }
             };
         }
@@ -83,6 +77,9 @@ export const getallproducts = A(async (req, res)=>{
         // Category filter
         if (req.query.category) {
             filter.category = req.query.category;
+        }
+        if(req.query.subcategory){
+            filter.subCategory = req.query.subcategory;
         }
         if (req.query.price) {
             const priceRange = req.query.price.split(',');
@@ -123,18 +120,22 @@ export const getallproducts = A(async (req, res)=>{
             filter.gender = req.query.gender;
         }
 
-        console.log("Filter: ", filter);
+        
 
         // Selling price range filter
-        /* if (req.query.sellingPrice) {
-            const priceRange = req.query.sellingPrice.split(':');
+        if (req.query.sellingPrice) {
+            // const priceRange = req.query.sellingPrice.split(',');
+            console.log("Price Range: ", req.query.sellingPrice);
+            /* console.log("price:")
             if (priceRange.length === 2) {
-                filter.sellingPrice = {
+                filter.price = {
                     $gte: parseFloat(priceRange[0]),
                     $lte: parseFloat(priceRange[1])
                 };
-            }
-        } */
+            } */
+           filter.price = req.query.sellingPrice;
+        }
+        
 
         // Date filter (if applicable)
         if (req.query.dateRange) {
@@ -146,18 +147,20 @@ export const getallproducts = A(async (req, res)=>{
                 };
             }
         }
+        console.log("Filter: ", filter);
         // const { page = 1} = req.query; // Default to page 1 and limit 10
-
+        const allProducts = await ProductModel.find({});
+        const totalProducts = await ProductModel.countDocuments(filter);
         // Parse page and limit as integers
         if(Number(req.query.width) >= 1024){
-            let itemsPerPage = 1;
+            let itemsPerPage = 50;
             const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
 
             // Calculate the number of items to skip
             const skip = (currentPage - 1) * itemsPerPage;
-
+            
             // Get total count of products matching the filter
-            const totalProducts = await ProductModel.countDocuments(filter);
+            
 
             // Calculate total pages
             const totalPages = Math.ceil(totalProducts / itemsPerPage);
@@ -170,7 +173,7 @@ export const getallproducts = A(async (req, res)=>{
                 .skip(skip);
             console.log("Fetched Products: ", products);
             return res.status(200).json({
-                products: products,
+                products: allProducts,
                 pro:products,
                 length: totalProducts
             });
@@ -178,18 +181,16 @@ export const getallproducts = A(async (req, res)=>{
         // Find products using the built query filter
         const products = await ProductModel.find(filter).sort(sort);
         console.log("Fetched Products: ", products);
-
-        // Send response with products
         return res.status(200).json({
-            products: products,
+            products: allProducts,
             pro:products,
-            length: products.length
+            length: totalProducts
         });
     } catch (error) {
         console.error("Error Fetching Products: ",error);
         res.status(500).json({success:false,message:'Internal server Error',result:{
             products:[],
-            pro:null,
+            pro:[],
             length:-1,
         }})
     }

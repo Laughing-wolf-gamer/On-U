@@ -9,6 +9,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import './bag.css';
 import { Select } from '@mui/material';
 import AddAddressPopup from './AddAddressPopup';
+import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 
 const Bag = () => {
     const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
@@ -103,15 +104,17 @@ const Bag = () => {
     const handleAddressSelection = (address) => {
         setSelectedAddress(address);
     };
+    const [showPayment,setShowPayment] = useState(false);
 
     const placeOrder = () => {
         if (selectedAddress) {
-            navigate('/payment');
+            // navigate('/processPayment');
+            setShowPayment(true);
         } else {
             alert.error('Please select a delivery address');
         }
     };
-    console.log("Users Address: ",allAddresses);
+    console.log("Users Address: ",bag);
 
     return (
         <>
@@ -135,13 +138,13 @@ const Bag = () => {
 
                             <div className="flex flex-col lg:flex-row mt-4 gap-6">
                                 <div className="flex-1">
-                                    {bag.orderItems.map(item => (
-                                        <div key={item._id} className="flex items-center border-b py-4">
-                                            <Link to={`/products/${item.productId._id}`}>
-                                                <img src={item.color.images[0]} alt={item.productId.title} className="w-24 h-24 object-contain" />
+                                    {bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.map((item,i) => (
+                                        <div key={i} className="flex items-center border-b py-4">
+                                            <Link to={`/products/${item.productId?._id}`}>
+                                                <img src={item?.color?.images[0].url} alt={item?.productId?.title} className="w-24 h-24 object-contain" />
                                             </Link>
                                             <div className="ml-4 flex-1">
-                                                <h3 className="font-semibold">{item.productId.title}</h3>
+                                                <h3 className="font-semibold">{item?.productId?.title}</h3>
                                                 <p className="text-sm">Size: {item.size.label}</p>
                                                 <div className="flex items-center space-x-2 text-sm text-[#0db7af]">
                                                     <span>₹{Math.round(item.productId.salePrice)}</span>
@@ -268,8 +271,8 @@ const Bag = () => {
                                 onClose={handleClosePopup}
                                 onSave={handleSaveAddress}
                             />
-
-
+                            
+                            
                         </div>
                     ) : (
                         <div className="text-center py-6">Your bag is empty! Add items to your bag.</div>
@@ -278,6 +281,7 @@ const Bag = () => {
             ) : (
                 <div className="text-center py-6">Please log in to access your bag</div>
             )}
+            {showPayment && <PaymentProcessingPage totalAmount={mrp} closePopup={() => setShowPayment(false)} />}
         </>
     );
 };

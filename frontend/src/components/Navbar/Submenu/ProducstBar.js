@@ -9,11 +9,10 @@ import { Link } from "react-router-dom";
 
 const ProductsBar = ({show, CMenu, parentCallback}) => {
 	const transitions = useTransition(show, {
-	from: { opacity: 0 },
-	enter: { opacity: 1 },
-	leave: { opacity: 0 },
-	delay: 300,
-	
+		from: { opacity: 0 },
+		enter: { opacity: 1 },
+		leave: { opacity: 0 },
+		delay: 300,
 	})
 	let H = window.screen.height 
 	
@@ -40,19 +39,9 @@ const ProductsBar = ({show, CMenu, parentCallback}) => {
 					</div>
 					<div className=" h-[418px] ">
 					<h1 className='text-red-600 text-sm  font-semibold py-1'>Kids</h1>
-					{Kids_Category.map((data) =>
-						<Link to="/products"><li className='litext list-none py-0.5  hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
-					)}
-
-					{/* <hr className='py-1' />
-
-					<h1 className='text-red-600 text-sm font-semibold py-1'>InnerWear&nbsp;&&nbsp;Sleepwear</h1>
-					{Innerwear_Sleepwear.map((data) =>
-						<Link to="/products"><li className='litext list-none py-0.5 hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
-					)}
-					<hr className='py-1' />
-					<h1 className='text-red-600 text-sm font-semibold py-1'>Plus&nbsp;Size</h1> */}
-
+						{Kids_Category.map((data) =>
+							<Link to="/products"><li className='litext list-none py-0.5  hover:font-semibold'onClick={()=> parentCallback('hidden', false)}>{data.title}</li></Link>
+						)}
 					</div>
 
 					<div className=" h-[418px] ">

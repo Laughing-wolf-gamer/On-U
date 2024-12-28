@@ -332,12 +332,14 @@ const Home = () => {
   useEffect(() => {
     document.documentElement.scrollTo = 0;
   }, []);
+
+
+
   let b_banners = [];
   let c_banners = [];
   let bb_banners = [];
   let d_banners = [];
   let a_banners = [];
-  let ma_banners = [];
   let e_banners = [];
   let f_banners = [];
   let g_banners = [];
@@ -352,11 +354,18 @@ const Home = () => {
   let i_banners = [];
   let j_banners = [];
   let k_banners = [];
+  
+
+  // mobile
+  let ma_banners = [];
+  let mb_banners = [];
+  let dealsofdayMobile_bannsers = []
+  let categoriesToBag_Mb_bannsers = []
+  let mc_bannsers = []
   if(banners){
     b_banners = banners.find((b_cat)=> b_cat?.CategoryType === "banner")?.Url || [];
     bb_banners = banners.find((b_cat)=> b_cat?.CategoryType === "bb")?.Url || [];
     d_banners = banners.find((b_cat)=> b_cat?.CategoryType === "d")?.Url || []
-    ma_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "ma")?.Url || []
     a_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "a")?.Url || []
     c_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "c")?.Url || []
     e_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "e")?.Url || []
@@ -373,9 +382,15 @@ const Home = () => {
     i_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "i")?.Url || []
     j_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "j")?.Url || []
     k_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "k")?.Url || []
+    // mobile
+    ma_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "ma")?.Url || []
+    mb_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "mb")?.Url || []
+    dealsofdayMobile_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "dealsofdayMobile")?.Url || []
+    categoriesToBag_Mb_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "categoriesToBag_Mb")?.Url || []
+    mc_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "mc")?.Url || []
   }
   
-  
+  console.log("product: ",product);
   return (
     <Fragment>
       {
@@ -412,12 +427,6 @@ const Home = () => {
                 </div>
                 <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                   <BadgeIndianRupee size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
-                  {/* <div className="flex justify-center items-center h-screen bg-gray-100">
-                    <BadgeIndianRupee
-                        size={5}
-                        className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrate"
-                    />
-                </div> */}
                   <div className='h-full w-1 bg-black'/>
                   <div className='w-full text-left h-auto justify-center items-center'>
                     <h3 className='font-medium text-left [20px] text-black'>Order Discount</h3>
@@ -428,7 +437,7 @@ const Home = () => {
             </div>
 
             <div className=' py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
-              {product && product.length && <ProductPreviewFull product = {product}/>}
+              {product && product.length > 0 && <ProductPreviewFull product = {product}/>}
             </div>
             <DraggableImageSlider images={c_banners} headers={"CATEGORIES TO BAG"}/>
             <DraggableImageSlider images={bb_banners} headers={"TOP PICKS"}/>
@@ -859,7 +868,7 @@ const Home = () => {
           :
           <Fragment>
             <div className='bg-white '>{/* Category */}
-              <ul className='flex overflow-x-scroll '>
+              <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
                 <DraggingScrollView images={ma_banners}/>
               </ul>
             </div>
@@ -870,29 +879,41 @@ const Home = () => {
 
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                {
+                  mb_banners && mb_banners.length > 0 ? mb_banners.map((mb, index) => (
+                    <div key={`mb_banners_${index}`}>
+                    <LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
                     <div className='h-[30px]'>
                     </div>
                   </div>
-                </Link>
-                {/* <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                    <div className='h-[30px]'>
+                  )):(
+                    <>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                          <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link> */}
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
+                          </div>
+                        </div>
+                      </Link>
+                    </>
+                  )
+                }
 
               </Carousel>
             </div>
@@ -900,15 +921,21 @@ const Home = () => {
             <div>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>DEAL OF THE DAY</h1>
               <ul className='flex overflow-x-scroll '>
+                {
+                  dealsofdayMobile_bannsers && dealsofdayMobile_bannsers.length > 0 ? dealsofdayMobile_bannsers.map((d, index) => (
+                    <Link key={`dealsOfDaty_banners${index}`} to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                  )):(<>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
+                  </>)
+                }
                 
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
               </ul>
             </div>
             
@@ -973,8 +1000,8 @@ const Home = () => {
                 <ul className='flex flex-row overflow-x-scroll'>
                   
                   {
-                    [1,2,3,4,5,6,7,7].map((_,i)=>(
-                      <Link key={i} to='/products' className='m-2'><li className=''><LazyLoadImage effect='blur' src={c1 } alt="categoryToBag" className="min-h-[80px] min-w-[120px]" /></li></Link>
+                    categoriesToBag_Mb_bannsers && categoriesToBag_Mb_bannsers.length > 0 && categoriesToBag_Mb_bannsers.map((c,index)=>(
+                      <Link key={index} to='/products' className='m-2'><li className=''><LazyLoadImage effect='blur' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" /></li></Link>
                     ))
                   }
                 </ul>
@@ -982,69 +1009,82 @@ const Home = () => {
             </div>
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                    <div className='h-[30px]'>
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                    <div className='h-[30px]'>
+                {
+                  mc_bannsers && mc_bannsers.length > 0 ? mc_bannsers.map((mc, index) => (
+                    <Link key={`mc_banners_${index}`} to='/products'>
+                      <div>
+                        <LazyLoadImage effect='blur' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                        <div className='h-[30px]'>
+                        </div>
+                      </div>
+                    </Link>
+                  )):(<>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                          <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc4} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc4} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc5} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc5} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc6} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc6} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc7} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc7} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
-                <Link to='/products'>
-                  <div>
-                    <LazyLoadImage effect='blur' src={mc8} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                    <div className='h-[30px]'>
+                          </div>
+                        </div>
+                      </Link>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mc8} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
+                          <div className='h-[30px]'>
 
-                    </div>
-                  </div>
-                </Link>
+                          </div>
+                        </div>
+                      </Link>
+                  </>)
+                }
+                
               </Carousel>
             </div>
 

@@ -21,6 +21,7 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BASE_API_URL } from "./config/index.js";
 import About from "./components/About-Screen/About.js";
 import Contact from "./components/About-Screen/Contact.js";
+import FAQ from "./components/About-Screen/FAQ.js";
 
 
 function App() {
@@ -81,9 +82,11 @@ function App() {
         {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
         <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
         <Route path='/bag' element={<Bag user={user}/>}/>
+        {/* <Route path='/processPayment' element={<PaymentProcessingPage user={user}/>}/> */}
         <Route path='/address/bag' element={<Address user={user}/>}/>
         <Route path='/about' element={<About />}/>
         <Route path='/contact' element={<Contact />}/>
+        <Route path='/faq' element={<FAQ />}/>
       </Routes>
       
       

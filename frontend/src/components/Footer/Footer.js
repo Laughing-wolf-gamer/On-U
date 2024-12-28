@@ -10,11 +10,11 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <Fragment>
-      <div className="w-screen mx-3 py-10 font1 bg-slate-50 ">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black">
+      <div className="w-screen mx-3 py-10 font1 bg-slate-50">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
           {/* Online Shopping */}
-          <div>
-            <h1 className="text-lg font-bold mb-4">ONLINE SHOPPING</h1>
+          <div className="border-r border-gray-300 pr-8">
+            <h1 className="text-lg font-bold mb-4 text-gray-800">ONLINE SHOPPING</h1>
             <ul className="text-sm space-y-2">
               <li className="hover:underline text-gray-400">Men</li>
               <li className="hover:underline text-gray-400">Women</li>
@@ -23,7 +23,7 @@ const Footer = () => {
           </div>
 
           {/* Useful Links */}
-          <div>
+          <div className="border-r border-gray-300 pr-8">
             <h1 className="text-lg font-bold text-gray-800 mb-4">USEFUL LINKS</h1>
             <ul className="text-sm space-y-2">
               <Link to="/about">
@@ -32,15 +32,15 @@ const Footer = () => {
               <Link to="/contact">
                 <li className="hover:underline text-gray-400">Contact Us</li>
               </Link>
-              <li className="hover:underline text-gray-400">FAQ</li>
-              <li className="hover:underline text-gray-400">Terms Of Use</li>
-              <li className="hover:underline text-gray-400">Track Orders</li>
+              <Link to="/faq">
+                <li className="hover:underline text-gray-400">FAQ</li>
+              </Link>
             </ul>
           </div>
 
           {/* App and Social Media */}
-          <div>
-            <h1 className="text-lg font-bold mb-4">EXPERIENCE ON-U APP</h1>
+          <div className="border-r border-gray-300 pr-8">
+            <h1 className="text-lg font-bold mb-4 text-gray-800">EXPERIENCE ON-U APP</h1>
             <div className="grid grid-cols-2 gap-4 mb-6 w-52 md:w-auto">
               <img src={g1} alt="Google Play" />
               <img src={g2} alt="Apple Store" />
@@ -60,14 +60,14 @@ const Footer = () => {
               <img src={g3} alt="Original Products" className="w-12 mr-4" />
               <div>
                 <h1 className="font-normal text-gray-800">100% ORIGINAL</h1>
-                <span className="text-gray-600 flex-wrap">Guarantee for all products on On-U.com</span>
+                <span className="text-gray-600">Guarantee for all products on On-U.com</span>
               </div>
             </div>
             <div className="flex items-center text-gray-400">
               <img src={g4} alt="Easy Returns" className="w-12 mr-4" />
               <div>
                 <h1 className="font-normal text-gray-800">Return within 30 days</h1>
-               <span className="font-thin text-gray-400"> Of receiving your order</span>
+                <span className="font-thin text-gray-400"> Of receiving your order</span>
               </div>
             </div>
           </div>

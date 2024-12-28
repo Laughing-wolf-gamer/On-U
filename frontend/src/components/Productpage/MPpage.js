@@ -76,7 +76,7 @@ const MPpage = () => {
     }
     const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
 
-    function addtowishlist(e) {
+    function buyNow(e) {
         e.preventDefault();
         if (user) {
             const option ={
@@ -158,7 +158,7 @@ const MPpage = () => {
                             {
                                 selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((im,i) => (
                                     <div className='' key={i}>
-                                        <LazyLoadImage src={im} alt={`product ${i}`} />
+                                        <LazyLoadImage src={im.url ? im.url : im} alt={`product ${i}`} />
                                             <div className='h-[30px] bg-white'>
                                         </div>
                                     </div>
@@ -195,7 +195,7 @@ const MPpage = () => {
                                                     setCurrentSize(size);
                                                     // setSelectedSize(s);
                                                     handleSetNewImageArray(size);
-                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size.label}</button>
+                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size?.label}</button>
                                             )
                                         }
                                     </div>
@@ -252,13 +252,13 @@ const MPpage = () => {
                                     </div>
 
                                 </div>
-                                <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
+                                {/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                                     <h1 className='font1 flex items-center mt-2 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
                                     <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-slate-500'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice || product?.price)}</span></h1>
                                     <li className='list-none text-slate-500 text-sm'>Applicable on: Orders above &#8377;&nbsp; 1599 (only on first purchase)</li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>ONU250</span></li>
                                     <li className='list-none text-slate-500 text-sm'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
-                                </div>
+                                </div> */}
                                 <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3'>
                                     <div className="col-span-1 text-center text-xs text-slate-500 ">
                                         <img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
@@ -274,7 +274,7 @@ const MPpage = () => {
                                     </div>
                                 </div>
                                 <div className='pb-2 pt-2 bg-white px-2 grid grid-cols-2 sticky bottom-0 '>
-                                    <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
+                                    <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                                     <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-slate-500 text-white ml-4 rounded-md hover:bg-gray-900" onClick={addtobag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;CART</span></button>
                                 </div>
 

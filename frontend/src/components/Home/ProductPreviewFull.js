@@ -31,6 +31,7 @@ const ProductPreviewFull = ({product}) => {
     useEffect(()=>{
         getRandomArrayOfProducts();
     },[product])
+    console.log("ProductPreviewFull",previewProducts);
     return (
         <Fragment>
             <div className="w-fit md:w-full gap-x-7 flex flex-row md:flex-1 h-fit p-1 justify-center items-center">
@@ -69,7 +70,7 @@ const ProductPreviewFull = ({product}) => {
                                         </span>
 
                                         {p.salePrice && p.salePrice > 0 && (
-                                            <span className="ml-2 text-[20px] font-bold text-red-500 hover:animate-vibrateScale">
+                                            <span className="ml-2 text-[20px] font-bold text-gray-red hover:animate-vibrateScale">
                                                 ₹ {p.salePrice}
                                             </span>
                                         )

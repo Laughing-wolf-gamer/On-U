@@ -1,5 +1,8 @@
+import ProductCategory from "../../model/fillters Models/ProductCategory.model.js";
+import ProductGender from "../../model/fillters Models/ProductGender.model.js";
+import ProductSubCategory from "../../model/fillters Models/ProductSubCategory.js";
 import ProductModel from "../../model/productmodel.js";
-import { handleImageUpload } from "../../utilis/cloudinaryUtils.js";
+import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -25,6 +28,32 @@ export const uploadImage = async (req, res) =>{
         });
     }
 }
+export const uploadMultipleImages = async (req, res) => {
+    try {
+        const files = req.files.map(file => {
+            const b64 = Buffer.from(file.buffer).toString('base64');
+            return `data:${file.mimetype};base64,${b64}`;
+        });
+        // console.log("Files: ",files);
+
+        // Upload multiple images to Cloudinary
+        const results = await handleMultipleImageUpload(files);
+        console.log("Uploaded Images:", results.map(result => result.secure_url));
+
+        // Return the uploaded image URLs
+        res.status(200).json({
+            Success: true,
+            message: 'Images uploaded successfully!',
+            results: results.map(result => result.secure_url)
+        });
+    } catch (error) {
+        console.error('Error while uploading images:', error);
+        res.status(500).json({
+            Success: false,
+            message: 'Internal Server Error'
+        });
+    }
+};
 export const addNewProduct = async (req, res) => {
     try {
         const {
@@ -41,18 +70,21 @@ export const addNewProduct = async (req, res) => {
             salePrice,
         } = req.body;
         console.log("All fields ",req.body);
+        
+        if(!isFormValid(req.body).isValid){
+            return res.status(400).json({Success:false,message:"All fields are required ",reasons:isFormValid(req.body).reasons});
+        }
+        const AllColors = []
         size.forEach(s => {
             if(s.colors){
                 s.colors.forEach(c => {
                     const colorsImageArray = c.images.filter(c => c !== "");
                     c.images = colorsImageArray;
+                    AllColors.push(c);
                 });
-                // console.log("All Size Images Array",s);
             }
         });
-        if(!isFormValid(req.body).isValid){
-            return res.status(400).json({Success:false,message:"All fields are required ",reasons:isFormValid(req.body).reasons});
-        }
+        console.log("Colors: ",AllColors);
         const newProduct = new ProductModel({
             title,
             shortTitle,
@@ -65,20 +97,18 @@ export const addNewProduct = async (req, res) => {
             subCategory,
             price,
             salePrice,
-            // quantity,
-            // totalStock,
+            AllColors:AllColors,
         });
-        /* if(clothsize || footwearsize){
-            newProduct.size = !clothsize || clothsize?.length <= 0 ? [...footwearsize]:[...clothsize];
-        } */
         await newProduct.save();
         console.log("New Products Data: ",newProduct);
         res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
+        
     } catch (error) {
         console.error('Error while adding new product:', error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
+
 function isFormValid(formData) {
     const reasons = [];
 
@@ -102,12 +132,6 @@ function isFormValid(formData) {
     } else if (isNaN(formData.price) || formData.price <= 0) {
         reasons.push("Price must be a positive number.");
     }
-
-    /* // Color check
-    if (!formData.color || formData.color.length === 0) {
-        reasons.push("At least one color is required.");
-    } */
-
     // Size check
     if (!formData.size || formData.size.length === 0) {
         reasons.push("At least one size is required.");
@@ -231,5 +255,141 @@ export const deleteProduct = async (req, res) => {
     } catch (error) {
         console.error('Error deleting the Product', error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+
+/// Filters...
+
+export const SetGenderFilter = async (req, res) => {
+    try {
+        const{label} = req.params
+        const productGenderOptions = await ProductGender.findOne({label:gender});
+        if(!productGenderOptions){
+            const newGender = new ProductGender({label});
+            await newGender.save();
+            res.status(201).json({Success:true,message:"Successful Set New Gender"})
+        }
+
+    } catch (error) {
+        console.error("Error Setting New Gender",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+export const DeleteGenderFilter = async (req, res) => {
+    try {
+        const{label} = req.params;
+        const deletedGender = await ProductGender.findOneAndDelete({label});
+        if(!deletedGender) res.status(404).json({Success:false})
+        res.status(200).json({Success:true,message:"Deleted"})
+    }catch(error){
+        console.error("Error")
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+export const FetchGenderFilter = async (req, res) => {
+    try {
+        const allGenderOptions = await ProductGender.find({});
+        if(!allGenderOptions) res.status(404).json({Success:false,message:"No Gender Filters Found"});
+        res.status(200).json({Success:true,message:"Fetch All Genders: ",result:allGenderOptions})
+    }
+    catch (error) {
+        console.error('Error Fetching', error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+
+
+export const SetCategoryFilter = async (req, res) => {
+    try {
+        const{label} = req.params
+        const productCategoryOptions = await ProductCategory.findOne({label:category});
+        if(!productCategoryOptions){
+            const newCategory = new ProductCategory({label});
+            await newCategory.save();
+            res.status(201).json({Success:true,message:"Successful Set New Category"})
+        }
+    } catch (error) {
+        console.error("Error Setting New Category",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+
+export const DeleteCategoryFilter = async (req, res) => {
+    try {
+        const{label} = req.params;
+        const deletedCategory = await ProductCategory.findOneAndDelete({label});
+        if(!deletedCategory) res.status(404).json({Success:false})
+        res.status(200).json({Success:true,message:"Deleted"})
+    }catch(error){
+        console.error("Error")
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+
+export const FetchCategoryFilter = async (req, res) => {
+    try {
+        const allCategoryOptions = await ProductCategory.find({});
+        if(!allCategoryOptions) res.status(404).json({Success:false,message:"No Category Filters Found"});
+        res.status(200).json({Success:true,message:"Fetch All Categories: ",result:allCategoryOptions})
+    }
+    catch (error) {
+        console.error('Error Fetching', error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+
+
+
+export const SetSubCategoryFilter = async (req, res) => {
+    try {
+        const{label} = req.params
+        const productSubCategoryOptions = await ProductSubCategory.findOne({label:subCategory});
+        if(!productSubCategoryOptions){
+            const newSubCategory = new ProductSubCategory({label});
+            await newSubCategory.save();
+            res.status(201).json({Success:true,message:"Successful Set New SubCategory"})
+        }
+    } catch (error) {
+        console.error("Error Setting New SubCategory",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+export const DeleteSubCategoryFilter = async (req, res) => {
+    try {
+        const{label} = req.params;
+        const deletedSubCategory = await ProductSubCategory.findOneAndDelete({label});
+        if(!deletedSubCategory) res.status(404).json({Success:false})
+        res.status(200).json({Success:true,message:"Deleted"})
+    }catch(error){
+        console.error("Error")
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+
+
+export const FetchSubCategoryFilter = async (req, res) => {
+    try {
+        const allSubCategoryOptions = await ProductSubCategory.find({});
+        if(!allSubCategoryOptions) res.status(404).json({Success:false,message:"No SubCategory Filters Found"});
+        res.status(200).json({Success:true,message:"Fetch All SubCategories: ",result:allSubCategoryOptions})
+    }
+    catch (error) {
+        console.error('Error Fetching', error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+
+export const FetchAllFilters  = async (req, res) => {
+    try {
+        const filters = await ProductModel.find({})
+        .select('category subCategory gender AllColors -_id')  // Select only the category field and exclude _id
+        console.log("All Filters: ",filters);
+        const categoryValues = filters.map(item => item.category);
+        const genderValues = filters.map(item => item.gender);
+        const subCategoryValues = filters.map(item => item.subCategory);
+        res.status(200).json({Success:true,message:"All Filters",result:{AllCategory:categoryValues || [],AllGenders:genderValues || [],AllSubCategory:subCategoryValues || []}})
+    } catch (error) {
+        console.error("Error Fetching Fillters",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"})
     }
 }

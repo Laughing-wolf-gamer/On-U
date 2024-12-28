@@ -53,7 +53,7 @@ const HomeProductsPreview = ({ product }) => {
                             }}
                             className={`w-full h-full relative transition-opacity duration-500 ease-in-out cursor-pointer`}
                         >
-                            <LazyLoadImage effect='blur' src={imageArray[hoveredImageIndex]} width='100%' className="w-full h-full object-cover" alt={`Product ${hoveredImageIndex}`} />
+                            <LazyLoadImage effect='blur' src={imageArray[hoveredImageIndex].url ? imageArray[hoveredImageIndex].url : imageArray[hoveredImageIndex]} width='100%' className="w-full h-full object-cover" alt={`Product ${hoveredImageIndex}`} />
                         </div>
                     )
                 }

@@ -32,13 +32,15 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
         >
           <div className='px-8 py-8 '>
             <div className=' w-full'>
-               <h1 className='font1 font-semibold'>Welcome</h1>
+                <Link to='/'>
+                  <h1 className='font1 font-semibold'>Welcome</h1>
+                </Link>
                {user ? "" : <h1 className='font1 font-extralight text-sm '>To access account and manage orders  <br /></h1>}
                 
                 {
                 user ? 
                   <div>
-                      {`${user?.name}`} <br />
+                      {`${user?.user?.name}`} <br />
                       <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
                   </div>
                 
@@ -53,12 +55,13 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                
                
                 <hr className='my-4' />
-                <Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Orders</Link>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Wishlist</h1>
+                <Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Bag</Link>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
+                <Link to="/contact">
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
+                </Link>
                 <div className='flex'>
-                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-gray-600 flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
                 </div>
                
 
@@ -72,10 +75,9 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
 
                 {
                   user ? 
-                   <button className=' font1 font-smibold text-[#ff3f6c] text-sm border-[1px] px-3 py-2 
+                   <button className=' font1 font-smibold text-gray-600 text-sm border-[1px] px-3 py-2 
                    border-[#d4d5d8] hover:border-[#ff3f6c] ' onClick={logoutBTN}>LOGOUT</button>
                 :
-
                 ""
                 }
    

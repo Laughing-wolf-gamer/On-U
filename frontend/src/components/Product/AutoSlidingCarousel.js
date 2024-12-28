@@ -6,7 +6,7 @@ const AutoSlidingCarousel = ({ pro }) => {
   const imageArray = getImagesArrayFromProducts(pro)
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [timer, setTimer] = useState(null); // Timer for auto sliding
-
+  console.log("AutoSlidingCarousel", imageArray);
   // Function to move to the current slide
   const currentSlide = (n) => {
     setSlideIndex(n);
@@ -73,7 +73,7 @@ const AutoSlidingCarousel = ({ pro }) => {
 			}}
         >
           <LazyLoadImage
-            src={im}
+            src={im.url ? im.url:im}
             className="w-full h-full object-contain"
             width="100%"
             alt="product"

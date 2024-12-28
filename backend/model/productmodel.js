@@ -22,6 +22,9 @@ const productModelSchema = new mongoose.Schema({
     size:[
         {type:Object,default:[]}
     ],
+    AllColors:[{
+        type:Object,default:[],required:true
+    }],
     bulletPoints:[
         {
             header:{type:String},

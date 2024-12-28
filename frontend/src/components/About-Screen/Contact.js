@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import Footer from "../Footer/Footer";
 
 const Contact = () => {
   // State for form handling
@@ -24,7 +25,7 @@ const Contact = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-12 px-6 lg:px-24">
+    <div className="bg-gray-50 py-16 px-6 lg:px-24">
       {/* Header Section */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
@@ -36,12 +37,15 @@ const Contact = () => {
       </header>
 
       {/* Contact Form Section */}
-      <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <h2 className="text-3xl font-semibold text-gray-800 text-center">Contact Us</h2>
-        <form onSubmit={handleSubmit} className="mt-8 space-y-6">
+      <section className="max-w-5xl mx-auto bg-white p-10 rounded-xl shadow-2xl transition-all hover:scale-105 transform duration-300 ease-in-out">
+        <h2 className="text-3xl font-semibold text-gray-800 text-center mb-8">Contact Us</h2>
+        <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <div>
-              <label htmlFor="name" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="name"
+                className="block text-lg font-medium text-gray-700"
+              >
                 Full Name
               </label>
               <input
@@ -51,12 +55,15 @@ const Contact = () => {
                 value={formData.name}
                 onChange={handleChange}
                 required
-                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-lg font-medium text-gray-700">
+              <label
+                htmlFor="email"
+                className="block text-lg font-medium text-gray-700"
+              >
                 Email Address
               </label>
               <input
@@ -66,13 +73,16 @@ const Contact = () => {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
             </div>
           </div>
 
           <div>
-            <label htmlFor="message" className="block text-lg font-medium text-gray-700">
+            <label
+              htmlFor="message"
+              className="block text-lg font-medium text-gray-700"
+            >
               Your Message
             </label>
             <textarea
@@ -82,14 +92,14 @@ const Contact = () => {
               onChange={handleChange}
               rows="6"
               required
-              className="mt-2 p-3 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-300"
             ></textarea>
           </div>
 
           <div className="flex justify-center">
             <button
               type="submit"
-              className="px-8 py-3 bg-gray-600 text-white text-lg font-semibold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="px-8 py-3 bg-gray-600 text-white text-lg font-semibold rounded-lg hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-300 transform hover:scale-105"
             >
               Send Message
             </button>
@@ -99,16 +109,28 @@ const Contact = () => {
 
       {/* Contact Details Section */}
       <section className="mt-16 text-center">
-        <h3 className="text-3xl font-semibold text-gray-800">Our Contact Information</h3>
+        <h3 className="text-3xl font-semibold text-gray-800 mb-4">
+          Our Contact Information
+        </h3>
         <p className="mt-4 text-lg text-gray-600">
           You can also reach us through the following contact details:
         </p>
         <div className="mt-8 text-lg text-gray-700 space-y-4">
-          <p>Email: <span className="text-blue-600">support@on-u.com</span></p>
-          <p>Phone: <span className="text-blue-600">(123) 456-7890</span></p>
-          <p>Address: 123 ON-U St., Suite 100, City, Country</p>
+          <p>
+            Email:{" "}
+            <span className="text-blue-600 hover:underline">support@on-u.com</span>
+          </p>
+          <p>
+            Phone:{" "}
+            <span className="text-blue-600 hover:underline">(123) 456-7890</span>
+          </p>
+          <p>
+            Address: 123 ON-U St., Suite 100, City, Country
+          </p>
         </div>
       </section>
+
+      <Footer />
     </div>
   );
 };

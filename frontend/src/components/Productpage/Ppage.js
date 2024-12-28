@@ -10,14 +10,14 @@ import { BsTag } from 'react-icons/bs'
 import { BiSpreadsheet } from 'react-icons/bi'
 import elementClass from 'element-class'
 import Single_product from '../Product/Single_product'
-import {VscChromeClose} from 'react-icons/vsc'
 import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { capitalizeFirstLetterOfEachWord, getRandomItem, getRandomItems } from '../../config'
+import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
+import LoadingSpinner from '../Product/LoadingSpinner'
 
 const Ppage = () => {
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -30,7 +30,6 @@ const Ppage = () => {
   const dispatch = useDispatch()
   const [currentColor,setCurrentColorColor] = useState({})
   const[currentSize,setCurrentSize] = useState({})
-
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
@@ -141,7 +140,7 @@ const Ppage = () => {
 			setSelectedImage(color.images[0]);
 		}
 	},[product,dispatch])
-	console.log("Selected : ",selectedSize,selectedColor);
+  console.log("Radnom Images: ",);
   return (
     <Fragment>
       {
@@ -150,7 +149,7 @@ const Ppage = () => {
             <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
               <div className='h-max col-span-7'>
                 <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
-                  <ImageZoom imageSrc={selectedImage || getRandomItem(selectedSize_color_Image_Array)}/>
+                  {selectedImage ? <ImageZoom imageSrc={selectedImage.url ? selectedImage.url: selectedImage }/> : <LoadingSpinner/>}
                 </div>
                 <div className='h-20 justify-start items-center flex-row flex col-span-7'>
                     <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
@@ -163,7 +162,7 @@ const Ppage = () => {
                             onClick={() => (Addclass(), setSelectedImage(e))}
                           >
                             <img
-                              src={e}
+                              src={e.url || e}
                               className='w-full h-full object-contain  hover:scale-110'
                               alt="productImage"
                             />

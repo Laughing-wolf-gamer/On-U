@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useCallback } from 'react'
+import React, { Fragment, useState, useCallback, useEffect } from 'react'
 import './Navbar.css'
 import onUlogo from '../images/applogo.png'
 import { FaRegUser } from 'react-icons/fa'
@@ -14,9 +14,11 @@ import Studio from './Submenu/Studio'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductsBar from './Submenu/ProducstBar.js'
+import { useSelector } from 'react-redux'
 
 
 const Navbar = ({user}) => {
+  const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
   console.log("Navbar User: ", user)
   const [Menu1, setMenu1] = useState('hidden')
   const [Menu2, setMenu2] = useState('hidden')
