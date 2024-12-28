@@ -31,6 +31,35 @@ const ProductPreviewFull = ({product}) => {
     useEffect(()=>{
         getRandomArrayOfProducts();
     },[product])
+    const [rating, setRating] = useState(0);
+
+    // Generate a random rating between 1 and 5 when the component mounts
+    useEffect(() => {
+        setRating(Math.floor(Math.random() * 5) + 1);
+    }, []);
+
+    // Function to render stars based on rating
+    const renderStars = () => {
+        const stars = [];
+        for (let i = 1; i <= 5; i++) {
+            stars.push(
+                <svg
+                    key={i}
+                    xmlns="http://www.w3.org/2000/svg"
+                    className={`h-5 w-5 ${i <= rating ? 'text-yellow-400' : 'text-gray-300'} hover:animate-vibrateScale `}
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M12 17.75l-5.47 3.06 1.43-6.12L2.5 9.75l6.26-.52L12 2l2.74 6.23 6.26.52-4.42 4.94 1.43 6.12z" />
+                </svg>
+            );
+        }
+        return stars;
+    };
     console.log("ProductPreviewFull",previewProducts);
     return (
         <Fragment>
@@ -49,34 +78,37 @@ const ProductPreviewFull = ({product}) => {
                 }
             </div>
             <div className="w-screen h-auto justify-center items-center flex flex-row">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 row-span-3 justify-center items-center">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 row-span-3 justify-center items-center ">
                     {previewProducts && previewProducts.length > 0 && previewProducts.map((p, index) => (
-                        <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center">
+                        <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center hover:shadow-md rounded-md">
                             <HomeProductsPreview product={p} />
                             <div className="w-full p-2 bg-white flex flex-col justify-center items-center">
-                                <h2 className="font-normal text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
-                                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}` : p?.title}
+                                <h2 className="font-extralight text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
+                                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}...` : p?.title}
                                 </h2>
+                                {/* Rating Section */}
+                                <div className="flex mt-2">
+                                    {renderStars()}
+                                </div>
                                 <div className='flex flex-row justify-between items-center'>
                                     <span className="text-[20px] font-mono">
-                                        
                                         {p.salePrice && p.salePrice > 0 ? (
                                             <span className="line-through text-gray-500 hover:animate-bounce">
                                                 ₹ {p.price}
-                                                </span>
-                                            ) : (
-                                                p.price
-                                            )}
-                                        </span>
-
-                                        {p.salePrice && p.salePrice > 0 && (
-                                            <span className="ml-2 text-[20px] font-bold text-gray-red hover:animate-vibrateScale">
-                                                ₹ {p.salePrice}
                                             </span>
-                                        )
-                                    }
+                                        ) : (
+                                            p.price
+                                        )}
+                                    </span>
+                
+                                    {p.salePrice && p.salePrice > 0 && (
+                                        <span className="ml-2 text-[20px] font-bold text-gray-red hover:animate-vibrateScale">
+                                            ₹ {p.salePrice}
+                                        </span>
+                                    )}
                                 </div>
-
+                
+                                
                             </div>
                         </div>
                     ))}
