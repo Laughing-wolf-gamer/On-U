@@ -71,6 +71,17 @@ export const generateArrayOfRandomItems = (array,numItems)=>{
 
     return shuffled.slice(0, numItems); // Return the first `numItems` elements
 }
+export const extractSpecificWord = (inputString) => {
+    if(inputString == null){
+        return "NO TEXT"
+    }
+    // Regular expression to match uppercase words or phrases like "ON-U"
+    const regex = /\b[A-Z]+(?:-[A-Z]+)*\b/g;
+  
+    // Find matches
+    const matches = inputString.match(regex);
+    return matches ? matches[0] : null; // Return the first match or null if no match is found
+  };
 
 export const DevMode = false;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";

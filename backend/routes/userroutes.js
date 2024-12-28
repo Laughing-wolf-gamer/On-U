@@ -10,10 +10,14 @@ route.post('/loginmobile',loginMobileNumber)
 route.get('/check-auth',isAuthenticateuser, getuser)
 route.post('/otpverify/:id/:otp', optverify)
 route.get('/resendotp/:id', resendotp)
-route.get('/website/about',getAboutData)
+
+
 route.put('/updateAddress',isAuthenticateuser,updateAddress);
 route.get('/getAddress',isAuthenticateuser,getAllAddress);
 // route.put('/updateuser/:id',isAuthenticateuser, updateuser)
 route.get('/logout', logout)
+
+route.get('/website/about',getAboutData)
+
 
 export default route

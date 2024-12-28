@@ -1,6 +1,6 @@
 import express from 'express';
 import { addNewProduct, deleteProduct, editProduct, FetchAllFilters, fetchAllProducts, FetchCategoryFilter, FetchGenderFilter, FetchSubCategoryFilter, SetCategoryFilter, SetGenderFilter, SetSubCategoryFilter, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
-import { getuser, logInUser, registerNewAdmin } from '../../controller/adminController/admin.auth.controller.js';
+import { getuser, logInUser, registerNewAdmin, setAboutData } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 
@@ -15,7 +15,7 @@ route.get('/product/all',fetchAllProducts);
 route.put('/product/edit/:id',ProtectAdminRoute,editProduct);
 route.delete('/product/del/:id',ProtectAdminRoute,deleteProduct);
 
-
+route.put('/website/about',ProtectAdminRoute,setAboutData);
 
 
 

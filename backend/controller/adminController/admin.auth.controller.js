@@ -1,6 +1,7 @@
 import User from "../../model/usermodel.js";
 import bcrypt from 'bcryptjs';
 import sendtoken from "../../utilis/sendtoken.js";
+import WebSiteModel from "../../model/websiteData.model.js";
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {userName,email,password,phoneNumber} = req.body;
@@ -52,7 +53,16 @@ export const getuser = (async(req, res, next)=>{
 
 export const setAboutData = async(req,res)=>{
     try {
-      const {about} = req.body;
+      const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'AboutData'}); 
+      if(!alreadyFoundWebsiteData){
+        const about = new WebSiteModel({AboutData: req.body,tag: 'AboutData'});
+        await about.save();
+        console.log("About Data: ",about)
+        return;
+      }
+      alreadyFoundWebsiteData.AboutData = req.body;
+      await alreadyFoundWebsiteData.save();
+      res.status(200).json({Success:true,message: 'About Data set successfully'});
       console.log("About Data: ",about)
     } catch (error) {
         console.error(`Error setting about data `,error);
