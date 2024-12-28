@@ -78,7 +78,7 @@ const ProductPreviewFull = ({product}) => {
                 }
             </div>
             <div className="w-screen h-auto justify-center items-center flex flex-row">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-5 row-span-3 justify-center items-center ">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 row-span-3 justify-center items-center ">
                     {previewProducts && previewProducts.length > 0 && previewProducts.map((p, index) => (
                         <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center hover:shadow-md rounded-md">
                             <HomeProductsPreview product={p} />

@@ -4,6 +4,7 @@ import { sendMessage } from 'fast-two-sms';
 import Errorhandler from '../utilis/errorhandel.js';
 import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
+import WebSiteModel from '../model/websiteData.model.js';
 
 export const registermobile = A(async (req, res, next) => {
   try {
@@ -250,5 +251,23 @@ export const logout = A( async(req, res, next)=>{
       success:true,
       message:"Log Out sucessfully"
   })
+})
+export const setAboutData = A(async(req,res)=>{
+  try {
+    const {about} = req.body;
+    console.log("About Data: ",about)
+  } catch (error) {
+      console.error(`Error setting about data `,error);
+      res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+})
+export const getAboutData = A(async(req,res)=>{
+  try {
+    const aboutData = await WebSiteModel.findOne({name:'about'});
+  } catch (error) {
+      console.error(`Error setting about data `,error);
+      res.status(500).json({Success:false,message: 'Internal Server Error'});
+    
+  }
 })
 
