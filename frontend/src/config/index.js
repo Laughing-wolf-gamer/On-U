@@ -81,7 +81,19 @@ export const extractSpecificWord = (inputString) => {
     // Find matches
     const matches = inputString.match(regex);
     return matches ? matches[0] : null; // Return the first match or null if no match is found
-  };
+};
+export const headerConfig = ()=>{
+    const token = sessionStorage.getItem("token");
+    console.log("Header Token: ",token);
+    const headers = {
+        withCredentials:true,
+        headers: {
+            Authorization:`Bearer ${token}`,
+            "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+        },
+    }
+    return headers;
+}
 
-export const DevMode = false;
+export const DevMode = true;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";

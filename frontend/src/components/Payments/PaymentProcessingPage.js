@@ -9,7 +9,9 @@ const PaymentProcessingPage = ({isOpen,totalAmount,closePopup}) => {
     let couponDiscount = 0;
 
     // Apply coupon discount
-    const applyCoupon = () => {
+    const applyCoupon = (e) => {
+        e.stopPropagation();
+        e.preventDefault();
         if (coupon === "DISCOUNT10") {
             couponDiscount = 100;
         } else {
@@ -17,15 +19,18 @@ const PaymentProcessingPage = ({isOpen,totalAmount,closePopup}) => {
         }
         setDiscount(couponDiscount);
     };
-
-    // Calculate total amount after discount and coupon
-    // const totalAmount = originalPrice - discount;
-
-    // Open popup
-    // const openPopup = () => setIsOpen(true);
-
-    // Close popup
-    //   const closePopup = () => setIsOpen(false);
+    const HandleSetPayment = (e,paymentMode)=>{
+        e.stopPropagation();
+        e.preventDefault();
+        setPaymentMethod(paymentMethod)
+    }
+    const processPayment = async(e)=>{
+        e.stopPropagation();
+        try {
+        } catch (error) {
+            console.error("Error processing Error: ",error);
+        }
+    }
 
     // Confirm payment
     const confirmPayment = () => {
@@ -42,6 +47,7 @@ const PaymentProcessingPage = ({isOpen,totalAmount,closePopup}) => {
         <div>
             <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50" onClick={(e) => {
                 e.preventDefault();
+                console.log("Clicked Background: ");
                 closePopup();
             }}>
                 <div className="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -57,41 +63,41 @@ const PaymentProcessingPage = ({isOpen,totalAmount,closePopup}) => {
                     <div className="space-y-2">
                     <label className="flex items-center">
                         <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="UPI"
-                        onChange={() => setPaymentMethod("UPI")}
-                        className="mr-2"
+                            type="radio"
+                            name="paymentMethod"
+                            value="UPI"
+                            onChange={(e) => HandleSetPayment(e,"UPI")}
+                            className="mr-2"
                         />
                         UPI
                     </label>
                     <label className="flex items-center">
                         <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="Card"
-                        onChange={() => setPaymentMethod("Card")}
-                        className="mr-2"
+                            type="radio"
+                            name="paymentMethod"
+                            value="Card"
+                            onChange={(e) => HandleSetPayment(e,"Card")}
+                            className="mr-2"
                         />
                         Card
                     </label>
                     <label className="flex items-center">
                         <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="Netbanking"
-                        onChange={() => setPaymentMethod("Netbanking")}
-                        className="mr-2"
+                            type="radio"
+                            name="paymentMethod"
+                            value="Netbanking"
+                            onChange={(e) => HandleSetPayment(e,"Netbanking")}
+                            className="mr-2"
                         />
                         Netbanking
                     </label>
                     <label className="flex items-center">
                         <input
-                        type="radio"
-                        name="paymentMethod"
-                        value="COD"
-                        onChange={() => setPaymentMethod("COD")}
-                        className="mr-2"
+                            type="radio"
+                            name="paymentMethod"
+                            value="COD"
+                            onChange={(e) => HandleSetPayment(e,"COD")}
+                            className="mr-2"
                         />
                         Cash On Delivery
                     </label>

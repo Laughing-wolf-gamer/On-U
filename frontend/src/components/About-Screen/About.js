@@ -8,8 +8,8 @@ const About = () => {
 	const[aboutData, setAboutData] = useState(null);
 	const fetchPageAboutData = async () => {
 		try {
-			const res = await axios.get(`${BASE_API_URL}/api/auth/website/about`);
-			// console.log("Res: ",res.data);
+			const res = await axios.get(`${BASE_API_URL}/api/common/website/about`);
+			console.log("About Data: ",res?.data?.aboutData);
 			setAboutData(res?.data?.aboutData || null);
 		} catch (error) {
 			console.error("Error Fetching About Data: ",error);

@@ -1,4 +1,6 @@
 import BannerModel from "../../model/banner.model.js";
+import ProductModel from "../../model/productmodel.js";
+import WebSiteModel from "../../model/websiteData.model.js";
 
 export const getHomeBanners = async (req,res)=>{
 	try {
@@ -49,3 +51,49 @@ export const removeHomeCarousal = async (req, res) => {
 		res.status(500).json({Success: false, message: 'Internal Server Error'});
 	}
 }
+/// Filters...
+
+export const FetchAllFilters  = async (req, res) => {
+    try {
+        const filters = await ProductModel.find({})
+        .select('category subCategory gender AllColors -_id')  // Select only the category field and exclude _id
+        console.log("All Filters: ",filters);
+        const categoryValues = filters.map(item => item.category);
+        const genderValues = filters.map(item => item.gender);
+        const subCategoryValues = filters.map(item => item.subCategory);
+        res.status(200).json({Success:true,message:"All Filters",result:{AllCategory:categoryValues || [],AllGenders:genderValues || [],AllSubCategory:subCategoryValues || []}})
+    } catch (error) {
+        console.error("Error Fetching Filters",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"})
+    }
+}
+export const setAboutData = async(req,res)=>{
+    try {
+      const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'AboutData'}); 
+      if(!alreadyFoundWebsiteData){
+        const about = new WebSiteModel({AboutData: req.body,tag: 'AboutData'});
+        await about.save();
+        console.log("About Data: ",about)
+        return;
+      }
+      alreadyFoundWebsiteData.AboutData = req.body;
+      await alreadyFoundWebsiteData.save();
+      res.status(200).json({Success:true,message: 'About Data set successfully'});
+      console.log("About Data: ",about)
+    } catch (error) {
+        console.error(`Error setting about data `,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
+export const getAboutData = async(req,res)=>{
+	try {
+	  const aboutData = await WebSiteModel.findOne({tag:'AboutData'});
+	  console.log("About Data: ",aboutData)
+	  res.status(200).json({Success:true,message: 'About Data Found',aboutData: aboutData?.AboutData || {}});
+	} catch (error) {
+		console.error(`Error setting about data `,error);
+		res.status(500).json({Success:false,message: 'Internal Server Error'});
+	  
+	}
+}
+  

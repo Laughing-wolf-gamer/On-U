@@ -1,6 +1,7 @@
 import ProductCategory from "../../model/fillters Models/ProductCategory.model.js";
 import ProductGender from "../../model/fillters Models/ProductGender.model.js";
 import ProductSubCategory from "../../model/fillters Models/ProductSubCategory.js";
+import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 
@@ -258,138 +259,25 @@ export const deleteProduct = async (req, res) => {
     }
 }
 
-/// Filters...
-
-export const SetGenderFilter = async (req, res) => {
+export const getOrderById = async(req,res)=>{
     try {
-        const{label} = req.params
-        const productGenderOptions = await ProductGender.findOne({label:gender});
-        if(!productGenderOptions){
-            const newGender = new ProductGender({label});
-            await newGender.save();
-            res.status(201).json({Success:true,message:"Successful Set New Gender"})
+        const{orderId} = req.params;
+        const order = await OrderModel.findById(orderId);
+        if(!order){
+            return res.status(200).json({Success:true,message:"NO Orders Found Yet",order:[]})
         }
-
+        res.status(200).json({Success:true,message:'Fetched All Orders',order})
     } catch (error) {
-        console.error("Error Setting New Gender",error);
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}
-export const DeleteGenderFilter = async (req, res) => {
-    try {
-        const{label} = req.params;
-        const deletedGender = await ProductGender.findOneAndDelete({label});
-        if(!deletedGender) res.status(404).json({Success:false})
-        res.status(200).json({Success:true,message:"Deleted"})
-    }catch(error){
-        console.error("Error")
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}
-export const FetchGenderFilter = async (req, res) => {
-    try {
-        const allGenderOptions = await ProductGender.find({});
-        if(!allGenderOptions) res.status(404).json({Success:false,message:"No Gender Filters Found"});
-        res.status(200).json({Success:true,message:"Fetch All Genders: ",result:allGenderOptions})
-    }
-    catch (error) {
-        console.error('Error Fetching', error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
+        console.error("Error getting orders by Id: ",error);
     }
 }
 
-
-export const SetCategoryFilter = async (req, res) => {
+export const getallOrders = async(req,res)=>{
     try {
-        const{label} = req.params
-        const productCategoryOptions = await ProductCategory.findOne({label:category});
-        if(!productCategoryOptions){
-            const newCategory = new ProductCategory({label});
-            await newCategory.save();
-            res.status(201).json({Success:true,message:"Successful Set New Category"})
-        }
+        const allOrders = await OrderModel.find({});
+        console.log("Order: ",allOrders);
     } catch (error) {
-        console.error("Error Setting New Category",error);
-        res.status(500).json({Success:false,message:"Internal Server Error"})
+        console.error("Error Getting All Orders ",error);
     }
 }
 
-export const DeleteCategoryFilter = async (req, res) => {
-    try {
-        const{label} = req.params;
-        const deletedCategory = await ProductCategory.findOneAndDelete({label});
-        if(!deletedCategory) res.status(404).json({Success:false})
-        res.status(200).json({Success:true,message:"Deleted"})
-    }catch(error){
-        console.error("Error")
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}
-
-export const FetchCategoryFilter = async (req, res) => {
-    try {
-        const allCategoryOptions = await ProductCategory.find({});
-        if(!allCategoryOptions) res.status(404).json({Success:false,message:"No Category Filters Found"});
-        res.status(200).json({Success:true,message:"Fetch All Categories: ",result:allCategoryOptions})
-    }
-    catch (error) {
-        console.error('Error Fetching', error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
-    }
-}
-
-
-
-export const SetSubCategoryFilter = async (req, res) => {
-    try {
-        const{label} = req.params
-        const productSubCategoryOptions = await ProductSubCategory.findOne({label:subCategory});
-        if(!productSubCategoryOptions){
-            const newSubCategory = new ProductSubCategory({label});
-            await newSubCategory.save();
-            res.status(201).json({Success:true,message:"Successful Set New SubCategory"})
-        }
-    } catch (error) {
-        console.error("Error Setting New SubCategory",error);
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}
-export const DeleteSubCategoryFilter = async (req, res) => {
-    try {
-        const{label} = req.params;
-        const deletedSubCategory = await ProductSubCategory.findOneAndDelete({label});
-        if(!deletedSubCategory) res.status(404).json({Success:false})
-        res.status(200).json({Success:true,message:"Deleted"})
-    }catch(error){
-        console.error("Error")
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}
-
-
-export const FetchSubCategoryFilter = async (req, res) => {
-    try {
-        const allSubCategoryOptions = await ProductSubCategory.find({});
-        if(!allSubCategoryOptions) res.status(404).json({Success:false,message:"No SubCategory Filters Found"});
-        res.status(200).json({Success:true,message:"Fetch All SubCategories: ",result:allSubCategoryOptions})
-    }
-    catch (error) {
-        console.error('Error Fetching', error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
-    }
-}
-
-export const FetchAllFilters  = async (req, res) => {
-    try {
-        const filters = await ProductModel.find({})
-        .select('category subCategory gender AllColors -_id')  // Select only the category field and exclude _id
-        console.log("All Filters: ",filters);
-        const categoryValues = filters.map(item => item.category);
-        const genderValues = filters.map(item => item.gender);
-        const subCategoryValues = filters.map(item => item.subCategory);
-        res.status(200).json({Success:true,message:"All Filters",result:{AllCategory:categoryValues || [],AllGenders:genderValues || [],AllSubCategory:subCategoryValues || []}})
-    } catch (error) {
-        console.error("Error Fetching Fillters",error);
-        res.status(500).json({Success:false,message:"Internal Server Error"})
-    }
-}

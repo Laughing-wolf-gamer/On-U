@@ -21,9 +21,18 @@ import {
     SUCCESS_DELETE_WISH,
     REQUEST_DELETE_WISH,
     FAIL_DELETE_WISH,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REQUEST_CREATE_ORDER,
+    SUCCESS_CREATE_ORDER,
+    FAIL_CREATE_ORDER,
+    REQUEST_GET_ORDER,
+    SUCCESS_GET_ORDER,
+    FAIL_GET_ORDER,
+    REQUEST_GET_ALL_ORDER,
+    SUCCESS_GET_ALL_ORDER,
+    FAIL_GET_ALL_ORDER
 } from '../const/orderconst'
-import { BASE_API_URL } from '../config'
+import { BASE_API_URL, headerConfig } from '../config'
 
 export const createwishlist = (option) => async (dispatch) => {
     console.log(option)
@@ -147,6 +156,42 @@ export const deletewish = (fdata) => async (dispatch) => {
         dispatch({ type: REQUEST_DELETE_WISH, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_WISH, payload: error.response.data.message })
+    }
+}
+
+
+
+
+export const create_order = (orderdata) => async (dispatch) => {
+    try {
+        dispatch({ type: REQUEST_CREATE_ORDER })
+        // const token = sessionStorage.getItem('token');
+        const { data } = await axios.post('/api/shop/orders/create_order', orderdata, headerConfig())
+        console.log("Order Data: ",data)
+        dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.success,})
+
+    } catch (error) {
+
+        dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
+
+    }
+}
+export const fetchAllOrders = () => async (dispatch) => {
+    try {
+        dispatch({ type: REQUEST_GET_ALL_ORDER })
+        const { data } = await axios.get(`/api/shop/orders/all`, headerConfig())
+        dispatch({ type: SUCCESS_GET_ALL_ORDER, payload: data.orders,})
+    } catch (error) {
+        dispatch({ type: FAIL_GET_ALL_ORDER, payload: error.response.data.message })
+    }
+}
+export const fetchOrderById = (id) => async (dispatch) => {
+    try {
+        dispatch({ type: REQUEST_GET_ORDER })
+        const { data } = await axios.get(`/api/shop/orders/get_order/${id}`, headerConfig())
+        dispatch({ type: SUCCESS_GET_ORDER, payload: data.order,})
+    } catch (error) {
+        dispatch({ type: FAIL_GET_ORDER, payload: error.response.data.message })
     }
 }
 

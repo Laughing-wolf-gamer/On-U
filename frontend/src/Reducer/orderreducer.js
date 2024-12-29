@@ -20,7 +20,16 @@ REQUEST_UPDATE_QTY_BAG,
    SUCCESS_DELETE_WISH,
    REQUEST_DELETE_WISH,
       FAIL_DELETE_WISH,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REQUEST_CREATE_ORDER,
+    SUCCESS_CREATE_ORDER,
+    FAIL_CREATE_ORDER,
+    REQUEST_GET_ORDER,
+    SUCCESS_GET_ORDER,
+    FAIL_GET_ORDER,
+    REQUEST_GET_ALL_ORDER,
+    SUCCESS_GET_ALL_ORDER,
+    FAIL_GET_ALL_ORDER
 } from '../const/orderconst'
 
 export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
@@ -165,6 +174,83 @@ export const delete_bag_reducer = (state = {deletebag:{}}, action) =>{
                 deletebag:action.payload,
             };
         case FAIL_DELETE_BAG:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+
+
+export const create_order_reducer = (state = {order:{}}, action) =>{
+    switch (action.type) {
+        case REQUEST_CREATE_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_CREATE_ORDER:
+            return {
+                loading: false,
+                order:action.payload,
+            };
+        case FAIL_CREATE_ORDER:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+export const get_all_order_reducer = (state = {allorder:[]}, action) =>{
+    switch (action.type) {
+        case REQUEST_GET_ALL_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_GET_ALL_ORDER:
+            return {
+                loading: false,
+                allorder:action.payload || [],
+            };
+        case FAIL_GET_ALL_ORDER:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+export const get_order_by_id_reducer = (state = {orderbyid:null}, action) =>{
+    switch (action.type) {
+        case REQUEST_GET_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_GET_ORDER:
+            return {
+                loading: false,
+                orderbyid:action.payload || null,
+            };
+        case FAIL_GET_ORDER:
                 return {
                     loading: false,
                     error:action.payload

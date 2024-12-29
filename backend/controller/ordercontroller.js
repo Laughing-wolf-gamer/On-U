@@ -5,10 +5,20 @@ import Errorhandler from '../utilis/errorhandel.js'
 
 
 export const createorder = A(async (req, res, next) => {
-    
-    const {} = req.body
+  console.log("Order User",req.user);
+  console.log("Order Body",req.body)
   
-  })
+  
+})
+export const getallOrders = A(async (req, res, next) => {
+  console.log("Order User",req.user);  
+  console.log("Order Body",req.body)
+  
+})
+export const getOrderById = A(async (req, res, next) => {
+  console.log("Order User",req.user);
+  console.log("Order Body",req.body)
+})
 
 export const createwishlist = A(async (req, res, next) => {
    const {user, orderItems} = req.body

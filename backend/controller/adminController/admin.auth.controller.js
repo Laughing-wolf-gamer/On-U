@@ -51,21 +51,3 @@ export const getuser = (async(req, res, next)=>{
   res.status(200).json({Success:true,message: 'User is Authenticated',user});
 })
 
-export const setAboutData = async(req,res)=>{
-    try {
-      const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'AboutData'}); 
-      if(!alreadyFoundWebsiteData){
-        const about = new WebSiteModel({AboutData: req.body,tag: 'AboutData'});
-        await about.save();
-        console.log("About Data: ",about)
-        return;
-      }
-      alreadyFoundWebsiteData.AboutData = req.body;
-      await alreadyFoundWebsiteData.save();
-      res.status(200).json({Success:true,message: 'About Data set successfully'});
-      console.log("About Data: ",about)
-    } catch (error) {
-        console.error(`Error setting about data `,error);
-        res.status(500).json({Success:false,message: 'Internal Server Error'});
-    }
-}

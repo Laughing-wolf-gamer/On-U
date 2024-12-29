@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
-import { registerUser, getuser, optverify, resendotp, updateuser, logout, updateuserdetails, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress, getAboutData } from '../controller/usercontroller.js';
+import { registerUser, getuser, optverify, resendotp, updateuser, logout, updateuserdetails, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress } from '../controller/usercontroller.js';
 
 const route = express.Router();
 route.post('/register', registerUser)
@@ -17,7 +17,7 @@ route.get('/getAddress',isAuthenticateuser,getAllAddress);
 // route.put('/updateuser/:id',isAuthenticateuser, updateuser)
 route.get('/logout', logout)
 
-route.get('/website/about',getAboutData)
+// route.get('/website/about',getAboutData)
 
 
 export default route

@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const ordersSchema = new mongoose.Schema({
-    user:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user",
         required:true
@@ -9,10 +9,12 @@ const ordersSchema = new mongoose.Schema({
     orderItems: [{
         type:mongoose.Schema.Types.ObjectId,
         ref:"product",
-        qty:Number,
-        required:true
+        color:Object,
+        size:Object,
+        quantity:Number,
+        required:true,
     }],
-    
+    paymentMode:{type:String,default:"PrePaid",required:true},
     paymentInfo:{
         status: { type: String, required: true },
     },
@@ -20,6 +22,6 @@ const ordersSchema = new mongoose.Schema({
 
 },{timeStamps:true,})
 
-const Order = mongoose.model('MynOrder', ordersSchema)
+const OrderModel = mongoose.model('order', ordersSchema)
 
-export default Order
+export default OrderModel
