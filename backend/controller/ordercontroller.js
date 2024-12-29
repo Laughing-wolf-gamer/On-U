@@ -2,22 +2,64 @@ import A from '../Middelwares/resolveandcatch.js'
 import WhishList from '../model/wishlist.js'
 import Bag from '../model/bag.js'
 import Errorhandler from '../utilis/errorhandel.js'
+import OrderModel from '../model/ordermodel.js'
 
 
 export const createorder = A(async (req, res, next) => {
   console.log("Order User",req.user);
   console.log("Order Body",req.body)
-  
-  
+  try {
+    if(!req.user){
+      return res.status(400).json({success:false,message:"No User Found"})
+    }
+    const{orderItems,Address,bagId,TotalAmount,paymentMode,status} = req.body;
+    if(!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) return res.status(404).json({success:false,message:"Please Provide All the Data: "})
+    const orderData = new OrderModel({userId:req.user.id,orderItems,SelectedAddress:Address,TotalAmount,paymentMode,status});
+    await orderData.save();
+    const bagToRemove = await Bag.findByIdAndDelete(bagId);
+    console.log("Bag Removed: ",bagToRemove);
+    res.status(200).json({success:true,message:"order Created Successfully",result:orderData})
+  } catch (error) {
+    console.error(`Error creating Order: `,error);
+    res.status(500).json({success:false,message:"Internal server Error"});
+  }
 })
 export const getallOrders = A(async (req, res, next) => {
-  console.log("Order User",req.user);  
-  console.log("Order Body",req.body)
+  try {
+    console.log("Order User",req.user);  
+    if(!req.user){
+      return res.status(400).json({success:false,message:"No User Found!",result:[]});
+    }
+    const orders = await OrderModel.find({userId:req.user.id});
+    
+    res.status(200).json({success:true,message:"Successfully Fetched Orders",result:orders || []})
+
+  } catch (error) {
+    console.error("Error Fetching Orders...",error)
+    res.status(500).json({success:false,message:"Internal server Error"});
+  }
   
 })
 export const getOrderById = A(async (req, res, next) => {
-  console.log("Order User",req.user);
-  console.log("Order Body",req.body)
+  // console.log("Order Id: ",req.params,req.user);
+  try {
+    const{orderId} = req.params
+    if(!orderId){
+      return res.status(404).json({success:false,message:"Please Provide OrderId: ",result:null})
+    }
+    if(!req.user){
+      return res.status(404).json({success:false,message:"Please Provide User: ",result:null})
+    }
+    const order = await OrderModel.findById(orderId);
+    if(order.userId.toString() !== req.user.id){
+      return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
+    }
+    res.status(200).json({success:true,message:"Found Order",result:order});
+    
+  } catch (error) {
+    console.error("Error Getting Order Details: ",error);
+    res.status(500).json({success:false,message:"Internal server Error"});
+  }
 })
 
 export const createwishlist = A(async (req, res, next) => {

@@ -38,7 +38,8 @@ export const registermobile = A(async (req, res, next) => {
 
 })
 export const loginMobileNumber = A(async(req, res, next) => {
-  const { phonenumber } = req.body
+  const { phonenumber } = req.body;
+  console.log("Login Details: ",checkLoginType(phonenumber));
   const user = await User.findOne({phoneNumber:phonenumber});
   if(!user){
     return next( new Errorhandler('Mobile Number not found', 404))
@@ -46,6 +47,26 @@ export const loginMobileNumber = A(async(req, res, next) => {
   const token = sendtoken(user);
   return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
 })
+function checkLoginType(input) {
+  // Regex for validating phone number (simplified version)
+  const phoneRegex = /^[+]?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?[-.\s]?)?[\d\s-]{7,}$/;
+
+  // Regex for validating email
+  const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+  // Check if the input matches the phone number pattern
+  if (phoneRegex.test(input)) {
+    return 'phone';
+  }
+  
+  // Check if the input matches the email pattern
+  if (emailRegex.test(input)) {
+    return 'email';
+  }
+
+  // If it doesn't match either, return 'invalid'
+  return 'invalid';
+}
 
 
 

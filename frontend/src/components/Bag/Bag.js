@@ -30,7 +30,11 @@ const Bag = () => {
     const [isAddressFilled, setIsAddressFilled] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
-    const handleClosePopup = () => setIsAddressPopupOpen(false);
+    const handleClosePopup = () => {
+        setIsAddressPopupOpen(false)
+        dispatch(getbag({ userId: user.id }));
+        dispatch(getAddress())
+    };
     const handleSaveAddress = async (newAddress) => {
         // const updatedAddresses = [...user.user.addresses, newAddress];
         // Assuming you have a function to update the user's address in the backend
@@ -281,7 +285,7 @@ const Bag = () => {
             ) : (
                 <div className="text-center py-6">Please log in to access your bag</div>
             )}
-            {showPayment && <PaymentProcessingPage totalAmount={mrp} closePopup={() => setShowPayment(false)} />}
+            {showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={mrp} closePopup={() => setShowPayment(false)} />}
         </>
     );
 };

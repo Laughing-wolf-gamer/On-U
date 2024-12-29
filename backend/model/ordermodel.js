@@ -7,17 +7,13 @@ const ordersSchema = new mongoose.Schema({
         required:true
     },
     orderItems: [{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"product",
-        color:Object,
-        size:Object,
-        quantity:Number,
+        type:Object,
         required:true,
     }],
+    TotalAmount:{type:Number,required:true},
+    SelectedAddress:{type:Object,required:true},
     paymentMode:{type:String,default:"PrePaid",required:true},
-    paymentInfo:{
-        status: { type: String, required: true },
-    },
+    status: { type: String, default:"Processing",enum: ["Processing", "Order Confirmed", "Order Shipped", "Out for Delivery", "Delivered"], required: true },
     
 
 },{timeStamps:true,})

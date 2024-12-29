@@ -37,8 +37,8 @@ const MProductsBar = ({showPrducts}) => {
 					{/* Categories Dropdown */}
 					{activeGender === product.Gender && (
 						<div className="pl-4 space-y-2">
-							{product.category.map((category) => (
-								<div key={category.title} className="space-y-2">
+							{product.category.map((category,i) => (
+								<div key={i} className="space-y-2">
 								{/* Category Section */}
 								<div
 									className="text-black font-thin px-5 py-4 relative w-full flex "

@@ -30,7 +30,7 @@ const reducer = combineReducers({
 
 
       createOrder: create_order_reducer,
-      fetchOrderById:get_order_by_id_reducer,
+      getOrderById:get_order_by_id_reducer,
       getallOrders:get_all_order_reducer,
       
 })

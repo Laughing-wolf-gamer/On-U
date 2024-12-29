@@ -1,4 +1,4 @@
-import { BASE_API_URL } from '../config'
+import { BASE_API_URL, headerConfig } from '../config'
 import {
     REQUEST_USER_NO,
     SUCCESS_USER_NO,
@@ -102,19 +102,13 @@ export const updateAddress = (address) => async (dispatch) => {
 export const getAddress = () => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
-        // console.log(token);
+        console.log(token);
         dispatch({ type: REQUEST_ALL_ADDRESS })
         if(!token){
             dispatch({ type: FAIL_ALL_ADDRESS, payload: null})
             return;
         }
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/getAddress`,{
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        })
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/getAddress`,headerConfig())
         dispatch({ type: SUCCESS_ALL_ADDRESS, payload: data.allAddresses})
     } catch (error) {
         dispatch({ type: FAIL_ALL_ADDRESS, payload: error.response?.data?.message })

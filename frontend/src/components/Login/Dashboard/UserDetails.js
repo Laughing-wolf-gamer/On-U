@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 const UserDetails = ({ user }) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState(user);
+  const [editedUser, setEditedUser] = useState(null);
 
   const handleEditChange = (e) => {
     const { name, value } = e.target;
@@ -22,7 +22,10 @@ const UserDetails = ({ user }) => {
     setIsEditing(false);
     setEditedUser(user); // Revert to original user data
   };
-
+  console.log("Saved User:",user);
+  useEffect(()=>{
+    setEditedUser(user)
+  },[user])
   return (
     <div className="max-w-2xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
       <h2 className="font-semibold text-2xl text-gray-800 mb-4">User Details</h2>
@@ -54,7 +57,7 @@ const UserDetails = ({ user }) => {
               className="mt-2 p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
-            <p className="mt-2 text-gray-600">{editedUser?.phonenumber || 'Not Available'}</p>
+            <p className="mt-2 text-gray-600">{editedUser?.phoneNumber || 'Not Available'}</p>
           )}
         </div>
 

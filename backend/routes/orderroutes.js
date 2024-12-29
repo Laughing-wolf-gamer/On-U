@@ -4,7 +4,7 @@ import { isAuthenticateuser } from '../Middelwares/authuser.js';
 const route = express.Router();
 
 route.post('/orders/create_order',isAuthenticateuser, createorder)
-route.get('/orders/get_order/:userId',isAuthenticateuser, getOrderById)
+route.get('/orders/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)
 
 

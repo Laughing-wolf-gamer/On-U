@@ -166,9 +166,10 @@ export const create_order = (orderdata) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_CREATE_ORDER })
         // const token = sessionStorage.getItem('token');
-        const { data } = await axios.post('/api/shop/orders/create_order', orderdata, headerConfig())
+        console.log("Order Data: ",orderdata);
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/orders/create_order`, orderdata, headerConfig())
         console.log("Order Data: ",data)
-        dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.success,})
+        dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.result})
 
     } catch (error) {
 
@@ -179,17 +180,21 @@ export const create_order = (orderdata) => async (dispatch) => {
 export const fetchAllOrders = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_ALL_ORDER })
-        const { data } = await axios.get(`/api/shop/orders/all`, headerConfig())
-        dispatch({ type: SUCCESS_GET_ALL_ORDER, payload: data.orders,})
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/orders/all`, headerConfig())
+        console.log("Orders: ",data);
+        dispatch({ type: SUCCESS_GET_ALL_ORDER, payload: data.result})
     } catch (error) {
         dispatch({ type: FAIL_GET_ALL_ORDER, payload: error.response.data.message })
     }
 }
 export const fetchOrderById = (id) => async (dispatch) => {
     try {
+        // console.log("Fetch Order:  ",headerConfig());
+        
         dispatch({ type: REQUEST_GET_ORDER })
-        const { data } = await axios.get(`/api/shop/orders/get_order/${id}`, headerConfig())
-        dispatch({ type: SUCCESS_GET_ORDER, payload: data.order,})
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/orders/get_order/${id}`, headerConfig())
+        // console.log("Order: ",data);
+        dispatch({ type: SUCCESS_GET_ORDER, payload: data.result})
     } catch (error) {
         dispatch({ type: FAIL_GET_ORDER, payload: error.response.data.message })
     }
