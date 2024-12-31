@@ -58,6 +58,7 @@ export const uploadMultipleImages = async (req, res) => {
 export const addNewProduct = async (req, res) => {
     try {
         const {
+            productId,
             title,
             shortTitle,
             size,
@@ -85,8 +86,19 @@ export const addNewProduct = async (req, res) => {
                 });
             }
         });
-        console.log("Colors: ",AllColors);
+        let totalStock = 0;
+        size.forEach(s => {
+            let sizeStock = 0;
+            if(s.colors){
+                s.colors.forEach(c => {
+                    sizeStock += c.quantity;
+                });
+            }
+            totalStock += sizeStock;
+        })
+        console.log("Total Stock: ",totalStock);
         const newProduct = new ProductModel({
+            productId,
             title,
             shortTitle,
             size,
@@ -98,9 +110,12 @@ export const addNewProduct = async (req, res) => {
             subCategory,
             price,
             salePrice,
+            totalStock,
             AllColors:AllColors,
         });
+        if(!newProduct) return res.status(400).json({Success:false,message:"Product not created",result:null});
         await newProduct.save();
+
         console.log("New Products Data: ",newProduct);
         res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
         
@@ -112,7 +127,10 @@ export const addNewProduct = async (req, res) => {
 
 function isFormValid(formData) {
     const reasons = [];
-
+    if(!formData.productId){
+        reasons.push("Product ID is required.");
+        return;
+    }
     // Title check
     if (!formData.title) {
         reasons.push("Title is required.");
@@ -159,18 +177,6 @@ function isFormValid(formData) {
     }
 
     // Quantity check
-    /* if (!formData.quantity) {
-        reasons.push("Quantity is required.");
-    } else if (isNaN(formData.quantity) || formData.quantity <= 0) {
-        reasons.push("Quantity must be a positive number.");
-    }
-
-    // Total stock check
-    if (!formData.totalStock) {
-        reasons.push("Total stock is required.");
-    } else if (isNaN(formData.totalStock) || formData.totalStock <= 0) {
-        reasons.push("Total stock must be a positive number.");
-    } */
 
     // Bullet points check
     if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
@@ -200,6 +206,7 @@ export const editProduct = async (req, res) => {
         const {id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
         const {
+            productId,
             title,
             size,
             description,
@@ -216,9 +223,23 @@ export const editProduct = async (req, res) => {
         const updateFields = {};
 
         // Check each property and add it to the updateFields object if it exists in req.body
-        
+        if(productId && productId.length > 0) updateFields.productId = productId;
         if (title && title.length > 0) updateFields.title = title;
-        if (size && size.length > 0) updateFields.size = size;
+        if (size && size.length > 0) {
+            let totalStock = -1;
+            updateFields.size = size
+            size.forEach(s => {
+                let sizeStock = 0;
+                if(s.colors){
+                    s.colors.forEach(c => {
+                        sizeStock += c.quantity;
+                    });
+                }
+                totalStock += sizeStock;
+            })
+            // console.log("Colors: ",AllColors);
+            if(totalStock > 0) updateFields.totalStock = totalStock;
+        };
         if (description && description.length > 0) updateFields.description = description;
         if (material && material.length > 0) updateFields.material = material;
         if (bulletPoints && bulletPoints.length > 0) updateFields.bulletPoints = bulletPoints;
@@ -266,9 +287,27 @@ export const getOrderById = async(req,res)=>{
         if(!order){
             return res.status(200).json({Success:true,message:"NO Orders Found Yet",order:[]})
         }
-        res.status(200).json({Success:true,message:'Fetched All Orders',order})
+        res.status(200).json({Success:true,message:'Fetched All Orders',result:order})
     } catch (error) {
         console.error("Error getting orders by Id: ",error);
+        res.status(500).json({Success:false,message:"Internal Server Error",result:null});
+    }
+}
+export const updateOrderStatus = async(req,res)=>{
+    try {
+        const{orderId} = req.params;
+        const{status} = req.body;
+        if(!orderId || !status){
+            return res.status(400).json({Success:false,message:"Order Id and Status are required"});
+        }
+        const order = await OrderModel.findByIdAndUpdate(orderId,{status:status},{new:true});
+        if(!order){
+            return res.status(404).json({Success:false,message:"Order not found"});
+        }
+        res.status(200).json({Success:true,message:"Order Status Updated",result:order});
+    } catch (error) {
+        console.error("Error updating order status: ",error);
+        res.status(500).json({Success:false,message:"Internal Server Error",result:null});
     }
 }
 
@@ -276,8 +315,10 @@ export const getallOrders = async(req,res)=>{
     try {
         const allOrders = await OrderModel.find({});
         console.log("Order: ",allOrders);
+        res.status(200).json({Success:true,message:"All Orders",result:allOrders || []});
     } catch (error) {
         console.error("Error Getting All Orders ",error);
+        res.status(500).json({Success:false,message:"Internal Server Error"});
     }
 }
 

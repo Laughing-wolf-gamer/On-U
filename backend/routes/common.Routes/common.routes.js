@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, FetchAllFilters, getAboutData, getHomeBanners, removeHomeCarousal, setAboutData } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addOption, FetchAllFilters, getAboutData, getAllOptions, getHomeBanners, getOptions, removeHomeCarousal, removeOptionsByType, setAboutData } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -12,4 +12,13 @@ route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeH
 route.get('/product/filters',FetchAllFilters);
 route.put('/website/about',isAuthenticateuser,ProtectAdminRoute,setAboutData);
 route.get('/website/about',getAboutData);
+
+route.get('/options/get/all',getAllOptions)
+route.get('/options/getByType/:type', getOptions);
+
+// Route to add a new option
+route.post('/options/add',isAuthenticateuser,ProtectAdminRoute, addOption);
+
+// Route to delete an option
+route.post('/options/removeByType',isAuthenticateuser,ProtectAdminRoute,removeOptionsByType);
 export default route

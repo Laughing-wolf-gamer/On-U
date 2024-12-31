@@ -15,6 +15,7 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
     }
 
     const verifytoken = jwt.verify(token, process.env.SECRETID)
+    if(!verifytoken) return next(new Error('User not found', 403));
     const user = await User.findById(verifytoken.id)
 	if (!user) {
         return next(new ErrorHandler('User not found', 404))
@@ -22,6 +23,7 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
 	if(user.role !== 'admin') {
         return next(new ErrorHandler('Unauthorized to access this route', 401))
     }
+    console.log("Admin User: ",user);
 	req.user = user;
     next()
 })

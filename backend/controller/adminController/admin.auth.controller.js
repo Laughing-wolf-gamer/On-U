@@ -2,6 +2,8 @@ import User from "../../model/usermodel.js";
 import bcrypt from 'bcryptjs';
 import sendtoken from "../../utilis/sendtoken.js";
 import WebSiteModel from "../../model/websiteData.model.js";
+import ProductModel from "../../model/productmodel.js";
+import OrderModel from "../../model/ordermodel.js";
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {userName,email,password,phoneNumber} = req.body;
@@ -50,4 +52,180 @@ export const getuser = (async(req, res, next)=>{
   console.log("user",user);
   res.status(200).json({Success:true,message: 'User is Authenticated',user});
 })
+export const getTotalOrders = async (req,res)=>{
+  try {
+    const orders = await OrderModel.find({});
+    res.status(200).json({Success:true,message: 'All Orders',result:orders?.length || 0});
+  } catch (error) {
+    console.error("Error getting all orders: ",error);
+  }
+}
 
+
+export const UpdateSizeStock = async (req,res)=>{
+  try {
+    const {productId,sizeId,updatedAmount} = req.body;
+    const product = await ProductModel.findById(productId);
+    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
+    const size = product?.size?.find(size => size._id == sizeId);
+    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
+    size.quantity = updatedAmount;
+    if (size && size.length > 0) {
+      let totalStock = -1;
+      size.forEach(s => {
+          let sizeStock = 0;
+          if(s.colors){
+              s.colors.forEach(c => {
+                  sizeStock += c.quantity;
+              });
+          }
+          totalStock += sizeStock;
+      })
+      // console.log("Colors: ",AllColors);
+      if(totalStock > 0) product.totalStock = totalStock;
+    };
+    await product.save();
+    res.status(200).json({Success:true,message: 'Size Stock Updated Successfully'});
+  } catch (error) {
+    console.log("Error Updating Size Stock: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+export const addNewSizeToProduct = async (req,res)=>{
+  try {
+    const {productId,size} = req.body;
+    const product = await ProductModel.findById(productId);
+    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
+    product.size.push(size);
+    let totalStock = -1;
+    if (product.size && product.size.length > 0) {
+      product.size.forEach(s => {
+          let sizeStock = 0;
+          if(s.colors){
+              s.colors.forEach(c => {
+                  sizeStock += c.quantity;
+              });
+          }
+          totalStock += sizeStock;
+      })
+      // console.log("Colors: ",AllColors);
+      if(totalStock > 0) product.totalStock = totalStock;
+    }
+    await product.save();
+    res.status(200).json({Success:true,message: 'Size Added Successfully'});
+  }catch (error) {
+    console.log("Error Adding Size: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+export const addNewColorToSize = async (req,res)=>{
+  try {
+    const {productId,sizeId,color} = req.body;
+    const product = await ProductModel.findById(productId);
+    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
+    const size = product?.size?.find(size => size._id == sizeId);
+    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
+    size.colors.push(color);
+    let totalStock = -1;
+    if (size && size.length > 0) {
+      size.forEach(s => {
+          let sizeStock = 0;
+          if(s.colors){
+              s.colors.forEach(c => {
+                  sizeStock += c.quantity;
+              });
+          }
+          totalStock += sizeStock;
+      })
+      // console.log("Colors: ",AllColors);
+      if(totalStock > 0) product.totalStock = totalStock;
+    };
+    await product.save();
+    res.status(200).json({Success:true,message: 'Color Added Successfully'});
+  } catch (error) {
+    console.log("Error Adding Color: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+export const UpdateColorStock = async (req,res)=>{
+  try {
+    const {productId,sizeId,colorId,updatedAmount} = req.body;
+    const product = await ProductModel.findById(productId);
+    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
+    const size = product?.size?.find(size => size._id == sizeId);
+    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
+    const color = size?.colors?.find(color => color._id == colorId);
+    if(!color) return res.status(404).json({Success:false,message: 'Color not found'});
+    color.quantity = updatedAmount;
+    if (size && size.length > 0) {
+      let totalStock = -1;
+      size.forEach(s => {
+          let sizeStock = 0;
+          if(s.colors){
+              s.colors.forEach(c => {
+                sizeStock += c.quantity;
+              });
+          }
+          totalStock += sizeStock;
+      })
+      // console.log("Colors: ",AllColors);
+      if(totalStock > 0) product.totalStock = totalStock;
+    };
+    if(totalStock > 0) product.totalStock = totalStock;
+    await product.save();
+    res.status(200).json({Success:true,message: 'Color Stock Updated Successfully'});
+  }catch (error) {
+    console.log("Error Updating Color Stock: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+
+
+export const getProductTotalStocks = async (req,res)=>{
+  try {
+    const products = await ProductModel.find({});
+    let totalStock = 0;
+    products.forEach(product => {
+      totalStock += product?.totalStock;
+    });
+    res.status(200).json({Success:true,message: 'All Stocks',result:totalStock || -1});
+  } catch (error) {
+    console.error("Error getting all stocks: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error',result:-1});
+
+  }
+}
+export const getTotalProductStocks = async (req,res)=>{
+  try {
+    const products = await ProductModel.find({});
+    let totalStock = 0;
+    products.forEach(product => {
+      totalStock += product?.totalStock;
+    });
+    res.status(200).json({Success:true,message: 'All Products',result:totalStock});
+  } catch (error) {
+    console.error("Error getting all products: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+
+  }
+}
+export const getTotalUsers = async (req,res)=>{
+  try {
+    const users = await User.find({role: 'user'});
+    console.log("Users: ",users)
+    res.status(200).json({Success:true,message: 'All Users',result:users?.length || -1});
+  } catch (error) {
+    console.error("Error getting all users: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+export const getAllProducts = async (req,res)=>{
+  try {
+    const products = await ProductModel.find({});
+
+    res.status(200).json({Success:true,message: 'All Products',result:products?.length || 0});
+  } catch (error) {
+    console.error("Error getting all products: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
+  }
+}

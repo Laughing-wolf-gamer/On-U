@@ -16,7 +16,7 @@ const ordersSchema = new mongoose.Schema({
     status: { type: String, default:"Processing",enum: ["Processing", "Order Confirmed", "Order Shipped", "Out for Delivery", "Delivered"], required: true },
     
 
-},{timeStamps:true,})
+},{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)
 

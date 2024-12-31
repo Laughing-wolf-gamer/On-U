@@ -1,6 +1,11 @@
 import mongoose from 'mongoose'
 
 const productModelSchema = new mongoose.Schema({
+    productId:{
+        type:String,
+        required:[true,'Please enter product id'],
+    },
+    brand:String,
     title:{
         type:String,
         required:[true,'Please enter product title'],
@@ -60,7 +65,7 @@ const productModelSchema = new mongoose.Schema({
         type:String,
     },
     // quantity:{type: Number, required: true},
-    // totalStock:{type: Number, required: true},
+    totalStock:{type: Number},
     avgRating:Number,
 
 },{timestamps:true})

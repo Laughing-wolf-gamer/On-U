@@ -1,4 +1,5 @@
 import BannerModel from "../../model/banner.model.js";
+import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
 import WebSiteModel from "../../model/websiteData.model.js";
 
@@ -96,4 +97,75 @@ export const getAboutData = async(req,res)=>{
 	  
 	}
 }
+
+
+export const getAllOptions = async(req,res)=>{
+	try {
+		const allOptions = await Option.find({});
+		res.status(200).json({Success:true,message:"Featch All Options",result:allOptions || []})
+	} catch (error) {
+		console.error(`Error Feathing Options`,error);
+		res.status(500).json({Success:false,message:"Failed to feath all options"})
+	}
+}
+// Fetch all options of a specific type
+export const getOptions = async (req, res) => {
+	try {
+	  const { type } = req.params; // Get the type of option (e.g., category)
+	  
+	  if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+		return res.status(400).json({ message: 'Invalid option type' });
+	  }
+  
+	  const options = await Option.find({ type });
+  
+	  res.status(200).json({Success:true,message:"Featch All Options",result:options});
+	} catch (error) {
+	  res.status(500).json({ message: 'Server error' });
+	}
+};
+  
+  // Add a new option
+export const addOption = async (req, res) => {
+	try {
+		const { type, value } = req.body;
+	
+		if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+			return res.status(400).json({ message: 'Invalid option type' });
+		}
+	
+		const existingOption = await Option.findOne({ type, value });
+		if (existingOption) {
+			return res.status(400).json({ message: 'Option already exists' });
+		}
+	
+		const newOption = new Option({ type, value });
+		await newOption.save();
+	
+		res.status(201).json({ Success:true,message: 'Option added successfully', result: newOption });
+	} catch (error) {
+	  	res.status(500).json({ message: 'Server error' ,result:null});
+	}
+};
+  
+  // Delete an option by its value
+export const removeOptionsByType = async (req, res) => {
+	try {
+		// const parseData = JSON.parse(req.body);
+		const { removingData} = req.body;
+		console.log("Delete Options: ",removingData);
+		const {type,value} = JSON.parse(removingData);
+		if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+			return res.status(400).json({ message: 'Invalid option type' });
+		}
+
+		const deleted = await Option.findOneAndDelete({ type, value });
+		console.log("Deleted Options: ",deleted);
+
+		res.status(200).json({ Success:true,message: 'Option deleted successfully' });
+	} catch (error) {
+		console.error("Error Deleting Options ",error);
+		res.status(500).json({ message: 'Server error' });
+	}
+};
   
