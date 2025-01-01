@@ -62,123 +62,298 @@ export const getTotalOrders = async (req,res)=>{
 }
 
 
-export const UpdateSizeStock = async (req,res)=>{
+export const UpdateSizeStock = async (req, res) => {
   try {
-    const {productId,sizeId,updatedAmount} = req.body;
-    const product = await ProductModel.findById(productId);
-    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
-    const size = product?.size?.find(size => size._id == sizeId);
-    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
-    size.quantity = updatedAmount;
-    if (size && size.length > 0) {
-      let totalStock = -1;
-      size.forEach(s => {
-          let sizeStock = 0;
-          if(s.colors){
-              s.colors.forEach(c => {
-                  sizeStock += c.quantity;
-              });
-          }
-          totalStock += sizeStock;
-      })
-      // console.log("Colors: ",AllColors);
-      if(totalStock > 0) product.totalStock = totalStock;
-    };
-    await product.save();
-    res.status(200).json({Success:true,message: 'Size Stock Updated Successfully'});
-  } catch (error) {
-    console.log("Error Updating Size Stock: ",error);
-    res.status(500).json({Success:false,message: 'Internal Server Error'});
-  }
-}
-export const addNewSizeToProduct = async (req,res)=>{
-  try {
-    const {productId,size} = req.body;
-    const product = await ProductModel.findById(productId);
-    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
-    product.size.push(size);
-    let totalStock = -1;
-    if (product.size && product.size.length > 0) {
-      product.size.forEach(s => {
-          let sizeStock = 0;
-          if(s.colors){
-              s.colors.forEach(c => {
-                  sizeStock += c.quantity;
-              });
-          }
-          totalStock += sizeStock;
-      })
-      // console.log("Colors: ",AllColors);
-      if(totalStock > 0) product.totalStock = totalStock;
+    const { productId, sizeId, updatedAmount } = req.body;
+    console.log("Updating Size Stock: ", productId, sizeId, updatedAmount);
+
+    // Update the size quantity directly in the database
+    const result = await ProductModel.updateOne(
+      { _id: productId, "size.id": sizeId }, // Find the product by productId and sizeId
+      {
+        $set: { "size.$.quantity": updatedAmount }, // Update the quantity of the specific size
+      }
+    );
+
+    if (result.nModified === 0) {
+      return res.status(404).json({ Success: false, message: 'Product or Size not found' });
     }
-    await product.save();
-    res.status(200).json({Success:true,message: 'Size Added Successfully'});
-  }catch (error) {
-    console.log("Error Adding Size: ",error);
-    res.status(500).json({Success:false,message: 'Internal Server Error'});
-  }
-}
-export const addNewColorToSize = async (req,res)=>{
-  try {
-    const {productId,sizeId,color} = req.body;
+
+    // Now calculate the total stock for the product, based on all sizes and colors
     const product = await ProductModel.findById(productId);
-    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
-    const size = product?.size?.find(size => size._id == sizeId);
-    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
-    size.colors.push(color);
-    let totalStock = -1;
-    if (size && size.length > 0) {
-      size.forEach(s => {
-          let sizeStock = 0;
-          if(s.colors){
-              s.colors.forEach(c => {
-                  sizeStock += c.quantity;
-              });
-          }
-          totalStock += sizeStock;
-      })
-      // console.log("Colors: ",AllColors);
-      if(totalStock > 0) product.totalStock = totalStock;
-    };
-    await product.save();
-    res.status(200).json({Success:true,message: 'Color Added Successfully'});
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product not found' });
+    }
+
+    // Calculate the new total stock
+    let totalStock = 0;
+    product.size.forEach(s => {
+      if (s.colors) {
+        let sizeStock = s.quantity; // Start with the size's own quantity
+        s.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Update the total stock of the product directly
+    const UpdateProduct = await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock: totalStock } },
+      { new: true }
+    );
+
+    res.status(200).json({ Success: true, message: 'Size Stock Updated Successfully' ,result:UpdateProduct});
   } catch (error) {
-    console.log("Error Adding Color: ",error);
-    res.status(500).json({Success:false,message: 'Internal Server Error'});
+    console.log("Error Updating Size Stock: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
   }
-}
-export const UpdateColorStock = async (req,res)=>{
+};
+
+
+export const addNewSizeToProduct = async (req, res) => {
   try {
-    const {productId,sizeId,colorId,updatedAmount} = req.body;
-    const product = await ProductModel.findById(productId);
-    if(!product) return res.status(404).json({Success:false,message: 'Product not found'});
-    const size = product?.size?.find(size => size._id == sizeId);
-    if(!size) return res.status(404).json({Success:false,message: 'Size not found'});
-    const color = size?.colors?.find(color => color._id == colorId);
-    if(!color) return res.status(404).json({Success:false,message: 'Color not found'});
-    color.quantity = updatedAmount;
-    if (size && size.length > 0) {
-      let totalStock = -1;
-      size.forEach(s => {
-          let sizeStock = 0;
-          if(s.colors){
-              s.colors.forEach(c => {
-                sizeStock += c.quantity;
-              });
-          }
-          totalStock += sizeStock;
-      })
-      // console.log("Colors: ",AllColors);
-      if(totalStock > 0) product.totalStock = totalStock;
-    };
-    if(totalStock > 0) product.totalStock = totalStock;
-    await product.save();
-    res.status(200).json({Success:true,message: 'Color Stock Updated Successfully'});
-  }catch (error) {
-    console.log("Error Updating Color Stock: ",error);
+    const { productId, size } = req.body;
+    const alreadyPresetProduct = await ProductModel.findById(productId);
+    const alreadyPresetSize = alreadyPresetProduct.size.find(s => s.id === size.id || s.label === size.label);
+    if(alreadyPresetSize){
+      return res.status(400).json({Success:false,message: 'Size already exists'});
+    }
+    // Add the new size to the product's sizes array
+    const product = await ProductModel.findOneAndUpdate(
+      { _id: productId }, // Find the product by productId
+      { $push: { size } }, // Push the new size to the size array
+      { new: true } // Return the updated document
+    );
+
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product not found' });
+    }
+
+    // Calculate the total stock based on all sizes and their colors
+    let totalStock = 0;
+    product.size.forEach(s => {
+      if (s.colors) {
+        let sizeStock = s.quantity; // Start with the size's own quantity
+        s.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Update the total stock of the product
+    const UpdatedProduct = await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock: totalStock } }
+    );
+
+    res.status(200).json({ Success: true, message: 'Size Added Successfully' ,result:UpdatedProduct});
+  } catch (error) {
+    console.log("Error Adding Size: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const removeSizeFromProduct = async (req, res) => {
+  try {
+    const { productId, sizeId } = req.body;
+    const product = await ProductModel.findOneAndUpdate({ _id: productId }, { $pull: { size: { id: sizeId } } }, { new: true });
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product or Size not found' });
+    }
+    res.status(200).json({ Success: true, message: 'Size Removed Successfully' ,result:product});
+  } catch (error) {
+    console.error('Error Removing Size: ',error);
     res.status(500).json({Success:false,message: 'Internal Server Error'});
   }
 }
+export const removeColorFromSize = async (req, res) => {
+  try {
+    const { productId, sizeId, colorId } = req.body;
+    console.log("Removing Color: ", productId, sizeId, colorId);
+    // Remove the color from the specified size in the product document
+    const product = await ProductModel.findOneAndUpdate(
+      { _id: productId, "size.id": sizeId }, // Find the product and the specific size
+      { $pull: { "size.$.colors": { id: colorId } } }, // Pull the color from the size.colors array
+      { new: true } // Return the updated product document
+    );
+    console.log("Product: ",product);
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product, Size, or Color not found' });
+    }
+
+    // Calculate the total stock based on all sizes and their colors
+    let totalStock = 0;
+    product.size.forEach(s => {
+      if (s.colors) {
+        let sizeStock = s.quantity; // Start with the size's own quantity
+        s.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Update the total stock of the product
+    const UpdatedProduct = await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock: totalStock } },
+      {new:true}
+    );
+
+    res.status(200).json({ Success: true, message: 'Color Removed Successfully' ,result:UpdatedProduct});
+  } catch (error) {
+    console.log("Error Removing Color: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+}
+export const addNewColorToSize = async (req, res) => {
+  try {
+    const { productId, sizeId, colors } = req.body;
+    console.log("Adding Color: ", productId, sizeId, colors);
+
+    // Find the product by ID
+    const alreadyPresetProduct = await ProductModel.findById(productId);
+    if (!alreadyPresetProduct) {
+      return res.status(404).json({ Success: false, message: 'Product not found' });
+    }
+
+    // Check if the size exists in the product
+    const size = alreadyPresetProduct.size.find(s => s.id === sizeId);
+    if (!size) {
+      return res.status(404).json({ Success: false, message: 'Size not found' });
+    }
+
+    // Check for existing colors before adding
+    for (const color of colors) {
+      const alreadyColorExist = size.colors.find(c => c.label === color.label);
+      if (alreadyColorExist) {
+        return res.status(400).json({ Success: false, message: 'Color already exists' });
+      }
+    }
+
+    // Push new colors to the size
+    size.colors.push(...colors); // Using spread to push multiple colors at once
+
+    // Update the product document with new colors
+    const product = await ProductModel.findByIdAndUpdate(
+      productId,
+      { $set: { "size.$[size].colors": size.colors } },
+      {
+        arrayFilters: [{ "size.id": sizeId }], // Use arrayFilters for modifying the nested array
+        new: true // Return the updated document
+      }
+    );
+
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product or Size not found' });
+    }
+
+    // Recalculate total stock based on all sizes and their colors
+    let totalStock = 0;
+    product.size.forEach(s => {
+      if (s.colors) {
+        let sizeStock = s.quantity; // Start with the size's own quantity
+        s.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Collect all colors for the updated product
+    const AllColors = [];
+    product.size.forEach(s => {
+      if (s.colors) {
+        s.colors.forEach(c => {
+          const colorsImageArray = c.images.filter(image => image !== "");
+          c.images = colorsImageArray; // Remove empty image entries
+          AllColors.push(c);
+        });
+      }
+    });
+
+    // Update the total stock and AllColors array in the product document
+    await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock, AllColors } },
+      { new: true }
+    );
+
+    // Send the success response after everything is done
+    res.status(200).json({ Success: true, message: 'Color Added Successfully' });
+  } catch (error) {
+    console.log("Error Adding Color: ", error);
+    // Ensure a single response is sent
+    if (!res.headersSent) {
+      res.status(500).json({ Success: false, message: 'Internal Server Error' });
+    }
+  }
+};
+
+
+
+export const UpdateColorStock = async (req, res) => {
+  try {
+    const { productId, sizeId, colorId, updatedAmount } = req.body;
+    const alreadyPresetProduct = await ProductModel.findById(productId);
+    if(!alreadyPresetProduct){
+      return res.status(404).json({ Success: false, message: 'Product not found' });
+    }
+    /* if(!alreadyPresetProduct.size){
+      return res.status(404).json({ Success: false, message: 'Size not found' });
+    }
+    if(!alreadyPresetProduct.size.colors){
+      return res.status(404).json({ Success: false, message: 'Color not found' });
+    } */
+    // Update the color quantity directly within the product document
+    const product = await ProductModel.findOneAndUpdate(
+      { _id: productId, "size.id": sizeId, "size.colors.id": colorId }, // Find product, size, and color by IDs
+      { 
+        $set: { 
+          "size.$[size].colors.$[color].quantity": updatedAmount // Update color quantity in the specified size
+        }
+      },
+      {
+        arrayFilters: [
+          { "size.id": sizeId }, // Array filter to match the size
+          { "color.id": colorId } // Array filter to match the color within the size
+        ],
+        new: true // Return the updated document
+      }
+    );
+
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product, Size, or Color not found' });
+    }
+
+    // Recalculate the total stock for the entire product
+    let totalStock = 0;
+    product.size.forEach(size => {
+      if (size.colors) {
+        let sizeStock = size.quantity; // Start with the size's own quantity
+        size.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to the size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Update the total stock of the product
+    const UpdatedProduct = await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock: totalStock } }
+    );
+
+    res.status(200).json({ Success: true, message: 'Color Stock Updated Successfully' ,result:UpdatedProduct});
+  } catch (error) {
+    console.log("Error Updating Color Stock: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+};
+
 
 
 export const getProductTotalStocks = async (req,res)=>{

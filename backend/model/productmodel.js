@@ -25,7 +25,19 @@ const productModelSchema = new mongoose.Schema({
         default:0
     },
     size:[
-        {type:Object,default:[]}
+        {
+            id:Number,
+            label:String,
+            quantity:Number,
+            colors:[
+                {
+                    id:Number,
+                    label:String,
+                    quantity:Number,
+                    images:[],
+                }
+            ]
+        }
     ],
     AllColors:[{
         type:Object,default:[],required:true

@@ -201,6 +201,18 @@ export const fetchAllProducts = async (req, res) => {
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
+export const getProductById = async (req, res) => {
+    try {
+        const {id} = req.params;
+        if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
+        const product = await ProductModel.findById(id);
+        if(!product) res.status(404).json({Success:false,message:"Product not found"});
+        res.status(200).json({Success: true, message: 'Product fetched successfully!', result: product});
+    } catch (error) {
+        console.error('Error while Fetching a product:', error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
 export const editProduct = async (req, res) => {
     try {
         const {id} = req.params;
@@ -246,7 +258,7 @@ export const editProduct = async (req, res) => {
         if (gender && gender.length > 0) updateFields.gender = gender;
         if (category && category.length > 0) updateFields.category = category;
         if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
-        if (price >= 0) updateFields.price = price;
+        if (price > 0) updateFields.price = price;
         if (salePrice) updateFields.salePrice = salePrice;
         console.log("Updating : ",updateFields);
         if (Object.keys(updateFields).length > 0) {

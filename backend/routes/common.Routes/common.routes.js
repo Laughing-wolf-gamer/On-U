@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addOption, FetchAllFilters, getAboutData, getAllOptions, getHomeBanners, getOptions, removeHomeCarousal, removeOptionsByType, setAboutData } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getHomeBanners, getOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -12,6 +12,10 @@ route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeH
 route.get('/product/filters',FetchAllFilters);
 route.put('/website/about',isAuthenticateuser,ProtectAdminRoute,setAboutData);
 route.get('/website/about',getAboutData);
+
+route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
+route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);
+route.get('/website/address',getAddressField);
 
 route.get('/options/get/all',getAllOptions)
 route.get('/options/getByType/:type', getOptions);

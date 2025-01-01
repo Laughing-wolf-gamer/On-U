@@ -86,6 +86,55 @@ export const setAboutData = async(req,res)=>{
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
+export const removeAddressFormField = async(req,res)=>{
+	try {
+		const {addressFormFields} = req.body;
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'Address'}); 
+		if(!alreadyFoundWebsiteData){
+			return res.status(404).json({Success:false,message: 'Address Data not found'});
+		}
+		const index = alreadyFoundWebsiteData.Address.findIndex(item => item === addressFormFields);
+		if(index === -1){
+			return res.status(404).json({Success:false,message: 'Address Data not found'});
+		}
+		alreadyFoundWebsiteData.Address.splice(index,1);
+		await alreadyFoundWebsiteData.save();
+		console.log("Address Data: ",alreadyFoundWebsiteData)
+		res.status(200).json({Success:true,message: 'Address Data removed successfully',result: alreadyFoundWebsiteData?.Address || []});
+	} catch (error) {
+		console.error(`Error setting about data `,error);
+		res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
+	}
+}
+export const setAddressField = async(req,res)=>{
+	try {
+		const {addressFormFields} = req.body;
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'Address'}); 
+		if(!alreadyFoundWebsiteData){
+			const about = new WebSiteModel({Address: [addressFormFields],tag: 'Address'});
+			await about.save();
+			console.log("Address Data: ",about)
+			return res.status(200).json({Success:true,message: 'Address Data set successfully'});
+		}
+		alreadyFoundWebsiteData.Address.push(addressFormFields);
+		await alreadyFoundWebsiteData.save();
+		console.log("Address Data: ",alreadyFoundWebsiteData)
+		res.status(200).json({Success:true,message: 'Address Data set successfully',result: alreadyFoundWebsiteData?.Address || []});
+	} catch (error) {
+		console.error(`Error setting about data `,error);
+		res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
+	}
+}
+export const getAddressField = async(req,res)=>{
+	try {
+	  const aboutData = await WebSiteModel.findOne({tag:'Address'});
+	  console.log("Address Data: ",aboutData?.Address)
+	  res.status(200).json({Success:true,message: 'Address Data Found',result: aboutData?.Address || []});
+	} catch (error) {
+		console.error(`Error setting about data `,error);
+		res.status(500).json({Success:false,message: 'Internal Server Error'});
+	}
+}
 export const getAboutData = async(req,res)=>{
 	try {
 	  const aboutData = await WebSiteModel.findOne({tag:'AboutData'});
@@ -102,10 +151,10 @@ export const getAboutData = async(req,res)=>{
 export const getAllOptions = async(req,res)=>{
 	try {
 		const allOptions = await Option.find({});
-		res.status(200).json({Success:true,message:"Featch All Options",result:allOptions || []})
+		res.status(200).json({Success:true,message:"Fetch All Options",result:allOptions || []})
 	} catch (error) {
-		console.error(`Error Feathing Options`,error);
-		res.status(500).json({Success:false,message:"Failed to feath all options"})
+		console.error(`Error Fetching Options`,error);
+		res.status(500).json({Success:false,message:"Failed to fetch all options"})
 	}
 }
 // Fetch all options of a specific type
@@ -113,7 +162,7 @@ export const getOptions = async (req, res) => {
 	try {
 	  const { type } = req.params; // Get the type of option (e.g., category)
 	  
-	  if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+	  if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
 		return res.status(400).json({ message: 'Invalid option type' });
 	  }
   
@@ -130,7 +179,7 @@ export const addOption = async (req, res) => {
 	try {
 		const { type, value } = req.body;
 	
-		if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}
 	
@@ -153,9 +202,9 @@ export const removeOptionsByType = async (req, res) => {
 	try {
 		// const parseData = JSON.parse(req.body);
 		const { removingData} = req.body;
-		console.log("Delete Options: ",removingData);
 		const {type,value} = JSON.parse(removingData);
-		if (!['category', 'subcategory', 'color', 'clothingSize','footSize', 'gender'].includes(type)) {
+		console.log("Delete Options: ",type,value);
+		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}
 

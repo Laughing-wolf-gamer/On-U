@@ -1,3 +1,4 @@
+import { Input } from '@mui/material';
 import React, { useState } from 'react';
 const initState = {
     name:'',
@@ -78,7 +79,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
                     </div>
                     <div>
                         <label className="block text-sm font-medium mb-1">Pin Code</label>
-                        <input
+                        <Input
                             type="text"
                             name="pincode"
                             value={newAddress.pincode}
