@@ -14,7 +14,7 @@ route.get('/resendotp/:id', resendotp)
 
 route.put('/updateAddress',isAuthenticateuser,updateAddress);
 route.get('/getAddress',isAuthenticateuser,getAllAddress);
-// route.put('/updateuser/:id',isAuthenticateuser, updateuser)
+route.put('/updateuser',isAuthenticateuser, updateuser)
 route.get('/logout', logout)
 
 // route.get('/website/about',getAboutData)

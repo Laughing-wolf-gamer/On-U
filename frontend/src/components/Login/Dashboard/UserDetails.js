@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
+import { updateuser } from '../../../action/useraction';
+import { useDispatch } from 'react-redux';
 
 const UserDetails = ({ user }) => {
+  const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
 
@@ -12,10 +15,11 @@ const UserDetails = ({ user }) => {
     }));
   };
 
-  const handleSave = () => {
+  const handleSave = async () => {
     // You can handle the save logic here (e.g., make an API call to update the user)
     setIsEditing(false);
-    console.log('Saved user:', editedUser);
+    console.log('Edited user user:', editedUser);
+    dispatch(updateuser(editedUser))
   };
 
   const handleCancel = () => {
@@ -97,16 +101,16 @@ const UserDetails = ({ user }) => {
             <input
               type="date"
               name="dob"
-              value={editedUser?.dob || ''}
+              value={editedUser?.DOB || ''}
               onChange={handleEditChange}
               className="mt-2 p-2 border border-gray-300 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
           ) : (
-            <p className="mt-2 text-gray-600">{editedUser?.dob || 'Not Set'}</p>
+            <p className="mt-2 text-gray-600">{editedUser?.DOB || 'Not Set'}</p>
           )}
         </div>
 
-        <div>
+        {/* <div>
           <label className="block text-gray-700">Location:</label>
           {isEditing ? (
             <input
@@ -127,7 +131,7 @@ const UserDetails = ({ user }) => {
           ) : (
             <p className="mt-2 text-gray-600">{editedUser?.address?.citystate || 'Not Set'}</p>
           )}
-        </div>
+        </div> */}
 
         <div className="flex space-x-4 mt-4">
           {isEditing ? (

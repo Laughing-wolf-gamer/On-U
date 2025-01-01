@@ -9,6 +9,7 @@ import { fetch_banners_reducer } from './Reducer/bannerreducer';
 
 const reducer = combineReducers({
       Registeruser: registeruser,
+      
       loginuser: loginuser,
       user : getuser,
       updateAddress:addressupdate,

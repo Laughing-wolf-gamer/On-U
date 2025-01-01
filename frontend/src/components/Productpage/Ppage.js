@@ -193,46 +193,61 @@ const Ppage = () => {
                     }
                     </h1>
                   <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
-                  <div className='w-auto max-h-fit justify-center items-start space-x-2'>
+                  <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                       {
-                        product && product.size && product.size.length > 0 && product.size.map((size) =>
-                            <button onClick={(e)=> {
+                        product && product.size && product.size.length > 0 && product.size.map((size,index) =>
+                            <div key={`size_${index}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
+                                ${currentSize?.id === size?.id ? "border-2 outline-offset-1 border-gray-300":""}`} onClick={(e)=> {
                               e.preventDefault();
                               setCurrentSize(size);
-                              // setSelectedSize(s);
                               handleSetNewImageArray(size);
-  
-                            }} type='button' className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-700 text-white":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size.label}</button>
+                            }}>
+                            <button  type='button' 
+                              className={`w-12 h-12 rounded-full flex items-center justify-center`}>
+                              {size.label}
+                            </button>
+                          </div>
                         )
                       }
                   </div>
                   <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                   {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
                       selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
-                        <button
-                          onClick={(e)=> {
-                            e.preventDefault();
-                            setCurrentColorColor(color);
-                            handelSetColorImages(color)
-                          }}
-                          key={`color-${color?.id}`}
-                          style={{
-                            backgroundColor: color?.label || color.id, // Use the label or raw color value
-                            width: "30px",
-                            height: "30px",
-                          }}
-                          type='button'
-                          //
-                          className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 duration-300 ease-in-out shadow-md
-														${selectedColorId === color?.id ? "outline outline-2 outline-offset-1 outline-black scale-110 shadow-md" : ""}
-													`}
-                          title={color?.id || color?.label || "Color"} // Optional tooltip
-                        />
+                        <div className={`flex flex-col h-fit shadow-md rounded-full p-2 items-center justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
+                            ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-300":""} `} onClick={(e)=> {
+                          e.preventDefault();
+                          setCurrentColorColor(color);
+                          handelSetColorImages(color)
+                        }}>
+                          <button
+                            
+                            key={`color-${color?.id}`}
+                            style={{
+                              backgroundColor: color?.label || color.id, // Use the label or raw color value
+                              width: "30px",
+                              height: "30px",
+                            }}
+                            type='button'
+                            //
+                            className={`w-12 h-12 rounded-full flex items-center justify-center
+                              ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-100 scale-110 shadow-md" : ""}
+                            `}
+                            title={color?.quantity || color?.label || "Color"} // Optional tooltip
+                          />
+                          {
+                            color.quantity <= 10 && (
+                              <div className='flex flex-col justify-center items-center space-y-1'>
+                                <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">{color?.quantity}</span> 
+                                {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Left</span>  */}
+                              </div>
+                            )
+                          }
+                        </div>
                       ))
                     ) : (
                       <p className="text-black">No colors available</p>
                     )}
-                  </div>
+                    </div>
 
                   <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
                   <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
@@ -256,13 +271,12 @@ const Ppage = () => {
                 </div>
 
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
-
                   {
-                    product && product.bulletPoints && product.bulletPoints.map((e) =>
+                    product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
                       <Fragment>
-                        <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
+                        <h1 className='font1 flex items-center mt-2 font-semibold'>{e?.header}</h1>
                         <span className='mt-4'>
-                          <li className='list-disc mt-2'>{e.body}</li>
+                          <li className='list-disc mt-2'>{e?.body}</li>
                         </span>
                       </Fragment>
                     )
@@ -289,7 +303,10 @@ const Ppage = () => {
                       product && Array.isArray(product?.size) && product.size.length > 0 && product.size.map((e,i) =>
                         // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
                         // <li className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</li>
-                        <span key={e?.id || i} className='list-none mt-2'>{e.label}</span>
+                        <Fragment key={e?.id || i}>
+                          <span className='list-none mt-2'>{e?.label}</span>
+                          <span className='list-none mt-2'>{e?.quantity}</span>
+                        </Fragment>
                       )
                     }
                   </div>

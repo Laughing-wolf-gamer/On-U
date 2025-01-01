@@ -116,22 +116,21 @@ export const getAddress = () => async (dispatch) => {
 }
 
 export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
-
     try {
-
         dispatch({ type: REQUEST_VERIFY_OTP })
-        console.log("Otp: ",otp)
-        /* const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber) */
-
-
+        console.log("Otp: ",otp, "MobileNo. ",mobileno)
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify/${mobileno}/${otp}`)
+        console.log("Data: ", data)
+        if(data.result.verify === 'verified'){
+            const token = data?.token
+            console.log("Token: ", token)
+            if(token){
+                sessionStorage.setItem('token', token)
+            }
+        }
         dispatch({ type: SUCCESS_VERIFY_OTP, payload: data?.result })
-
     } catch (Error) {
-      
         dispatch({ type: FAIL_VERIFY_OTP, payload: Error.response.data.message })
-
     }
 }
 
@@ -155,21 +154,27 @@ export const resendotp = () => async (dispatch) => {
 }
 
 export const updateuser = (userdata) => async (dispatch) => {
-    /* try {
+    try {
         dispatch({ type: REQUEST_UPDATE_USER })
+        // console.log("Update User Data: ", userdata)
         // const mobile = JSON.parse(localStorage.getItem('mobileno'))
         // const mobileno = Number(mobile.phonenumber)
-        const config = { headers: { "Content-Type": "application/json" } }
+        // const config = { headers: { "Content-Type": "application/json" } }
 
-        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser/${mobileno}`, userdata,config )
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser`, userdata,headerConfig())
+        console.log("Update User Data: ", data.result)
+        if(data.token){
+            const token = data?.token
+            console.log("Token: ", token)
+            sessionStorage.removeItem('token');
+            sessionStorage.setItem('token', data.token)
 
-        dispatch({ type: SUCCESS_UPDATE_USER, payload: data.user })
+        }
+        dispatch({ type: SUCCESS_UPDATE_USER, payload: data.result })
 
     } catch (Error) {
-    
         dispatch({ type: FAIL_UPDATE_USER, payload: Error.response.data.message })
-
-    } */
+    }
 }
 
 export const updatedetailsuser = (userdata, id) => async (dispatch) => {

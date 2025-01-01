@@ -3,27 +3,108 @@ import WhishList from '../model/wishlist.js'
 import Bag from '../model/bag.js'
 import Errorhandler from '../utilis/errorhandel.js'
 import OrderModel from '../model/ordermodel.js'
+import ProductModel from '../model/productmodel.js'
 
+export const createorder = async (req, res, next) => {
+  console.log("Order User ID:", req.user?.id);
+  console.log("Order Items Count:", req.body?.orderItems?.length);
 
-export const createorder = A(async (req, res, next) => {
-  console.log("Order User",req.user);
-  console.log("Order Body",req.body)
   try {
-    if(!req.user){
-      return res.status(400).json({success:false,message:"No User Found"})
+    if (!req.user) {
+      return res.status(400).json({ success: false, message: "No User Found" });
     }
-    const{orderItems,Address,bagId,TotalAmount,paymentMode,status} = req.body;
-    if(!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) return res.status(404).json({success:false,message:"Please Provide All the Data: "})
-    const orderData = new OrderModel({userId:req.user.id,orderItems,SelectedAddress:Address,TotalAmount,paymentMode,status});
+
+    const { orderItems, Address, bagId, TotalAmount, paymentMode, status } = req.body;
+
+    if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+      return res.status(400).json({ success: false, message: "Please Provide All the Data" });
+    }
+
+    const orderData = new OrderModel({
+      userId: req.user.id,
+      orderItems,
+      SelectedAddress: Address,
+      TotalAmount,
+      paymentMode,
+      status,
+    });
+
     await orderData.save();
+
+    const removingAmountPromise = orderItems.map(async item => {
+      try {
+        console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
+        await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+      } catch (err) {
+        console.error(`Error removing product: ${item?.productId?._id}`, err);
+      }
+    });
+
+    await Promise.all(removingAmountPromise);
+
+    // Uncomment and handle bag removal if needed
     const bagToRemove = await Bag.findByIdAndDelete(bagId);
-    console.log("Bag Removed: ",bagToRemove);
-    res.status(200).json({success:true,message:"order Created Successfully",result:orderData})
+    console.log("Bag Removed:", bagToRemove);
+    res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
+
   } catch (error) {
-    console.error(`Error creating Order: `,error);
-    res.status(500).json({success:false,message:"Internal server Error"});
+    console.error("Error creating Order:", error);
+    res.status(500).json({ success: false, message: "Internal server Error" });
   }
-})
+};
+
+const removeProduct = async(productId,color,size,quantity) => {
+  try {
+    const product = await ProductModel.findById(productId);
+    if(!product) {
+      console.log("Product Not Found: ",productId);
+      return
+    } ;
+    const activeSize = product.size.find(s => s?.label == size);
+    if(!activeSize) {
+      console.log("Size Not Found: ",size);
+      return
+    }
+    const activeColor = activeSize.colors.find(c => c?.label == color);
+    if(!activeColor) {
+      console.log("Color Not Found: ",color);
+      return
+    }
+    const colorReducedAmount = activeColor.quantity - quantity
+    const sizeReducedAmount = activeSize.quantity - quantity
+    console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
+    activeColor.quantity = colorReducedAmount;
+    activeSize.quantity = sizeReducedAmount;
+    const AllColors = []
+    product.size.forEach(s => {
+      if(s.colors){
+        s.colors.forEach(c => {
+          AllColors.push(c);
+        });
+      }
+    });
+    product.AllColors = AllColors;
+    if (product.size && product.size.length > 0) {
+      let totalStock = 0;
+      // updateFields.size = activeSize
+      product.size.forEach(s => {
+          let sizeStock = 0;
+          if(s.colors){
+              s.colors.forEach(c => {
+                sizeStock += c.quantity;
+              });
+          }
+          totalStock += sizeStock;
+      })
+      // console.log("Colors: ",AllColors);
+      if(totalStock > 0) product.totalStock = totalStock;
+    };
+    await product.save();
+    console.log("Product Updated: ",product);
+  } catch (error) {
+    console.error("Error Removing Product: ",error)
+  }
+}
 export const getallOrders = A(async (req, res, next) => {
   try {
     console.log("Order User",req.user);  

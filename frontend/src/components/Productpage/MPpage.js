@@ -186,39 +186,56 @@ const MPpage = () => {
                                     </h1>
                                     <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
                                     <h1 className='font1 text-base font-semibold mt-2 mb-2'>SELECT SIZE</h1>
-                                    <div className='w-auto max-h-fit justify-center items-start space-x-2'>
+                                    <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                                         {
-                                            product && product.size.length > 0 && product.size.map((size) =>
-                                                // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                                                <button  onClick={(e)=> {
-                                                    e.preventDefault();
-                                                    setCurrentSize(size);
-                                                    // setSelectedSize(s);
-                                                    handleSetNewImageArray(size);
-                                                }} className={`px-6 py-3 m-1 rounded-[35px] font1 text-sm font-semibold text-slate-400 ${currentSize?.id === size?.id ? "border bg-slate-200 text-white outline":""} border-slate-400 border-[2px] hover:border-slate-700`}>{size?.label}</button>
+                                            product && product.size.length > 0 && product.size.map((size,index) =>
+                                                <div key={`size_${index}`} className={`flex flex-col h-fit w-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
+                                                    ${currentSize?.id === size?.id ? "border-2 outline-offset-1 border-gray-300":""}`} 
+                                                    onClick={(e)=> {
+                                                        e.preventDefault();
+                                                        setCurrentSize(size);
+                                                        handleSetNewImageArray(size);
+                                                    }}>
+                                                    <button className={`w-12 h-12 rounded-full flex items-center justify-center`}>
+                                                        {size?.label}
+                                                    </button>
+                                                    
+                                                </div>
                                             )
                                         }
                                     </div>
                                     <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                                         {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
                                             selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
-                                                <button
+                                                <div key={`color-${color?.id}`} className={`flex flex-col h-fit w-fit shadow-md rounded-full p-2 items-center justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
+                                                    ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-300":""} `} 
                                                     onClick={(e)=> {
                                                         e.preventDefault();
                                                         setCurrentColorColor(color);
                                                         handelSetColorImages(color)
                                                     }}
-                                                    key={`color-${color?.id}`}
-                                                    style={{
-                                                        backgroundColor: color?.label || color.id, // Use the label or raw color value
-                                                        width: "30px",
-                                                        height: "30px",
-                                                    }}
-                                                    className={`w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-110 duration-300 ease-in-out shadow-md
-														${selectedColorId === color?.id ? "outline outline-2 outline-offset-1 outline-black scale-110 shadow-md" : ""}
-													`}
-                                                    title={color?.id || color?.label || "Color"} // Optional tooltip
-                                                />
+                                                >
+                                                    <button
+                                                        style={{
+                                                            backgroundColor: color?.label || color.id, // Use the label or raw color value
+                                                            width: "30px",
+                                                            height: "30px",
+                                                        }}
+                                                        className={`w-12 h-12 rounded-full flex items-center justify-center
+                                                            ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-100 scale-110 shadow-md" : ""}
+                                                        `}
+                                                        title={color?.id || color?.label || "Color"} // Optional tooltip
+                                                    />
+                                                    {
+                                                        color.quantity <= 10 && (
+                                                            <div className='flex flex-col justify-center items-center space-y-1'>
+                                                                <span className="text-red-500 text-sm font-black text-center flex-wrap">{color?.quantity} 
+                                                                    <span> Left</span></span> 
+                                                                {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Left</span>  */}
+                                                            </div>
+                                                        )
+                                                    }
+                                                </div>
                                             ))
                                         ) : (
                                             <p className="text-black font-bold">No colors available</p>
@@ -226,17 +243,17 @@ const MPpage = () => {
                                     </div>
                                     <br />
                                 </div>
-                                <div className='mt-2 pb-6 pt-4 bg-white px-4'>
-                                    <h1 className='font1 flex items-center mt-2 font-semibold'>bulletPoints<BsTag className='ml-2' /></h1>
+                                <div className='mt-2 pt-4 bg-white px-4'>
+                                    <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
                                 </div>
-                                <div className='mt-2 pb-6 pt-4 bg-white px-4'>
+                                <div className='mt-2 pb-4 pt-4 bg-white px-4'>
                                     {
-                                        product && product.bulletPoints && product.bulletPoints.map((e) =>
+                                        product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
                                             <Fragment>
-                                            <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
-                                            <span className='mt-4'>
-                                                <li className='list-disc mt-2'>{e.body}</li>
-                                            </span>
+                                                <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
+                                                <span className='mt-4'>
+                                                    <li className='list-disc mt-2'>{e.body}</li>
+                                                </span>
                                             </Fragment>
                                         )
                                     }

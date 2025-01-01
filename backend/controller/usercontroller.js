@@ -5,6 +5,7 @@ import Errorhandler from '../utilis/errorhandel.js';
 import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
 import WebSiteModel from '../model/websiteData.model.js';
+import { sendVerificationEmail } from './emailController.js';
 
 export const registermobile = A(async (req, res, next) => {
   try {
@@ -20,6 +21,7 @@ export const registermobile = A(async (req, res, next) => {
       return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:existingUser.otp,user:existingUser}})
     }
     const otp = Math.floor((1 + Math.random()) * 90000)
+    sendVerificationEmail(email, otp)
     const user = await User.create({
       name,
       email,
@@ -33,7 +35,9 @@ export const registermobile = A(async (req, res, next) => {
     res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
   } catch (error) {
     console.log(error)
-    res.status(500).json({success:true,message:"Internal server Error"})
+    if (!res.headersSent) {
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
   }
 
 })
@@ -113,7 +117,6 @@ export const registerUser = A(async (req, res, next) => {
       console.log(response)
       res.status(400).json({
         success: false,
-        
       })
       
     }
@@ -128,7 +131,7 @@ export const getuser = A(async(req, res, next)=>{
 export const optverify = A(async (req, res, next)=>{
     // const {otp} = req.body
     const{id,otp} = req.params;
-    console.log("OTP: ",otp,id)
+    // console.log("OTP: ",otp,id)
     const user = await User.findOne({phoneNumber: id})
     if (!user.otp) {
       return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
@@ -139,7 +142,7 @@ export const optverify = A(async (req, res, next)=>{
     user.otp = null;
     user.verify = 'verified';
     await user.save()
-    res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user})
+    res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user,token:sendtoken(user)});
 
 })
 
@@ -200,16 +203,22 @@ export const logInUser = async (req,res) =>{
 }
 
 export const updateuser =A( async(req,res,next)=>{
-  console.log(req.body)
-
-  const users = await User.updateOne({phonenumber: req.params.id}, req.body)
+  console.log("User: ",req.user);
+  console.log("Updating User: ",req.body)
+  const{ name, gender,email,dob} = req.body
+  const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender}},{new:true})
+  if(!user){
+    return next( new Errorhandler('User not found', 404))
+  }
+  res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
+  /* const users = await User.updateOne({phonenumber: req.params.id}, req.body)
   const user = await User.findOne({phonenumber: req.params.id})
 
   if(!user){
     return next( new Errorhandler('mobile incorrect', 400))
   }
   
-  sendtoken(user, 200, res)
+  sendtoken(user, 200, res) */
   
 })
 

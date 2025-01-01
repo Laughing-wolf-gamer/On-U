@@ -46,15 +46,11 @@ const Registeruser = () => {
                 address1: address1,
                 address2: address2,
                 citystate: citysate
-
             }
         }
         await dispatch(registerUser(myForm))
-        if(user){
-            Alert.success('User Registered Successfully')
-            console.log("Registering User: ", user?.token)
-            redirect('/Login')
-        }
+        // console.log("User: ", user)
+        
         // redirect('/verifying')
     }
 
@@ -69,7 +65,13 @@ const Registeruser = () => {
             console.log("User: ", user?.token)
         }
     }, [ error, dispatch]);
-
+    useEffect(()=>{
+        if(user){
+            Alert.success('User Registered Successfully')
+            console.log("Registering User: ", user?.token)
+            redirect('/verifying')
+        }
+    },[user,dispatch])
     return (
        
         <Fragment>

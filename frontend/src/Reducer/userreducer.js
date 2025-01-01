@@ -91,7 +91,7 @@ export const loginuser = (state = {user:null}, action) =>{
             return state;
     }
 }
-export const getuser = (state = {user:{}}, action) =>{
+export const getuser = (state = {user:null}, action) =>{
     switch (action.type) {
         case REQUEST_USER:
             return {
@@ -132,7 +132,7 @@ export const getuser = (state = {user:{}}, action) =>{
     }
 }
 
-export const otpverifie = (state = {userdetails:{}}, action) =>{
+export const otpverifie = (state = {userVerify:null}, action) =>{
     switch (action.type) {
 
         case REQUEST_VERIFY_OTP:
@@ -143,7 +143,7 @@ export const otpverifie = (state = {userdetails:{}}, action) =>{
         case SUCCESS_VERIFY_OTP:
             return {
                 loading: false,
-                user:action.payload
+                userVerify:action.payload
             };
 
         case FAIL_VERIFY_OTP:
