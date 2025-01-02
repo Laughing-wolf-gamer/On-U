@@ -99,6 +99,18 @@ export const updateAddress = (address) => async (dispatch) => {
         dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
     }
 }
+export const removeAddress = (addressIndex) => async (dispatch) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        console.log("Address Index: ", addressIndex)
+        dispatch({ type: REQUEST_UPDATE_ADDRESS })
+        const { data } = await axios.patch(`${BASE_API_URL}/api/auth/removeAddress`,{addressId:addressIndex},headerConfig())
+        console.log("Updated Data: ", data)
+        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data.success })
+    } catch (error) {
+        dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
+    }
+}
 export const getAddress = () => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');

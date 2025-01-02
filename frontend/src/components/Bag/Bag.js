@@ -18,7 +18,6 @@ const Bag = () => {
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const dispatch = useDispatch();
     const alert = useAlert();
-    const navigate = useNavigate();
     const [mrp, setMrp] = useState(0);
     // const [sp, setSp] = useState(0);
     const [ds, setDs] = useState(0);
@@ -217,22 +216,30 @@ const Bag = () => {
                                 <h3 className="font-semibold mb-2">Your Addresses</h3>
                                 <div className="space-y-4">
                                     {user && user.user && allAddresses && allAddresses.length > 0 ? (
-                                        allAddresses.map((addr, index) => (
-                                            <div
-                                                key={index}
-                                                className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
-                                                onClick={() => handleAddressSelection(addr)}
-                                            >
-                                                <div className="font-semibold">{addr.address1} {addr.address2}, {addr.citystate}</div>
-                                                <div>{addr.pincode}, India</div>
-                                                {selectedAddress === addr && <span className="text-xs text-white ">Default Address</span>}
+                                    allAddresses.map((addr, index) => (
+                                        <div
+                                        key={index}
+                                        className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
+                                        onClick={() => handleAddressSelection(addr)}
+                                        >
+                                        {/* Loop through each key-value pair in the address object */}
+                                        {Object.entries(addr).map(([key, value]) => (
+                                            <div key={key} className="flex justify-between">
+                                            <span className="font-semibold">{key}:</span>
+                                            <span>{value}</span>
                                             </div>
-                                        ))
+                                        ))}
+
+                                        {/* If the address is selected, show "Default Address" */}
+                                        {selectedAddress === addr && <span className="text-xs text-white ">Default Address</span>}
+                                        </div>
+                                    ))
                                     ) : (
-                                        <p>No addresses available. Please add an address.</p>
+                                    <p>No addresses available. Please add an address.</p>
                                     )}
                                 </div>
-                            </div>
+                                </div>
+
                             {/* Payment Checkout Section */}
                             <div className="mt-6 bg-gray-100 p-4 rounded-lg">
                                 <h3 className="font-semibold mb-4 text-center">Payment Checkout</h3>
@@ -285,7 +292,11 @@ const Bag = () => {
             ) : (
                 <div className="text-center py-6">Please log in to access your bag</div>
             )}
-            {showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={mrp} closePopup={() => setShowPayment(false)} />}
+            {showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={mrp} closePopup={() => {
+                dispatch(getbag({ userId: user.id }));
+                dispatch(getAddress())
+                setShowPayment(false)
+            }} />}
         </>
     );
 };

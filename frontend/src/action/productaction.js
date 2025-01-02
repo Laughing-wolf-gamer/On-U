@@ -6,7 +6,10 @@ import {
     REQUEST_SINGLE_PRODUCTS,
     SUCCESS_SINGLE_PRODUCTS,
     FAIL_SINGLE_PRODUCTS,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REQUEST_OPTIONS,
+    SUCCESS_OPTIONS,
+    FAIL_OPTIONS
 } from '../const/productconst'
 import axios from 'axios'
 
@@ -43,7 +46,18 @@ export const singleProduct = (id) => async (dispatch) => {
         dispatch({ type: FAIL_SINGLE_PRODUCTS, payload: error.response?.data?.message })
     }
 }
-
+export const fetchAllOptions = () => async (dispatch) => {
+    try {
+        dispatch({ type: REQUEST_OPTIONS })
+        // const { data } = await axios.get(`/api/v1/options`)
+        const res = await axios.get(`${BASE_API_URL}/api/common/options/get/all`);
+        const data = res?.data;
+        console.log("Options: ", res);
+        dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
+    } catch (error) {
+        dispatch({ type: FAIL_OPTIONS, payload: error.response?.data?.message })
+    }
+}
 export const clearErrors = () => async (dispatch) => {
     dispatch({
         type: CLEAR_ERRORS

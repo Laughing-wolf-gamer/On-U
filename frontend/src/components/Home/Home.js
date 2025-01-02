@@ -335,69 +335,93 @@ const Home = () => {
 
 
 
-  let b_banners = [];
-  let c_banners = [];
-  let bb_banners = [];
-  let d_banners = [];
-  let a_banners = [];
-  let e_banners = [];
-  let f_banners = [];
-  let g_banners = [];
-  let h_banners = [];
-  let m_banners = [];
-  let n_banners = [];
-  let o_banners = [];
-  let p_banners = [];
-  let q_banners = [];
-  let r_banners = [];
-  let s_banners = [];
-  let i_banners = [];
-  let j_banners = [];
-  let k_banners = [];
+  let Wide_Screen_Section_1 = {urls:[], header: ""};
+  let Wide_Screen_Section_2 = {urls:[],header:''};
+  let Wide_Screen_Section_3 = {urls:[],header:''};
+  let Wide_Screen_Section_4 = {urls:[],header:''};
+  let Wide_Screen_Section_5 = {urls:[],header:''};
+  let Wide_Screen_Section_6 = {urls:[],header:''};
+  let Wide_Screen_Section_7 = {urls:[],header:''};
+  let Wide_Screen_Section_8 = {urls:[],header:''};
+  let Wide_Screen_Section_9 = {urls:[],header:''};
+  let Wide_Screen_Section_10 = {urls:[],header:''};
+  let Wide_Screen_Section_11 = {urls:[],header:''};
   
 
   // mobile
-  let ma_banners = [];
-  let mb_banners = [];
-  let dealsofdayMobile_bannsers = []
-  let categoriesToBag_Mb_bannsers = []
-  let mc_bannsers = []
+  let Small_Screen_Section_1 = {urls:[],header:''};
+  let Small_Screen_Section_2 = {urls:[],header:''};
+  let Small_Screen_Section_3 = {urls:[],header:''};
+  let Small_Screen_Section_4 = {urls:[],header:''};
+  let Small_Screen_Section_5 = {urls:[],header:''};
+
   if(banners){
-    b_banners = banners.find((b_cat)=> b_cat?.CategoryType === "banner")?.Url || [];
-    bb_banners = banners.find((b_cat)=> b_cat?.CategoryType === "bb")?.Url || [];
-    d_banners = banners.find((b_cat)=> b_cat?.CategoryType === "d")?.Url || []
-    a_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "a")?.Url || []
-    c_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "c")?.Url || []
-    e_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "e")?.Url || []
-    f_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "f")?.Url || []
-    g_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "g")?.Url || []
-    h_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "h")?.Url || []
-    m_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "m")?.Url || []
-    o_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "o")?.Url || []
-    p_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "p")?.Url || []
-    q_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "q")?.Url || []
-    r_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "r")?.Url || []
-    s_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "s")?.Url || []
-    n_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "n")?.Url || []
-    i_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "i")?.Url || []
-    j_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "j")?.Url || []
-    k_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "k")?.Url || []
+    Wide_Screen_Section_1.urls = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 1")?.Url || [];
+    Wide_Screen_Section_1.header = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 1")?.Header || "";
+
+
+
+    Wide_Screen_Section_2.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 2")?.Url || []
+    Wide_Screen_Section_2.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 2")?.Header || ""
+
+
+    Wide_Screen_Section_3.urls = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 3")?.Url || [];
+    Wide_Screen_Section_3.header = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 3")?.Header || "";
+
+    Wide_Screen_Section_4.urls = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 4")?.Url || [];
+    Wide_Screen_Section_4.header = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 4")?.Header || "";
+
+
+    Wide_Screen_Section_5.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 5")?.Url || []
+    Wide_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 5")?.Header || ""
+
+
+    Wide_Screen_Section_6.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 6")?.Url || []
+    Wide_Screen_Section_6.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 6")?.Header || ""
+
+    Wide_Screen_Section_7.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 7")?.Url || []
+    Wide_Screen_Section_7.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 7")?.Header || ""
+
+
+    Wide_Screen_Section_8.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 8")?.Url || []
+    Wide_Screen_Section_8.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 8")?.Header || ""
+
+    Wide_Screen_Section_9.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 9")?.Url || []
+    Wide_Screen_Section_9.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 9")?.Header || ""
+
+
+    Wide_Screen_Section_10.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 10")?.Url || []
+    Wide_Screen_Section_10.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 10")?.Header || ""
+
+    Wide_Screen_Section_11.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 11")?.Url || []
+    Wide_Screen_Section_11.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Wide Screen Section- 11")?.Header || ""
+
+
     // mobile
-    ma_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "ma")?.Url || []
-    mb_banners = banners.find((ma_cat)=> ma_cat?.CategoryType === "mb")?.Url || []
-    dealsofdayMobile_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "dealsofdayMobile")?.Url || []
-    categoriesToBag_Mb_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "categoriesToBag_Mb")?.Url || []
-    mc_bannsers = banners.find((ma_cat)=> ma_cat?.CategoryType === "mc")?.Url || []
+    Small_Screen_Section_1.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Url || []
+    Small_Screen_Section_1.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Header || ""
+
+    Small_Screen_Section_2.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Url || []
+    Small_Screen_Section_2.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Header || ""
+
+    Small_Screen_Section_3.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Url || []
+    Small_Screen_Section_3.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Header || ""
+
+    Small_Screen_Section_4.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 4")?.Url || []
+    Small_Screen_Section_4.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 4")?.Header || ""
+
+    Small_Screen_Section_5.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Url || []
+    Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
   }
   
-  // console.log("mb banners",mb_banners);
+  console.log("All Banners: ",banners);
   return (
     <Fragment>
       {
         window.screen.width > 1024 ?
         <Fragment>
             <div className='mt-8 w-[100vw] relative'>
-                {b_banners && b_banners.length > 0 ? <CarousalView b_banners={b_banners} indicator = {indicator}/>: <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator = {indicator}/>}
+                {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator = {indicator}/>: <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator = {indicator}/>}
             </div>
             <div className='w-full flex justify-center items-center my-10 px-4 md:px-8 h-auto'>
               <div className='w-fit  h-auto flex justify-center gap-10 items-center flex-wrap'>
@@ -439,10 +463,10 @@ const Home = () => {
             <div className=' py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
               {product && product.length > 0 && <ProductPreviewFull product = {product}/>}
             </div>
-            <DraggableImageSlider images={c_banners} headers={"CATEGORIES TO BAG"}/>
-            <DraggableImageSlider images={bb_banners} headers={"TOP PICKS"}/>
-            {d_banners && d_banners.length > 0 ? <DraggableImageSlider images={d_banners} headers={"DEAL OF THE DAY"}/>: <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>}
-            {e_banners && e_banners.length > 0 ? <DraggableImageSlider images={e_banners} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>: <DraggableImageSlider images={[a1, 
+            <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header}/>
+            <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header}/>
+            {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/>: <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>}
+            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/>: <DraggableImageSlider images={[a1, 
               a2, 
               a3, 
               a4, 
@@ -578,21 +602,21 @@ const Home = () => {
               </div>
             </div> */}
             {
-              i_banners && i_banners.length > 0 ? <DraggableImageSlider images={i_banners} headers={"GIFTING CARDS"}/> : <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
+              Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
             }
             {/* {
               j_banners && j_banners.length > 0 ? <DraggableImageSlider images={j_banners} headers={"DEALS ON LATEST ARRIVALS"}/> : <DraggableImageSlider images={[j1, j2, j3, j4]} headers={"DEALS ON LATEST ARRIVALS"}/>
             } */}
 
             {
-              k_banners && k_banners.length > 0 ? <DraggableImageSlider images={k_banners} headers={"SPRING SUMMER 2024- FIRST ON E-COM"}/> : <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
+              Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
             }
             <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>DEALS ON LATEST ARRIVALS</h1>
               <div className='grid grid-cols-2 '>
                 
                 {
-                  j_banners && j_banners.length > 0 ? j_banners.map((j, index) => (
+                  Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? Wide_Screen_Section_8.map((j, index) => (
                     <Link key={`j_banners_${index}`} to='/products' className='m-1'><LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px]" /></Link>
                   )):(
                     <>
@@ -703,7 +727,7 @@ const Home = () => {
               </div>
             </div> */}
             {
-              o_banners && o_banners.length > 0 ? <DraggableImageSlider images={o_banners} headers={"BEST OF KIDS-WEAR"}/> : <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
+              Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
             }
             {/* <div>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>BEST OF KIDS-WEAR</h1>
@@ -751,7 +775,7 @@ const Home = () => {
               </div>
             </div> */}
             {
-              q_banners && q_banners.length > 0 ? <DraggableImageSlider images={q_banners} headers={"SPRING SUMMER SEASON CHECKLIST"}/> : <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
+              Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
             }
             {/* <div className='mt-4 grid grid-cols-1 min-h-[200px]'>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>SPRING SUMMER SEASON CHECKLIST</h1>
@@ -769,7 +793,7 @@ const Home = () => {
               </div>
             </div> */}
             {
-              r_banners && r_banners.length > 0 ? <DraggableImageSlider images={r_banners} headers={"NEWNESS FOR EVERY OCCASION"}/> : <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
+              Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
             }
             {/* <div className='mt-4 grid grid-cols-1 min-h-[200px]'>
               <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>NEWNESS FOR EVERY OCCASION</h1>
@@ -869,18 +893,13 @@ const Home = () => {
           <Fragment>
             <div className='bg-white '>{/* Category */}
               <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                <DraggingScrollView images={ma_banners}/>
+                <DraggingScrollView images={Small_Screen_Section_1.urls}/>
               </ul>
             </div>
-
-            {/* <div>
-              <LazyLoadImage effect='blur' src={mm3} alt=""  className='mt-2 min-h-[100px]'/>
-            </div> */}
-
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                 {
-                  mb_banners && mb_banners.length > 0 ? mb_banners.map((mb, index) => (
+                  Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? Small_Screen_Section_2.urls.map((mb, index) => (
                     <Link key={`mb_banners_${index}`} to='/products'><div><LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]'/></div></Link>
                   )):(<>
                       <Link to='/products'>
@@ -914,10 +933,10 @@ const Home = () => {
 
 
             <div>
-              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>DEAL OF THE DAY</h1>
+              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>{Small_Screen_Section_3.header}</h1>
               <ul className='flex overflow-x-scroll '>
                 {
-                  dealsofdayMobile_bannsers && dealsofdayMobile_bannsers.length > 0 ? dealsofdayMobile_bannsers.map((d, index) => (
+                  Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? Small_Screen_Section_3.urls.map((d, index) => (
                     <Link key={`dealsOfDaty_banners${index}`} to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
                   )):(<>
                       <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
@@ -990,12 +1009,12 @@ const Home = () => {
               <LazyLoadImage effect='blur' src={mm2_2} alt="" />
             </div> */}
             <div className='mt-4 grid grid-cols-1 min-h-[200px]'>
-              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>CATEGORIES TO BAG</h1>
+              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
               <div className='w-screen flex justify-start items-center'>
                 <ul className='flex flex-row overflow-x-scroll'>
                   
                   {
-                    categoriesToBag_Mb_bannsers && categoriesToBag_Mb_bannsers.length > 0 && categoriesToBag_Mb_bannsers.map((c,index)=>(
+                    Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 && Small_Screen_Section_4?.urls.map((c,index)=>(
                       <Link key={index} to='/products' className='m-2'><li className=''><LazyLoadImage effect='blur' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" /></li></Link>
                     ))
                   }
@@ -1005,7 +1024,7 @@ const Home = () => {
             <div className='mt-4 w-[100vw]'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                 {
-                  mc_bannsers && mc_bannsers.length > 0 ? mc_bannsers.map((mc, index) => (
+                  Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ? Small_Screen_Section_5.urls.map((mc, index) => (
                     <Link key={`mc_banners_${index}`} to='/products'>
                       <div>
                         <LazyLoadImage effect='blur' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]'/>

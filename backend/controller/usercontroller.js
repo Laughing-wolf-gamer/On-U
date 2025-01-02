@@ -242,15 +242,35 @@ export const updateuserdetails =A( async(req,res,next)=>{
   })
   
 })
+export const removeAddress = A(async(req, res, next) => {
+  try {
+    const user = req.user;
+    
+    if(!user) return next(new Errorhandler('User not found', 404));
+    const userToUpdate = await User.findById(user.id);
+    if(!userToUpdate) return next(new Errorhandler('User not found', 500));
+    const { addressId } = req.body;
+    console.log("Removing Address: ",req.body)
+    /* const index = userToUpdate.addresses.findIndex(item => item._id === addressId);
+    if(index === -1) return next(new Errorhandler('Address not found', 404)); */
+    userToUpdate.addresses.splice(addressId, 1);
+    await userToUpdate.save();
+    res.status(200).json({success:true,message: 'Address Removed Successfully', user: userToUpdate});
+  } catch (error) {
+    console.error(`Error removing address `,error);
+    res.status(500).json({success:false,message: `Internal Server Error ${error.message}`});
+  }
+})
 export const updateAddress = A(async(req, res, next) => {
   try {
     const user = req.user;
     console.log("Updating Address: ",user)
     if(!user) return next(new Errorhandler('User not found', 404));
-    const { name, phonenumber, pincode, address1, address2, citystate } = req.body;
+    if(!req.body) return next(new Errorhandler('Address not found', 404));
+    // const { name, phonenumber, pincode, address1, address2, citystate } = req.body;
     const userToUpdate = await User.findById(user.id);
     if(!userToUpdate) return next(new Errorhandler('User not found', 500));
-    userToUpdate.addresses.push({ name, phonenumber, pincode:Number(pincode), address1, address2, citystate });
+    userToUpdate.addresses.push({ ...req.body});
     await userToUpdate.save();
     res.status(200).json({success:true,message: 'Address Updated Successfully', user: userToUpdate});
   } catch (error) {

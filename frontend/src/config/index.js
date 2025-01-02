@@ -17,7 +17,6 @@ export function getImagesArrayFromProducts(product){
     const sizeRandom = getRandomItem(product.size)
     const randomColor = getRandomItem(sizeRandom.colors);
     return randomColor.images || [];
-    
 }
 
 export function getRandomItem(array) {
@@ -93,6 +92,9 @@ export const headerConfig = ()=>{
         },
     }
     return headers;
+}
+export const removeSpaces = (inputString) => {
+    return inputString.replace(/\s+/g, '');
 }
 
 export const DevMode = false;

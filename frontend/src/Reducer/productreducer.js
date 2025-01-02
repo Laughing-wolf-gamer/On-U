@@ -5,7 +5,10 @@ import {
     REQUEST_SINGLE_PRODUCTS,
     SUCCESS_SINGLE_PRODUCTS,
     FAIL_SINGLE_PRODUCTS,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REQUEST_OPTIONS,
+    SUCCESS_OPTIONS,
+    FAIL_OPTIONS
 } from '../const/productconst'
 
 export const Allproducts = (state = {product:[]}, action) =>{
@@ -24,6 +27,34 @@ export const Allproducts = (state = {product:[]}, action) =>{
             };
 
         case FAIL_PRODUCTS:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+    
+        default:
+            return state;
+    }
+}
+export const allOptions = (state = {options:[]}, action) =>{
+    switch (action.type) {
+        case REQUEST_OPTIONS:
+            return {
+                loading: true,
+            };
+
+        case SUCCESS_OPTIONS:
+            return {
+                loading: false,
+                options:action.payload,
+            };
+
+        case FAIL_OPTIONS:
                 return {
                     loading: false,
                     error:action.payload

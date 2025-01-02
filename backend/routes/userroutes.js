@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
-import { registerUser, getuser, optverify, resendotp, updateuser, logout, updateuserdetails, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress } from '../controller/usercontroller.js';
+import { registerUser, getuser, optverify, resendotp, updateuser, logout, updateuserdetails, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress, removeAddress } from '../controller/usercontroller.js';
 
 const route = express.Router();
 route.post('/register', registerUser)
@@ -13,6 +13,7 @@ route.get('/resendotp/:id', resendotp)
 
 
 route.put('/updateAddress',isAuthenticateuser,updateAddress);
+route.patch('/removeAddress',isAuthenticateuser,removeAddress)
 route.get('/getAddress',isAuthenticateuser,getAllAddress);
 route.put('/updateuser',isAuthenticateuser, updateuser)
 route.get('/logout', logout)

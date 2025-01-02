@@ -74,21 +74,21 @@ export const M_ProductsDetails = [
         category:[
             {
                 title:"Topwear",
-                subcategories:[
-                    "T-Shirt",
-                    "Shirt",
-                    "Jacket",
-                    "Sweatshirt",
-                ]
+                    subcategories:[
+                        "T-Shirt",
+                        "Shirt",
+                        "Jacket",
+                        "Sweatshirt",
+                    ]
             },
             {
                 title:"Bottom Wear",
-                subcategories:[
-                    "Jeans",
-                    "Trousers",
-                    "Shorts",
-                    "Track Pants",
-                ]
+                    subcategories:[
+                        "Jeans",
+                        "Trousers",
+                        "Shorts",
+                        "Track Pants",
+                    ]
             }
         ]
 

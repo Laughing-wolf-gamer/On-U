@@ -15,17 +15,22 @@ export const getHomeBanners = async (req,res)=>{
 }
 export const addHomeCarousal = async (req, res) => {
 	try {
-		const{url,CategoryType} = req.body;
+		const{url,CategoryType,Header} = req.body;
 		console.log("Add Home Carousal req.body",req.body);
-		if(!url) return res.status(400).json({Success: false, message: "URL is required"});
+		if(!url && !Header) return res.status(400).json({Success: false, message: "URL is required"});
 		let banner = await BannerModel.findOne({CategoryType: CategoryType});
 		if(!banner){
-			banner = new BannerModel({CategoryType: CategoryType,Url: [url]});
+			banner = new BannerModel({CategoryType: CategoryType,Header:Header,Url: [url]});
 		}else{
-			banner.Url.push(url);
+			if(Header){
+				banner.Header = Header;
+			}
+			if(url){
+				banner.Url.push(url);
+			}
 		}
 		await banner.save();
-		const banners = await BannerModel.find();
+		const banners = await BannerModel.find({});
 		console.log("Banners: ",banners)
 		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
 	} catch (error) {

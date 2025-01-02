@@ -24,6 +24,7 @@ import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
 import { Alert } from '@mui/material'
 import MProductsBar from './Msubmenu/ProductsBar'
+import { FaUserAlt } from 'react-icons/fa'
 
 
 const MNavbar = ({ user }) => {
@@ -221,7 +222,7 @@ const MNavbar = ({ user }) => {
 
                         <div className='absolute right-2 flex-row justify-center items-center'>
                             <Link to='/bag'><BsHandbag size={26} color='black' className='float-right m-2 pb-0.5' /></Link>
-                            <Link to='/my_wishlist'> <BsHeart size={25} color='black' className='float-right m-2 pt-0.5' /></Link>
+                            {/* <Link to='/my_wishlist'> <BsHeart size={25} color='black' className='float-right m-2 pt-0.5' /></Link> */}
                             <FiSearch size={25} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
@@ -253,25 +254,41 @@ const MNavbar = ({ user }) => {
                                     {
                                         user ?
 
-                                        <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 ' onClick={()=>(loginClose(), loginunchange(),logoutBTN())}>
-                                        <span>LOGOUT</span>
-                                
-                                        </div>
-                                        :
-                                        <Link to='/Login'> 
-                                            <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
-                                                <span>SIGN UP.</span>
-                                                <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
+                                            <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 ' onClick={()=>(loginClose(), loginunchange(),logoutBTN())}>
+                                                <span>LOGOUT</span>
                                             </div>
-                                        </Link>
+                                        :
+                                            <Link to='/Login'> 
+                                                <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
+                                                    <span>SIGN UP.</span>
+                                                    <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
+                                                </div>
+                                            </Link>
                                     }
                                 <ul>
+                                    {/* Profile */}
+                                    <Ripples color="#fb56c1" className='w-full'>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex'>
+                                            {user ? (
+                                                <Link to="/dashboard">
+                                                    <span className='float-left flex items-center'>
+                                                        <FaUserAlt size={20} className='mr-2' /> Profile
+                                                    </span>
+                                                </Link>
+                                            ) : (
+                                                <Link to="/login">
+                                                    <span className='float-left'>Login</span>
+                                                </Link>
+                                            )}
+                                        </li>
+                                    </Ripples>
                                     <Ripples color="#fb56c1" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))} */>
                                             <Link to="/"><span className='float-left'>Home</span></Link>
                                             {/* <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
+                                    
                                     {/* <MMen Men={Menul} fun1={handleClose} fun2={classunchange} /> */}
                                     <Ripples color="#fb56c1" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
@@ -279,34 +296,22 @@ const MNavbar = ({ user }) => {
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    <MProductsBar showPrducts={Menu2}/>
+                                    <MProductsBar showProducts={Menu2}/>
                                     <Ripples color="re" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setKids(Kids ? (false) : (true)), setMenu3(Menu3 === "hidden" ? "block" : "hidden"))} */>
-                                            <Link to='/products'><span className='float-left'>About Us</span></Link>
-                                            {/* <span className='absolute mx-5 right-0'>{Kids ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex '>
+                                            <Link to='/about'><span className='float-left'>About Us</span></Link>
                                         </li>
                                     </Ripples>
                                     {/* <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} /> */}
                                     <Ripples color="black" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setHome(Home ? (false) : (true)), setMenu4(Menu4 === "hidden" ? "block" : "hidden"))} */>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' >
                                             <Link to='/contact'><span className='float-left'>Contact</span></Link>
-                                            {/* <span className='absolute mx-5 right-0'>{Home ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
-                                    {/* <Ripples color="black" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setBeauty(Beauty ? (false) : (true)), setMenu5(Menu5 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Beauty</span>
-                                            <span className='absolute mx-5 right-0'>{Beauty ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
-                                        </li>
-                                    </Ripples>
-                                    <Mbeauty Mbeauty={Menu5} fun1={handleClose} fun2={classunchange}/> */}
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    {/* <h1 className='my-5'>On-U&nbsp;Studio&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-slate-400 border-slate-300 rounded-lg' >NEW</span></h1> */}
-                                    {/* <h1 className='my-5'>On-U&nbsp;Mall&nbsp;<span className=' py-[2px] px-2 text-[8px] font-bold border-2 text-slate-400 border-slate-300 rounded-lg' >NEW</span></h1> */}
-                                    {/* <h1 className='my-5'>On-U&nbsp;Insider</h1> */}
                                     <h1 className='my-5'>Gift&nbsp;Cards</h1>
                                     <h1 className='my-5'>Contact&nbsp;Us</h1>
                                     <h1 className='my-5'>FAQs</h1>
