@@ -11,10 +11,14 @@ route.get('/orders/all',isAuthenticateuser,getallOrders)
 
 route.post('/create_wishlist', createwishlist)
 route.get('/get_wishlist/:id', getwishlist)
+
+
+
 route.post('/create_bag',isAuthenticateuser, addItemsToBag)
 route.get('/bag/:userId',isAuthenticateuser, getbag)
 route.put('/update_bag',isAuthenticateuser, updateqtybag)
-route.put('/delete_bag',isAuthenticateuser, deletebag)
-route.put('/delete_wish',isAuthenticateuser, deletewish)
+route.put('/removeBagItem',isAuthenticateuser, deletebag)
+
+
 
 export default route;

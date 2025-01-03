@@ -20,7 +20,7 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
 	if (!user) {
         return next(new ErrorHandler('User not found', 404))
     }
-	if(user.role !== 'admin') {
+	if(user.role === 'user') {
         return next(new ErrorHandler('Unauthorized to access this route', 401))
     }
     console.log("Admin User: ",user);

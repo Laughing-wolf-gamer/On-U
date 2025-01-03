@@ -29,7 +29,7 @@ const reducer = combineReducers({
       bag_data:get_bag_reducer,
       update_bag: update_qty_bag_reducer,
       updateuser2:updatedetailsuserreducer,
-      deletebag:delete_bag_reducer,
+      deletebagReducer:delete_bag_reducer,
       deletewish:delete_wish_reducer,
 
 

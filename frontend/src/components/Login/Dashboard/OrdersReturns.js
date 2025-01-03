@@ -81,34 +81,18 @@ const OrderCard = ({ order, onViewDetails }) => {
       e.preventDefault();
       onViewDetails(order);
     }} className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
+        {/* Delivery Status Progress Bar */}
+        <div className="w-full flex-wrap  justify-center items-center">
+            <DeliveryStatus status={order?.status} />
+          </div>
       <div className="flex justify-between items-center space-x-6">
-        {/* Order Image Section */}
-        {/* <div className="w-32 h-32 flex-shrink-0">
-          <img
-            src={order?.image || 'https://via.placeholder.com/150'}
-            alt="Product"
-            className="w-full h-full object-cover rounded-lg shadow-md"
-          />
-        </div> */}
-        {/* Order Details Section */}
         <div className="flex-1 space-y-2">
           <p className="text-gray-700"><strong>Order ID:</strong> {order?._id || 'Not Available'}</p>
           <p className="text-gray-700"><strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}</p>
           <p className="text-gray-700"><strong>Order Status:</strong> {order?.status || 'Pending'}</p>
 
-          {/* <div className="flex justify-between mt-4">
-            <button onClick={(e) => { onViewDetails(order) }} className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
-              View Details
-            </button>
-            <button className="px-4 py-2 bg-gray-400 text-white rounded-lg shadow-md hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-400">
-              Return Order
-            </button>
-          </div> */}
         </div>
-          {/* Delivery Status Progress Bar */}
-          <div className="w-full min-h-fit justify-center items-center flex">
-            <DeliveryStatus status={order?.status} />
-          </div>
+          
       </div>
     </div>
   );

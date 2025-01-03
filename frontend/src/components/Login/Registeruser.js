@@ -1,43 +1,34 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import './Login.css'
-import { clearErrors,getuser, registerUser } from '../../action/useraction'
-import { useSelector, useDispatch } from 'react-redux'
-import { useNavigate } from 'react-router-dom'
-import { FcGoogle } from 'react-icons/fc'
-import { GoVerified } from 'react-icons/go'
+import React, { Fragment, useState, useEffect } from 'react';
+import './Login.css';
+import { clearErrors, registerUser } from '../../action/useraction';
+import { useSelector, useDispatch } from 'react-redux';
+import { Link, useNavigate } from 'react-router-dom';
+import { FcGoogle } from 'react-icons/fc';
 import GoogleLogin from 'react-google-login';
-import {useAlert} from 'react-alert'
-
-
+import { useAlert } from 'react-alert';
 
 const Registeruser = () => {
-    const Alert =useAlert()
-    const redirect = useNavigate()
-    const { user, error, loading } = useSelector(state => state.Registeruser)
-    const H = window.innerHeight
-    const Hpx = H - 56
-    const [name, setname] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [gender, setgender] = useState('')
-    const [email, setemail] = useState('')
-    const [address1, setaddress1] = useState('')
-    const [address2, setaddress2] = useState('')
-    const [citysate, setcitysate] = useState('')
-    const [pincode, setpincode] = useState('')
-    const dispatch = useDispatch()
+    const Alert = useAlert();
+    const redirect = useNavigate();
+    const { user, error, loading } = useSelector(state => state.Registeruser);
+    const [name, setname] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
+    const [gender, setgender] = useState('');
+    const [email, setemail] = useState('');
+    const [address1, setaddress1] = useState('');
+    const [address2, setaddress2] = useState('');
+    const [citysate, setcitysate] = useState('');
+    const [pincode, setpincode] = useState('');
+    const dispatch = useDispatch();
 
     const signin_google = (response) => {
-        /* const myForm = {
-            name: response.profileObj.name,
-            email: response.profileObj.email,
-        }
-        dispatch(updateuser(myForm)) */
-    }
+        // Handle Google Sign-In (optional)
+    };
 
     const onsubmit = async (e) => {
         e.preventDefault();
         const myForm = {
-            phonenumber:phoneNumber,
+            phonenumber: phoneNumber,
             name: name,
             gender: gender,
             email: email,
@@ -47,92 +38,137 @@ const Registeruser = () => {
                 address2: address2,
                 citystate: citysate
             }
-        }
-        await dispatch(registerUser(myForm))
-        // console.log("User: ", user)
-        
-        // redirect('/verifying')
-    }
+        };
+        await dispatch(registerUser(myForm));
+    };
 
-
-    const [state, setstate] = useState(false)
-    
     useEffect(() => {
-        if(error){
-            dispatch(clearErrors())
+        if (error) {
+            dispatch(clearErrors());
         }
-        if(user){
-            console.log("User: ", user?.token)
+        if (user) {
+            Alert.success('Otp Sent To Your EmailID');
+            redirect('/verifying');
         }
-    }, [ error, dispatch]);
-    useEffect(()=>{
-        if(user){
-            Alert.success('User Registered Successfully')
-            console.log("Registering User: ", user?.token)
-            redirect('/verifying')
-        }
-    },[user,dispatch])
+    }, [error, user, dispatch]);
+
     return (
-       
         <Fragment>
-            <form
-                encType="multipart/form-data"
-                onSubmit={(e) => onsubmit(e)}
-            >
-                <div className={`w-[100%] h-screen bg-[#fcecf4] py-10`}>
-                    <div className='h-max bg-white mx-auto w-[100vw] sm:w-[430px] md:w-[430px] lg:w-[430px] xl:w-[430px] 2xl:w-[430px] pt-3'>
+            <form onSubmit={(e) => onsubmit(e)}>
+                <div className="w-full min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 py-10">
+                    <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
+                        <h2 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register New User</h2>
+                        <div className="space-y-4">
+                            <input
+                                type="text"
+                                name="PhoneNumber"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="Phone Number"
+                                value={phoneNumber}
+                                onChange={(e) => setPhoneNumber(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="name"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="Full Name"
+                                value={name}
+                                onChange={(e) => setname(e.target.value)}
+                            />
 
-                        <div className='mx-auto w-[330px] my-8'>
+                            <div className="flex items-center space-x-6 mb-5">
+                                <label className="text-gray-700 font-semibold">Gender</label>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Men"
+                                        className="accent-pink-500"
+                                        onClick={() => setgender('men')}
+                                    />
+                                    <span className="ml-2 text-gray-700">Men</span>
+                                </div>
+                                <div>
+                                    <input
+                                        type="radio"
+                                        name="gender"
+                                        value="Women"
+                                        className="accent-pink-500"
+                                        onClick={() => setgender('women')}
+                                    />
+                                    <span className="ml-2 text-gray-700">Women</span>
+                                </div>
+                            </div>
 
-                            {/* <span className='float-right right-5 text-[#0db7af] top-1'><GoVerified /></span></p> */}
-                            <input type="text" name="PhoneNumber" className='w-full h-10 border-[1px] focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5' placeholder='Phone Number' value={phoneNumber} onChange={(e) => setPhoneNumber(e.target.value)} />
-                            <input type="text" name="name" className='w-full h-10 border-[1px] focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5' placeholder='Full Name' value={name} onChange={(e) => setname(e.target.value)} />
+                            <input
+                                type="text"
+                                name="email"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="E-Mail (Optional)"
+                                onChange={(e) => setemail(e.target.value)}
+                            />
 
-                            <label className='font1 text-base mr-4 mb-5'>Gender</label>
-                            <input type="radio" name="gender" value="Men" className='mb-5 accent-pink-500' onClick={() => setgender('men')} />
-                            <label for="Men" className='font1 text-sm mr-4 mb-5'>Men</label>
-                            <input type="radio" name="gender" value="Women" className='mb-5 accent-pink-500' onClick={() => setgender('women')} />
-                            <label for="Women" className='font1 text-sm mr-4 mb-5' >Women</label>
-
-                            <input type="text" name="email" className='w-full h-10 border-[1px] 
-                                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none '
-                                placeholder='E-Mail (Optional)' onChange={(e) => setemail(e.target.value)} />
-                            <button >
-
+                            <div className="flex items-center justify-center my-4">
                                 <GoogleLogin
-                                    clientId='667896313498-k77vitq087j4jhfne9fnd7i31abf2ok1.apps.googleusercontent.com'
-                                    buttonText={<FcGoogle />}
-                                    icon={false}
+                                    clientId="667896313498-k77vitq087j4jhfne9fnd7i31abf2ok1.apps.googleusercontent.com"
+                                    buttonText="Sign Up with Google"
+                                    icon={<FcGoogle />}
                                     onSuccess={signin_google}
                                     onFailure={signin_google}
-                                    cookiePolicy={'single_host_origin'}
+                                    cookiePolicy="single_host_origin"
+                                    className="w-full text-gray-800 border-2 border-gray-300 rounded-lg py-2 px-4 hover:bg-gray-100 transition-colors"
                                 />
+                            </div>
+
+                            <input
+                                type="text"
+                                name="address1"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="House No, Building, Street Area (Optional)"
+                                onChange={(e) => setaddress1(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="area"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="Locality Town (Optional)"
+                                onChange={(e) => setaddress2(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="city"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="City District & State (Optional)"
+                                onChange={(e) => setcitysate(e.target.value)}
+                            />
+                            <input
+                                type="text"
+                                name="pincode"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                placeholder="Pincode (Optional)"
+                                onChange={(e) => setpincode(e.target.value)}
+                            />
+
+                            <button
+                                disabled={loading}
+                                type="submit"
+                                className="w-full py-3 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 transition duration-300"
+                            >
+                                {!loading ? 'Create Account' : 'Loading...'}
                             </button>
 
-                            <input type="text" name="address1" className='w-full h-10 border-[1px] 
-                                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'
-                                placeholder='House No, Building, Street Area (Optional)' onChange={(e) => setaddress1(e.target.value)} />
-
-                            <input type="text" name="area" className='w-full h-10 border-[1px] 
-                                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'
-                                placeholder='Locality Town (Optional)' onChange={(e) => setaddress2(e.target.value)} />
-                            <input type="text" name="city" className='w-full h-10 border-[1px] 
-                                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'
-                                placeholder='City District & State (Optional)' onChange={(e) => setcitysate(e.target.value)} />
-                            <input type="text" name="pincode" className='w-full h-10 border-[1px] 
-                                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none mb-5'
-                                placeholder='Pincode (Optional)' onChange={(e) => setpincode(e.target.value)} />
-
-                            <p id='error' className='text-xs text-red-500 '></p>
-
-                            <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {!loading? 'CREATE ACCOUNT': 'Loading...'} </button>
-
+                            <Link
+                                to="/Login"
+                                className="text-center block text-pink-600 font-semibold mt-4 hover:underline"
+                            >
+                                Already have an account? Log In
+                            </Link>
                         </div>
                     </div>
                 </div>
             </form>
         </Fragment>
-    )
-}
+    );
+};
 
-export default Registeruser
+export default Registeruser;

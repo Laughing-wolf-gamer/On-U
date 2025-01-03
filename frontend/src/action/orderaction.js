@@ -114,13 +114,7 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
         // const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, {
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        });
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, headerConfig());
         console.log("Update Bag: ",data)
         dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
@@ -128,35 +122,28 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
     }
 }
 
-export const deletebag = (fdata) => async (dispatch) => {
-
+export const deleteBag = (deletingProductData) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
-        // const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}api/shop/delete_bag`,fdata,{
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        });
-        dispatch({ type: REQUEST_DELETE_BAG, payload: data.success,})
+        const res = await axios.put(`${BASE_API_URL}/api/shop/removeBagItem`,deletingProductData,headerConfig());
+        console.log("Delete Bag: ",res)
+        dispatch({ type: REQUEST_DELETE_BAG, payload: res?.data?.success || false})
     } catch (error) {
-        dispatch({ type: FAIL_DELETE_BAG, payload: error.response.data.message })
+        dispatch({ type: FAIL_DELETE_BAG, payload: error?.response?.data?.message || "Failed To Delete BAg" })
     }
 }
 
 export const deletewish = (fdata) => async (dispatch) => {
 
-    try {
+    /* try {
         dispatch({ type: SUCCESS_DELETE_WISH })
         const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.put(`${BASE_API_URL}/api/delete_wish`,fdata, config )
         dispatch({ type: REQUEST_DELETE_WISH, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_WISH, payload: error.response.data.message })
-    }
+    } */
 }
 
 

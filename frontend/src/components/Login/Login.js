@@ -1,67 +1,85 @@
-import React, { Fragment, useState, useEffect } from 'react'
-import img from '../images/login.webp'
-import './Login.css'
-import { useDispatch, useSelector } from 'react-redux'
-import { loginmobile } from '../../action/useraction'
-import { Link, useNavigate } from 'react-router-dom'
-import {useAlert} from 'react-alert'
+import React, { Fragment, useState, useEffect } from 'react';
+import './Login.css';
+import { useDispatch, useSelector } from 'react-redux';
+import { loginmobile } from '../../action/useraction';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAlert } from 'react-alert';
 
 const Login = () => {
-  const [mobileno, setmobileno] = useState('')
-  const Redirect = useNavigate()
-  const dispatch = useDispatch()
-  const {user} = useSelector(state => state.loginuser)
-  const Alert = useAlert()
-  let par = document.getElementById('error')
+  const [mobileno, setmobileno] = useState('');
+  const Redirect = useNavigate();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.loginuser);
+  const Alert = useAlert();
+  let par = document.getElementById('error');
 
   const continues = async () => {
- 
-    if (mobileno.length > 10) {
-      par.innerHTML = 'Error: Pls note you enter wrong mobile no'
+    if (mobileno.length < 10) {
+      par.innerHTML = 'Error: Please enter a valid 10-digit mobile number';
+      return;
     }
     if (mobileno.length === 10) {
-      await dispatch(loginmobile({phonenumber:mobileno}))
-      if(user){
-        Alert.success('Login Successfully')
-        Redirect('/')
+      await dispatch(loginmobile({ phonenumber: mobileno }));
+      if (user) {
+        Alert.success('Login Successful');
+        Redirect('/');
       }
     }
-  }
-  if(user){
-    console.log("User: ",user)
-    Redirect('/')
-  }
+  };
 
-  /* useEffect(() => {  
-    if(user){
-      console.log("User: ",user)
-      Redirect('/')
+  useEffect(() => {
+    if (user) {
+      console.log('User: ', user);
+      Redirect('/');
     }
-  }, [Redirect]); */
+  }, [user, Redirect]);
+
   return (
-
     <Fragment>
-      <div className={`w-[100%] h-screen bg-[#fcecf4] py-10`}>
-        <div className='h-[500px] bg-white mx-auto w-[100vw] sm:w-[430px] md:w-[430px] lg:w-[430px] xl:w-[430px] 2xl:w-[430px]'>
-          <img src={img} alt="login" className='w-auto min-h-[150px]' />
-          <div className='mx-auto w-[330px] my-8'>
+      <div className="w-full h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 flex items-center justify-center py-10">
+        <div className="bg-white p-8 rounded-lg shadow-lg w-full sm:w-[90%] md:w-[80%] lg:w-[50%] xl:w-[40%] 2xl:w-[35%]">
+          {/* <img src={img} alt="login" className="w-full h-auto rounded-lg mb-6" /> */}
+          <div className="mx-auto w-full">
+            <h1 className="text-2xl font-semibold text-center text-gray-800 mb-6">
+              Login or Sign Up
+            </h1>
 
-            <h1 className='font1 text-2xl font-medium mb-5'>Login <span className='text-lg'>or</span> SignUp</h1>
+            <input
+              type="number"
+              name="phonenumber"
+              className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400 mb-4"
+              onChange={(e) => setmobileno(e.target.value)}
+              placeholder="+91 | Mobile Number*"
+            />
+            <p id="error" className="text-xs text-red-500 text-center mb-4"></p>
 
-            <input type="number" name="phonenumber" className='w-full h-10 border-[1px] 
-                focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none'
-              onChange={(e) => setmobileno(e.target.value)} placeholder='+91 | Mobile Number*' />
-            <p id='error' className='text-xs text-red-500 '></p>
+            <h1 className="text-sm text-center mb-5">
+              By Continuing, I agree to the{' '}
+              <span className="text-pink-500">Terms of Use</span> &{' '}
+              <span className="text-pink-500">Privacy Policy</span>
+            </h1>
 
-            <h1 className='font1 text-sm mt-5'>By Continuing, I agree to the <span className='text-[#ee5f73]'>Terms of Use</span>  & <span className='text-[#ee5f73]'> Privacy Policy</span></h1>
-            <button type='submit' onClick={continues} className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5'>LOG IN</button>
-            <Link to='/registeruser' className='text-[#ee5f73] text-center block'>New User? Register</Link>
-            {/* <h1 className='font1 text-sm'>No Account? <span className='text-[#ee5f73]'>Register User</span></h1> */}
+            <button
+              type="submit"
+              onClick={continues}
+              className="w-full py-3 bg-pink-500 text-white font-semibold rounded-lg hover:bg-pink-600 transition duration-300 mb-4"
+            >
+              LOG IN
+            </button>
+
+            <Link
+              to="/registeruser"
+              className="text-center text-pink-500 font-bold hover:underline block"
+            >
+              <h1 className="text-sm">
+                No Account? <span className="text-pink-500">Register User</span>
+              </h1>
+            </Link>
           </div>
         </div>
       </div>
     </Fragment>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

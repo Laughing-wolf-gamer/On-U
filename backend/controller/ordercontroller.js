@@ -4,6 +4,7 @@ import Bag from '../model/bag.js'
 import Errorhandler from '../utilis/errorhandel.js'
 import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
+import { console } from 'inspector'
 
 export const createorder = async (req, res, next) => {
   console.log("Order User ID:", req.user?.id);
@@ -263,23 +264,28 @@ export const updateqtybag = A(async (req, res, next) => {
  
  })
 
-export const deletebag = A(async (req, res, next) => {
-  console.log(req.body)
-  const {user, product} = req.body
-
-  const users =  await Bag.updateOne({user: user}, {$pull:{
-        orderItems: {product:product}
-      }})
-   
-   res.status(200).json({
-     success:true
-     
- })
- 
- })
+export const deletebag = async (req, res) => {
+  // console.log("Deleting Bag: ",req.user)
+  try {
+    const {productId} = req.body
+    const bag = await Bag.findOne({userId: req.user.id});
+    bag.orderItems = bag.orderItems.filter(p => p.productId != productId)
+    if(bag.orderItems.length === 0){
+      await Bag.findOneAndDelete({userId: req.user.id})
+      return res.status(200).json({success:true,message:"Successfully deleted Bag"})
+    }
+    console.log("Bag Items: ",bag)
+    await bag.save()
+    res.status(200).json({success:true,message:"Successfully deleted Bag",bag})
+    
+  } catch (error) {
+    console.error("Error Occurred during deleting bag ", error.message)
+    res.status(500).json({message: "Internal Server Error"})
+  }
+}
 
 export const deletewish = A(async (req, res, next) => {
-  console.log(req.body)
+  /* console.log(req.body)
   const {user, product} = req.body
 
   const users =  await updateOne({user: user}, {$pull:{
@@ -291,6 +297,6 @@ export const deletewish = A(async (req, res, next) => {
    res.status(200).json({
      success:true
      
- })
+ }) */
  
  })

@@ -1,19 +1,25 @@
 import User from "../../model/usermodel.js";
 import bcrypt from 'bcryptjs';
 import sendtoken from "../../utilis/sendtoken.js";
-import WebSiteModel from "../../model/websiteData.model.js";
 import ProductModel from "../../model/productmodel.js";
 import OrderModel from "../../model/ordermodel.js";
 export const registerNewAdmin = async(req,res)=>{
     try {
-        const {userName,email,password,phoneNumber} = req.body;
-        console.log("Authenticating with: ",userName,email,password,phoneNumber )
+        const {name,email,password,phoneNumber,role} = req.body;
+        console.log("Authenticating with: ",name,email,password,phoneNumber)
+        if(role){
+          if(role !== 'admin' && role !== 'superAdmin'){
+            return res.status(401).json({Success:false,message: 'Invalid Role'});
+          }
+        }else{
+          return res.status(401).json({Success:false,message: 'Please enter a valid role'});
+        }
         let user = await User.findOne({email: email});
         if(user){
           return res.status(401).json({Success:false,message: 'User already exists'});
         }
         const hashedPassword = await bcrypt.hash(password,12);
-        user = new User({userName,email,password:hashedPassword,role:'admin'});
+        user = new User({name,phoneNumber,email,password:hashedPassword,role:role});
         await user.save();
         res.status(200).json({Success:true,message: 'User registered successfully'});
     } catch (error) {
@@ -23,12 +29,22 @@ export const registerNewAdmin = async(req,res)=>{
 }
 export const logInUser = async (req,res) =>{
     try {
-        const {email,password} = req.body;
+        const {email,password,role} = req.body;
         if(!email) return res.status(401).json({Success:false,message: 'Please enter a valid email'});
         if(!password) return res.status(401).json({Success:false,message: 'Please enter a valid password'});
+        if(!role) return res.status(401).json({Success:false,message: 'Please enter a valid role'});
+
+        if(role){
+          if(role !== 'admin' && role !== 'superAdmin'){
+            return res.status(401).json({Success:false,message: 'Invalid Role'});
+          }
+        }
         const user = await User.findOne({email});
         if(!user){
           return res.status(404).json({Success:false,message: 'User not found'});
+        }
+        if(user.role !== role){
+          return res.status(401).json({Success:false,message: 'Unauthorized to access this route'});
         }
         const isPasswordCorrect = await bcrypt.compare(password,user?.password || '');
         if(!isPasswordCorrect){
@@ -36,11 +52,10 @@ export const logInUser = async (req,res) =>{
         }
         const token = sendtoken(user);
         res.status(200).json({Success:true,message: 'User logged in successfully',user:{
-            userName:user.userName,
-            email:user.email,
-            role: user.role,
-            id: user._id,
-            
+          userName:user.userName,
+          email:user.email,
+          role: user.role,
+          id: user._id,
         },token})
     } catch (error) {
         console.error(`Error Logging in user ${error.message}`);
@@ -384,6 +399,95 @@ export const getTotalProductStocks = async (req,res)=>{
 
   }
 }
+export const getCustomerGraphData = async (req, res) => {
+  try {
+    // Group customers by month (or year) based on the 'createdAt' field
+    const result = await User.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" },  // Extract month from 'createdAt'
+          year: { $year: "$createdAt" },    // Extract year from 'createdAt'
+        }
+      },
+      {
+        $group: {
+          _id: { month: "$month", year: "$year" },
+          count: { $sum: 1 } // Count customers for each month/year
+        }
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 } // Sort by year and month
+      }
+    ]);
+
+    // If there is no data
+    if (!result || result.length === 0) {
+      return res.status(200).json({
+        Success: true,
+        message: 'No customer growth data available',
+        result: []
+      });
+    }
+
+    // Map the result to a format that can be sent to the frontend
+    console.log("Item: ",result);
+    const formattedResult = result.map((item) => ({
+      month: `${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.year}`,
+      count: item.count
+    }));
+
+    console.log("Customer Growth Data: ", formattedResult);
+
+    res.status(200).json({ Success: true, message: 'Customer Growth Data', result: formattedResult });
+  } catch (error) {
+    console.error("Error fetching customer growth data: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const getOrdersGraphData = async (req, res) => {
+  try {
+    // Group orders by month (or year) based on the 'createdAt' field
+    const result = await OrderModel.aggregate([
+      {
+        $project: {
+          month: { $month: "$createdAt" },  // Extract month from 'createdAt'
+          year: { $year: "$createdAt" },    // Extract year from 'createdAt'
+        }
+      },
+      {
+        $group: {
+          _id: { month: "$month", year: "$year" },
+          count: { $sum: 1 } // Count orders for each month/year
+        }
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1 } // Sort by year and month
+      }
+    ]);
+
+    // If there is no data
+    if (!result || result.length === 0) {
+      return res.status(200).json({
+        Success: true,
+        message: 'No order growth data available',
+        result: []
+      });
+    }
+
+    // Map the result to a format that can be sent to the frontend
+    const formattedResult = result.map((item) => ({
+      month: `${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.year}`,
+      count: item.count
+    }));
+
+    res.status(200).json({ Success: true, message: 'Order Growth Data', result: formattedResult });
+  } catch (error) {
+    console.error("Error fetching order growth data: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+}
+
 export const getTotalUsers = async (req,res)=>{
   try {
     const users = await User.find({role: 'user'});

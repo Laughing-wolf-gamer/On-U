@@ -1,5 +1,5 @@
 import React, { useEffect, Fragment, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { singleProduct } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Loader/Loader'
@@ -18,8 +18,10 @@ import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
+import { red } from '@mui/material/colors'
 
 const Ppage = () => {
+  const navigation = useNavigate();
 	const[selectedSize, setSelectedSize] = useState(null);
 	const[selectedColor, setSelectedColor] = useState([]);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -56,32 +58,19 @@ const Ppage = () => {
       console.log("Order Data: ",orderData)
       dispatch(createbag(orderData))
       alert.success('Product added successfully in Bag')
-       
-      alert.success('Product added successfully in Bag')
-
      }else{
        alert.show('You have To Login To Add This Product Into Bag')
      }
   }
 
-  function addtowishlist() {
-    if (user) {
-
-     const option ={
-        user:user._id,
-        orderItems:[
-          {product:param.id}
-        ]
-       
-      }
-      console.log(option)
-      dispatch(createwishlist(option))
-
-      alert.success('Product added successfully in wishlist')
-      
-      
-    }else{
-      alert.show('You have To Login To Add This Product Into Wishlist')
+  const handleBuyNow = async () => {
+    try {
+      await addtobag();
+      setTimeout(() => {
+        navigation('/bag')
+      }, 1000);
+    } catch (error) {
+      console.error("Error Adding to Bag: ",error);
     }
   }
 
@@ -137,11 +126,11 @@ const Ppage = () => {
 			const currentColor = selectedSize.colors[0];
 			setSelectedSize_color_Image_Array(currentColor.images);
 			setSelectedColorId(currentColor.id);
-			console.log("Colors: ",currentColor);
+			// console.log("Colors: ",currentColor);
 			setSelectedImage(currentColor.images[0]);
 		}
 	},[product,dispatch])
-  console.log("Radnom Images: ",);
+  console.log("sizes ",selectedSize);
   return (
     <Fragment>
       {
@@ -197,7 +186,7 @@ const Ppage = () => {
                       {
                         product && product.size && product.size.length > 0 && product.size.map((size,index) =>
                             <div key={`size_${index}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
-                                ${currentSize?.id === size?.id ? "border-2 outline-offset-1 border-gray-300":""}`} onClick={(e)=> {
+                                ${currentSize?.id === size.id && selectedSize?.label === size.label ? "border-2 outline-offset-1 border-gray-500 text-white font-bold bg-slate-700":"bg-white"}`} onClick={(e)=> {
                               e.preventDefault();
                               setCurrentSize(size);
                               handleSetNewImageArray(size);
@@ -214,7 +203,7 @@ const Ppage = () => {
                   {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
                       selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
                         <div className={`flex flex-col h-fit shadow-md rounded-full p-2 items-center justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
-                            ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-300":""} `} onClick={(e)=> {
+                            ${selectedColorId === color?.id ? "border-2 outline-offset-1":""} `} onClick={(e)=> {
                           e.preventDefault();
                           setCurrentColorColor(color);
                           handelSetColorImages(color)
@@ -230,14 +219,14 @@ const Ppage = () => {
                             type='button'
                             //
                             className={`w-12 h-12 rounded-full flex items-center justify-center
-                              ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-100 scale-110 shadow-md" : ""}
+                              ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-700 scale-110 shadow-md" : ""}
                             `}
                             title={color?.quantity || color?.label || "Color"} // Optional tooltip
                           />
                           {
                             color.quantity <= 10 && (
-                              <div className='flex flex-col justify-center items-center space-y-1'>
-                                <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">{color?.quantity}</span> 
+                              <div className='flex flex-col justify-center items-center'>
+                                {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">{color?.quantity}</span>  */}
                                 {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Left</span>  */}
                               </div>
                             )
@@ -250,7 +239,7 @@ const Ppage = () => {
                     </div>
 
                   <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
-                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={addtowishlist}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
+                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={handleBuyNow}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-base font-semibold text-slate-800'>

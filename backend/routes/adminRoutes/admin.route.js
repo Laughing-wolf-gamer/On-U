@@ -1,6 +1,6 @@
 import express from 'express';
 import { addNewProduct, deleteProduct, editProduct, fetchAllProducts, getallOrders, getOrderById, getProductById, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
-import { addNewColorToSize, addNewSizeToProduct, getAllProducts, getProductTotalStocks, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
+import { addNewColorToSize, addNewSizeToProduct, getAllProducts, getCustomerGraphData, getOrdersGraphData, getProductTotalStocks, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
@@ -8,6 +8,9 @@ import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 const route = express.Router();
 route.post('/auth/register',registerNewAdmin)
 route.post('/auth/login',logInUser)
+
+
+
 route.get('/auth/check-auth',isAuthenticateuser,ProtectAdminRoute,getuser)
 route.post('/product/add',ProtectAdminRoute,addNewProduct);
 route.post('/upload-image',ProtectAdminRoute,upload.single('my_file'),uploadImage);
@@ -25,6 +28,8 @@ route.put('/orders/updateOrderStatus/:orderId',isAuthenticateuser,ProtectAdminRo
 
 
 route.get('/stats/getTotalAllUsersCount',isAuthenticateuser,ProtectAdminRoute,getTotalUsers);
+route.get('/stats/getCustomerGraphData',isAuthenticateuser,ProtectAdminRoute,getCustomerGraphData);
+route.get('/stats/getOrderGraphData',isAuthenticateuser,ProtectAdminRoute,getOrdersGraphData);
 route.get('/stats/getAllProductsCount',isAuthenticateuser,ProtectAdminRoute,getAllProducts);
 route.get('/stats/getTotalOrdersLength',isAuthenticateuser,ProtectAdminRoute,getTotalOrders);
 

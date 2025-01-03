@@ -162,7 +162,7 @@ export const update_qty_bag_reducer = (state = {updatebag:{}}, action) =>{
     }
 }
 
-export const delete_bag_reducer = (state = {deletebag:{}}, action) =>{
+export const delete_bag_reducer = (state = {deleteBagResult:false}, action) =>{
     switch (action.type) {
         case SUCCESS_DELETE_BAG:
             return {
@@ -171,7 +171,7 @@ export const delete_bag_reducer = (state = {deletebag:{}}, action) =>{
         case REQUEST_DELETE_BAG:
             return {
                 loading: false,
-                deletebag:action.payload,
+                deleteBagResult:action.payload,
             };
         case FAIL_DELETE_BAG:
                 return {

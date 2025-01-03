@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
 import { useSelector, useDispatch } from 'react-redux';
-import { getbag, getqtyupdate, deletebag } from '../../action/orderaction';
+import { getbag, getqtyupdate, deletebag, deleteBag } from '../../action/orderaction';
 import { getAddress, getuser, updateAddress } from "../../action/useraction";
 import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
@@ -10,13 +10,16 @@ import './bag.css';
 import { Select } from '@mui/material';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
+import LoadingSpinner from '../Product/LoadingSpinner';
 
 const Bag = () => {
+    const navigation = useNavigate()
+    const dispatch = useDispatch();
     const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
+    const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
     const {allAddresses} = useSelector(state => state.getAllAddress)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
-    const dispatch = useDispatch();
     const alert = useAlert();
     const [mrp, setMrp] = useState(0);
     // const [sp, setSp] = useState(0);
@@ -42,39 +45,30 @@ const Bag = () => {
         alert.success('Address added successfully');
     };
 
-    useEffect(() => {
-        if (!user) {
-            dispatch(getuser());
-        }
-        if (user) {
-
-            if (!isAuthentication) {
-                alert.info('Log in to access BAG');
-            } else {
-                dispatch(getbag({ userId: user.id }));
-                dispatch(getAddress())
-            }
-            setAddress(user?.user?.addresses[0]);
-        }
-    }, [dispatch, user, isAuthentication, alert]);
+    
 
     useEffect(() => {
         if (bag?.orderItems) {
             let totalMRP = 0, totalSP = 0, totalDiscount = 0;
             bag.orderItems.forEach(item => {
                 // Check if salePrice is available, else fallback to price
-                const currentMrp = item.productId.salePrice || item.productId.price; 
+                const currentMrp = item.productId.salePrice || item.productId.price;
+                totalSP += item.productId.salePrice ? item.productId.salePrice : 0 * item.quantity; // Add the total price (either salePrice or regular price)
+                if(item.productId.salePrice){
+                    const dis = Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100) * item.quantity;
+                    totalDiscount += Math.abs(dis)
+                }
                 // Add the total price (either salePrice or regular price)
                 totalMRP += currentMrp * item.quantity; // Regular price multiplied by quantity
                 // totalSP += salePrice * item.quantity;// Sale price (or regular price) multiplied by quantity
             });
 
             // Calculate the total discount
-            totalDiscount = totalMRP - totalSP;
+            // totalDiscount = totalMRP - totalSP;
 
             // Set the calculated values
+                console.log("Discount: ",totalDiscount);
             setMrp(totalMRP);
-            // setSp(totalSP);
             setDs(totalDiscount);
             console.log("Bag: ", bag);
         }
@@ -87,8 +81,9 @@ const Bag = () => {
         dispatch(getbag({ userId: user.id }));
     };
 
-    const handleDeleteBag = (productId) => {
-        dispatch(deletebag({ product: productId, user: user.id }));
+    const handleDeleteBag = async (productId,bagOrderItemId) => {
+        await dispatch(deleteBag({productId,bagOrderItemId}));
+        dispatch(getbag({ userId: user.id }));
     };
 
     const handleAddressChange = (e) => {
@@ -117,12 +112,29 @@ const Bag = () => {
             alert.error('Please select a delivery address');
         }
     };
-    console.log("Users Address: ",bag);
+    useEffect(() => {
+        if (!user) {
+            dispatch(getuser());
+        }
+        if (user) {
+
+            if (!isAuthentication) {
+                alert.info('Log in to access BAG');
+            } else {
+                dispatch(getbag({ userId: user.id }));
+                dispatch(getAddress())
+            }
+            setAddress(user?.user?.addresses[0]);
+        }
+    }, [dispatch,deleteBagResult, user, isAuthentication, alert]);
+
+    console.log("Bag Data: ",bag);
 
     return (
         <>
             {isAuthentication ? (
                 <div>
+                    
                     {!bagLoading && bag?.orderItems?.length > 0 ? (
                         <div className="relative max-w-screen-lg mx-auto">
                             <div className="flex justify-between items-center mt-6">
@@ -152,7 +164,7 @@ const Bag = () => {
                                                 <div className="flex items-center space-x-2 text-sm text-[#0db7af]">
                                                     <span>₹{Math.round(item.productId.salePrice)}</span>
                                                     <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                    <span className="text-[#f26a10]">₹{-Math.round(item.productId.price - item.productId.salePrice)} OFF</span>
+                                                    <span className="text-[#f26a10]">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
                                                 </div>
                                                 <div className="mt-2">
                                                     Qty:
@@ -174,7 +186,10 @@ const Bag = () => {
                                             </div>
                                             <GrClose
                                                 className="text-xl text-red-500 cursor-pointer"
-                                                onClick={() => handleDeleteBag(item.productId._id)}
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleDeleteBag(item.productId._id,item._id);
+                                                }}
                                             />
                                         </div>
                                     ))}
@@ -251,8 +266,7 @@ const Bag = () => {
                                     <div className="flex justify-between items-center">
                                         <span>Selected Address:</span>
                                         <span className="text-sm">
-                                            {selectedAddress ? `${selectedAddress.address1}, ${selectedAddress.citystate}, ${selectedAddress.pincode}`
-                                                : "No address selected"}
+                                            {selectedAddress ? `${selectedAddress.address1}, ${selectedAddress.citystate}, ${selectedAddress.pincode}` : "No address selected"}
                                         </span>
                                     </div>
                                     <div className="flex flex-col space-y-2">
@@ -286,11 +300,42 @@ const Bag = () => {
                             
                         </div>
                     ) : (
-                        <div className="text-center py-6">Your bag is empty! Add items to your bag.</div>
+                        <Fragment>
+                            {bagLoading ? <div className='flex w-full h-screen justify-center items-center'>
+                                <LoadingSpinner/>
+                            </div>:
+                                <div className="min-h-screen flex justify-center items-center bg-gray-50">
+                                    <div className="bg-white flex flex-col p-6 rounded-lg shadow-md w-[90%] sm:w-[400px]">
+                                        <h2 className="text-xl font-semibold text-gray-800">Please Add Some Products To Your Bag</h2>
+                                        <div className="mt-6">
+                                            <button
+                                                onClick={(e)=>navigation('/')}
+                                                className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-300"
+                                            >
+                                                Continue Shopping
+                                            </button>
+                                        </div>
+                                    </div>                                    
+                              </div>
+                            }
+                        </Fragment>
                     )}
                 </div>
             ) : (
-                <div className="text-center py-6">Please log in to access your bag</div>
+                <div className='flex w-full h-screen justify-center items-center'>
+                    <div className="bg-white flex flex-col p-6 rounded-lg shadow-md w-[90%] sm:w-[400px]">
+                        <h2 className="text-xl font-semibold text-gray-800">Please log in to access your bag</h2>
+                        <p className="text-gray-500 mt-4">You must be logged in to view and manage your shopping bag.</p>
+                        <div className="mt-6">
+                        <button
+                            onClick={(e)=>navigation('/Login')}
+                            className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-300"
+                        >
+                            Log In
+                        </button>
+                        </div>
+                    </div>
+                </div>
             )}
             {showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={mrp} closePopup={() => {
                 dispatch(getbag({ userId: user.id }));
