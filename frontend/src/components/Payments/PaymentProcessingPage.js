@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { create_order, fetchAllOrders } from "../../action/orderaction";
+import { create_order, createPaymentOrder, fetchAllOrders } from "../../action/orderaction";
+import { useAlert } from "react-alert";
+import { BASE_CLIENT_URL } from "../../config";
+import { cashfree } from "../../utils/pgUtils";
 
-const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, closePopup }) => {
+const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, closePopup ,user}) => {
     const dispatch = useDispatch();
     const { allorder } = useSelector(state => state.getallOrders);
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
     const [discount, setDiscount] = useState(0);
-
+    const[isPaymentStart,setIsPaymentStart] = useState(false);
+    const alert = useAlert();
     const originalPrice = 1000;
     let couponDiscount = 0;
 
@@ -31,14 +35,94 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
         setPaymentMethod(paymentMode);
     };
 
-    const processPayment = async (e) => {
-        // e.stopPropagation();
-        try {
-            // Handle the actual payment processing logic here
-        } catch (error) {
-            console.error("Error processing payment: ", error);
+    const handleCashFreePayment = async ()=>{
+        if(!bag.orderItems || !bag.orderItems.length || bag.orderItems.length <= 0){
+            alert("Your cart is empty, please add items to proceed");
+            return;
         }
-    };
+        if(selectedAddress === null){
+            alert("Please select an address to proceed");
+            return;
+        }
+        console.log("orderItems: ",bag.orderItems);
+        // Call API to make cash free payment and update order status
+        const data = {
+            userId:user?.id,
+            cartId:bag?._id,
+            cartItems: bag.orderItems.map(item =>{
+                return {
+                    productId:item.productId,
+                    title:item.title,
+                    price:item?.salePrice > 0 ? item.salePrice : item.price,
+                    quantity:item.quantity,
+                }
+            }),
+            address:selectedAddress,
+            orderStatus:'pending',
+            paymentMethods:'Cashfree',
+            totalAmount:bag.orderItems.length,
+            orderDate:new Date(),
+            orderUpdateDate:new Date(),
+            paymentId:'',
+            payerId:'',
+        }
+        try {
+            const response = await dispatch(createPaymentOrder(data))
+            console.log("Response: ",response?.payload?.result);
+            /* sessionStorage.setItem("checkoutData",JSON.stringify({responseResult:bag.orderItems,bagId:bag._id}))
+            const responseResult = response?.payload?.result?.orderData;
+            if(response?.payload?.Success){
+                alert.success(`Order Placed Successfully ${response?.payload?.message}`);
+                let checkoutOptions = {
+                    paymentSessionId: responseResult?.payment_session_id,
+                    redirectTarget:'_self',
+                    returnUrl:`${BASE_CLIENT_URL}/bag`,
+                }
+                console.log("responseResult: ",checkoutOptions);
+                cashfree?.checkout(checkoutOptions).then(function(result){
+                    if(result.error){
+                        alert(result.error.message)
+                        setIsPaymentStart(false);
+                    }
+                    if(result.redirect){
+                        console.log("Redirection: ")
+                        setIsPaymentStart(true);
+                    }
+                });
+            } */
+        } catch (error) {
+          console.error(`Error creating order: `,error);
+          setIsPaymentStart(false);
+        }finally{
+            setIsPaymentStart(false);
+        }
+    }
+    const verifyAnyOrdersPayment = async()=>{
+		/* try {
+		  const data = JSON.parse(sessionStorage.getItem("checkoutData"))
+		  console.log("Session Data:",data)
+		  const resp = await dispatch(verifyingOrder({
+			paymentData:data?.responseResult,
+			orderId:data?.orderId,
+			cartId:data?.cartId
+		  }))
+		  console.log(resp);
+		  if(resp.payload.result === "SUCCESS"){
+			toast({
+				title: "Payment Successful",
+				description: "Your order has been placed successfully",
+			});
+			window.location.href = "/shop/payment-success"
+		  }else{
+			window.location.href = "/shop/payment-failed"
+		  }
+		} catch (error) {
+		  console.error(`Error Verifying order`)
+		} */
+	  }
+	  /* useEffect(()=>{
+		verifyAnyOrdersPayment();
+	  },[]) */
 
     // Confirm payment
     const confirmPayment = async () => {
@@ -60,7 +144,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                 closePopup();
             } else {
                 // Order confirm after Payment...
-                processPayment();
+                handleCashFreePayment();
             }
         } else {
             alert("Please select a payment method.");

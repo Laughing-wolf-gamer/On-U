@@ -97,12 +97,14 @@ const ProductPreviewFull = ({product}) => {
                                                 ₹ {p.price}
                                             </span>
                                         ) : (
-                                            p.price
+                                            <span className="text-gray-800 hover:animate-bounce">
+                                                ₹ {p.price}
+                                            </span>
                                         )}
                                     </span>
                 
                                     {p.salePrice && p.salePrice > 0 && (
-                                        <span className="ml-2 text-[20px] font-bold text-gray-red hover:animate-vibrateScale">
+                                        <span className="ml-2 text-[20px] font-bold text-red-600 hover:animate-vibrateScale">
                                             ₹ {p.salePrice}
                                         </span>
                                     )}

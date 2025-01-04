@@ -20,7 +20,7 @@ const ProductsBar = ({show, CMenu, parentCallback}) => {
 	<Fragment>
 		<div className={`w-[100%] h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
 			{ transitions((styles, item) => item && <animated.div style={styles}>
-				<div className={`container max-w-[90%] w-[90%] mx-auto h-[480px] ${CMenu} Mmenu bg-white `}
+				<div className={`container absolute left-28 w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-white `}
 					onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
 				>
 					<div className='grid grid-cols-5 px-8 py-4 cursor-pointer'>

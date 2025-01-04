@@ -164,6 +164,20 @@ export const create_order = (orderdata) => async (dispatch) => {
 
     }
 }
+export const createPaymentOrder = (orderdata) => async (dispatch) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        console.log("Payment Order Data: ",orderdata);
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/orders/createPaymentOrder`, orderdata, headerConfig())
+        console.log("Order Data: ",data)
+        return data.result;
+    } catch (error) {
+        console.error("Error: ",error);
+        return null;
+        // dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
+
+    }
+}
 export const fetchAllOrders = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_ALL_ORDER })

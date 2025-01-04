@@ -171,7 +171,7 @@ export const getallproducts = A(async (req, res)=>{
                 .sort(sort)
                 .limit(itemsPerPage)
                 .skip(skip);
-            console.log("Fetched Products: ", products);
+            // console.log("Fetched Products: ", products);
             return res.status(200).json({
                 products: allProducts,
                 pro:products,
@@ -180,7 +180,7 @@ export const getallproducts = A(async (req, res)=>{
         }
         // Find products using the built query filter
         const products = await ProductModel.find(filter).sort(sort);
-        console.log("Fetched Products: ", products);
+        // console.log("Fetched Products: ", products);
         return res.status(200).json({
             products: allProducts,
             pro:products,

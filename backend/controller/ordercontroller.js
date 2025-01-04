@@ -6,6 +6,93 @@ import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
 import { console } from 'inspector'
 
+export const createPaymentOrder = async (req, res, next) => {
+  console.log("Order User ID:", req.user);
+  console.log("Order Items Count:", req.body);
+
+  /* try {
+    if (!req.user) {
+      return res.status(400).json({ success: false, message: "No User Found" });
+    }
+
+    const { orderItems, Address, bagId, TotalAmount, paymentMode, status } = req.body;
+
+    if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+      return res.status(400).json({ success: false, message: "Please Provide All the Data" });
+    }
+
+    const orderData = new OrderModel({
+      userId: req.user.id,
+      orderItems,
+      SelectedAddress: Address,
+      TotalAmount,
+      paymentMode,
+      status,
+    });
+
+    await orderData.save();
+
+    const removingAmountPromise = orderItems.map(async item => {
+      try {
+        console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
+        await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+      } catch (err) {
+        console.error(`Error removing product: ${item?.productId?._id}`, err);
+      }
+    });
+
+    await Promise.all(removingAmountPromise);
+
+    // Uncomment and handle bag removal if needed
+    const bagToRemove = await Bag.findByIdAndDelete(bagId);
+    console.log("Bag Removed:", bagToRemove);
+    res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
+
+  } catch (error) {
+    console.error("Error creating Order:", error);
+    res.status(500).json({ success: false, message: "Internal server Error" });
+  } */
+}
+
+export const verifyPayment = async (req, res, next) => {
+  try {
+    console.log("Payment Verification Request: ", req.body);
+		// const{paymentData,orderId,cartId} = req.body;
+		/* console.log("Payments Data: ",orderId,cartId);
+		if(!paymentData){
+			return res.status(404).json({Success: false, message:"All Fields are required"})
+		}
+		const paymentStatus = await fetchPayments(paymentData.order_id);
+		console.log("Payment Status: ", paymentStatus);
+		if(!paymentStatus){
+            return res.status(404).json({Success: false, message:"Payment not found"})
+        }
+		if(paymentStatus.length > 0){
+			if(paymentStatus[0].payment_status === "SUCCESS"){
+				const order = await Order.findByIdAndUpdate(orderId,
+					{$set:{paymentStatus: paymentStatus[0].payment_status,orderStatus:'confirmed',paymentId:paymentStatus[0]?.cf_payment_id}},{new:true});
+				if(!order) return res.status(404).json({Success: false, message: 'No order found'});
+				await Cart.findByIdAndDelete(cartId);
+				console.log('order Items: ',order.cartItems)
+				for(let item of order.cartItems) {
+					const product = await Product.findByIdAndUpdate(item.productId, {$inc: {totalStock: -item.quantity}},{new:true});
+					if(!product) return res.status(404).json({Success: false, message: 'Product not found or Not Enough in Stock'});
+				}
+				return res.status(200).json({
+					Success: true, message: 'Payment Completed successfully!', result: "SUCCESS"
+				})
+			}else{
+				return res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED"});
+			}
+		}
+		res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED"}); */
+	} catch (error) {
+		console.error(`Error  while verifying payment request`,error);
+		res.status(500).json({Success:false, message: 'Internal Server Error'});
+	}
+}
+
+
 export const createorder = async (req, res, next) => {
   console.log("Order User ID:", req.user?.id);
   console.log("Order Items Count:", req.body?.orderItems?.length);

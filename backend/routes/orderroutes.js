@@ -1,9 +1,10 @@
 import express from 'express';
-import { createorder, createwishlist, getwishlist, addItemsToBag, getbag, updateqtybag, deletebag, deletewish, getOrderById, getallOrders } from "../controller/ordercontroller.js";
+import { createorder, createwishlist, getwishlist, addItemsToBag, getbag, updateqtybag, deletebag, deletewish, getOrderById, getallOrders, createPaymentOrder, verifyPayment } from "../controller/ordercontroller.js";
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
 const route = express.Router();
 
 route.post('/orders/create_order',isAuthenticateuser, createorder)
+route.post('/orders/createPaymentOrder',isAuthenticateuser,createPaymentOrder)
 route.get('/orders/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)
 
