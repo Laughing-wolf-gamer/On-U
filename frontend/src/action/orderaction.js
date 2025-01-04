@@ -168,9 +168,23 @@ export const createPaymentOrder = (orderdata) => async (dispatch) => {
     try {
         // const token = sessionStorage.getItem('token');
         console.log("Payment Order Data: ",orderdata);
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/orders/createPaymentOrder`, orderdata, headerConfig())
-        console.log("Order Data: ",data)
-        return data.result;
+        const res = await axios.post(`${BASE_API_URL}/api/payment/create_cashFreeOrder`, orderdata, headerConfig())
+        console.log("Payment Order Data: ",res.data)
+        return res.data;
+    } catch (error) {
+        console.error("Error: ",error);
+        return null;
+        // dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
+
+    }
+}
+export const verifyingOrder = (orderdata) => async (dispatch) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        console.log("Payment Order Data: ",orderdata);
+        const res = await axios.post(`${BASE_API_URL}/api/payment/verify_payment`, orderdata, headerConfig())
+        console.log("Payment Order Data: ",res.data)
+        return res.data;
     } catch (error) {
         console.error("Error: ",error);
         return null;

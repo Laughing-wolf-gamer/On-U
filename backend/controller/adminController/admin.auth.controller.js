@@ -84,7 +84,7 @@ export const UpdateSizeStock = async (req, res) => {
 
     // Update the size quantity directly in the database
     const result = await ProductModel.updateOne(
-      { _id: productId, "size.id": sizeId }, // Find the product by productId and sizeId
+      { _id: productId, "size._id": sizeId }, // Find the product by productId and sizeId
       {
         $set: { "size.$.quantity": updatedAmount }, // Update the quantity of the specific size
       }
@@ -130,11 +130,21 @@ export const UpdateSizeStock = async (req, res) => {
 export const addNewSizeToProduct = async (req, res) => {
   try {
     const { productId, size } = req.body;
+    console.log("Adding Size: ", productId, size);
+    // Check if the size already exists in the product
     const alreadyPresetProduct = await ProductModel.findById(productId);
-    const alreadyPresetSize = alreadyPresetProduct.size.find(s => s.id === size.id || s.label === size.label);
+    if (alreadyPresetProduct) {
+      for (const newSize of size) {
+        const size = alreadyPresetProduct.size.find(s => s.label === newSize.label);
+        if(size){
+          return res.status(400).json({Success:false,message: 'Size already exists'});
+        }
+      }
+    }
+    /* const alreadyPresetSize = alreadyPresetProduct.size.find(s => s.label === size.label);
     if(alreadyPresetSize){
       return res.status(400).json({Success:false,message: 'Size already exists'});
-    }
+    } */
     // Add the new size to the product's sizes array
     const product = await ProductModel.findOneAndUpdate(
       { _id: productId }, // Find the product by productId
@@ -174,7 +184,7 @@ export const addNewSizeToProduct = async (req, res) => {
 export const removeSizeFromProduct = async (req, res) => {
   try {
     const { productId, sizeId } = req.body;
-    const product = await ProductModel.findOneAndUpdate({ _id: productId }, { $pull: { size: { id: sizeId } } }, { new: true });
+    const product = await ProductModel.findOneAndUpdate({ _id: productId }, { $pull: { size: { _id: sizeId } } }, { new: true });
     if (!product) {
       return res.status(404).json({ Success: false, message: 'Product or Size not found' });
     }
@@ -190,8 +200,8 @@ export const removeColorFromSize = async (req, res) => {
     console.log("Removing Color: ", productId, sizeId, colorId);
     // Remove the color from the specified size in the product document
     const product = await ProductModel.findOneAndUpdate(
-      { _id: productId, "size.id": sizeId }, // Find the product and the specific size
-      { $pull: { "size.$.colors": { id: colorId } } }, // Pull the color from the size.colors array
+      { _id: productId, "size._id": sizeId }, // Find the product and the specific size
+      { $pull: { "size.$.colors": { _id: colorId } } }, // Pull the color from the size.colors array
       { new: true } // Return the updated product document
     );
     console.log("Product: ",product);
@@ -228,16 +238,18 @@ export const addNewColorToSize = async (req, res) => {
   try {
     const { productId, sizeId, colors } = req.body;
     console.log("Adding Color: ", productId, sizeId, colors);
-
+    console.log("Colors: ",colors.map(c => c.quantity));
     // Find the product by ID
     const alreadyPresetProduct = await ProductModel.findById(productId);
     if (!alreadyPresetProduct) {
+      console.log("Product not found: ", productId);
       return res.status(404).json({ Success: false, message: 'Product not found' });
     }
 
     // Check if the size exists in the product
-    const size = alreadyPresetProduct.size.find(s => s.id === sizeId);
+    const size = alreadyPresetProduct.size.find(s => s._id.toString() === sizeId);
     if (!size) {
+      console.error("Size not found: ", sizeId);
       return res.status(404).json({ Success: false, message: 'Size not found' });
     }
 
@@ -245,19 +257,20 @@ export const addNewColorToSize = async (req, res) => {
     for (const color of colors) {
       const alreadyColorExist = size.colors.find(c => c.label === color.label);
       if (alreadyColorExist) {
+        console.log("Color already exists: ", color);
         return res.status(400).json({ Success: false, message: 'Color already exists' });
       }
     }
 
     // Push new colors to the size
     size.colors.push(...colors); // Using spread to push multiple colors at once
-
+    console.log("Size Colors: ",size.colors);
     // Update the product document with new colors
     const product = await ProductModel.findByIdAndUpdate(
       productId,
       { $set: { "size.$[size].colors": size.colors } },
       {
-        arrayFilters: [{ "size.id": sizeId }], // Use arrayFilters for modifying the nested array
+        arrayFilters: [{ "size._id": sizeId }], // Use arrayFilters for modifying the nested array
         new: true // Return the updated document
       }
     );
@@ -325,7 +338,7 @@ export const UpdateColorStock = async (req, res) => {
     } */
     // Update the color quantity directly within the product document
     const product = await ProductModel.findOneAndUpdate(
-      { _id: productId, "size.id": sizeId, "size.colors.id": colorId }, // Find product, size, and color by IDs
+      { _id: productId, "size._id": sizeId, "size.colors._id": colorId }, // Find product, size, and color by IDs
       { 
         $set: { 
           "size.$[size].colors.$[color].quantity": updatedAmount // Update color quantity in the specified size
@@ -333,8 +346,8 @@ export const UpdateColorStock = async (req, res) => {
       },
       {
         arrayFilters: [
-          { "size.id": sizeId }, // Array filter to match the size
-          { "color.id": colorId } // Array filter to match the color within the size
+          { "size._id": sizeId }, // Array filter to match the size
+          { "color._id": colorId } // Array filter to match the color within the size
         ],
         new: true // Return the updated document
       }
@@ -399,6 +412,45 @@ export const getTotalProductStocks = async (req,res)=>{
 
   }
 }
+export const getOrderDeliveredGraphData = async (req,res) => {
+  try {
+    // Perform aggregation on the OrderModel
+    const result = await OrderModel.aggregate([
+      // Match orders where status is 'Delivered'
+      { $match: { status: 'Delivered' } },
+
+      // Add fields for the month and year based on the 'createdAt' field (or the field that holds the date)
+      {
+        $addFields: {
+          year: { $year: "$createdAt" },
+          month: { $month: "$createdAt" },
+        }
+      },
+
+      // Group orders by year and month, counting the number of orders
+      {
+        $group: {
+          _id: { year: "$year", month: "$month" },  // Group by year and month
+          totalOrders: { $sum: 1 },  // Count orders in each group
+        }
+      },
+
+      // Sort by year and month
+      { 
+        $sort: { "_id.year": 1, "_id.month": 1 } 
+      }
+    ]);
+    if(!result || result.length === 0){
+      return res.status(200).json({Success:true,message: 'No Orders by Month and Year',result:[]});
+    }
+
+    console.log(result);
+    res.status(200).json({Success:true,message: 'Orders by Month and Year',result});
+  } catch (err) {
+    console.error("Error fetching orders: ", err);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+};
 export const getCustomerGraphData = async (req, res) => {
   try {
     // Group customers by month (or year) based on the 'createdAt' field
@@ -495,6 +547,15 @@ export const getTotalUsers = async (req,res)=>{
     res.status(200).json({Success:true,message: 'All Users',result:users?.length || -1});
   } catch (error) {
     console.error("Error getting all users: ",error);
+    res.status(500).json({Success:false,message: 'Internal Server Error'});
+  }
+}
+export const getMaxDeliveredOrders = async (req,res)=>{
+  try {
+    const orders = await OrderModel.find({status: 'Delivered'});
+    res.status(200).json({Success:true,message: 'All Delivered Orders',result:orders?.length || -1});
+  } catch (error) {
+    console.error("Error getting all delivered orders: ",error);
     res.status(500).json({Success:false,message: 'Internal Server Error'});
   }
 }

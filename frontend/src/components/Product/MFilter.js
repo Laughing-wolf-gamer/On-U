@@ -112,7 +112,11 @@ const MFilter = ({ product }) => {
 
   function genderarray() {
     if (product && product.length > 0) {
-      product.forEach(p => gender.push(p.gender));
+      product.forEach(p => {
+        if(!gender.includes(p.gender)){
+          gender.push(p.gender)
+        }
+      });
   }
     console.log("Gender: ",gender);
   }
@@ -121,7 +125,10 @@ const MFilter = ({ product }) => {
     if (product && product.length > 0) {
       product.forEach(p => {
           p.AllColors.forEach(c => {
+            const alreadyExists = color.some(item => item.label === c.label);
+            if (!alreadyExists){
               color.push(c);
+            }
           });
       });
   }
@@ -206,18 +213,18 @@ function price2fun(e,f){
 
   function colorfun(e) {
     if (MMainlink.includes('?')) {
-      let newtext = e.replace(/ /g, '%20')
+      let newtext = e.label.replace(/ /g, '%20')
       if (MMainlink.includes(`${newtext}`)) {
         let newurl = MMainlink.includes(`&color=${newtext}`) ? MMainlink.replace(`&color=${newtext}`, '') : null
         let newurl2 = MMainlink.replace(`?color=${newtext}`, '')
         let newurlsuccess = (newurl === null ? newurl2 : newurl)
         setMMainlink(newurlsuccess)
       } else {
-        let newtext = e.replace(/ /g, '%20')
+        let newtext = e.label.replace(/ /g, '%20')
         setMMainlink(`${MMainlink}&color=${newtext}`)
       }
     } else {
-      let newtext = e.replace(/ /g, '%20')
+      let newtext = e.label.replace(/ /g, '%20')
       setMMainlink(`${MMainlink}?color=${newtext}`)
     }
   }
@@ -231,12 +238,27 @@ function price2fun(e,f){
 
 
   }
+  function addclassColor1(e) {
+    let f = e.replace(/ /g, ""); // Remove any spaces from the string
+    // Escape '#' for use in querySelector
+    f = f.replace('#', '\\#');
+    var font = document.querySelector(`.font${f}`)
+
+    elementClass(font).toggle('fontbold')
+
+
+  }
   function addclass2(e) {
     let f = e.replace(/ /g, "")
     var tick = document.querySelector(`.tick${f}`)
     elementClass(tick).toggle('tickcolor')
-
-
+  }
+  function addcolorclass(e) {
+    let f = e.replace(/ /g, ""); // Remove any spaces from the string
+    // Escape '#' for use in querySelector
+    f = f.replace('#', '\\#');
+    var tick = document.querySelector(`.tick${f}`); // Query the element with the correct class name
+    elementClass(tick).toggle('tickcolor'); // Toggle 'tickcolor' class on the found element
   }
 
   function addclass3(e) {
@@ -357,8 +379,14 @@ console.log("Gender: ",gender);
                 {
                   colornewarray && colornewarray.map((e) =>
 
-                    <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
-                      onClick={() => (colorfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}></span>
+                    <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 font1 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
+                      onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
+                        <span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
+                        
+                        </span>
+                        <div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
+
+                        </div>
                       <span className={`text-sm`}>{e.label}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
 
                   )

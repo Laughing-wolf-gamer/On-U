@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from 'react';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
 import { useSelector, useDispatch } from 'react-redux';
-import { getbag, getqtyupdate, deletebag, deleteBag } from '../../action/orderaction';
+import { getbag, getqtyupdate, deletebag, deleteBag, verifyingOrder } from '../../action/orderaction';
 import { getAddress, getuser, updateAddress } from "../../action/useraction";
 import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
@@ -128,6 +128,31 @@ const Bag = () => {
         }
     }, [dispatch,deleteBagResult, user, isAuthentication, alert]);
 
+    
+    const verifyAnyOrdersPayment = async()=>{
+        console.log("Verifying Orders Payment")
+        if(!sessionStorage.getItem("checkoutData")) return;
+        try {
+            const data = JSON.parse(sessionStorage.getItem("checkoutData"))
+            console.log("Session Data: ",data)
+            const response = await dispatch(verifyingOrder(data))
+            console.log("Verifying Order Response: ",response);
+            sessionStorage.removeItem("checkoutData")
+            if(response?.result === "SUCCESS"){
+                alert.success("Payment Successful");
+            }else{
+                alert.error("Payment Failed");
+            }
+            dispatch(getbag({ userId: response?.userId }));
+            
+        } catch (error) {
+            console.error(`Error Verifying order: `,error);
+        }finally{
+        }
+    }
+    useEffect(()=>{
+        verifyAnyOrdersPayment();
+    },[dispatch])
     console.log("Bag Data: ",bag);
 
     return (
@@ -139,11 +164,11 @@ const Bag = () => {
                         <div className="relative max-w-screen-lg mx-auto">
                             <div className="flex justify-between items-center mt-6">
                                 <div className="flex space-x-2 text-[#696B79]">
-                                    <span className="font-semibold text-[#0db7af]">BAG</span>
+                                    <span className={`font-semibold ${!showPayment ? "text-[#0db7af]":''}`}>BAG</span>
                                     <span>--------</span>
                                     {/* <span className="font-semibold">ADDRESS</span>
                                     <span>--------</span> */}
-                                    <span className="font-semibold">PAYMENT</span>
+                                    <span className={`font-semibold ${showPayment ? "text-[#0db7af]":''}`}>PAYMENT</span>
                                 </div>
                                 <div className="flex items-center">
                                     <BsShieldFillCheck className="text-[#0db7af] text-3xl" />
@@ -153,29 +178,37 @@ const Bag = () => {
 
                             <div className="flex flex-col lg:flex-row mt-4 gap-6">
                                 <div className="flex-1">
-                                    {bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.map((item,i) => (
+                                    {bag && bag?.orderItems && bag?.orderItems?.length > 0 && bag?.orderItems?.map((item,i) => (
                                         <div key={i} className="flex items-center border-b py-4">
                                             <Link to={`/products/${item.productId?._id}`}>
-                                                <img src={item?.color?.images[0].url} alt={item?.productId?.title} className="w-24 h-24 object-contain" />
+                                                <img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-24 h-24 object-contain" />
                                             </Link>
                                             <div className="ml-4 flex-1">
                                                 <h3 className="font-semibold">{item?.productId?.title}</h3>
-                                                <p className="text-sm">Size: {item.size.label}</p>
+                                                <p className="text-sm">Size: {item?.size?.label}</p>
                                                 <div className="flex items-center space-x-2 text-sm text-[#0db7af]">
-                                                    <span>₹{Math.round(item.productId.salePrice)}</span>
-                                                    <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                    <span className="text-[#f26a10]">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
+                                                    {
+                                                        item?.productId?.salePrice ? (
+                                                            <>
+                                                                <span>₹{Math.round(item.productId.salePrice)}</span>
+                                                                <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
+                                                                <span className="text-[#f26a10]">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
+                                                            </>
+
+                                                        ):(
+                                                            <span>₹ {item.productId.price}</span>
+                                                        )
+                                                    }
                                                 </div>
                                                 <div className="mt-2">
                                                     Qty:
                                                     <select
-                                                        value={item.quantity}
+                                                        value={item?.quantity}
                                                         onChange={(e) => updateQty(e, item.productId._id)}
-                                                        // onBlur={(e) => } // Optional: to update on blur
                                                         className="ml-2 h-10 w-14 px-2 border rounded"
                                                     >
                                                         {/* Create options from 1 to item.size.quantity */}
-                                                        {[...Array(item.size.quantity).keys()].map(num => (
+                                                        {[...Array(item?.size?.quantity || []).keys()].map(num => (
                                                             <option key={num + 1} value={num + 1}>
                                                                 {num + 1}
                                                             </option>

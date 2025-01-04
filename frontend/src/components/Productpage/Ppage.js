@@ -30,7 +30,7 @@ const Ppage = () => {
   const param = useParams()
   const alert  =useAlert()
   const dispatch = useDispatch()
-  const [currentColor,setCurrentColorColor] = useState(null)
+  const [currentColor,setCurrentColor] = useState(null)
   const[currentSize,setCurrentSize] = useState(null)
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
@@ -100,37 +100,44 @@ const Ppage = () => {
     const handleImageClick = (imageUrl) => {
       setSelectedImage(imageUrl);
     };
-    const handleSetNewImageArray = (size)=>{
-      console.log("selected color: ",size.colors[0].images[0]);
-      setSelectedSize(size);
-      setSelectedColor(size.colors);
-      setSelectedColorId(size.colors[0].id);
+    const handleSetNewImageArray = (newSize)=>{
+      console.log("selected Size: ",newSize);
+      setCurrentSize(newSize);
+      setSelectedSize(newSize);
+      setSelectedColor(newSize.colors);
+      setCurrentColor(newSize.colors[0]);
+      setSelectedColorId(newSize.colors[0]._id);
     }
     const handelSetColorImages = (color) => {
       setSelectedSize_color_Image_Array(color.images)
       setSelectedImage(color.images[0]);
-      setSelectedColorId(color.id);
+      setSelectedColorId(color._id);
     }
   useEffect(()=>{
     if(product){
       setSelectedSize(product.size[0]);
       setCurrentSize(product.size[0]);
-      setSelectedColor(product.size[0].colors);
+      setSelectedColor(product.size[0]?.colors);
+
       const currentColor = product.size[0].colors[0];
-      setSelectedSize_color_Image_Array(currentColor.images);
-      setSelectedColorId(currentColor.id);
+
+      setSelectedColorId(currentColor._id);
       setSelectedImage(currentColor.images[0]);
+      setSelectedSize_color_Image_Array(currentColor.images);
     }
-		if(selectedSize){
+		
+	},[product])
+  useEffect(()=>{
+    if(selectedSize){
 			setSelectedColor(selectedSize.colors);
-			const currentColor = selectedSize.colors[0];
+      const currentColor = selectedSize.colors[0];
 			setSelectedSize_color_Image_Array(currentColor.images);
-			setSelectedColorId(currentColor.id);
-			// console.log("Colors: ",currentColor);
+			setSelectedColorId(currentColor._id);
+			console.log("Colors: ",currentColor.quantity);
 			setSelectedImage(currentColor.images[0]);
 		}
-	},[product,dispatch])
-  console.log("sizes ",selectedSize);
+    console.log("Selected Size New ",currentSize);
+  },[selectedSize])
   return (
     <Fragment>
       {
@@ -185,10 +192,12 @@ const Ppage = () => {
                   <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                       {
                         product && product.size && product.size.length > 0 && product.size.map((size,index) =>
-                            <div key={`size_${index}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
-                                ${currentSize?.id === size.id && selectedSize?.label === size.label ? "border-2 outline-offset-1 border-gray-500 text-white font-bold bg-slate-700":"bg-white"}`} onClick={(e)=> {
-                              e.preventDefault();
-                              setCurrentSize(size);
+                            <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
+                              ${currentSize?._id === size?._id  ? "border-2 border-black bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} onClick={(e)=> {
+                                console.log("Selecting Size: ",currentSize?._id === size?._id);
+                              // e.preventDefault();
+                              // setCurrentSize(size);
+                              // setSelectedSize(size);
                               handleSetNewImageArray(size);
                             }}>
                             <button  type='button' 
@@ -202,32 +211,36 @@ const Ppage = () => {
                   <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
                   {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
                       selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
-                        <div className={`flex flex-col h-fit shadow-md rounded-full p-2 items-center justify-center gap-2 transition-transform hover:scale-110 duration-300 ease-in-out 
-                            ${selectedColorId === color?.id ? "border-2 outline-offset-1":""} `} onClick={(e)=> {
-                          e.preventDefault();
-                          setCurrentColorColor(color);
-                          handelSetColorImages(color)
+                        <div className={`flex flex-col h-32 w-24  p-3 rounded-md items-center justify-start gap-2 transition-transform duration-300 ease-in-out`} onClick={(e)=> {
+                            e.preventDefault();
+                            setCurrentColor(color);
+                            handelSetColorImages(color)
                         }}>
                           <button
-                            
-                            key={`color-${color?.id}`}
+                            disabled = {color.quantity <= 0}
                             style={{
-                              backgroundColor: color?.label || color.id, // Use the label or raw color value
-                              width: "30px",
-                              height: "30px",
+                              backgroundColor: color?.label || color._id, // Use the label or raw color value
+                              width: "40px",
+                              height: "40px",
                             }}
                             type='button'
                             //
-                            className={`w-12 h-12 rounded-full flex items-center justify-center
-                              ${selectedColorId === color?.id ? "border-2 outline-offset-1 border-gray-700 scale-110 shadow-md" : ""}
+                            className={`w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                              ${currentColor?._id === color?._id  ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110" : "scale-100 border-4 border-black"}
                             `}
                             title={color?.quantity || color?.label || "Color"} // Optional tooltip
                           />
                           {
-                            color.quantity <= 10 && (
+                            color.quantity <= 10 && color.quantity > 0 && (
                               <div className='flex flex-col justify-center items-center'>
-                                {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">{color?.quantity}</span>  */}
-                                {/* <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Left</span>  */}
+                                <span className="text-red-600 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
+                              </div>
+                            )
+                          }
+                          {
+                            color.quantity <= 0 && (
+                              <div className='flex flex-col justify-center items-center'>
+                                <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Out of Stock</span>
                               </div>
                             )
                           }

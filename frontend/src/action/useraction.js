@@ -213,15 +213,11 @@ export const logout = () => async (dispatch) => {
    
     try {
         console.log("logout")
-
         const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/logout` )
         sessionStorage.clear();
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
-
     } catch (Error) {
-    
         dispatch({ type: FAIL_LOGOUT, payload: Error.response.data.message })
-
     }
 }
 

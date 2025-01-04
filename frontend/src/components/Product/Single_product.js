@@ -84,8 +84,8 @@ const Single_product = ({ pro }) => {
                             <AutoSlidingCarousel pro={pro}/>
 
                             <div className='relative pb-6'>
-                                <p className='font1 text-base px-2'>{pro?.title?.length > 20 ? `${pro?.title.slice(0, 20)}` : pro?.title}</p>
-                                <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{pro?.subCategory}</p>
+                                <p className='font1 text-base px-2'>{pro?.title?.length > 20 ? `${capitalizeFirstLetterOfEachWord(pro?.title.slice(0, 20))}` : capitalizeFirstLetterOfEachWord(pro?.title)}</p>
+                                <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{capitalizeFirstLetterOfEachWord(pro?.subCategory)}</p>
                                 <p className='flex px-2'><span className='flex items-center text-sm font-medium'><BiRupee />{pro?.salePrice ? pro.salePrice : pro?.price}</span >&nbsp;
                                     {
                                         pro.salePrice !== null && (

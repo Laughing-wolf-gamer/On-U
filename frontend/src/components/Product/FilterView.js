@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import PriceSlider from './PriceSlider';
+import { capitalizeFirstLetterOfEachWord } from '../../config';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // console.log("Filter Products array: ", product);
@@ -35,7 +36,10 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 p.AllColors.forEach(c => {
-                    color.push(c);
+                    const alreadyExists = color.find((col) => col.label === c.label);
+                    if(!alreadyExists){
+                        color.push(c);
+                    }
                 });
             });
         }
@@ -45,7 +49,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         product.forEach(p => {
             spARRAY.push(p.price);
         });
-        console.log("Prices: ", spARRAY);
+        // console.log("SubCategory: ", subcategory);
     };
     useEffect(()=>{
         categoriesarray();
@@ -82,32 +86,37 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             dispatchFetchAllProduct();
         }
     };
-    // Update the URL based on the selected subcategory
     const subcategoryfun = (e) => {
         let url = new URL(window.location.href);
-
-        // Check if the 'subcategory' parameter is already present in the URL
-        if (url.searchParams.has('subcategory')) {
-            // If the subcategory is already set, toggle its selection (remove if already present, else set it)
-            if (url.searchParams.get('subcategory') === e) {
-                url.searchParams.delete('subcategory'); // Remove the subcategory if it is selected
-            } else {
-                url.searchParams.set('subcategory', e); // Set the new subcategory if it's different
-            }
+    
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('subcategory'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            // If 'subcategory' parameter doesn't exist, append it to the URL
-            url.searchParams.append('subcategory', e);
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
-
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('subcategory');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('subcategory', sub);
+        });
+    
         // Update the URL in the browser's address bar without reloading the page
         window.history.replaceState(null, "", url.toString());
-
+    
         // Fetch products based on the updated URL parameters
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
         }
     };
-
 
     const colorfun = (e) => {
         let url = new URL(window.location.href);
@@ -225,6 +234,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     useEffect(() => {
         check();
     }, []);
+    console.log("subcategorynewarray: ",subcategorynewarray)
+    
 
     return (
         <Fragment>
@@ -242,7 +253,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 id={`id${i}`}
                                 onClick={() => genderfun(e)}
                             />
-                            <label className='font1 text-sm font-semibold ml-2 mr-4 mb-2'>{e}</label>
+                            <label className='font1 text-sm font-semibold ml-2 mr-4 mb-2'>{capitalizeFirstLetterOfEachWord(e)}</label>
                         </li>
                     ))}
                 </ul>
@@ -250,58 +261,110 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Categories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
-                    {Categorynewarray.map((e, i) => (
-                        <li key={i} onClick={(event) => {
-                            event.preventDefault();
-                            categoryfun(e);
-                        }}>
-                            <input type="checkbox" name="categories" value={e} id={`id${e}`} className='mb-2 accent-gray-500' />
-                            <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                {e} <span className='text-xs font-serif font-normal text-slate-400'> ({category.filter((f) => f === e).length})</span>
-                            </label>
-                        </li>
-                    ))}
+                    {Categorynewarray.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedCategories = params.getAll('category'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                categoryfun(e); // This will update the URL with the selected category
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value={e}
+                                    id={`cat_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-serif font-normal text-slate-400'> 
+                                        ({category.filter((f) => f === e).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
+                    })}
                 </ul>
                 {/* Subcategories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
-                    {subcategorynewarray.map((e, i) => (
-                        <li key={i} onClick={(event) => {
-                            event.preventDefault();
-                            subcategoryfun(e); // You'll create the subcategoryfun similar to categoryfun
-                        }}>
-                            <input type="checkbox" name="subcategories" value={e} id={`id_${e}`} className='mb-2 accent-gray-500' />
-                            <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                {e} <span className='text-xs font-serif font-normal text-slate-400'> ({subcategory.filter((f) => f === e).length})</span>
-                            </label>
-                        </li>
-                    ))}
+                    {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
+                        // Check if the current subcategory 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedSubcategories = params.getAll('subcategory'); // Get all subcategories from URL
+
+                        const isChecked = selectedSubcategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <li key={i} onClick={(event) => {
+                                event.preventDefault();
+                                subcategoryfun(e); // This will update the URL with the selected subcategory
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="subcategories"
+                                    value={e}
+                                    id={`id_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({subcategory.filter((f) => f === e).length})</span>
+                                </label>
+                            </li>
+                        );
+                    })}
                 </ul>
 
 
                 {/* Color Filter */}
                 <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-hidden relative`}>
                     <h1 className='font1 text-base font-semibold mb-2'>COLOR</h1>
-                    {colornewarray.map((e, i) => (
-                        <li key={i} className='items-center justify-start flex flex-row space-x-7 p-2'>
-                            <input
-                                type="checkbox"
-                                name="color"
-                                value={e.label}
-                                id={`id_${e.id}`}
-                                className='mb-2 accent-gray-500'
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    colorfun(e.label)
-                                }}
-                            />
-                            <div style={{ backgroundColor: e.label }} className='w-10 h-5 border border-slate-400'></div>
-                        </li>
-                    ))}
-                    <button className={`absolute bottom-1 right-2 font1 text-gray-600 ${colorulbtn}`} onClick={() => {
-                        setcolorul('max-h-max');
-                        setcolorulbtn('hidden');
-                    }}> + More</button>
+                    {colornewarray.slice(0, colorul === 'max-h-max' ? colornewarray.length : 5).map((e, i) => {
+                        // Check if the current color 'e.label' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedColors = params.getAll('color'); // Get all color values from URL
+
+                        const isChecked = selectedColors.includes(e.label); // Check if current color is selected
+
+                        return (
+                            <li key={i} className='items-center justify-start flex flex-row space-x-7 p-2'>
+                                <input
+                                    type="checkbox"
+                                    name="color"
+                                    value={e.label}
+                                    id={`id_${i}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if color is selected in the URL
+                                    onClick={(event) => {
+                                        event.preventDefault();
+                                        colorfun(e.label); // This will update the URL with the selected color
+                                    }}
+                                />
+                                <div style={{ backgroundColor: e.label }} className='w-10 h-5 border border-slate-400'></div>
+                            </li>
+                        );
+                    })}
+                    
+                    {/* Show "+ More" button if the number of colors exceeds 5 */}
+                    {colornewarray.length > 5 && colorul !== 'max-h-max' && (
+                        <button 
+                            className={`absolute bottom-1 right-2 font1 text-gray-600 ${colorulbtn}`} 
+                            onClick={() => {
+                                setcolorul('max-h-max');
+                                setcolorulbtn('hidden');
+                            }}>
+                            + More
+                        </button>
+                    )}
                 </ul>
                 {/* {
                     spARRAY.length > 1 && <Fragment>

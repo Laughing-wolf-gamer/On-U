@@ -4,91 +4,91 @@ import Bag from '../model/bag.js'
 import Errorhandler from '../utilis/errorhandel.js'
 import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
-import { console } from 'inspector'
+import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
 
 export const createPaymentOrder = async (req, res, next) => {
-  console.log("Order User ID:", req.user);
-  console.log("Order Items Count:", req.body);
-
-  /* try {
+  try {
+    console.log("Order User ID:", req.user?.id);
     if (!req.user) {
       return res.status(400).json({ success: false, message: "No User Found" });
     }
-
-    const { orderItems, Address, bagId, TotalAmount, paymentMode, status } = req.body;
-
-    if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+    
+    const { bagId, orderItems, totalAmount,address, paymentMode, orderStatus } = req.body;
+    const orderData = await generateOrderRequest(totalAmount,req.user.id,orderItems,req.user.user.phoneNumber)
+    
+    console.log("orderRecept Data: ", orderData);
+    if (!orderData) {
       return res.status(400).json({ success: false, message: "Please Provide All the Data" });
     }
 
-    const orderData = new OrderModel({
-      userId: req.user.id,
-      orderItems,
-      SelectedAddress: Address,
-      TotalAmount,
-      paymentMode,
-      status,
-    });
-
-    await orderData.save();
-
-    const removingAmountPromise = orderItems.map(async item => {
-      try {
-        console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
-        await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
-      } catch (err) {
-        console.error(`Error removing product: ${item?.productId?._id}`, err);
-      }
-    });
-
-    await Promise.all(removingAmountPromise);
-
-    // Uncomment and handle bag removal if needed
-    const bagToRemove = await Bag.findByIdAndDelete(bagId);
-    console.log("Bag Removed:", bagToRemove);
+    ;
     res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
 
   } catch (error) {
     console.error("Error creating Order:", error);
     res.status(500).json({ success: false, message: "Internal server Error" });
-  } */
+  }
 }
 
 export const verifyPayment = async (req, res, next) => {
   try {
+    if (!req.user) {
+      return res.status(400).json({ success: false, message: "No User Found" });
+    }
+    const{paymentData,SelectedAddress,orderDetails,totalAmount,bagId} = req.body;
     console.log("Payment Verification Request: ", req.body);
-		// const{paymentData,orderId,cartId} = req.body;
-		/* console.log("Payments Data: ",orderId,cartId);
+		console.log("Payments Data: ",bagId);
 		if(!paymentData){
 			return res.status(404).json({Success: false, message:"All Fields are required"})
 		}
 		const paymentStatus = await fetchPayments(paymentData.order_id);
 		console.log("Payment Status: ", paymentStatus);
 		if(!paymentStatus){
-            return res.status(404).json({Success: false, message:"Payment not found"})
-        }
+      return res.status(404).json({Success: false, message:"Payment not found"})
+    }
 		if(paymentStatus.length > 0){
 			if(paymentStatus[0].payment_status === "SUCCESS"){
-				const order = await Order.findByIdAndUpdate(orderId,
-					{$set:{paymentStatus: paymentStatus[0].payment_status,orderStatus:'confirmed',paymentId:paymentStatus[0]?.cf_payment_id}},{new:true});
-				if(!order) return res.status(404).json({Success: false, message: 'No order found'});
-				await Cart.findByIdAndDelete(cartId);
-				console.log('order Items: ',order.cartItems)
-				for(let item of order.cartItems) {
-					const product = await Product.findByIdAndUpdate(item.productId, {$inc: {totalStock: -item.quantity}},{new:true});
-					if(!product) return res.status(404).json({Success: false, message: 'Product not found or Not Enough in Stock'});
-				}
-				return res.status(200).json({
-					Success: true, message: 'Payment Completed successfully!', result: "SUCCESS"
-				})
+        const bagData = await Bag.findById(bagId).populate('orderItems.productId');
+        if(bagData){
+          console.log("Bag Data: ",bagData);
+          const orderData = new OrderModel({
+            userId: req?.user?.id,
+            orderItems:orderDetails,
+            SelectedAddress: SelectedAddress,
+            TotalAmount:totalAmount,
+            paymentMode:paymentStatus[0].payment_group,
+            status:'Order Confirmed',
+          });
+      
+          await orderData.save();
+      
+          const removingAmountPromise = orderDetails.map(async item => {
+            try {
+              console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
+              await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+            } catch (err) {
+              console.error(`Error removing product: ${item?.productId?._id}`, err);
+            }
+          });
+      
+          await Promise.all(removingAmountPromise);
+      
+          // Uncomment and handle bag removal if needed
+          const bagToRemove = await Bag.findByIdAndDelete(bagId);
+          console.log("Bag Removed:", bagToRemove);
+          res.status(200).json({ success: true, message: "Order Created Successfully", result: "SUCCESS",userId:req.user?.id });
+          return;
+        }
 			}else{
-				return res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED"});
+				res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
+        return;
 			}
 		}
-		res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED"}); */
+		res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
 	} catch (error) {
 		console.error(`Error  while verifying payment request`,error);
-		res.status(500).json({Success:false, message: 'Internal Server Error'});
+    if(res.headersSent) return;
+		res.status(500).json({Success:false, message: 'Internal Server Error',userId:req.user?.id });
 	}
 }
 
@@ -114,7 +114,7 @@ export const createorder = async (req, res, next) => {
       SelectedAddress: Address,
       TotalAmount,
       paymentMode,
-      status,
+      status:'Processing',
     });
 
     await orderData.save();
@@ -136,7 +136,8 @@ export const createorder = async (req, res, next) => {
     res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
 
   } catch (error) {
-    console.error("Error creating Order:", error);
+    console.error("Error creating Order: ", error);
+    if(res.headersSent) return;
     res.status(500).json({ success: false, message: "Internal server Error" });
   }
 };

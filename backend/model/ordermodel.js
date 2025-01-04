@@ -13,7 +13,7 @@ const ordersSchema = new mongoose.Schema({
     TotalAmount:{type:Number,required:true},
     SelectedAddress:{type:Object,required:true},
     paymentMode:{type:String,default:"PrePaid",required:true},
-    status: { type: String, default:"Processing",enum: ["Processing", "Order Confirmed", "Order Shipped", "Out for Delivery", "Delivered"], required: true },
+    status: { type: String, default:"Processing",enum: ["Order Confirmed","Processing", "Order Shipped", "Out for Delivery", "Delivered"], required: true },
     
 
 },{timestamps:true})

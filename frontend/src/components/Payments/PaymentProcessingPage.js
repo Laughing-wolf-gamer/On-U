@@ -44,52 +44,55 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
             alert("Please select an address to proceed");
             return;
         }
-        console.log("orderItems: ",bag.orderItems);
+        console.log("Bag Data: ",bag);
         // Call API to make cash free payment and update order status
         const data = {
             userId:user?.id,
-            cartId:bag?._id,
-            cartItems: bag.orderItems.map(item =>{
+            bagId:bag?._id,
+            orderItems: bag.orderItems.map(item =>{
                 return {
-                    productId:item.productId,
-                    title:item.title,
-                    price:item?.salePrice > 0 ? item.salePrice : item.price,
+                    productId:item.productId._id,
+                    title:item.productId.title,
+                    price:item.productId?.salePrice > 0 ? item.productId.salePrice : item.productId.price,
                     quantity:item.quantity,
                 }
             }),
+
             address:selectedAddress,
             orderStatus:'pending',
+            paymentMode:paymentMethod,
             paymentMethods:'Cashfree',
-            totalAmount:bag.orderItems.length,
+            totalAmount:totalAmount,
             orderDate:new Date(),
             orderUpdateDate:new Date(),
             paymentId:'',
             payerId:'',
         }
         try {
-            const response = await dispatch(createPaymentOrder(data))
-            console.log("Response: ",response?.payload?.result);
-            /* sessionStorage.setItem("checkoutData",JSON.stringify({responseResult:bag.orderItems,bagId:bag._id}))
-            const responseResult = response?.payload?.result?.orderData;
-            if(response?.payload?.Success){
-                alert.success(`Order Placed Successfully ${response?.payload?.message}`);
+            const responseResult = await dispatch(createPaymentOrder(data))
+            console.log("Generating Payment Response: ",responseResult);
+            const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
+            sessionStorage.setItem("checkoutData",JSON.stringify({paymentData:responseResult?.result,bagId:bag?._id,SelectedAddress:selectedAddress,totalAmount,orderDetails}));
+            if(responseResult?.success){
+                alert.success(`Order Placed Successfully ${responseResult?.message}`);
                 let checkoutOptions = {
-                    paymentSessionId: responseResult?.payment_session_id,
+                    paymentSessionId: responseResult?.result?.payment_session_id,
                     redirectTarget:'_self',
                     returnUrl:`${BASE_CLIENT_URL}/bag`,
                 }
                 console.log("responseResult: ",checkoutOptions);
                 cashfree?.checkout(checkoutOptions).then(function(result){
                     if(result.error){
-                        alert(result.error.message)
+                        alert.error(result.error.message)
                         setIsPaymentStart(false);
                     }
                     if(result.redirect){
                         console.log("Redirection: ")
+                        alert.info("Redirecting to Payment Gateway")
                         setIsPaymentStart(true);
                     }
                 });
-            } */
+            }
         } catch (error) {
           console.error(`Error creating order: `,error);
           setIsPaymentStart(false);
@@ -97,32 +100,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
             setIsPaymentStart(false);
         }
     }
-    const verifyAnyOrdersPayment = async()=>{
-		/* try {
-		  const data = JSON.parse(sessionStorage.getItem("checkoutData"))
-		  console.log("Session Data:",data)
-		  const resp = await dispatch(verifyingOrder({
-			paymentData:data?.responseResult,
-			orderId:data?.orderId,
-			cartId:data?.cartId
-		  }))
-		  console.log(resp);
-		  if(resp.payload.result === "SUCCESS"){
-			toast({
-				title: "Payment Successful",
-				description: "Your order has been placed successfully",
-			});
-			window.location.href = "/shop/payment-success"
-		  }else{
-			window.location.href = "/shop/payment-failed"
-		  }
-		} catch (error) {
-		  console.error(`Error Verifying order`)
-		} */
-	  }
-	  /* useEffect(()=>{
-		verifyAnyOrdersPayment();
-	  },[]) */
+    
 
     // Confirm payment
     const confirmPayment = async () => {
@@ -137,7 +115,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                     paymentMode: paymentMethod,
                     TotalAmount: totalAmount,
                     Address: selectedAddress,
-                    status: 'Processing'
+                    status: 'Order Confirmed'
                 };
                 console.log("OrderData: ", orderData);
                 await dispatch(create_order(orderData));

@@ -22,7 +22,9 @@ async function generateOrderId(){
 }
 async function generateOrderRequest(amount,customer_id,cart_items,customer_phone){
 	try {
-		const orderId = await generateOrderId(); 
+		const orderId = await generateOrderId();
+		// console.log(cart_items);
+		// return;
 		console.log(amount,customer_id,cart_items,customer_phone);
 		var request = {
 			"order_id": orderId,
@@ -52,7 +54,7 @@ async function generateOrderRequest(amount,customer_id,cart_items,customer_phone
 		const response = await Cashfree.PGCreateOrder("2022-09-01", request)
 		return response.data;
 	} catch (error) {
-		console.error(`Error generating orderRequest:`,error);
+		console.error(`Error generating orderRequest: `,error.message);
 		return null;
 	}
 }

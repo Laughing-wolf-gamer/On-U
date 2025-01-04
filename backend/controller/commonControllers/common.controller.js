@@ -172,7 +172,6 @@ export const getOptions = async (req, res) => {
 	  }
   
 	  const options = await Option.find({ type });
-  
 	  res.status(200).json({Success:true,message:"Featch All Options",result:options});
 	} catch (error) {
 	  res.status(500).json({ message: 'Server error' });

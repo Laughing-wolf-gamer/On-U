@@ -7,6 +7,7 @@ import commonRoute from './routes/common.Routes/common.routes.js'
 import User from './routes/userroutes.js';
 import Product from './routes/productroute.js';
 import Order from './routes/orderroutes.js';
+import paymentRoutes from './routes/payment.route.js'
 import errorMiddleware from './Middelwares/error.js';
 import path from "path";
 import dotenv from 'dotenv';
@@ -50,6 +51,7 @@ app.use('/api/common',commonRoute)
 app.use('/api/auth', User)
 app.use('/api/shop', Product)
 app.use('/api/shop', Order)
+app.use('/api/payment', paymentRoutes)
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
