@@ -44,7 +44,7 @@ app.use(cors({
   allowedHeaders: ['Content-Type', 'Authorization','Cache-Control','Expires','Pragma'],
   credentials: true,
 }))
-/*  */
+
 
 app.use('/admin',adminRoute)
 app.use('/api/common',commonRoute)
@@ -54,6 +54,7 @@ app.use('/api/shop', Order)
 app.use('/api/payment', paymentRoutes)
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
+
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
