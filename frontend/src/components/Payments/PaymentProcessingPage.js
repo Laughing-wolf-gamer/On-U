@@ -31,7 +31,6 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
     // Handle payment selection
     const HandleSetPayment = (e, paymentMode) => {
         e.preventDefault();
-
         setPaymentMethod(paymentMode);
     };
 
@@ -95,7 +94,6 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
             }
         } catch (error) {
           console.error(`Error creating order: `,error);
-          setIsPaymentStart(false);
         }finally{
             setIsPaymentStart(false);
         }
@@ -117,8 +115,8 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                     Address: selectedAddress,
                     status: 'Order Confirmed'
                 };
-                console.log("OrderData: ", orderData);
-                await dispatch(create_order(orderData));
+                // console.log("OrderData: ", orderData);
+                dispatch(create_order(orderData));
                 closePopup();
             } else {
                 // Order confirm after Payment...
