@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import './MNavbar.css'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { FiSearch } from 'react-icons/fi'
@@ -17,7 +17,7 @@ import Mhome from './Msubmenu/Home'
 import Mbeauty from './Msubmenu/Beauty'
 import { Link, useNavigate } from 'react-router-dom'
 import {logout, getuser, otpverifie, loginmobile} from '../../../action/useraction'
-import { useDispatch} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { useAlert } from 'react-alert'
 import {registermobile} from '../../../action/useraction'
 import {MdArrowBack} from 'react-icons/md'
@@ -25,11 +25,14 @@ import {Allproduct} from '../../../action/productaction'
 import { Alert } from '@mui/material'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
+import { getbag } from '../../../action/orderaction'
+import { ShoppingCart } from 'lucide-react'
 
 
 const MNavbar = ({ user }) => {
 
     const dispatch = useDispatch()
+    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const redirect = useNavigate()
     const [show, setShow] = useState(false);
     const [Class, setClass] = useState("hidden");
@@ -58,7 +61,7 @@ const MNavbar = ({ user }) => {
         from: { transform: "translateX(0)" },
         enter: { transform: "translateX(75vw)" },
         leave: { transform: "translateX(0vw)" },
-        delay: 500,
+        delay: 1000,
 
     })
 
@@ -208,7 +211,12 @@ const MNavbar = ({ user }) => {
             setserdiv('hidden')
         }
     }
-
+    useEffect(()=>{
+        if(user){
+          dispatch(getbag({ userId: user.id }));
+        }
+    },[user])
+    console.log("Nav Bar bag: ",bag?.orderItems?.length)
     return (
         <Fragment>
             <div className='MNavbar hidden sticky top-0 bg-white overflow-x-hidden h-max z-10 ' >
@@ -221,8 +229,14 @@ const MNavbar = ({ user }) => {
                         </div>
 
                         <div className='absolute right-2 flex-row justify-center items-center'>
-                            <Link to='/bag'><BsHandbag size={26} color='black' className='float-right m-2 pb-0.5' /></Link>
-                            {/* <Link to='/my_wishlist'> <BsHeart size={25} color='black' className='float-right m-2 pt-0.5' /></Link> */}
+                            {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
+                                <div className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                                    <span>{bag.orderItems.length}</span>
+                                </div>
+                            )}
+                            {/* <ShoppingCart /> */}
+                            <Link to='/bag'><ShoppingCart size={26} color='black' className='float-right m-2 pb-0.5' /></Link>
+                            
                             <FiSearch size={25} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
@@ -283,9 +297,8 @@ const MNavbar = ({ user }) => {
                                         </li>
                                     </Ripples>
                                     <Ripples color="#fb56c1" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' /* onClick={() => (setMen(Men ? (false) : (true)), setMenul(Menul === "hidden" ? "block" : "hidden"))} */>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex '>
                                             <Link to="/"><span className='float-left'>Home</span></Link>
-                                            {/* <span className='absolute mx-5 right-0'>{Men ? <IoIosArrowDown /> : <IoIosArrowForward />}</span> */}
                                         </li>
                                     </Ripples>
                                     
@@ -302,7 +315,6 @@ const MNavbar = ({ user }) => {
                                             <Link to='/about'><span className='float-left'>About Us</span></Link>
                                         </li>
                                     </Ripples>
-                                    {/* <MKids MKids={Menu3} fun1={handleClose} fun2={classunchange} /> */}
                                     <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' >
                                             <Link to='/contact'><span className='float-left'>Contact</span></Link>

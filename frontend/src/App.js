@@ -50,7 +50,7 @@ function App() {
       console.log(url)
         if (url === window.location.protocol+"//" + window.location.host + '/Login') {
           
-           window.location.href = window.location.protocol + "//"+window.location.host
+          window.location.href = window.location.protocol + "//"+window.location.host
         }
         if (url === window.location.protocol+"//" + window.location.host + '/verifying') {
           

@@ -43,12 +43,6 @@ const MProductsBar = ({showProducts}) => {
 				case 'subcategory':
 					setSubcategories(options.filter(item => item.type === "subcategory"));
 					break;
-				/* case 'color':
-					setColors(options.filter(item => item.type === "color"));
-					break;
-				case 'size':
-					setSizes(options.filter(item => item.type === "size"));
-					break; */
 				case 'gender':
 					setGenders(options.filter(item => item.type === "gender"));
 					break;
@@ -60,6 +54,7 @@ const MProductsBar = ({showProducts}) => {
 			setProductsFilters();
 		}
 	},[dispatch,options])
+
 	useEffect(()=>{
 		if(genders.length > 0 && categories.length > 0 && subcategories.length > 0){
 			const changedProducts = genders.map((g)=>{
@@ -78,10 +73,11 @@ const MProductsBar = ({showProducts}) => {
 			setProductsOptions(changedProducts)
 		}
 	},[categories,subcategories,genders])
+
 	useEffect(()=>{
 		dispatch(fetchAllOptions())
 	},[dispatch])
-	console.log("All Options: ",productsOptions)
+	
 	return (
 		<div className={`ml-2 w-full ${showProducts}`}>
 			{productsOptions && productsOptions.length > 0 && productsOptions.map((product) => (

@@ -317,13 +317,13 @@ const Ppage = () => {
                     {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
                     <p>{product?.material}</p>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
-                  <div className='mt-2'>
+                  {/* <div className='mt-2'>
                     Wipe your jewelry with a soft cloth after every use
                     Always store your jewelry in a flat box to avoid accidental scratches
                     Keep sprays and perfumes away from your jewelry
                     Do not soak your jewelry in water
                     Clean your jewelry using a soft brush, dipped in jewelry cleaning solution only
-                  </div>
+                  </div> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
                   {
                     product && product.specification && product.specification.length > 0 && product.specification.map((e) =>

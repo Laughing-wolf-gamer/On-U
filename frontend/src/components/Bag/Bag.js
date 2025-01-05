@@ -11,6 +11,8 @@ import { Select } from '@mui/material';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import LoadingSpinner from '../Product/LoadingSpinner';
+import Emptybag from './Emptybag';
+import { capitalizeFirstLetterOfEachWord } from '../../config';
 
 const Bag = () => {
     const navigation = useNavigate()
@@ -273,7 +275,7 @@ const Bag = () => {
                                         {/* Loop through each key-value pair in the address object */}
                                         {Object.entries(addr).map(([key, value]) => (
                                             <div key={key} className="flex justify-between">
-                                            <span className="font-semibold">{key}:</span>
+                                            <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
                                             <span>{value}</span>
                                             </div>
                                         ))}
@@ -283,7 +285,7 @@ const Bag = () => {
                                         </div>
                                     ))
                                     ) : (
-                                    <p>No addresses available. Please add an address.</p>
+                                        <p>No addresses available. Please add an address.</p>
                                     )}
                                 </div>
                                 </div>
@@ -338,17 +340,7 @@ const Bag = () => {
                                 <LoadingSpinner/>
                             </div>:
                                 <div className="min-h-screen flex justify-center items-center bg-gray-50">
-                                    <div className="bg-white flex flex-col p-6 rounded-lg shadow-md w-[90%] sm:w-[400px]">
-                                        <h2 className="text-xl font-semibold text-gray-800">Please Add Some Products To Your Bag</h2>
-                                        <div className="mt-6">
-                                            <button
-                                                onClick={(e)=>navigation('/')}
-                                                className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-300"
-                                            >
-                                                Continue Shopping
-                                            </button>
-                                        </div>
-                                    </div>                                    
+                                    <Emptybag/>                                   
                               </div>
                             }
                         </Fragment>
@@ -362,7 +354,7 @@ const Bag = () => {
                         <div className="mt-6">
                         <button
                             onClick={(e)=>navigation('/Login')}
-                            className="w-full bg-pink-500 text-white px-6 py-3 rounded-lg hover:bg-pink-600 transition duration-300"
+                            className="w-full bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-300"
                         >
                             Log In
                         </button>

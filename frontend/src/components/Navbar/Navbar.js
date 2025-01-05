@@ -14,10 +14,14 @@ import Studio from './Submenu/Studio'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductsBar from './Submenu/ProducstBar.js'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { getbag } from '../../action/orderaction.js'
+import { ShoppingCart } from 'lucide-react'
 
 
 const Navbar = ({user}) => {
+  const dispatch = useDispatch();
+  const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
   const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
   console.log("Navbar User: ", user)
   const [Menu1, setMenu1] = useState('hidden')
@@ -72,7 +76,12 @@ const Navbar = ({user}) => {
     setShow7(v)
   }, []);
 
-
+  useEffect(()=>{
+    if(user){
+      dispatch(getbag({ userId: user.id }));
+    }
+  },[user])
+  console.log("Nav Bar bag: ",bag?.orderItems)
   return (
     <Fragment>
       <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide z-40 ">
@@ -132,8 +141,20 @@ const Navbar = ({user}) => {
                 {/* <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
                   <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='black' className='w-full h-full flex'/></span>Wishlist</h1></Link>
                 </li> */}
-                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
-                  <Link to='/bag'> <h1 className='px-3 text-xs text-center relative'><span className='text-lg absolute -top-5 left-1/3'><BsHandbag color='black' /></span>BAG</h1></Link>
+                <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
+                  {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
+                    <div className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                        <span>{bag.orderItems.length}</span>
+                    </div>
+                  )}
+                  <Link to="/bag">
+                    <h1 className="px-3 text-xs text-center relative">
+                      <span className="text-lg absolute -top-5 left-1/3">
+                        <ShoppingCart className='mb-4' size={20} color="black" />
+                      </span>
+                      BAG
+                    </h1>
+                  </Link>
                 </li>
             </ul>
           </div>

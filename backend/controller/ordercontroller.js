@@ -277,7 +277,7 @@ export const getwishlist = A(async (req, res, next) => {
 
 export const addItemsToBag = A(async (req, res) => {
     try {
-      // console.log("Bag Body",req.body)
+      console.log("Bag Body",req.body)
       const {userId,productId,quantity,color,size} = req.body
       if(!userId || !productId || !quantity || !color || !size){
         return res.status(400).json({message: "Please provide all the required fields"})
@@ -292,6 +292,8 @@ export const addItemsToBag = A(async (req, res) => {
         const product = userBag.orderItems.find(p => p.productId == productId)
         if(product){
           product.quantity = product.quantity + quantity
+        }else{
+          userBag.orderItems.push({productId,quantity,color,size})
         }
         await userBag.save()
       }
