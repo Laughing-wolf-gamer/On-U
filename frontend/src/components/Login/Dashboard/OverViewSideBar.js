@@ -22,24 +22,24 @@ const OverViewSideBar = ({activeSection,setActiveSection}) => {
             setActiveSection('Saved-Addresses')
           }} className="w-full text-left p-2 hover:underline">Saved Addresses</button>
         </li>
-        <li>
+        {/* <li>
           <button onClick={(e)=>{
             e.preventDefault()
             setActiveSection('Saved-Cards')
           }} className="w-full text-left p-2 hover:underline">Payment Methods</button>
-        </li>
+        </li> */}
         {/* <li>
           <button onClick={(e)=>{
             e.preventDefault()
             setActiveSection('Coupons')
           }} className="w-full text-left p-2 hover:underline">Wishlist</button>
         </li> */}
-        <li>
+        {/* <li>
           <button onClick={(e)=>{
             e.preventDefault()
             setActiveSection('Gift-Cards')
           }} className="w-full text-left p-2 hover:underline">Account Settings</button>
-        </li>
+        </li> */}
       </ul>
     </div>
   );

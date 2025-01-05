@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "/static/css/main.161fa481.css",
-    "main.js": "/static/js/main.5873e2a9.js",
+    "main.css": "/static/css/main.fd593276.css",
+    "main.js": "/static/js/main.b9e26d47.js",
     "static/media/sudio-nav-banner.png": "/static/media/sudio-nav-banner.9baa9d1a811409ff9813.png",
     "static/media/banner5.jpg": "/static/media/banner5.b0d73c3f5b9328de362e.jpg",
     "static/media/banner2.webp": "/static/media/banner2.59e179797c6e0a3a42f0.webp",
@@ -277,11 +277,11 @@
     "static/media/gen.PNG": "/static/media/gen.fa2b20a1896583169e2c.PNG",
     "static/media/ma1.webp": "/static/media/ma1.8fcbed9b49ee8fdca23d.webp",
     "index.html": "/index.html",
-    "main.161fa481.css.map": "/static/css/main.161fa481.css.map",
-    "main.5873e2a9.js.map": "/static/js/main.5873e2a9.js.map"
+    "main.fd593276.css.map": "/static/css/main.fd593276.css.map",
+    "main.b9e26d47.js.map": "/static/js/main.b9e26d47.js.map"
   },
   "entrypoints": [
-    "static/css/main.161fa481.css",
-    "static/js/main.5873e2a9.js"
+    "static/css/main.fd593276.css",
+    "static/js/main.b9e26d47.js"
   ]
 }

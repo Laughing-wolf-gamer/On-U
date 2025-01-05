@@ -1,11 +1,12 @@
 import express from 'express';
-import { addHomeCarousal, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getHomeBanners, getOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getHomeBanners, getOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
 const route = express.Router();
 
-route.post('/create/home',isAuthenticateuser,ProtectAdminRoute,addHomeCarousal)
+route.post('/create/home/carousal',isAuthenticateuser,ProtectAdminRoute,addHomeCarousal)
+route.post('/create/home/carousal/multiple',isAuthenticateuser,ProtectAdminRoute,addHomeCarousalMultiple)
 route.get('/fetch/all/:CategoryType',getHomeBanners)
 route.get('/fetch/all',getHomeBanners)
 route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeHomeCarousal)

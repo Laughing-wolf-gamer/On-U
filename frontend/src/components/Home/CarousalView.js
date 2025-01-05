@@ -79,7 +79,7 @@ const CarousalView = ({b_banners,indicator}) => {
           </div>
         </div>
         {/* Left and Right Buttons */}
-        <div className='absolute h-32 top-1/2 left-4 transform -translate-y-1/2 z-10'>
+        <div className='absolute h-32 top-1/2 left-14 transform -translate-y-1/2 z-10'>
           <button
             className={`flex my-auto text-gray-700 opacity-[50%] hover:text-gray-900`}
             onClick={(e) => {
@@ -91,7 +91,7 @@ const CarousalView = ({b_banners,indicator}) => {
             <ChevronLeft  size={50}/>
           </button>
         </div>
-        <div className='absolute h-32  top-1/2 right-4 transform -translate-y-1/2 z-10'>
+        <div className='absolute h-32  top-1/2 right-14 transform -translate-y-1/2 z-10'>
           <button
             className={`h-full w-full text-gray-700 opacity-[50%] transition-color hover:text-gray-900 hover:scale-110 duration-500`}
             onClick={(e) => {

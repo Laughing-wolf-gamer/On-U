@@ -4,6 +4,8 @@ import { getAddress, removeAddress, updateAddress } from '../../../action/userac
 import AddAddressPopup from '../../Bag/AddAddressPopup';
 import { Circle, SeparatorVertical, X } from 'lucide-react';
 import { useAlert } from 'react-alert';
+import { capitalizeFirstLetterOfEachWord } from '../../../config';
+import LoadingOverlay from '../../../utils/LoadingOverLay';
 
 const SavedAddresses = () => {
   const alert = useAlert();
@@ -56,7 +58,7 @@ const SavedAddresses = () => {
           {Object.entries(address).map(([key, value], idx) => (
             <div key={key} className="flex flex-col space-y-4 text-sm text-gray-700">
               <div className='justify-between items-center flex'>
-                <span className="font-medium text-sm text-gray-600 capitalize">{key}:</span>
+                <span className="font-medium text-sm text-gray-600 capitalize">{capitalizeFirstLetterOfEachWord(key)}:</span>
                 <span className="text-gray-800">{value}</span>
               </div>
               {/* Horizontal line */}
@@ -101,16 +103,5 @@ const SavedAddresses = () => {
   );
 };
 
-const LoadingOverlay = ({ isLoading }) => {
-  if (!isLoading) return null;
-
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-      <div className="flex justify-center items-center">
-        <Circle className="animate-spin text-white text-[40px]" />
-      </div>
-    </div>
-  );
-};
 
 export default SavedAddresses;

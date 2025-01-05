@@ -66,11 +66,12 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                
 
                 <hr className='my-4' />
-
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Coupons</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Cards</h1>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
+                <Link to={`dashboard`}>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
+                </Link>
                 <br />
 
                 {

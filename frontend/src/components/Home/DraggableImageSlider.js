@@ -62,14 +62,14 @@ const DraggableImageSlider = ({ images, headers }) => {
     };
 
     return (
-        <div className="mt-8 px-6 py-4">
-            <h1 className="text-3xl text-center font-bold text-slate-800 mb-6 tracking-wide">
+        <div className="mt-4 grid grid-cols-1 min-h-[200px]">
+            <h1 className="text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8">
                 {headers}
             </h1>
-            <div className="relative">
+            <div className="w-screen flex justify-start items-center">
                 <ul
                     ref={sliderRef}
-                    className="flex flex-row overflow-x-auto space-x-4 scrollbar-thin scrollbar-thumb-gray-500 scrollbar-track-gray-200"
+                    className="flex flex-row overflow-x-scroll scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent"
                     onMouseDown={handleMouseDown}
                     onMouseMove={handleMouseMove}
                     onMouseUp={handleMouseUp}
@@ -83,21 +83,24 @@ const DraggableImageSlider = ({ images, headers }) => {
                             key={`q_banners_${index}`}
                             onClick={(e) => {
                                 e.preventDefault();
-                                if (!isDragging) {
+                                if (isDragging) {
                                     navigation('/products');
                                 }
                             }}
-                            className="relative group cursor-pointer rounded-xl overflow-hidden shadow-lg transition-all duration-300 transform hover:scale-105 hover:shadow-xl"
+                            className="m-2"
                         >
-                            <LazyLoadImage
-                                effect="blur"
-                                src={c}
-                                alt={`banner-${index}`}
-                                className="min-h-[200px] min-w-[250px] max-w-[300px] transition-transform duration-500 ease-in-out group-hover:scale-110"
-                                onDragStart={handleDragStart} // Prevent image drag
-                            />
+                            <li>
+                                <LazyLoadImage
+                                    effect="blur"
+                                    src={c}
+                                    alt="banners"
+                                    className="min-h-[100px] min-w-[200px] transform transition-transform duration-500 ease-in-out hover:scale-110"
+                                    onDragStart={handleDragStart} // Prevent image drag
+                                />
+                            </li>
                         </div>
                     ))}
+
                 </ul>
             </div>
         </div>

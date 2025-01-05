@@ -13,6 +13,34 @@ export const getHomeBanners = async (req,res)=>{
 		res.status(500).json({Success: false, message: 'Internal Server Error'});
 	}
 }
+export const addHomeCarousalMultiple = async(req,res)=>{
+	try {
+		const{images,CategoryType,Header} = req.body;
+		const ImageFiltered = images.map(img => img.url)
+		console.log("Add Home Carousal Multiple req.body",images.map(img => img.url));
+		// return;
+		if(!images ||!images.length) return res.status(400).json({Success: false, message: "At least one image is required"});
+		let banner = await BannerModel.findOne({CategoryType: CategoryType});
+		if(!banner){
+			banner = new BannerModel({CategoryType: CategoryType, Header: Header, Url: [...ImageFiltered]});
+		}else{
+			if(Header){
+                banner.Header = Header;
+            }
+            if(ImageFiltered && ImageFiltered.length > 0){
+                banner.Url.push(...ImageFiltered);
+            }
+
+		}
+		await banner.save();
+		const banners = await BannerModel.find({});
+		console.log("Banners: ",banners)
+		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
+	} catch (error) {
+		console.error(`Error getting`,error);
+		res.status(500).json({Success: false, message: 'Internal Server Error'});
+	}
+}
 export const addHomeCarousal = async (req, res) => {
 	try {
 		const{url,CategoryType,Header} = req.body;

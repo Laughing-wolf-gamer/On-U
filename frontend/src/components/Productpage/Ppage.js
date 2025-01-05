@@ -18,7 +18,6 @@ import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
-import { red } from '@mui/material/colors'
 
 const Ppage = () => {
   const navigation = useNavigate();
