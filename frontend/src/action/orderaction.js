@@ -111,8 +111,8 @@ export const getbag = ({userId}) => async (dispatch) => {
 export const getqtyupdate = (qtydata) => async (dispatch) => {
 
     try {
-        const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
+        const token = sessionStorage.getItem('token');
         const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, {
             withCredentials:true,
             headers: {

@@ -94,7 +94,7 @@ export const updateAddress = (address) => async (dispatch) => {
             },
         })
         console.log("Updated Data: ", data)
-        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data.success })
+        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data?.success })
     } catch (error) {
         dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
     }
