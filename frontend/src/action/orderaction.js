@@ -113,8 +113,13 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
-        // const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, headerConfig());
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, {
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        });
         console.log("Update Bag: ",data)
         dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
