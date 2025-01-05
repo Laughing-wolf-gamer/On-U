@@ -21,8 +21,10 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BASE_API_URL } from "./config/index.js";
 import About from "./components/About-Screen/About.js";
 import Contact from "./components/About-Screen/Contact.js";
-import FAQ from "./components/About-Screen/FAQ.js";
 import OrderDetailsPage from "./components/Login/Dashboard/OrderDetailsPage.js";
+import FAQ from "./components/About-Screen/FAQ.js";
+
+
 
 
 function App() {
