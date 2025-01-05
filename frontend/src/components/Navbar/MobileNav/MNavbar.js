@@ -272,12 +272,14 @@ const MNavbar = ({ user }) => {
                                                 <span>LOGOUT</span>
                                             </div>
                                         :
-                                            <Link to='/Login'> 
-                                                <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
+                                            <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
+                                                <Link to='/registeruser'>
                                                     <span>SIGN UP.</span>
+                                                </Link>
+                                                <Link to='/Login'> 
                                                     <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
-                                                </div>
-                                            </Link>
+                                                </Link>
+                                            </div>
                                     }
                                 <ul>
                                     {/* Profile */}
@@ -290,7 +292,7 @@ const MNavbar = ({ user }) => {
                                                     </span>
                                                 </Link>
                                             ) : (
-                                                <Link to="/login">
+                                                <Link to="/Login">
                                                     <span className='float-left'>Login</span>
                                                 </Link>
                                             )}
@@ -324,10 +326,10 @@ const MNavbar = ({ user }) => {
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    <h1 className='my-5'>Gift&nbsp;Cards</h1>
-                                    <h1 className='my-5'>Contact&nbsp;Us</h1>
-                                    <h1 className='my-5'>FAQs</h1>
-                                    <h1 className='my-5'>Legal</h1>
+                                    <Link to={"/"}><h1 className='my-5'>Gift&nbsp;Cards</h1></Link>
+                                    <Link to={"/contact"}><h1 className='my-5'>Contact&nbsp;Us</h1></Link>
+                                    <Link to={"/faq"}><h1 className='my-5'>FAQs</h1></Link>
+                                    {/* <h1 className='my-5'>Legal</h1> */}
                                 </div>
                             </Offcanvas.Body>
                         </Offcanvas>
