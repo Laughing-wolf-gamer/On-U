@@ -1,11 +1,22 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import './Coupon.css'
 import {VscTriangleLeft, VscTriangleRight} from 'react-icons/vsc'
 import gen from '../images/gen.PNG'
 import coup from '../images/coup.webp'
 import {Link} from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { featchallbanners } from '../../action/banner.action'
 const Coupon = () => {
+  const { banners} = useSelector(state => state.banners)
+  const dispatch = useDispatch();
   const [cou, setcou] = useState(false)
+  useEffect(()=>{
+    dispatch(featchallbanners());
+  },[])
+  let coupon = {urls:[], header: ""};
+  if(banners){
+    coupon.urls = banners.find((b_cat)=> b_cat?.CategoryType === "coupon-1")?.Url || [];
+  }
   return (
 
     <div  >
@@ -29,7 +40,7 @@ const Coupon = () => {
                             + FREE SHIPPING
                             </span>
                           </div>
-                          <img src={coup} alt="" className='w-2/6' />
+                          <img src={coupon.urls[0] || coup} alt="" className='w-2/6' />
                         </div>
 
                         <div className="flex py-4">
@@ -38,7 +49,7 @@ const Coupon = () => {
                           <div className='text-xs font-sans font-light'>Applicable on your first order</div>
                           </div>
                           <div className="">
-                           <Link to='/Login'>
+                           <Link to='/registeruser'>
                            <button className='bg-[#ff3f6c] text-center rounded-[4px] mx-auto font1 text-white px-6 py-3'onClick={()=>(cou ? setcou(false):setcou(true))}>
                               SING UP NOW 
                             </button>

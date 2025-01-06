@@ -6,19 +6,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FcGoogle } from 'react-icons/fc';
 import GoogleLogin from 'react-google-login';
 import { useAlert } from 'react-alert';
+import { fetchAddressForm } from '../../action/common.action';
+import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
+import { removeSpaces } from '../../config';
 
 const Registeruser = () => {
     const Alert = useAlert();
     const redirect = useNavigate();
+    const { formData } = useSelector(state => state.fetchFormBanners);
     const { user, error, loading } = useSelector(state => state.Registeruser);
     const [name, setname] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setgender] = useState('');
     const [email, setemail] = useState('');
-    const [address1, setaddress1] = useState('');
-    const [address2, setaddress2] = useState('');
-    const [citysate, setcitysate] = useState('');
-    const [pincode, setpincode] = useState('');
+    const [newAddress, setNewAddress] = useState({});
+    // const [address1, setaddress1] = useState('');
+    // const [address2, setaddress2] = useState('');
+    // const [citysate, setcitysate] = useState('');
+    // const [pincode, setpincode] = useState('');
     const dispatch = useDispatch();
 
     const signin_google = (response) => {
@@ -32,14 +37,16 @@ const Registeruser = () => {
             name: name,
             gender: gender,
             email: email,
-            address: {
-                pincode: Number(pincode),
-                address1: address1,
-                address2: address2,
-                citystate: citysate
-            }
+            address:newAddress
         };
         await dispatch(registerUser(myForm));
+    };
+    const handleChangeAddressData = (e) => {
+        const { name, value } = e.target;
+        setNewAddress((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
     };
 
     useEffect(() => {
@@ -50,8 +57,9 @@ const Registeruser = () => {
             Alert.success('Otp Sent To Your EmailID');
             redirect('/verifying');
         }
+        dispatch(fetchAddressForm());
     }, [error, user, dispatch]);
-
+    console.log("address form. ", formData);
     return (
         <Fragment>
             <form onSubmit={(e) => onsubmit(e)}>
@@ -119,8 +127,27 @@ const Registeruser = () => {
                                     className="w-full text-gray-800 border-2 border-gray-300 rounded-lg py-2 px-4 hover:bg-gray-100 transition-colors"
                                 />
                             </div>
-
-                            <input
+                            <h1>Add Address Data: </h1>
+                            {formData && formData.map((item, index) => (
+                                <Fragment key={index}>
+                                    <div>
+                                        <FormControl fullWidth error={error}>
+                                            <InputLabel htmlFor={removeSpaces(item)}>{item}</InputLabel>
+                                            <Input
+                                                id={removeSpaces(item)}
+                                                name={removeSpaces(item)}
+                                                value={newAddress[removeSpaces(item)] || ''}
+                                                onChange={handleChangeAddressData}
+                                                placeholder={`Enter ${removeSpaces(item)}`}
+                                            />
+                                            {error && (
+                                                <FormHelperText>{error}</FormHelperText>
+                                            )}
+                                        </FormControl>
+                                    </div>
+                                </Fragment>
+                            ))}
+                            {/* <input
                                 type="text"
                                 name="address1"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
@@ -147,7 +174,7 @@ const Registeruser = () => {
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                                 placeholder="Pincode (Optional)"
                                 onChange={(e) => setpincode(e.target.value)}
-                            />
+                            /> */}
 
                             <button
                                 disabled={loading}

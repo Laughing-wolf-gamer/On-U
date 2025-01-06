@@ -71,7 +71,7 @@ function App() {
     <Router>
       <Navbar user={user}/>
       <MNavbar user={user}/>
-      <Coupon />
+      {/* <Coupon /> */}
       <Routes>
         <Route path="/" element={<Home/>}/>
         <Route path="/Login" element={<Login/>}/>
