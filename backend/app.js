@@ -13,8 +13,8 @@ import path from "path";
 import dotenv from 'dotenv';
 import { fileURLToPath } from "url";
 
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express(); 
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -53,12 +53,12 @@ app.use('/api/shop', Product)
 app.use('/api/shop', Order)
 app.use('/api/payment', paymentRoutes)
 
-/* app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "../frontend/build")));
 
 
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
-}); */
+});
 
 app.use(errorMiddleware)
 export default app
