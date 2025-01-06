@@ -109,7 +109,7 @@ export const addNewProduct = async (req, res) => {
             category,
             subCategory,
             price,
-            salePrice,
+            salePrice: salePrice && salePrice > 0 ? salePrice : null,
             totalStock,
             AllColors:AllColors,
         });
@@ -259,7 +259,7 @@ export const editProduct = async (req, res) => {
         if (category && category.length > 0) updateFields.category = category;
         if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
         if (price > 0) updateFields.price = price;
-        if (salePrice) updateFields.salePrice = salePrice;
+        if (salePrice) updateFields.salePrice = salePrice && salePrice > 0 ? salePrice: null;
         console.log("Updating : ",updateFields);
         if (Object.keys(updateFields).length > 0) {
             const updatedProduct = await ProductModel.findByIdAndUpdate(

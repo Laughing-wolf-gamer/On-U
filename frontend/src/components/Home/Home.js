@@ -466,7 +466,8 @@ const Home = () => {
             <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header}/>
             <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header}/>
             {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/>: <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>}
-            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/>: <DraggableImageSlider images={[
+            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/>: 
+              <DraggableImageSlider images={[
               a1,
               a2, 
               a3, 

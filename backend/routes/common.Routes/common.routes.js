@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getHomeBanners, getOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -12,7 +12,9 @@ route.get('/fetch/all',getHomeBanners)
 route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeHomeCarousal)
 route.get('/product/filters',FetchAllFilters);
 route.put('/website/about',isAuthenticateuser,ProtectAdminRoute,setAboutData);
+route.put('/website/convenienceFees',isAuthenticateuser,ProtectAdminRoute,patchConvenienceOptions)
 route.get('/website/about',getAboutData);
+route.get('/website/convenienceFees',getConvenienceFees)
 
 route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
 route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);

@@ -177,7 +177,7 @@ const Ppage = () => {
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-xl font-semibold text-slate-800'>
-                    <span className="mr-4 font-bold">₹ {Math.round(product?.salePrice ? product?.salePrice : product?.price)}</span>
+                    <span className="mr-4 font-bold">₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}</span>
                     {
                       product && product.salePrice && product.salePrice > 0 &&(
                         <>
@@ -256,12 +256,12 @@ const Ppage = () => {
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
                   <h1 className='font1 text-base font-semibold text-slate-800'>
                     {
-                      product && product.salePrice && (<span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>)
+                      product && product.salePrice && product?.salePrice > 0 && (<span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>)
                     }
                     
                     <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
                     {
-                      product && product.salePrice && (
+                      product && product.salePrice && product?.salePrice > 0 && (
                         <>
                           <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> 
                         </>
@@ -283,7 +283,7 @@ const Ppage = () => {
                     )
                   }
                   <h1 className='font1 flex items-center mt-8 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Best Price:&nbsp; <span className='text-[#f26a10e1]'>&nbsp;Rs. {Math.round(product?.salePrice)}</span></h1>
+                  <h1 className='font1 flex items-center mt-4 font-semibold'>Best Price:&nbsp; <span className='text-[#f26a10e1]'>&nbsp;Rs. {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}</span></h1>
                   <li className='list-disc mt-2'>Applicable on: Orders above Rs. 1599 (only on first purchase)</li>
                   <li className='list-disc mt-2'>Coupon code: <span className='font-semibold'>ONU250</span></li>
                   <li className='list-disc mt-2'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>

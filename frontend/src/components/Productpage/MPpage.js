@@ -176,9 +176,9 @@ const MPpage = () => {
                         <div className="border-b border-white pb-6 pt-2 bg-white">
                             <h1 className="font1 text-lg font-semibold text-slate-800">
                                 <span className="mr-4 font-bold">
-                                    ₹ {Math.round(product?.salePrice ? product?.salePrice : product?.price)}
+                                    ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                 </span>
-                                {product?.salePrice && (
+                                {product?.salePrice && product?.salePrice > 0 && (
                                     <Fragment>
                                         <span className="line-through mr-4 text-slate-500 font-light">
                                             ₹ {product?.price}

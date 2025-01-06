@@ -73,9 +73,9 @@ export const removeHomeCarousal = async (req, res) => {
 		const banner = await BannerModel.findById(id);
 		if(!banner) return res.status(404).json({Success: false, message: "Banner not found"});
 		banner.Url.splice(imageIndex,1);
-		if(banner.Url.length === 0){
+		/* if(banner.Url.length === 0){
 			await banner.remove();
-		}
+		} */
 		await banner.save();
 		const banners = await BannerModel.find({});
 		console.log("Banners: ",banners)
@@ -118,6 +118,38 @@ export const setAboutData = async(req,res)=>{
         console.error(`Error setting about data `,error);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
+}
+export const getConvenienceFees = async(req,res)=>{
+	try {
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
+		console.log("Convenience Fees: ",alreadyFoundWebsiteData)
+		res.status(200).json({Success:true,message:"Convenience Fees",result: alreadyFoundWebsiteData?.ConvenienceFees || 0});
+	} catch (error) {
+		console.error(`Error getting`,error);
+		res.status(500).json({Success: false, message: 'Internal Server Error'});
+	}
+}
+export const patchConvenienceOptions = async(req,res)=>{
+	try {
+		const {convenienceFees} = req.body;
+		console.log("Convenience: ",req.body);
+		if(!convenienceFees){
+			return res.status(400).json({Success: false, message: "Convenience Fees are required"});
+		}
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
+		if(!alreadyFoundWebsiteData){
+            const newConvenienceFees = new WebSiteModel({tag: 'ConvenienceFees',ConvenienceFees:convenienceFees});
+			await newConvenienceFees.save();
+			console.log("Convenience Fees: ",newConvenienceFees)
+        }
+		alreadyFoundWebsiteData.ConvenienceFees = Number(convenienceFees);
+		await alreadyFoundWebsiteData.save();
+		console.log("Convenience Fees: ",alreadyFoundWebsiteData)
+		res.status(200).json({Success:true,message: 'Convenience Fees Patched successfully',result: alreadyFoundWebsiteData?.ConvenienceFees || 0});
+	} catch (error) {
+		console.error("Error Patching Options: ",error);
+		res.status(500).json({Success:false,message: 'Internal Server Error'});
+	}
 }
 export const removeAddressFormField = async(req,res)=>{
 	try {
@@ -239,14 +271,41 @@ export const removeOptionsByType = async (req, res) => {
 		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}
-
+		let canRemoveOption = true;
+		switch (type) {
+			case 'category':
+                const availableProductCategoryItems = await ProductModel.find({category: value})
+				if(availableProductCategoryItems.length > 0){
+					canRemoveOption = false;
+				}
+                break;
+            case'subcategory':
+				const availableProductSubCategoryItems = await ProductModel.find({subCategory: value})
+				if(availableProductSubCategoryItems.length > 0){
+					canRemoveOption = false;
+				}
+                break;
+            case 'gender':
+                const availableProductGenderItems = await ProductModel.find({gender: value})
+				if(availableProductGenderItems.length > 0){
+					canRemoveOption = false;
+				}
+                break;
+            default:
+		}
+		if(!canRemoveOption){
+			return res.status(400).json({Success:true,message:"Cannot Remove Items If used"});
+		}
 		const deleted = await Option.findOneAndDelete({ type, value });
 		console.log("Deleted Options: ",deleted);
-
 		res.status(200).json({ Success:true,message: 'Option deleted successfully' });
+
 	} catch (error) {
 		console.error("Error Deleting Options ",error);
 		res.status(500).json({ message: 'Server error' });
 	}
 };
+
+
+
   

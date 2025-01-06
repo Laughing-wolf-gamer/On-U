@@ -3,7 +3,7 @@ import { BsShieldFillCheck } from 'react-icons/bs';
 import { GrClose } from 'react-icons/gr';
 import { useSelector, useDispatch } from 'react-redux';
 import { getbag, getqtyupdate, deletebag, deleteBag, verifyingOrder } from '../../action/orderaction';
-import { getAddress, getuser, updateAddress } from "../../action/useraction";
+import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
 import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
 import './bag.css';
@@ -19,6 +19,7 @@ import LoadingOverlay from '../../utils/LoadingOverLay';
 const Bag = () => {
     const navigation = useNavigate()
     const dispatch = useDispatch();
+    const[convenienceFees,setConvenienceFees] = useState(-1);
     const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
@@ -60,7 +61,7 @@ const Bag = () => {
                 const productSellingPrice = item.productId.salePrice || item.productId.price;
 
                 // Calculate total sale price (totalSP) - salePrice multiplied by quantity (if salePrice exists)
-                if (item.productId.salePrice) {
+                if (item.productId.salePrice && item.productId.price > 0) {
                     totalSP += item.productId.salePrice * item.quantity; // salePrice * quantity
                 } else {
                     totalSP += item.productId.price * item.quantity; // If no salePrice, use regular price
@@ -68,7 +69,7 @@ const Bag = () => {
 
                 // Calculate the discount only if there is a sale price
                 let discount = 0;
-                if(item.productId.salePrice){
+                if(item.productId.salePrice && item.productId.price > 0){
                     discount = item.productId.price - item.productId.salePrice; // Calculate discount percentage and multiply by quantity to account for multiple items
                     // console.log("Discount: ", discount);  // This is the discount percentage for each item
                 }
@@ -164,8 +165,17 @@ const Bag = () => {
             console.error(`Error Verifying order: `,error);
         }
     }
+    const handleConvenienceFeesChange = async () => {
+        try {
+            const fees = await dispatch(getConvinceFees())
+            setConvenienceFees(fees);
+        } catch (error) {
+            console.error("Error Fetching Convenience Data: ",error);
+        }
+    };
     useEffect(()=> {
         verifyAnyOrdersPayment();
+        handleConvenienceFeesChange();
     },[dispatch])
     useEffect(()=>{
         if(allAddresses){
@@ -174,7 +184,8 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    console.log("bag Data: ",bag);
+    // console.log("bag Data: ",bag);
+    console.log("Convenience Data: ",convenienceFees);
     return (
         <>
             {isAuthentication ? (
@@ -264,7 +275,7 @@ const Bag = () => {
                                     </div>
                                     <div className="flex justify-between mb-4">
                                         <span>Convenience Fee</span>
-                                        <span className="line-through">₹99</span>
+                                        <span className="line-through">₹{convenienceFees}</span>
                                     </div>
                                     <div className="flex justify-between font-semibold text-xl">
                                         <span>Total</span>
@@ -287,8 +298,8 @@ const Bag = () => {
                                             {/* Loop through each key-value pair in the address object */}
                                             {Object.entries(addr).map(([key, value]) => (
                                                 <div key={key} className="flex justify-between">
-                                                <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                                                <span>{value}</span>
+                                                    <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                                    <span>{value}</span>
                                                 </div>
                                             ))}
 

@@ -127,6 +127,15 @@ export const getAddress = () => async (dispatch) => {
     }
 }
 
+export const getConvinceFees = ()=>async()=>{
+    try {
+        const response = await axios.get(`${BASE_API_URL}/api/common/website/convenienceFees`);
+        return response.data.result;
+    } catch (error) {
+        console.error("Failed to get: ",error);
+    }
+}
+
 export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_VERIFY_OTP })

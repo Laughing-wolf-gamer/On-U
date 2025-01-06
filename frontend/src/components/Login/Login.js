@@ -30,7 +30,8 @@ const Login = () => {
   useEffect(() => {
     if (user) {
       if(sessionStorage.getItem('token')){
-        console.log('User: ', user);
+        Alert.success('Login Successful');
+        // console.log('Logged In User: ', user);
         Redirect('/');
       }
     }
