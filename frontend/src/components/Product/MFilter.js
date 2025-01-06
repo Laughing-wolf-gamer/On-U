@@ -7,6 +7,7 @@ import { Allproduct as getproduct } from '../../action/productaction'
 import elementClass from 'element-class'
 import './MFilter.css'
 import Slider from '@mui/material/Slider';
+import { capitalizeFirstLetterOfEachWord } from '../../config'
 
 
 
@@ -358,7 +359,7 @@ console.log("Gender: ",gender);
 
                     <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
                       onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                      <span className={`text-sm`}>{e}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
+                      <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
 
                   )
                 }
@@ -370,7 +371,7 @@ console.log("Gender: ",gender);
 
                     <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
                       onClick={() => (categoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                      <span className={`text-sm`}>{e}</span> <span className={`absolute right-6 text-xs`}>{category.filter((f) => f === e).length}</span></li>
+                      <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{category.filter((f) => f === e).length}</span></li>
 
                   )
                 }
