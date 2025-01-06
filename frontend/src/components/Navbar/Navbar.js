@@ -150,7 +150,7 @@ const Navbar = ({user}) => {
                   <Link to="/bag">
                     <h1 className="px-3 text-xs text-center relative">
                       <span className="text-lg absolute -top-5 left-1/3">
-                        <ShoppingCart className='mb-4' size={20} color="black" />
+                        <BsHandbag color="black" />
                       </span>
                       BAG
                     </h1>
