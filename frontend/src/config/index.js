@@ -99,4 +99,4 @@ export const removeSpaces = (inputString) => {
 
 export const DevMode = false;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";
-export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://on-u-frontend-new.onrender.com";
+export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";
