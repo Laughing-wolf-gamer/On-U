@@ -2,30 +2,30 @@ import React, { Fragment, useEffect, useState } from 'react'
 import HomeProductsPreview from './HomeProductsPreview'
 import { generateArrayOfRandomItems } from '../../config';
 const previewHeader = [
-  {
-    id: 'top-picks',
-    title: 'Top Picks',
-  },
-  {
-    id: 'best-sellers',
-    title: 'Best Sellers',
-  },
-  {
-    id: 'sale-items',
-    title: 'Sale Items',
-  }
+    {
+        id: 'top-picks',
+        title: 'Top Picks',
+    },
+    {
+        id: 'best-sellers',
+        title: 'Best Sellers',
+    },
+    {
+        id: 'sale-items',
+        title: 'Sale Items',
+    }
 ]
 const ProductPreviewFull = ({product}) => {
     const [previewProducts, setSelectedPreviewProducts] = useState([]);
     const[activePreview,setActivePreviews] = useState('top-picks');
     const getRandomArrayOfProducts = (e,previewProductsTitle)=>{
         if(e){
-          e.preventDefault();
+            e.preventDefault();
         }
         if(product){
-          setActivePreviews(previewProductsTitle)
-          const randomizes = generateArrayOfRandomItems(product, 6); 
-          setSelectedPreviewProducts(randomizes)
+            setActivePreviews(previewProductsTitle)
+            const randomizes = generateArrayOfRandomItems(product, 6); 
+            setSelectedPreviewProducts(randomizes)
         }
     }
     useEffect(()=>{

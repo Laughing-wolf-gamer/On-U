@@ -292,16 +292,6 @@ function price2fun(e,f){
     Redirect(MMainlink)
     reloadproducts()
   }
-// const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
-// function pricenewfun() {
-//   if (MMainlink.includes('?')) {
-//     setMMainlink(`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
-//   } else {
-//     setMMainlink(`${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
-//   }
-// }
-// console.log("Main Link",MMainlink)
-console.log("Gender: ",gender);
   return (
     <Fragment>
       <div className='hidden mobilevisible fixed bottom-0 w-full '>
