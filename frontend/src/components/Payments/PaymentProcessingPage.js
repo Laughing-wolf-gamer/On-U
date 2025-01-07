@@ -2,12 +2,11 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { create_order, createPaymentOrder, fetchAllOrders } from "../../action/orderaction";
 import { useAlert } from "react-alert";
-import { BASE_CLIENT_URL } from "../../config";
+import { BASE_CLIENT_URL, DevMode } from "../../config";
 import { cashfree } from "../../utils/pgUtils";
 
 const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, closePopup ,user}) => {
     const dispatch = useDispatch();
-    const { allorder } = useSelector(state => state.getallOrders);
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
     const [discount, setDiscount] = useState(0);
@@ -68,18 +67,20 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
             payerId:'',
         }
         try {
+            setIsPaymentStart(true);
             const responseResult = await dispatch(createPaymentOrder(data))
             console.log("Generating Payment Response: ",responseResult);
             const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
             sessionStorage.setItem("checkoutData",JSON.stringify({paymentData:responseResult?.result,bagId:bag?._id,SelectedAddress:selectedAddress,totalAmount,orderDetails}));
             if(responseResult?.success){
                 alert.success(`Order Placed Successfully ${responseResult?.message}`);
+                const ReturnUrlBase = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";
                 let checkoutOptions = {
                     paymentSessionId: responseResult?.result?.payment_session_id,
-                    redirectTarget:'_self',
-                    returnUrl:`${BASE_CLIENT_URL}/bag`,
+                    redirectTarget:'_self',// _self, _modal
+                    returnUrl:`${ReturnUrlBase}/bag`,
                 }
-                console.log("responseResult: ",checkoutOptions);
+                // console.log("responseResult: ",checkoutOptions);
                 cashfree?.checkout(checkoutOptions).then(function(result){
                     if(result.error){
                         alert.error(result.error.message)
@@ -88,7 +89,6 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                     if(result.redirect){
                         console.log("Redirection: ")
                         alert.info("Redirecting to Payment Gateway")
-                        setIsPaymentStart(true);
                     }
                 });
             }
@@ -96,6 +96,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
           console.error(`Error creating order: `,error);
         }finally{
             setIsPaymentStart(false);
+            // closePopup();
         }
     }
     
@@ -136,12 +137,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
     return (
         <div>
             <div
-                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50"
-                onClick={(e) => {
-                    // e.preventDefault();
-                    // closePopup();
-                }}
-            >
+                className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
                 <div className="bg-white p-6 rounded-lg relative shadow-lg w-full max-w-md mx-4 sm:mx-0">
                     <button
                         onClick={closePopup}
@@ -169,7 +165,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                     </div>
 
                     {/* Coupon Section */}
-                    <div className="mt-6">
+                    {/* <div className="mt-6">
                         <label className="block text-sm font-semibold">Have a coupon?</label>
                         <input
                             type="text"
@@ -184,7 +180,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                         >
                             Apply Coupon
                         </button>
-                    </div>
+                    </div> */}
 
                     {/* Total Amount Calculation */}
                     <div className="mt-6 space-y-4">
@@ -196,10 +192,10 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                             <span className="font-semibold">Discount:</span>
                             <span>₹{discount}</span>
                         </p>
-                        <p className="flex justify-between text-sm">
+                        {/* <p className="flex justify-between text-sm">
                             <span className="font-semibold">Coupon Discount:</span>
                             <span>₹{couponDiscount}</span>
-                        </p>
+                        </p> */}
                         <p className="flex justify-between text-lg font-semibold text-gray-800">
                             <span>Total Amount:</span>
                             <span>₹{totalAmount}</span>
@@ -208,10 +204,11 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
 
                     {/* Confirm Button */}
                     <button
+                        disabled = {isPaymentStart}
                         onClick={confirmPayment}
                         className="w-full bg-green-500 text-white p-4 rounded-md mt-6 hover:bg-green-600"
                     >
-                        Confirm Payment
+                        {isPaymentStart ? "Payment Started" : "Confirm Payment"}
                     </button>
                 </div>
             </div>
