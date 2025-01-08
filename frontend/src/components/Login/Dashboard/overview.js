@@ -7,6 +7,7 @@ import AccountSettings from './AccountSettings';
 import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
 import { useNavigate } from 'react-router-dom';
+import { AlignJustify } from 'lucide-react';
 
 const Overview = ({ user }) => {
   const navigation = useNavigate();
@@ -20,13 +21,13 @@ const Overview = ({ user }) => {
   // If no user, show warning
   if (!user) {
     return (
-      <div className="bg-white h-[90%] flex flex-col items-center justify-center">
-        <div className="text-center bg-white h-full justify-center items-center p-8 rounded-lg shadow-md w-[90%] xl:w-[70%]">
-          <h1 className="text-xl font-semibold text-black">No User Logged In</h1>
-          <p className="text-gray-600 my-4">Please log in to access your account.</p>
+      <div className="bg-gray-00 h-[90%] flex flex-col items-center justify-center">
+        <div className="text-center bg-gray-900 h-full justify-center items-center p-8 rounded-lg shadow-md w-[90%] xl:w-[70%]">
+          <h1 className="text-xl font-semibold text-white">No User Logged In</h1>
+          <p className="text-gray-400 my-4">Please log in to access your account.</p>
           <button
             onClick={(e) => navigation('/Login')}
-            className="bg-black text-white px-6 py-3 rounded-lg hover:bg-gray-700 transition duration-300"
+            className="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-300"
           >
             Log In
           </button>
@@ -36,38 +37,36 @@ const Overview = ({ user }) => {
   }
 
   return (
-    <div className="bg-white min-h-screen">
+    <div className="bg-gray-300 min-h-screen text-white">
       {/* Account Header */}
-      <div className="py-6 border-b mx-auto w-[90%] mt-5 2xl:w-[70%] px-4 xl:w-[70%] lg:w-[70%] bg-gray-200 shadow-md rounded-lg">
-        <h1 className="font-semibold text-2xl text-black">Account</h1>
-        <p className="text-sm text-gray-600">{user?.user?.name}</p>
+      <div className="py-6 border-b mx-auto w-[90%] mt-5 2xl:w-[70%] px-4 xl:w-[70%] lg:w-[70%] bg-gray-500 shadow-md rounded-lg">
+        <h1 className="font-semibold text-2xl text-white">Account</h1>
+        <p className="text-sm text-gray-400">{user?.user?.name}</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row">
+      <div className="flex flex-col lg:flex-row mt-4">
         {/* Toggle Button for Small Screens */}
         <button
-          className="lg:hidden p-4 bg-black text-white"
+          className="lg:hidden p-4 bg-gray-700 text-white"
           onClick={() => setSidebarOpen(!sidebarOpen)}
         >
-          Toggle Menu
+          <AlignJustify />
         </button>
 
         {/* Sidebar */}
         <div
-          className={`w-full lg:w-[30%] bg-white p-6 rounded-lg shadow-md border-r-2 ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
+          className={`w-full lg:w-[15%] justify-center items-center mt-4 flex-col bg-gray-500 ml-3 p-6 rounded-lg shadow-md border-r-2 ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
         >
           <OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
         </div>
 
         {/* Profile Details */}
-        <div className="w-full lg:w-[70%] py-3">
-          <div className="bg-white p-6 rounded-lg shadow-md w-full mx-auto text-sm">
+        <div className="w-full lg:w-[80%] py-3 px-4">
+          <div className="bg-gray-800 p-6 rounded-lg shadow-md w-full mx-auto text-sm">
             {/* Render active section */}
             {activeSection === 'User-Details' && <UserDetails user={user?.user} />}
             {activeSection === 'Orders-Returns' && <OrdersReturns />}
             {activeSection === 'Saved-Addresses' && <SavedAddresses />}
-            {activeSection === 'Payment-Methods' && <PaymentMethods />}
-            {activeSection === 'Account-Settings' && <AccountSettings />}
           </div>
         </div>
       </div>

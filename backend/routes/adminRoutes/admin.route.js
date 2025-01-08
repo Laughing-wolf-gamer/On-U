@@ -1,5 +1,5 @@
 import express from 'express';
-import { addNewProduct, deleteProduct, editProduct, fetchAllProducts, getallOrders, getOrderById, getProductById, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
+import { addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, removeCoupon, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
 import { addNewColorToSize, addNewSizeToProduct, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
@@ -51,6 +51,11 @@ route.patch('/product/update/removeSizeFromProduct',isAuthenticateuser,ProtectAd
 
 
 
+// coupons.
+route.post('/product/coupons/create',isAuthenticateuser,ProtectAdminRoute,createNewCoupon);
+route.put('/product/coupons/edit/:couponId',isAuthenticateuser,ProtectAdminRoute,editCoupon);
+route.delete('/product/coupons/remove/:couponId',isAuthenticateuser,ProtectAdminRoute,removeCoupon);
+route.get('/product/coupons/all',isAuthenticateuser,ProtectAdminRoute,fetchAllCoupons);
 // filters routes...
 // route.get('/product/filters',FetchAllFilters);
 

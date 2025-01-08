@@ -4,6 +4,7 @@ import Errorhandler from '../utilis/errorhandel.js';
 import ImageKit from "imagekit";
 import Apifeature from '../utilis/Apifeatures.js';
 import ProductModel from '../model/productmodel.js';
+import OrderModel from '../model/ordermodel.js';
 
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
@@ -195,56 +196,116 @@ export const getallproducts = A(async (req, res)=>{
         }})
     }
 })
-function sortProducts(sortby) {
-  const sort = {};
+export const checkUserPurchasedProduct = async (req, res) => {
+    try {
+        const userId = req.user.id; // Get the user's ID
+        if(!userId){
+            return res.status(401).json({
+                success: false,
+                message: 'User not authenticated'
+            });
+        }
+        const { productId } = req.params; // Get the product ID from the request parameters
+        if(!productId){
+            return res.status(400).json({
+                success: false,
+                message: 'Product ID is required'
+            });
+        }
+        const originalProduct = await ProductModel.findById(productId);
+        if(!originalProduct){
+            return res.status(400).json({
+                success: false,
+                message: 'Product not found'
+            })
+        }
+        if(originalProduct.Rating.some(r => r.userId === userId)){
 
-  switch(sortby) {
-      case "price-high-to-low":
-          sort.price = -1;  // Sort by price descending
-          break;
-      case "price-low-to-high":
-          sort.price = 1;   // Sort by price ascending
-          break;
-      case "title-a-2-z":
-          sort.title = 1;   // Sort by title A-Z
-          break;
-      case "title-z-2-a":
-          sort.title = -1;  // Sort by title Z-A
-          break;
-      case "rating-high-to-low":
-          sort.rating = -1; // Sort by rating descending
-          break;
-      case "rating-low-to-high":
-          sort.rating = 1;  // Sort by rating ascending
-          break;
-      case "newest-first":
-          sort.date = -1;   // Sort by date descending (newest first)
-          break;
-      case "oldest-first":
-          sort.date = 1;    // Sort by date ascending (oldest first)
-          break;
-      case "best-sellers":
-          sort.sales = -1;  // Sort by best-selling (descending)
-          break;
-      case "most-popular":
-          sort.popularity = -1; // Sort by popularity descending
-          break;
-      case "best-reviewed":
-          sort.reviews = -1;  // Sort by reviews descending
-          break;
-      case "discount-high-to-low":
-          sort.discount = -1; // Sort by discount percentage descending
-          break;
-      case "discount-low-to-high":
-          sort.discount = 1;  // Sort by discount percentage ascending
-          break;
-      default:
-          sort.price = 1;    // Default sort by price ascending
-          break;
-  }
+        }
+        // Find orders for the user that have a "Delivered" status
+        const orderPurchasedProductByUserId = await OrderModel.find({ 
+            userId, 
+            status: "Delivered" 
+        });
+        
+        // If the user has orders
+        if (orderPurchasedProductByUserId && orderPurchasedProductByUserId.length > 0) {
+            // Check if any of the order items include the productId
+            console.log("Product Id: ",productId);
+            for (const order of orderPurchasedProductByUserId) {
+                console.log("OrderPurchasedProductByUserId: ", order.orderItems)
+                // Ensure orderItems is an array and contains the productId
+                if (order.orderItems && order.orderItems.some(item => item.productId._id === productId)) {
+                    
+                    return res.status(200).json({
+                        success: true,
+                        message: 'User has purchased this product'
+                    });
+                }
+            }
+        }
 
-  return sort;  // Return the sorting configuration object
+        return res.status(200).json({
+            success: false,
+            message: 'User has not purchased this product'
+        });
+    } catch (error) {
+        console.error("Error Checking User Purchased ", error);
+        res.status(500).json({ 
+            success: false, 
+            message: 'Internal server error' 
+        });
+    }
 }
+
+export const setRating = async (req, res) => {
+    try {
+        const { productId } = req.params;
+        const { comment, rating} = req.body;
+        
+        console.log("Posting Rating: ", req.body);
+
+        // Validate rating
+        if (rating) {
+            if (Number(rating) <= 0 || Number(rating) > 5) {
+                return res.status(400).json({ success: false, message: 'Rating should be between 1 and 5' });
+            }
+        }
+
+        // Validate comment
+        if (comment) {
+            if (typeof comment !== 'string' || comment.trim() === '') {
+                return res.status(400).json({ success: false, message: 'Comment cannot be empty' });
+            }
+        }
+
+        console.log("Setting rating: ", productId);
+
+        // Update product with new rating and comment
+        const product = await ProductModel.findByIdAndUpdate(
+            productId, 
+            {
+                $push: { 
+                    Rating: {
+                        userId: req.user.id,
+                        rating: Number(rating),
+                        comment: comment || ''
+                    }
+                }
+            },
+            { new: true } // Ensure that the updated document is returned
+        );
+
+        console.log("Updated Product: ", product);
+
+        // Respond with success
+        res.status(200).json({ success: true, message: 'Rating set successfully', result: product });
+    } catch (error) {
+        console.log("Error Posting Rating", error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+}
+
 
 export const SendSingleProduct = A(async (req, res, next)=>{
     const product = await ProductModel.findById(req.params.id)

@@ -453,17 +453,68 @@ export const getOrderDeliveredGraphData = async (req,res) => {
 };
 export const getCustomerGraphData = async (req, res) => {
   try {
-    // Group customers by month (or year) based on the 'createdAt' field
-    const result = await User.aggregate([
-      {
+    // Get the startDate and endDate from query parameters, or default to a wide range
+    const { startDate, endDate, period } = req.query;
+    console.log("reqQuery: " ,req.query)
+
+    // Convert the startDate and endDate to Date objects, if provided
+    const start = startDate ? new Date(startDate) : new Date('2000-01-01'); // Default to a wide range if not provided
+    const end = endDate ? new Date(endDate) : new Date(); // Default to the current date if not provided
+
+    // Initialize the aggregation pipeline
+    let matchStage = {};
+
+    if (period === 'monthly') {
+      // For monthly period: Group by month and year, and filter by startDate and endDate
+      matchStage = {
+        $match: {
+          createdAt: { $gte: start, $lte: end }, // Filter customers created within the date range
+        }
+      };
+      // Adding projection stage to extract month and year from the 'createdAt' field
+      matchStage = {
         $project: {
           month: { $month: "$createdAt" },  // Extract month from 'createdAt'
           year: { $year: "$createdAt" },    // Extract year from 'createdAt'
+          createdAt: 1                      // Retain the createdAt field for matching date range
         }
-      },
+      };
+    } else if (period === 'yearly') {
+      // For yearly period: Group by year only, and filter by startDate and endDate
+      matchStage = {
+        $match: {
+          createdAt: { $gte: start, $lte: end }, // Filter customers created within the date range
+        }
+      };
+      // Adding projection stage to extract year from the 'createdAt' field
+      matchStage = {
+        $project: {
+          year: { $year: "$createdAt" },    // Extract year from 'createdAt'
+          createdAt: 1                      // Retain the createdAt field for matching date range
+        }
+      };
+    } else {
+      // Default to monthly if no period is specified
+      matchStage = {
+        $match: {
+          createdAt: { $gte: start, $lte: end },
+        }
+      };
+      matchStage = {
+        $project: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+          createdAt: 1
+        }
+      };
+    }
+
+    // Perform the aggregation with the modified match and projection stages
+    const result = await User.aggregate([
+      matchStage,  // Match customers based on the provided date range
       {
         $group: {
-          _id: { month: "$month", year: "$year" },
+          _id: { month: "$month", year: "$year" }, // Group by month and year
           count: { $sum: 1 } // Count customers for each month/year
         }
       },
@@ -481,35 +532,66 @@ export const getCustomerGraphData = async (req, res) => {
       });
     }
 
-    // Map the result to a format that can be sent to the frontend
-    console.log("Item: ",result);
+    // Format the result for frontend display
     const formattedResult = result.map((item) => ({
       month: `${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.year}`,
       count: item.count
     }));
+    console.log("Format: ", formattedResult)
 
-    console.log("Customer Growth Data: ", formattedResult);
-
-    res.status(200).json({ Success: true, message: 'Customer Growth Data', result: formattedResult });
+    res.status(200).json({
+      Success: true,
+      message: 'Customer Growth Data',
+      result: formattedResult
+    });
   } catch (error) {
     console.error("Error fetching customer growth data: ", error);
     res.status(500).json({ Success: false, message: 'Internal Server Error' });
   }
 };
 
+
 export const getOrdersGraphData = async (req, res) => {
   try {
-    // Group orders by month (or year) based on the 'createdAt' field
-    const result = await OrderModel.aggregate([
-      {
+    const { period } = req.query; // period can be 'monthly' or 'yearly'
+    let matchStage = {};
+
+    // Determine how to group the data based on the 'period' query parameter
+    let groupBy = {};
+    if (period === 'monthly') {
+      // Group by month and year
+      matchStage = {
         $project: {
           month: { $month: "$createdAt" },  // Extract month from 'createdAt'
           year: { $year: "$createdAt" },    // Extract year from 'createdAt'
         }
-      },
+      };
+      groupBy = { month: "$month", year: "$year" };
+    } else if (period === 'yearly') {
+      // Group by year only
+      matchStage = {
+        $project: {
+          year: { $year: "$createdAt" }, // Extract year from 'createdAt'
+        }
+      };
+      groupBy = { year: "$year" };
+    } else {
+      // Default to monthly if no valid period is provided
+      matchStage = {
+        $project: {
+          month: { $month: "$createdAt" },
+          year: { $year: "$createdAt" },
+        }
+      };
+      groupBy = { month: "$month", year: "$year" };
+    }
+
+    // Perform aggregation
+    const result = await OrderModel.aggregate([
+      matchStage,  // Dynamically inserted match stage based on period
       {
         $group: {
-          _id: { month: "$month", year: "$year" },
+          _id: groupBy,  // Group by month/year based on period
           count: { $sum: 1 } // Count orders for each month/year
         }
       },
@@ -528,17 +610,34 @@ export const getOrdersGraphData = async (req, res) => {
     }
 
     // Map the result to a format that can be sent to the frontend
-    const formattedResult = result.map((item) => ({
-      month: `${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.year}`,
-      count: item.count
-    }));
+    const formattedResult = result.map((item) => {
+      let formattedDate = '';
+      if (item._id.month && item._id.year) {
+        // For monthly data, return the first day of the month
+        formattedDate = new Date(item._id.year, item._id.month - 1, 1); // Month is 0-indexed
+        formattedDate = `${formattedDate.getDate().toString().padStart(2, '0')}-${(formattedDate.getMonth() + 1).toString().padStart(2, '0')}-${formattedDate.getFullYear()}`;
+      } else if (item._id.year) {
+        // For yearly data, just return the year
+        formattedDate = item._id.year.toString();
+      }
 
-    res.status(200).json({ Success: true, message: 'Order Growth Data', result: formattedResult });
+      return {
+        date: formattedDate,  // Date formatted as 01-MM-YYYY or just YYYY
+        count: item.count
+      };
+    });
+
+    res.status(200).json({
+      Success: true,
+      message: 'Order Growth Data',
+      result: formattedResult
+    });
   } catch (error) {
     console.error("Error fetching order growth data: ", error);
     res.status(500).json({ Success: false, message: 'Internal Server Error' });
   }
-}
+};
+
 
 export const getTotalUsers = async (req,res)=>{
   try {

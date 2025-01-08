@@ -23,6 +23,8 @@ import About from "./components/About-Screen/About.js";
 import Contact from "./components/About-Screen/Contact.js";
 import OrderDetailsPage from "./components/Login/Dashboard/OrderDetailsPage.js";
 import FAQ from "./components/About-Screen/FAQ.js";
+import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js";
+import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
 
 
 
@@ -91,6 +93,8 @@ function App() {
         <Route path='/about' element={<About />}/>
         <Route path='/contact' element={<Contact />}/>
         <Route path='/faq' element={<FAQ />}/>
+        <Route path='/t&c' element={<TermsAndConditions />}/>
+        <Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
       </Routes>
       
       

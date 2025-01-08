@@ -266,11 +266,11 @@ const Bag = () => {
                                         <span>₹{totalSellingPrice}</span>
                                     </div>
                                     <div className="flex justify-between mb-2">
-                                        <span>Discount</span>
+                                        <span>You Saved</span>
                                         <span>₹{Math.round(discountedAmount)}</span>
                                     </div>
                                     <div className="flex justify-between mb-2">
-                                        <span>Coupon Discount</span>
+                                        <span>Coupon</span>
                                         <span>Apply Coupon</span>
                                     </div>
                                     <div className="flex justify-between mb-4">

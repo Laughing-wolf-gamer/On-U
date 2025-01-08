@@ -1,6 +1,6 @@
 import React, { useEffect, Fragment, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { singleProduct } from '../../action/productaction'
+import { checkPurchasesProductToRate, postRating, singleProduct } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Loader/Loader'
 import './Ppage.css'
@@ -18,7 +18,30 @@ import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
-
+const productReviewMock = {
+  reviews: [
+    {
+      text: "Great product, highly recommend!",
+      rating:1,
+    },
+    {
+      text: "Good value for the price. Works as expected.",
+      rating:1,
+    },
+    {
+      text: "Not as good as I thought. Could use some improvements.",
+      rating:3,
+    },
+    {
+      text: "Excellent quality and fast shipping!",
+      rating:4,
+    },
+    {
+      text: "Pretty decent, but the color was off from the picture.",
+      rating:4,
+    }
+  ]
+};
 const Ppage = () => {
   const navigation = useNavigate();
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -31,6 +54,9 @@ const Ppage = () => {
   const dispatch = useDispatch()
   const [currentColor,setCurrentColor] = useState(null)
   const[currentSize,setCurrentSize] = useState(null)
+  const[hasPurchased, setHasPurchased] = useState(false);
+  const[ratingData,setRatingData] = useState(null);
+
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
@@ -74,7 +100,23 @@ const Ppage = () => {
   }
 
   const [state, setstate] = useState(false)
-  
+
+  const PostRating = async (e)=>{
+      e.preventDefault();
+      console.log("Rating Data: ", ratingData);
+      if(ratingData && user && product){
+        await dispatch(postRating({productId:product?._id, ratingData}))
+        dispatch(singleProduct(param.id))
+      }
+    }
+
+
+    const checkFetchedIsPurchased = async ()=>{
+      console.log("Checking: ",product);
+      const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
+      // console.log("response On Is Purchased: ", didPurchased.success);
+      setHasPurchased(didPurchased?.success || false);
+    }
   useEffect(() => {
     
 
@@ -96,22 +138,22 @@ const Ppage = () => {
       dispatch(clearErrors())
     }
   }, [dispatch, param, error, alert, werror]);
-    const handleImageClick = (imageUrl) => {
-      setSelectedImage(imageUrl);
-    };
-    const handleSetNewImageArray = (newSize)=>{
-      console.log("selected Size: ",newSize);
-      setCurrentSize(newSize);
-      setSelectedSize(newSize);
-      setSelectedColor(newSize.colors);
-      setCurrentColor(newSize.colors[0]);
-      setSelectedColorId(newSize.colors[0]._id);
-    }
-    const handelSetColorImages = (color) => {
-      setSelectedSize_color_Image_Array(color.images)
-      setSelectedImage(color.images[0]);
-      setSelectedColorId(color._id);
-    }
+  const handleImageClick = (imageUrl) => {
+    setSelectedImage(imageUrl);
+  };
+  const handleSetNewImageArray = (newSize)=>{
+    console.log("selected Size: ",newSize);
+    setCurrentSize(newSize);
+    setSelectedSize(newSize);
+    setSelectedColor(newSize.colors);
+    setCurrentColor(newSize.colors[0]);
+    setSelectedColorId(newSize.colors[0]._id);
+  }
+  const handelSetColorImages = (color) => {
+    setSelectedSize_color_Image_Array(color.images)
+    setSelectedImage(color.images[0]);
+    setSelectedColorId(color._id);
+  }
   useEffect(()=>{
     if(product){
       setSelectedSize(product.size[0]);
@@ -124,8 +166,10 @@ const Ppage = () => {
       setSelectedImage(currentColor.images[0]);
       setSelectedSize_color_Image_Array(currentColor.images);
     }
-		
-	},[product])
+		if(product){
+      checkFetchedIsPurchased();
+    }
+	},[product,dispatch])
   useEffect(()=>{
     if(selectedSize){
 			setSelectedColor(selectedSize.colors);
@@ -137,6 +181,8 @@ const Ppage = () => {
 		}
     console.log("Selected Size New ",currentSize);
   },[selectedSize])
+  console.log("All Products: ",product,product?.Rating)
+
   return (
     <Fragment>
       {
@@ -316,13 +362,6 @@ const Ppage = () => {
                     {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
                     <p>{product?.material}</p>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
-                  {/* <div className='mt-2'>
-                    Wipe your jewelry with a soft cloth after every use
-                    Always store your jewelry in a flat box to avoid accidental scratches
-                    Keep sprays and perfumes away from your jewelry
-                    Do not soak your jewelry in water
-                    Clean your jewelry using a soft brush, dipped in jewelry cleaning solution only
-                  </div> */}
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
                   {
                     product && product.specification && product.specification.length > 0 && product.specification.map((e) =>
@@ -332,12 +371,115 @@ const Ppage = () => {
                 </div>
 
                 <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
-                  <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
+                  <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
                   <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
                 </div>
+                  {/* Average Rating Section */}
+                  {product && product?.Rating && product?.Rating.length > 0  && (
+                    <div className='average-rating mt-6'>
+                      <h4 className='text-lg font-semibold'>Average Rating:</h4>
+                      <div className='flex items-center'>
+                        {(() => {
+                          const totalStars = product && product.Rating &&product.Rating.length > 0 && product.Rating.reduce((acc, review) => acc + review.rating, 0);
+                          const avgStars = totalStars / product.Rating.length;
+                          const roundedAvg = Math.round(avgStars * 10) / 10; // Round to 1 decimal place
+
+                          return (
+                            <>
+                              <div className='stars'>
+                                {[...Array(Math.floor(roundedAvg))].map((_, i) => (
+                                  <span key={i} className='star text-black'>★</span>
+                                ))}
+                                {[...Array(5 - Math.floor(roundedAvg))].map((_, i) => (
+                                  <span key={i} className='star text-gray-300'>★</span>
+                                ))}
+                              </div>
+                              <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+                            </>
+                          );
+                        })()}
+                      </div>
+                    </div>
+                  )}
 
               </div>
             </div>
+           <div className='w-[70%] px-2'>
+              {/* Reviews Section */}
+              <div className='reviews-section'>
+                <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
+                <div className='reviews-list mt-4 overflow-y-auto'>
+                  {product && product.Rating &&product.Rating.length > 0 && product.Rating.map((review, index) => {
+                    const randomStars = review.rating; // Random stars between 1 and 5
+                    return (
+                      <div key={index} className='review-item mb-4'>
+                        <div className='flex items-center'>
+                          {/* Display random star rating */}
+                          <div className='stars'>
+                            {[...Array(randomStars)].map((_, i) => (
+                              <span key={i} className='star text-black'>★</span>
+                            ))}
+                            {[...Array(5 - randomStars)].map((_, i) => (
+                              <span key={i} className='star text-gray-300'>★</span>
+                            ))}
+                          </div>
+                          <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
+                        </div>
+                        <p className='text-gray-700 mt-2'>{review?.comment}</p>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* Review Input Section */}
+                <div className='w-full flex flex-col justify-start items-center'>
+                  <div className='mt-6 w-full'>
+
+                    <h4 className='text-lg font-semibold'>Write a Review</h4>
+
+                    <form className='mt-4'>
+                      {/* Review Text Input */}
+                      <div className='mb-4'>
+                        <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                        <textarea
+                          onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
+                          id='reviewText'
+                          name='reviewText'
+                          rows='4'
+                          placeholder='Write your review here...'
+                          className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                        />
+                      </div>
+
+                      {/* Star Rating Input */}
+                      <div className='mb-4'>
+                        <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                        <input
+                          onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
+                          id='starRating'
+                          name='starRating'
+                          type='number'
+                          min='1'
+                          max='5'
+                          className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                          placeholder='Rate from 1 to 5'
+                        />
+                      </div>
+
+                      {/* Submit Button */}
+                      <div className='flex justify-start'>
+                        <button
+                          onClick={PostRating}
+                          className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                        >
+                          Submit Review
+                        </button>
+                      </div>
+                    </form>
+                    </div>
+                </div>
+              </div>
+           </div>
             <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
             <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6'>
               {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}

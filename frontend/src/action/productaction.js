@@ -1,4 +1,4 @@
-import { BASE_API_URL } from '../config'
+import { BASE_API_URL, headerConfig } from '../config'
 import {
     REQUEST_PRODUCTS,
     SUCCESS_PRODUCTS,
@@ -56,6 +56,27 @@ export const fetchAllOptions = () => async (dispatch) => {
         dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
     } catch (error) {
         dispatch({ type: FAIL_OPTIONS, payload: error.response?.data?.message })
+    }
+}
+export const postRating = ({productId,ratingData})=> async()=>{
+    try {
+        console.log("Post Rating: ",productId,ratingData)
+        const res = await axios.put(`${BASE_API_URL}/api/shop/rating/${productId}`,ratingData,headerConfig());
+        return res.data;
+    } catch (error) {
+        console.error("Failed to post: ",error);
+        return null;
+    }
+}
+export const checkPurchasesProductToRate = ({productId}) => async()=>{
+    try {
+
+        const res = await axios.get(`${BASE_API_URL}/api/shop/rating/checkPurchases/${productId}`,headerConfig());
+        console.log("Check: ",res.data)
+        return res.data;
+    } catch (error) {
+        console.error("Failed to check",error);
+        return false;
     }
 }
 export const clearErrors = () => async (dispatch) => {

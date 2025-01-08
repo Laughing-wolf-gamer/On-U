@@ -16,7 +16,6 @@ const BagSchema = new mongoose.Schema({
         size:Object,
         quantity:Number,
     }],
-   
 })
 
 const Bag = mongoose.model('Bag', BagSchema)

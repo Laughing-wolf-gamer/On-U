@@ -1,6 +1,4 @@
-import ProductCategory from "../../model/fillters Models/ProductCategory.model.js";
-import ProductGender from "../../model/fillters Models/ProductGender.model.js";
-import ProductSubCategory from "../../model/fillters Models/ProductSubCategory.js";
+import Coupon from "../../model/Coupon.model.js";
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
@@ -55,6 +53,112 @@ export const uploadMultipleImages = async (req, res) => {
         });
     }
 };
+
+export const createNewCoupon = async(req,res)=>{
+    try {
+        const {
+            couponName,
+            couponCode,
+            couponType,
+            discount,
+            minOrderAmount,
+            customerLogin,
+            freeShipping,
+            productId,
+            category,
+            status,
+            validDate,
+        } = req.body;
+        console.log("Creating new coupon: ",req.body);
+        const newCoupon = new Coupon({
+            CouponName:couponName,
+            CouponCode:couponCode,
+            CouponType:couponType,
+            Discount:discount,
+            MinOrderAmount:minOrderAmount,
+            CustomerLogin:customerLogin,
+            FreeShipping:freeShipping,
+            ProductId:productId,
+            Category:category,
+            Status:status,
+            ValidDate:validDate,
+        });
+        await newCoupon.save();
+        res.status(201).json({message: "Coupon created successfully", newCoupon});
+    } catch (error) {
+        console.error("Error creating new coupon: ",error);
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}
+
+export const removeCoupon = async(req,res)=>{
+    try {
+        const{couponId} = req.params;
+        const removed = await Coupon.findByIdAndDelete(couponId);
+        if (!removed) {
+            return res.status(404).json({ message: "Coupon not found" });
+        }
+        res.status(200).json({ message: "Coupon removed successfully", removed });
+    } catch (error) {
+        console.error("Error removing coupon: ",error);
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}
+
+export const editCoupon = async (req,res)=>{
+    try {
+        const{couponId} = req.params;
+        const {
+            couponName,
+            couponCode,
+            couponType,
+            discount,
+            minOrderAmount,
+            customerLogin,
+            freeShipping,
+            productId,
+            category,
+            status,
+            validDate,
+        } = req.body;
+        const updateFields = {};
+        if (couponName && couponName.length > 0) updateFields.CouponName = couponName;
+        if (couponCode && couponCode.length > 0) updateFields.CouponCode = couponCode;
+        if (couponType && couponType.length > 0) updateFields.CouponType = couponType;
+        if (discount && discount.length > 0) updateFields.Discount = discount;
+        if (minOrderAmount && minOrderAmount.length > 0) updateFields.MinOrderAmount = minOrderAmount;
+        if (customerLogin && customerLogin.length > 0) updateFields.CustomerLogin = customerLogin;
+        if (freeShipping > 0) updateFields.FreeShipping = freeShipping;
+        if (productId ) updateFields.ProductId = productId
+        if(category && category.length > 0) updateFields.Category = category
+        if(status && ["Active", "Inactive"].includes(status)) updateFields.Status = status
+        if(validDate) updateFields.ValidDate = validDate
+        console.log("Coupon Updating : ",updateFields);
+        if (Object.keys(updateFields).length > 0) {
+            const updatedCoupons = await Coupon.findByIdAndUpdate(
+                couponId, 
+                updateFields, 
+                { new: true }
+            );
+            if(!updatedCoupons) res.status(404).json({Success:false,message:"Product Update Failed"});
+            return res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedCoupons});
+        }
+    } catch (error) {
+        console.log("Error Editing coupon: ",error);
+        res.status(500).json({message: "Internal Server Error"});
+    }
+}
+
+
+export const fetchAllCoupons = async(req, res) => {
+    try {
+        const coupons = await Coupon.find({});
+        res.status(200).json({message: "All coupons fetched successfully", result: coupons || []});
+    } catch (error) {
+        console.error("Error fetching all coupon",error);
+        res.status(500).json({message: "Internal Server Error",result:[]});
+    }
+}
 export const addNewProduct = async (req, res) => {
     try {
         const {
@@ -70,6 +174,7 @@ export const addNewProduct = async (req, res) => {
             subCategory,
             price,
             salePrice,
+            Rating,
         } = req.body;
         console.log("All fields ",req.body);
         
@@ -112,6 +217,7 @@ export const addNewProduct = async (req, res) => {
             salePrice: salePrice && salePrice > 0 ? salePrice : null,
             totalStock,
             AllColors:AllColors,
+            Rating:Rating && Rating.length > 0 ? [Rating]:[]
         });
         if(!newProduct) return res.status(400).json({Success:false,message:"Product not created",result:null});
         await newProduct.save();

@@ -184,7 +184,7 @@ const Allproductpage = () => {
             </div>
 
 
-            <div className='w-full 2xl:grid  xl:grid  lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 '>
+            <div className='w-full 2xl:grid  xl:grid  lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 mb-10'>
                 {/* Filter ******************** */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-slate-200 h-max sticky top-0 ">
                     {

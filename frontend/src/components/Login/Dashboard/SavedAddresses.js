@@ -10,7 +10,7 @@ import LoadingOverlay from '../../../utils/LoadingOverLay';
 const SavedAddresses = () => {
   const alert = useAlert();
   const dispatch = useDispatch();
-  const { allAddresses,loading:addressStateLoading } = useSelector(state => state.getAllAddress);
+  const { allAddresses, loading: addressStateLoading } = useSelector(state => state.getAllAddress);
   const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
 
   // Open Add Address Popup
@@ -24,11 +24,11 @@ const SavedAddresses = () => {
 
   // Handle saving new address
   const handleSaveAddress = async (newAddress) => {
-    // Assuming you have a function to update the user's address in the backend
     await dispatch(updateAddress(newAddress));
     alert.success('Address added successfully');
     dispatch(getAddress());
   };
+
   const removeAddressByIndex = async (addressIndex) => {
     await dispatch(removeAddress(addressIndex));
     alert.success('Address removed successfully');
@@ -40,30 +40,28 @@ const SavedAddresses = () => {
     dispatch(getAddress());
   }, [dispatch]);
 
-
   const renderAddress = (i, address) => {
-    console.log("Address Loading: ", addressStateLoading);
     return (
-      <div key={i} className="mb-4 relative p-6 border transition-color border-gray-300 rounded-lg shadow-md bg-white hover:shadow-lg duration-300">
+      <div key={i} className="mb-4 relative p-6 border transition-color border-gray-700 rounded-lg shadow-md bg-gray-800 hover:shadow-xl duration-300">
         {/* Centered "X" button */}
         <button
-          className="absolute top-2 right-2 flex justify-center items-center bg-red-600 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-700 transition-colors duration-300"
+          className="absolute top-2 right-2 flex justify-center items-center bg-red-700 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-800 transition-colors duration-300"
           onClick={(e) => removeAddressByIndex(i)}
         >
           <X size={14} />
         </button>
-  
-        <h2 className="text-xl font-semibold text-gray-800 mb-3">Address {i + 1}</h2>
+
+        <h2 className="text-xl font-semibold text-white mb-3">Address {i + 1}</h2>
         <div className="space-y-3">
           {Object.entries(address).map(([key, value], idx) => (
-            <div key={key} className="flex flex-col space-y-4 text-sm text-gray-700">
+            <div key={key} className="flex flex-col space-y-4 text-sm text-gray-400">
               <div className='justify-between items-center flex'>
-                <span className="font-medium text-sm text-gray-600 capitalize">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                <span className="text-gray-800">{value}</span>
+                <span className="font-medium text-sm text-gray-500 capitalize">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                <span className="text-gray-300">{value}</span>
               </div>
               {/* Horizontal line */}
               {idx < Object.entries(address).length - 1 && (
-                <div className="border-b border-gray-300 my-2 w-full"></div>
+                <div className="border-b border-gray-600 my-2 w-full"></div>
               )}
             </div>
           ))}
@@ -72,23 +70,22 @@ const SavedAddresses = () => {
     );
   };
 
-
   return (
-    <div className="p-6">
+    <div className="p-6 bg-gray-900 min-h-screen">
       <LoadingOverlay isLoading={addressStateLoading} />
-      <h2 className="font-semibold text-lg mb-4">Saved Addresses</h2>
+      <h2 className="font-semibold text-lg text-white mb-4">Saved Addresses</h2>
 
       {/* Display saved addresses */}
       {allAddresses && allAddresses.length > 0 ? (
-        allAddresses.map((address,index) => renderAddress(index,address))
+        allAddresses.map((address, index) => renderAddress(index, address))
       ) : (
-        <p>No addresses saved.</p>
+        <p className="text-gray-400">No addresses saved.</p>
       )}
 
       {/* Button to open the "Add Address" popup */}
       <button
         onClick={handleOpenPopup}
-        className="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+        className="mt-6 py-2 px-6 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300"
       >
         Add Address
       </button>
@@ -102,6 +99,5 @@ const SavedAddresses = () => {
     </div>
   );
 };
-
 
 export default SavedAddresses;

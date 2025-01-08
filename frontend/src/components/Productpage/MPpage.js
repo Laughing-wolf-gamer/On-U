@@ -1,7 +1,7 @@
 import React, { useEffect, Fragment, useState, CSSProperties } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { singleProduct } from '../../action/productaction';
+import { checkPurchasesProductToRate, postRating, singleProduct } from '../../action/productaction';
 import Loader from '../Loader/Loader';
 import './Ppage.css';
 import { Carousel } from 'react-responsive-carousel';
@@ -18,7 +18,30 @@ import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
 import { capitalizeFirstLetterOfEachWord } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
+const productReviewMock = {
+    reviews: [
+      {
+        comment: "Great product, highly recommend!",
+        rating:1,
+      },
+      {
+        comment: "Good value for the price. Works as expected.",
+        rating:1,
+      },
+      {
+        comment: "Not as good as I thought. Could use some improvements.",
+        rating:3,
+      },
+      {
+        comment: "Excellent quality and fast shipping!",
+        rating:4,
+      },
+      {
+        comment: "Pretty decent, but the color was off from the picture.",
+        rating:4,
+      }
+    ]
+};
 const MPpage = () => {
     const navigation = useNavigate();
     const param = useParams();
@@ -29,8 +52,10 @@ const MPpage = () => {
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const[hasPurchased, setHasPurchased] = useState(false);
     const [selectedSizeColorImageArray, setSelectedSizeColorImageArray] = useState([]);
     const [selectedColorId, setSelectedColorId] = useState(null);
+    const[ratingData,setRatingData] = useState(null);
 
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
@@ -118,6 +143,19 @@ const MPpage = () => {
         setSelectedImage(color.images[0]);
         setSelectedColorId(color._id);
     };
+    const PostRating = (e)=>{
+        e.preventDefault();
+        console.log("Rating Data: ", ratingData);
+        if(ratingData && user && product){
+            dispatch(postRating({productId:product?._id, ratingData}))
+        }
+    }
+    const checkFetchedIsPurchased = async ()=>{
+        console.log("Checking: ",product);
+        const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
+        // console.log("response On Is Purchased: ", didPurchased.success);
+        setHasPurchased(didPurchased?.success || false);
+    }
 
     useEffect(() => {
         if (product) {
@@ -135,8 +173,12 @@ const MPpage = () => {
             setSelectedColorId(color._id);
             setSelectedImage(color.images[0]);
         }
-    }, [product, dispatch]);
+        if(product){
+            checkFetchedIsPurchased();
+        }
 
+    }, [product, dispatch]);
+    console.log("Product: ",product);
     return (
         <Fragment>
             {loading === false ? (
@@ -283,13 +325,6 @@ const MPpage = () => {
                             </div>
 
                         </div>
-                        {/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                            <h1 className='font1 flex items-center mt-2 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                            <h1 className='font1 flex items-center mt-1 font-semibold'>Best Price:&nbsp; <span className='text-slate-500'>&nbsp;&#8377;&nbsp; {Math.round(product?.salePrice || product?.price)}</span></h1>
-                            <li className='list-none text-slate-500 text-sm'>Applicable on: Orders above &#8377;&nbsp; 1599 (only on first purchase)</li>
-                            <li className='list-none text-slate-500 text-sm'>Coupon code: <span className='font-semibold'>ONU250</span></li>
-                            <li className='list-none text-slate-500 text-sm'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
-                        </div> */}
                         <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3'>
                             <div className="col-span-1 text-center text-xs text-slate-500 ">
                                 <img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
@@ -314,9 +349,85 @@ const MPpage = () => {
                             <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
                             <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                         </div>
+                        <div className='w-full px-4 md:px-2'>
+                            {/* Reviews Section */}
+                            <div className='reviews-section'>
+                                <h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
+                                <div className='reviews-list mt-4 overflow-y-auto h-72'>
+                                    {product &&product?.Rating &&product?.Rating.length > 0 && product?.Rating?.map((review, index) => {
+                                        const randomStars = review.rating; // Random stars between 1 and 5
+                                        return (
+                                            <div key={index} className='review-item mb-6'>
+                                                <div className='flex items-center justify-start'>
+                                                    {/* Display random star rating */}
+                                                    <div className='stars'>
+                                                        {[...Array(randomStars)].map((_, i) => (
+                                                            <span key={i} className='star text-black'>★</span>
+                                                        ))}
+                                                        {[...Array(5 - randomStars)].map((_, i) => (
+                                                            <span key={i} className='star text-gray-300'>★</span>
+                                                        ))}
+                                                    </div>
+                                                    <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
+                                                </div>
+                                                <p className='text-gray-700 mt-2'>{review?.comment}</p>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                {hasPurchased && <Fragment>
+                                    {/* Review Input Section */}
+                                    <div className='w-full flex flex-col justify-start items-center'>
+                                        <div className='mt-6 w-full max-w-3xl'>
+                                            <h4 className='text-xl md:text-lg font-semibold text-center md:text-left'>Write a Review</h4>
+
+                                            <form className='mt-4'>
+                                                {/* Review Text Input */}
+                                                <div className='mb-4'>
+                                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                                                    <textarea
+                                                        onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
+                                                        id='reviewText'
+                                                        name='reviewText'
+                                                        rows='4'
+                                                        placeholder='Write your review here...'
+                                                        className='mt-2 p-3 w-full border border-gray-300 rounded-md'
+                                                    />
+                                                </div>
+
+                                                {/* Star Rating Input */}
+                                                <div className='mb-4'>
+                                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                                                    <input
+                                                        onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
+                                                        id='starRating'
+                                                        name='starRating'
+                                                        type='number'
+                                                        min='1'
+                                                        max='5'
+                                                        className='mt-2 p-3 w-full border border-gray-300 rounded-md'
+                                                        placeholder='Rate from 1 to 5'
+                                                    />
+                                                </div>
+
+                                                {/* Submit Button */}
+                                                <div className='flex justify-start'>
+                                                    <button
+                                                        onClick={PostRating}
+                                                        className='bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors'
+                                                    >
+                                                        Submit Review
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </Fragment>}
+                            </div>
+                            </div>
 
                         <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                        <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
+                            <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
                             <ul className='grid grid-cols-2 gap-2'>
                                 {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
                             </ul>

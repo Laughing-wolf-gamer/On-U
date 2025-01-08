@@ -1,5 +1,6 @@
 import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
 import React, { useState } from 'react';
+import Footer from '../Footer/Footer';
 
 const FAQ = () => {
   // Example FAQ Data
@@ -47,7 +48,7 @@ const FAQ = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-12 px-6 lg:px-24">
+    <div className="bg-gray-50 py-12 px-6 lg:px-24 my-3">
       {/* Header Section */}
       <header className="text-center mb-12">
         <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
@@ -82,6 +83,7 @@ const FAQ = () => {
           ))}
         </div>
       </section>
+      <Footer/>
     </div>
   );
 };

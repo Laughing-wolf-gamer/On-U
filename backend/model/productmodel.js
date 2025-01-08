@@ -69,16 +69,21 @@ const productModelSchema = new mongoose.Schema({
     style_no:{
         type:String,default:'1'
     },
-    // image:[{type:String,default:[]}],
-    /* color:[
-        {type:Object,default:[]}
-    ], */
     subCategory:{
         type:String,
     },
-    // quantity:{type: Number, required: true},
     totalStock:{type: Number},
-    avgRating:Number,
+    Rating:[
+        {
+            userId:{
+                type: mongoose.Schema.Types.ObjectId,
+                ref: 'user'
+            },
+            rating:Number,
+            comment:String
+        }
+    ],
+    AppliedCoupon:{type:mongoose.Schema.Types.ObjectId,ref:'coupon'}
 
 },{timestamps:true})
 
