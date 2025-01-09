@@ -15,7 +15,59 @@ import Emptybag from './Emptybag';
 import { capitalizeFirstLetterOfEachWord } from '../../config';
 import { Circle, X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
+const handelGetAmountAfterApplyingCoupon = (coupon,bag,user)=>{
+    let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+    let totalMRP = 0;
+    bag.orderItems.forEach(item => {
+        // Check if salePrice is available, else fallback to regular price
+        const productSellingPrice = item.productId.salePrice || item.productId.price;
 
+        // Calculate total sale price (totalSP) - salePrice multiplied by quantity (if salePrice exists)
+        if (item.productId.salePrice && item.productId.price > 0) {
+            totalSP += item.productId.salePrice * item.quantity; // salePrice * quantity
+        } else {
+            totalSP += item.productId.price * item.quantity; // If no salePrice, use regular price
+        }
+
+        // Calculate the discount only if there is a sale price
+        let discount = 0;
+        if(item.productId.salePrice && item.productId.price > 0){
+            discount = item.productId.price - item.productId.salePrice; // Calculate discount percentage and multiply by quantity to account for multiple items
+            // console.log("Discount: ", discount);  // This is the discount percentage for each item
+        }
+        totalDiscount += discount * item.quantity; // Multiply by quantity to account for multiple items
+
+        // Add the regular price or sale price multiplied by quantity for MRP
+
+        totalProductSellingPrice += (productSellingPrice * item.quantity) + bag?.ConvenienceFees; // Regular price or salePrice * quantity
+        totalMRP += item.productId.price * item.quantity;
+        const setCouponDiscountAmount = ()=>{
+            if(coupon.CouponType === "Percentage"){
+                totalProductSellingPrice = totalProductSellingPrice - (totalProductSellingPrice * (coupon.Discount / 100));
+            }else{
+                totalProductSellingPrice = totalProductSellingPrice - coupon.Discount;
+            }
+        }
+        if(coupon.MinOrderAmount > 0){
+            if(coupon.MinOrderAmount > totalProductSellingPrice){
+                setCouponDiscountAmount();
+            }
+        }else{
+            totalProductSellingPrice -= bag?.ConvenienceFees;
+        }
+        /*
+            CouponCode: "ABCDH12"
+            CouponName: "Coupon1"
+            CouponType: "Percentage"
+            CustomerLogin: false
+            Discount: 10
+            FreeShipping: true
+            MinOrderAmount: 0
+            Status: "Inactive"
+            ValidDate: "2025-01-09T18:48:22.540Z"
+         */
+    });
+}
 const Bag = () => {
     const navigation = useNavigate()
     const dispatch = useDispatch();
@@ -29,6 +81,7 @@ const Bag = () => {
     const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
     const[totalSellingPrice,setTotalMRP] = useState(0)
     const [discountedAmount, setDiscountAmount] = useState(0);
+    const[couponDiscountData,setCouponDiscountData] = useState(null);
     // const [id, setId] = useState('');
     // const [initialized, setInitialized] = useState(false);
 
@@ -52,41 +105,74 @@ const Bag = () => {
 
     
 
+
     useEffect(() => {
         if (bag?.orderItems) {
             let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
             let totalMRP = 0;
-            bag.orderItems.forEach(item => {
-                // Check if salePrice is available, else fallback to regular price
-                const productSellingPrice = item.productId.salePrice || item.productId.price;
 
-                // Calculate total sale price (totalSP) - salePrice multiplied by quantity (if salePrice exists)
-                if (item.productId.salePrice && item.productId.price > 0) {
-                    totalSP += item.productId.salePrice * item.quantity; // salePrice * quantity
-                } else {
-                    totalSP += item.productId.price * item.quantity; // If no salePrice, use regular price
-                }
+            bag.orderItems.forEach(item => {
+                const { productId, quantity } = item;
+                const { salePrice, price } = productId;
+                
+                // Use salePrice if available, else fallback to regular price
+                const productSellingPrice = salePrice || price;
+
+                // Calculate the total sale price (totalSP) based on salePrice or regular price
+                const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+                totalSP += itemTotalPrice;
 
                 // Calculate the discount only if there is a sale price
-                let discount = 0;
-                if(item.productId.salePrice && item.productId.price > 0){
-                    discount = item.productId.price - item.productId.salePrice; // Calculate discount percentage and multiply by quantity to account for multiple items
-                    // console.log("Discount: ", discount);  // This is the discount percentage for each item
+                if (salePrice && price > 0) {
+                    const discount = price - salePrice;
+                    totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
                 }
-                totalDiscount += discount * item.quantity; // Multiply by quantity to account for multiple items
 
-                // Add the regular price or sale price multiplied by quantity for MRP
-                totalProductSellingPrice += productSellingPrice * item.quantity; // Regular price or salePrice * quantity
-                totalMRP += item.productId.price * item.quantity;;
+                // Total product selling price includes salePrice or regular price + convenience fees
+                totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+
+                // Calculate the total MRP (Maximum Retail Price) based on regular price
+                totalMRP += price * quantity;
             });
-            
-            // Log the results to check the calculations
-            setTotalProductSellingPrice(totalProductSellingPrice); // Set the MRP total value
-            setDiscountAmount(totalDiscount); // Set the total discount value
-            setTotalMRP(totalMRP);
+            console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
+            if (bag.Coupon) {
+                const coupon = bag.Coupon;
+                const { CouponType, Discount, MinOrderAmount } = coupon;
 
+                const applyCouponDiscount = () => {
+                    if (CouponType === "Percentage") {
+                        totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+                        setCouponDiscountData({})
+                    } else {
+                        totalProductSellingPrice -= Discount;
+                    }
+                };
+
+                // Apply coupon discount only if applicable
+                if (MinOrderAmount > 0) {
+                    if(totalProductSellingPrice >= MinOrderAmount){
+                        applyCouponDiscount();
+                    }
+                }else{
+                    applyCouponDiscount();
+                }
+                if (bag.Coupon.FreeShipping) {
+                    totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+                }
+            }
+
+            // Log the results to check the calculations
+            console.log("Total Product Selling Price: ", totalProductSellingPrice);
+            console.log("Total Discount: ", totalDiscount);
+            console.log("Total MRP: ", totalMRP);
+
+            // Update state
+            setTotalProductSellingPrice(totalProductSellingPrice);
+            setDiscountAmount(totalDiscount);
+            setTotalMRP(totalMRP);
         }
     }, [bag]);
+
 
     const updateQty = async (e, itemId) => {
         console.log("Item ID: ", itemId);
@@ -184,8 +270,8 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    // console.log("bag Data: ",bag);
-    console.log("Convenience Data: ",convenienceFees);
+    console.log("bag Data: ",bag?.Coupon);
+    
     return (
         <>
             {isAuthentication ? (
@@ -271,11 +357,11 @@ const Bag = () => {
                                     </div>
                                     <div className="flex justify-between mb-2">
                                         <span>Coupon</span>
-                                        <span>Apply Coupon</span>
+                                        <span>{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
                                     </div>
                                     <div className="flex justify-between mb-4">
                                         <span>Convenience Fee</span>
-                                        <span className="line-through">₹{convenienceFees}</span>
+                                        <span className={`${bag.Coupon && bag.Coupon.FreeShipping ? "line-through":""}`}>₹{convenienceFees}</span>
                                     </div>
                                     <div className="flex justify-between font-semibold text-xl">
                                         <span>Total</span>

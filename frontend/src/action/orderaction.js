@@ -86,6 +86,24 @@ export const createbag = (option) => async (dispatch) => {
 
     }
 }
+export const applyCouponToBag = ({bagId,couponCode}) => async()=>{
+    try {
+        console.log("applyCoupon: ", bagId, couponCode);
+        const res = await axios.put(`${BASE_API_URL}/api/shop/bag/applyCoupon/${bagId}`,{couponCode},headerConfig())
+        console.log("applyCoupon: ", res.data);
+    } catch (error) {
+        console.error("Error applying coupon: ",error);
+    }
+}
+export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
+    try {
+        console.log("remove Coupon: ", bagId, couponCode);
+        const res = await axios.patch(`${BASE_API_URL}/api/shop/bag/applyCoupon/${bagId}`,{couponCode},headerConfig())
+        console.log("Remove Coupon: ", res.data);
+    } catch (error) {
+        console.error("Error applying coupon: ",error);
+    }
+}
 
 export const getbag = ({userId}) => async (dispatch) => {
 

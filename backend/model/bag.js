@@ -6,6 +6,11 @@ const BagSchema = new mongoose.Schema({
         ref:"user",
         required:true
     },
+    Coupon:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"coupon",
+    },
+    ConvenienceFees:Number,
     orderItems: [{
         productId:{
             type:mongoose.Schema.Types.ObjectId,
@@ -16,6 +21,7 @@ const BagSchema = new mongoose.Schema({
         size:Object,
         quantity:Number,
     }],
+    TotalBagAmount:Number
 })
 
 const Bag = mongoose.model('Bag', BagSchema)

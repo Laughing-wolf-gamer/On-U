@@ -278,6 +278,7 @@ import { generateArrayOfRandomItems } from '../../config'
 import ProductPreviewFull from './ProductPreviewFull'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 import DraggableImageSlider from './DraggableImageSlider'
+import FullScreenOverlayDialog from './FullScreenOverLaydialogue'
 
 
 const Home = () => {
@@ -681,6 +682,9 @@ const Home = () => {
 
             <Footer/>
           </Fragment>
+      }
+      {
+        product && <FullScreenOverlayDialog products = {product}/>
       }
 
     </Fragment>

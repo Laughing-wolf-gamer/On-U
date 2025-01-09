@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { create_order, createPaymentOrder, fetchAllOrders } from "../../action/orderaction";
+import { applyCouponToBag, create_order, createPaymentOrder, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
 import { useAlert } from "react-alert";
 import { BASE_CLIENT_URL, DevMode } from "../../config";
 import { cashfree } from "../../utils/pgUtils";
@@ -13,19 +13,24 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
     const[isPaymentStart,setIsPaymentStart] = useState(false);
     const alert = useAlert();
     const originalPrice = 1000;
-    let couponDiscount = 0;
 
     // Apply coupon discount
-    const applyCoupon = (e) => {
-        // e.stopPropagation();
+    const applyCoupon = async (e) => {
         e.preventDefault();
-        if (coupon === "DISCOUNT10") {
-            couponDiscount = 100;
-        } else {
-            couponDiscount = 0;
+        if(bag && coupon){
+            await dispatch(applyCouponToBag({bagId:bag._id,couponCode:coupon}))
+            closePopup();
+        }else{
+            alert.info("Please select a coupon and apply it before proceeding with payment");
         }
-        setDiscount(couponDiscount);
     };
+    const removeCoupon = async(e,code)=>{
+        e.preventDefault();
+        if(bag){
+            await dispatch(removeCouponFromBag({bagId:bag._id,couponCode:code}))
+            closePopup();
+        }
+    }
 
     // Handle payment selection
     const HandleSetPayment = (e, paymentMode) => {
@@ -132,7 +137,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
         dispatch(fetchAllOrders());
     }, [dispatch]);
 
-    console.log("paymentMethod: ", paymentMethod);
+    console.log("Bag Coupon: ", bag.Coupon);
 
     return (
         <div>
@@ -165,22 +170,47 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                     </div>
 
                     {/* Coupon Section */}
-                    {/* <div className="mt-6">
-                        <label className="block text-sm font-semibold">Have a coupon?</label>
-                        <input
-                            type="text"
-                            value={coupon}
-                            onChange={(e) => setCoupon(e.target.value)}
-                            className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                            placeholder="Enter Coupon Code"
-                        />
-                        <button
-                            onClick={applyCoupon}
-                            className="w-full bg-blue-500 text-white p-3 rounded-md mt-3 hover:bg-blue-600"
-                        >
-                            Apply Coupon
-                        </button>
-                    </div> */}
+                    {bag && bag.Coupon ? (
+                        <Fragment>
+                        <div className="mt-6">
+                          {bag && bag?.Coupon ? (
+                            <div className="flex items-center justify-between p-4 bg-green-100 border border-green-300 rounded-lg">
+                              <div>
+                                <label className="block text-sm font-semibold">Applied Coupon!</label>
+                                <span className="text-gray-600">Coupon Code: {bag?.Coupon?.CouponCode}</span>
+                              </div>
+                              <button
+                                className="text-red-500 font-semibold hover:text-red-700"
+                                onClick={(e)=> removeCoupon(e,bag?.Coupon?.CouponCode)}
+                              >
+                                X
+                              </button>
+                            </div>
+                          ) : (
+                            <span className="text-gray-600">No coupon applied</span>
+                          )}
+                        </div>
+                      </Fragment>
+                    ):(
+                        <>
+                            <div className="mt-6">
+                                <label className="block text-sm font-semibold">Have a coupon?</label>
+                                <input
+                                    type="text"
+                                    value={coupon}
+                                    onChange={(e) => setCoupon(e.target.value)}
+                                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                                    placeholder="Enter Coupon Code"
+                                />
+                                <button
+                                    onClick={applyCoupon}
+                                    className="w-full bg-gray-600 text-white p-3 rounded-md mt-3 hover:bg-gray-800"
+                                >
+                                    Apply Coupon
+                                </button>
+                            </div>
+                        </>
+                    )}
 
                     {/* Total Amount Calculation */}
                     <div className="mt-6 space-y-4">

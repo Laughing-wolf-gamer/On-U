@@ -39,13 +39,31 @@ import axios from 'axios'
 export const loginmobile = ({phonenumber}) => async (dispatch) => {
     try {
         console.log("logIn Data: ", phonenumber)
-        dispatch({ type: LOGIN_USER_DATA })
+        // dispatch({ type: LOGIN_USER_DATA })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {phonenumber})
+        console.log("Login Data: ", data)
+        return data.result;
+        // const token = data?.result?.token
+        // sessionStorage.setItem('token', token)
+        // dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
+    } catch (error) {
+        // dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
+        return null;
+    }
+}
+export const loginVerify = (verifyData)=> async(dispatch)=>{
+    try {
+        console.log("verify OTP Data: ", verifyData)
+        dispatch({ type: LOGIN_USER_DATA })
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile/verify`, verifyData)
+        console.log("Verify OTP Data: ", data)
         const token = data?.result?.token
         sessionStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
+        return data.result;
     } catch (error) {
         dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
+        return null;
     }
 }
 export const registerUser = (userData) => async (dispatch) => {

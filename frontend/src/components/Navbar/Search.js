@@ -24,7 +24,7 @@ const Search = () => {
                 <input
                     type="text"
                     placeholder="Search for products, brands and more"
-                    className="rounded-3xl w-full h-full pl-4 text-white placeholder-white outline-none border-2 border-solid border-gray-400 focus:border-blue-500"
+                    className="rounded-3xl w-full h-full pl-4 text-white placeholder-white outline-none border-2 border-solid border-gray-300 focus:border-blue-500"
                     style={{ backgroundColor: "#BCCCDC" }}
                     onChange={(e) => setstate(e.target.value)}
                 />

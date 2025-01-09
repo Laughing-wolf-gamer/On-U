@@ -42,14 +42,42 @@ export const registermobile = A(async (req, res, next) => {
 
 })
 export const loginMobileNumber = A(async(req, res, next) => {
-  const { phonenumber } = req.body;
-  console.log("Login Details: ",checkLoginType(phonenumber));
-  const user = await User.findOne({phoneNumber:phonenumber});
+  const { phonenumber,email } = req.body;
+  let user = await User.findOne({phoneNumber:phonenumber});
+  if(!user){
+    user = await User.findOne({email:email});
+  }
+  console.log("Login Details: ",user);
   if(!user){
     return next( new Errorhandler('Mobile Number not found', 404))
   }
+  const otp = Math.floor((1 + Math.random()) * 90000)
+  sendVerificationEmail(user.email, otp)
+  user.otp = otp;
+  await user.save();
+  // const token = sendtoken(user);
+  // return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
+  return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:phonenumber}})
+})
+export const loginOtpCheck = A(async(req,res,next)=>{
+  const{otp,phoneNumber} = req.body;
+  const user = await User.findOne({phoneNumber:phoneNumber});
+  if(!user){
+    return next( new Errorhandler('Mobile Number not found', 404))
+  }
+  if(!user.otp){
+    return next( new Errorhandler('OTP not found', 404))
+  }
+  console.log("otp Verify Data: ",req.body)
+  console.log("otp Verify: ",user.otp);
+  if(user.otp.toString() !== otp){
+    return res.status(200).json({success:false, message:"OTP Do not Equal"});
+  }
+  user.otp = null
+  await user.save();
   const token = sendtoken(user);
   return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
+
 })
 function checkLoginType(input) {
   // Regex for validating phone number (simplified version)

@@ -5,6 +5,8 @@ import Errorhandler from '../utilis/errorhandel.js'
 import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
 import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
+import Coupon from '../model/Coupon.model.js'
+import WebSiteModel from '../model/websiteData.model.js'
 
 export const createPaymentOrder = async (req, res, next) => {
   try {
@@ -275,6 +277,82 @@ export const getwishlist = A(async (req, res, next) => {
   
 })
 
+export const applyCouponToBag = async(req,res)=>{
+  try {
+    const{id} = req.user;
+    const{bagId} = req.params;
+    const{couponCode} = req.body;
+    
+    const coupon = await Coupon.findOne({CouponCode: couponCode});
+    console.log("Coupon Code: ",coupon)
+    if(!coupon){
+      return res.status(404).json({message: "Coupon Not Found"})
+    }
+    if (coupon.ValidDate < Date.now()) {
+      return res.status(400).json({ message: "Coupon is expired" });
+    }
+    const bag = await  Bag.findById(bagId);
+    console.error("Coupon bag",bag);
+    if(!bag){
+      return res.status(404).json({message: "Bag Not Found"})
+    }
+    if(bag.Coupon){
+      return res.status(400).json({message: "Bag already has a coupon"})
+    }
+    if(bag.userId.toString() !== id){
+      return res.status(400).json({message: "Coupon cannot be applied to this bag"})
+    }
+    bag.Coupon = coupon._id;
+    coupon.Status = "Inactive";
+    
+    await Promise.all([
+      coupon.save(),
+      bag.save()
+    ])
+    res.status(200).json({success:true,message: "Coupon Applied Successfully"})
+  } catch (error) {
+    console.error("Failed to apply coupon: ",error);
+    res.status(500).json({success:false,message:"Internal server error"});
+  }
+
+}
+export const removeCouponToBag = async(req,res)=>{
+  try {
+    const{id} = req.user;
+    const{bagId} = req.params;
+    const{couponCode} = req.body;
+    const bag = await Bag.findById(bagId).populate("Coupon");
+    console.error("Coupon bag",bag);
+    if(!bag){
+      return res.status(404).json({message: "Bag Not Found"})
+    }
+    
+    const coupon = await Coupon.findOne({CouponCode: couponCode});
+    console.log("Coupon Code: ",coupon)
+    if(!coupon){
+      return res.status(404).json({message: "Coupon Not Found"})
+    }
+    if(!bag.Coupon){
+      return res.status(400).json({message: "No Coupon Found"})
+    }
+    if(bag.userId.toString() !== id){
+      return res.status(400).json({message: "Coupon cannot be applied to this bag"})
+    }
+    bag.Coupon = null;
+    coupon.Status = "Active";
+    
+    await Promise.all([
+      coupon.save(),
+      bag.save()
+    ])
+    res.status(200).json({success:true,message: "Coupon Removed Successfully"})
+  } catch (error) {
+    console.error("Failed to apply coupon: ",error);
+    res.status(500).json({success:false,message:"Internal server error"});
+  }
+
+}
+
 export const addItemsToBag = A(async (req, res) => {
     try {
       console.log("Bag Body",req.body)
@@ -284,8 +362,8 @@ export const addItemsToBag = A(async (req, res) => {
       }
       const FindUserBag = await Bag.findOne({userId});
       if(!FindUserBag){
-        const bag = new Bag({userId,orderItems:[{productId,quantity,color,size}]})
-        
+        const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
+        const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
         await bag.save()
       }else{
         const userBag = await Bag.findOne({userId})
@@ -295,6 +373,8 @@ export const addItemsToBag = A(async (req, res) => {
         }else{
           userBag.orderItems.push({productId,quantity,color,size})
         }
+        const TotalBagAmount = calculateTotalAmount(bag.orderItems);
+        userBag.TotalBagAmount = TotalBagAmount;
         await userBag.save()
       }
       const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
@@ -306,13 +386,20 @@ export const addItemsToBag = A(async (req, res) => {
     }
  
  })
+ function calculateTotalAmount(products) {
+  return products.reduce((total, product) => {
+    // Choose the salePrice if it exists, otherwise use the regular price
+    const priceToUse = product.productId.salePrice || product.productId.price;
+    return total + (product.quantity * priceToUse);
+  }, 0);
+}
 
  export const getbag = async (req, res) => {
   try {
     const { userId } = req.params;
 
     // Fetch the bag with populated orderItems.productId in one query
-    const bag = await Bag.findOne({ userId }).populate('orderItems.productId').exec();
+    const bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon').exec();
 
     if (!bag) {
       return res.status(404).json({ message: "Bag not found" });
@@ -386,13 +473,13 @@ export const updateqtybag = async (req, res, next) => {
     }
 
     // Find the user's shopping bag
-    const bag = await Bag.findOne({ userId: req.user.id });
+    const bag = await Bag.findOne({ userId: req.user.id }).populate('orderItems.productId');;
     if (!bag) {
       return res.status(400).json({ message: "Bag Not Found" });
     }
 
     // Find the specific product in the user's bag
-    const product = bag.orderItems.find(p => p.productId.toString() === id);
+    const product = bag.orderItems.find(p => p.productId._id.toString() === id);
     if (!product) {
       return res.status(400).json({ message: "Product not found in bag" });
     }
@@ -404,18 +491,19 @@ export const updateqtybag = async (req, res, next) => {
     }
 
     // Log the original and updated product details for debugging
-    console.log("Original Product:", product);
-    console.log("Original Product Size:", originalProductDataSize);
+    // console.log("Original Product:", product);
+    // console.log("Original Product Size:", originalProductDataSize);
 
     // If the size quantity in the bag doesn't match the original product size, update it
     if (product.size.quantity !== originalProductDataSize.quantity) {
-      console.log("Updating size quantity");
+      // console.log("Updating size quantity");
       product.size.quantity = originalProductDataSize.quantity; // Sync with original product size quantity
     }
-
     // Update the quantity in the bag
     product.quantity = qty;
-
+    const TotalBagAmount = calculateTotalAmount(bag.orderItems);
+    bag.TotalBagAmount = TotalBagAmount;
+    console.log("Updated Bag:", bag);
     // Save the updated bag
     await bag.save();
 
