@@ -47,7 +47,13 @@ export const paymentVerification = async (req, res) => {
             const bagData = await Bag.findById(bagId).populate('orderItems.productId');
             if(bagData){
                 console.log("Bag Data: ",bagData);
+                const generateRandomId = () => {
+                    return Math.floor(10000000 + Math.random() * 90000000); // Generates a random 8-digit number
+                };
+                
+                const randomOrderShipRocketId = generateRandomId();
                 const orderData = new OrderModel({
+                    ShipRocketOrderId:randomOrderShipRocketId,
                     userId: req?.user?.id,
                     orderItems:orderDetails,
                     SelectedAddress: selectedAddress,

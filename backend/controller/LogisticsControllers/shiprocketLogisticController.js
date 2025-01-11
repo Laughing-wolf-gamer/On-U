@@ -92,7 +92,7 @@ export const logoutAuthToken = async ()=>{
     "order_type": "adhoc" // Make sure this is the correct order type, e.g., "adhoc"
 }; */
 
-export const generateOrderForShipment = async(shipmentData) =>{
+export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
     if(!token) await getAuthToken();
     try {
         const userData = await User.findById(shipmentData.userId);
@@ -112,11 +112,7 @@ export const generateOrderForShipment = async(shipmentData) =>{
                 hsn: '1234'
             }
         })
-        const generateRandomId = () => {
-            return Math.floor(10000000 + Math.random() * 90000000); // Generates a random 8-digit number
-        };
         
-        const randomId = generateRandomId();
         function formatDate(date) {
             const year = date.getFullYear();
             const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
@@ -127,7 +123,7 @@ export const generateOrderForShipment = async(shipmentData) =>{
             return `${year}-${month}-${day} ${hours}:${minutes}`;
         }
         const orderDetails = {
-            order_id: randomId, // Unique order ID, ensure this is generated dynamically
+            order_id: randomOrderId, // Unique order ID, ensure this is generated dynamically
             order_date: formatDate(new Date()), // The date when the order is placed (in YYYY-MM-DD HH:mm format)
             pickup_location: "warehouse", // The city from where the order is to be picked up
             billing_customer_name: userData.name, // Customer's name
@@ -166,5 +162,30 @@ export const generateOrderForShipment = async(shipmentData) =>{
         // console.dir('Error creating order:', error);
         console.dir(error, { depth: null});
         return null;
+    }
+}
+export const getAllShipRocketOrder = async()=>{
+    if(!token) await getAuthToken();
+    try {
+        const response = await axios.get(`${SHIPROCKET_API_URL}/orders`,
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+        // console.dir(response.data,{depth:null});
+        return response.data.data;
+    } catch (error) {
+        console.dir(error, { depth: null});
+        return [];
+    }
+}
+
+export const getShipmentOrderByOrderId = async(orderId)=>{
+    try {
+        
+    } catch (error) {
+        console.dir(error, { depth: null});
     }
 }

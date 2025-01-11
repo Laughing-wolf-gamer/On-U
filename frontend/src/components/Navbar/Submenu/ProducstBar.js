@@ -50,7 +50,7 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
             item && (
 				<animated.div style={styles}>
 					<div
-						className={`container absolute left-28 w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-white`}
+						className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-gray-50`}
 						onMouseEnter={() => parentCallback('block', true)}
 						onMouseLeave={() => parentCallback('hidden', false)}
 					>

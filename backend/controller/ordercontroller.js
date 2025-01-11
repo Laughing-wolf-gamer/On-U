@@ -108,8 +108,13 @@ export const createorder = async (req, res, next) => {
     if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
       return res.status(400).json({ success: false, message: "Please Provide All the Data" });
     }
-
+    const generateRandomId = () => {
+      return Math.floor(10000000 + Math.random() * 90000000); // Generates a random 8-digit number
+    };
+  
+    const randomOrderShipRocketId = generateRandomId();
     const orderData = new OrderModel({
+      ShipRocketOrderId:randomOrderShipRocketId,
       userId: req.user.id,
       orderItems,
       SelectedAddress: Address,
@@ -119,7 +124,7 @@ export const createorder = async (req, res, next) => {
     });
 
     await orderData.save();
-    const createdShipRocketOrder = await generateOrderForShipment(orderData)
+    const createdShipRocketOrder = await generateOrderForShipment(orderData,randomOrderShipRocketId)
     if(!createdShipRocketOrder){
       return res.status(500).json({ success: false, message: "Failed to create ShipRocket Order" });
     }

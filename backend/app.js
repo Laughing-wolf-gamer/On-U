@@ -13,8 +13,7 @@ import errorMiddleware from './Middelwares/error.js';
 import path from "path";
 import dotenv from 'dotenv';
 import { fileURLToPath } from "url";
-import { getAuthToken } from './controller/LogisticsControllers/shiprocketLogisticController.js';
-
+import shipRocketHookRoute from './routes/logisticRoutes.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
@@ -55,6 +54,7 @@ app.use('/api/shop', Product)
 app.use('/api/shop', Order)
 app.use('/api/payment', paymentRoutes)
 app.use('/api/payment/razerypay',razorPayRoute)
+app.use('/api/logistic/hook',shipRocketHookRoute)
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 

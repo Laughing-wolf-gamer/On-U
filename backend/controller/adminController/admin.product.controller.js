@@ -3,6 +3,7 @@ import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
+import { getAllShipRocketOrder } from "../LogisticsControllers/shiprocketLogisticController.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -438,8 +439,11 @@ export const updateOrderStatus = async(req,res)=>{
 
 export const getallOrders = async(req,res)=>{
     try {
+
         const allOrders = await OrderModel.find({});
-        console.log("Order: ",allOrders);
+        // console.log("Order: ",allOrders);
+        // const shipRocketOrdersAll = await getAllShipRocketOrder();
+        // console.log("Shiprocket orders: ",shipRocketOrdersAll)
         res.status(200).json({Success:true,message:"All Orders",result:allOrders || []});
     } catch (error) {
         console.error("Error Getting All Orders ",error);

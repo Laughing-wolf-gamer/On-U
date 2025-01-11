@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 
 const ordersSchema = new mongoose.Schema({
+    ShipRocketOrderId:{type:String,required:true},
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user",
