@@ -17,6 +17,7 @@ const About = () => {
 		}
 	}
 	useEffect(() => {
+		window.scrollTo(0,0)
 		fetchPageAboutData();
 	}, []);
 	console.log("About Data: ",aboutData);

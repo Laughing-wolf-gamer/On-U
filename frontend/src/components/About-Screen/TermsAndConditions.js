@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from '../Footer/Footer';
 
 const TermsAndConditions = () => {
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
   return (
-    <div className="container mx-auto p-6">
-      <div className="bg-white shadow-lg rounded-lg p-8 space-y-8 max-w-5xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-semibold text-center text-gray-800 mb-6">Terms and Conditions</h1>
-        
+    <div className="p-6 w-screen">
+      <div className="bg-white relative h-32 flex flex-col justify-center items-center rounded-md">
+        <img
+          src="https://indiater.com/wp-content/uploads/2019/10/free-modern-fashion-cover-banner-design-psd-template.jpg"
+          alt="banner"
+          className="w-full h-full object-cover rounded-lg"
+        />
+        <div className="bg-black absolute inset-0 opacity-50 flex justify-center items-center">
+          <h1 className="text-3xl md:text-2xl font-semibold text-center text-white mb-6">
+            Terms & Conditions
+          </h1>
+        </div>
+      </div>
+      <div className="bg-white rounded-lg p-8 space-y-8 w-screen mr-4">
         <p className="text-lg text-gray-700 mb-4 text-center">
           <strong>Effective Date:</strong> [Insert Date]
         </p>

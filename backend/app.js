@@ -8,10 +8,12 @@ import User from './routes/userroutes.js';
 import Product from './routes/productroute.js';
 import Order from './routes/orderroutes.js';
 import paymentRoutes from './routes/payment.route.js'
+import razorPayRoute from './routes/razerPayPayment.route.js'
 import errorMiddleware from './Middelwares/error.js';
 import path from "path";
 import dotenv from 'dotenv';
 import { fileURLToPath } from "url";
+import { getAuthToken } from './controller/LogisticsControllers/shiprocketLogisticController.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -52,6 +54,7 @@ app.use('/api/auth', User)
 app.use('/api/shop', Product)
 app.use('/api/shop', Order)
 app.use('/api/payment', paymentRoutes)
+app.use('/api/payment/razerypay',razorPayRoute)
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
 
@@ -59,6 +62,9 @@ app.use(express.static(path.join(__dirname, "../frontend/build")));
 app.get("*", (req, res) => {
   res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
 });
+
+
+
 
 app.use(errorMiddleware)
 export default app

@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { updateuser } from '../../../action/useraction';
-import { useDispatch } from 'react-redux';
-
-const UserDetails = ({ user }) => {
-  const dispatch = useDispatch();
+import React, { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
+import { updateuser } from "../../../action/useraction";
+/* const dispatch = useDispatch();
   const [isEditing, setIsEditing] = useState(false);
   const [editedUser, setEditedUser] = useState(null);
 
@@ -17,7 +15,6 @@ const UserDetails = ({ user }) => {
 
   const handleSave = async () => {
     setIsEditing(false);
-    console.log('Edited user:', editedUser);
     dispatch(updateuser(editedUser));
   };
 
@@ -28,126 +25,173 @@ const UserDetails = ({ user }) => {
 
   useEffect(() => {
     setEditedUser(user);
+  }, [user]); */
+const UserDetails = ({user}) => {
+  const dispatch = useDispatch();
+  // Initial profile data
+  /* const [profile, setProfile] = useState({
+    name: "John Doe",
+    email: "john.doe@example.com",
+    phoneNumber: "+1234567890",
+    gender: "Male",
+  }); */
+  const [editedUser, setEditedUser] = useState(null);
+
+  // State for editing
+  const [isEditing, setIsEditing] = useState(null); // Store which field is being edited
+  const [tempValue, setTempValue] = useState("");
+
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedUser((prevState) => ({
+      ...prevState,
+      [name]: value,
+    }));
+  };
+
+  // Handle save changes
+  const handleSave = (e) => {
+    setIsEditing(false);
+    dispatch(updateuser(editedUser));
+  };
+
+  // Handle cancel edit
+  const handleCancel = () => {
+    setIsEditing(false);
+    setEditedUser(user); // Revert to original user data
+  };
+  useEffect(() => {
+    setEditedUser(user);
   }, [user]);
+  console.log("User has been updated: ",user);
 
   return (
-    <div className="max-w-3xl mx-auto p-8 bg-gray-900 text-white shadow-xl rounded-lg mt-8 space-y-6 sm:px-6 md:px-8">
-      <h2 className="font-semibold text-3xl mb-6 text-center text-gray-100">User Details</h2>
-
-      <div className="space-y-5">
-        {/* Full Name */}
-        <div>
-          <label className="block text-lg text-gray-300">Full Name:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="name"
-              value={editedUser?.name || ''}
-              onChange={handleEditChange}
-              className="mt-2 p-4 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 bg-gray-800 text-white placeholder-gray-500"
-              placeholder="Enter your full name"
-            />
-          ) : (
-            <p className="mt-2 text-gray-400">{editedUser?.name || 'Not Available'}</p>
-          )}
-        </div>
-
-        {/* Mobile Number */}
-        <div>
-          <label className="block text-lg text-gray-300">Mobile Number:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="phonenumber"
-              value={editedUser?.phonenumber || ''}
-              onChange={handleEditChange}
-              className="mt-2 p-4 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 bg-gray-800 text-white placeholder-gray-500"
-              placeholder="Enter your mobile number"
-            />
-          ) : (
-            <p className="mt-2 text-gray-400">{editedUser?.phoneNumber || 'Not Available'}</p>
-          )}
-        </div>
-
-        {/* Email */}
-        <div>
-          <label className="block text-lg text-gray-300">Email ID:</label>
-          {isEditing ? (
-            <input
-              type="email"
-              name="email"
-              value={editedUser?.email || ''}
-              onChange={handleEditChange}
-              className="mt-2 p-4 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 bg-gray-800 text-white placeholder-gray-500"
-              placeholder="Enter your email"
-            />
-          ) : (
-            <p className="mt-2 text-gray-400">{editedUser?.email || 'Not Available'}</p>
-          )}
-        </div>
-
-        {/* Gender */}
-        <div>
-          <label className="block text-lg text-gray-300">Gender:</label>
-          {isEditing ? (
-            <input
-              type="text"
-              name="gender"
-              value={editedUser?.gender || ''}
-              onChange={handleEditChange}
-              className="mt-2 p-4 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 bg-gray-800 text-white placeholder-gray-500"
-              placeholder="Enter your gender"
-            />
-          ) : (
-            <p className="mt-2 text-gray-400">{editedUser?.gender || 'Not Set'}</p>
-          )}
-        </div>
-
-        {/* Date of Birth */}
-        <div>
-          <label className="block text-lg text-gray-300">Date of Birth:</label>
-          {isEditing ? (
-            <input
-              type="date"
-              name="dob"
-              value={editedUser?.DOB || ''}
-              onChange={handleEditChange}
-              className="mt-2 p-4 border border-gray-600 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300 bg-gray-800 text-white placeholder-gray-500"
-            />
-          ) : (
-            <p className="mt-2 text-gray-400">{editedUser?.DOB || 'Not Set'}</p>
-          )}
-        </div>
-
-        {/* Action Buttons */}
-        <div className="flex space-x-6 mt-6 justify-center">
-          {isEditing ? (
-            <>
-              <button
-                onClick={handleSave}
-                className="px-8 py-3 bg-black text-white rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200 transform hover:scale-105"
-              >
-                Save
-              </button>
-              <button
-                onClick={handleCancel}
-                className="px-8 py-3 bg-gray-700 text-white rounded-lg shadow-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200 transform hover:scale-105"
-              >
-                Cancel
-              </button>
-            </>
-          ) : (
-            <button
-              onClick={() => setIsEditing(true)}
-              className="px-8 py-3 bg-gray-600 text-white rounded-lg shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-400 transition duration-200 transform hover:scale-105"
-            >
-              Edit
-            </button>
-          )}
-        </div>
+    <div className="w-full h-full mx-auto bg-white p-8">
+      <h2 className="text-3xl font-bold mb-6">Your Profile</h2>
+      
+      {/* Name */}
+      <div className="flex justify-between items-center mb-6">
+        <label className="font-semibold text-lg">Name:</label>
+        {isEditing === "name" ? (
+          <input
+            type="text"
+            className="border px-3 py-2 rounded"
+            value={tempValue}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <span className="text-lg">{editedUser?.name}</span>
+        )}
+        <button
+          className="text-blue-500 ml-2"
+          onClick={() => {
+            setIsEditing("name");
+            setTempValue(editedUser?.name);
+          }}
+        >
+          Edit
+        </button>
       </div>
+
+      {/* Email */}
+      <div className="flex justify-between items-center mb-6">
+        <label className="font-semibold text-lg">Email:</label>
+        {isEditing === "email" ? (
+          <input
+            type="email"
+            className="border px-3 py-2 rounded"
+            value={tempValue}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <span className="text-lg">{editedUser?.email}</span>
+        )}
+        <button
+          className="text-blue-500 ml-2"
+          onClick={() => {
+            setIsEditing("email");
+            setTempValue(editedUser?.email);
+          }}
+        >
+          Edit
+        </button>
+      </div>
+
+      {/* Phone */}
+      <div className="flex justify-between items-center mb-6">
+        <label className="font-semibold text-lg">Phone:</label>
+        {isEditing === "phone" ? (
+          <input
+            type="text"
+            className="border px-3 py-2 rounded"
+            value={tempValue}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <span className="text-lg">{editedUser?.phoneNumber}</span>
+        )}
+        <button
+          className="text-blue-500 ml-2"
+          onClick={() => {
+            setIsEditing("phone");
+            setTempValue(editedUser?.phoneNumber);
+          }}
+        >
+          Edit
+        </button>
+      </div>
+
+      {/* Gender */}
+      <div className="flex justify-between items-center mb-6">
+        <label className="font-semibold text-lg">Gender:</label>
+        {isEditing === "gender" ? (
+          <input
+            type="text"
+            className="border px-3 py-2 rounded"
+            value={tempValue}
+            onChange={handleInputChange}
+          />
+        ) : (
+          <span className="text-lg">{editedUser?.gender}</span>
+        )}
+        <button
+          className="text-blue-500 ml-2"
+          onClick={() => {
+            setIsEditing("gender");
+            setTempValue(editedUser?.gender);
+          }}
+        >
+          Edit
+        </button>
+      </div>
+
+      {/* Edit buttons */}
+      {isEditing && (
+        <div className="mt-6 flex justify-end space-x-6">
+          <button
+            className="bg-green-500 text-white px-6 py-3 rounded"
+            onClick={handleSave}
+          >
+            Save
+          </button>
+          <button
+            className="bg-red-500 text-white px-6 py-3 rounded"
+            onClick={handleCancel}
+          >
+            Cancel
+          </button>
+        </div>
+      )}
     </div>
   );
 };
 
 export default UserDetails;
+
+
+
+/* 
+
+
+*/

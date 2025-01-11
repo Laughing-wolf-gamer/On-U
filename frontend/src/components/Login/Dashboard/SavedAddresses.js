@@ -42,26 +42,26 @@ const SavedAddresses = () => {
 
   const renderAddress = (i, address) => {
     return (
-      <div key={i} className="mb-4 relative p-6 border transition-color border-gray-700 rounded-lg shadow-md bg-gray-800 hover:shadow-xl duration-300">
+      <div key={i} className="mb-4 relative p-6 border transition-color border-gray-300 rounded-lg shadow-sm bg-gray-200 hover:bg-gray-300 duration-300">
         {/* Centered "X" button */}
         <button
-          className="absolute top-2 right-2 flex justify-center items-center bg-red-700 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-800 transition-colors duration-300"
+          className="absolute top-2 right-2 flex justify-center items-center bg-red-500 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-600 transition-colors duration-300"
           onClick={(e) => removeAddressByIndex(i)}
         >
           <X size={14} />
         </button>
 
-        <h2 className="text-xl font-semibold text-white mb-3">Address {i + 1}</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-3">Address {i + 1}</h2>
         <div className="space-y-3">
           {Object.entries(address).map(([key, value], idx) => (
-            <div key={key} className="flex flex-col space-y-4 text-sm text-gray-400">
+            <div key={key} className="flex flex-col space-y-4 text-sm text-gray-700">
               <div className='justify-between items-center flex'>
-                <span className="font-medium text-sm text-gray-500 capitalize">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                <span className="text-gray-300">{value}</span>
+                <span className="font-medium text-sm text-gray-600 capitalize">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                <span className="text-gray-800">{value}</span>
               </div>
               {/* Horizontal line */}
               {idx < Object.entries(address).length - 1 && (
-                <div className="border-b border-gray-600 my-2 w-full"></div>
+                <div className="border-b border-gray-300 my-2 w-full"></div>
               )}
             </div>
           ))}
@@ -71,21 +71,21 @@ const SavedAddresses = () => {
   };
 
   return (
-    <div className="p-6 bg-gray-900 min-h-screen">
+    <div className="p-6 bg-gray-100 min-h-screen">
       <LoadingOverlay isLoading={addressStateLoading} />
-      <h2 className="font-semibold text-lg text-white mb-4">Saved Addresses</h2>
+      <h2 className="font-semibold text-lg text-gray-900 mb-4">Saved Addresses</h2>
 
       {/* Display saved addresses */}
       {allAddresses && allAddresses.length > 0 ? (
         allAddresses.map((address, index) => renderAddress(index, address))
       ) : (
-        <p className="text-gray-400">No addresses saved.</p>
+        <p className="text-gray-600">No addresses saved.</p>
       )}
 
       {/* Button to open the "Add Address" popup */}
       <button
         onClick={handleOpenPopup}
-        className="mt-6 py-2 px-6 bg-blue-800 text-white rounded-lg hover:bg-blue-900 transition duration-300"
+        className="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
       >
         Add Address
       </button>

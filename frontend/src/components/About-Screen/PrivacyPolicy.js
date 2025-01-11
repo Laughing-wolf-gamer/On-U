@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import Footer from '../Footer/Footer';
 
 const PrivacyPolicy = () => {
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
   return (
     <div className="flex flex-col p-6 mb-3 px-4">
       <div className="bg-white shadow-md rounded-lg p-8">

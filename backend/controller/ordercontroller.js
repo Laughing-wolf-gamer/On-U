@@ -7,6 +7,8 @@ import ProductModel from '../model/productmodel.js'
 import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
 import Coupon from '../model/Coupon.model.js'
 import WebSiteModel from '../model/websiteData.model.js'
+import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
+import { sendOrderPlacedMail } from './emailController.js'
 
 export const createPaymentOrder = async (req, res, next) => {
   try {
@@ -96,9 +98,6 @@ export const verifyPayment = async (req, res, next) => {
 
 
 export const createorder = async (req, res, next) => {
-  console.log("Order User ID:", req.user?.id);
-  console.log("Order Items Count:", req.body?.orderItems?.length);
-
   try {
     if (!req.user) {
       return res.status(400).json({ success: false, message: "No User Found" });
@@ -120,10 +119,15 @@ export const createorder = async (req, res, next) => {
     });
 
     await orderData.save();
+    const createdShipRocketOrder = await generateOrderForShipment(orderData)
+    if(!createdShipRocketOrder){
+      return res.status(500).json({ success: false, message: "Failed to create ShipRocket Order" });
+    }
+    
 
     const removingAmountPromise = orderItems.map(async item => {
       try {
-        console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
+        // console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
         await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
       } catch (err) {
         console.error(`Error removing product: ${item?.productId?._id}`, err);
@@ -133,8 +137,9 @@ export const createorder = async (req, res, next) => {
     await Promise.all(removingAmountPromise);
 
     // Uncomment and handle bag removal if needed
-    const bagToRemove = await Bag.findByIdAndDelete(bagId);
-    console.log("Bag Removed:", bagToRemove);
+    await Bag.findByIdAndDelete(bagId);
+    sendOrderPlacedMail(req.user.id,orderData)// sending Message Mail....
+    // console.log("Bag Removed:", bagToRemove);
     res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
 
   } catch (error) {

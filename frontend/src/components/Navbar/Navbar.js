@@ -1,7 +1,7 @@
 import React, { Fragment, useState, useCallback, useEffect } from 'react'
 import './Navbar.css'
 import onUlogo from '../images/applogo.png'
-import { FaRegUser } from 'react-icons/fa'
+import { FaRegUser, FaSearch, FaUser, FaUserAlt } from 'react-icons/fa'
 import { BsHeart } from 'react-icons/bs'
 import { BsHandbag } from 'react-icons/bs'
 import Search from './Search.js'
@@ -16,7 +16,7 @@ import {Link} from 'react-router-dom'
 import ProductsBar from './Submenu/ProducstBar.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { getbag } from '../../action/orderaction.js'
-import { ShoppingCart } from 'lucide-react'
+import { SearchIcon, ShoppingCart } from 'lucide-react'
 
 
 const Navbar = ({user}) => {
@@ -82,11 +82,15 @@ const Navbar = ({user}) => {
     }
   },[user])
   console.log("Nav Bar bag: ",bag?.orderItems)
+  const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+  const toggleSearchBar = () => {
+    setIsSearchVisible(!isSearchVisible);
+  };
   return (
     <Fragment>
       <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide z-40 ">
         <div className='flex-row flex justify-between items-center w-screen h-full'>
-
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
               <li className='w-max flex items-stretch'>
@@ -98,79 +102,67 @@ const Navbar = ({user}) => {
                 
               </li>
             </Link>
-            <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
-              <li className='w-max flex  justify-center items-center border-4 border-transparent cborder1 cursor-pointer'
+          </ul>
+          <div className='h-full mt-3 w-fit flex flex-row px-5 items-center justify-end'>
+            <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5' to="/">
+              <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
                 onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
               >
-                <h1 className='px-3'>HOME</h1>
+                <h1 className='px-3 text-center font1'>HOME</h1>
               </li>
             </Link>
-              <Link to={"/products"} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
-                <li className='w-max flex justify-center items-center border-4 border-transparent cborder2 cursor-pointer'
-                  onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
-                >
-                  <h1 className='px-3'>PRODUCTS</h1>
-                </li>
-              </Link>
-
-            <Link to={'/about'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
+            <Link to={"/products"} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
+                onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
+              >
+                <h1 className='px-3 text-center font1'>PRODUCTS</h1>
+              </li>
+            </Link>
+            <Link to={'/about'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'>
+                <h1 className='px-3 text-center font1'>ABOUT</h1>
+              </li>
+            </Link>
+            <Link to={'/contact'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
               <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-                <h1 className='px-3'>ABOUT</h1>
+                <h1 className='px-3 text-center font1'>CONTACT</h1>
               </li>
             </Link>
-            <Link to={'/contact'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale'>
-              <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-                <h1 className='px-3'>CONTACT</h1>
-              </li>
-            </Link>
-          </ul>
-          <div className="w-full flex justify-center h-14 mt-1 items-center">
-            <div className="flex flex-row w-full h-full mx-6 py-1">
-              <Search />
+            <div className="flex flex-row w-full h-14 space-x-5 mb-5 mx-4">
+              {isSearchVisible && <Search />}
+              <button onClick={toggleSearchBar} className="text-gray-800 hover:border border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
+                <SearchIcon size={25}/>
+              </button>
             </div>
-          </div>
-
-          <div className=' h-full mt-3 max-w-fit flex flex-row items-center justify-end'>
             <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>
-                <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer'
-                  onClick={() => (setMenu7(Menu7 === 'block' ? "hidden" : "block"), setShow7(!show7))}
-                  onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
-                >
-                  <l1 className='px-3  text-center text-xs relative hover:animate-vibrateScale'> <span className='text-lg block absolute -top-5 left-1/3'><FaRegUser color='black' /></span> <span className='block'>PROFILE</span> </l1>
-                </li>
-                {/* <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent ' >
-                  <Link to='/my_wishlist'><h1 className='px-1 text-xs text-center relative '> <span className='text-lg absolute -top-5 left-1/3 justify-center items-center'><BsHeart color='black' className='w-full h-full flex'/></span>Wishlist</h1></Link>
-                </li> */}
-                <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
-                  {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
-                    <div className="absolute top-0 right-0 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                        <span>{bag.orderItems.length}</span>
-                    </div>
-                  )}
-                  <Link to="/bag">
-                    <h1 className="px-3 text-xs text-center relative">
-                      <span className="text-lg absolute -top-5 left-1/3">
-                        <BsHandbag color="black" />
-                      </span>
-                      BAG
-                    </h1>
+              <li className='w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent cursor-pointer'
+                onClick={() => (setMenu7(Menu7 === 'block' ? "hidden" : "block"), setShow7(!show7))}
+                onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
+              >
+                <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
+                  <Link to="/dashboard">
+                    <FaUserAlt color='black' className='w-full h-full justify-self-center'/>
                   </Link>
-                </li>
+                </div>
+              </li>
+              <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
+                {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
+                  <div className="absolute top-0 right-3 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                    <span>{bag.orderItems.length}</span>
+                  </div>
+                )}
+                <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
+                  <Link to="/bag">
+                      <BsHandbag color="black" className='w-full h-full justify-self-center'/>
+                  </Link>
+                </div>
+              </li>
             </ul>
           </div>
         </div>
-        {/* <Men show={show1} CMenu={Menu1} parentCallback={callback} /> */}
-        {/* <Women show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} /> */}
         <ProductsBar show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
-        {/* <Kids show={show3} CMenu={Menu3} parentCallback={Callbackmenu3} /> */}
         <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
-        {/* <Home show={show4} CMenu={Menu4} parentCallback={Callbackmenu4} />  */}
-        {/* <Beauty show={show5} CMenu={Menu5} parentCallback={Callbackmenu5} /> */}
-        {/* <Studio show={show6} CMenu={Menu6} parentCallback={Callbackmenu6} /> */}
-
       </div>
-      
-
     </Fragment>
   )
 }

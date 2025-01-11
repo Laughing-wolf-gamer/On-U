@@ -20,11 +20,11 @@ const Search = () => {
     }
     return (
         <Fragment>
-            <form className="flex flex-row w-full h-full justify-between items-center gap-2" onSubmit={searchenter}>
+            <form className="flex flex-row w-[600px] h-full justify-between items-center gap-2" onSubmit={searchenter}>
                 <input
                     type="text"
                     placeholder="Search for products, brands and more"
-                    className="rounded-3xl w-full h-full pl-4 text-white placeholder-white outline-none border-2 border-solid border-gray-300 focus:border-blue-500"
+                    className="rounded-xl w-full h-full pl-4 text-white placeholder-gray-600 outline-none border-2 border-solid border-gray-300 focus:border-blue-500 bg-gray-600"
                     style={{ backgroundColor: "#BCCCDC" }}
                     onChange={(e) => setstate(e.target.value)}
                 />

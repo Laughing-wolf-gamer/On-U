@@ -412,114 +412,120 @@ export const getTotalProductStocks = async (req,res)=>{
 
   }
 }
-export const getOrderDeliveredGraphData = async (req,res) => {
+
+
+export const getOrderDeliveredGraphData = async (req, res) => { 
   try {
-    // Perform aggregation on the OrderModel
-    const result = await OrderModel.aggregate([
-      // Match orders where status is 'Delivered'
-      { $match: { status: 'Delivered' } },
-
-      // Add fields for the month and year based on the 'createdAt' field (or the field that holds the date)
-      {
-        $addFields: {
-          year: { $year: "$createdAt" },
-          month: { $month: "$createdAt" },
-        }
-      },
-
-      // Group orders by year and month, counting the number of orders
-      {
-        $group: {
-          _id: { year: "$year", month: "$month" },  // Group by year and month
-          totalOrders: { $sum: 1 },  // Count orders in each group
-        }
-      },
-
-      // Sort by year and month
-      { 
-        $sort: { "_id.year": 1, "_id.month": 1 } 
-      }
-    ]);
-    if(!result || result.length === 0){
-      return res.status(200).json({Success:true,message: 'No Orders by Month and Year',result:[]});
-    }
-
-    console.log(result);
-    res.status(200).json({Success:true,message: 'Orders by Month and Year',result});
-  } catch (err) {
-    console.error("Error fetching orders: ", err);
-    res.status(500).json({Success:false,message: 'Internal Server Error'});
-  }
-};
-export const getCustomerGraphData = async (req, res) => {
-  try {
-    // Get the startDate and endDate from query parameters, or default to a wide range
+    // Get the startDate, endDate, and period from query parameters, or default to a wide range
     const { startDate, endDate, period } = req.query;
-    console.log("reqQuery: " ,req.query)
+    console.log("reqQuery: ", req.query);
 
     // Convert the startDate and endDate to Date objects, if provided
     const start = startDate ? new Date(startDate) : new Date('2000-01-01'); // Default to a wide range if not provided
     const end = endDate ? new Date(endDate) : new Date(); // Default to the current date if not provided
 
-    // Initialize the aggregation pipeline
-    let matchStage = {};
+    // Initialize the match stage
+    let matchStage = {
+      $match: {
+        status: 'Delivered', // Filter orders where status is 'Delivered'
+        createdAt: { $gte: start, $lte: end }, // Filter orders created within the date range
+      },
+    };
 
-    if (period === 'monthly') {
-      // For monthly period: Group by month and year, and filter by startDate and endDate
-      matchStage = {
-        $match: {
-          createdAt: { $gte: start, $lte: end }, // Filter customers created within the date range
-        }
-      };
-      // Adding projection stage to extract month and year from the 'createdAt' field
-      matchStage = {
-        $project: {
-          month: { $month: "$createdAt" },  // Extract month from 'createdAt'
-          year: { $year: "$createdAt" },    // Extract year from 'createdAt'
-          createdAt: 1                      // Retain the createdAt field for matching date range
-        }
-      };
-    } else if (period === 'yearly') {
-      // For yearly period: Group by year only, and filter by startDate and endDate
-      matchStage = {
-        $match: {
-          createdAt: { $gte: start, $lte: end }, // Filter customers created within the date range
-        }
-      };
-      // Adding projection stage to extract year from the 'createdAt' field
-      matchStage = {
-        $project: {
-          year: { $year: "$createdAt" },    // Extract year from 'createdAt'
-          createdAt: 1                      // Retain the createdAt field for matching date range
-        }
-      };
-    } else {
-      // Default to monthly if no period is specified
-      matchStage = {
-        $match: {
-          createdAt: { $gte: start, $lte: end },
-        }
-      };
-      matchStage = {
-        $project: {
-          month: { $month: "$createdAt" },
-          year: { $year: "$createdAt" },
-          createdAt: 1
-        }
-      };
-    }
+    // Adding projection stage to extract date (day, month, year) from 'createdAt' field
+    const projectStage = {
+      $project: {
+        day: { $dayOfMonth: "$createdAt" },    // Extract day from 'createdAt'
+        month: { $month: "$createdAt" },       // Extract month from 'createdAt'
+        year: { $year: "$createdAt" },         // Extract year from 'createdAt'
+        createdAt: 1                           // Retain the createdAt field for matching date range
+      },
+    };
 
-    // Perform the aggregation with the modified match and projection stages
-    const result = await User.aggregate([
-      matchStage,  // Match customers based on the provided date range
+    // Perform the aggregation to get daily delivered order count
+    const result = await OrderModel.aggregate([
+      matchStage,      // Match orders based on the provided date range and status
+      projectStage,    // Project day, month, and year from createdAt
       {
         $group: {
-          _id: { month: "$month", year: "$year" }, // Group by month and year
-          count: { $sum: 1 } // Count customers for each month/year
+          _id: { day: "$day", month: "$month", year: "$year" }, // Group by day, month, and year
+          count: { $sum: 1 }  // Count delivered orders for each day
         }
       },
       {
-        $sort: { "_id.year": 1, "_id.month": 1 } // Sort by year and month
+        $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } // Sort by year, month, and day
+      }
+    ]);
+
+    // If there is no data
+    if (!result || result.length === 0) {
+      return res.status(200).json({
+        Success: true,
+        message: 'No delivered order growth data available',
+        result: []
+      });
+    }
+
+    // Format the result for frontend display (YYYY-MM-DD)
+    const formattedResult = result.map((item) => ({
+      date: `${item._id.year}-${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.day < 10 ? `0${item._id.day}` : item._id.day}`,
+      count: item.count
+    }));
+
+    console.log("Formatted result: ", formattedResult);
+
+    res.status(200).json({
+      Success: true,
+      message: 'Delivered Order Growth Data',
+      result: formattedResult
+    });
+  } catch (error) {
+    console.error("Error fetching delivered order growth data: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+};
+
+
+
+export const getCustomerGraphData = async (req, res) => {
+  try {
+    // Get the startDate and endDate from query parameters, or default to a wide range
+    const { startDate, endDate, period } = req.query;
+    console.log("reqQuery: ", req.query);
+
+    // Convert the startDate and endDate to Date objects, if provided
+    const start = startDate ? new Date(startDate) : new Date('2000-01-01'); // Default to a wide range if not provided
+    const end = endDate ? new Date(endDate) : new Date(); // Default to the current date if not provided
+
+    // Initialize the match stage
+    let matchStage = {
+      $match: {
+        createdAt: { $gte: start, $lte: end }, // Filter customers created within the date range
+      },
+    };
+
+    // Adding projection stage to extract date (day, month, year) from 'createdAt' field
+    const projectStage = {
+      $project: {
+        day: { $dayOfMonth: "$createdAt" },    // Extract day from 'createdAt'
+        month: { $month: "$createdAt" },       // Extract month from 'createdAt'
+        year: { $year: "$createdAt" },         // Extract year from 'createdAt'
+        createdAt: 1                           // Retain the createdAt field for matching date range
+      },
+    };
+
+    // Perform the aggregation to get daily customer count
+    const result = await User.aggregate([
+      matchStage,      // Match customers based on the provided date range
+      projectStage,    // Project day, month, and year from createdAt
+      {
+        $group: {
+          _id: { day: "$day", month: "$month", year: "$year" }, // Group by day, month, and year
+          count: { $sum: 1 }  // Count customers for each day
+        }
+      },
+      {
+        $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } // Sort by year, month, and day
       }
     ]);
 
@@ -534,10 +540,11 @@ export const getCustomerGraphData = async (req, res) => {
 
     // Format the result for frontend display
     const formattedResult = result.map((item) => ({
-      month: `${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.year}`,
+      date: `${item._id.year}-${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.day < 10 ? `0${item._id.day}` : item._id.day}`,
       count: item.count
     }));
-    console.log("Format: ", formattedResult)
+
+    console.log("Formatted result: ", formattedResult);
 
     res.status(200).json({
       Success: true,
@@ -551,52 +558,67 @@ export const getCustomerGraphData = async (req, res) => {
 };
 
 
+
 export const getOrdersGraphData = async (req, res) => {
   try {
-    const { period } = req.query; // period can be 'monthly' or 'yearly'
-    let matchStage = {};
+    const { startDate, endDate, period } = req.query; // Get query parameters
 
-    // Determine how to group the data based on the 'period' query parameter
+    // Convert startDate and endDate to Date objects
+    const start = startDate ? new Date(startDate) : new Date('2000-01-01'); // Default to a wide range if not provided
+    const end = endDate ? new Date(endDate) : new Date(); // Default to the current date if not provided
+
+    // Initialize the match stage to filter orders based on startDate and endDate
+    const matchStage = {
+      $match: {
+        createdAt: { $gte: start, $lte: end }, // Filter orders created within the date range
+      },
+    };
+
+    // Initialize the groupBy structure and projection
     let groupBy = {};
+    let projectStage = {};
+
+    // Grouping based on 'period' query parameter
     if (period === 'monthly') {
-      // Group by month and year
-      matchStage = {
+      // For monthly period: Group by month and year
+      projectStage = {
         $project: {
           month: { $month: "$createdAt" },  // Extract month from 'createdAt'
           year: { $year: "$createdAt" },    // Extract year from 'createdAt'
-        }
+        },
       };
-      groupBy = { month: "$month", year: "$year" };
+      groupBy = { month: "$month", year: "$year" }; // Group by month and year
     } else if (period === 'yearly') {
-      // Group by year only
-      matchStage = {
+      // For yearly period: Group by year only
+      projectStage = {
         $project: {
           year: { $year: "$createdAt" }, // Extract year from 'createdAt'
-        }
+        },
       };
-      groupBy = { year: "$year" };
+      groupBy = { year: "$year" }; // Group by year
     } else {
       // Default to monthly if no valid period is provided
-      matchStage = {
+      projectStage = {
         $project: {
           month: { $month: "$createdAt" },
           year: { $year: "$createdAt" },
-        }
+        },
       };
-      groupBy = { month: "$month", year: "$year" };
+      groupBy = { month: "$month", year: "$year" }; // Default group by month and year
     }
 
-    // Perform aggregation
+    // Perform the aggregation based on the selected period
     const result = await OrderModel.aggregate([
-      matchStage,  // Dynamically inserted match stage based on period
+      matchStage,  // Filter by date range
+      projectStage, // Extract month and year from 'createdAt'
       {
         $group: {
           _id: groupBy,  // Group by month/year based on period
-          count: { $sum: 1 } // Count orders for each month/year
+          count: { $sum: 1 } // Count the number of orders in each group
         }
       },
       {
-        $sort: { "_id.year": 1, "_id.month": 1 } // Sort by year and month
+        $sort: { "_id.year": 1, "_id.month": 1 } // Sort by year and month (for monthly data)
       }
     ]);
 
@@ -609,20 +631,20 @@ export const getOrdersGraphData = async (req, res) => {
       });
     }
 
-    // Map the result to a format that can be sent to the frontend
+    // Format the result for frontend display
     const formattedResult = result.map((item) => {
       let formattedDate = '';
       if (item._id.month && item._id.year) {
-        // For monthly data, return the first day of the month
+        // For monthly data, return the first day of the month in "DD-MM-YYYY" format
         formattedDate = new Date(item._id.year, item._id.month - 1, 1); // Month is 0-indexed
         formattedDate = `${formattedDate.getDate().toString().padStart(2, '0')}-${(formattedDate.getMonth() + 1).toString().padStart(2, '0')}-${formattedDate.getFullYear()}`;
       } else if (item._id.year) {
-        // For yearly data, just return the year
+        // For yearly data, return just the year
         formattedDate = item._id.year.toString();
       }
 
       return {
-        date: formattedDate,  // Date formatted as 01-MM-YYYY or just YYYY
+        date: formattedDate,  // Formatted date (01-MM-YYYY or YYYY)
         count: item.count
       };
     });
@@ -637,6 +659,7 @@ export const getOrdersGraphData = async (req, res) => {
     res.status(500).json({ Success: false, message: 'Internal Server Error' });
   }
 };
+
 
 
 export const getTotalUsers = async (req,res)=>{

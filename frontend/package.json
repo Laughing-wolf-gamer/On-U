@@ -17,7 +17,6 @@
     "caniuse-lite": "^1.0.30001689",
     "color-name-list": "^11.2.0",
     "color-namer": "^1.4.0",
-    "crypto-browserify": "^3.12.0",
     "dotenv": "^16.4.7",
     "element-class": "^0.2.2",
     "lucide-react": "^0.468.0",
@@ -32,6 +31,7 @@
     "react-lazy": "^1.1.0",
     "react-lazy-load-image-component": "^1.5.4",
     "react-material-ui-carousel": "^3.3.3",
+    "react-razorpay": "^3.0.1",
     "react-redux": "^7.2.8",
     "react-responsive-carousel": "^3.2.23",
     "react-ripples": "^2.2.1",
@@ -72,10 +72,20 @@
     ]
   },
   "devDependencies": {
+    "assert": "^2.1.0",
     "autoprefixer": "^10.4.2",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.6",
-    "tailwindcss": "^3.0.24"
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tailwindcss": "^3.0.24",
+    "url": "^0.11.4"
   },
   "proxy": "http://localhost:4000"
 }

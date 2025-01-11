@@ -12,9 +12,11 @@ import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import LoadingSpinner from '../Product/LoadingSpinner';
 import Emptybag from './Emptybag';
-import { capitalizeFirstLetterOfEachWord } from '../../config';
+import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../../config';
 import { Circle, X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
+import axios from 'axios';
+import Footer from '../Footer/Footer';
 const handelGetAmountAfterApplyingCoupon = (coupon,bag,user)=>{
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0;
@@ -230,23 +232,21 @@ const Bag = () => {
 
     
     const verifyAnyOrdersPayment = async()=>{
-        console.log("Verifying Orders Payment")
         if(!sessionStorage.getItem("checkoutData")) return;
         try {
             const data = JSON.parse(sessionStorage.getItem("checkoutData"))
-            console.log("Session Data: ",data)
-            const response = await dispatch(verifyingOrder(data))
-            console.log("Verifying Order Response: ",response);
+            const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
+            console.log("Verifying Order Response: ",response.data);
             sessionStorage.removeItem("checkoutData")
-            if(response?.result === "SUCCESS"){
+            if(response?.data.success){
                 alert.success("Payment Successful");
             }else{
                 alert.error("Payment Failed");
             }
-            if(user){
-                dispatch(getbag({ userId: response?.userId }));
-            }
             
+            if(user){
+                dispatch(getbag({ userId: response?.data?.userId }));
+            }
         } catch (error) {
             console.error(`Error Verifying order: `,error);
         }
@@ -481,6 +481,7 @@ const Bag = () => {
                 dispatch(getAddress())
                 setShowPayment(false)
             }} />}
+            <Footer/>
         </>
     );
 };

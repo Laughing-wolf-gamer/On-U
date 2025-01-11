@@ -89,7 +89,7 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 const CategorySection = ({ title, categories, parentCallback }) => (
 	<div>
 		<h1 className="text-red-600 text-sm font-semibold py-1 mx-2">{title}</h1>
-		{categories.map((category) => (
+		{categories && categories.slice(0,5).map((category) => (
 			<Link to="/products" key={category.title}>
 				<li
 					className="litext list-none py-0.5 m-2 hover:font-semibold"

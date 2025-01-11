@@ -25,7 +25,8 @@ const Login = () => {
     if (mobileno.length === 10) {
       const result = await dispatch(loginmobile({ phonenumber: mobileno }));
       setOtpData(result); // Assuming result means OTP is sent
-      console.log('Login mobile: ', result);
+      // console.log('Login mobile: ', result);
+      Alert.success("Otp sent successfully To Your Mail Id ")
     }
   };
 

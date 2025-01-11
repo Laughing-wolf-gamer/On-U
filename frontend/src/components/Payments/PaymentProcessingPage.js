@@ -2,10 +2,12 @@ import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { applyCouponToBag, create_order, createPaymentOrder, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
 import { useAlert } from "react-alert";
-import { BASE_CLIENT_URL, DevMode } from "../../config";
+import { BASE_API_URL, BASE_CLIENT_URL, DevMode, headerConfig } from "../../config";
 import { cashfree } from "../../utils/pgUtils";
-
+import axios from "axios";
+import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
 const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, closePopup ,user}) => {
+    const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
@@ -104,6 +106,61 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
             // closePopup();
         }
     }
+    const handleRazerPayPayment = async()=>{
+        try {
+            const { data } = await axios.post(`${BASE_API_URL}/api/payment/razerypay/order`, { amount:totalAmount },headerConfig());
+            if(!data.success){
+                alert.error("Failed to create order, please try again later");
+                return;
+            }
+            console.log("Data: ", data.keyId);
+            console.log("Order: ", data.order); 
+            // return;
+            const options = {
+                key: data.keyId, // Enter the Key ID generated from the Dashboard
+                amount: data.order.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                currency: "INR",
+                name: "On-U",
+                description: "Test Transaction",
+                order_id: data.order.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                // callback_url: `${BASE_API_URL}/api/payment/razerypay/paymentVerification`,
+                handler:function(response){
+                    console.log("Razerpay Response: ",{...response});
+                    sessionStorage.setItem("checkoutData",JSON.stringify({
+                        razorpay_payment_id:response.razorpay_payment_id,
+                        razorpay_order_id:response.razorpay_order_id,
+                        razorpay_signature:response.razorpay_signature,
+                        bagId:bag?._id,
+                        selectedAddress:selectedAddress,
+                        totalAmount,
+                        orderDetails: bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity })),
+    
+                    }));
+                    alert.success("RazerPay Payment Success")
+                    window.open(`${BASE_CLIENT_URL}/bag`,"_self")
+                },
+                prefill: {
+                    name: user?.user?.name,
+                    email: user?.user?.email,
+                    contact: user?.user?.phoneNumber,
+                },
+                notes: {
+                    selectedAddress,
+                },
+                theme: {
+                    color: "#45D347",
+                },
+            };
+            const razor = new Razorpay(options);
+            razor.on("payment.failed", function(response) {
+                alert.error("Payment Failed, Please try again");
+                console.log("Payment Failed Response: ", response);
+            });
+            razor.open();
+        } catch (error) {
+            console.error("Payment Failed", error);
+        }
+    }
     
 
     // Confirm payment
@@ -126,7 +183,8 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                 closePopup();
             } else {
                 // Order confirm after Payment...
-                handleCashFreePayment();
+                // handleCashFreePayment();
+                handleRazerPayPayment();
             }
         } else {
             alert("Please select a payment method.");

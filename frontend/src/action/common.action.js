@@ -19,7 +19,21 @@ export const fetchAddressForm = () => async (dispatch) => {
         dispatch({ type: FETCH_ADDRESS_FORM_FAIL, payload: error.response.data.message })
     }
 }
+export const sendGetCoupon = ({fullName,email})=> async(dispatch)=>{
+    try {
+        const{data} = await axios.post(`${BASE_API_URL}/api/common/coupons/sendCoupon`,{fullName,email})
+        if(data.success){
+            console.log("Coupon Send: ",data);
+            return data;
+        }
+        return data;
 
+    } catch (error) {
+        console.log('error sending: ',error);
+        // dispatch({ type: GET_COUPON_FAIL, payload: error.response.data.message })
+        return null;
+    }
+}
 
 
 export const clearErrors = () => async (dispatch) => {

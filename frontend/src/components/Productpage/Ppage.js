@@ -18,30 +18,6 @@ import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
-const productReviewMock = {
-  reviews: [
-    {
-      text: "Great product, highly recommend!",
-      rating:1,
-    },
-    {
-      text: "Good value for the price. Works as expected.",
-      rating:1,
-    },
-    {
-      text: "Not as good as I thought. Could use some improvements.",
-      rating:3,
-    },
-    {
-      text: "Excellent quality and fast shipping!",
-      rating:4,
-    },
-    {
-      text: "Pretty decent, but the color was off from the picture.",
-      rating:4,
-    }
-  ]
-};
 const Ppage = () => {
   const navigation = useNavigate();
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -80,7 +56,7 @@ const Ppage = () => {
         color:currentColor,
         size:currentSize,
       }
-      console.log("Order Data: ",orderData)
+      // console.log("Order Data: ",orderData)
       dispatch(createbag(orderData))
       alert.success('Product added successfully in Bag')
      }else{
@@ -146,11 +122,12 @@ const Ppage = () => {
     setCurrentSize(newSize);
     setSelectedSize(newSize);
     setSelectedColor(newSize.colors);
-    setCurrentColor(newSize.colors[0]);
+    // setCurrentColor(newSize.colors[0]);
     setSelectedColorId(newSize.colors[0]._id);
   }
   const handelSetColorImages = (color) => {
     setSelectedSize_color_Image_Array(color.images)
+
     setSelectedImage(color.images[0]);
     setSelectedColorId(color._id);
   }
@@ -176,12 +153,12 @@ const Ppage = () => {
       const currentColor = selectedSize.colors[0];
 			setSelectedSize_color_Image_Array(currentColor.images);
 			setSelectedColorId(currentColor._id);
-			console.log("Colors: ",currentColor.quantity);
+			// console.log("Colors: ",currentColor.quantity);
 			setSelectedImage(currentColor.images[0]);
 		}
-    console.log("Selected Size New ",currentSize);
+    // console.log("Selected Size New ",currentSize);
   },[selectedSize])
-  console.log("All Products: ",product,product?.Rating)
+  // console.log("All Products: ",product,product?.Rating)
 
   return (
     <Fragment>
@@ -238,7 +215,7 @@ const Ppage = () => {
                       {
                         product && product.size && product.size.length > 0 && product.size.map((size,index) =>
                             <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
-                              ${currentSize?._id === size?._id  ? "border-2 border-black bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} onClick={(e)=> {
+                              ${currentSize?._id === size?._id  ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} onClick={(e)=> {
                                 console.log("Selecting Size: ",currentSize?._id === size?._id);
                               // e.preventDefault();
                               // setCurrentSize(size);
@@ -269,23 +246,25 @@ const Ppage = () => {
                               height: "40px",
                             }}
                             type='button'
-                            //
-                            className={`w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                              ${currentColor?._id === color?._id  ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110" : "scale-100 border-4 border-black"}
+                            className={`${color.quantity <= 0 ? `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                              bg-gray-600`:`w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                                ${currentColor?._id === color?._id
+                                  ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110"
+                                  : "scale-100 border-4 border-gray-800"}`}
                             `}
                             title={color?.quantity || color?.label || "Color"} // Optional tooltip
                           />
                           {
                             color.quantity <= 10 && color.quantity > 0 && (
                               <div className='flex flex-col justify-center items-center'>
-                                <span className="text-red-600 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
+                                <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
                               </div>
                             )
                           }
                           {
                             color.quantity <= 0 && (
                               <div className='flex flex-col justify-center items-center'>
-                                <span className="text-red-600 text-sm font-extrabold text-center flex-wrap">Out of Stock</span>
+                                <span className="text-gray-500 text-sm font-extrabold text-center flex-wrap">Out of Stock</span>
                               </div>
                             )
                           }
@@ -296,7 +275,11 @@ const Ppage = () => {
                     )}
                     </div>
 
-                  <button className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" onClick={addtobag}><BsHandbag className='mr-4' /> <span>ADD TO CART</span></button>
+                  <button 
+                    className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" 
+                    onClick={addtobag}>
+                      <BsHandbag className='mr-4' /> <span>ADD TO CART</span>
+                  </button>
                   <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={handleBuyNow}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
                 </div>
                 <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>

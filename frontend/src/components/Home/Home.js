@@ -279,6 +279,7 @@ import ProductPreviewFull from './ProductPreviewFull'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 import DraggableImageSlider from './DraggableImageSlider'
 import FullScreenOverlayDialog from './FullScreenOverLaydialogue'
+import FullScreenOverLayCouponPopUp from './FullScreenOverLayCouponPopUp'
 
 
 const Home = () => {
@@ -416,6 +417,16 @@ const Home = () => {
   }
   
   console.log("All Banners: ",banners);
+
+  const [showComponent, setShowComponent] = useState(null);
+
+  // Randomly decide which component to show
+  useEffect(() => {
+    const randomComponent = Math.random() < 0.5 ? 'coupon' : 'dialog';
+    setShowComponent(randomComponent);
+  }, []);
+
+
   return (
     <Fragment>
       {
@@ -683,9 +694,9 @@ const Home = () => {
             <Footer/>
           </Fragment>
       }
-      {
-        product && <FullScreenOverlayDialog products = {product}/>
-      }
+      <FullScreenOverLayCouponPopUp />
+       {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
+       {/* {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />} */}
 
     </Fragment>
   )

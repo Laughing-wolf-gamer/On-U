@@ -1,18 +1,31 @@
-import React, { useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
+import { useDispatch } from "react-redux";
+import { useAlert } from "react-alert";
+import axios from "axios";
+import { BASE_API_URL } from "../../config";
 
 const Contact = () => {
+  const dispatch = useDispatch();
+  const [formData, setFormData] = useState(null);
+  const[sendingFormData,setSendingFormData] = useState(null);
+  const alert = useAlert();
   // State for form handling
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    phoneNumber: "",
-    message: "",
-  });
+  const fetchContactUsPageData = async () => {
+		try {
+			const res = await axios.get(`${BASE_API_URL}/api/common/website/contact-us`);
+			console.log("Contact us Page Data ",res?.data?.result);
+			setFormData(res?.data?.result || null);
+		} catch (error) {
+			console.error("Error Fetching About Data: ",error);
+			setFormData(null);
+		}
+	}
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prevData) => ({
+  const handleChange = (data) => {
+
+    const { name, value } = data;
+    setSendingFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -21,9 +34,15 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     // Handle form submission (e.g., send to a server or display a success message)
-    alert("Message sent! We will get back to you shortly.");
-    setFormData({ name: "", email: "", message: "" }); // Reset the form
+    alert.info("Message sent! We will get back to you shortly.");
   };
+  useEffect(()=>{
+    window.scrollTo(0,0)
+  },[])
+  useEffect(()=>{
+    fetchContactUsPageData();
+  },[dispatch])
+  console.log("Contact us page loaded: ",sendingFormData);
 
   return (
     <div className="bg-gray-50 py-16 px-6 lg:px-24">
@@ -42,25 +61,30 @@ const Contact = () => {
         <h2 className="text-3xl font-semibold text-gray-800 text-center mb-8">Contact Us</h2>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div>
-              <label
-                htmlFor="name"
-                className="block text-lg font-medium text-gray-700"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                value={formData.name}
-                onChange={handleChange}
-                required
-                className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-              />
-            </div>
+            {formData && formData.formDataForContactUs && formData.formDataForContactUs.length > 0 && formData.formDataForContactUs.map((field,i) => (
+              <Fragment key={i}>
+                <div>
+                  <label
+                    htmlFor= {field.fieldName}
+                    className="block text-lg font-medium text-gray-700"
+                  >
+                    {field.fieldName}
+                  </label>
+                  <input
+                    type="text"
+                    id= {`${field.fieldName}_field ${i}`}
+                    name={field.fieldName}
+                    value={sendingFormData[field.fieldName]}
+                    onChange={(e)=>{
+                      handleChange({name: field.fieldName, value:e.target.value})
+                    }}
+                    className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                  />
+                </div>
+              </Fragment>
+            ))}
 
-            <div>
+            {/* <div>
               <label
                 htmlFor="email"
                 className="block text-lg font-medium text-gray-700"
@@ -71,14 +95,14 @@ const Contact = () => {
                 type="email"
                 id="email"
                 name="email"
-                value={formData.email}
+                value={sendingFormData?.email}
                 onChange={handleChange}
                 required
                 className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
-            </div>
+            </div> */}
 
-            <div>
+            {/* <div>
               <label
                 htmlFor="phoneNumber"
                 className="block text-lg font-medium text-gray-700"
@@ -89,12 +113,12 @@ const Contact = () => {
                 type="tel"  // Corrected input type
                 id="phoneNumber"
                 name="phoneNumber"
-                value={formData.phoneNumber}
+                value={sendingFormData?.phoneNumber}
                 onChange={handleChange}
                 required
                 className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
               />
-            </div>
+            </div> */}
           </div>
 
           <div>
@@ -107,7 +131,7 @@ const Contact = () => {
             <textarea
               id="message"
               name="message"
-              value={formData.message}
+              value={sendingFormData?.message}
               onChange={handleChange}
               rows="6"
               required
@@ -137,14 +161,14 @@ const Contact = () => {
         <div className="mt-8 text-lg text-gray-700 space-y-4">
           <p>
             Email:{" "}
-            <span className="text-blue-600 hover:underline">support@on-u.com</span>
+            <span className="text-blue-600 hover:underline">{formData?.email}</span>
           </p>
           <p>
             Phone:{" "}
-            <span className="text-blue-600 hover:underline">(123) 456-7890</span>
+            <span className="text-blue-600 hover:underline">{formData?.phoneNumber}</span>
           </p>
           <p>
-            Address: 123 ON-U St., Suite 100, City, Country
+            {formData?.address}
           </p>
         </div>
       </section>

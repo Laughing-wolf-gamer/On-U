@@ -4,7 +4,8 @@ const websiteSchema = new mongoose.Schema({
     tag:String,
     AboutData:Object,
     Address:Array,
-    ConvenienceFees:Number
+    ConvenienceFees:Number,
+    ContactUsePageData:Object,
 },{timestamps:true})
 
 const WebSiteModel = mongoose.model('websiteData', websiteSchema)

@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, setAboutData, setAddressField } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -16,6 +16,9 @@ route.put('/website/convenienceFees',isAuthenticateuser,ProtectAdminRoute,patchC
 route.get('/website/about',getAboutData);
 route.get('/website/convenienceFees',getConvenienceFees)
 
+route.put('/website/contact-us',isAuthenticateuser,ProtectAdminRoute,setContactUsePageData)
+route.get('/website/contact-us',getContactUsPageData)
+
 route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
 route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);
 route.get('/website/address',getAddressField);
@@ -28,4 +31,6 @@ route.post('/options/add',isAuthenticateuser,ProtectAdminRoute, addOption);
 
 // Route to delete an option
 route.post('/options/removeByType',isAuthenticateuser,ProtectAdminRoute,removeOptionsByType);
+
+route.post('/coupons/sendCoupon',sendMailToGetCoupon)
 export default route

@@ -31,22 +31,22 @@ const ProductPreviewFull = ({product}) => {
     useEffect(()=>{
         getRandomArrayOfProducts();
     },[product])
-    const [rating, setRating] = useState(0);
 
-    // Generate a random rating between 1 and 5 when the component mounts
-    useEffect(() => {
-        setRating(Math.floor(Math.random() * 5) + 1);
-    }, []);
-
-    // Function to render stars based on rating
-    const renderStars = () => {
+    const renderStars = (p) => {
+        let rating = Math.floor(Math.random() * 5) + 1;
+        if(p && p.Rating && p.Rating.length){
+            const totalStars = p.Rating.reduce((acc, review) => acc + review.rating, 0);
+            const avgStars = totalStars / p.Rating.length;
+            const roundedAvg = Math.round(avgStars * 10) / 10;
+            rating = roundedAvg;
+        }
         const stars = [];
         for (let i = 1; i <= 5; i++) {
             stars.push(
                 <svg
                     key={i}
                     xmlns="http://www.w3.org/2000/svg"
-                    className={`h-5 w-5 ${i <= rating ? 'text-yellow-400' : 'text-gray-300'} hover:animate-vibrateScale `}
+                    className={`h-5 w-5 ${i <= rating ? 'text-black' : 'text-gray-300'} hover:animate-vibrateScale `}
                     viewBox="0 0 24 24"
                     fill="none"
                     stroke="currentColor"
@@ -60,7 +60,7 @@ const ProductPreviewFull = ({product}) => {
         }
         return stars;
     };
-    console.log("ProductPreviewFull",previewProducts);
+    
     return (
         <Fragment>
             <div className="w-fit md:w-full gap-x-7 flex flex-row md:flex-1 h-fit p-1 justify-center items-center">
@@ -88,7 +88,7 @@ const ProductPreviewFull = ({product}) => {
                                 </h2>
                                 {/* Rating Section */}
                                 <div className="flex mt-2">
-                                    {renderStars()}
+                                    {renderStars(p)}
                                 </div>
                                 <div className='flex flex-row justify-between items-center'>
                                     <span className="text-[20px] font-mono">

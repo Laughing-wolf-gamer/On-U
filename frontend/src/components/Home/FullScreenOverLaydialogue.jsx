@@ -17,6 +17,7 @@ const FullScreenOverlayDialog = ({ products }) => {
             closeDialog();
         }
     };
+
     // Disable scrolling on body when dialog is open
     useEffect(() => {
         if (isOpen) {
@@ -30,17 +31,18 @@ const FullScreenOverlayDialog = ({ products }) => {
             document.body.style.overflow = 'auto';
         };
     }, [isOpen]);
+
     console.log("Overlay Products: ", products);
 
     return (
         <Fragment>
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+                    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center transition-colors ease-in-out"
                     onClick={handleOverlayClick} // Close on click outside
                 >
                     {/* Dialog Content */}
-                    <div className="relative w-[90%] sm:w-[80%] lg:w-[70%] h-[90%] sm:h-[80%] lg:h-[70%] bg-white rounded-lg flex flex-col">
+                    <div className={`relative w-[90%] sm:w-[80%] lg:w-[70%] h-[90%] sm:h-[80%] lg:h-[70%] bg-white rounded-lg flex flex-col opacity-0 transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>
                         <div
                             className="absolute top-[-14px] right-[-14px] p-2 w-12 h-12 rounded-full shadow-lg flex justify-center items-center z-20 cursor-pointer bg-white"
                             onClick={closeDialog}

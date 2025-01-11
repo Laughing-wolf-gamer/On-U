@@ -1,7 +1,9 @@
 import BannerModel from "../../model/banner.model.js";
+import Coupon from "../../model/Coupon.model.js";
 import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
 import WebSiteModel from "../../model/websiteData.model.js";
+import { sendCouponMail } from "../emailController.js";
 
 export const getHomeBanners = async (req,res)=>{
 	try {
@@ -119,6 +121,35 @@ export const setAboutData = async(req,res)=>{
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
+
+export const setContactUsePageData = async (req, res) => {
+	try {
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag:"contact-us"});
+		if(!alreadyFoundWebsiteData){
+			const contact = new WebSiteModel({ContactUsePageData: req.body, tag: 'contact-us'});
+            await contact.save();
+            console.log("Contact Use Page Data: ",contact)
+            return;
+		}
+		alreadyFoundWebsiteData.ContactUsePageData = req.body;
+		await alreadyFoundWebsiteData.save();
+		res.status(200).json({Success: true, message: 'Contact Use Page Data set successfully'});
+		console.log("Contact Use Page Data: ",contact)
+	} catch (error) {
+		console.error("Internal Server Error", error);
+		res.status(500).json({Success: false, message: 'Internal Server Error'});
+	}
+}
+export const getContactUsPageData = async(req,res)=>{
+	try {
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'contact-us'});
+        // console.log("Contact Use Page Data: ",alreadyFoundWebsiteData)
+        res.status(200).json({Success:true,message:"Contact Use Page Data",result: alreadyFoundWebsiteData?.ContactUsePageData || {}});
+    } catch (error) {
+        console.error(`Error getting`,error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
 export const getConvenienceFees = async(req,res)=>{
 	try {
 		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
@@ -211,6 +242,8 @@ export const getAboutData = async(req,res)=>{
 	  
 	}
 }
+
+
 
 
 export const getAllOptions = async(req,res)=>{
@@ -306,6 +339,26 @@ export const removeOptionsByType = async (req, res) => {
 	}
 };
 
+
+export const sendMailToGetCoupon = async (req,res)=>{
+	try {
+		const{fullName,email} = req.body;
+		const coupon = await Coupon.aggregate([{ $sample: { size: 1 } }]);
+		const randomCoupon = coupon[0]; // Get the first (and only) item in the array
+		if(randomCoupon){
+			const success = await sendCouponMail(fullName,email,randomCoupon?.CouponCode)
+			console.log("Coupon sent: ",success)
+			if(!success){
+                return res.status(500).json({ success:false,message: 'Failed to send coupon email'});
+			}
+			return res.status(200).json({ success:true,message: 'Coupon sent successfully'});
+		}
+		res.status(404).json({ success:false,message: 'No coupon found'});
+	} catch (error) {
+		console.error("Error sending email: ", error);
+		res.status(500).json({ success:false,message: 'Failed to send email' });
+	}
+}
 
 
   
