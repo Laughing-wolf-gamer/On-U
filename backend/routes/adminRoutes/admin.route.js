@@ -56,8 +56,6 @@ route.post('/product/coupons/create',isAuthenticateuser,ProtectAdminRoute,create
 route.put('/product/coupons/edit/:couponId',isAuthenticateuser,ProtectAdminRoute,editCoupon);
 route.delete('/product/coupons/remove/:couponId',isAuthenticateuser,ProtectAdminRoute,removeCoupon);
 route.get('/product/coupons/all',isAuthenticateuser,ProtectAdminRoute,fetchAllCoupons);
-// filters routes...
-// route.get('/product/filters',FetchAllFilters);
 
 
 

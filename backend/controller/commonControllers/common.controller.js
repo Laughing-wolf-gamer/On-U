@@ -1,4 +1,5 @@
 import BannerModel from "../../model/banner.model.js";
+import ContactQuery from "../../model/ContactQuery.model.js";
 import Coupon from "../../model/Coupon.model.js";
 import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
@@ -149,6 +150,34 @@ export const getContactUsPageData = async(req,res)=>{
         console.error(`Error getting`,error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
+}
+export const getContactQuery = async(req,res)=>{
+	try {
+        const queries = await ContactQuery.find({});
+        console.log("Contact Queries: ",queries)
+        res.status(200).json({Success:true,message:"Contact Queries",result: queries});
+    } catch (error) {
+        console.error(`Error getting`,error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+export const createContactQuery = async(req,res)=>{
+	try {
+		console.log("Query Data: ",req.body);
+		const{contactDetails,message} = req.body;
+		if(!contactDetails){
+			return res.status(400).json({Success: false, message: "Contact Details are required"});
+		}
+		if(!message){
+			return res.status(400).json({Success: false, message: "Message is required"});
+		}
+		const newQuery = new ContactQuery({QueryDetails:{...contactDetails},QueryMessage:message});
+		await newQuery.save();
+		res.status(201).json({Success: true, message: 'Query created successfully!', result: newQuery});
+	} catch (error) {
+		console.error("Error creating contact query: ",error);
+		res.status(500).json({Success: false, message: 'Internal Server Error'});
+	}
 }
 export const getConvenienceFees = async(req,res)=>{
 	try {

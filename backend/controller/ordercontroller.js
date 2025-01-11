@@ -138,7 +138,7 @@ export const createorder = async (req, res, next) => {
 
     // Uncomment and handle bag removal if needed
     await Bag.findByIdAndDelete(bagId);
-    sendOrderPlacedMail(req.user.id,orderData)// sending Message Mail....
+    await sendOrderPlacedMail(req.user.id,orderData)// sending Message Mail....
     // console.log("Bag Removed:", bagToRemove);
     res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
 

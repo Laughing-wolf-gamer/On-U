@@ -2,6 +2,7 @@ import Coupon from "../../model/Coupon.model.js";
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
+import { sendUpdateOrderStatus } from "../emailController.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -413,6 +414,7 @@ export const getOrderById = async(req,res)=>{
 }
 export const updateOrderStatus = async(req,res)=>{
     try {
+        const {id} = req.user;
         const{orderId} = req.params;
         const{status} = req.body;
         if(!orderId || !status){
@@ -422,7 +424,12 @@ export const updateOrderStatus = async(req,res)=>{
         if(!order){
             return res.status(404).json({Success:false,message:"Order not found"});
         }
-        res.status(200).json({Success:true,message:"Order Status Updated",result:order});
+        // const updateMailSent = await
+        const updateOrderStatusMailSent = await sendUpdateOrderStatus(id,order);
+        if(updateOrderStatusMailSent){
+            return res.status(200).json({Success:true,message:"Order Status Updated",result:order});
+        }
+        res.status(200).json({Success:false,message:"Failed to update order status"});
     } catch (error) {
         console.error("Error updating order status: ",error);
         res.status(500).json({Success:false,message:"Internal Server Error",result:null});
