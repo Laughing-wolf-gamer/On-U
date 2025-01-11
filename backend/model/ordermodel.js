@@ -14,9 +14,11 @@ const ordersSchema = new mongoose.Schema({
     TotalAmount:{type:Number,required:true},
     SelectedAddress:{type:Object,required:true},
     paymentMode:{type:String,default:"PrePaid",required:true},
-    status: { type: String, default:"Processing",enum: ["Order Confirmed","Processing", "Order Shipped", "Out for Delivery", "Delivered"], required: true },
-    
-
+    status: { type: String, default:"Processing", required: true },
+    current_status: { type: String,default:"Processing"},
+    current_timestamp:{type:String,},
+    courier_name:{type:String,default:""},
+    scans:[{type:Object,default:[]}],
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

@@ -18,6 +18,7 @@ import { capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
+import PincodeChecker from './PincodeChecker'
 const Ppage = () => {
   const navigation = useNavigate();
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -217,9 +218,6 @@ const Ppage = () => {
                             <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
                               ${currentSize?._id === size?._id  ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} onClick={(e)=> {
                                 console.log("Selecting Size: ",currentSize?._id === size?._id);
-                              // e.preventDefault();
-                              // setCurrentSize(size);
-                              // setSelectedSize(size);
                               handleSetNewImageArray(size);
                             }}>
                             <button  type='button' 
@@ -274,7 +272,7 @@ const Ppage = () => {
                       <p className="text-black">No colors available</p>
                     )}
                     </div>
-
+                    <PincodeChecker/>
                   <button 
                     className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" 
                     onClick={addtobag}>
@@ -384,7 +382,7 @@ const Ppage = () => {
                       </div>
                     </div>
                   )}
-
+                 
               </div>
             </div>
            <div className='w-[70%] px-2'>

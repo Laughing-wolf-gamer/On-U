@@ -108,7 +108,14 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
     }
     const handleRazerPayPayment = async()=>{
         try {
-            const { data } = await axios.post(`${BASE_API_URL}/api/payment/razerypay/order`, { amount:totalAmount },headerConfig());
+            console.log("Payment Gateway: User: ",user);
+            const { data } = await axios.post(`${BASE_API_URL}/api/payment/razerypay/order`, {
+                amount:totalAmount,
+                customer_id:user.id,
+                contact:user?.user?.phoneNumber,
+                email:user?.user?.email,
+                callback_url:`${BASE_CLIENT_URL}/bag`
+            },headerConfig());
             if(!data.success){
                 alert.error("Failed to create order, please try again later");
                 return;

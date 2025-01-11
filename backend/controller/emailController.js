@@ -204,7 +204,7 @@ export const sendOrderPlacedMail = async (userId,orderData)=>{
         
         try {
             const info = await sendMailAsync(mailOptions);
-            console.log('Coupon email sent successfully:', info);
+            console.log('Order Placed Successfully:', info);
             sendingEmailSuccess = true;
         } catch (error) {
             console.error('Error sending email: ', error.message);

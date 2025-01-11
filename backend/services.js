@@ -1,4 +1,5 @@
 import App from './app.js';
+import ngrok from 'ngrok';
 import { getAuthToken } from './controller/LogisticsControllers/shiprocketLogisticController.js';
 import connectdatabse from './database/Database.js';
 import { config } from 'dotenv';
@@ -13,6 +14,11 @@ const PORT = process.env.PORT || 8000;
 const server = App.listen(process.env.PORT, ()=>{
     console.log(`Server on http://localhost:${PORT}`)
     getAuthToken();
+    ngrok.connect({addr: PORT}).then((url)=>{
+        console.log(`Public URL: ${url}`)
+    }).catch((err)=>{
+        console.error(`Error starting ngrok: ${err}`)
+    })
 })
 
 connectdatabse()

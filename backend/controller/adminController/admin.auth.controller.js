@@ -675,7 +675,7 @@ export const getTotalUsers = async (req,res)=>{
 export const getMaxDeliveredOrders = async (req,res)=>{
   try {
     const orders = await OrderModel.find({status: 'Delivered'});
-    res.status(200).json({Success:true,message: 'All Delivered Orders',result:orders?.length || -1});
+    res.status(200).json({Success:true,message: 'All Delivered Orders',result:orders?.length || 0});
   } catch (error) {
     console.error("Error getting all delivered orders: ",error);
     res.status(500).json({Success:false,message: 'Internal Server Error'});

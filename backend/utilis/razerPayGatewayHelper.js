@@ -14,8 +14,9 @@ export const instance = new Razorpay({
 export const createOrder = async (req, res) => {
     try {
         console.log("Payment Amount:", req.body);
+        const{amount} = req.body;
         const options = {
-            amount: Number(req.body.amount * 100),
+            amount: Number(amount * 100),
             currency: "INR",
         };
         const order = await instance.orders.create(options);
@@ -63,7 +64,7 @@ export const paymentVerification = async (req, res) => {
                 });
             
                 await orderData.save();
-                const createdShipRocketOrder = await generateOrderForShipment(orderData)
+                const createdShipRocketOrder = await generateOrderForShipment(orderData,randomOrderShipRocketId)
                 if(!createdShipRocketOrder){
                     return res.status(500).json({ success: false, message: "Failed to create ShipRocket Order" });
                 }
@@ -144,5 +145,17 @@ const removeProduct = async(productId,color,size,quantity) => {
         console.log("Product Updated: ",product);
     } catch (error) {
         console.error("Error Removing Product: ",error)
+    }
+}
+
+
+export const OnPaymentCallBack = async (req,res)=>{
+    try {
+        const SECREAT = 1234567890;
+        console.dir(req.body, { depth: null});
+        res.status(200).json({ success: true, message: 'Payment Successful' });
+    } catch (error) {
+        console.error("Error Removing OnPayment Call",error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }

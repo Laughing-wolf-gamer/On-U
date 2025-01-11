@@ -189,3 +189,13 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
         console.dir(error, { depth: null});
     }
 }
+
+
+export const checkShipmentAvailability = async(wareHousePincode,) =>{
+    if(!token) await getAuthToken();
+    try {
+        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`)   
+    } catch (error) {
+        console.dir(error, { depth: null});
+    }
+}

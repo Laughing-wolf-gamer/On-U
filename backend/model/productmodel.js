@@ -83,8 +83,12 @@ const productModelSchema = new mongoose.Schema({
             comment:String
         }
     ],
-    AppliedCoupon:{type:mongoose.Schema.Types.ObjectId,ref:'coupon'}
-
+    AppliedCoupon:{type:mongoose.Schema.Types.ObjectId,ref:'coupon'},
+    width:{type:Number},
+    height:{type:Number},
+    length:{type:Number},
+    weight:{type:Number},
+    breadth:{type:Number},
 },{timestamps:true})
 
 productModelSchema.index({title: 1})

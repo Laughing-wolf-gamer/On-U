@@ -240,13 +240,15 @@ const Bag = () => {
             sessionStorage.removeItem("checkoutData")
             if(response?.data.success){
                 alert.success("Payment Successful");
+                if(user){
+                    setTimeout(() => {
+                        dispatch(getbag({ userId: user.id }));
+                    }, 1000);
+                }
             }else{
                 alert.error("Payment Failed");
             }
             
-            if(user){
-                dispatch(getbag({ userId: response?.data?.userId }));
-            }
         } catch (error) {
             console.error(`Error Verifying order: `,error);
         }

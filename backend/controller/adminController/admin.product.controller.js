@@ -177,6 +177,11 @@ export const addNewProduct = async (req, res) => {
             price,
             salePrice,
             Rating,
+            width,
+            height,
+            length,
+            weight,
+            breadth,
         } = req.body;
         console.log("All fields ",req.body);
         
@@ -219,7 +224,12 @@ export const addNewProduct = async (req, res) => {
             salePrice: salePrice && salePrice > 0 ? salePrice : null,
             totalStock,
             AllColors:AllColors,
-            Rating:Rating && Rating.length > 0 ? [Rating]:[]
+            Rating:Rating && Rating.length > 0 ? [Rating]:[],
+            width,
+            height,
+            length,
+            weight,
+            breadth
         });
         if(!newProduct) return res.status(400).json({Success:false,message:"Product not created",result:null});
         await newProduct.save();
@@ -337,6 +347,11 @@ export const editProduct = async (req, res) => {
             subCategory,
             price,
             salePrice,
+            width,
+            height,
+            length,
+            weight,
+            breadth,
         } = req.body;
         console.log("Editing: ",req.body);
         // Define an object to store fields that need updating
@@ -368,7 +383,12 @@ export const editProduct = async (req, res) => {
         if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
         if (price > 0) updateFields.price = price;
         if (salePrice) updateFields.salePrice = salePrice && salePrice > 0 ? salePrice: null;
-        console.log("Updating : ",updateFields);
+        if(width && width > 0) updateFields.width = Number(width);
+        if(height && height > 0) updateFields.height = Number(height);
+        if(length && length > 0) updateFields.length = Number(length);
+        if(weight && weight > 0) updateFields.weight = Number(weight);
+        if(breadth && breadth > 0) updateFields.breadth = Number(breadth);
+        console.log("Updating Product Fields: ",updateFields);
         if (Object.keys(updateFields).length > 0) {
             const updatedProduct = await ProductModel.findByIdAndUpdate(
                 id, 
