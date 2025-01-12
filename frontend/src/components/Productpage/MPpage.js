@@ -18,6 +18,7 @@ import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
 import { capitalizeFirstLetterOfEachWord } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import PincodeChecker from './PincodeChecker';
 const productReviewMock = {
     reviews: [
       {
@@ -214,8 +215,8 @@ const MPpage = () => {
                                 {capitalizeFirstLetterOfEachWord(product?.gender)}
                             </h1>
                         </div>
-
-                        <div className="border-b border-white pb-6 pt-2 bg-white">
+                        
+                        <div className="border-b border-white pb-2 pt-2 bg-white">
                             <h1 className="font1 text-lg font-semibold text-slate-800">
                                 <span className="mr-4 font-bold">
                                     ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
@@ -298,7 +299,7 @@ const MPpage = () => {
                             </div>
 
                         </div>
-
+                        <PincodeChecker productId={product?._id}/>
                         <div className='mt-2 pt-4 bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
                         </div>

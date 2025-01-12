@@ -272,7 +272,7 @@ const Ppage = () => {
                       <p className="text-black">No colors available</p>
                     )}
                     </div>
-                    <PincodeChecker/>
+                    <PincodeChecker productId={product._id}/>
                   <button 
                     className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" 
                     onClick={addtobag}>

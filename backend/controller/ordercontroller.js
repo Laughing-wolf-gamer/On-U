@@ -370,22 +370,39 @@ export const addItemsToBag = A(async (req, res) => {
       if(!userId || !productId || !quantity || !color || !size){
         return res.status(400).json({message: "Please provide all the required fields"})
       }
-      const FindUserBag = await Bag.findOne({userId});
+      
+      const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
       if(!FindUserBag){
+
         const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
         const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
-        await bag.save()
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+        if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
+        if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+        if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
+        if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+
+
+        await bag.save();
       }else{
-        const userBag = await Bag.findOne({userId})
-        const product = userBag.orderItems.find(p => p.productId == productId)
+        const product = FindUserBag.orderItems.find(p => p.productId._id == productId)
         if(product){
           product.quantity = product.quantity + quantity
         }else{
-          userBag.orderItems.push({productId,quantity,color,size})
+          FindUserBag.orderItems.push({productId,quantity,color,size})
         }
-        const TotalBagAmount = calculateTotalAmount(bag.orderItems);
-        userBag.TotalBagAmount = TotalBagAmount;
-        await userBag.save()
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+
+        if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
+        if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
+        if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
+        if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
+        await FindUserBag.save()
+
+
+
+        // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+        // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
       }
       const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
       console.log("Bag Items: ",bag)
@@ -396,15 +413,80 @@ export const addItemsToBag = A(async (req, res) => {
     }
  
  })
- function calculateTotalAmount(products) {
+ const getItemsData = async (bag) => {
+  let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+  let totalMRP = 0;
+
+  // Use for...of to handle async properly
+  for (const item of bag.orderItems) {
+      const { productId, color, size, quantity } = item;
+      // console.log("Bag Item: ", item);
+
+      // Await the database query
+      const productData = await ProductModel.findById(productId?._id || productId);
+      const { salePrice, price } = productData;
+
+      // Calculate item totals
+      const productSellingPrice = salePrice || price;
+      const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+      totalSP += itemTotalPrice;
+
+      // Calculate discount if both salePrice and price are valid
+      if (salePrice && price > 0) {
+          const discount = price - salePrice;
+          totalDiscount += discount * quantity;
+      }
+
+      // Add to the product selling price
+      totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+
+      // Add to MRP
+      totalMRP += price * quantity;
+  }
+
+  // If coupon logic is required:
+  if (bag.Coupon) {
+      const coupon = bag.Coupon;
+      const { CouponType, Discount, MinOrderAmount } = coupon;
+
+      const applyCouponDiscount = () => {
+          if (CouponType === "Percentage") {
+              totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+              setCouponDiscountData({});
+          } else {
+              totalProductSellingPrice -= Discount;
+          }
+      };
+
+      // Apply coupon discount only if applicable
+      if (MinOrderAmount > 0) {
+          if (totalProductSellingPrice >= MinOrderAmount) {
+              applyCouponDiscount();
+          }
+      } else {
+          applyCouponDiscount();
+      }
+
+      // Apply free shipping discount
+      if (bag.Coupon.FreeShipping) {
+          totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+      }
+  }
+//  console.log("Total: ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP )
+
+  return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP };
+};
+
+function calculateTotalAmount(products) {
+  // console.log("Total Bag Orders: ",products);
   return products.reduce((total, product) => {
     // Choose the salePrice if it exists, otherwise use the regular price
     const priceToUse = product.productId.salePrice || product.productId.price;
     return total + (product.quantity * priceToUse);
-  }, 0);
+  }, 0) || 0;
 }
 
- export const getbag = async (req, res) => {
+export const getbag = async (req, res) => {
   try {
     const { userId } = req.params;
 
@@ -513,7 +595,13 @@ export const updateqtybag = async (req, res, next) => {
     product.quantity = qty;
     const TotalBagAmount = calculateTotalAmount(bag.orderItems);
     bag.TotalBagAmount = TotalBagAmount;
-    console.log("Updated Bag:", bag);
+    // console.log("Updated Bag:", bag);
+    const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+    // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+    if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
+    if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+    if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
+    if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
     // Save the updated bag
     await bag.save();
 

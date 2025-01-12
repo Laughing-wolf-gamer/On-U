@@ -21,6 +21,7 @@
     "nodemailer": "^6.9.16",
     "path-browserify": "^1.0.1",
     "razorpay": "^2.9.5",
+    "twilio": "^5.4.1",
     "util": "^0.12.4",
     "validator": "^13.7.0"
   },

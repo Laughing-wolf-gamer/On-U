@@ -1,8 +1,9 @@
 // src/components/PincodeChecker.js
 import React, { useState } from "react";
 import axios from "axios";
+import { BASE_API_URL } from "../../config";
 
-const PincodeChecker = () => {
+const PincodeChecker = ({productId}) => {
   const [pincode, setPincode] = useState("");
   const [message, setMessage] = useState("");
 
@@ -14,12 +15,13 @@ const PincodeChecker = () => {
     e.preventDefault();
 
     try {
-      const response = await axios.post("http://localhost:5000/check-pincode", {
-        pincode,
-      });
+      // console.log("Pincode: ",pincode, " is Proudct:",productId);
+      const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/${pincode}/${productId}`,);
 
-      if (response.data.deliverable) {
-        setMessage("Delivery is available for this pincode!");
+      if (response.data.result) {
+        console.log("Delivery is available!",response.data.result);
+        const result = response.data.result;
+        setMessage(`Delivery is available for this pincode Within ${result?.edd} days`);
       } else {
         setMessage("Sorry, delivery is not available for this pincode.");
       }
@@ -29,8 +31,8 @@ const PincodeChecker = () => {
   };
 
   return (
-    <div className="max-w-md p-6 bg-white h-fit">
-      <h3 className="text-sm  font-thin text-left mb-4">Check Pincode for Delivery</h3>
+    <div className="max-w-sm p-6 bg-white h-fit">
+      <h3 className="text-sm  font-thin text-left mb-4">Pincode</h3>
       <form onSubmit={handleSubmit} className="space-x-4 justify-between items-center flex flex-row">
         <input
           type="text"
@@ -42,9 +44,9 @@ const PincodeChecker = () => {
         />
         <button
           type="submit"
-          className="w-2/4 flex-wrap h- bg-black text-white p-2 rounded-md hover:bg-gray-800"
+          className="w-1/3 flex-wrap h-12 my-auto bg-black p-2 rounded-md hover:bg-gray-800"
         >
-          Check Delivery
+          <span className="w-full h-full text-center text-white font-light text-xl">Check</span>
         </button>
       </form>
       {message && <p className="mt-4 text-center text-gray-600">{message}</p>}

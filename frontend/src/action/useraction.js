@@ -36,11 +36,11 @@ import {
 } from '../const/userconst'
 import axios from 'axios'
 
-export const loginmobile = ({phonenumber}) => async (dispatch) => {
+export const loginmobile = ({logInData}) => async (dispatch) => {
     try {
-        console.log("logIn Data: ", phonenumber)
+        console.log("logIn Data: ", logInData)
         // dispatch({ type: LOGIN_USER_DATA })
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {phonenumber})
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {logInData})
         console.log("Login Data: ", data)
         return data.result;
         // const token = data?.result?.token

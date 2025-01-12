@@ -167,6 +167,7 @@ export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
 export const getAllShipRocketOrder = async()=>{
     if(!token) await getAuthToken();
     try {
+        
         const response = await axios.get(`${SHIPROCKET_API_URL}/orders`,
             {
                 headers: {
@@ -191,11 +192,32 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
 }
 
 
-export const checkShipmentAvailability = async(wareHousePincode,) =>{
-    if(!token) await getAuthToken();
+export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
-        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`)   
+        if(!token) await getAuthToken();
+        const picketUp_pin = 784501;
+        const cod = true;
+        const shipmentData = {
+            cod: 1,  // Make sure `cod` is a boolean
+            pickup_postcode: picketUp_pin,
+            delivery_postcode: delivary_pin,  // Make sure `delivary_pin` is defined somewhere
+            weight: weight,  // Assuming `weight` is defined and a valid number
+        };
+
+        console.log("Shipment availability: ", shipmentData);
+
+        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+            params: shipmentData,  // Use `params` for query parameters in GET requests
+        });
+
+        // console.log(res.data);
+        console.dir(res.data,{ depth: null})
+        return res.data;
     } catch (error) {
         console.dir(error, { depth: null});
+        // console.error("Error: ",error)
     }
 }

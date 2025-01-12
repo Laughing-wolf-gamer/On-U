@@ -6,6 +6,7 @@ import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
 import WebSiteModel from '../model/websiteData.model.js';
 import { sendVerificationEmail } from './emailController.js';
+import { sendOTP } from '../utilis/smsAuthentication.js';
 
 export const registermobile = A(async (req, res, next) => {
   try {
@@ -21,7 +22,7 @@ export const registermobile = A(async (req, res, next) => {
       return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:existingUser.otp,user:existingUser}})
     }
     const otp = Math.floor((1 + Math.random()) * 90000)
-    sendVerificationEmail(email, otp)
+    await sendVerificationEmail(email, otp)
     const user = await User.create({
       name,
       email,
@@ -42,28 +43,53 @@ export const registermobile = A(async (req, res, next) => {
 
 })
 export const loginMobileNumber = A(async(req, res, next) => {
-  const { phonenumber,email } = req.body;
-  let user = await User.findOne({phoneNumber:phonenumber});
-  if(!user){
-    user = await User.findOne({email:email});
+  const { logInData} = req.body;
+  const isPhoneNumber = CheckIsPhoneNumber(logInData);
+  console.log("Login Type: ",isPhoneNumber);
+  let phoneNumber = null;
+  let email = null;
+  let user = null;
+  if(isPhoneNumber === 'invalid'){
+    return res.status(400).json({ success: false, message: 'Invalid LogIn Data' });
   }
-  console.log("Login Details: ",user);
+  if(isPhoneNumber === 'phone'){
+    phoneNumber = logInData;
+    user = await User.findOne({phoneNumber:logInData});
+  }else{
+    email = logInData;
+    user = await User.findOne({email:logInData});
+
+  }
+  console.log("Log In Data: ",phoneNumber,email);
+  console.log("Login User: ",user);
   if(!user){
     return next( new Errorhandler('Mobile Number not found', 404))
   }
-  const otp = Math.floor((1 + Math.random()) * 90000)
-  sendVerificationEmail(user.email, otp)
+  function generateOTP() {
+    return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP
+  }
+  let otp = generateOTP();
+  try {
+    if(phoneNumber){
+      await sendOTP(user.phoneNumber,otp);
+    }
+  } catch (error) {
+    console.error("Error Sending otp");
+  }
+  sendVerificationEmail(user.email, otp) 
   user.otp = otp;
   await user.save();
-  // const token = sendtoken(user);
-  // return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
-  return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:phonenumber}})
+  return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
 })
 export const loginOtpCheck = A(async(req,res,next)=>{
-  const{otp,phoneNumber} = req.body;
-  const user = await User.findOne({phoneNumber:phoneNumber});
+  const{otp,phoneNumber,email} = req.body;
+  let user = await User.findOne({phoneNumber:phoneNumber});
   if(!user){
-    return next( new Errorhandler('Mobile Number not found', 404))
+    // return next( new Errorhandler('Mobile Number not found', 404))
+    user = await User.findOne({email:email});
+    if(!user){
+      return next( new Errorhandler('Email not found', 404))
+    }
   }
   if(!user.otp){
     return next( new Errorhandler('OTP not found', 404))
@@ -79,7 +105,7 @@ export const loginOtpCheck = A(async(req,res,next)=>{
   return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
 
 })
-function checkLoginType(input) {
+function CheckIsPhoneNumber(input) {
   // Regex for validating phone number (simplified version)
   const phoneRegex = /^[+]?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?[-.\s]?)?[\d\s-]{7,}$/;
 

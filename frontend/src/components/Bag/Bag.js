@@ -17,6 +17,7 @@ import { Circle, X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
+import { BiRupee } from 'react-icons/bi';
 const handelGetAmountAfterApplyingCoupon = (coupon,bag,user)=>{
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0;
@@ -164,9 +165,9 @@ const Bag = () => {
             }
 
             // Log the results to check the calculations
-            console.log("Total Product Selling Price: ", totalProductSellingPrice);
-            console.log("Total Discount: ", totalDiscount);
-            console.log("Total MRP: ", totalMRP);
+            // console.log("Total Product Selling Price: ", totalProductSellingPrice);
+            // console.log("Total Discount: ", totalDiscount);
+            // console.log("Total MRP: ", totalMRP);
 
             // Update state
             setTotalProductSellingPrice(totalProductSellingPrice);
@@ -272,7 +273,7 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    console.log("bag Data: ",bag?.Coupon);
+    console.log("bag Data: ",bag);
     
     return (
         <>
@@ -351,11 +352,11 @@ const Bag = () => {
                                     <h3 className="font-semibold mb-2">PRICE DETAILS ({bag.orderItems.length} items)</h3>
                                     <div className="flex justify-between mb-2">
                                         <span>Total MRP</span>
-                                        <span>₹{totalSellingPrice}</span>
+                                        <span>₹{bag?.totalMRP || totalSellingPrice}</span>
                                     </div>
                                     <div className="flex justify-between mb-2">
                                         <span>You Saved</span>
-                                        <span>₹{Math.round(discountedAmount)}</span>
+                                        <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
                                     </div>
                                     <div className="flex justify-between mb-2">
                                         <span>Coupon</span>
@@ -367,7 +368,7 @@ const Bag = () => {
                                     </div>
                                     <div className="flex justify-between font-semibold text-xl">
                                         <span>Total</span>
-                                        <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                        <span>₹{Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
                                     </div>
                                 </div>
                             </div>

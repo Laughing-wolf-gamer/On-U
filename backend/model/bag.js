@@ -21,7 +21,10 @@ const BagSchema = new mongoose.Schema({
         size:Object,
         quantity:Number,
     }],
-    TotalBagAmount:Number
+    totalProductSellingPrice:Number,
+    totalSP:Number,
+    totalMRP:Number,
+    totalDiscount:Number,
 })
 
 const Bag = mongoose.model('Bag', BagSchema)

@@ -6,7 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';
 
 const Login = () => {
-  const [mobileno, setmobileno] = useState('');
+  const [logInData, setLogInData] = useState('');
   const [otpData, setOtpData] = useState(null);
   const [otp, setOtp] = useState('');
   const [otpError, setOtpError] = useState('');
@@ -18,16 +18,13 @@ const Login = () => {
   let par = document.getElementById('error');
 
   const continues = async () => {
-    if (mobileno.length < 10) {
-      par.innerHTML = 'Error: Please enter a valid 10-digit mobile number';
+    if (!logInData) {
+      Alert.error('Please enter a Valid LogIn Details');
       return;
     }
-    if (mobileno.length === 10) {
-      const result = await dispatch(loginmobile({ phonenumber: mobileno }));
-      setOtpData(result); // Assuming result means OTP is sent
-      // console.log('Login mobile: ', result);
-      Alert.success("Otp sent successfully To Your Mail Id ")
-    }
+    const result = await dispatch(loginmobile({ logInData }));
+    setOtpData(result); // Assuming result means OTP is sent
+    Alert.success("Otp sent successfully To Your Mail Id ")
   };
 
   const handleOtpChange = (e) => {
@@ -71,19 +68,19 @@ const Login = () => {
             <h1 className="text-2xl font-semibold text-center text-gray-700 mb-6">Login or Sign Up</h1>
 
             <input
-              type="number"
-              name="phoneNumber"
-              maxLength="10"
+              type="text"
+              name="logInData"
               className="w-full p-4 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400 mb-4"
-              onChange={(e) => setmobileno(e.target.value)}
-              placeholder="+91 | Mobile Number"
+              onChange={(e) => setLogInData(e.target.value)}
+              placeholder="Enter Phone Number / Email"
             />
             <p id="error" className="text-xs text-black text-center mb-4"></p>
 
             <h1 className="text-sm text-center mb-5">
               By Continuing, I agree to the{' '}
-              <span className="text-gray-600">Terms of Use</span> &{' '}
-              <span className="text-gray-600">Privacy Policy</span>
+              <Link to="/tc"><span className="text-gray-600">Terms of Use</span> &{' '}</Link>
+              <Link to="/privacyPolicy"><span className="text-gray-600">Privacy Policy</span></Link>
+              
             </h1>
 
             <button

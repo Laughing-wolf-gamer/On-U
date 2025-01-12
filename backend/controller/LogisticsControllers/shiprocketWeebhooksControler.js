@@ -1,5 +1,7 @@
 import OrderModel from "../../model/ordermodel.js";
+import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
+import { checkShipmentAvailability } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
     try {
@@ -108,6 +110,46 @@ export const removeWareHouseById = async(req,res)=>{
         res.status(200).json({Success: true, message: 'Warehouse'});
     } catch (error) {
         console.error("Error fetching",error);
+        res.status(500).json({Success: false, message: 'Internal Server Error'});
+    }
+}
+
+
+export const checkAvailability = async (req,res)=>{
+    try {
+        const {pincode,productId} = req.params;
+        console.log("Checking availability: ",pincode);
+        const product = await ProductModel.findById(productId);
+        if(!product){
+            console.error("Product Not Found: ",productId);
+            return res.status(404).json({Success: false, message: 'Product not found'});
+        }
+        if(!pincode){
+            console.error("Pincode is required");
+            return res.status(400).json({Success: false, message: 'Pincode is required'});
+        }
+        const weight = product.weight;
+        const available = await checkShipmentAvailability(pincode,weight);
+        if(available === null){
+            console.error("Error checking availability");
+            return res.status(500).json({Success: false, message: 'Error checking availability'});
+        }
+        const partnersDelivering = available?.data?.available_courier_companies?.map((partners) => ({edd:partners.estimated_delivery_days,etd:partners.etd,etd_hours:partners.etd_hours}));
+        if(partnersDelivering.length > 0) {
+            console.log("Pincode is available for delivery: ", partnersDelivering);
+            const fastestDelivery = partnersDelivering.reduce((fastest, current) => {
+                // Compare 'edd' values, assuming they represent days for delivery
+                if (parseInt(current.edd) < parseInt(fastest.edd)) {
+                    return current;
+                }
+                return fastest;
+            }, partnersDelivering[0]); // Start with the first element
+            return res.status(200).json({Success: true, message: 'Pincode availability', result: fastestDelivery});
+        }
+        console.log("Pincode is available: ", );
+        res.status(200).json({Success: false, message: 'Delivery not available'});
+    } catch (error) {
+        console.error("Error: ", error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
