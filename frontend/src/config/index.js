@@ -97,6 +97,14 @@ export const removeSpaces = (inputString) => {
     return inputString.replace(/\s+/g, '');
 }
 
+
+export const calculateDiscountPercentage = (originalPrice, salePrice) => {
+    if (originalPrice > 0 && salePrice > 0) {
+      return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
+    }
+    return 0; // Return 0 if the prices are invalid or zero
+};
+
 export const DevMode = false;
 export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";
 export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";

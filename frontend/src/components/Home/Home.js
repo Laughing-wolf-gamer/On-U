@@ -431,104 +431,132 @@ const Home = () => {
     <Fragment>
       {
         window.screen.width > 1024 ?
-        <Fragment>
+          <Fragment>
             <div className='mt-8 w-[100vw] relative'>
-                {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator = {indicator}/>: <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator = {indicator}/>}
+                {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
+                    <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
+                    : 
+                    <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator={indicator} />}
             </div>
+
             <div className='w-full flex justify-center items-center my-10 px-4 md:px-8 h-auto'>
-              <div className='w-fit  h-auto flex justify-center gap-10 items-center flex-wrap'>
-                <div className='px-4 flex w-72  flex-row gap-x-1 justify-center items-center'>
-                  <Truck  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
-                  <div className='h-full w-1 bg-black'/>
-                  <div className='w-full text-left h-auto justify-center items-center'>
-                    <h3 className='font-medium text-left text-[20px] text-black'>FREE SHIPPING</h3>
-                    <span className='font-light text-left text-[15px] text-gray-400'>On all orders over $75.00</span>
-                  </div>
+                <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <Truck size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
+                        <div className='h-full w-1 bg-gray-800'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[20px] text-gray-900'>FREE SHIPPING</h3>
+                            <span className='font-light text-left text-[15px] text-gray-500'>On all orders over $75.00</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <Clock size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
+                        <div className='h-full w-1 bg-gray-800'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[20px] text-gray-900'>SUPPORT 24/7</h3>
+                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <CircleDollarSign size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
+                        <div className='h-full w-1 bg-gray-800'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[20px] text-gray-900'>Money Return</h3>
+                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <BadgeIndianRupee size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
+                        <div className='h-full w-1 bg-gray-800'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[20px] text-gray-900'>Order Discount</h3>
+                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
+                        </div>
+                    </div>
                 </div>
-                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <Clock  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
-                  <div className='h-full w-1 bg-black'/>
-                  <div className='w-full text-left h-auto justify-center items-center'>
-                    <h3 className='font-medium text-left [20px] text-black'>SUPPORT 24/7</h3>
-                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
-                  </div>
-                </div>
-                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <CircleDollarSign  size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
-                  <div className='h-full w-1 bg-black'/>
-                  <div className='w-full text-left h-auto justify-center items-center'>
-                    <h3 className='font-medium text-left text-[20px] text-black'>Money Return</h3>
-                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
-                  </div>
-                </div>
-                <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                  <BadgeIndianRupee size={5} className="w-16 h-16 text-black transition-transform duration-150 hover:animate-vibrateScale"/>
-                  <div className='h-full w-1 bg-black'/>
-                  <div className='w-full text-left h-auto justify-center items-center'>
-                    <h3 className='font-medium text-left [20px] text-black'>Order Discount</h3>
-                    <span className='font-light text-left text-[15px] text-gray-400'>Free shipping on all order</span>
-                  </div>
-                </div>
-              </div>
             </div>
 
-            <div className=' py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
-              {product && product.length > 0 && <ProductPreviewFull product = {product}/>}
+            <div className='py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
+                {product && product.length > 0 && <ProductPreviewFull product={product} />}
             </div>
-            <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header}/>
-            <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header}/>
-            {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/>: <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>}
-            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/>: 
-              <DraggableImageSlider images={[
-              a1,
-              a2, 
-              a3, 
-              a4, 
-              a5, 
-              a6, 
-              a7, 
-              a8,
-            ]} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>}
-            
-            {
-              Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
+
+            <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} />
+            <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} />
+            {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
+                <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>
+            }
+
+            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/> : 
+                <DraggableImageSlider images={[a1, a2, a3, a4, a5, a6, a7, a8]} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>
             }
 
             {
-              Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
+                Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : 
+                <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
             }
+
+            {
+                Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
+                <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
+            }
+
             <div>
-              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8'>DEALS ON LATEST ARRIVALS</h1>
-              <div className='grid grid-cols-2 '>
-                
-                {
-                  Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? Wide_Screen_Section_8.map((j, index) => (
-                    <Link key={`j_banners_${index}`} to='/products' className='m-1'><LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px]" /></Link>
-                  )):(
-                    <>
-                      <Link to='/products'><LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px]'/></Link>
-                      <Link to='/products'><LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px]'/></Link>
-                      <Link to='/products'><LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px]'/></Link>
-                      <Link to='/products'><LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px]'/></Link>
-                    </>
-                  )
-                }
-
-              </div>
+                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-800 mb-8 mt-8'>DEALS ON LATEST ARRIVALS</h1>
+                <div className='grid grid-cols-2'>
+                    {
+                        Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? 
+                        Wide_Screen_Section_8.map((j, index) => (
+                            <Link key={`j_banners_${index}`} to='/products' className='m-1'>
+                                <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px]" />
+                            </Link>
+                        )) : (
+                            <>
+                                <Link to='/products'>
+                                    <LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px]' />
+                                </Link>
+                                <Link to='/products'>
+                                    <LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px]' />
+                                </Link>
+                                <Link to='/products'>
+                                    <LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px]' />
+                                </Link>
+                                <Link to='/products'>
+                                    <LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px]' />
+                                </Link>
+                            </>
+                        )
+                    }
+                </div>
             </div>
 
             {
-              Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
+                Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
+                <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
             }
-            {
-              Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
-            }
-            {
-              Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
-            }
-          <Footer/>
 
-          </Fragment>
+            {
+                Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
+                <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
+            }
+
+            {
+                Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : 
+                <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
+            }
+            
+            <Footer/>
+        </Fragment>
+
           :
           <Fragment>
             <div className='bg-white '>{/* Category */}

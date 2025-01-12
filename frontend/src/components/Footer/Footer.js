@@ -17,9 +17,9 @@ const Footer = () => {
             <h1 className="text-lg font-bold mb-4 text-gray-800">ONLINE SHOPPING</h1>
             <Link to="/products">
               <ul className="text-sm space-y-2">
-                <li className="hover:underline text-gray-400">Men</li>
-                <li className="hover:underline text-gray-400">Women</li>
-                <li className="hover:underline text-gray-400">Kids</li>
+                <li className="hover:underline text-gray-700">Men</li>
+                <li className="hover:underline text-gray-700">Women</li>
+                <li className="hover:underline text-gray-700">Kids</li>
               </ul>
             </Link>
           </div>
@@ -29,19 +29,19 @@ const Footer = () => {
             <h1 className="text-lg font-bold text-gray-800 mb-4">USEFUL LINKS</h1>
             <ul className="text-sm space-y-2">
               <Link to="/about">
-                <li className="hover:underline text-gray-400">About Us</li>
+                <li className="hover:underline text-gray-700">About Us</li>
               </Link>
               <Link to="/contact">
-                <li className="hover:underline text-gray-400">Contact Us</li>
+                <li className="hover:underline text-gray-700">Contact Us</li>
               </Link>
               <Link to="/faq">
-                <li className="hover:underline text-gray-400">FAQ</li>
+                <li className="hover:underline text-gray-700">FAQ</li>
               </Link>
               <Link to="/tc">
-                <li className="hover:underline text-gray-400">Terms And Conditions</li>
+                <li className="hover:underline text-gray-700">Terms And Conditions</li>
               </Link>
               <Link to="/privacyPolicy">
-                <li className="hover:underline text-gray-400">Privacy Policy</li>
+                <li className="hover:underline text-gray-700">Privacy Policy</li>
               </Link>
             </ul>
           </div>
@@ -54,7 +54,7 @@ const Footer = () => {
               <img src={g2} alt="Apple Store" />
             </div>
             <h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
-            <div className="flex space-x-4 md:text-2xl text-lg text-gray-400">
+            <div className="flex space-x-4 md:text-2xl text-lg text-gray-800">
               <AiFillFacebook />
               <ImTwitter />
               <AiFillYoutube />
@@ -75,7 +75,7 @@ const Footer = () => {
               <img src={g4} alt="Easy Returns" className="w-12 mr-4" />
               <div>
                 <h1 className="font-normal text-gray-800">Return within 30 days</h1>
-                <span className="font-thin text-gray-400"> Of receiving your order</span>
+                <span className="font-thin text-gray-500"> Of receiving your order</span>
               </div>
             </div>
           </div>
@@ -85,7 +85,7 @@ const Footer = () => {
         <div className="text-sm mt-10">
           <h1 className="font-extrabold text-black mb-4">POPULAR SEARCHES</h1>
           <p className="text-gray-700">
-            Makeup | Dresses For Girls | T-Shirts | Sandals | Handbags | Sport Shoes | Watches | Earrings | Rings | Lipstick
+            Makeup | Dresses For Girls | T-Shirts | Sandals
           </p>
         </div>
 

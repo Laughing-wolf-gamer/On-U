@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState } from 'react'
+import React, { useEffect, Fragment, useState, useMemo } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { checkPurchasesProductToRate, postRating, singleProduct } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,11 +14,13 @@ import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { capitalizeFirstLetterOfEachWord} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
 import PincodeChecker from './PincodeChecker'
+import ReactPlayer from 'react-player';
+
 const Ppage = () => {
   const navigation = useNavigate();
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -159,8 +161,18 @@ const Ppage = () => {
 		}
     // console.log("Selected Size New ",currentSize);
   },[selectedSize])
-  // console.log("All Products: ",product,product?.Rating)
+  console.log("All Products: ",selectedSize_color_Image_Array)
+  const isVideo = useMemo(() => {
+    if (!selectedImage || !selectedImage.url) return false;
 
+    const url = selectedImage.url;
+    return (
+        url.includes("video") || 
+        url.endsWith(".mp4") || 
+        url.endsWith(".mov") || 
+        url.endsWith(".avi")
+    );
+  }, [selectedImage]);
   return (
     <Fragment>
       {
@@ -168,29 +180,72 @@ const Ppage = () => {
           <div>
             <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
               <div className='h-max col-span-7'>
-                <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
-                  {selectedImage ? <ImageZoom imageSrc={selectedImage.url ? selectedImage.url: selectedImage }/> : <LoadingSpinner/>}
-                </div>
+              <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
+                {selectedImage ? (
+                  isVideo ? (
+                      // Video handling using ReactPlayer
+                      <div className="w-full h-full">
+                          <ReactPlayer
+                              className="w-full h-full object-contain rounded-md border"
+                              url={selectedImage.url || selectedImage}
+                              controls={true}
+                              width="100%"
+                              height="100%"
+                              playing={false} // Set to true if you want to auto-play
+                              light={false}   // Optional: Display a thumbnail preview before play
+                          />
+                      </div>
+                  ) : (
+                      // Image handling (ImageZoom)
+                      <ImageZoom imageSrc={selectedImage.url || selectedImage} />
+                  )
+              ) : (
+                  // Loading Spinner
+                  <LoadingSpinner />
+              )}
+              </div>
                 <div className='h-20 justify-start items-center flex-row flex col-span-7'>
-                    <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
-                      {
-                        selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((e, index) =>
+                  <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
+                    {
+                      selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
+                      selectedSize_color_Image_Array.map((e, index) => {
+                        // Check if the media is a video or an image
+                        const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
+                        console.log("Selected color Images: ", isVideo);
+                        return (
                           <div
                             key={index} // Ensure each element has a unique key
                             className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
-                            onMouseEnter={() => (Addclass(), setSelectedImage(e))}
-                            onClick={() => (Addclass(), setSelectedImage(e))}
+                            onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
+                            onClick={() => { Addclass(); setSelectedImage(e); }}
                           >
-                            <img
-                              src={e.url || e}
-                              className='w-full h-full object-contain  hover:scale-110'
-                              alt="productImage"
-                            />
+                            {isVideo ? (
+                              // Render the video player if it's a video file
+                              <video
+                                className='w-full h-full object-contain hover:scale-110'
+                                controls
+                                src={e.url || e}
+                                alt="productVideo"
+                                loading="lazy"
+                              >
+                                Your browser does not support the video tag.
+                              </video>
+                            ) : (
+                              // Render the image if it's an image file
+                              <img
+                                src={e.url || e}
+                                className='w-full h-full object-contain hover:scale-110'
+                                alt="productImage"
+                                loading="lazy"
+                              />
+                            )}
                           </div>
-                        )
-                      }
-                    </div>
+                        );
+                      })
+                    }
                   </div>
+                </div>
+
 
               </div>
               {/* Content div for large screen */}
@@ -206,7 +261,7 @@ const Ppage = () => {
                       product && product.salePrice && product.salePrice > 0 &&(
                         <>
                           <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
-                          <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span>
+                          <span className="text-gray-700">{calculateDiscountPercentage(product.price,product.salePrice)} % OFF</span>
                         </>
                       )
                     }
@@ -272,7 +327,7 @@ const Ppage = () => {
                       <p className="text-black">No colors available</p>
                     )}
                     </div>
-                    <PincodeChecker productId={product._id}/>
+                    <PincodeChecker productId={product?._id}/>
                   <button 
                     className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" 
                     onClick={addtobag}>
@@ -286,11 +341,11 @@ const Ppage = () => {
                       product && product.salePrice && product?.salePrice > 0 && (<span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>)
                     }
                     
-                    <span className="line-through mr-4 font-extralight text-slate-500">Rs. {product?.price}</span>
+                    <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
                     {
                       product && product.salePrice && product?.salePrice > 0 && (
                         <>
-                          <span className="text-[#f26a10e1]">( {-Math.round(product?.salePrice / product?.price * 100 - 100)}% OFF )</span> 
+                          <span className="text-gray-700">{calculateDiscountPercentage(product.price,product.salePrice)} % OFF</span> 
                         </>
                       )
                     }
@@ -311,9 +366,9 @@ const Ppage = () => {
                   }
                   <h1 className='font1 flex items-center mt-8 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
                   <h1 className='font1 flex items-center mt-4 font-semibold'>Best Price:&nbsp; <span className='text-[#f26a10e1]'>&nbsp;Rs. {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}</span></h1>
-                  <li className='list-disc mt-2'>Applicable on: Orders above Rs. 1599 (only on first purchase)</li>
+                  <li className='list-disc mt-2'>Applicable on: Orders above ₹. 1599 (only on first purchase)</li>
                   <li className='list-disc mt-2'>Coupon code: <span className='font-semibold'>ONU250</span></li>
-                  <li className='list-disc mt-2'>Coupon Discount: Rs. 62 off (check cart for final savings)</li>
+                  <li className='list-disc mt-2'>Coupon Discount: ₹ 62 off (check cart for final savings)</li>
 
                 </div>
 
@@ -487,5 +542,4 @@ const getColorNameFromHex = (hexCode) => {
     return "Unknown Color"; // Fallback if hexCode is invalid
   }
 };
-
 export default Ppage

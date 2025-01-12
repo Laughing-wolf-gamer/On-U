@@ -73,18 +73,20 @@ const ProductPreviewFull = ({product}) => {
             <div className='w-fit sm:w-fit md:min-h-fit h-auto justify-center items-center space-x-7 flex flex-wrap md:flex-row'>
                 {
                     previewHeader && previewHeader.length > 0 && previewHeader.map((h, index) => (
-                        <h3 key={index} className={`text-black text-[20px] transition-transform duration-150 hover:animate-vibrateScale font-normal text-center m-2 cursor-pointer hover:text-gray-500 underline-offset-4 tracking-widest ${activePreview === h?.id ? "text-gray-700":''}`}onClick={(e)=> getRandomArrayOfProducts(e,h?.id)}>{h?.title}</h3>
+                        <h3 key={index} className={`text-black text-[20px] transition-transform duration-150 hover:animate-vibrateScale font-normal text-center m-2 cursor-pointer hover:text-gray-500 underline-offset-4 tracking-widest ${activePreview === h?.id ? "text-gray-700":''}`}onClick={(e)=> getRandomArrayOfProducts(e,h?.id)}>
+                            {h?.title}
+                        </h3>
                     ))
                 }
             </div>
-            <div className="w-screen h-auto justify-center items-center flex flex-row">
+            <div className="w-screen h-auto justify-center items-center flex flex-row bg-white p-2">
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 row-span-3 justify-center items-center ">
                     {previewProducts && previewProducts.length > 0 && previewProducts.map((p, index) => (
-                        <div key={index} className="w-80 m-1 bg-gray-100 h-full relative flex flex-col justify-start items-center hover:shadow-md rounded-md">
+                        <div key={index} className="w-80 m-1 bg-white h-full relative flex flex-col justify-start items-center hover:shadow-md pt-2">
                             <HomeProductsPreview product={p} />
-                            <div className="w-full p-2 bg-white flex flex-col justify-center items-center">
-                                <h2 className="font-extralight text-black text-2xl hover:text-gray-500 transition-colors duration-200 text-center mb-5">
-                                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}...` : p?.title}
+                            <div className="w-full p-2 bg-white flex flex-col justify-center items-center shadow-md">
+                                <h2 className="font-extralight text-gray-700 text-2xl hover:text-gray-100 transition-colors duration-200 text-center mb-5">
+                                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}` : p?.title}
                                 </h2>
                                 {/* Rating Section */}
                                 <div className="flex mt-2">
@@ -93,11 +95,11 @@ const ProductPreviewFull = ({product}) => {
                                 <div className='flex flex-row justify-between items-center'>
                                     <span className="text-[20px] font-mono">
                                         {p.salePrice && p.salePrice > 0 ? (
-                                            <span className="line-through text-gray-500 hover:animate-bounce">
+                                            <span className="line-through text-black hover:animate-bounce">
                                                 ₹ {p.price}
                                             </span>
                                         ) : (
-                                            <span className="text-gray-800 hover:animate-bounce">
+                                            <span className="text-black hover:animate-bounce">
                                                 ₹ {p.price}
                                             </span>
                                         )}
@@ -108,9 +110,7 @@ const ProductPreviewFull = ({product}) => {
                                             ₹ {p.salePrice}
                                         </span>
                                     )}
-                                </div>
-                
-                                
+                                </div>                                
                             </div>
                         </div>
                     ))}

@@ -82,7 +82,6 @@ const Single_product = ({ pro }) => {
                     <Link to={`/products/${pro._id}`} /* target='_blank'  */>
                         <li className=' w-full border-[1px] border-slate-200 grid-cols-1 2xl:border-none xl:border-none lg:border-none relative ' /* onMouseEnter={() => (showdiv(), changeimg())} onMouseLeave={() => (notshowdiv(), stopchangeimg())} */>
                             <AutoSlidingCarousel pro={pro}/>
-
                             <div className='relative pb-6'>
                                 <p className='font1 text-base px-2'>{pro?.title?.length > 20 ? `${capitalizeFirstLetterOfEachWord(pro?.title.slice(0, 20))}` : capitalizeFirstLetterOfEachWord(pro?.title)}</p>
                                 <p className='overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-400'>{capitalizeFirstLetterOfEachWord(pro?.subCategory)}</p>

@@ -16,33 +16,14 @@ import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
-import { capitalizeFirstLetterOfEachWord } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
-const productReviewMock = {
-    reviews: [
-      {
-        comment: "Great product, highly recommend!",
-        rating:1,
-      },
-      {
-        comment: "Good value for the price. Works as expected.",
-        rating:1,
-      },
-      {
-        comment: "Not as good as I thought. Could use some improvements.",
-        rating:3,
-      },
-      {
-        comment: "Excellent quality and fast shipping!",
-        rating:4,
-      },
-      {
-        comment: "Pretty decent, but the color was off from the picture.",
-        rating:4,
-      }
-    ]
-};
+import ReactPlayer from 'react-player';
+
+
+
+
 const MPpage = () => {
     const navigation = useNavigate();
     const param = useParams();
@@ -196,13 +177,39 @@ const MPpage = () => {
                         {selectedSizeColorImageArray &&
                             selectedSizeColorImageArray.length > 0 &&
                             selectedSizeColorImageArray.map((im, i) => (
-                                <div className="" key={i}>
-                                    <LazyLoadImage
-                                        src={im.url ? im.url : im}
-                                        alt={`product ${i}`}
-                                    />
-                                    <div className="h-[30px] bg-white"></div>
-                                </div>
+                            <div key={i}>
+                                {im.url ? (
+                                // Check if the file is a video (based on file extension)
+                                im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
+                                    <div className="relative">
+                                        {/* Render video using ReactPlayer */}
+                                        <ReactPlayer
+                                            className="w-full h-full object-contain"
+                                            url={im.url}
+                                            controls={true}
+                                            width="100%"
+                                            height="100%"
+                                            playing={false} // Set to true if you want to auto-play the video
+                                        />
+                                        <div className="h-[30px] bg-white"></div>
+                                    </div>
+                                ) : (
+                                    // Render image using LazyLoadImage
+                                    <div className="relative">
+                                        <LazyLoadImage
+                                            src={im.url}
+                                            alt={`product ${i}`}
+                                            loading="lazy"
+                                            className="w-full h-full object-contain"
+                                        />
+                                        <div className="h-[30px] bg-white"></div>
+                                    </div>
+                                )
+                                ) : (
+                                    // Fallback if there's no URL, display a fallback message or content
+                                    <div>No media found</div>
+                                )}
+                            </div>
                             ))}
                     </Carousel>
 
@@ -227,7 +234,8 @@ const MPpage = () => {
                                             ₹ {product?.price}
                                         </span>
                                         <span className="text-gray-700">
-                                            ( {Math.round((product.salePrice / product.price) * 100 - 100)}% OFF)
+                                            {calculateDiscountPercentage(product.price,product.salePrice)} % OFF
+                                            {/* ( {Math.round((product.salePrice / product.price) * 100 - 100)}% OFF) */}
                                         </span>
                                     </Fragment>
                                 )}
@@ -278,8 +286,6 @@ const MPpage = () => {
                                                 handleSetColorImages(color);
                                             }}
                                         />
-
-                                        {/* Quantity Info */}
                                         {color.quantity <= 10 && color.quantity > 0 && (
                                             <div className="flex flex-col justify-center items-center mt-2">
                                                 <span className="text-red-600 text-sm font-semibold text-center">

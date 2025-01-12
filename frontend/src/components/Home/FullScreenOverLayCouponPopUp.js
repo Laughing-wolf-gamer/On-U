@@ -62,10 +62,9 @@ const FullScreenOverLayCouponPopUp = () => {
                         className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-4 relative"
                         onClick={(e) => e.stopPropagation()} // Prevent click from propagating to the overlay
                     >
-                        <button className='absolute w-10 h-10 text-black top-5 left-6 cursor-pointer' onClick={handleHateCouponClick}>
+                        <button className='absolute w-10 h-10 text-black md:top-5 top-3 left-6 cursor-pointer' onClick={handleHateCouponClick}>
                             <X/>
                         </button>
-                        
                         {/* Left Column - Form */}
                         <div className="flex flex-col justify-between p-12">
                             <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
@@ -75,7 +74,7 @@ const FullScreenOverLayCouponPopUp = () => {
                             </p>
 
                             {/* Input Fields */}
-                            <div className="space-y-8">
+                            <div className="md:space-y-8 space-y-2">
                                 <div>
                                     <label className="block text-gray-600 font-medium" >
                                         Name

@@ -219,7 +219,7 @@ const MNavbar = ({ user }) => {
     console.log("Nav Bar bag: ",bag?.orderItems?.length)
     return (
         <Fragment>
-            <div className='MNavbar hidden sticky top-0 bg-white overflow-x-hidden h-max z-10 ' >
+            <div className='MNavbar hidden sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10 shadow-md' >
                 <div className='relative w-full h-full'>
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='flex flex-row justify-between items-center'>
@@ -234,7 +234,6 @@ const MNavbar = ({ user }) => {
                                     <span>{bag.orderItems.length}</span>
                                 </div>
                             )}
-                            {/* <ShoppingCart /> */}
                             <Link to='/bag'><ShoppingCart size={26} color='black' className='float-right m-2 pb-0.5' /></Link>
                             
                             <FiSearch size={25} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
@@ -283,7 +282,7 @@ const MNavbar = ({ user }) => {
                                     }
                                 <ul>
                                     {/* Profile */}
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="#D0DDD0" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex'>
                                             {user ? (
                                                 <Link to="/dashboard">
@@ -298,14 +297,14 @@ const MNavbar = ({ user }) => {
                                             )}
                                         </li>
                                     </Ripples>
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="#D0DDD0" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex '>
                                             <Link to="/"><span className='float-left'>Home</span></Link>
                                         </li>
                                     </Ripples>
                                     
                                     {/* <MMen Men={Menul} fun1={handleClose} fun2={classunchange} /> */}
-                                    <Ripples color="#fb56c1" className='w-full'>
+                                    <Ripples color="#D0DDD0" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
                                             <span className='float-left'>Products</span>
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>

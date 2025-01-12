@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
+import ReactPlayer from "react-player";
 
 const AutoSlidingCarousel = ({ pro }) => {
   const imageArray = getImagesArrayFromProducts(pro);
@@ -45,6 +46,13 @@ const AutoSlidingCarousel = ({ pro }) => {
   const dotStyle = (i) => ({
     backgroundColor: slideIndex === i + 1 ? hexToRgba('#9AA6B2', 0.5) : hexToRgba('#9AA6B2', 1),
   });
+  // Memoize the media type for each image in the imageArray
+  const mediaItems = useMemo(() => {
+    return imageArray.map((im) => ({
+      url: im.url,
+      isVideo: im.url && (im.url.includes("video") || im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi")),
+    }));
+  }, [imageArray]); // Recalculate only when imageArray changes
 
   return (
     <div
@@ -52,16 +60,35 @@ const AutoSlidingCarousel = ({ pro }) => {
       onMouseEnter={stopAutoSliding} // Stop auto sliding when mouse enters
       onMouseLeave={startAutoSliding} // Start auto sliding when mouse leaves
     >
-      {/* Render all slides */}
-      {imageArray.map((im, i) => (
+      {imageArray && imageArray.length > 0 && mediaItems.map((mediaItem, i) => (
         <div key={i} className={`${pro._id} fade w-full`} style={slideStyle(i)}>
-          <LazyLoadImage
-            src={im.url ? im.url : im} // Use url or fallback to the image itself
-            className="w-full h-full object-contain"
-            width="100%"
-            alt="product"
-            effect="blur"
-          />
+          {/* Check if the file is a video or image */}
+          {mediaItem.isVideo ? (
+            // Video file handling with ReactPlayer
+            <div className="media-item overflow-hidden">
+              <ReactPlayer
+                url={mediaItem.url}
+                className="w-full h-full object-contain"
+                muted={true}
+                controls={true}
+                width="100%"
+                height="100%"
+                playing={true}
+                light={false} // Optional: thumbnail preview
+              />
+            </div>
+          ) : (
+            // Image file handling with LazyLoadImage
+            <div className="media-item">
+              <LazyLoadImage
+                src={mediaItem.url}
+                className="w-full h-full object-contain"
+                width="100%"
+                alt="product"
+                effect="blur"
+              />
+            </div>
+          )}
         </div>
       ))}
 

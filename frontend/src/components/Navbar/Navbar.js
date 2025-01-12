@@ -81,13 +81,13 @@ const Navbar = ({user}) => {
   };
   return (
     <Fragment>
-      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide z-40 ">
+      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide shadow-md shadow-gray-700 z-40 ">
         <div className='flex-row flex justify-between items-center w-screen h-full'>
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
               <li className='w-max flex items-stretch'>
                 
-                <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
+                <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t shadow-md'>
                   {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
                   <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
                 </div>
