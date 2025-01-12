@@ -20,10 +20,6 @@ const Registeruser = () => {
     const [gender, setgender] = useState('');
     const [email, setemail] = useState('');
     const [newAddress, setNewAddress] = useState({});
-    // const [address1, setaddress1] = useState('');
-    // const [address2, setaddress2] = useState('');
-    // const [citysate, setcitysate] = useState('');
-    // const [pincode, setpincode] = useState('');
     const dispatch = useDispatch();
 
     const signin_google = (response) => {
@@ -32,6 +28,10 @@ const Registeruser = () => {
 
     const onsubmit = async (e) => {
         e.preventDefault();
+        if (!name ||!phoneNumber ||!gender ||!email || Object.keys(newAddress).length === 0) {
+            Alert.error('All Fields are required!');
+            return;
+        }
         const myForm = {
             phonenumber: phoneNumber,
             name: name,
@@ -63,7 +63,7 @@ const Registeruser = () => {
     return (
         <Fragment>
             <form onSubmit={(e) => onsubmit(e)}>
-                <div className="w-full min-h-screen bg-gradient-to-r from-purple-500 via-pink-500 to-red-500 py-10">
+                <div className="w-full min-h-screen bg-gradient-to-r from-gray-500 via-slate-500 to-gray-500 py-10">
                     <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
                         <h2 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register New User</h2>
                         <div className="space-y-4">
@@ -91,7 +91,7 @@ const Registeruser = () => {
                                         type="radio"
                                         name="gender"
                                         value="Men"
-                                        className="accent-pink-500"
+                                        className="accent-gray-500"
                                         onClick={() => setgender('men')}
                                     />
                                     <span className="ml-2 text-gray-700">Men</span>
@@ -101,7 +101,7 @@ const Registeruser = () => {
                                         type="radio"
                                         name="gender"
                                         value="Women"
-                                        className="accent-pink-500"
+                                        className="accent-gray-500"
                                         onClick={() => setgender('women')}
                                     />
                                     <span className="ml-2 text-gray-700">Women</span>
@@ -111,8 +111,8 @@ const Registeruser = () => {
                             <input
                                 type="text"
                                 name="email"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                placeholder="E-Mail (Optional)"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                placeholder="E-Mail"
                                 onChange={(e) => setemail(e.target.value)}
                             />
 
@@ -147,46 +147,17 @@ const Registeruser = () => {
                                     </div>
                                 </Fragment>
                             ))}
-                            {/* <input
-                                type="text"
-                                name="address1"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                placeholder="House No, Building, Street Area (Optional)"
-                                onChange={(e) => setaddress1(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                name="area"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                placeholder="Locality Town (Optional)"
-                                onChange={(e) => setaddress2(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                name="city"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                placeholder="City District & State (Optional)"
-                                onChange={(e) => setcitysate(e.target.value)}
-                            />
-                            <input
-                                type="text"
-                                name="pincode"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
-                                placeholder="Pincode (Optional)"
-                                onChange={(e) => setpincode(e.target.value)}
-                            /> */}
-
                             <button
                                 disabled={loading}
                                 type="submit"
-                                className="w-full py-3 bg-pink-600 text-white font-semibold rounded-lg hover:bg-pink-700 transition duration-300"
+                                className="w-full py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300"
                             >
                                 {!loading ? 'Create Account' : 'Loading...'}
                             </button>
 
                             <Link
                                 to="/Login"
-                                className="text-center block text-pink-600 font-semibold mt-4 hover:underline"
+                                className="text-center block text-gray-600 font-semibold mt-4 hover:underline"
                             >
                                 Already have an account? Log In
                             </Link>
