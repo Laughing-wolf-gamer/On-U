@@ -10,7 +10,7 @@ const client = new twilio(accountSid, authToken);
 function generateOTP() {
     return Math.floor(100000 + Math.random() * 900000); // 6-digit OTP
 }
-const sendingFromPhoneNumber = "+918486794883"
+const sendingFromPhoneNumber = "+12184322835"
 
 // Function to send the OTP via SMS
 export async function sendOTP(phoneNumber,otp) {
