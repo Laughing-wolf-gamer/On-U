@@ -11,7 +11,7 @@ const Emptybag = () => {
     }
   return (
     <Fragment>
-        <div className='w-full h-full justify-center flex-1 items-center '>
+        <div className='w-full h-full justify-center flex-1 items-center'>
             <div className='h-max text-center w-max mx-auto my-auto'>
               <LazyLoadImage src={emptybag} alt={`empty_Bag`} className='w-[150px] mt-10 mb-10 mx-auto min-h-[150px]' />
               <h1 className='text-[#282c3f] font-bold font1 text-[22px]'>Hey, it feels so light!</h1>

@@ -331,7 +331,7 @@ function price2fun(e,f){
         <div className=''>
 
           <h1 className='w-full px-8 font1 font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
-            {document.URL.includes('?') && <span className='absolute right-8 text-[#fb56c1]' onClick={clearall}>CLEAR ALL</span>} </h1>
+            {document.URL.includes('?') && <span className='absolute right-8 text-blue-400' onClick={clearall}>CLEAR ALL</span>} </h1>
           <div className='grid grid-cols-12 h-[93%] '>
             <div className='col-span-4 h-full'>
               <h1 className={`filter1 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
@@ -410,7 +410,7 @@ function price2fun(e,f){
           <div className='grid grid-cols-12 w-full font1 bg-white py-3 border-t-[0.5px] border-slate-200 absolute bottom-0 h-[7%]'>
             <div className="col-span-6 text-lg flex justify-center items-center " onClick={filterdiv}>
               CLOSE</div>
-            <div className="col-span-6 text-lg flex justify-center text-center text-[#fb56c1] " 
+            <div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
             onClick={() => (setMMainlink( MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
               ,filterdiv(), reloadproducts() )}>
               <Link to={MMainlink}>

@@ -87,18 +87,18 @@ const Allproductpage = () => {
 
     return (
         <Fragment>
-            <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-gray-800 text-white">
-                <span className='text-slate-400 font-light'>Home</span>
-                <span className='font-light text-gray-200 capitalize'>{window.location.pathname}</span>
+            <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-slate-200 text-slate-900">
+                <span className='font-light'>Home</span>
+                <span className='font-light capitalize'>{window.location.pathname}</span>
             </div>
-            <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-gray-900 text-white">
+            <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-gray-200 text-slate-900">
                 <span className=" font1  text-sm capitalize">NO OF ITEMS</span>
-                <span className="text-gray-400 font-light">- {loading === false ? pro?.length : '...'} items</span>
+                <span className="text-gray-700 font-light">- {loading === false ? pro?.length : '...'} items</span>
             </div>
 
             {/* Filter__title div */}
-            <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-gray-800">
-                <div className="col-span-2 font-semibold text-base font1 text-white">FILTERS</div>
+            <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-slate-200">
+                <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
                 <div className="col-span-7 text-gray-400 text-xs">SIZE</div>
                 <div className="col-span-3 relative cursor-pointer">
                     <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
@@ -133,10 +133,10 @@ const Allproductpage = () => {
 
             <div className='w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 mb-10 bg-gray-900'>
                 {/* Filter */}
-                <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-gray-800 text-white">
+                <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
                     {loading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
-                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-800 text-white">
+                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-slate-200 text-slate-900">
                     {loading === true ? (<Loader />) :
                         (loading === false &&
                             <Fragment>

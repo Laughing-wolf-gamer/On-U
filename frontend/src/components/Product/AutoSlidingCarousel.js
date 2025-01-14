@@ -1,11 +1,12 @@
 import React, { useState, useEffect, useRef, useMemo } from "react";
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 
 const AutoSlidingCarousel = ({ pro }) => {
   const imageArray = getImagesArrayFromProducts(pro);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
+  const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
 
   // Function to change to a specific slide
@@ -38,14 +39,42 @@ const AutoSlidingCarousel = ({ pro }) => {
     };
   }, []); // Empty dependency array means this runs only once when the component mounts
 
+  // Track visibility of video elements using IntersectionObserver
+  const observer = useRef(
+    new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        const index = entry.target.dataset.index;
+        setVideoInView((prevState) => {
+          const updatedState = [...prevState];
+          updatedState[index] = entry.isIntersecting;
+          return updatedState;
+        });
+      });
+    }, { threshold: 0.5 }) // 50% visibility before triggering play
+  );
+
+  useEffect(() => {
+    const videoElements = document.querySelectorAll(".video-element");
+    videoElements.forEach((video) => {
+      observer.current.observe(video);
+    });
+
+    return () => {
+      videoElements.forEach((video) => {
+        observer.current.unobserve(video);
+      });
+    };
+  }, [imageArray]); // Re-run observer setup when imageArray changes
+
   // Calculate slide visibility and dot highlight based on slideIndex
   const slideStyle = (i) => ({
     display: i + 1 === slideIndex ? "block" : "none", // Show only the current slide
   });
 
   const dotStyle = (i) => ({
-    backgroundColor: slideIndex === i + 1 ? hexToRgba('#9AA6B2', 0.5) : hexToRgba('#9AA6B2', 1),
+    backgroundColor: slideIndex === i + 1 ? hexToRgba('#1D1616', 0.5) : hexToRgba('#9AA6B2', 1),
   });
+
   // Memoize the media type for each image in the imageArray
   const mediaItems = useMemo(() => {
     return imageArray.map((im) => ({
@@ -65,15 +94,16 @@ const AutoSlidingCarousel = ({ pro }) => {
           {/* Check if the file is a video or image */}
           {mediaItem.isVideo ? (
             // Video file handling with ReactPlayer
-            <div className="media-item overflow-hidden">
+            <div className="media-item overflow-hidden video-element" data-index={i}>
               <ReactPlayer
                 url={mediaItem.url}
+                loop={true}
                 className="w-full h-full object-contain"
                 muted={true}
-                controls={true}
+                controls={false}
                 width="100%"
                 height="100%"
-                playing={true}
+                playing={videoInView[i]} // Play video only when in view
                 light={false} // Optional: thumbnail preview
               />
             </div>
@@ -81,6 +111,7 @@ const AutoSlidingCarousel = ({ pro }) => {
             // Image file handling with LazyLoadImage
             <div className="media-item">
               <LazyLoadImage
+                loading="lazy"
                 src={mediaItem.url}
                 className="w-full h-full object-contain"
                 width="100%"
@@ -93,7 +124,7 @@ const AutoSlidingCarousel = ({ pro }) => {
       ))}
 
       {/* Navigation Dots */}
-      <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2">
+      <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 min-w-max">
         {imageArray.map((_, i) => (
           <div
             key={i}

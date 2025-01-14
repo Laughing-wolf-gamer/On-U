@@ -23,6 +23,9 @@ import ReactPlayer from 'react-player';
 
 const Ppage = () => {
   const navigation = useNavigate();
+  const [isFocused, setIsFocused] = useState(false);
+
+
 	const[selectedSize, setSelectedSize] = useState(null);
 	const[selectedColor, setSelectedColor] = useState([]);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -188,10 +191,11 @@ const Ppage = () => {
                           <ReactPlayer
                               className="w-full h-full object-contain rounded-md border"
                               url={selectedImage.url || selectedImage}
-                              controls={true}
+                              muted = {true}
+                              controls={false}
                               width="100%"
                               height="100%"
-                              playing={false} // Set to true if you want to auto-play
+                              playing={true} // Set to true if you want to auto-play
                               light={false}   // Optional: Display a thumbnail preview before play
                           />
                       </div>
@@ -214,29 +218,33 @@ const Ppage = () => {
                         console.log("Selected color Images: ", isVideo);
                         return (
                           <div
-                            key={index} // Ensure each element has a unique key
-                            className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
+                            key={index}
+                            className="w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-200 transform transition-transform duration-300 ease-in-out"
                             onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
                             onClick={() => { Addclass(); setSelectedImage(e); }}
                           >
                             {isVideo ? (
-                              // Render the video player if it's a video file
-                              <video
-                                className='w-full h-full object-contain hover:scale-110'
-                                controls
-                                src={e.url || e}
-                                alt="productVideo"
-                                loading="lazy"
-                              >
-                                Your browser does not support the video tag.
-                              </video>
+                              // Use ReactPlayer for better performance with videos
+                              <ReactPlayer
+                                className="w-full h-full object-contain hover:scale-110"
+                                url={e.url || e}
+                                playing={isFocused} // Play only when the element is in focus
+                                controls={false} // Hide video controls
+                                muted
+                                width="100%"
+                                height="100%"
+                                light={false} // No thumbnail before video plays
+                                onFocus={() => setIsFocused(true)} // Start playing when focused
+                                onBlur={() => setIsFocused(false)} // Stop playing when out of focus
+                                config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
+                              />
                             ) : (
-                              // Render the image if it's an image file
+                              // Render the image if it's not a video
                               <img
                                 src={e.url || e}
-                                className='w-full h-full object-contain hover:scale-110'
+                                className="w-full h-full object-contain hover:scale-110"
                                 alt="productImage"
-                                loading="lazy"
+                                loading="lazy" // Ensure image is lazily loaded
                               />
                             )}
                           </div>
@@ -466,54 +474,58 @@ const Ppage = () => {
                     );
                   })}
                 </div>
+                {
+                  hasPurchased && (<Fragment>
+                      <div className='w-full flex flex-col justify-start items-center'>
+                        {/* Review Input Section */}
+                        <div className='mt-6 w-full'>
 
-                {/* Review Input Section */}
-                <div className='w-full flex flex-col justify-start items-center'>
-                  <div className='mt-6 w-full'>
+                          <h4 className='text-lg font-semibold'>Write a Review</h4>
 
-                    <h4 className='text-lg font-semibold'>Write a Review</h4>
+                          <form className='mt-4'>
+                            {/* Review Text Input */}
+                            <div className='mb-4'>
+                              <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                              <textarea
+                                onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
+                                id='reviewText'
+                                name='reviewText'
+                                rows='4'
+                                placeholder='Write your review here...'
+                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                              />
+                            </div>
 
-                    <form className='mt-4'>
-                      {/* Review Text Input */}
-                      <div className='mb-4'>
-                        <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                        <textarea
-                          onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
-                          id='reviewText'
-                          name='reviewText'
-                          rows='4'
-                          placeholder='Write your review here...'
-                          className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                        />
+                            {/* Star Rating Input */}
+                            <div className='mb-4'>
+                              <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                              <input
+                                onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
+                                id='starRating'
+                                name='starRating'
+                                type='number'
+                                min='1'
+                                max='5'
+                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                placeholder='Rate from 1 to 5'
+                              />
+                            </div>
+
+                            {/* Submit Button */}
+                            <div className='flex justify-start'>
+                              <button
+                                onClick={PostRating}
+                                className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                              >
+                                Submit Review
+                              </button>
+                            </div>
+                          </form>
+                          </div>
                       </div>
-
-                      {/* Star Rating Input */}
-                      <div className='mb-4'>
-                        <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                        <input
-                          onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
-                          id='starRating'
-                          name='starRating'
-                          type='number'
-                          min='1'
-                          max='5'
-                          className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                          placeholder='Rate from 1 to 5'
-                        />
-                      </div>
-
-                      {/* Submit Button */}
-                      <div className='flex justify-start'>
-                        <button
-                          onClick={PostRating}
-                          className='bg-gray-500 text-white px-4 py-2 rounded-md'
-                        >
-                          Submit Review
-                        </button>
-                      </div>
-                    </form>
-                    </div>
-                </div>
+                    </Fragment>
+                  )
+                }
               </div>
            </div>
             <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>

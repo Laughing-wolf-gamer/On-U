@@ -373,7 +373,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 } */}
 
                 {/* Clear All Filters Button */}
-                <button className='bg-gray-800 text-white hover:bg-gray-600 p-2 h-10 text-center mx-auto mt-5 justify-center items-center flex w-[50%] rounded-[10px]' onClick={clearAllFilters}>
+                <button className='bg-slate-200 text-gray-700 p-2 h-10 text-center mx-auto mt-5 justify-center items-center flex w-[50%] rounded-[10px]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center'>Clear All Filters</span>
                 </button>
             </div>

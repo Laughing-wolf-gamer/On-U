@@ -60,7 +60,7 @@ const MPpage = () => {
         if (isSelected) {
             return (
                 <li
-                    style={{ ...indicatorStyles, background: '#fb56c1' }}
+                    style={{ ...indicatorStyles, background: '#1D1616' }}
                     aria-label={`Selected: ${label} ${index + 1}`}
                     title={`Selected: ${label} ${index + 1}`}
                 />
@@ -191,7 +191,7 @@ const MPpage = () => {
                                             height="100%"
                                             playing={false} // Set to true if you want to auto-play the video
                                         />
-                                        <div className="h-[30px] bg-white"></div>
+                                        <div className="h-[30px] bg-neutral-100"></div>
                                     </div>
                                 ) : (
                                     // Render image using LazyLoadImage
@@ -288,7 +288,7 @@ const MPpage = () => {
                                         />
                                         {color.quantity <= 10 && color.quantity > 0 && (
                                             <div className="flex flex-col justify-center items-center mt-2">
-                                                <span className="text-red-600 text-sm font-semibold text-center">
+                                                <span className="text-gray-800 text-sm font-semibold text-center">
                                                     Only {color?.quantity} Left
                                                 </span>
                                             </div>

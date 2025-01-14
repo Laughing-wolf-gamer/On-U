@@ -53,7 +53,7 @@ const Overview = ({ user }) => {
 
         {/* Sidebar */}
         <div
-          className={`w-full lg:w-[15%] justify-center items-center mt-4 flex-col bg-gray-300 ml-3 p-6 rounded-lg shadow-md border-r-2 ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
+          className={`w-full lg:w-[15%] justify-center items-center mt-4 flex-col ml-3 p-6 rounded-lg shadow-md border-r-2 ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
         >
           <OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
         </div>

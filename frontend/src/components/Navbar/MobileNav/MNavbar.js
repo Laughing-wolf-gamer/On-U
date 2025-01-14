@@ -219,7 +219,7 @@ const MNavbar = ({ user }) => {
     console.log("Nav Bar bag: ",bag?.orderItems?.length)
     return (
         <Fragment>
-            <div className='MNavbar hidden sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10 shadow-md' >
+            <div className='MNavbar hidden sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10' >
                 <div className='relative w-full h-full'>
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='flex flex-row justify-between items-center'>

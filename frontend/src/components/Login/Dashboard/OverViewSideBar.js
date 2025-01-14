@@ -2,7 +2,7 @@ import React from 'react';
 
 const OverViewSideBar = ({ activeSection, setActiveSection }) => {
   return (
-    <div className="w-fit bg-gray-800 text-gray-200 p-6 rounded-lg shadow-lg">
+    <div className="w-fit">
       <ul className="space-y-4">
         <li>
           <button
@@ -10,8 +10,8 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
               e.preventDefault();
               setActiveSection('User-Details');
             }}
-            className={`w-full text-left p-3 rounded-lg hover:bg-gray-600 focus:outline-none transition duration-200 ${
-              activeSection === 'User-Details' ? 'bg-gray-600' : 'bg-gray-800'
+            className={`w-full text-center h-full focus:outline-none transition duration-200 font-semibold ${
+              activeSection === 'User-Details' ? 'text-gray-900' : 'text-gray-500'
             }`}
           >
             User Details
@@ -23,8 +23,8 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
               e.preventDefault();
               setActiveSection('Orders-Returns');
             }}
-            className={`w-full text-left p-3 rounded-lg hover:bg-gray-600 focus:outline-none transition duration-200 ${
-              activeSection === 'Orders-Returns' ? 'bg-gray-600' : 'bg-gray-800'
+            className={`w-full h-full text-center p-3 focus:outline-none transition duration-200 font-semibold ${
+              activeSection === 'Orders-Returns' ? 'text-gray-900' : 'text-gray-500'
             }`}
           >
             Orders & Returns
@@ -36,8 +36,8 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
               e.preventDefault();
               setActiveSection('Saved-Addresses');
             }}
-            className={`w-full text-left p-3 rounded-lg hover:bg-gray-600 focus:outline-none transition duration-200 ${
-              activeSection === 'Saved-Addresses' ? 'bg-gray-600' : 'bg-gray-800'
+            className={`w-full h-full text-center focus:outline-none transition duration-200 font-semibold ${
+              activeSection === 'Saved-Addresses' ? 'text-gray-900' : 'text-gray-500'
             }`}
           >
             Saved Addresses

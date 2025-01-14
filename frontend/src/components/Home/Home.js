@@ -303,7 +303,7 @@ const Home = () => {
     if (isSelected) {
       return (
         <li
-          style={{ ...indicatorStyles, background: '#9f9f9f' }}
+          style={{ ...indicatorStyles, background: '#7E99A3' }}
           aria-label={`Selected: ${label} ${index + 1}`}
           title={`Selected: ${label} ${index + 1}`}
         />
@@ -416,7 +416,7 @@ const Home = () => {
     Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
   }
   
-  console.log("All Banners: ",banners);
+  console.log("All Banners: ",Wide_Screen_Section_3);
 
   const [showComponent, setShowComponent] = useState(null);
 
@@ -431,300 +431,324 @@ const Home = () => {
     <Fragment>
       {
         window.screen.width > 1024 ?
-          <Fragment>
-            <div className='mt-8 w-[100vw] relative'>
-                {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
-                    <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
-                    : 
-                    <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator={indicator} />}
-            </div>
-
-            <div className='w-full flex justify-center items-center my-10 px-4 md:px-8 h-auto'>
-                <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <Truck size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
-                        <div className='h-full w-1 bg-gray-800'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[20px] text-gray-900'>FREE SHIPPING</h3>
-                            <span className='font-light text-left text-[15px] text-gray-500'>On all orders over $75.00</span>
-                        </div>
-                    </div>
-
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <Clock size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
-                        <div className='h-full w-1 bg-gray-800'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[20px] text-gray-900'>SUPPORT 24/7</h3>
-                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
-                        </div>
-                    </div>
-
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <CircleDollarSign size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
-                        <div className='h-full w-1 bg-gray-800'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[20px] text-gray-900'>Money Return</h3>
-                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
-                        </div>
-                    </div>
-
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <BadgeIndianRupee size={5} className="w-16 h-16 text-gray-800 transition-transform duration-150 hover:animate-vibrateScale"/>
-                        <div className='h-full w-1 bg-gray-800'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[20px] text-gray-900'>Order Discount</h3>
-                            <span className='font-light text-left text-[15px] text-gray-500'>Free shipping on all orders</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <div className='py-8 flex flex-col justify-center space-y-5 my-auto items-center'>
-                {product && product.length > 0 && <ProductPreviewFull product={product} />}
-            </div>
-
-            <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} />
-            <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} />
-            {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
-                <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>
-            }
-
-            {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/> : 
-                <DraggableImageSlider images={[a1, a2, a3, a4, a5, a6, a7, a8]} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>
-            }
-
-            {
-                Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : 
-                <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
-            }
-
-            {
-                Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
-                <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
-            }
-
-            <div>
-                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-800 mb-8 mt-8'>DEALS ON LATEST ARRIVALS</h1>
-                <div className='grid grid-cols-2'>
-                    {
-                        Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? 
-                        Wide_Screen_Section_8.map((j, index) => (
-                            <Link key={`j_banners_${index}`} to='/products' className='m-1'>
-                                <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px]" />
-                            </Link>
-                        )) : (
-                            <>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px]' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px]' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px]' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px]' />
-                                </Link>
-                            </>
-                        )
-                    }
-                </div>
-            </div>
-
-            {
-                Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
-                <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
-            }
-
-            {
-                Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
-                <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
-            }
-
-            {
-                Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
-                <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : 
-                <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
-            }
-            
-            <Footer/>
-        </Fragment>
+        <Fragment>
+          <div className='mt-8 w-[100vw] relative bg-slate-200'>
+              {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
+                  <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
+                  : 
+                  <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator={indicator} />}
+          </div>
+          <div className='h-full w-screen bg-slate-100 py-4'>
+              <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
+                  <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
+                      <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                          <Truck size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
+                          <div className='h-full w-1 bg-slate-200'/>
+                          <div className='w-full text-left h-auto justify-center items-center'>
+                              <h3 className='font-medium text-left text-[20px] text-slate-700'>FREE SHIPPING</h3>
+                              <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
+                          </div>
+                      </div>
+      
+                      <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                          <Clock size={5} className="w-16 h-16 text-gray-100 transition-transform duration-150 hover:scale-110"/>
+                          <div className='h-full w-1 bg-slate-200'/>
+                          <div className='w-full text-left h-auto justify-center items-center'>
+                              <h3 className='font-medium text-left text-[20px] text-gray-700'>SUPPORT 24/7</h3>
+                              <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                          </div>
+                      </div>
+      
+                      <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                          <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-100"/>
+                          <div className='h-full w-1 bg-slate-200'/>
+                          <div className='w-full text-left h-auto justify-center items-center'>
+                              <h3 className='font-medium text-left text-[20px] text-gray-700'>Money Return</h3>
+                              <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                          </div>
+                      </div>
+      
+                      <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                          <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-100"/>
+                          <div className='h-full w-1 bg-slate-200'/>
+                          <div className='w-full text-left h-auto justify-center items-center'>
+                              <h3 className='font-medium text-left text-[20px] text-gray-700'>Order Discount</h3>
+                              <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      
+          <div className='py-8 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
+              {product && product.length > 0 && <ProductPreviewFull product={product} />}
+          </div>
+      
+          <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} />
+          <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} />
+          {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
+              <DraggableImageSlider images={[d1, d2, d3, d4, d5, d6, d7, d8]} headers={"DEAL OF THE DAY"}/>
+          }
+      
+          {Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/> : 
+              <DraggableImageSlider images={[a1, a2, a3, a4, a5, a6, a7, a8]} headers={"BEST OF ON-U EXCLUSIVE BRANDS"}/>
+          }
+      
+          {
+              Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : 
+              <DraggableImageSlider images={[i1, i2, i3, i4, i5]} headers={"GIFTING CARDS"}/>
+          }
+      
+          {
+              Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
+              <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
+          }
+      
+          <div className='bg-slate-200 pt-8'>
+              <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>DEALS ON LATEST ARRIVALS</h1>
+              <div className='grid grid-cols-2'>
+                  {
+                      Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? 
+                      Wide_Screen_Section_8.map((j, index) => (
+                          <Link key={`j_banners_${index}`} to='/products' className='m-1'>
+                              <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px] rounded-lg shadow-lg" />
+                          </Link>
+                      )) : (
+                          <>
+                              <Link to='/products'>
+                                  <LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
+                              </Link>
+                              <Link to='/products'>
+                                  <LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
+                              </Link>
+                              <Link to='/products'>
+                                  <LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
+                              </Link>
+                              <Link to='/products'>
+                                  <LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
+                              </Link>
+                          </>
+                      )
+                  }
+              </div>
+          </div>
+      
+          {
+              Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
+              <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
+          }
+      
+          {
+              Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
+              <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
+          }
+      
+          {
+              Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
+              <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : 
+              <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
+          }
+          
+          <Footer/>
+      </Fragment>
+    
 
           :
           <Fragment>
-            <div className='bg-white '>{/* Category */}
+            <div className='bg-slate-200'>{/* Category */}
               <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                <DraggingScrollView images={Small_Screen_Section_1.urls}/>
+                <DraggingScrollView images={Small_Screen_Section_1.urls} />
               </ul>
             </div>
-            <div className='mt-4 w-[100vw]'>
-              <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                {
-                  Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? Small_Screen_Section_2.urls.map((mb, index) => (
-                    <Link key={`mb_banners_${index}`} to='/products'><div><LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]'/></div></Link>
-                  )):(<>
-                      <Link to='/products'>
-                        <div>
-                          <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                          <div className='h-[30px]'>
-                          </div>
-                        </div>
-                      </Link>
-                      <Link to='/products'>
-                        <div>
-                          <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                          <div className='h-[30px]'>
 
-                          </div>
+            <div className='pt-4 w-[100vw] bg-slate-200'>
+              <Carousel className='bg-slate-200' showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                {Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ?
+                  Small_Screen_Section_2.urls.map((mb, index) => (
+                    <Link key={`mb_banners_${index}`} to='/products'>
+                      <div>
+                        <LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                      </div>
+                    </Link>
+                  )) : (
+                    <>
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
-                  </>)
+                      <Link to='/products'>
+                        <div>
+                          <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
+                        </div>
+                      </Link>
+                    </>
+                  )
                 }
-
               </Carousel>
             </div>
 
-
-            <div>
-              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>{Small_Screen_Section_3.header}</h1>
-              <ul className='flex overflow-x-scroll '>
-                {
-                  Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? Small_Screen_Section_3.urls.map((d, index) => (
-                    <Link key={`dealsOfDaty_banners${index}`} to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                  )):(<>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                      <Link to='/products'><li className='w-max mr-2'><LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" /></li></Link>
-                  </>)
-                }
-                
+            <div className='bg-slate-200'>
+              <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
+              <ul className='flex overflow-x-scroll'>
+                {Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
+                  Small_Screen_Section_3.urls.map((d, index) => (
+                    <Link key={`dealsOfDaty_banners${index}`} to='/products'>
+                      <li className='w-max mr-2'>
+                        <LazyLoadImage effect='blur' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                      </li>
+                    </Link>
+                  )) : (
+                    <>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                      <Link to='/products'>
+                        <li className='w-max mr-2'>
+                          <LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        </li>
+                      </Link>
+                    </>
+                  )}
               </ul>
             </div>
-            
-            <div className='flex flex-col justify-center space-y-5 my-auto items-center'>
-              {product && product.length && <ProductPreviewFull product = {product}/>}
+
+            <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-auto items-center'>
+              {product && product.length && <ProductPreviewFull product={product} />}
             </div>
 
-            <div className='mt-4 grid grid-cols-1 min-h-[200px]'>
-              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-800 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
+            <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-100'>
+              <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
               <div className='w-screen flex justify-start items-center'>
                 <ul className='flex flex-row overflow-x-scroll'>
-                  
-                  {
-                    Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 && Small_Screen_Section_4?.urls.map((c,index)=>(
-                      <Link key={index} to='/products' className='m-2'><li className=''><LazyLoadImage effect='blur' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" /></li></Link>
-                    ))
-                  }
+                  {Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 && Small_Screen_Section_4?.urls.map((c, index) => (
+                    <Link key={index} to='/products' className='m-2'>
+                      <li className=''>
+                        <LazyLoadImage effect='blur' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" />
+                      </li>
+                    </Link>
+                  ))}
                 </ul>
               </div>
             </div>
-            <div className='mt-4 w-[100vw]'>
+
+            <div className='pt-4 w-[100vw] bg-slate-200'>
               <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                {
-                  Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ? Small_Screen_Section_5.urls.map((mc, index) => (
+                {Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
+                  Small_Screen_Section_5.urls.map((mc, index) => (
                     <Link key={`mc_banners_${index}`} to='/products'>
                       <div>
-                        <LazyLoadImage effect='blur' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                        <div className='h-[30px]'>
-                        </div>
+                        <LazyLoadImage effect='blur' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                        <div className='h-[30px]'></div>
                       </div>
                     </Link>
-                  )):(<>
+                  )) : (
+                    <>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc1} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                          <div className='h-[30px]'>
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc1} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc2} width='100%' alt='Banner_Image' className='min-h-[200px]'/>
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc2} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc3} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc3} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc4} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc4} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc5} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc5} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc6} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc6} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc7} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc7} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mc8} width='100%' alt='Banner_Image' className='min-h-[200px]'/><br />
-                          <div className='h-[30px]'>
-
-                          </div>
+                          <LazyLoadImage effect='blur' src={mc8} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <div className='h-[30px]'></div>
                         </div>
                       </Link>
-                  </>)
-                }
-                
+                    </>
+                  )}
               </Carousel>
             </div>
 
-            <Footer/>
+            <Footer />
           </Fragment>
+
       }
-      <FullScreenOverLayCouponPopUp />
        {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
-       {/* {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />} */}
+       {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
 
     </Fragment>
   )

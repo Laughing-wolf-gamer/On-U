@@ -55,7 +55,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg w-96 shadow-lg max-w-full mx-4 sm:mx-0">
+            <div className="bg-white p-6 w-96 max-w-full mx-4 sm:mx-0">
                 <h2 className="text-xl font-semibold mb-4 text-center">Add New Address</h2>
                 <form className="space-y-4">
                     {formData && formData.map((item, index) => (
@@ -79,26 +79,24 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
                     ))}
                 </form>
                 <div className="flex justify-end mt-4 space-x-2">
-                    <Button
-                        variant="contained"
+                    <button
                         onClick={() => {
                             onClose();
                             setNewAddress(formInitState || {}); // Reset form when closing
                             setError(''); // Reset error on cancel
                         }}
                         color="secondary"
-                        className="px-4 py-2"
+                        className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
                     >
                         Cancel
-                    </Button>
-                    <Button
-                        variant="contained"
+                    </button>
+                    <button
                         onClick={handleSave}
                         color="primary"
-                        className="px-4 py-2"
+                        className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
                     >
                         Save
-                    </Button>
+                    </button>
                 </div>
             </div>
         </div>

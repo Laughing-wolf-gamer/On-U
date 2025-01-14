@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Footer from '../Footer/Footer';
 
 const FAQ = () => {
@@ -48,43 +48,45 @@ const FAQ = () => {
   };
 
   return (
-    <div className="bg-gray-50 py-12 px-6 lg:px-24 my-3">
-      {/* Header Section */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-          Frequently Asked Questions
-        </h1>
-        <p className="mt-4 text-lg text-gray-600">
-          Find answers to some of the most common questions about shopping on ON-U.
-        </p>
-      </header>
+    <Fragment>
+      <div className="bg-gray-50 py-12 px-6 lg:px-24 my-3 h-screen w-full">
+        {/* Header Section */}
+        <header className="text-center mb-12">
+          <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
+            Frequently Asked Questions
+          </h1>
+          <p className="mt-4 text-lg text-gray-600">
+            Find answers to some of the most common questions about shopping on ON-U.
+          </p>
+        </header>
 
-      {/* FAQ Section */}
-      <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
-        <div className="space-y-4">
-          {faqData.map((faq, index) => (
-            <div key={index} className="border-b border-gray-200">
-              <button
-                onClick={() => toggleFAQ(index)}
-                className="w-full text-left py-4 text-lg font-semibold text-gray-800 hover:bg-gray-100 focus:outline-none justify-between items-end flex rounded-md transition-all duration-300"
-              >
-                {faq.question}
-                {
-                  openFAQ === index ? <ChevronDown/> :<ChevronRight/>
-                }
-              </button>
-              
-              {openFAQ === index && (
-                <div className="py-4 text-gray-600">
-                  <p>{faq.answer}</p>
-                </div>
-              )}
-            </div>
-          ))}
-        </div>
-      </section>
+        {/* FAQ Section */}
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+          <div className="space-y-4">
+            {faqData.map((faq, index) => (
+              <div key={index} className="border-b border-gray-200">
+                <button
+                  onClick={() => toggleFAQ(index)}
+                  className="w-full text-left py-4 text-lg font-semibold text-gray-800 hover:bg-gray-100 focus:outline-none justify-between items-end flex rounded-md transition-all duration-300"
+                >
+                  {faq.question}
+                  {
+                    openFAQ === index ? <ChevronDown/> :<ChevronRight/>
+                  }
+                </button>
+                
+                {openFAQ === index && (
+                  <div className="py-4 text-gray-600">
+                    <p>{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </section>
+      </div>
       <Footer/>
-    </div>
+    </Fragment>
   );
 };
 

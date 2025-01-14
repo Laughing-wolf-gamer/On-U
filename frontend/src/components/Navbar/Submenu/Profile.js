@@ -27,7 +27,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
    <Fragment>
      
        { transitions((styles, item) => item && <animated.div style={styles}>
-        <div className={`container absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white cursor-pointer`}
+        <div className={`container absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-gray-200 text-gray-900 cursor-pointer`}
           onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
         >
           <div className='px-8 py-8 '>
@@ -47,8 +47,8 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 :
                      
                    <Link className='dec' to="/Login">
-                    <button className=' font1 font-semibold text-slate-800 text-sm border-[1px] px-3 py-2 
-                    border-slate-600 hover:border-slate-700 '>LOGIN/&nbsp;SIGNUP</button>
+                    <button className=' font1 font-semibold text-gray-900 text-sm border-[1px] px-3 py-2 
+                    border-slate-200 hover:border-slate-300 '>LOGIN/&nbsp;SIGNUP</button>
                    </Link>
  
                   }
@@ -61,7 +61,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                   <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
                 </Link>
                 <div className='flex'>
-                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-gray-600 flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-gray-700 flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
                 </div>
                
 
@@ -77,7 +77,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                 {
                   user ? 
                    <button className=' font1 font-smibold text-gray-600 text-sm border-[1px] px-3 py-2 
-                   border-[#d4d5d8] hover:border-[#ff3f6c] ' onClick={logoutBTN}>LOGOUT</button>
+                   border-[#d4d5d8] hover:border-[#2d2c2c] ' onClick={logoutBTN}>LOGOUT</button>
                 :
                 ""
                 }

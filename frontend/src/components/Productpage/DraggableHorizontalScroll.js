@@ -4,7 +4,7 @@ import { LazyLoadImage } from 'react-lazy-load-image-component'; // Assuming you
 
 const DraggingScrollView = ({ images, customClass }) => {
     return (
-        <div className="flex overflow-x-auto py-4 scrollbar-hide">
+        <div className="flex overflow-x-auto py-4 scrollbar-hide bg-slate-50">
             {images.map((image, index) => (
                 <Link key={`image_icons${index}`} to='/products'>
                     <li className='w-max mr-2'>

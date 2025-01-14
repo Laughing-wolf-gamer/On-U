@@ -312,7 +312,7 @@ const Bag = () => {
                                                             <>
                                                                 <span>₹{Math.round(item.productId.salePrice)}</span>
                                                                 <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                                <span className="text-[#f26a10] font-normal">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
+                                                                <span className="text-[#f26a10] font-normal hover:animate-vibrateScale">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
                                                             </>
 
                                                         ):(
@@ -360,7 +360,7 @@ const Bag = () => {
                                     </div>
                                     <div className="flex justify-between mb-2">
                                         <span>Coupon</span>
-                                        <span>{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
+                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600":""}`} >{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
                                     </div>
                                     <div className="flex justify-between mb-4">
                                         <span>Convenience Fee</span>
@@ -456,7 +456,7 @@ const Bag = () => {
                     ) : (
                         <Fragment>
                             {bagLoading ?  <LoadingOverlay isLoading={bagLoading} />:
-                                <div className="min-h-screen flex justify-center items-center bg-gray-50">
+                                <div className="min-h-screen flex justify-center items-center bg-slate-100">
                                     <Emptybag/>                                   
                                 </div>
                             }

@@ -81,15 +81,15 @@ const Navbar = ({user}) => {
   };
   return (
     <Fragment>
-      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-white contenthide shadow-md shadow-gray-700 z-40 ">
+      <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
         <div className='flex-row flex justify-between items-center w-screen h-full'>
           <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
             <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
               <li className='w-max flex items-stretch'>
                 
-                <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t shadow-md'>
+                <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
                   {/* <img src={onUlogo} alt="On-U Logo" className='w-14 h-full object-contain rounded-lg' /> */}
-                  <Link to='/'> <h1 className='text-slate-800 text-3xl py-1 ml-2 font-extrabold text-center'>On U</h1></Link>
+                  <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-sans text-center text-gray-800'>On U</h1></Link>
                 </div>
                 
               </li>
@@ -100,29 +100,29 @@ const Navbar = ({user}) => {
               <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
                 onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
               >
-                <h1 className='px-3 text-center font1'>HOME</h1>
+                <h1 className='px-3 text-center font1 text-slate-800'>HOME</h1>
               </li>
             </Link>
             <Link to={"/products"} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
               <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
                 onMouseEnter={() => (setMenu2('block'), setShow2(true))} onMouseLeave={() => (setMenu2('hidden'), setShow2(false))}
               >
-                <h1 className='px-3 text-center font1'>PRODUCTS</h1>
+                <h1 className='px-3 text-center font1 text-slate-800'>PRODUCTS</h1>
               </li>
             </Link>
             <Link to={'/about'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
               <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'>
-                <h1 className='px-3 text-center font1'>ABOUT</h1>
+                <h1 className='px-3 text-center font1 text-slate-800'>ABOUT</h1>
               </li>
             </Link>
             <Link to={'/contact'} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5'>
-              <li className='w-max flex justify-center items-center border-4 border-transparent cborder3 cursor-pointer'>
-                <h1 className='px-3 text-center font1'>CONTACT</h1>
+              <li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'>
+                <h1 className='px-3 text-center font1 text-slate-800'>CONTACT</h1>
               </li>
             </Link>
             <div className="flex flex-row w-full h-14 space-x-5 mb-5 mx-4">
               {isSearchVisible && <Search />}
-              <button onClick={toggleSearchBar} className="text-gray-800 hover:border border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
+              <button onClick={toggleSearchBar} className="text-slate-800 hover:border border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
                 <SearchIcon size={25}/>
               </button>
             </div>
@@ -133,7 +133,7 @@ const Navbar = ({user}) => {
               >
                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
                   <Link to="/dashboard">
-                    <FaUserAlt color='black' className='w-full h-full justify-self-center'/>
+                    <FaUserAlt className='w-full h-full justify-self-center text-slate-800'/>
                   </Link>
                 </div>
               </li>
@@ -145,7 +145,7 @@ const Navbar = ({user}) => {
                 )}
                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
                   <Link to="/bag">
-                      <BsHandbag color="black" className='w-full h-full justify-self-center'/>
+                      <BsHandbag className='w-full h-full justify-self-center text-slate-800'/>
                   </Link>
                 </div>
               </li>

@@ -67,16 +67,16 @@ const UserDetails = ({user}) => {
   console.log("User has been updated: ",user);
 
   return (
-    <div className="w-full h-full mx-auto bg-white p-8">
-      <h2 className="text-3xl font-bold mb-6">Your Profile</h2>
+    <div className="w-full h-full mx-auto bg-white p-6 sm:p-8">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6">Your Profile</h2>
       
       {/* Name */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <label className="font-semibold text-lg">Name:</label>
         {isEditing === "name" ? (
           <input
             type="text"
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mt-2 sm:mt-0 w-full sm:w-auto"
             value={tempValue}
             onChange={handleInputChange}
           />
@@ -84,7 +84,7 @@ const UserDetails = ({user}) => {
           <span className="text-lg">{editedUser?.name}</span>
         )}
         <button
-          className="text-blue-500 ml-2"
+          className="text-gray-900 ml-2 mt-2 sm:mt-0"
           onClick={() => {
             setIsEditing("name");
             setTempValue(editedUser?.name);
@@ -95,20 +95,20 @@ const UserDetails = ({user}) => {
       </div>
 
       {/* Email */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <label className="font-semibold text-lg">Email:</label>
         {isEditing === "email" ? (
           <input
             type="email"
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mt-2 sm:mt-0 w-full sm:w-auto"
             value={tempValue}
             onChange={handleInputChange}
           />
         ) : (
-          <span className="text-lg">{editedUser?.email}</span>
+          <span className="text-lg flex-wrap">{editedUser?.email}</span>
         )}
         <button
-          className="text-blue-500 ml-2"
+          className="text-gray-900 ml-2 mt-2 sm:mt-0"
           onClick={() => {
             setIsEditing("email");
             setTempValue(editedUser?.email);
@@ -119,12 +119,12 @@ const UserDetails = ({user}) => {
       </div>
 
       {/* Phone */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <label className="font-semibold text-lg">Phone:</label>
         {isEditing === "phone" ? (
           <input
             type="text"
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mt-2 sm:mt-0 w-full sm:w-auto"
             value={tempValue}
             onChange={handleInputChange}
           />
@@ -132,7 +132,7 @@ const UserDetails = ({user}) => {
           <span className="text-lg">{editedUser?.phoneNumber}</span>
         )}
         <button
-          className="text-blue-500 ml-2"
+          className="text-gray-900 ml-2 mt-2 sm:mt-0"
           onClick={() => {
             setIsEditing("phone");
             setTempValue(editedUser?.phoneNumber);
@@ -143,12 +143,12 @@ const UserDetails = ({user}) => {
       </div>
 
       {/* Gender */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex flex-col sm:flex-row justify-between items-center mb-6">
         <label className="font-semibold text-lg">Gender:</label>
         {isEditing === "gender" ? (
           <input
             type="text"
-            className="border px-3 py-2 rounded"
+            className="border px-3 py-2 rounded mt-2 sm:mt-0 w-full sm:w-auto"
             value={tempValue}
             onChange={handleInputChange}
           />
@@ -156,7 +156,7 @@ const UserDetails = ({user}) => {
           <span className="text-lg">{editedUser?.gender}</span>
         )}
         <button
-          className="text-blue-500 ml-2"
+          className="text-gray-900 ml-2 mt-2 sm:mt-0"
           onClick={() => {
             setIsEditing("gender");
             setTempValue(editedUser?.gender);
@@ -168,7 +168,7 @@ const UserDetails = ({user}) => {
 
       {/* Edit buttons */}
       {isEditing && (
-        <div className="mt-6 flex justify-end space-x-6">
+        <div className="mt-6 flex flex-col sm:flex-row justify-end space-y-4 sm:space-x-6 sm:space-y-0">
           <button
             className="bg-green-500 text-white px-6 py-3 rounded"
             onClick={handleSave}
@@ -184,6 +184,7 @@ const UserDetails = ({user}) => {
         </div>
       )}
     </div>
+
   );
 };
 

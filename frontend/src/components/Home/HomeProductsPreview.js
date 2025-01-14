@@ -54,7 +54,7 @@ const HomeProductsPreview = ({ product }) => {
 
     return (
         <div
-            className="w-[90%] bg-gray-200 my-auto h-[80%] overflow-hidden relative flex flex-col transform transition-all duration-300 ease-in-out hover:scale-105"
+            className="w-[90%] bg-slate-200 my-auto h-[80%] overflow-hidden relative flex flex-col transform transition-all duration-300 ease-in-out hover:scale-105"
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -75,11 +75,11 @@ const HomeProductsPreview = ({ product }) => {
             <div
                 className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2 
                     w-full h-10 flex items-center justify-center 
-                    text-white bg-gray-800 hover:bg-gray-700 text-center 
+                    text-white bg-black hover:bg-gray-600 text-center 
                     font-semibold transition-all duration-300 ease-in-out 
                     ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
-                <button className="w-full flex items-center justify-center space-x-2 font-medium">
+                <button className="w-full flex items-center text-white justify-center space-x-2 font-medium">
                     <ShoppingCart size={20} />
                     <span>Add to Cart</span>
                 </button>
@@ -89,7 +89,7 @@ const HomeProductsPreview = ({ product }) => {
                 <div
                     className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
                 >
-                    <span className="text-white font-semibold text-center text-xs">{amount}% OFF</span>
+                    <span className="font-semibold text-center text-xs">{amount}% OFF</span>
                 </div>
             )}
         </div>
@@ -97,7 +97,6 @@ const HomeProductsPreview = ({ product }) => {
 };
 
 const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigation }) => {
-
     // Function to check if the file is a video based on URL
     const isVideo = (url) => {
         return (
@@ -132,12 +131,12 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                     <ReactPlayer
                         className="w-full h-full object-fill"
                         url={selectedMedia.url || selectedMedia}
-                        playing={false} // Do not autoplay for better performance
-                        controls={true} // Show video controls
+                        playing={true} // Do not autoplay for better performance
+                        controls={false} // Show video controls
                         muted
                         width="100%"
                         height="100%"
-                        light={true} // Show thumbnail before playing video
+                        light={false} // Show thumbnail before playing video
                     />
                 ) : (
                     <LazyLoadImage
@@ -154,6 +153,5 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
         )
     );
 };
-
 
 export default HomeProductsPreview;
