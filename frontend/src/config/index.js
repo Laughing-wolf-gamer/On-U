@@ -106,5 +106,5 @@ export const calculateDiscountPercentage = (originalPrice, salePrice) => {
 };
 
 export const DevMode = true;
-export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://on-u-backend-new.onrender.com";
+export const BASE_API_URL = DevMode ? "http://localhost:8003" : "https://on-u-backend-new.onrender.com";
 export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";
