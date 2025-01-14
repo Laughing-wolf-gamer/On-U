@@ -12,10 +12,14 @@ import razorPayRoute from './routes/razerPayPayment.route.js'
 import errorMiddleware from './Middelwares/error.js';
 import path from "path";
 import dotenv from 'dotenv';
-import { fileURLToPath } from "url";
+// import { fileURLToPath } from "url";
 import shipRocketHookRoute from './routes/logisticRoutes.js';
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
+
+
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
 
 const app = express(); 
 if (process.env.NODE_ENV !== "PRODUCTION") {
@@ -58,16 +62,9 @@ app.use('/api/logistic',shipRocketHookRoute)
 
 
 app.use(express.static(path.join(__dirname, "../frontend/build")));
-
-
 app.get("*", (req, res) => {
-  res.sendFile(path.resolve(__dirname, "../frontend/build/index.html"));
+  res.sendFile(path.join(__dirname, "frontend","build","index.html"));
 });
-
-
-
-
-
 
 app.use(errorMiddleware)
 export default app
