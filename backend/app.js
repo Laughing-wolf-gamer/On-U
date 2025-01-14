@@ -61,7 +61,8 @@ app.use('/api/payment/razerypay',razorPayRoute)
 app.use('/api/logistic',shipRocketHookRoute)
 
 
-app.use(express.static(path.join(__dirname, "../frontend/build")));
+app.use(express.static(path.join(__dirname, "frontend", "build")));
+
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "frontend","build","index.html"));
 });
