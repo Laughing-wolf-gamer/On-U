@@ -30,13 +30,14 @@ app.use(cookieParser())
 app.use(bodyparser.urlencoded({extended:true}))
 
 const allowedOrigins = [
+  process.env.API_URL,
   process.env.CLIENT_URL,
   process.env.CLIENT_URL_ADMIN,
 ];
 app.use(cors({
   origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or Postman)
-      console.log("Origin: " + origin,allowedOrigins.includes(origin))
+      console.log("Origin: " + origin,", Allowed: ",allowedOrigins.includes(origin))
       if (!origin) return callback(null, true);
 
       if (allowedOrigins.includes(origin)) {
