@@ -432,11 +432,11 @@ const Home = () => {
       {
         window.screen.width > 1024 ?
         <Fragment>
-          <div className='mt-8 w-[100vw] relative bg-slate-200'>
+          <div className='pt-1 w-[100vw] relative bg-slate-200'>
               {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
-                  <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
-                  : 
-                  <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator={indicator} />}
+                <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
+                : 
+                <CarousalView b_banners={[b2, b3, b4, b5, b6, b7, b8, b9]} indicator={indicator} />}
           </div>
           <div className='h-full w-screen bg-slate-100 py-4'>
               <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
