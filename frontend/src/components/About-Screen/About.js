@@ -184,4 +184,16 @@ const About = () => {
 	);
 };
 
+
+/* 
+server {
+	listen 80;
+	root /root/On-U/frontend/build;
+
+	location / {
+		try_files $uri $uri/ = 404;
+	}
+} 
+*/
+
 export default About;
