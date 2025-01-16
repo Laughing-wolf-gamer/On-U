@@ -13,7 +13,7 @@ export const getHomeBanners = async (req,res)=>{
 		return res.status(200).json({Success: true,message:"Successfully Fetched Banners", result:banners});
 	} catch (error) {
 		console.error(`Error getting Banners: `,error);
-		res.status(500).json({Success: false, message: 'Internal Server Error'});
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
 export const addHomeCarousalMultiple = async(req,res)=>{
@@ -41,7 +41,7 @@ export const addHomeCarousalMultiple = async(req,res)=>{
 		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
 	} catch (error) {
 		console.error(`Error getting`,error);
-		res.status(500).json({Success: false, message: 'Internal Server Error'});
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
 export const addHomeCarousal = async (req, res) => {
@@ -66,7 +66,7 @@ export const addHomeCarousal = async (req, res) => {
 		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
 	} catch (error) {
 		console.error(`Error adding Banners: `,error);
-		res.status(500).json({Success: false, message: 'Internal Server Error'});
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
 export const removeHomeCarousal = async (req, res) => {
@@ -85,7 +85,7 @@ export const removeHomeCarousal = async (req, res) => {
 		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
 	} catch (error) {
 		console.error(`Error adding Banners: `,error);
-		res.status(500).json({Success: false, message: 'Internal Server Error'});
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
 /// Filters...
@@ -101,7 +101,7 @@ export const FetchAllFilters  = async (req, res) => {
         res.status(200).json({Success:true,message:"All Filters",result:{AllCategory:categoryValues || [],AllGenders:genderValues || [],AllSubCategory:subCategoryValues || []}})
     } catch (error) {
         console.error("Error Fetching Filters",error);
-        res.status(500).json({Success:false,message:"Internal Server Error"})
+        res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
 }
 export const setAboutData = async(req,res)=>{
@@ -119,7 +119,7 @@ export const setAboutData = async(req,res)=>{
       console.log("About Data: ",about)
     } catch (error) {
         console.error(`Error setting about data `,error);
-        res.status(500).json({Success:false,message: 'Internal Server Error'});
+        res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
 }
 
@@ -138,7 +138,7 @@ export const setContactUsePageData = async (req, res) => {
 		console.log("Contact Use Page Data: ",contact)
 	} catch (error) {
 		console.error("Internal Server Error", error);
-		res.status(500).json({Success: false, message: 'Internal Server Error'});
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
 export const getContactUsPageData = async(req,res)=>{
@@ -148,7 +148,7 @@ export const getContactUsPageData = async(req,res)=>{
         res.status(200).json({Success:true,message:"Contact Use Page Data",result: alreadyFoundWebsiteData?.ContactUsePageData || {}});
     } catch (error) {
         console.error(`Error getting`,error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
+        res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
 }
 export const getContactQuery = async(req,res)=>{
@@ -158,7 +158,7 @@ export const getContactQuery = async(req,res)=>{
         res.status(200).json({Success:true,message:"Contact Queries",result: queries});
     } catch (error) {
         console.error(`Error getting`,error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
+        res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
 }
 export const createContactQuery = async(req,res)=>{
