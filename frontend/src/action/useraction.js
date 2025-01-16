@@ -36,18 +36,13 @@ import {
 } from '../const/userconst'
 import axios from 'axios'
 
-export const loginmobile = ({logInData}) => async (dispatch) => {
+export const loginmobile = ({logInData}) => async () => {
     try {
         console.log("logIn Data: ", logInData)
-        // dispatch({ type: LOGIN_USER_DATA })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {logInData})
         console.log("Login Data: ", data)
         return data.result;
-        // const token = data?.result?.token
-        // sessionStorage.setItem('token', token)
-        // dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
     } catch (error) {
-        // dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
         return null;
     }
 }
