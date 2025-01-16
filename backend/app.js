@@ -80,6 +80,6 @@ app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'frontend', 'build', 'index.html'));
 }); */
 
-app.use(errorMiddleware);
+// app.use(errorMiddleware);
 
 export default app;
