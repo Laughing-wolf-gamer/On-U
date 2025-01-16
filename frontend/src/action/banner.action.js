@@ -11,6 +11,7 @@ export const featchallbanners = () => async (dispatch) => {
     try {
 
         dispatch({ type: REQUEST_FEATCH_BANNERS })
+        console.log("Fetching Banners...");
         // const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.get(`${BASE_API_URL}/api/common/fetch/all`)
         console.log("Fetch Banners: ",data);
