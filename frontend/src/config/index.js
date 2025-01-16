@@ -106,5 +106,5 @@ export const calculateDiscountPercentage = (originalPrice, salePrice) => {
 };
 
 export const DevMode = false;
-export const BASE_API_URL = DevMode ? "http://localhost:8000" : "https://api.theonu.in";
+export const BASE_API_URL = DevMode ? "http://localhost:8004" : "https://api.theonu.in";
 export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://theonu.in";
