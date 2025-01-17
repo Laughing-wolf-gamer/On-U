@@ -197,13 +197,13 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
 
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
-        const res = await axios.get(`${DELEIVARY_API}/pin-codes/json/?filter_codes=${Number(delivary_pin)}`,{
+        /* const res = await axios.get(`${DELEIVARY_API}/pin-codes/json/?filter_codes=${Number(delivary_pin)}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${DELEIVARY_TOKEN}`,
             },
-        });
-        /* if(!token) await getAuthToken();
+        }); */
+        if(!token) await getAuthToken();
         const picketUp_pin = 784501;
         const cod = true;
         const shipmentData = {
@@ -220,11 +220,11 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
                 Authorization: `Bearer ${token}`,
             },
             params: shipmentData,  // Use `params` for query parameters in GET requests
-        }); */
+        });
 
         console.log("Checking Delivery: ",res.data);
         // console.dir(res.data,{ depth: null})
-        return [];
+        return res?.data || [];
     } catch (error) {
         // console.dir(error, { depth: null});
         console.error("Error: ",error.message)
