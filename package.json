@@ -9,7 +9,7 @@
     "cors": "^2.8.5",
     "crypto": "^1.0.1",
     "crypto-js": "^4.2.0",
-    "dotenv": "^16.0.0",
+    "dotenv": "^16.4.7",
     "express": "^4.17.3",
     "fast-two-sms": "^3.0.0",
     "imagekit": "^3.2.5",
@@ -32,7 +32,7 @@
   "scripts": {
     "dev": "nodemon backend/services.js",
     "start": "node backend/services.js",
-    "build":"npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "abhishek",
   "license": "ISC",

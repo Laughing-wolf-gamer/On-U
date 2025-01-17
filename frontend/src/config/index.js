@@ -105,6 +105,6 @@ export const calculateDiscountPercentage = (originalPrice, salePrice) => {
     return 0; // Return 0 if the prices are invalid or zero
 };
 
-export const DevMode = false;
-export const BASE_API_URL = DevMode ? "http://localhost:8004" : "https://api.theonu.in";
-export const BASE_CLIENT_URL = DevMode ? "http://localhost:3000" : "https://theonu.in";
+export const DevMode = true;
+export const BASE_API_URL = DevMode ? process.env.REACT_APP_API_URL : "https://api.theonu.in";
+export const BASE_CLIENT_URL = DevMode ? process.env.REACT_APP_CLIENT_URL : "https://theonu.in";

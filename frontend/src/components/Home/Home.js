@@ -451,7 +451,7 @@ const Home = () => {
                       </div>
       
                       <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                          <Clock size={5} className="w-16 h-16 text-gray-100 transition-transform duration-150 hover:scale-110"/>
+                          <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
                           <div className='h-full w-1 bg-slate-200'/>
                           <div className='w-full text-left h-auto justify-center items-center'>
                               <h3 className='font-medium text-left text-[20px] text-gray-700'>SUPPORT 24/7</h3>
@@ -460,7 +460,7 @@ const Home = () => {
                       </div>
       
                       <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                          <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-100"/>
+                          <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
                           <div className='h-full w-1 bg-slate-200'/>
                           <div className='w-full text-left h-auto justify-center items-center'>
                               <h3 className='font-medium text-left text-[20px] text-gray-700'>Money Return</h3>
@@ -469,7 +469,7 @@ const Home = () => {
                       </div>
       
                       <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                          <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-100"/>
+                          <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
                           <div className='h-full w-1 bg-slate-200'/>
                           <div className='w-full text-left h-auto justify-center items-center'>
                               <h3 className='font-medium text-left text-[20px] text-gray-700'>Order Discount</h3>
@@ -573,26 +573,26 @@ const Home = () => {
                   Small_Screen_Section_2.urls.map((mb, index) => (
                     <Link key={`mb_banners_${index}`} to='/products'>
                       <div>
-                        <LazyLoadImage effect='blur' src={mb} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                        <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
                       </div>
                     </Link>
                   )) : (
                     <>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mb1} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <LazyLoadImage effect='blur' src={mb1} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
                           <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mb2} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <LazyLoadImage effect='blur' src={mb2} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
                           <div className='h-[30px]'></div>
                         </div>
                       </Link>
                       <Link to='/products'>
                         <div>
-                          <LazyLoadImage effect='blur' src={mb3} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                          <LazyLoadImage effect='blur' src={mb3} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
                           <div className='h-[30px]'></div>
                         </div>
                       </Link>
@@ -609,49 +609,49 @@ const Home = () => {
                   Small_Screen_Section_3.urls.map((d, index) => (
                     <Link key={`dealsOfDaty_banners${index}`} to='/products'>
                       <li className='w-max mr-2'>
-                        <LazyLoadImage effect='blur' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                        <LazyLoadImage effect='blur' loading='lazy' src={d} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                       </li>
                     </Link>
                   )) : (
                     <>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d1} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d2} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d3} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d4} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d5} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d6} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d7} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                       <Link to='/products'>
                         <li className='w-max mr-2'>
-                          <LazyLoadImage effect='blur' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
+                          <LazyLoadImage effect='blur' loading='lazy' src={d8} alt="dealsofday" className="w-[50vw] min-h-[200px]" />
                         </li>
                       </Link>
                     </>
@@ -670,7 +670,7 @@ const Home = () => {
                   {Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 && Small_Screen_Section_4?.urls.map((c, index) => (
                     <Link key={index} to='/products' className='m-2'>
                       <li className=''>
-                        <LazyLoadImage effect='blur' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" />
+                        <LazyLoadImage effect='blur' loading='lazy' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" />
                       </li>
                     </Link>
                   ))}
@@ -684,7 +684,7 @@ const Home = () => {
                   Small_Screen_Section_5.urls.map((mc, index) => (
                     <Link key={`mc_banners_${index}`} to='/products'>
                       <div>
-                        <LazyLoadImage effect='blur' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                        <LazyLoadImage effect='blur' loading='lazy' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
                         <div className='h-[30px]'></div>
                       </div>
                     </Link>

@@ -1,9 +1,8 @@
 import { adminSideBarMenu, capitalizeFirstLetterOfEachWord } from '@/config'
 import { ChartArea, Feather, LayoutDashboard, ListOrdered, ShoppingCart } from 'lucide-react'
-import React, { Fragment, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import React, { Fragment } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet'
-import { DropdownMenu } from '../ui/dropdown-menu'
 import Dropdown from './Dropdown'
 
 const GetAdminSideBarMenuIcon = ({ id }) => {
@@ -21,7 +20,7 @@ const GetAdminSideBarMenuIcon = ({ id }) => {
 
 const MenuItems = ({ setOpen, user }) => {
     const navigate = useNavigate();
-  
+    console.log("handle add Navigation: ",adminSideBarMenu)
     // Filter accessible menu based on the user's role
     const accessibleMenu = adminSideBarMenu.filter((item) => item?.accessRole?.includes(user.role));
     

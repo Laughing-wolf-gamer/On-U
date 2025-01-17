@@ -41,7 +41,7 @@ const ProductPreviewFull = ({ product }) => {
         <svg
           key={i}
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-5 w-5 ${i <= rating ? 'text-yellow-400' : 'text-slate-400'} hover:animate-vibrateScale`}
+          className={`h-5 w-5 ${i <= rating ? 'text-gray-900' : 'text-slate-400'} hover:animate-vibrateScale`}
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"

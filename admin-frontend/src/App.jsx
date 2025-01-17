@@ -72,12 +72,12 @@ function App() {
                     <Route path="warehouse" element={<WarehouseAdmin/>}/>
 
                     <Route path="features/home" element={<AdminHomeFeatures/>}/>
-                    <Route path="features/about" element={<AdminAboutPage/>}/>
                     <Route path="features/addOptions" element={<AdminOptions/>}/>
                     <Route path="features/addressOptions" element={<AdminAddressPage/>}/>
                     <Route path="features/couponManagement" element={<AdminCouponFormPage/>}/>
 
                     <Route path="orders" element={<AdminOrders/>}/>
+                    <Route path="pages/about" element={<AdminAboutPage/>}/>
                     <Route path="pages/contactUsManagement" element={<AdminContactPage/>}/>
                     <Route path="pages/privacyPolicy" element={<AdminPrivacyPolicyPage/>}/>
                     <Route path="pages/termsAndCond" element={<AdminTermsConditionsPage />}/>

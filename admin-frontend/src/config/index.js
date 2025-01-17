@@ -175,6 +175,12 @@ export const adminSideBarMenu = [
                 accessRole:['superAdmin'],
                 path: 'pages/contactUsManagement',
             },
+            {
+                id:'adminAbout',
+                label:'Admin About',
+                accessRole:['superAdmin'],
+                path: 'pages/about',
+            },
         ]
         
     },
@@ -188,12 +194,6 @@ export const adminSideBarMenu = [
                 label:'Admin Home Details',
                 accessRole:["admin",'superAdmin'],
                 path: 'features/home',
-            },
-            {
-                id:'adminAbout',
-                label:'Admin About',
-                accessRole:['superAdmin'],
-                path: 'features/about',
             },
             {
                 id:'adminOptionsManagement',

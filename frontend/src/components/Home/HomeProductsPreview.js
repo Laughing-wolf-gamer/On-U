@@ -1,5 +1,5 @@
 import { ShoppingCart } from 'lucide-react';
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { calculateDiscount, calculateDiscountPercentage, getImagesArrayFromProducts } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useNavigate } from 'react-router-dom';
@@ -64,12 +64,12 @@ const HomeProductsPreview = ({ product }) => {
             <div className="min-w-xs h-full bg-white">
                 {
                     imageArray && imageArray.length && 
-                    <ProductImageVideoView 
-                        imageArray={imageArray} 
-                        hoveredImageIndex={hoveredImageIndex} 
-                        product={product} 
-                        navigation={navigation} 
-                    />
+                        <ProductImageVideoView 
+                            imageArray={imageArray} 
+                            hoveredImageIndex={hoveredImageIndex} 
+                            product={product} 
+                            navigation={navigation} 
+                        />
                 }
             </div>
             <div
@@ -98,59 +98,62 @@ const HomeProductsPreview = ({ product }) => {
 
 const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigation }) => {
     // Function to check if the file is a video based on URL
-    const isVideo = (url) => {
+    const isVideo = useCallback((url) => {
         return (
             url.includes(".mp4") ||
             url.includes(".mov") ||
             url.includes(".avi") ||
             url.includes(".webm")
         );
-    };
+    }, []);
 
     // Memoize selected media to avoid recalculating on each render
-    const selectedMedia = useMemo(() => {
-        return imageArray[hoveredImageIndex];
-    }, [imageArray, hoveredImageIndex]);
+    const selectedMedia = useMemo(() => imageArray[hoveredImageIndex], [imageArray, hoveredImageIndex]);
 
-    // Memoize the media type check (video or image) to avoid recalculating on each render
-    const mediaIsVideo = useMemo(() => {
-        return selectedMedia && selectedMedia?.url && isVideo(selectedMedia?.url);
-    }, [selectedMedia]);
+    // Memoize media type check to avoid recalculating on each render
+    const mediaIsVideo = useMemo(() => selectedMedia && selectedMedia.url && isVideo(selectedMedia.url), [selectedMedia, isVideo]);
+
+    // Handle the navigation on click, memoized to avoid unnecessary re-renders
+    const handleClick = useCallback((e) => {
+        e.preventDefault();
+        navigation(`/products/${product?._id}`);
+    }, [navigation, product]);
+
+    // Early return if there is no valid image array or selected media
+    if (!imageArray || imageArray.length === 0 || !selectedMedia) {
+        return null;
+    }
 
     return (
-        imageArray && imageArray.length > 0 && (
-            <div
-                onClick={(e) => {
-                    e.preventDefault();
-                    navigation(`/products/${product?._id}`);
-                }}
-                className="w-full h-full relative transition-opacity duration-500 ease-in-out cursor-pointer bg-gray-100"
-            >
-                {/* Check if the selected media is a video or an image */}
-                {mediaIsVideo ? (
-                    <ReactPlayer
-                        className="w-full h-full object-fill"
-                        url={selectedMedia.url || selectedMedia}
-                        playing={true} // Do not autoplay for better performance
-                        controls={false} // Show video controls
-                        muted
-                        width="100%"
-                        height="100%"
-                        light={false} // Show thumbnail before playing video
-                    />
-                ) : (
-                    <LazyLoadImage
-                        effect="blur"
-                        src={selectedMedia.url || selectedMedia}
-                        width="100%"
-                        height="100%"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        alt={`Product ${hoveredImageIndex}`}
-                    />
-                )}
-            </div>
-        )
+        <div
+            onClick={handleClick}
+            className="w-full h-full relative transition-opacity duration-500 ease-in-out cursor-pointer bg-gray-100"
+        >
+            {/* Check if the selected media is a video or an image */}
+            {mediaIsVideo ? (
+                <ReactPlayer
+                    className="w-full h-full object-fill"
+                    url={selectedMedia.url}
+                    playing
+                    controls={false}
+                    loading="lazy"
+                    muted
+                    width="100%"
+                    height="100%"
+                    light={false} // Show thumbnail before playing video
+                />
+            ) : (
+                <LazyLoadImage
+                    effect="blur"
+                    src={selectedMedia.url}
+                    width="100%"
+                    height="100%"
+                    className="w-full h-full object-cover"
+                    loading="lazy"
+                    alt={`Product ${hoveredImageIndex}`}
+                />
+            )}
+        </div>
     );
 };
 
