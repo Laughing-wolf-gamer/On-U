@@ -4,6 +4,9 @@ import User from '../../model/usermodel.js';
 
 dotenv.config();
 
+const DELEIVARY_TOKEN = process.env.DELIVARY_API_TOKEN;
+const DELEIVARY_API = process.env.DELIVARY_API_START;
+
 
 const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
@@ -194,7 +197,13 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
 
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
-        if(!token) await getAuthToken();
+        const res = await axios.get(`${DELEIVARY_API}/pin-codes/json/?filter_codes=${Number(delivary_pin)}`,{
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${DELEIVARY_TOKEN}`,
+            },
+        });
+        /* if(!token) await getAuthToken();
         const picketUp_pin = 784501;
         const cod = true;
         const shipmentData = {
@@ -211,13 +220,13 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
                 Authorization: `Bearer ${token}`,
             },
             params: shipmentData,  // Use `params` for query parameters in GET requests
-        });
+        }); */
 
-        // console.log(res.data);
-        console.dir(res.data,{ depth: null})
-        return res.data;
+        console.log("Checking Delivery: ",res.data);
+        // console.dir(res.data,{ depth: null})
+        return [];
     } catch (error) {
-        console.dir(error, { depth: null});
-        // console.error("Error: ",error)
+        // console.dir(error, { depth: null});
+        console.error("Error: ",error.message)
     }
 }

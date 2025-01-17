@@ -86,7 +86,7 @@ const Allproductpage = () => {
     }, []);
 
     return (
-        <Fragment>
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-slate-200 text-slate-900">
                 <span className='font-light'>Home</span>
                 <span className='font-light capitalize'>{window.location.pathname}</span>
@@ -183,7 +183,7 @@ const Allproductpage = () => {
             </div>
             {(window.screen.width < 1024 && product) && <MFilter product={product} />}
             <Footer />
-        </Fragment>
+        </div>
     );
 };
 

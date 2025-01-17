@@ -162,7 +162,7 @@ const MPpage = () => {
     }, [product, dispatch]);
     console.log("Product: ",product);
     return (
-        <Fragment>
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {loading === false ? (
                 <div>
                     <Carousel
@@ -445,7 +445,7 @@ const MPpage = () => {
             ) : (
                 <Loader />
             )}
-        </Fragment>
+        </div>
     );
 };
 

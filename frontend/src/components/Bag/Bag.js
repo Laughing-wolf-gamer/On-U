@@ -276,7 +276,7 @@ const Bag = () => {
     console.log("bag Data: ",bag);
     
     return (
-        <>
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
             {isAuthentication ? (
                 <div>
                     
@@ -485,7 +485,7 @@ const Bag = () => {
                 setShowPayment(false)
             }} />}
             <Footer/>
-        </>
+        </div>
     );
 };
 

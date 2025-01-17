@@ -428,10 +428,10 @@ const Home = () => {
 
 
   return (
-    <Fragment>
+    <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         window.screen.width > 1024 ?
-        <Fragment>
+        <Fragment >
           <div className='pt-1 w-[100vw] relative bg-slate-200'>
               {Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
                 <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
@@ -556,9 +556,7 @@ const Home = () => {
           }
           
           <Footer/>
-      </Fragment>
-    
-
+        </Fragment >
           :
           <Fragment>
             <div className='bg-slate-200'>{/* Category */}
@@ -750,7 +748,7 @@ const Home = () => {
        {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
        {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
 
-    </Fragment>
+    </div>
   )
 }
 

@@ -1,6 +1,6 @@
 import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData } from "@/store/admin/status-slice";
 import { BoxIcon, DollarSign, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Bar } from 'react-chartjs-2';
@@ -30,7 +30,7 @@ const Header = () => {
   );
 };
 
-const StatsCard = ({ title, value, icon, onChange }) => {
+const StatsCard = ({ title, value, icon, onChange ,isActive}) => {
   return (
     <div
       onClick={(e) => {
@@ -39,7 +39,7 @@ const StatsCard = ({ title, value, icon, onChange }) => {
           onChange(title, value);
         }
       }}
-      className="bg-white p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-full sm:w-96 md:w-80 mb-4"
+      className={`${isActive ? "bg-gray-200":"bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-full sm:w-96 md:w-80 mb-4`}
     >
       <div className="hover:scale-110 transition-transform duration-300">
         <h3 className="text-gray-500 text-base">{title}</h3>
@@ -53,6 +53,7 @@ const StatsCard = ({ title, value, icon, onChange }) => {
 };
 
 const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
+  console.log("Data: ",data);
   if (!data || data.length <= 0) return null;
   
   const labels = filter === 'Monthly' ? data.map(item => item.date) : data.map(item => item.date);
@@ -162,11 +163,45 @@ const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
   );
 };
 let newStartDate, newEndDate;
+let startingGraphData = false;
+const getDateRange = (preset) => {
+  const today = new Date();
+  let start = new Date(today);
+  let end = new Date(today);
+
+  switch (preset) {
+    case 'TODAY':
+      start.setHours(0, 0, 0, 0);
+      end.setHours(23, 59, 59, 999);
+      break;
+    case 'YESTERDAY':
+      start = new Date(today);
+      start.setDate(today.getDate() - 1);
+      start.setHours(0, 0, 0, 0);
+      end = new Date(today);
+      end.setDate(today.getDate() - 1);
+      end.setHours(23, 59, 59, 999);
+      break;
+    case 'THIS MONTH':
+      start = new Date(today.getFullYear(), today.getMonth(), 1);
+      end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+      end.setHours(23, 59, 59, 999);
+      break;
+    case 'LAST 7 DAYS':
+      start = new Date(today);
+      start.setDate(today.getDate() - 7);
+      start.setHours(0, 0, 0, 0);
+      break;
+  }
+
+  return { startDate: start, endDate: end };
+};
 const AdminDashboard = ({ user }) => {
-  const { TotalCustomers, TotalProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
+  const{startDate:defaulStart, endDate:defaultEnd} = getDateRange("THIS MONTH");
+  const { isLoading, TotalCustomers, TotalProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
   const dispatch = useDispatch();
   const [stats, setStats] = useState({ title: "Total Customers", value: TotalCustomers });
-  const [currentGraphData, setGraphData] = useState({ title: "Total Customers", value: [] });
+  const [currentGraphData, setGraphData] = useState({ title: "Total Orders", value: [] });
   const [startDate, setStartDate] = useState(new Date().toISOString().split("T")[0]);
   const [endDate, setEndDate] = useState(new Date().toISOString().split("T")[0]);
   const [filterDateRange, setFilterRange] = useState([]);
@@ -217,38 +252,15 @@ const AdminDashboard = ({ user }) => {
     return amount.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
-  const getDateRange = (preset) => {
-    const today = new Date();
-    let start = new Date(today);
-    let end = new Date(today);
-
-    switch (preset) {
-      case 'TODAY':
-        start.setHours(0, 0, 0, 0);
-        end.setHours(23, 59, 59, 999);
-        break;
-      case 'YESTERDAY':
-        start = new Date(today);
-        start.setDate(today.getDate() - 1);
-        start.setHours(0, 0, 0, 0);
-        end = new Date(today);
-        end.setDate(today.getDate() - 1);
-        end.setHours(23, 59, 59, 999);
-        break;
-      case 'THIS MONTH':
-        start = new Date(today.getFullYear(), today.getMonth(), 1);
-        end = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-        end.setHours(23, 59, 59, 999);
-        break;
-      case 'LAST 7 DAYS':
-        start = new Date(today);
-        start.setDate(today.getDate() - 7);
-        start.setHours(0, 0, 0, 0);
-        break;
-    }
-
-    return { startDate: start, endDate: end };
-  };
+  
+  useEffect(()=>{
+    const s = new Date(defaulStart).toISOString().split("T")[0]
+    const e = new Date(defaultEnd).toISOString().split("T")[0]
+    console.log("Fetching all customers: ",s,e);
+    dispatch(getCustomerGraphData({ s, e, period: 'monthly' }));
+    dispatch(getOrderDeliveredGraphData({ defaulStart, defaultEnd, period: 'monthly' }));
+    dispatch(getOrderGraphData({ defaulStart, defaultEnd, period: 'monthly' }));
+  },[])
 
   useEffect(() => {
     // Fetch all necessary data whenever startDate or endDate changes
@@ -256,120 +268,150 @@ const AdminDashboard = ({ user }) => {
     dispatch(fetchAllProductsCount());
     dispatch(fetchAllOrdersCount());
     dispatch(fetchMaxDeliveredOrders());
-
+    // console.log("Fetching all customers: ",startDate,endDate);
     dispatch(getCustomerGraphData({ startDate, endDate, period: 'monthly' }));
     dispatch(getOrderDeliveredGraphData({ startDate, endDate, period: 'monthly' }));
     dispatch(getOrderGraphData({ startDate, endDate, period: 'monthly' }));
+    if(!startingGraphData){
+      startingGraphData = CustomerGraphData;
+    }
   }, [dispatch, startDate, endDate]);
-
-  console.log("Customer Data: ", filterDateRange);
-
+  useEffect(()=>{
+    if(CustomerGraphData && CustomerGraphData.length > 0){
+      if(!startingGraphData){
+        startingGraphData = true;
+        handleFilterChange("THIS MONTH",CustomerGraphData)
+      }
+    }
+  },[CustomerGraphData,startingGraphData])
+  console.log("CustomerGraphData Data: ", CustomerGraphData);
   return (
-    <div className="flex flex-col h-full w-full">
-      <div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
-        <Header />
-        <div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg">
-          <StatsCard
-            title="Total Revenue"
-            value={`₹${convertAmount(randomRevenue)}`}
-            icon={<IndianRupee className="text-3xl text-green-600" />}
-          />
-          <StatsCard
-            onChange={(title, value) => {
-              setStats({ title, value });
-              setGraphData({ title, value: OrdersGraphData });
-              handleFilterChange("THIS MONTH",OrdersGraphData)
-            }}
-            title="Total Orders"
-            value={TotalOrders}
-            
-            icon={<ShoppingBasket className="text-3xl text-blue-600" />}
-          />
-          <StatsCard
-            onChange={(title, value) => {
-              setStats({ title, value });
-              setGraphData({ title, value: CustomerGraphData });
-              handleFilterChange("THIS MONTH",CustomerGraphData)
-            }}
-            title="Total Customers"
-            value={TotalCustomers}
-            icon={<User className="text-3xl text-yellow-600" />}
-          />
-          <StatsCard
-            onChange={(title, value) => {
-              setStats({ title, value });
-            }}
-            title="Total Products"
-            value={TotalProducts}
-            icon={<BoxIcon className="text-3xl text-orange-600" />}
-          />
-          <StatsCard
-            onChange={(title, value) => {
-              setStats({ title, value });
-              setGraphData({ title, value: OrderDeliverData });
-              handleFilterChange("THIS MONTH",OrderDeliverData)
-            }}
-            title="Max Delivered Orders"
-            value={MaxDeliveredOrders}
-            icon={<PackageCheck className="text-3xl text-pink-500" />}
-          />
-        </div>
-      </div>
+    <>
+      {isLoading ? <LoadingSpinner/>:<Fragment>
+          <div className="flex flex-col h-full w-full">
+            <div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
+              <Header />
+              <div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg">
+                <StatsCard
+                  isActive={currentGraphData.title === "Total Orders"}
+                  onChange={(title, value) => {
+                    setStats({ title, value });
+                    setGraphData({ title, value: OrdersGraphData });
+                    handleFilterChange("THIS MONTH",OrdersGraphData)
+                  }}
+                  title="Total Orders"
+                  value={TotalOrders}
+                  
+                  icon={<ShoppingBasket className="text-3xl text-blue-600" />}
+                />
+                <StatsCard
+                isActive={currentGraphData.title === "Total Customers"}
+                  onChange={(title, value) => {
+                    setStats({ title, value });
+                    setGraphData({ title, value: CustomerGraphData });
+                    handleFilterChange("THIS MONTH",CustomerGraphData)
+                  }}
+                  title="Total Customers"
+                  value={TotalCustomers}
+                  icon={<User className="text-3xl text-yellow-600" />}
+                />
+                <StatsCard
+                  isActive={currentGraphData.title === "Max Delivered Orders"}
+                  onChange={(title, value) => {
+                    setStats({ title, value });
+                    setGraphData({ title, value: OrderDeliverData });
+                    handleFilterChange("THIS MONTH",OrderDeliverData)
+                  }}
+                  title="Max Delivered Orders"
+                  value={MaxDeliveredOrders}
+                  icon={<PackageCheck className="text-3xl text-pink-500" />}
+                />
+                <StatsCard
+                isActive={currentGraphData.title === "Total Products"}
+                  onChange={(title, value) => {
+                    setStats({ title, value });
+                  }}
+                  title="Total Products"
+                  value={TotalProducts}
+                  icon={<BoxIcon className="text-3xl text-orange-600" />}
+                />
+                <StatsCard
+                  title="Total Revenue"
+                  value={`₹${convertAmount(randomRevenue)}`}
+                  icon={<IndianRupee className="text-3xl text-green-600" />}
+                />
+                
+              </div>
+            </div>
 
-      <div className="flex-1 p-10">
-        <h2 className="text-xl font-semibold text-gray-700 mb-4">{currentGraphData?.title} Growth Over Time</h2>
-        <div className="bg-white p-5 rounded-lg shadow-md">
-          <div className="flex justify-between items-center mb-4">
-            <span className="text-lg font-medium">Select Date Range</span>
-            <select
-              value={dateLabel}
-              onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
-              className="px-4 py-2 border rounded-md"
-            >
-              <option value="TODAY">Today</option>
-              <option value="YESTERDAY">Yesterday</option>
-              <option value="LAST 7 DAYS">Last 7 Days</option>
-              <option value="THIS MONTH">This Month</option>
-              <option value="CUSTOM">Custom</option>
-            </select>
-          </div>
-          <div className="text-sm text-gray-600">
-            <p>Start Date: {startDate}</p>
-            <p>End Date: {endDate}</p>
-          </div>
-          <div className="mb-4">
-            <div className="flex gap-3">
-              <input
-                type="date"
-                value={startDate}
-                onChange={(e) => {
-                  setStartDate(e.target.value)
-                  newStartDate = e.target.value;
-                  handleSetCustomStartDate(currentGraphData?.value || [])
-                }}
-                className="px-4 py-2 border rounded-md"
-              />
-              <input
-                type="date"
-                value={endDate}
-                onChange={(e) => {
-                  setEndDate(e.target.value)
-                  newEndDate = e.target.value;
-                  handleSetCustomStartDate(currentGraphData?.value || [])
-                }}
-                min={startDate}
-                className="px-4 py-2 border rounded-md"
-              />
+            <div className="flex-1 p-10">
+              <h2 className="text-xl font-semibold text-gray-700 mb-4">{currentGraphData?.title} Growth Over Time</h2>
+              <div className="bg-white p-5 rounded-lg shadow-md">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="text-lg font-medium">Select Date Range</span>
+                  <select
+                    value={dateLabel}
+                    onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
+                    className="px-4 py-2 border rounded-md"
+                  >
+                    <option value="TODAY">Today</option>
+                    <option value="YESTERDAY">Yesterday</option>
+                    <option value="LAST 7 DAYS">Last 7 Days</option>
+                    <option value="THIS MONTH">This Month</option>
+                    <option value="CUSTOM">Custom</option>
+                  </select>
+                </div>
+                <div className="text-sm text-gray-600">
+                  <p>Start Date: {startDate}</p>
+                  <p>End Date: {endDate}</p>
+                </div>
+                <div className="mb-4">
+                  <div className="flex gap-3">
+                    <input
+                      type="date"
+                      value={startDate}
+                      onChange={(e) => {
+                        setStartDate(e.target.value)
+                        newStartDate = e.target.value;
+                        handleSetCustomStartDate(currentGraphData?.value || [])
+                      }}
+                      className="px-4 py-2 border rounded-md"
+                    />
+                    <input
+                      type="date"
+                      value={endDate}
+                      onChange={(e) => {
+                        setEndDate(e.target.value)
+                        newEndDate = e.target.value;
+                        handleSetCustomStartDate(currentGraphData?.value || [])
+                      }}
+                      min={startDate}
+                      className="px-4 py-2 border rounded-md"
+                    />
+                  </div>
+                </div>
+                <div className="h-fit mx-auto">
+                  <CustomerBarChart data={!filterDateRange || filterDateRange.length < 0 ? OrdersGraphData :filterDateRange} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
+                </div>
+              </div>
             </div>
           </div>
-          <div className="h-fit mx-auto">
-            <CustomerBarChart data={filterDateRange} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
-          </div>
-        </div>
-      </div>
-    </div>
+        </Fragment>}
+    </>
   );
 };
+
+const LoadingSpinner = () => {
+  return (
+      <div className="fixed inset-0 bg-slate-700 bg-opacity-100 flex justify-center items-center z-50">
+          <div className="flex flex-col justify-center items-center">
+              <div className="border-t-4 border-b-4 border-white w-16 h-16 rounded-full animate-spin">
+                  
+              </div>
+          </div>
+      </div>
+  )
+}
 
 
 export default AdminDashboard;
