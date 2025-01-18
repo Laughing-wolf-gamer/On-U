@@ -1,6 +1,7 @@
 import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
+import qs from 'querystring'
 
 dotenv.config();
 
@@ -96,7 +97,7 @@ export const logoutAuthToken = async ()=>{
 }; */
 
 export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
-    if(!token) await getAuthToken();
+    // if(!token) await getAuthToken();
     try {
         const userData = await User.findById(shipmentData.userId);
         if(!userData){
@@ -147,20 +148,68 @@ export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
             height: 10, // Package dimensions (height)
             weight: 1, // Package weight in kilograms
         };
+        const shipments = {
+            add:'dsaveaewa',
+            waybill:randomOrderId,
+            address_type:'sdavasdvads',
+            phone:'9101094674',
+            Payment_mode:'COD',
+            name:'sdjviaeevine',
+            pin:'500032',
+            shipping_mode:'express',
+            cosignee_gst_amount:'2934938',
+            integrated_gst_amount:'34343',
+            ewbn:'3423r3',
+            cosignee_gst_tin:'32423423',
+            hsn_code:'324234',
+            gst_cess_amount:'23423',
+            weight:'23'
+        }
+        const pickup_location= {
+            name:'warehouse 1',
+        }
         
-        
-        
-        
-        console.log("ShipRocket Order data: ",orderDetails)
-        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`,orderDetails,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
+        const orderOptions = {
+            method: 'POST',
+            url: `https://track.delhivery.com/api/cmu/create.json`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                Authorization: `Token ${DELEIVARY_TOKEN}`,
+                'Cache-Control': 'no-cache, must-revalidate, proxy-revalidate'
+            },
+            params: {
+                format: 'json',
+                data: qs.stringify({
+                    shipments,
+                    pickup_location
+                })  // Convert your data into a URL-encoded string
             }
-        );
-        console.dir(response.data,{depth:null});
-        return response.data;
+        };
+        const createdOrderResponse  = await axios.request(orderOptions);
+        console.log("Created Order request", createdOrderResponse.data);
+        const PicketUpData = {
+            pickup_time:new Date().toTimeString(),
+            pickup_date:new Date().toLocaleDateString(),
+            pickup_location:'warehouse 1',
+            expected_package_count:1,
+        }
+        const Picketoptions = {
+            method: 'POST',
+            url: `https://track.delhivery.com/api/cmu/create.json`,
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded', // Change the content type to form-url-encoded
+                Authorization: `Token ${DELEIVARY_TOKEN}`,
+                'Cache-Control': 'no-cache, must-revalidate, proxy-revalidate'
+            },
+            params: `format=json&data=`,
+            data:PicketUpData
+        };
+        const orderCreation = await axios.request(Picketoptions);
+
+        console.log("Created Picket Up request", orderCreation.data);
+        
+
+        return null;
     } catch (error) {
         // console.dir('Error creating order:', error);
         console.dir(error, { depth: null});
@@ -197,15 +246,16 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
 
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
-        /* console.log("Checking shipment availability: ",delivary_pin,DELEIVARY_TOKEN);
-        const res = await axios.get(`https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=700052`,{
+        console.log("Checking shipment availability: ",delivary_pin,DELEIVARY_TOKEN);
+        const res = await axios.get(`${DELEIVARY_API}/pin-codes/json/?filter_codes=${Number(delivary_pin)}`,{
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Token ${DELEIVARY_TOKEN}`,
                 "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
-        }); */
-        if(!token) await getAuthToken();
+        });
+        console.log("res",res?.data?.delivery_codes[0].postal_code);
+        /* if(!token) await getAuthToken();
         const picketUp_pin = 784501;
         const shipmentData = {
             cod: 1,  // Make sure `cod` is a boolean
@@ -223,9 +273,11 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
             params: shipmentData,  // Use `params` for query parameters in GET requests
         });
 
-        console.log("Checking Delivery: ",res.data);
+        console.log("Checking Delivery: ",res.data); */
         // console.dir(res.data,{ depth: null})
-        return res?.data || [];
+        const firstPostalCode = res?.data?.delivery_codes[0].postal_code
+        return firstPostalCode.remarks === '';
+        // return res?.data?.delivery_codes || [];
     } catch (error) {
         // console.dir(error, { depth: null});
         console.error("Error: ",error.message)
