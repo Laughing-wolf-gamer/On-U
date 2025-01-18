@@ -19,7 +19,7 @@ const Registeruser = () => {
     const [phoneNumber, setPhoneNumber] = useState('');
     const [gender, setgender] = useState('');
     const [email, setemail] = useState('');
-    const [newAddress, setNewAddress] = useState({});
+    // const [newAddress, setNewAddress] = useState({});
     const dispatch = useDispatch();
 
     const signin_google = (response) => {
@@ -28,7 +28,7 @@ const Registeruser = () => {
 
     const onsubmit = async (e) => {
         e.preventDefault();
-        if (!name ||!phoneNumber ||!gender ||!email || Object.keys(newAddress).length === 0) {
+        if (!name ||!phoneNumber ||!gender ||!email) {
             Alert.error('All Fields are required!');
             return;
         }
@@ -37,16 +37,15 @@ const Registeruser = () => {
             name: name,
             gender: gender,
             email: email,
-            address:newAddress
         };
         await dispatch(registerUser(myForm));
     };
     const handleChangeAddressData = (e) => {
-        const { name, value } = e.target;
+        /* const { name, value } = e.target;
         setNewAddress((prev) => ({
             ...prev,
             [name]: value,
-        }));
+        })); */
     };
 
     useEffect(() => {
@@ -69,6 +68,13 @@ const Registeruser = () => {
                         <div className="space-y-4">
                             <input
                                 type="text"
+                                name="email"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
+                                placeholder="E-Mail"
+                                onChange={(e) => setemail(e.target.value)}
+                            />
+                            <input
+                                type="text"
                                 name="PhoneNumber"
                                 className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
                                 placeholder="Phone Number"
@@ -83,7 +89,6 @@ const Registeruser = () => {
                                 value={name}
                                 onChange={(e) => setname(e.target.value)}
                             />
-
                             <div className="flex items-center space-x-6 mb-5">
                                 <label className="text-gray-700 font-semibold">Gender</label>
                                 <div>
@@ -108,13 +113,7 @@ const Registeruser = () => {
                                 </div>
                             </div>
 
-                            <input
-                                type="text"
-                                name="email"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
-                                placeholder="E-Mail"
-                                onChange={(e) => setemail(e.target.value)}
-                            />
+                            
 
                             {/* <div className="flex items-center justify-center my-4">
                                 <GoogleLogin
@@ -127,7 +126,7 @@ const Registeruser = () => {
                                     className="w-full text-gray-800 border-2 border-gray-300 rounded-lg py-2 px-4 hover:bg-gray-100 transition-colors"
                                 />
                             </div> */}
-                            <h1>Add Address Data: </h1>
+                            {/* <h1>Add Address Data: </h1>
                             {formData && formData.map((item, index) => (
                                 <Fragment key={index}>
                                     <div>
@@ -146,7 +145,7 @@ const Registeruser = () => {
                                         </FormControl>
                                     </div>
                                 </Fragment>
-                            ))}
+                            ))} */}
                             <button
                                 disabled={loading}
                                 type="submit"

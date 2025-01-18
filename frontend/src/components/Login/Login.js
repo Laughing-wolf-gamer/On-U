@@ -9,8 +9,6 @@ const Login = () => {
   const [logInData, setLogInData] = useState('');
   const [otpData, setOtpData] = useState(null);
   const [otp, setOtp] = useState('');
-  const [otpError, setOtpError] = useState('');
-  const [isOtpVerified, setIsOtpVerified] = useState(false);
   const Redirect = useNavigate();
   const dispatch = useDispatch();
   const { user } = useSelector((state) => state.loginuser);
@@ -27,7 +25,7 @@ const Login = () => {
       const{success,message,result} = reponse;
       if(success){
         setOtpData(result); // Assuming result means OTP is sent
-        Alert.success("Otp sent successfully To Your Mail Id ")
+        Alert.info("Otp sent successfully To Your Mail Id ")
       }else{
         Alert.error(message);
       }
@@ -39,20 +37,22 @@ const Login = () => {
 
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
-    setOtpError('');
   };
 
   const handleOtpVerify = async() => {
     // Assuming you verify OTP here (replace with actual verification logic)
     if(otpData){
-      await dispatch(loginVerify({phoneNumber:otpData.phoneNumber,otp:otp}))
-      console.log("Verified OTP: ",user);
-      setOtpData(null); // Clear OTP data after successful verification
-      setOtp('');
-      setOtpError('');
-      setIsOtpVerified(true);
-      Alert.success('OTP Verified');
-      Redirect('/');
+      const response = await dispatch(loginVerify({phoneNumber:otpData.phoneNumber,otp:otp}))
+      console.log("Verified OTP: ",response);
+      const{success,message,result} = response;
+      if(success && result){
+        Alert.success('Login Successful');
+        setOtpData(null); // Clear OTP data after successful verification
+        setOtp('');
+        Redirect('/');
+      }else{
+        Alert.error(message || "Verification Failed");
+      }
     }
   };
 
@@ -60,16 +60,6 @@ const Login = () => {
     setOtpData(false);
     setOtp('');
   };
-
-  useEffect(() => {
-    if (user) {
-      if (sessionStorage.getItem('token')) {
-        Alert.success('Login Successful');
-        Redirect('/');
-      }
-    }
-  }, [user, Redirect]);
-
   return (
     <Fragment>
       <div className="w-full h-screen bg-gray-300 flex items-center justify-center py-10">
@@ -120,15 +110,13 @@ const Login = () => {
             <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Enter OTP</h2>
 
             <input
-              type="text"
-              maxLength="6"
+              type="number"
+              maxLength={6}
               className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-gray-400 mb-4 text-lg placeholder-gray-400"
               onChange={handleOtpChange}
               value={otp}
               placeholder="Enter OTP"
             />
-            {otpError && <p className="text-sm text-red-500 text-center">{otpError}</p>}
-
             <div className="flex justify-between gap-4">
               <button
                 className="w-[48%] py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-200"

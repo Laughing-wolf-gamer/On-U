@@ -55,7 +55,7 @@ export const loginVerify = (verifyData)=> async(dispatch)=>{
         const token = data?.result?.token
         sessionStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
-        return data.result;
+        return data;
     } catch (error) {
         dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
         return null;

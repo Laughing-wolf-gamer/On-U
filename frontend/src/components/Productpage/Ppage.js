@@ -473,7 +473,7 @@ const Ppage = () => {
                       <div className='w-full max-h-fit flex flex-wrap flex-row justify-start items-center space-x-1'>
                         {product?.size && product.size.length > 0 && product.size.map((e, i) => (
                           <div key={e?.id || i} className='m-2 '>
-                            <span className='list-none font-bold mt-2'>{e?.label}: </span>
+                            <span className='list-none font-normal mt-2'>{e?.label}: </span>
                             <span className='list-none mt-2'>{e?.quantity}</span>
                           </div>
                         ))}

@@ -10,7 +10,7 @@ import { sendOTP } from '../utilis/smsAuthentication.js';
 
 export const registermobile = A(async (req, res, next) => {
   try {
-    const {email,name,address,gender, phonenumber } = req.body
+    const {email,name,gender, phonenumber } = req.body
   
     console.log("Authenticating with: ",req.body )
     const existingUser = await User.findOne({phoneNumber:phonenumber})
@@ -27,7 +27,6 @@ export const registermobile = A(async (req, res, next) => {
       name,
       email,
       phoneNumber:phonenumber,
-      addresses:[address],
       gender,
       otp:otp.toString(),
       role:'user',
@@ -97,7 +96,7 @@ export const loginOtpCheck = A(async(req,res,next)=>{
   console.log("otp Verify Data: ",req.body)
   console.log("otp Verify: ",user.otp);
   if(user.otp.toString() !== otp){
-    return res.status(200).json({success:false, message:"OTP Do not Equal"});
+    return res.status(200).json({success:false, message:"OTP Do not Match"});
   }
   user.otp = null
   await user.save();

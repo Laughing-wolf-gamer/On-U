@@ -197,15 +197,16 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
 
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
-        /* const res = await axios.get(`${DELEIVARY_API}/pin-codes/json/?filter_codes=${Number(delivary_pin)}`,{
+        /* console.log("Checking shipment availability: ",delivary_pin,DELEIVARY_TOKEN);
+        const res = await axios.get(`https://staging-express.delhivery.com/c/api/pin-codes/json/?filter_codes=700052`,{
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${DELEIVARY_TOKEN}`,
+                'Authorization': `Token ${DELEIVARY_TOKEN}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
         }); */
         if(!token) await getAuthToken();
         const picketUp_pin = 784501;
-        const cod = true;
         const shipmentData = {
             cod: 1,  // Make sure `cod` is a boolean
             pickup_postcode: picketUp_pin,

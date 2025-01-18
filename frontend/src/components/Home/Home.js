@@ -417,7 +417,7 @@ const Home = () => {
     Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
   }
   
-  console.log("All Banners: ",Wide_Screen_Section_3);
+  // console.log("All Banners: ",Wide_Screen_Section_3);
 
   const [showComponent, setShowComponent] = useState(null);
 
