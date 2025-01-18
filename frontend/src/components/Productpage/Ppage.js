@@ -203,6 +203,7 @@ const Ppage = () => {
                           <ReactPlayer
                             className="w-full h-[70%] object-contain rounded-md border"
                             url={selectedImage.url || selectedImage}
+                            loop={true}
                             muted={true}
                             controls={false}
                             width="100%"

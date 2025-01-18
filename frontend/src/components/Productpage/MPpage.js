@@ -198,6 +198,7 @@ const MPpage = () => {
                                             loop={true}
                                             muted={true}
                                             controls={false}
+                                            playing = {true}
                                             loading="lazy"
                                             width="100%"
                                             height="100%"
