@@ -469,12 +469,12 @@ const Ppage = () => {
                         <li className='list-none '>Warranty provided by Brand Owner / Manufacturer</li>
                       </h1>
                       <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
-                      <div className='w-auto max-h-fit justify-center items-start space-x-4'>
+                      <div className='w-full max-h-fit flex flex-wrap flex-row justify-start items-center space-x-1'>
                         {product?.size && product.size.length > 0 && product.size.map((e, i) => (
-                          <Fragment key={e?.id || i}>
-                            <span className='list-none mt-2'>{e?.label}</span>
+                          <div key={e?.id || i} className='m-2 '>
+                            <span className='list-none font-bold mt-2'>{e?.label}: </span>
                             <span className='list-none mt-2'>{e?.quantity}</span>
-                          </Fragment>
+                          </div>
                         ))}
                       </div>
                       <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
