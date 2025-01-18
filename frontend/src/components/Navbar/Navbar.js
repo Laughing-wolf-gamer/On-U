@@ -1,18 +1,19 @@
 import React, { Fragment, useState, useCallback, useEffect } from 'react'
 import './Navbar.css'
-import { FaUserAlt } from 'react-icons/fa'
-import { BsHandbag } from 'react-icons/bs'
+import { FaHeart, FaUserAlt } from 'react-icons/fa'
+import { BsHandbag, BsHeart } from 'react-icons/bs'
 import Search from './Search.js'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductsBar from './Submenu/ProducstBar.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { getbag } from '../../action/orderaction.js'
+import { getbag, getwishlist } from '../../action/orderaction.js'
 import { SearchIcon } from 'lucide-react'
 
 
 const Navbar = ({user}) => {
   const dispatch = useDispatch();
+  const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
   const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
   const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
   console.log("Navbar User: ", user)
@@ -71,9 +72,10 @@ const Navbar = ({user}) => {
   useEffect(()=>{
     if(user){
       dispatch(getbag({ userId: user.id }));
+      dispatch(getwishlist())
     }
-  },[user])
-  console.log("Nav Bar bag: ",bag?.orderItems)
+  },[user,dispatch])
+  console.log("Nav wishlist bag: ",wishlist)
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const toggleSearchBar = () => {
@@ -138,8 +140,20 @@ const Navbar = ({user}) => {
                 </div>
               </li>
               <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
+                {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
+                  <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                    <span>{wishlist.orderItems.length}</span>
+                  </div>
+                )}
+                <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
+                  <Link to="/my_wishlist">
+                    <BsHeart className='w-full h-full justify-self-center text-slate-800'/>
+                  </Link>
+                </div>
+              </li>
+              <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
                 {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
-                  <div className="absolute top-0 right-3 bg-red-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                  <div className="absolute top-0 right-3 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                     <span>{bag.orderItems.length}</span>
                   </div>
                 )}

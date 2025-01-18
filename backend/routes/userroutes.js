@@ -17,7 +17,7 @@ route.put('/updateAddress',isAuthenticateuser,updateAddress);
 route.patch('/removeAddress',isAuthenticateuser,removeAddress)
 route.get('/getAddress',isAuthenticateuser,getAllAddress);
 route.put('/updateuser',isAuthenticateuser, updateuser)
-route.get('/logout', logout)
+route.post('/logout', logout)
 
 // route.get('/website/about',getAboutData)
 

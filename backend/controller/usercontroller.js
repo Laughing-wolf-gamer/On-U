@@ -63,7 +63,7 @@ export const loginMobileNumber = A(async(req, res, next) => {
   console.log("Log In Data: ",phoneNumber,email);
   console.log("Login User: ",user);
   if(!user){
-    return next( new Errorhandler('Mobile Number not found', 404))
+    return res.status(200).json({success:false,message: 'No User Found ',result:null})
   }
   function generateOTP() {
     return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP

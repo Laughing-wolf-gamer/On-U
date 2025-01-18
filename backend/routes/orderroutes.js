@@ -10,8 +10,9 @@ route.get('/orders/all',isAuthenticateuser,getallOrders)
 
 
 
-route.post('/create_wishlist', createwishlist)
-route.get('/get_wishlist/:id', getwishlist)
+route.post('/create_wishlist',isAuthenticateuser, createwishlist)
+route.get('/get_wishlist',isAuthenticateuser, getwishlist)
+route.put('/delete_wishlist',isAuthenticateuser,deletewish)
 
 
 

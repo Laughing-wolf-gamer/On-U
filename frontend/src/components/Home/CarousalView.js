@@ -28,7 +28,7 @@ const CarousalView = ({ b_banners, indicator }) => {
 
   useEffect(() => {
     const observer = new IntersectionObserver(handleIntersection, {
-      threshold: 0.5, // Trigger when 50% of the element is in view
+      threshold: 0.7, // Trigger when 50% of the element is in view
     });
     if (sectionRef.current) {
       observer.observe(sectionRef.current);
@@ -42,7 +42,7 @@ const CarousalView = ({ b_banners, indicator }) => {
   }, []);
 
   return (
-    <Fragment>
+    <div className='w-screen'>
       <Carousel
         showThumbs={false}
         showStatus={false}
@@ -58,13 +58,14 @@ const CarousalView = ({ b_banners, indicator }) => {
         }
       >
         {b_banners.map((b, index) => (
-          <div key={`b_${index}`}>
+          <div key={`b_${index} h-full`}>
             <Link to='/products'>
               <LazyLoadImage
                 effect='blur'
                 src={b}
                 width='100%'
-                className='min-h-[420px] bg-gray-500' // Changed to a gray background
+                height="100%"
+                className='min-h-[520px] bg-gray-900' // Changed to a gray background
                 alt='Banner_Image'
               />
             </Link>
@@ -125,7 +126,7 @@ const CarousalView = ({ b_banners, indicator }) => {
           <ChevronRight size={50} />
         </button>
       </div>
-    </Fragment>
+    </div>
   );
 };
 

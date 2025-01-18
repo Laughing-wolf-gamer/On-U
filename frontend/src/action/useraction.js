@@ -41,7 +41,7 @@ export const loginmobile = ({logInData}) => async () => {
         console.log("logIn Data: ", logInData)
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {logInData})
         console.log("Login Data: ", data)
-        return data.result;
+        return data;
     } catch (error) {
         return null;
     }
@@ -235,7 +235,8 @@ export const logout = () => async (dispatch) => {
    
     try {
         console.log("logout")
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/logout` )
+        const res = await axios.post(`${BASE_API_URL}/api/auth/logout`)
+        console.log("Loggin Aoutine");
         sessionStorage.clear();
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
     } catch (Error) {

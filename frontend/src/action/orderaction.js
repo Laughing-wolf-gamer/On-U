@@ -34,30 +34,23 @@ import {
 } from '../const/orderconst'
 import { BASE_API_URL, headerConfig } from '../config'
 
-export const createwishlist = (option) => async (dispatch) => {
-    console.log(option)
+export const createwishlist = ({productId}) => async (dispatch) => {
+    // console.log(option)
     try {
-
         dispatch({ type: REQUEST_CREATE_WISHLIST })
-        const config = { headers: { "Content-Type": "application/json" } }
-
-        const { data } = await axios.post(`${BASE_API_URL}/api/create_wishlist`, option, config)
-
-        dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: data.success,})
-
+        const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist`,{productId}, headerConfig());
+        console.log("Wishlist created: ",res?.data);
+        dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success,})
     } catch (error) {
-
         dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
-
     }
 }
 
-export const getwishlist = (userid) => async (dispatch) => {
-
+export const getwishlist = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_WISHLIST })
-        const { data } = await axios.get(`${BASE_API_URL}/api/get_wishlist/${userid}`)
-        dispatch({ type: SUCCESS_GET_WISHLIST, payload: data.wishlist,})
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/get_wishlist`,headerConfig())
+        dispatch({ type: SUCCESS_GET_WISHLIST, payload: data.wishlist})
     } catch (error) {
         dispatch({ type: FAIL_GET_WISHLIST, payload: error.response.data.message })
     }
@@ -68,7 +61,7 @@ export const createbag = (option) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         // console.log(token);
-        console.log(option)
+        // console.log(option)
         dispatch({ type: REQUEST_CREATE_BAG })
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/create_bag`,option, {
             withCredentials:true,
@@ -157,20 +150,16 @@ export const deleteBag = (deletingProductData) => async (dispatch) => {
     }
 }
 
-export const deletewish = (fdata) => async (dispatch) => {
-
-    /* try {
+export const deletewish = ({deletingProductId}) => async (dispatch) => {
+    try {
+        console.log("Deleting WishList...",deletingProductId)
         dispatch({ type: SUCCESS_DELETE_WISH })
-        const config = { headers: { "Content-Type": "application/json" } }
-        const { data } = await axios.put(`${BASE_API_URL}/api/delete_wish`,fdata, config )
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/delete_wishlist`,{deletingProductId}, headerConfig());
         dispatch({ type: REQUEST_DELETE_WISH, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_WISH, payload: error.response.data.message })
-    } */
+    }
 }
-
-
-
 
 export const create_order = (orderdata) => async (dispatch) => {
     try {

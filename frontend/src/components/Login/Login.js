@@ -22,9 +22,19 @@ const Login = () => {
       Alert.error('Please enter a Valid LogIn Details');
       return;
     }
-    const result = await dispatch(loginmobile({ logInData }));
-    setOtpData(result); // Assuming result means OTP is sent
-    Alert.success("Otp sent successfully To Your Mail Id ")
+    try {
+      const reponse = await dispatch(loginmobile({ logInData }));
+      const{success,message,result} = reponse;
+      if(success){
+        setOtpData(result); // Assuming result means OTP is sent
+        Alert.success("Otp sent successfully To Your Mail Id ")
+      }else{
+        Alert.error(message);
+      }
+    } catch (error) {
+      Alert.error('Failed to login');
+      console.error(error);
+    }
   };
 
   const handleOtpChange = (e) => {

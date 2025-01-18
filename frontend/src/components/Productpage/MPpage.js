@@ -10,7 +10,7 @@ import { BsTag } from 'react-icons/bs';
 import { BsHeart } from 'react-icons/bs';
 import { BsHandbag } from 'react-icons/bs';
 import Single_product from '../Product/Single_product';
-import { createbag} from '../../action/orderaction';
+import { createbag, createwishlist} from '../../action/orderaction';
 import { useAlert } from 'react-alert';
 import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
@@ -20,6 +20,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord } from '..
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
+import { ShoppingBag, ShoppingCart } from 'lucide-react';
 
 
 
@@ -88,10 +89,18 @@ const MPpage = () => {
                 navigation('/bag')
             }, 200);
         } else {
-            alert.error('You need to log in to add this product to your wishlist');
+            alert.error('You need to log in to add this product purchase.');
         }
     }
-
+    const addToWishList = async()=>{
+        if (user) {
+            // console.log("Wishlist Data: ", wishlistData)
+            dispatch(createwishlist({productId:param.id,}))
+            alert.success('Product added successfully to Wishlist')
+        }else{
+            alert.show('You have To Login To Add This Product To Wishlist')
+        }
+    }
     function addToBag(e) {
         e.preventDefault();
         if (user) {
@@ -186,10 +195,12 @@ const MPpage = () => {
                                         <ReactPlayer
                                             className="w-full h-full object-contain"
                                             url={im.url}
-                                            controls={true}
+                                            loop={true}
+                                            muted={true}
+                                            controls={false}
+                                            loading="lazy"
                                             width="100%"
                                             height="100%"
-                                            playing={false} // Set to true if you want to auto-play the video
                                         />
                                         <div className="h-[30px] bg-neutral-100"></div>
                                     </div>
@@ -197,6 +208,7 @@ const MPpage = () => {
                                     // Render image using LazyLoadImage
                                     <div className="relative">
                                         <LazyLoadImage
+                                            effect="blur"
                                             src={im.url}
                                             alt={`product ${i}`}
                                             loading="lazy"
@@ -223,7 +235,7 @@ const MPpage = () => {
                             </h1>
                         </div>
                         
-                        <div className="border-b border-white pb-2 pt-2 bg-white">
+                        <div className="border-b border-gray-600 pb-2 pt-2 bg-white">
                             <h1 className="font1 text-lg font-semibold text-slate-800">
                                 <span className="mr-4 font-bold">
                                     ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
@@ -244,7 +256,7 @@ const MPpage = () => {
                                 inclusive of all taxes
                             </h1>
                             <h1 className="font1 text-base font-semibold mt-2 mb-2">SELECT SIZE</h1>
-                            <div className="flex flex-wrap justify-start items-center gap-2">
+                            <div className="flex flex-wrap justify-start items-center gap-2 border-b border-gray-300">
                                 {product?.size?.map((size, index) => (
                                     <div
                                         key={`size_${index}`}
@@ -261,8 +273,7 @@ const MPpage = () => {
                                     </div>
                                 ))}
                             </div>
-
-                            <div className="flex flex-wrap justify-start items-center gap-4 mt-4">
+                            <div className="flex flex-wrap justify-start items-center gap-4 mt-4 border-b border-gray-300">
                                 {selectedColor?.map((color, i) => (
                                     <div
                                         key={`color-${color?._id} ${i}`}
@@ -303,7 +314,6 @@ const MPpage = () => {
                                     </div>
                                 ))}
                             </div>
-
                         </div>
                         <PincodeChecker productId={product?._id}/>
                         <div className='mt-2 pt-4 bg-white px-4'>
@@ -346,9 +356,10 @@ const MPpage = () => {
                                 Secure Payments
                             </div>
                         </div>
-                        <div className='pb-2 pt-2 bg-white px-2 grid grid-cols-2 sticky bottom-0 '>
-                            <button className="font1 font-semibold text-sm py-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
-                            <button className="font1 font-semibold text-sm py-4 px-6 inline-flex items-center justify-center bg-slate-500 text-white ml-4 rounded-md hover:bg-gray-900" onClick={addToBag}><BsHandbag className='mr-4'/> <span>ADD&nbsp;TO&nbsp;CART</span></button>
+                        <div className='h-fit w-full justify-center items-center flex flex-row flex-wrap gap-5'>
+                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center bg-slate-500 text-white ml-4 rounded-md hover:bg-gray-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
+                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><BsHeart className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
+                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
                         </div>
 
                         <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>

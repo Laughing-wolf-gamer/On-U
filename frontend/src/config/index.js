@@ -19,6 +19,7 @@ export function getImagesArrayFromProducts(product){
     return randomColor.images || [];
 }
 
+
 export function getRandomItem(array) {
     if (!Array.isArray(array) || array.length === 0) {
       return null; // Return null for invalid or empty arrays

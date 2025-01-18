@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const ImageZoom = ({ imageSrc }) => {
-  const zoomSize = 220; // Size of the zoomed square
+  const zoomSize = 120; // Size of the zoomed square
   const [zoomStyle, setZoomStyle] = useState({});
   const [showZoom, setShowZoom] = useState(false);
 
@@ -37,10 +37,8 @@ const ImageZoom = ({ imageSrc }) => {
   };
 
   return (
-    <div className="relative h-[30%] w-full border-[0.5px] overflow-hidden hover:shadow-md">
-      {/* Main Image */}
-      <LazyLoadImage
-        effect="blur"
+    <div className="relative h-[60%] p-3 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
+      <img
         src={imageSrc}
         alt="Zoomable"
         className="w-full h-full object-cover"

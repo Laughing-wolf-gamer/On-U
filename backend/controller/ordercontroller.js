@@ -1,7 +1,6 @@
 import A from '../Middelwares/resolveandcatch.js'
 import WhishList from '../model/wishlist.js'
 import Bag from '../model/bag.js'
-import Errorhandler from '../utilis/errorhandel.js'
 import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
 import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
@@ -9,6 +8,7 @@ import Coupon from '../model/Coupon.model.js'
 import WebSiteModel from '../model/websiteData.model.js'
 import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 import { sendOrderPlacedMail } from './emailController.js'
+import mongoose from 'mongoose'
 
 export const createPaymentOrder = async (req, res, next) => {
   try {
@@ -244,48 +244,54 @@ export const getOrderById = A(async (req, res, next) => {
   }
 })
 
-export const createwishlist = A(async (req, res, next) => {
-   const {user, orderItems} = req.body
-   const Finduser = await WhishList.find({user: user})
-    if (Finduser.length !== 0 ) {
-      const product = await WhishList.find({user:user})
-      function f (data){
-        return data.product ==  orderItems[0].product
-      }
-      if (product[0].orderItems.filter(f).length > 0) {
-     
-        return next(new Errorhandler("Product all ready added in Wishlist", 404));
-      }else{
-        await WhishList.updateOne({user: user}, {$push:{
-          orderItems: [orderItems[0]]
-        }})
-      
-      }
-      
-    }else{
-       console.log('else')
-      const wishlist = await WhishList.create(req.body)
-
+export const createwishlist = async (req, res, next) => {
+  try {
+    const id = req.user.id;
+    const{productId} = req.body;
+    console.log("Creating Wish List: ",req.body);
+    if(!id){
+      return res.status(200).json({success:false,message: "user Is Not Logged In"})
     }
-    
+    if(!productId) {
+      return res.status(200).json({success:false,message: "Product id Required"});
+    }
+    let previousWishList = await WhishList.findOne({userId:id})
+    if(previousWishList){
+      if(previousWishList.orderItems.includes(productId)){
+        return res.status(200).json({success:false,message: "Product already in wishlist"})
+      }
+      previousWishList.orderItems.push(productId);
+      await previousWishList.save();
+      // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
+      return res.status(200).json({success:true,message: "Product added to wishlist"})
+    }
+    previousWishList = new WhishList({userId:id, orderItems:[{
+      productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
+    }]})
+    console.log("new WishList: ",previousWishList);
+    await previousWishList.save();
+    // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
+    res.status(200).json({success:true,message: "Product added to wishlist"})
+  } catch (error) {
+    console.error("Error creating wishlist: ",error);
+    res.status(500).json({message: "Internal server error"});
+  }
+}
+
+export const getwishlist = async (req, res) => {
+  try {
+    // console.log("Get wishlist: ",req.user.id)
+    const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
+    console.log("All Wishlist: ", wishlist);
     res.status(200).json({
       success:true,
-      
-  })
-  
-  })
-
-export const getwishlist = A(async (req, res, next) => {
+      wishlist: wishlist || []
+    })
     
-    const wishlist = await WhishList.findOne({user: req.params.id}).populate('orderItems.product')
-
-    res.status(200).json({
-      success:true,
-      wishlist
-      
-  })
-  
-})
+  } catch (error) {
+    console.error("Error getting: ",error);  
+  }
+}
 
 export const applyCouponToBag = async(req,res)=>{
   try {
@@ -639,19 +645,46 @@ export const deletebag = async (req, res) => {
   }
 }
 
-export const deletewish = A(async (req, res, next) => {
-  /* console.log(req.body)
-  const {user, product} = req.body
+export const deletewish = async (req, res) => {
+  try {
+    const { deletingProductId } = req.body;
 
-  const users =  await updateOne({user: user}, {$pull:{
-        orderItems: {product:product}
-      }})
+    // Find the wishlist of the user
+    const wishlist = await WhishList.findOne({ userId: req.user.id });
+    
+    // If the wishlist is not found, return a 404 error
+    if (!wishlist) {
+      return res.status(404).json({ success: false, message: "Wishlist not found" });
+    }
 
-      console.log(users)
-   
-   res.status(200).json({
-     success:true
-     
- }) */
- 
- })
+    // Ensure the deletingProductId is treated as an ObjectId for proper comparison
+    const deletingProductIdObjectId = mongoose.Types.ObjectId(deletingProductId);
+
+    // Remove the item from the wishlist's orderItems
+    wishlist.orderItems = wishlist.orderItems.filter(p => 
+      !p.productId.equals(deletingProductIdObjectId)  // Using `.equals` for ObjectId comparison
+    );
+
+    console.log("Deleting Wishlist Items: ", deletingProductId, wishlist.orderItems.map(p => p.productId));
+
+    // If no items are left in the wishlist, delete the wishlist entirely
+    if (wishlist.orderItems.length === 0) {
+      await WhishList.findOneAndDelete({ userId: req.user.id });
+      return res.status(200).json({ success: true, message: "Successfully deleted Wishlist" });
+    }
+
+    // Save the updated wishlist
+    await wishlist.save();
+
+    // Return success response
+    res.status(200).json({
+      success: true,
+      message: "Successfully deleted Wishlist item",
+      result: wishlist,
+    });
+  } catch (error) {
+    console.error("Error: ", error);
+    // Return a generic error response if an exception occurs
+    res.status(500).json({ success: false, message: "An error occurred while deleting wishlist item", error: error.message });
+  }
+};

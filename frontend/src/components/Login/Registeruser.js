@@ -59,11 +59,11 @@ const Registeruser = () => {
         }
         dispatch(fetchAddressForm());
     }, [error, user, dispatch]);
-    console.log("address form. ", formData);
+    // console.log("address form. ", formData);
     return (
         <Fragment>
             <form onSubmit={(e) => onsubmit(e)}>
-                <div className="w-full min-h-screen bg-gradient-to-r from-gray-500 via-slate-500 to-gray-500 py-10">
+                <div className="w-full min-h-screen bg-gray-300 py-10">
                     <div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-lg">
                         <h2 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register New User</h2>
                         <div className="space-y-4">
@@ -116,7 +116,7 @@ const Registeruser = () => {
                                 onChange={(e) => setemail(e.target.value)}
                             />
 
-                            <div className="flex items-center justify-center my-4">
+                            {/* <div className="flex items-center justify-center my-4">
                                 <GoogleLogin
                                     clientId="667896313498-k77vitq087j4jhfne9fnd7i31abf2ok1.apps.googleusercontent.com"
                                     buttonText="Sign Up with Google"
@@ -126,7 +126,7 @@ const Registeruser = () => {
                                     cookiePolicy="single_host_origin"
                                     className="w-full text-gray-800 border-2 border-gray-300 rounded-lg py-2 px-4 hover:bg-gray-100 transition-colors"
                                 />
-                            </div>
+                            </div> */}
                             <h1>Add Address Data: </h1>
                             {formData && formData.map((item, index) => (
                                 <Fragment key={index}>

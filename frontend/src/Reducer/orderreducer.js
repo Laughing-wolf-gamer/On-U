@@ -32,7 +32,7 @@ REQUEST_UPDATE_QTY_BAG,
     FAIL_GET_ALL_ORDER
 } from '../const/orderconst'
 
-export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
+export const create_wishlist_reducer = (state = {wishlist:[]}, action) =>{
     switch (action.type) {
         case REQUEST_CREATE_WISHLIST:
             return {
@@ -41,7 +41,7 @@ export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
         case SUCCESS_CREATE_WISHLIST:
             return {
                 loading: false,
-                wishlist:action.payload,
+                wishlist:action.payload || [],
             };
         case FAIL_CREATE_WISHLIST:
                 return {
@@ -58,7 +58,7 @@ export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
     }
 }
 
-export const get_wishlist_reducer = (state = {wishlist:{}}, action) =>{
+export const get_wishlist_reducer = (state = {wishlist:[]}, action) =>{
     switch (action.type) {
         case REQUEST_GET_WISHLIST:
             return {
@@ -67,7 +67,7 @@ export const get_wishlist_reducer = (state = {wishlist:{}}, action) =>{
         case SUCCESS_GET_WISHLIST:
             return {
                 loading: false,
-                wishlist:action.payload,
+                wishlist:action.payload || [],
             };
         case FAIL_GET_WISHLIST:
                 return {

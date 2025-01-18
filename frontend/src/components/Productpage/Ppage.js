@@ -20,6 +20,8 @@ import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { ShoppingBag, ShoppingCart } from 'lucide-react'
 
 const Ppage = () => {
   const navigation = useNavigate();
@@ -67,6 +69,15 @@ const Ppage = () => {
       alert.success('Product added successfully in Bag')
      }else{
        alert.show('You have To Login To Add This Product Into Bag')
+     }
+  }
+  const addToWishList = async()=>{
+    if (user) {
+      // console.log("Wishlist Data: ", wishlistData)
+      dispatch(createwishlist({productId:param.id,}))
+      alert.success('Product added successfully to Wishlist')
+     }else{
+       alert.show('You have To Login To Add This Product To Wishlist')
      }
   }
 
@@ -176,365 +187,349 @@ const Ppage = () => {
         url.endsWith(".avi")
     );
   }, [selectedImage]);
+  console.log("hasPurchased: ",hasPurchased);
   return (
-    <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         loading === false ?
           <div>
-            <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
-              <div className='h-max col-span-7'>
-              <div className='max-h-full w-full p-3 m-2 justify-center items-center overflow-hidden'>
-                {selectedImage ? (
-                  isVideo ? (
-                      // Video handling using ReactPlayer
-                      <div className="w-full h-full">
+            <div className='flex-row flex justify-between items-start px-3 gap-4'>
+              <div className='w-[40%] h-[30%] justify-start items-start flex'>
+                <div className='w-full h-fit justify-center items-start flex-col flex'>
+                    {selectedImage ? (
+                      isVideo ? (
+                        // Video handling using ReactPlayer
+                        <div className="relative h-[40%] p-3 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
                           <ReactPlayer
-                              className="w-full h-full object-contain rounded-md border"
-                              url={selectedImage.url || selectedImage}
-                              muted = {true}
-                              controls={false}
-                              width="100%"
-                              height="100%"
-                              playing={true} // Set to true if you want to auto-play
-                              light={false}   // Optional: Display a thumbnail preview before play
+                            className="w-full h-[70%] object-contain rounded-md border"
+                            url={selectedImage.url || selectedImage}
+                            muted={true}
+                            controls={false}
+                            width="100%"
+                            height="100%"
+                            playing={true} // Set to true if you want to auto-play
+                            light={false}   // Optional: Display a thumbnail preview before play
                           />
-                      </div>
-                  ) : (
-                      // Image handling (ImageZoom)
-                      <ImageZoom imageSrc={selectedImage.url || selectedImage} />
-                  )
-              ) : (
-                  // Loading Spinner
-                  <LoadingSpinner />
-              )}
-              </div>
-                <div className='h-20 justify-start items-center flex-row flex col-span-7'>
-                  <div className='grid grid-cols-8 h-full col-span-7 gap-2 px-3'>
-                    {
-                      selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
-                      selectedSize_color_Image_Array.map((e, index) => {
-                        // Check if the media is a video or an image
-                        const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
-                        console.log("Selected color Images: ", isVideo);
-                        return (
-                          <div
-                            key={index}
-                            className="w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-200 transform transition-transform duration-300 ease-in-out"
-                            onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
-                            onClick={() => { Addclass(); setSelectedImage(e); }}
-                          >
-                            {isVideo ? (
-                              // Use ReactPlayer for better performance with videos
-                              <ReactPlayer
-                                className="w-full h-full object-contain hover:scale-110"
-                                url={e.url || e}
-                                playing={isFocused} // Play only when the element is in focus
-                                controls={false} // Hide video controls
-                                muted
-                                width="100%"
-                                height="100%"
-                                light={false} // No thumbnail before video plays
-                                onFocus={() => setIsFocused(true)} // Start playing when focused
-                                onBlur={() => setIsFocused(false)} // Stop playing when out of focus
-                                config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
-                              />
-                            ) : (
-                              // Render the image if it's not a video
-                              <img
-                                src={e.url || e}
-                                className="w-full h-full object-contain hover:scale-110"
-                                alt="productImage"
-                                loading="lazy" // Ensure image is lazily loaded
-                              />
-                            )}
-                          </div>
-                        );
-                      })
-                    }
-                  </div>
-                </div>
-
-
-              </div>
-              {/* Content div for large screen */}
-              <div className='col-span-5'>
-                <div className='border-b-[1px] border-slate-300  pb-6 pt-4'>
-                  <h1 className='font1 text-2xl font-semibold text-slate-800'>{capitalizeFirstLetterOfEachWord(product?.title)}</h1>
-                  <h1 className='text-xl text-[#808080e8] font-light'>{capitalizeFirstLetterOfEachWord(product?.gender)}</h1>
-                </div>
-                <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
-                  <h1 className='font1 text-xl font-semibold text-slate-800'>
-                    <span className="mr-4 font-bold">₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}</span>
-                    {
-                      product && product.salePrice && product.salePrice > 0 &&(
-                        <>
-                          <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
-                          <span className="text-gray-700">{calculateDiscountPercentage(product.price,product.salePrice)} % OFF</span>
-                        </>
-                      )
-                    }
-                    </h1>
-                  <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>inclusive of all taxes</h1>
-                  <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
-                      {
-                        product && product.size && product.size.length > 0 && product.size.map((size,index) =>
-                            <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
-                              ${currentSize?._id === size?._id  ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} onClick={(e)=> {
-                                console.log("Selecting Size: ",currentSize?._id === size?._id);
-                              handleSetNewImageArray(size);
-                            }}>
-                            <button  type='button' 
-                              className={`w-12 h-12 rounded-full flex items-center justify-center`}>
-                              {size.label}
-                            </button>
-                          </div>
-                        )
-                      }
-                  </div>
-                  <div className="w-auto h-auto flex flex-wrap justify-start items-center p-4 gap-2">
-                  {selectedColor && selectedColor.length > 0 && selectedColor.length > 0 ? (
-                      selectedColor && selectedColor.length > 0 && selectedColor.map((color, i) => (
-                        <div className={`flex flex-col h-32 w-24  p-3 rounded-md items-center justify-start gap-2 transition-transform duration-300 ease-in-out`} onClick={(e)=> {
-                            e.preventDefault();
-                            setCurrentColor(color);
-                            handelSetColorImages(color)
-                        }}>
-                          <button
-                            disabled = {color.quantity <= 0}
-                            style={{
-                              backgroundColor: color?.label || color._id, // Use the label or raw color value
-                              width: "40px",
-                              height: "40px",
-                            }}
-                            type='button'
-                            className={`${color.quantity <= 0 ? `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                              bg-gray-600`:`w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                                ${currentColor?._id === color?._id
-                                  ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110"
-                                  : "scale-100 border-4 border-gray-800"}`}
-                            `}
-                            title={color?.quantity || color?.label || "Color"} // Optional tooltip
-                          />
-                          {
-                            color.quantity <= 10 && color.quantity > 0 && (
-                              <div className='flex flex-col justify-center items-center'>
-                                <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
-                              </div>
-                            )
-                          }
-                          {
-                            color.quantity <= 0 && (
-                              <div className='flex flex-col justify-center items-center'>
-                                <span className="text-gray-500 text-sm font-extrabold text-center flex-wrap">Out of Stock</span>
-                              </div>
-                            )
-                          }
                         </div>
-                      ))
+                      ) : (
+                        // Image handling (ImageZoom)
+                        <ImageZoom imageSrc={selectedImage.url || selectedImage} />
+                      )
                     ) : (
-                      <p className="text-black">No colors available</p>
+                      // Loading Spinner
+                      <Loader />
                     )}
-                    </div>
-                    <PincodeChecker productId={product?._id}/>
-                  <button 
-                    className="font1 w-60 font-semibold text-base py-4 px-12 inline-flex items-center justify-center bg-slate-800 text-white mr-6  mt-4 rounded-md hover:bg-gray-600" 
-                    onClick={addtobag}>
-                      <BsHandbag className='mr-4' /> <span>ADD TO CART</span>
-                  </button>
-                  <button className="font1 font-semibold text-base py-4 px-8 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"onClick={handleBuyNow}><BsHeart className='mr-4' /><span>BUY NOW</span></button>
-                </div>
-                <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
-                  <h1 className='font1 text-base font-semibold text-slate-800'>
-                    {
-                      product && product.salePrice && product?.salePrice > 0 && (<span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>)
-                    }
-                    
-                    <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
-                    {
-                      product && product.salePrice && product?.salePrice > 0 && (
-                        <>
-                          <span className="text-gray-700">{calculateDiscountPercentage(product.price,product.salePrice)} % OFF</span> 
-                        </>
-                      )
-                    }
-                    </h1>
-                  <h1 className='font1 '>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span> </h1>
-                </div>
-
-                <div className='border-b-[1px] border-slate-200  pb-6 pt-4'>
-                  {
-                    product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
-                      <Fragment>
-                        <h1 className='font1 flex items-center mt-2 font-semibold'>{e?.header}</h1>
-                        <span className='mt-4'>
-                          <li className='list-disc mt-2'>{e?.body}</li>
-                        </span>
-                      </Fragment>
-                    )
-                  }
-                  <h1 className='font1 flex items-center mt-8 font-semibold'>BEST OFFERS<BsTag className='ml-2' /></h1>
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Best Price:&nbsp; <span className='text-[#f26a10e1]'>&nbsp;Rs. {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}</span></h1>
-                  <li className='list-disc mt-2'>Applicable on: Orders above ₹. 1599 (only on first purchase)</li>
-                  <li className='list-disc mt-2'>Coupon code: <span className='font-semibold'>ONU250</span></li>
-                  <li className='list-disc mt-2'>Coupon Discount: ₹ 62 off (check cart for final savings)</li>
-
-                </div>
-
-                <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
-
-                  <h1 className='font1 flex items-center mt-2 font-semibold'>PRODUCT DETAILS <BiSpreadsheet className='ml-2 text-xl' /></h1>
-                  <h1 className='mt-4'>
-                    <li className='list-none mt-2'>{product?.description}</li>
-                    <li className='list-none '>Warranty: 1 month</li>
-                    <li className='list-none '>Warranty provided by Brand Owner / Manufacturer</li>
-                  </h1>
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
-                  <div className='w-auto max-h-fit justify-center items-start space-x-4'>
-                    {
-                      product && Array.isArray(product?.size) && product.size.length > 0 && product.size.map((e,i) =>
-                        // <button className={`px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#0db7af] ${e.selected?'bg-[#0db7af] text-white' : ''}`} onClick={() => dispatch(singleProduct(param.id, {size: e.label}))}>{e.label}</button>
-                        // <li className='px-6 py-3 rounded-[35px] font1 text-sm font-semibold text-[#ff3f6c] border-[1px] border-[#ff3f6c]'>{e.label}</li>
-                        <Fragment key={e?.id || i}>
-                          <span className='list-none mt-2'>{e?.label}</span>
-                          <span className='list-none mt-2'>{e?.quantity}</span>
-                        </Fragment>
-                      )
-                    }
-                  </div>
-                  {/* <li className='list-none mt-2'>{product?.size}</li> */}
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
-                    {/* <li className='list-none mt-2'>{product?.color?.length}</li> */}
-                    <p>{product?.material}</p>
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
-                  <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
-                  {
-                    product && product.specification && product.specification.length > 0 && product.specification.map((e) =>
-                      <li className='list-none mt-2'>{e?.point}</li>
-                    )
-                  }
-                </div>
-
-                <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
-                  <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
-                  <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
-                </div>
-                  {/* Average Rating Section */}
-                  {product && product?.Rating && product?.Rating.length > 0  && (
-                    <div className='average-rating mt-6'>
-                      <h4 className='text-lg font-semibold'>Average Rating:</h4>
-                      <div className='flex items-center'>
-                        {(() => {
-                          const totalStars = product && product.Rating &&product.Rating.length > 0 && product.Rating.reduce((acc, review) => acc + review.rating, 0);
-                          const avgStars = totalStars / product.Rating.length;
-                          const roundedAvg = Math.round(avgStars * 10) / 10; // Round to 1 decimal place
-
-                          return (
-                            <>
-                              <div className='stars'>
-                                {[...Array(Math.floor(roundedAvg))].map((_, i) => (
-                                  <span key={i} className='star text-black'>★</span>
-                                ))}
-                                {[...Array(5 - Math.floor(roundedAvg))].map((_, i) => (
-                                  <span key={i} className='star text-gray-300'>★</span>
-                                ))}
-                              </div>
-                              <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
-                            </>
-                          );
-                        })()}
-                      </div>
-                    </div>
-                  )}
-                 
-              </div>
-            </div>
-           <div className='w-[70%] px-2'>
-              {/* Reviews Section */}
-              <div className='reviews-section'>
-                <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
-                <div className='reviews-list mt-4 overflow-y-auto'>
-                  {product && product.Rating &&product.Rating.length > 0 && product.Rating.map((review, index) => {
-                    const randomStars = review.rating; // Random stars between 1 and 5
-                    return (
-                      <div key={index} className='review-item mb-4'>
-                        <div className='flex items-center'>
-                          {/* Display random star rating */}
-                          <div className='stars'>
-                            {[...Array(randomStars)].map((_, i) => (
-                              <span key={i} className='star text-black'>★</span>
-                            ))}
-                            {[...Array(5 - randomStars)].map((_, i) => (
-                              <span key={i} className='star text-gray-300'>★</span>
-                            ))}
-                          </div>
-                          <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
-                        </div>
-                        <p className='text-gray-700 mt-2'>{review?.comment}</p>
-                      </div>
-                    );
-                  })}
-                </div>
-                {
-                  hasPurchased && (<Fragment>
-                      <div className='w-full flex flex-col justify-start items-center'>
-                        {/* Review Input Section */}
-                        <div className='mt-6 w-full'>
-
-                          <h4 className='text-lg font-semibold'>Write a Review</h4>
-
-                          <form className='mt-4'>
-                            {/* Review Text Input */}
-                            <div className='mb-4'>
-                              <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                              <textarea
-                                onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
-                                id='reviewText'
-                                name='reviewText'
-                                rows='4'
-                                placeholder='Write your review here...'
-                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                              />
-                            </div>
-
-                            {/* Star Rating Input */}
-                            <div className='mb-4'>
-                              <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                              <input
-                                onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
-                                id='starRating'
-                                name='starRating'
-                                type='number'
-                                min='1'
-                                max='5'
-                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                placeholder='Rate from 1 to 5'
-                              />
-                            </div>
-
-                            {/* Submit Button */}
-                            <div className='flex justify-start'>
-                              <button
-                                onClick={PostRating}
-                                className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                    <div className='h-20 w-fit justify-center items-center flex-row flex col-span-7 mt-4'>
+                      <div className='grid grid-cols-6 h-full col-span-4 gap-2 px-3'> {/* Reduced grid-cols from 8 to 6 */}
+                        {
+                          selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
+                          selectedSize_color_Image_Array.map((e, index) => {
+                            // Check if the media is a video or an image
+                            const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
+                            console.log("Selected color Images: ", isVideo);
+                            return (
+                              <div
+                                key={index}
+                                className="w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-200 transform transition-transform duration-300 ease-in-out"
+                                onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
+                                onClick={() => { Addclass(); setSelectedImage(e); }}
                               >
-                                Submit Review
+                                {isVideo ? (
+                                  <ReactPlayer
+                                    className="w-full h-[80px] object-contain hover:scale-110"
+                                    url={e.url || e}
+                                    playing={isFocused} // Play only when the element is in focus
+                                    controls={false} // Hide video controls
+                                    muted
+                                    width="100%"
+                                    height="100%"
+                                    light={false} // No thumbnail before video plays
+                                    onFocus={() => setIsFocused(true)} // Start playing when focused
+                                    onBlur={() => setIsFocused(false)} // Stop playing when out of focus
+                                    config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
+                                  />
+                                ) : (
+                                  <img
+                                    src={e.url || e}
+                                    className="w-full h-[80px] object-contain hover:scale-110"
+                                    alt="productImage"
+                                    loading="lazy" // Ensure image is lazily loaded
+                                  />
+                                )}
+                              </div>
+                            );
+                          })
+                        }
+                      </div>
+                    </div>
+                    <div className='w-[80%] px-2'> {/* Adjust the width of the reviews section */}
+                      {/* Reviews Section */}
+                      <div className='reviews-section'>
+                        <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
+                        <div className='reviews-list mt-4 overflow-y-auto'>
+                          {product && product.Rating && product.Rating.length > 0 && product.Rating.map((review, index) => {
+                            const randomStars = review.rating; // Random stars between 1 and 5
+                            return (
+                              <div key={index} className='review-item mb-4'>
+                                <div className='flex items-center'>
+                                  {/* Display random star rating */}
+                                  <div className='stars'>
+                                    {[...Array(randomStars)].map((_, i) => (
+                                      <span key={i} className='star text-black'>★</span>
+                                    ))}
+                                    {[...Array(5 - randomStars)].map((_, i) => (
+                                      <span key={i} className='star text-gray-300'>★</span>
+                                    ))}
+                                  </div>
+                                  <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
+                                </div>
+                                <p className='text-gray-700 mt-2'>{review?.comment}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
+                        {hasPurchased ? (
+                          <div className='w-screen justify-center items-center flex-row flex'>
+                            <div className='w-full flex flex-col justify-start items-center'>
+                              {/* Review Input Section */}
+                              <div className='mt-6 w-full'>
+                                <h4 className='text-lg font-semibold'>Write a Review</h4>
+                                <form className='mt-4'>
+                                  {/* Review Text Input */}
+                                  <div className='mb-4'>
+                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                                    <textarea
+                                      onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
+                                      id='reviewText'
+                                      name='reviewText'
+                                      rows='4'
+                                      placeholder='Write your review here...'
+                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                    />
+                                  </div>
+
+                                  {/* Star Rating Input */}
+                                  <div className='mb-4'>
+                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                                    <input
+                                      onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
+                                      id='starRating'
+                                      name='starRating'
+                                      type='number'
+                                      min='1'
+                                      max='5'
+                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                      placeholder='Rate from 1 to 5'
+                                    />
+                                  </div>
+
+                                  {/* Submit Button */}
+                                  <div className='flex justify-start'>
+                                    <button
+                                      onClick={PostRating}
+                                      className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                                    >
+                                      Submit Review
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        ) :(
+                          null
+                        )}
+                      </div>
+                    </div>
+                </div>
+              </div>
+
+              {/* Content div for large screen */}
+              <div className='w-full h-full flex flex-row '>
+                  {/* Left Column (Add to Cart Section) */}
+                  <div className='w-[60%] flex flex-col justify-start items-start p-4'>
+                    <div className='border-b-[1px] border-slate-300 pb-6 pt-4'>
+                      <h1 className='font1 text-2xl font-semibold text-slate-800'>
+                        {capitalizeFirstLetterOfEachWord(product?.title)}
+                      </h1>
+                      <h1 className='text-xl text-[#808080e8] font-light'>
+                        {capitalizeFirstLetterOfEachWord(product?.gender)}
+                      </h1>
+                    </div>
+                    
+                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4 w-full'>
+                      <h1 className='font1 text-xl font-semibold text-slate-800'>
+                        <span className="mr-4 font-bold">
+                          ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
+                        </span>
+                        {product?.salePrice && product?.salePrice > 0 && (
+                          <>
+                            <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
+                            <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
+                          </>
+                        )}
+                      </h1>
+                      <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
+                        inclusive of all taxes
+                      </h1>
+                      <div className='w-full justify-center items-center flex flex-col'>
+                        {/* Size Selection */}
+                        <div className="w-full flex flex-wrap justify-start items-start p-4 gap-2">
+                          {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
+                            <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
+                              ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} 
+                              onClick={() => { handleSetNewImageArray(size); }}>
+                              <button className={`w-12 h-12 rounded-full flex items-center justify-center`}>
+                                {size.label}
                               </button>
                             </div>
-                          </form>
-                          </div>
+                          ))}
+                        </div>
+
+                        {/* Color Selection */}
+                        <div className="w-full flex flex-wrap justify-start items-start gap-2">
+                          {selectedColor && selectedColor.length > 0 ? (
+                            selectedColor.map((color, i) => (
+                              <div key={`color_${i}`} className="flex flex-col h-32 w-20 rounded-md items-center justify-start gap-2 transition-transform duration-300 ease-in-out" 
+                                onClick={(e) => { e.preventDefault(); setCurrentColor(color); handelSetColorImages(color); }}>
+                                <button disabled={color.quantity <= 0} 
+                                  style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
+                                  className={`${color.quantity <= 0 ? `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` : 
+                                    `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out ${currentColor?._id === color?._id ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110" : "scale-100 border-4 border-gray-800"}`}`}
+                                  title={color?.quantity || color?.label || "Color"} />
+                                {color.quantity <= 10 && color.quantity > 0 && (
+                                  <div className='flex flex-col justify-center items-center'>
+                                    <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
+                                  </div>
+                                )}
+                                {color.quantity <= 0 && (
+                                  <div className='flex flex-col justify-center items-center'>
+                                    <span className='text-gray-500 text-sm font-extrabold text-center flex-wrap'>Out of Stock</span>
+                                  </div>
+                                )}
+                              </div>
+                            ))
+                          ) : (
+                            <p className="text-black">No colors available</p>
+                          )}
+                        </div>
                       </div>
-                    </Fragment>
-                  )
-                }
-              </div>
-           </div>
+
+                      {/* Add to Cart & Buy Now Buttons */}
+                      <PincodeChecker productId={product?._id} />
+                    </div>
+                    <div className='w-[90%] h-fit justify-center items-center flex flex-col'>
+                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
+                        <ShoppingCart size={20} className='m-4' /> <span>ADD TO CART</span>
+                      </button>
+                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
+                        <BsHeart size={20} className='m-4' /><span>ADD TO WISHLIST NOW</span>
+                      </button>
+                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
+                        <ShoppingBag size={20} className='m-4' /><span>BUY NOW</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Right Column (Product Details Section) */}
+                  <div className='w-[40%] flex flex-col justify-start items-start p-4'>
+                    
+                    {/* Price and Discount Section */}
+                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
+                      {/* <h1 className='font1 text-base font-semibold text-slate-800'>
+                        {product?.salePrice && product.salePrice > 0 && (
+                          <span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>
+                        )}
+                        <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
+                        {product?.salePrice && product.salePrice > 0 && (
+                          <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
+                        )}
+                      </h1> */}
+                      <h1 className='font1'>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></h1>
+                    </div>
+
+                    {/* Bullet Points */}
+                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
+                      {product?.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e, index) => (
+                        <Fragment key={index}>
+                          <h1 className='font1 flex items-center mt-2 font-semibold'>{e?.header}</h1>
+                          <span className='mt-4'>
+                            <li className='list-disc mt-2'>{e?.body}</li>
+                          </span>
+                        </Fragment>
+                      ))}
+                    </div>
+
+                    {/* Product Details */}
+                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
+                      <h1 className='font1 flex items-center mt-2 font-semibold'>PRODUCT DETAILS <BiSpreadsheet className='ml-2 text-xl' /></h1>
+                      <h1 className='mt-4'>
+                        <li className='list-none mt-2'>{product?.description}</li>
+                        <li className='list-none '>Warranty: 1 month</li>
+                        <li className='list-none '>Warranty provided by Brand Owner / Manufacturer</li>
+                      </h1>
+                      <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
+                      <div className='w-auto max-h-fit justify-center items-start space-x-4'>
+                        {product?.size && product.size.length > 0 && product.size.map((e, i) => (
+                          <Fragment key={e?.id || i}>
+                            <span className='list-none mt-2'>{e?.label}</span>
+                            <span className='list-none mt-2'>{e?.quantity}</span>
+                          </Fragment>
+                        ))}
+                      </div>
+                      <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
+                      <p>{product?.material}</p>
+                      <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
+                      <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
+                      {product?.specification && product.specification.length > 0 && product.specification.map((e, index) => (
+                        <li key={index} className='list-none mt-2'>{e?.point}</li>
+                      ))}
+                    </div>
+
+                    {/* Additional Info */}
+                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
+                      <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
+                      <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
+                    </div>
+
+                    {/* Average Rating */}
+                    {product?.Rating && product?.Rating.length > 0 && (
+                      <div className='average-rating mt-6'>
+                        <h4 className='text-lg font-semibold'>Average Rating:</h4>
+                        <div className='flex items-center'>
+                          {(() => {
+                            const totalStars = product.Rating.reduce((acc, review) => acc + review.rating, 0);
+                            const avgStars = totalStars / product.Rating.length;
+                            const roundedAvg = Math.round(avgStars * 10) / 10;
+                            return (
+                              <>
+                                <div className='stars'>
+                                  {[...Array(Math.floor(roundedAvg))].map((_, i) => (
+                                    <span key={i} className='star text-black'>★</span>
+                                  ))}
+                                  {[...Array(5 - Math.floor(roundedAvg))].map((_, i) => (
+                                    <span key={i} className='star text-gray-300'>★</span>
+                                  ))}
+                                </div>
+                                <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+                              </>
+                            );
+                          })()}
+                        </div>
+                      </div>
+                    )}
+                    
+                  </div>
+                </div>
+
+            </div>
+            
             <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
             <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6'>
               {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
             </ul>
             <Footer/>
           </div>
-          
           :
           <Loader />
       }

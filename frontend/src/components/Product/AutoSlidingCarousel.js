@@ -5,6 +5,7 @@ import ReactPlayer from "react-player";
 
 const AutoSlidingCarousel = ({ pro }) => {
   const imageArray = getImagesArrayFromProducts(pro);
+  console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
@@ -94,13 +95,14 @@ const AutoSlidingCarousel = ({ pro }) => {
           {/* Check if the file is a video or image */}
           {mediaItem.isVideo ? (
             // Video file handling with ReactPlayer
-            <div className="media-item overflow-hidden video-element" data-index={i}>
+            <div className="media-item overflow-hidden video-element" data-index={i} style={{ position: 'relative', width: '100%', height: '100%' }}>
               <ReactPlayer
                 url={mediaItem.url}
                 loop={true}
                 className="w-full h-full object-contain"
                 muted={true}
                 controls={false}
+                loading="lazy"
                 width="100%"
                 height="100%"
                 playing={videoInView[i]} // Play video only when in view
@@ -109,7 +111,7 @@ const AutoSlidingCarousel = ({ pro }) => {
             </div>
           ) : (
             // Image file handling with LazyLoadImage
-            <div className="media-item">
+            <div className="media-item" style={{ position: 'relative', width: '100%', height: '100%' }}>
               <LazyLoadImage
                 loading="lazy"
                 src={mediaItem.url}
@@ -122,7 +124,7 @@ const AutoSlidingCarousel = ({ pro }) => {
           )}
         </div>
       ))}
-
+  
       {/* Navigation Dots */}
       <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 min-w-max">
         {imageArray.map((_, i) => (
