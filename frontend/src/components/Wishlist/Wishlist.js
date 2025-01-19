@@ -23,7 +23,8 @@ const Wishlist = () => {
 
 
 
-    function delwish(product) {
+    function delwish(e,product) {
+        e.stopPropagation()
         dispatch(deletewish({deletingProductId: product}))
         setstate2(false)
     }
@@ -108,7 +109,7 @@ const Wishlist = () => {
                                         <div key={pro?.productId?._id}  onClick={(e)=>{
                                             redirect(`/products/${pro?.productId?._id}`);
                                         }} className='border-[0.5px] border-slate-300 relative'>
-                                            <div className='text-base  cursor-pointer bg-slate-400 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={()=>delwish(pro?.productId._id)}><MdClear className='font-extralight '/></div>
+                                            <div className='text-xl cursor-pointer text-white bg-gray-900 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={(e)=>delwish(e,pro?.productId._id)}><MdClear className='font-extralight '/></div>
                                             <Single_product pro={pro?.productId} user = {user} showWishList = {false}/>
                                         </div>
                                     ))}

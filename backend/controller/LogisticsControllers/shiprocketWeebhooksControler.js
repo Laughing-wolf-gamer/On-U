@@ -130,9 +130,10 @@ export const checkAvailability = async (req,res)=>{
         }
         const weight = product.weight;
         const available = await checkShipmentAvailability(pincode,weight);
-        if(available){
-            
+        if(!available){
+            return res.status(200).json({Success: false, message: 'Delivery not available'});
         }
+        return res.status(200).json({Success: true, message: 'Pincode availability', result: available});
         /* if(available === null || available.length === 0){
             console.error("Error checking availability");
             return res.status(500).json({Success: false, message: 'Error checking availability'});

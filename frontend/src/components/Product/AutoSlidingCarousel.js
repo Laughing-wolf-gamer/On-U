@@ -4,12 +4,13 @@ import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 import { BsHeart } from "react-icons/bs";
 import { Heart } from "lucide-react";
-import { createwishlist } from "../../action/orderaction";
+import { createwishlist, getwishlist } from "../../action/orderaction";
 import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 
-const AutoSlidingCarousel = ({ pro ,user,showWishList = true}) => {
+const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => {
   const imageArray = getImagesArrayFromProducts(pro,true);
+  const [addedToWishList,setAddedToWishList] = useState(false);
   console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
@@ -92,14 +93,19 @@ const AutoSlidingCarousel = ({ pro ,user,showWishList = true}) => {
   const addToWishList = async(e)=>{
       e.stopPropagation();
       if (user) {
-        // console.log("Wishlist Data: ", wishlistData)
-        await dispatch(createwishlist({productId:pro._id,}))
-        alert.success('Product added successfully to Wishlist')
-        window.location.reload();
+          setAddedToWishList(true);
+          // console.log("Wishlist Data: ", wishlistData)
+          await dispatch(createwishlist({productId:pro._id,}))
+          dispatch(getwishlist())
+          alert.success('Product added successfully to Wishlist')
+          // window.location.reload();
        }else{
          alert.show('You have To Login To Add This Product To Wishlist')
        }
     }
+    const isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id)
+    console.log("All Slding Carousal: ",wishlist,isInWishList);
+
   return (
     <div
       className="slideshow-container min-h-[150px] relative"
@@ -142,14 +148,22 @@ const AutoSlidingCarousel = ({ pro ,user,showWishList = true}) => {
       ))}
 
       {/* Navigation Dots */}
-      {
-        showWishList && <div className="absolute top-3 right-2 min-w-max hover:animate-vibrateScale" onClick={addToWishList}>
-          <Heart fill="black" size={30} strokeWidth={.3}/>
+      {showWishList && (
+        <div
+          className="absolute top-3 right-2 min-w-max focus:outline-none"
+          onClick={addToWishList}
+        >
+          {isInWishList ? (
+            <div className="text-red-500 animate-shine p-1 rounded-full">
+              <Heart fill="red" className="text-red-500" />
+            </div>
+          ) : (
+            <Heart fill="white" className="text-white" />
+          )}
         </div>
-      }
+      )}
       
     </div>
   );
 };
-
 export default AutoSlidingCarousel;

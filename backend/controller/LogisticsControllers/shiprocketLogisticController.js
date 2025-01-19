@@ -148,46 +148,73 @@ export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
             height: 10, // Package dimensions (height)
             weight: 1, // Package weight in kilograms
         };
-        const shipments = {
-            add:'dsaveaewa',
-            waybill:randomOrderId,
-            address_type:'sdavasdvads',
-            phone:'9101094674',
-            Payment_mode:'COD',
-            name:'sdjviaeevine',
-            pin:'500032',
-            shipping_mode:'express',
-            cosignee_gst_amount:'2934938',
-            integrated_gst_amount:'34343',
-            ewbn:'3423r3',
-            cosignee_gst_tin:'32423423',
-            hsn_code:'324234',
-            gst_cess_amount:'23423',
-            weight:'23'
-        }
-        const pickup_location= {
-            name:'warehouse 1',
-        }
-        
-        const orderOptions = {
-            method: 'POST',
-            url: `https://track.delhivery.com/api/cmu/create.json`,
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization: `Token ${DELEIVARY_TOKEN}`,
-                'Cache-Control': 'no-cache, must-revalidate, proxy-revalidate'
+        // Prepare the payload data as the 'data' object
+        const requestData = {
+            order_id: randomOrderId, // Unique order ID
+            payment_mode: 'COD', // Payment mode (COD, Pre-paid, or Pickup)
+            pickup_location: 'Registered Warehouse Name', // Exact warehouse name (case-sensitive)
+            client_name: 'ON U', // Registered client name
+            fragile_shipment: false, // Set to true if fragile items are being shipped
+            waybill: [  // Shipment data (waybills for each box)
+            {
+                box_id: 'box_1',
+                waybill_number: 'WB123456789',  // Unique waybill number for this box
+                contents: 'Product 1, Product 2' // Product details for the box
             },
-            params: {
-                format: 'json',
-                data: qs.stringify({
-                    shipments,
-                    pickup_location
-                })  // Convert your data into a URL-encoded string
+            {
+                box_id: 'box_2',
+                waybill_number: 'WB987654321',  // Unique waybill number for another box
+                contents: 'Product 3, Product 4' // Product details for the box
             }
+            ]
         };
-        const createdOrderResponse  = await axios.request(orderOptions);
-        console.log("Created Order request", createdOrderResponse.data);
-        const PicketUpData = {
+        
+        // URL encode the JSON payload
+        const payload = qs.stringify({
+            format: 'json',  // Specify that the format is JSON
+            data: JSON.stringify(requestData) // Encode the data as a JSON string
+        });
+        
+        // Define your API Key or Bearer Token
+        const apiKey = DELEIVARY_TOKEN.toString();  // Replace with your actual API key or token
+        
+        // Make the POST request using Axios with authentication headers
+        axios.post('https://track.delhivery.com/api/cmu/create.json', payload, {
+            headers: {
+            'Content-Type': 'application/x-www-form-urlencoded', // Content-Type for URL-encoded data
+            'Authorization': `Token ${apiKey}`  // Include the authentication token or API key
+            }
+        })
+        .then(response => {
+        console.log('Success:', response.data);
+        })
+        .catch(error => {
+        console.error('Error:', error.response ? error.response.data : error.message);
+        });
+        /* const data = {
+            pickup_time: '14:30:00',  // Example time in hh:mm:ss
+            pickup_date: '2025-01-20', // Example date in YYYY-MM-DD
+            pickup_location: 'Warehouse A', // Example pickup location
+            expected_package_count: 5 // Example expected package count
+        };
+        
+        // Replace with your actual API key or token
+        const apiKey = DELEIVARY_TOKEN.toString();
+        
+        axios.post('https://track.delhivery.com/fm/request/new/', data, {
+        headers: {
+            'Authorization': `Token ${apiKey}`, // For Bearer token
+        }
+        })
+        .then(response => {
+            console.log('Request successful:', response.data);
+        })
+        .catch(error => {
+            console.error('Error during the request:', error.response ? error.response.data : error.message);
+        }); */
+        // const createdOrderResponse  = await axios.request(orderOptions);
+        // console.log("Created Order request", createdOrderResponse.data);
+        /* const PicketUpData = {
             pickup_time:new Date().toTimeString(),
             pickup_date:new Date().toLocaleDateString(),
             pickup_location:'warehouse 1',
@@ -204,9 +231,9 @@ export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
             params: `format=json&data=`,
             data:PicketUpData
         };
-        const orderCreation = await axios.request(Picketoptions);
+        const orderCreation = await axios.request(Picketoptions); */
 
-        console.log("Created Picket Up request", orderCreation.data);
+        // console.log("Created Picket Up request", orderCreation.data);
         
 
         return null;

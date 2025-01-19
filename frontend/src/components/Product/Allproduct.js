@@ -12,9 +12,11 @@ import MFilter from './MFilter';
 import Footer from '../Footer/Footer';
 import Filter from './Filter';
 import FilterView from './FilterView';
+import { getwishlist } from '../../action/orderaction';
 
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
+    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('Recommended');
     const Redirect = useNavigate();
@@ -83,6 +85,7 @@ const Allproductpage = ({user}) => {
 
     useEffect(() => {
         window.scrollTo(0, 0);
+        dispatch(getwishlist())
     }, []);
 
     return (
@@ -141,7 +144,7 @@ const Allproductpage = ({user}) => {
                         (loading === false &&
                             <Fragment>
                                 <ul className='grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-10 xl:gap-10 lg:gap-10 '>
-                                    {pro && pro?.map((p) => (<Single_product pro={p} user = {user} key={p._id} />))}
+                                    {pro && pro?.map((p) => (<Single_product pro={p} user = {user} key={p._id} wishlist = {wishlist}/>))}
                                 </ul>
                                 {window.screen.width >= 1024 && length && length > 50 &&
                                     <div className='paginationBox font1 border-t-[1px] border-gray-700 py-4 hidden 2xl:block xl:block lg:block relative'>

@@ -234,6 +234,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'text',
         placeHolder:'Enter Product ID',
+        required:true,
     },
     {
         label:'Title',
@@ -241,6 +242,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'text',
         placeHolder:'Enter Product Title',
+        required:true,
     },
     {
         label:'Short Title',
@@ -248,18 +250,21 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'text',
         placeHolder:'Enter Short Title',
+        required:true,
     },
     {
         label:'Description',
         name:'description',
         componentType:'textarea',
         placeHolder:'Enter Product Description',
+        required:true,
     },
     {
         label:'Materials & Care',
         name:'material',
         componentType:'textarea',
         placeHolder:'Enter Materials & Care',
+        required:true,
     },
     {
         label:'Price',
@@ -267,6 +272,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Price',
+        required:true,
     },
     {
         label:'Sale Price',
@@ -274,6 +280,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Sale Price (Option)',
+        required:true,
     },
     {
         label:"Gender",
@@ -284,7 +291,8 @@ export const addProductsFromElement = [
             {id:'men',label:"Men"},
             {id:'women',label:"Women"},
             {id:'kids',label:"Kids"},
-        ]
+        ],
+        required:true,
     },
     {
         label:"Category",
@@ -297,7 +305,8 @@ export const addProductsFromElement = [
             {id:'bottomWear',label:"Bottom Wear"},
             {id:'innerWear',label:"Inner Wear"},
             {id:'footWear',label:"Foot Wear"},
-        ]
+        ],
+        required:true,
     },
     {
         label:"SubCategory",
@@ -305,27 +314,31 @@ export const addProductsFromElement = [
         componentType:'select',
         placeHolder:'Select Product Sub-Category',
         options:[
-        ]
+        ],
+        required:true,
     },
     {
         label:"ClothSize",
         name:'clothingSize',
         componentType:'sizeSelect',
         placeHolder:'Select Product Size',
-        options:[]
+        options:[],
+        required:true,
     },
     {
         label:"FootwearSize",
         name:'footWearSize',
         componentType:'sizeSelect',
         placeHolder:'Select Product Shoes Size',
-        options:[]
+        options:[],
+        required:true,
     },
     {
         label:"Bullet Points",
         name:'bulletPoints',
         componentType:'bulletPoints',
         placeHolder:'Select Product Bullet Points',
+        required:true,
     },
     {
         label:"width",
@@ -333,6 +346,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Width',
+        required:true,
     },
     {
         label:"height",
@@ -340,6 +354,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Height',
+        required:true,
     },
     {
         label:"length",
@@ -347,6 +362,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Length',
+        required:true,
     },
     {
         label:"weight",
@@ -354,6 +370,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Weight',
+        required:true,
     },
     {
         label:"breadth",
@@ -361,6 +378,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'text',
         placeHolder:'Enter Product Breadth',
+        required:true,
     }
     
 ]

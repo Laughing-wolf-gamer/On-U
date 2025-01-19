@@ -15,15 +15,16 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
     switch (controlItems.componentType) {
       case 'text':
         return (
-          <Input
+            <Input
             name={controlItems.name}
             placeholder={controlItems.placeholder}
             id={controlItems.name}
             type={controlItems.type}
             value={value}
             onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
-            className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full"
+            className={`px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full`}
           />
+          
         );
       case 'select':
         return (
@@ -77,14 +78,17 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
         );
     }
   }
-
+  const validated = formControls.map(v => v.required && !formData[v.name])
   return (
     <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
       <div className="flex flex-col gap-6">
         {formControls.map((controlItem) => (
-          <div key={controlItem.name} className="grid w-full gap-3">
+          <div key={controlItem.name} className="grid w-full gap-2">
             <Label>{controlItem.label}</Label>
             {renderInputControllersByType(controlItem)}
+            {
+              controlItem.required && !formData[controlItem.name] && <span className='text-red-500 text-[12px] font-light'>Field Required</span>
+            }
           </div>
         ))}
       </div>

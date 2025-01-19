@@ -12,7 +12,7 @@ import elementClass from 'element-class'
 import Single_product from '../Product/Single_product'
 import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
-import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
+import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord} from '../../config'
 import ImageZoom from './ImageZoom'
@@ -56,7 +56,7 @@ const Ppage = () => {
     elementClass(foo1).remove('visible')
   }
 
-  function addtobag() {
+  async function addtobag() {
     console.log("User", user)
     if (user) {
       const orderData ={
@@ -66,10 +66,12 @@ const Ppage = () => {
         color:currentColor,
         size:currentSize,
       }
-      // console.log("Order Data: ",orderData)
-      dispatch(createbag(orderData))
+      await Promise.all([
+        dispatch(createbag(orderData)),
+        dispatch(getwishlist()),
+        dispatch(getbag({ userId: user.id }))
+      ])
       alert.success('Product added successfully in Bag')
-      
      }else{
        alert.show('You have To Login To Add This Product Into Bag')
      }
@@ -77,10 +79,12 @@ const Ppage = () => {
   const addToWishList = async()=>{
     if (user) {
       // console.log("Wishlist Data: ", wishlistData)
-      await dispatch(createwishlist({productId:param.id,}))
+      await Promise.all([
+        dispatch(createwishlist({productId:param.id,})),
+        dispatch(getwishlist()),
+        dispatch(getbag({ userId: user.id }))
+      ])
       alert.success('Product added successfully to Wishlist, ')
-      // callFunction('New Data from ComponentA');
-      window.location.reload();
      }else{
        alert.show('You have To Login To Add This Product To Wishlist')
      }
@@ -409,16 +413,16 @@ const Ppage = () => {
                                     `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                     ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                   title={color?.quantity || color?.label || "Color"} />
-                                {color.quantity <= 10 && color.quantity > 0 && (
+                                {/* {color.quantity <= 10 && color.quantity > 0 && (
                                   <div className='flex flex-col justify-center items-center'>
-                                    <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
+                                    <span className="text-red-700 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
                                   </div>
                                 )}
                                 {color.quantity <= 0 && (
                                   <div className='flex flex-col justify-center items-center'>
                                     <span className='text-gray-500 text-sm font-extrabold text-center flex-wrap'>Out of Stock</span>
                                   </div>
-                                )}
+                                )} */}
                               </div>
                             ))
                           ) : (

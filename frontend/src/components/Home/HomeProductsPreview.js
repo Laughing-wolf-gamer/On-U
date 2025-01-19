@@ -85,7 +85,7 @@ const HomeProductsPreview = ({ product }) => {
                     <button onClick={(e)=>{
                         e.stopPropagation();
                         navigation(`/products/${product?._id}`);
-                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-red-500 hover:bg-red-600 focus:bg-red-400 text-center justify-center font-sans hover:shadow-md">
+                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-black bg-white focus:bg-red-400 focus:bg text-center justify-center font-sans hover:shadow-md">
                         <Heart size={20} />
                         <span className='font-sans'>Add to Wishlist</span>
                     </button>

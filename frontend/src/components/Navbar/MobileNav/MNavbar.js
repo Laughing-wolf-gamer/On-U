@@ -141,9 +141,6 @@ const MNavbar = ({ user }) => {
         var position = xm - total;
         var x = startX - xm;
         var y = startY - ym
-        /* console.log("x:", x)
-        console.log("y:", y)
-        console.log("P:", -position) */
         if (x >= 0 && y >= 0) { // + + down
             if (x > 20 && x > y) {
 
@@ -308,9 +305,12 @@ const MNavbar = ({ user }) => {
                                         </li>
                                     </Ripples>
                                     <Ripples color="#D0DDD0" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex '>
+                                        <div className='text-black font1 px-5 py-4 relative w-full flex bg-blue-50' onClick={(e)=>{
+                                            setShow(false)
+                                            setClass("hidden")
+                                        }} >
                                             <Link to="/"><span className='float-left'>Home</span></Link>
-                                        </li>
+                                        </div>
                                     </Ripples>
                                     <Ripples color="#D0DDD0" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
@@ -320,12 +320,18 @@ const MNavbar = ({ user }) => {
                                     </Ripples>
                                     <MProductsBar showProducts={Menu2}/>
                                     <Ripples color="re" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex '>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex 'onClick={(e)=>{
+                                            setShow(false)
+                                            setClass("hidden")
+                                        }} >
                                             <Link to='/about'><span className='float-left'>About Us</span></Link>
                                         </li>
                                     </Ripples>
                                     <Ripples color="black" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' >
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={(e)=>{
+                                            setShow(false)
+                                            setClass("hidden")
+                                        }} >
                                             <Link to='/contact'><span className='float-left'>Contact</span></Link>
                                         </li>
                                     </Ripples>
