@@ -4,7 +4,6 @@ import User from '../model/usermodel.js'
 import A from './resolveandcatch.js'
 
 const ProtectAdminRoute = A(async(req, res, next)=>{
-    // const { token } = req.cookies;
     const header = req.headers['authorization'];
     // if(!header) return res.status(401).json({Success:false,message: 'No Headers Found!'});
     if(!header) return next(new Error('No Headers Found',401));

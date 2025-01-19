@@ -96,8 +96,6 @@ const commonSlice = createSlice({
 
 export const addFeaturesImage = createAsyncThunk('/common/addFeaturesImage',async(data)=>{
 	try {
-       /*  const token = sessionStorage.getItem('token');
-        console.log(token); */
         const response = await axios.post(`${BASE_URL}/api/common/create/home/carousal`,data,Header());
         return response.data;
     } catch (error) {

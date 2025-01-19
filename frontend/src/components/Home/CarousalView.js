@@ -14,7 +14,7 @@ const CarousalView = ({ b_banners, indicator }) => {
     setAnimate(false); // Reset the animation when the index changes
     setTimeout(() => {
       setAnimate(true); // Trigger animation after the carousel change
-    }, 700); // Delay to sync with the animation duration
+    },5000); // Delay to sync with the animation duration
   };
 
   const handleIntersection = (entries) => {
@@ -48,7 +48,7 @@ const CarousalView = ({ b_banners, indicator }) => {
         showStatus={false}
         showArrows={false}
         showIndicators={true}
-        autoPlay={600}
+        autoPlay={1000}
         swipeable
         infiniteLoop={true}
         selectedItem={currentIndex}
@@ -65,7 +65,7 @@ const CarousalView = ({ b_banners, indicator }) => {
                 src={b}
                 width='100%'
                 height="100%"
-                className='min-h-[520px] bg-gray-900' // Changed to a gray background
+                className='min-h-[480px] bg-gray-300' // Changed to a gray background
                 alt='Banner_Image'
               />
             </Link>
@@ -104,7 +104,7 @@ const CarousalView = ({ b_banners, indicator }) => {
       {/* Left and Right Buttons */}
       <div className='absolute h-32 top-1/2 left-14 transform -translate-y-1/2 z-10'>
         <button
-          className='flex my-auto text-gray-600 opacity-[50%] hover:text-gray-900'
+          className='h-full w-full text-gray-600 opacity-[90%] transition-color hover:text-gray-900 hover:scale-110 duration-500'
           onClick={(e) => {
             e.preventDefault();
             console.log('Change Index: ', currentIndex);
@@ -116,7 +116,7 @@ const CarousalView = ({ b_banners, indicator }) => {
       </div>
       <div className='absolute h-32 top-1/2 right-14 transform -translate-y-1/2 z-10'>
         <button
-          className='h-full w-full text-gray-600 opacity-[50%] transition-color hover:text-gray-900 hover:scale-110 duration-500'
+          className='h-full w-full text-gray-600 opacity-[90%] transition-color hover:text-gray-900 hover:scale-110 duration-500'
           onClick={(e) => {
             e.preventDefault();
             console.log('Change Index: ', currentIndex);

@@ -66,7 +66,7 @@ const FullScreenOverLayCouponPopUp = () => {
                             <X/>
                         </button>
                         {/* Left Column - Form */}
-                        <div className="flex flex-col justify-between p-10 max-h-96">
+                        <div className="flex flex-col justify-between p-10 max-h-full">
                             <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
                             <p className="text-gray-800 flex-wrap">
                                 Join us to receive you 20% off
