@@ -3,8 +3,9 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useAlert } from 'react-alert';
 import { sendGetCoupon } from '../../action/common.action';
 import { useDispatch } from 'react-redux';
-
+import popUp from '../images/popUp-image.jpg'
 const FullScreenOverLayCouponPopUp = () => {
+    console.log("Pop Up images: ",popUp);
     const [isOpen, setIsOpen] = useState(true);
     const [name, setName] = useState('');
     const alert = useAlert();
@@ -124,7 +125,7 @@ const FullScreenOverLayCouponPopUp = () => {
 
                         <div className="hidden md:block relative ">
                             <img
-                                src="https://th.bing.com/th/id/OIP.lHSX3U-BFmJDteFTZEeFhQHaLH?rs=1&pid=ImgDetMain" // Replace with your image URL
+                                src={popUp || "https://th.bing.com/th/id/OIP.lHSX3U-BFmJDteFTZEeFhQHaLH?rs=1&pid=ImgDetMain"} // Replace with your image URL
                                 alt="Coupon-Image"
                                 className="h-full w-full object-cover"
                             />

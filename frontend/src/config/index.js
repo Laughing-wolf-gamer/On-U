@@ -41,7 +41,6 @@ export function getImagesArrayFromProducts(product) {
             s.colors.forEach(c => {
               // Filter out video files from color images
               if (c.images && Array.isArray(c.images)) {
-                
                 const filteredImages = c.images.filter(image => !isVideoFile(image));
                 images = [...images, ...filteredImages];
               }

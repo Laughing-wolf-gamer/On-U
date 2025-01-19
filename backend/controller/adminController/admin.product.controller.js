@@ -3,7 +3,6 @@ import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
-import { getAllShipRocketOrder } from "../LogisticsControllers/shiprocketLogisticController.js";
 
 export const uploadImage = async (req, res) =>{
     try {
