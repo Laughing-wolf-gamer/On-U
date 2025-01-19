@@ -85,7 +85,7 @@ const Footer = () => {
         <div className="text-sm mt-10">
           <h1 className="font-extrabold text-black mb-4">POPULAR SEARCHES</h1>
           <p className="text-gray-700">
-            Makeup | Dresses For Girls | T-Shirts | Sandals
+            Shirts | Dresses For Girls | T-Shirts | Sandals
           </p>
         </div>
 

@@ -76,9 +76,6 @@ export const removeHomeCarousal = async (req, res) => {
 		const banner = await BannerModel.findById(id);
 		if(!banner) return res.status(404).json({Success: false, message: "Banner not found"});
 		banner.Url.splice(imageIndex,1);
-		/* if(banner.Url.length === 0){
-			await banner.remove();
-		} */
 		await banner.save();
 		const banners = await BannerModel.find({});
 		console.log("Banners: ",banners)

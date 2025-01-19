@@ -55,7 +55,7 @@ const HomeProductsPreview = ({ product }) => {
 
     return (
         <div
-            className="w-[100%] h-[100%] overflow-hidden relative flex flex-col shadow-md"
+            className="w-[100%] h-[100%] overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -75,18 +75,19 @@ const HomeProductsPreview = ({ product }) => {
             </div>
             <div 
                 className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2 
-                    w-full h-fit flex flex-col space-y-2 items-center justify-center 
-                    font-sans transition-all duration-300 ease-in-out 
-                    ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
+                    w-full h-fit flex flex-col gap-1 items-center justify-center 
+                    font-sans transition-all duration-300 ease-in-out
+                    ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 <div
                     className={`w-full h-fit`}
                 >
                     <button onClick={(e)=>{
-                    navigation(`/products/${product?._id}`);  
-                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-700 hover:bg-gray-400 text-center  justify-center space-x-2 font-medium">
-                        <ShoppingCart size={20} />
-                        <span className='font-sans'>Add to Cart</span>
+                        e.stopPropagation();
+                        // navigation(`/products/${product?._id}`);
+                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-red-500 hover:bg-red-600 focus:bg-red-400 text-center justify-center font-sans hover:shadow-md">
+                        <Heart size={20} />
+                        <span className='font-sans'>Add to Wishlist</span>
                     </button>
                 </div>
                 <div
@@ -94,13 +95,11 @@ const HomeProductsPreview = ({ product }) => {
                 >
                     <button onClick={(e)=>{
                     navigation(`/products/${product?._id}`);  
-                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-700 hover:bg-gray-400 text-center  justify-center space-x-2 font-medium">
-                        <Heart size={20} />
-                        <span className='font-sans'>Add to Wishlist</span>
+                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md">
+                        <ShoppingCart size={20} />
+                        <span className='font-sans'>Add to Cart</span>
                     </button>
                 </div>
-                
-
             </div>
 
             {product && product.salePrice && product.salePrice > 0 && product.salePrice < product.price && (

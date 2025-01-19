@@ -86,36 +86,49 @@ const ProductPreviewFull = ({ product }) => {
       <div className="w-screen h-auto justify-center items-center flex flex-row bg-slate-200 p-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-10 row-span-2 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
-            previewProducts.slice(0,4).map((p, index) => (
-              <div key={index} className="md:w-80 w-44 m-1 h-full rounded-md bg-white relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
+            previewProducts.slice(0,4).filter(s => s.salePrice != null).map((p, index) => (
+              <div key={index} className="md:w-72 w-44 m-1 h-full rounded-md bg-white relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
                 <HomeProductsPreview product={p} />
                 <div className="w-full p-2 bg-white flex flex-col justify-center items-start hover:shadow-md rounded-md space-y-2">
                   <h2 className="font1 text-base font-normal md:font-semibold font-sans text-gray-800 text-left">
                     {p?.title?.length > 26 ? `${p?.title.slice(0, 26)}` : p?.title}
-                    {/* {p?.title} */}
                   </h2>
-                  {/* Rating Section */}
-                  <div className="flex flex-row justify-center items-center">
+                  {/* <div className="flex flex-row justify-center items-center">
                     {renderStars(p)}
-                  </div>
+                  </div> */}
+                  
                   <div className='flex flex-row justify-start items-center w-full'>
                     <span className="font1 text-base text-slate-700">
                       {p.salePrice && p.salePrice > 0 ? (
-                        <span className="line-through text-sm md:text-xl font-light md:font-medium font-sans text-slate-700 hover:animate-bounce">
+                        <span className="line-through text-sm md:text-base font-light md:font-medium font-sans text-slate-700 hover:animate-bounce">
                           ₹ {p.price}
                         </span>
                       ) : (
-                        <span className="text-sm md:text-xl font-light md:font-medium font-sans text-slate-700 hover:animate-bounce">
+                        <span className="text-sm md:text-base font-light md:font-medium font-sans text-slate-700 hover:animate-bounce">
                           ₹ {p.price}
                         </span>
                       )}
                     </span>
                     {p.salePrice && p.salePrice > 0 && (
-                      <span className="ml-2 text-sm md:text-xl font-light md:font-medium font-sans text-[#f26a10] hover:animate-vibrateScale">
+                      <span className="ml-2 text-sm md:text-base font-light md:font-semibold font-sans text-red-500 hover:animate-vibrateScale">
                         ₹ {p.salePrice}
                       </span>
                     )}
                   </div>
+                  {p.AllColors && p.AllColors.length > 0 && (
+                    <div className="mt-2 flex space-x-2">
+                      {p.AllColors.slice(0,4).map((color, colorIndex) => (
+                        <div
+                          key={colorIndex}
+                          className="w-6 h-6 rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out"
+                          style={{
+                            backgroundColor: color.label, // Assuming color is a hex or RGB string
+                          }}
+                        />
+                      ))}
+                    </div>
+                  )}
+                  
                 </div>
               </div>
             ))

@@ -257,7 +257,7 @@ const Home = () => {
     Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
   }
   
-  // console.log("All Banners: ",Wide_Screen_Section_3);
+  console.log("All Banners: ",Wide_Screen_Section_8);
 
   const [showComponent, setShowComponent] = useState(null);
 
@@ -350,48 +350,37 @@ const Home = () => {
             }
         
             <div className='bg-slate-200 pt-8'>
-                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>DEALS ON LATEST ARRIVALS</h1>
-                <div className='grid grid-cols-2'>
+                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                <div className='grid grid-cols-2 col-span-12'>
                     {
-                        Wide_Screen_Section_8 && Wide_Screen_Section_8.length > 0 ? 
-                        Wide_Screen_Section_8.map((j, index) => (
+                        !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
+                        Wide_Screen_Section_8.urls.map((j, index) => (
                             <Link key={`j_banners_${index}`} to='/products' className='m-1'>
-                                <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px] rounded-lg shadow-lg" />
+                                <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px] rounded-lg shadow-md" />
                             </Link>
                         )) : (
-                            <>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j1} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j2} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j3} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
-                                </Link>
-                                <Link to='/products'>
-                                    <LazyLoadImage effect='blur' src={j4} alt="" className='min-h-[200px] rounded-lg shadow-lg' />
-                                </Link>
-                            </>
+                            <Fragment>
+                                <Loader/>
+                            </Fragment>
                         )
                     }
                 </div>
             </div>
         
             {
-                Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
+                !bannerLoading && Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
                 <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
             }
         
             {
-                Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
+                !bannerLoading && Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
                 <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
             }
         
             {
-                Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
+                !bannerLoading && Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : 
                 <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8,r8,r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
             }

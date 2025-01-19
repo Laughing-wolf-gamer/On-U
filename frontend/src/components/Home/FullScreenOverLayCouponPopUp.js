@@ -60,14 +60,14 @@ const FullScreenOverLayCouponPopUp = () => {
                     onClick={handleOverlayClick} // Close on click outside
                 >
                     <div
-                        className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-4 relative overflow-hidden"
+                        className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-3 relative overflow-hidden overflow-y-auto my-auto"
                         onClick={(e) => e.stopPropagation()} // Prevent click from propagating to the overlay
                     >
                         <button className='absolute w-10 h-10 text-black md:top-3 top-2 left-6 cursor-pointer' onClick={handleHateCouponClick}>
                             <X/>
                         </button>
                         {/* Left Column - Form */}
-                        <div className="flex flex-col justify-between p-10 max-h-full">
+                        <div className="flex flex-col justify-between p-16 md:p-10 max-h-full">
                             <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
                             <p className="text-gray-800 flex-wrap">
                                 Join us to receive you 20% off
@@ -106,7 +106,7 @@ const FullScreenOverLayCouponPopUp = () => {
                             </div>
 
                             {/* Buttons */}
-                            <div className="mt-6 flex flex-col justify-center gap-4 h-fit">
+                            <div className="flex flex-col justify-center gap-2 h-fit">
                                 <button
                                     disabled = {loadingSent}
                                     onClick={handleGetCouponClick}

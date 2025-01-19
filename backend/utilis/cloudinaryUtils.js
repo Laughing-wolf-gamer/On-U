@@ -16,6 +16,7 @@ async function handleImageUpload(file){
         // Upload image to Cloudinary
         const result = await cloudinary.uploader.upload(file, {
             resource_type: 'auto', // Automatically detect the resource type (image/video)
+            quality: 60, // Reduce image quality to 60%
         });
         return result; // Return the result which contains the image URL, public_id, etc.
     } catch (error) {
@@ -28,6 +29,7 @@ async function handleMultipleImageUpload(files) {
         const uploadPromises = files.map(file =>
             cloudinary.uploader.upload(file, {
                 resource_type: 'auto',
+                quality: 60, // Reduce image quality to 60%
             })
         );
         const results = await Promise.all(uploadPromises);

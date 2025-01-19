@@ -305,6 +305,11 @@ const MPpage = () => {
                                 </div>
                             </div>
                         </div>
+                        <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
+                            <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
+                            <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><BsHeart className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
+                            <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
+                        </div>
                         <PincodeChecker productId={product?._id}/>
                         <div className='mt-2 pt-4 bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
@@ -346,12 +351,6 @@ const MPpage = () => {
                                 Secure Payments
                             </div>
                         </div>
-                        <div className='h-fit w-full justify-center items-center flex flex-row flex-wrap gap-5'>
-                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center bg-slate-500 text-white ml-4 rounded-md hover:bg-gray-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
-                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><BsHeart className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
-                            <button className="font1 font-semibold text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
-                        </div>
-
                         <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
                             <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>

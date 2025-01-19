@@ -23,7 +23,7 @@ function filterImageFiles(files) {
 }
 export function getImagesArrayFromProducts(product) {
     // Helper function to check if a file is a video based on its extension
-    console.log(product.size)
+    console.log("all colors",product.AllColors)
     const isVideoFile = (fileName) => {
       const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'];
       return videoExtensions.some(extension => fileName.url.toLowerCase().endsWith(extension));
