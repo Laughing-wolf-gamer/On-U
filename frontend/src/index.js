@@ -18,7 +18,7 @@ ReactDOM.render(
     <Provider store={store}>
       <Alertprovider template={AlertTemplate} {...option}>
         <React.StrictMode >
-          <App />
+            <App />
         </React.StrictMode>
       </Alertprovider>
     </Provider>,

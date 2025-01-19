@@ -1,6 +1,9 @@
 import { capitalizeFirstLetterOfEachWord } from '@/config';
+import { resetTokenCredentials } from '@/store/auth-slice';
 import { EditIcon, LogOut } from 'lucide-react';
 import React from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 // ProfileHeader Component
 const ProfileHeader = ({ admin }) => {
@@ -59,7 +62,9 @@ const ProfileActions = ({ onEdit, onLogout }) => {
 
 // AdminProfile Component
 const AdminProfile = ({ user }) => {
-    console.log("Profile User: ", user);
+    const navigate = useNavigate();
+    const dispatch = useDispatch();
+    // console.log("Profile User: ", user);
 
     const admin = {
         name: "John Doe",
@@ -75,16 +80,18 @@ const AdminProfile = ({ user }) => {
         alert("Edit Profile Clicked");
     };
 
-    const handleLogout = () => {
-        // Handle logout action
-        alert("Logout Clicked");
-    };
+    const HandleLogOut = async (e)=>{
+        e.preventDefault();
+        dispatch(resetTokenCredentials());
+        sessionStorage.clear();
+        navigate('/auth/login');
+    }
 
     return (
         <div className="w-full h-full mx-auto p-6 bg-white shadow-lg rounded-lg">
             <ProfileHeader admin={user} />
             <ProfileDetails admin={user} />
-            <ProfileActions onEdit={handleEdit} onLogout={handleLogout} />
+            <ProfileActions onEdit={handleEdit} onLogout={HandleLogOut} />
         </div>
     );
 };

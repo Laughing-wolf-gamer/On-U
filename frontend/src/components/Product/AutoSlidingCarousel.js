@@ -8,7 +8,7 @@ import { createwishlist } from "../../action/orderaction";
 import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 
-const AutoSlidingCarousel = ({ pro ,user}) => {
+const AutoSlidingCarousel = ({ pro ,user,showWishList = true}) => {
   const imageArray = getImagesArrayFromProducts(pro,true);
   console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
@@ -93,7 +93,7 @@ const AutoSlidingCarousel = ({ pro ,user}) => {
       e.stopPropagation();
       if (user) {
         // console.log("Wishlist Data: ", wishlistData)
-        dispatch(createwishlist({productId:pro._id,}))
+        await dispatch(createwishlist({productId:pro._id,}))
         alert.success('Product added successfully to Wishlist')
         window.location.reload();
        }else{
@@ -142,9 +142,12 @@ const AutoSlidingCarousel = ({ pro ,user}) => {
       ))}
 
       {/* Navigation Dots */}
-      <div className="absolute top-3 right-2 min-w-max hover:animate-vibrateScale" onClick={addToWishList}>
-        <Heart fill="black" size={30} strokeWidth={.3}/>
-      </div>
+      {
+        showWishList && <div className="absolute top-3 right-2 min-w-max hover:animate-vibrateScale" onClick={addToWishList}>
+          <Heart fill="black" size={30} strokeWidth={.3}/>
+        </div>
+      }
+      
     </div>
   );
 };

@@ -4,6 +4,7 @@ import { BASE_URL, Header } from '@/config';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { X } from 'lucide-react';
+import UploadOverlay from './UploadOverlay';
 
 const FileUploadComponent = ({
   maxFiles = 5,
@@ -187,8 +188,10 @@ const FileUploadComponent = ({
           </div>
         ))}
       </div>
+      <UploadOverlay isUploading={isLoading}/>
     </div>
   );
 };
+
 
 export default FileUploadComponent;

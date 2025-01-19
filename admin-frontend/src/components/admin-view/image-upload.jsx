@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import axios from 'axios';
 import { Skeleton } from '../ui/skeleton';
 import { BASE_URL } from '@/config';
+import UploadOverlay from './UploadOverlay';
 
 const ImageUpload = ({currentIndex = -1,file,setFile,Header,uploadedImageUrl,setUploadedImageUrl,imageLoading,setImageLoading,isEditingMode,isCustomStyling,newStyling}) => {
 	const inputRef = useRef(null);
@@ -111,6 +112,7 @@ const ImageUpload = ({currentIndex = -1,file,setFile,Header,uploadedImageUrl,set
                     )
 				}
 			</div>
+            <UploadOverlay isUploading={imageLoading}/>
 		</div>
 	)
 }

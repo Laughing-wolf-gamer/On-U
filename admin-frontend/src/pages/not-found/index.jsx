@@ -22,6 +22,9 @@ const NotFound = ({user,isAuthenticated}) => {
       >
         Go Back Home
       </a>
+      <span >
+        Reload the Page to move Back to Home Page.
+      </span>
     </div>
   );
 };

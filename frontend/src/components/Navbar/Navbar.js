@@ -1,18 +1,21 @@
 import React, { Fragment, useState, useCallback, useEffect } from 'react'
 import './Navbar.css'
 import { FaHeart, FaUserAlt } from 'react-icons/fa'
-import { BsHandbag, BsHeart } from 'react-icons/bs'
+import { BsBag, BsHandbag, BsHeart } from 'react-icons/bs'
 import Search from './Search.js'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductsBar from './Submenu/ProducstBar.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { getbag, getwishlist } from '../../action/orderaction.js'
-import { SearchIcon } from 'lucide-react'
+import { BaggageClaim, SearchIcon, ShoppingBag } from 'lucide-react'
+import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
 
 
 const Navbar = ({user}) => {
+
   const dispatch = useDispatch();
+  const { state } = useFunctionContext();
   const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
   const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
   const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
@@ -75,12 +78,26 @@ const Navbar = ({user}) => {
       dispatch(getwishlist())
     }
   },[user,dispatch])
-  console.log("Nav wishlist bag: ",wishlist)
+  
   const [isSearchVisible, setIsSearchVisible] = useState(false);
 
   const toggleSearchBar = () => {
     setIsSearchVisible(!isSearchVisible);
   };
+  const fetchAllWishList = ()=>{
+    console.log('State in Nav Bar');
+    setTimeout(() => {
+      dispatch(getwishlist())
+    }, 900);
+  }
+  useEffect(() => {
+    
+    fetchAllWishList();
+    if(user){
+      dispatch(getbag({ userId: user.id }));
+    }
+  }, [state]);
+  // console.log("Nav wishlist bag: ",wishlist)
   return (
     <Fragment>
       <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
@@ -151,15 +168,15 @@ const Navbar = ({user}) => {
                   </Link>
                 </div>
               </li>
-              <li className="w-max flex justify-center items-center font1 font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
+              <li className="w-max flex justify-center items-center pb-1.5 font1 font-semibold font-sans capitalize no-underline text-sm border-4 border-transparent relative">
                 {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
-                  <div className="absolute top-0 right-3 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                  <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                     <span>{bag.orderItems.length}</span>
                   </div>
                 )}
                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
-                  <Link to="/bag">
-                      <BsHandbag className='w-full h-full justify-self-center text-slate-800'/>
+                <Link to="/bag">
+                    <BsHandbag className='w-full h-full justify-self-center text-slate-800'/>
                   </Link>
                 </div>
               </li>

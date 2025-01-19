@@ -256,19 +256,19 @@ export const createwishlist = async (req, res, next) => {
       return res.status(200).json({success:false,message: "Product id Required"});
     }
     let previousWishList = await WhishList.findOne({userId:id})
+    console.log("Creating Wish List: ",previousWishList);
     if(previousWishList){
-      if(previousWishList.orderItems.includes(productId)){
-        return res.status(200).json({success:false,message: "Product already in wishlist"})
+      const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
+      if (isAlreadyPresent) {
+        return res.status(409).json({ success: false, message: "Product already in wishlist" });
       }
-      previousWishList.orderItems.push(productId);
+      previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
       await previousWishList.save();
-      // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
       return res.status(200).json({success:true,message: "Product added to wishlist"})
     }
     previousWishList = new WhishList({userId:id, orderItems:[{
       productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
     }]})
-    console.log("new WishList: ",previousWishList);
     await previousWishList.save();
     // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
     res.status(200).json({success:true,message: "Product added to wishlist"})

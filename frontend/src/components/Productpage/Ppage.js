@@ -22,12 +22,14 @@ import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { ShoppingBag, ShoppingCart } from 'lucide-react'
+import eventManager from '../../EventManager'
+import { useFunctionContext } from '../../Contaxt/FunctionContext'
 
 const Ppage = () => {
   const navigation = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
 
-
+  const { callFunction } = useFunctionContext();
 	const[selectedSize, setSelectedSize] = useState(null);
 	const[selectedColor, setSelectedColor] = useState([]);
 	const [selectedImage, setSelectedImage] = useState(null);
@@ -44,7 +46,7 @@ const Ppage = () => {
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
   const {error, bag} = useSelector(state => state.bag)
-  const {error:werror} = useSelector(state => state.wishlist)
+  const {error:warning} = useSelector(state => state.wishlist)
   function Addclass() {
     var foo1 = document.querySelector(`.imgfulldiv`)
     elementClass(foo1).add('visible')
@@ -75,8 +77,9 @@ const Ppage = () => {
   const addToWishList = async()=>{
     if (user) {
       // console.log("Wishlist Data: ", wishlistData)
-      dispatch(createwishlist({productId:param.id,}))
-      alert.success('Product added successfully to Wishlist')
+      await dispatch(createwishlist({productId:param.id,}))
+      alert.success('Product added successfully to Wishlist, ')
+      // callFunction('New Data from ComponentA');
       window.location.reload();
      }else{
        alert.show('You have To Login To Add This Product To Wishlist')
@@ -129,11 +132,11 @@ const Ppage = () => {
       alert.error(error)
       dispatch(clearErrors())
     }
-    if(werror){
-      alert.error(werror)
+    if(warning){
+      alert.error(warning)
       dispatch(clearErrors())
     }
-  }, [dispatch, param, error, alert, werror]);
+  }, [dispatch, param, error, alert, warning]);
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
   };

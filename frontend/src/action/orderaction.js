@@ -35,12 +35,11 @@ import {
 import { BASE_API_URL, headerConfig } from '../config'
 
 export const createwishlist = ({productId}) => async (dispatch) => {
-    // console.log(option)
     try {
         dispatch({ type: REQUEST_CREATE_WISHLIST })
         const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist`,{productId}, headerConfig());
         console.log("Wishlist created: ",res?.data);
-        dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success,})
+        dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
     } catch (error) {
         dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
     }

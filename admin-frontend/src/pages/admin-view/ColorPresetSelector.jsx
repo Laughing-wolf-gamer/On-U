@@ -216,32 +216,32 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 				
 							{/* Increment/Decrement Quantity */}
 							<div className="flex items-center space-x-2">
-							<button
-								disabled = {isLoading}
-								onClick={(e) => handleIncrement(e, color, "decrement")}
-								className="px-3 py-2 text-sm bg-gray-500 rounded-lg hover:bg-gray-600 focus:outline-none"
-								aria-label="Decrease quantity"
-							>
-								<Minus/>
-							</button>
-							<Input
-								disabled = {isLoading}
-								type="number"
-								value={
-								selectedColorArray.find((c) => c.id === color.id)?.quantity || 0
-							}
-								onChange={(e) => handleChangeQuantity(e, color)}
-								className="w-full h-full text-center border-2 rounded-full focus:ring-2 focus:ring-gray-500 focus:outline-none"
-								min="0"
-							/>
-							<button
-								disabled={isLoading}
-								onClick={(e) => handleIncrement(e, color, "increment")}
-								className="px-3 py-2 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none"
-								aria-label="Increase quantity"
-							>
-								<Plus/>
-							</button>
+								<button
+									disabled = {isLoading}
+									onClick={(e) => handleIncrement(e, color, "decrement")}
+									className="px-3 py-2 text-sm bg-gray-500 rounded-lg hover:bg-gray-600 focus:outline-none"
+									aria-label="Decrease quantity"
+								>
+									<Minus/>
+								</button>
+								<Input
+									disabled = {isLoading}
+									type="number"
+									value={
+										selectedColorArray.find((c) => c.id === color.id)?.quantity || 0
+									}
+									onChange={(e) => handleChangeQuantity(e, color)}
+									className="w-full h-full text-center border-2 rounded-full focus:ring-2 focus:ring-gray-500 focus:outline-none"
+									min="1"
+								/>
+								<button
+									disabled={isLoading}
+									onClick={(e) => handleIncrement(e, color, "increment")}
+									className="px-3 py-2 text-sm bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:outline-none"
+									aria-label="Increase quantity"
+								>
+									<Plus/>
+								</button>
 							</div>
 							
 							{selectedColorArray.find((s) => s.id === color.id)?.quantity > 0 && (

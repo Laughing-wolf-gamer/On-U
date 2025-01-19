@@ -20,6 +20,7 @@
     "dotenv": "^16.4.7",
     "e-commerce": "file:..",
     "element-class": "^0.2.2",
+    "events": "^3.3.0",
     "lucide-react": "^0.468.0",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",

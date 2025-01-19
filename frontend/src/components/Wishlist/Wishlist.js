@@ -104,12 +104,12 @@ const Wishlist = () => {
                             <br />
                             <div className='2xl:px-4 xl:px-4 lg:px-4 '>
                                 <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 '>
-                                    {wishlist && wishlist.orderItems.map((pro) => (
+                                    {user && wishlist && wishlist.orderItems.map((pro) => (
                                         <div key={pro?.productId?._id}  onClick={(e)=>{
                                             redirect(`/products/${pro?.productId?._id}`);
                                         }} className='border-[0.5px] border-slate-300 relative'>
                                             <div className='text-base  cursor-pointer bg-slate-400 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={()=>delwish(pro?.productId._id)}><MdClear className='font-extralight '/></div>
-                                            <Single_product pro={pro?.productId} />
+                                            <Single_product pro={pro?.productId} user = {user} showWishList = {false}/>
                                         </div>
                                     ))}
                                 </ul>

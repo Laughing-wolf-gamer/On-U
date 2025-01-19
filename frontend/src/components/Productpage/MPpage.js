@@ -26,6 +26,7 @@ import { ShoppingBag, ShoppingCart } from 'lucide-react';
 
 
 const MPpage = () => {
+    const [isUpdating,setIsUpdating] = useState();
     const navigation = useNavigate();
     const param = useParams();
     const alert = useAlert();
@@ -94,15 +95,14 @@ const MPpage = () => {
     }
     const addToWishList = async()=>{
         if (user) {
-            // console.log("Wishlist Data: ", wishlistData)
-            dispatch(createwishlist({productId:param.id,}))
+            await dispatch(createwishlist({productId:param.id,}))
             alert.success('Product added successfully to Wishlist')
+            window.location.reload();
         }else{
-            alert.show('You have To Login To Add This Product To Wishlist')
+            alert.info('You have To Login To Add This Product To Wishlist')
         }
     }
-    function addToBag(e) {
-        e.preventDefault();
+    async function addToBag(e) {
         if (user) {
             const orderData = {
                 userId: user.id,
@@ -111,16 +111,17 @@ const MPpage = () => {
                 color: currentColor,
                 size: currentSize,
             };
-            dispatch(createbag(orderData))
+            await dispatch(createbag(orderData))
             alert.success('Product added successfully to the bag');
+            window.location.reload();
         } else {
-            alert.error('You need to log in to add this product to your bag');
+            alert.info('You need to log in to add this product to your bag');
         }
     }
 
-    const handleImageClick = (imageUrl) => {
+    /* const handleImageClick = (imageUrl) => {
         setSelectedImage(imageUrl);
-    };
+    }; */
 
     const handleSetNewImageArray = (size) => {
         setCurrentSize(size);
@@ -136,15 +137,12 @@ const MPpage = () => {
     };
     const PostRating = (e)=>{
         e.preventDefault();
-        console.log("Rating Data: ", ratingData);
         if(ratingData && user && product){
             dispatch(postRating({productId:product?._id, ratingData}))
         }
     }
     const checkFetchedIsPurchased = async ()=>{
-        console.log("Checking: ",product);
         const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
-        // console.log("response On Is Purchased: ", didPurchased.success);
         setHasPurchased(didPurchased?.success || false);
     }
 
