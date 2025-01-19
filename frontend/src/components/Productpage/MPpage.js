@@ -316,16 +316,6 @@ const MPpage = () => {
                                                 `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                                 ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                             title={color?.quantity || color?.label || "Color"} />
-                                            {/* {color.quantity <= 10 && color.quantity > 0 && (
-                                            <div className='flex flex-col justify-center items-center'>
-                                                <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
-                                            </div>
-                                            )}
-                                            {color.quantity <= 0 && (
-                                            <div className='flex flex-col justify-center items-center'>
-                                                <span className='text-gray-500 text-sm font-extrabold text-center flex-wrap'>Out of Stock</span>
-                                            </div>
-                                            )} */}
                                         </div>
                                         ))
                                     ) : (
