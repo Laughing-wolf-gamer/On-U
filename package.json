@@ -32,7 +32,7 @@
   "scripts": {
     "dev": "nodemon backend/services.js",
     "start": "node backend/services.js",
-    "build": "npm install && npm install --prefix frontend && npm run build --prefix frontend"
+    "build": "pnpm run build --prefix frontend && pnpm run build --prefix admin-frontend"
   },
   "author": "abhishek",
   "license": "ISC",
