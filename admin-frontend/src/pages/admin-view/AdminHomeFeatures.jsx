@@ -162,13 +162,13 @@ const AdminHomeFeatures = () => {
                         </>
                     )
                 }
-                <Input
+                {/* <Input
                     type="text"
                     value={imageUrlsCategory}
                     onChange={(e) => setImageUrlsCategory(e.target.value)}
                     placeholder="Enter New Category Name"
                     className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
+                /> */}
                 <Input
                     type="text"
                     value={imageHeader}
