@@ -82,7 +82,7 @@ function App() {
         <Route path='/dashboard' element={<Overview user={user}/>}/>
         {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
         {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
-        <Route path='/products' element={<Allproductpage/>}/>
+        <Route path='/products' element={<Allproductpage user = {user}/>}/>
         {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
         {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
         <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>

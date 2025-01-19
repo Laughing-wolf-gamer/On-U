@@ -14,7 +14,7 @@ route.post('/auth/login',logInUser)
 route.get('/auth/check-auth',isAuthenticateuser,ProtectAdminRoute,getuser)
 route.post('/product/add',ProtectAdminRoute,addNewProduct);
 route.post('/upload-image',ProtectAdminRoute,upload.single('my_file'),uploadImage);
-route.post('/upload-image-all',ProtectAdminRoute,upload.array('my_files[]',10),uploadMultipleImages);
+route.post('/upload-image-all',isAuthenticateuser,ProtectAdminRoute,upload.array('my_files[]',10),uploadMultipleImages);
 route.get('/product/all',fetchAllProducts);
 route.get('/product/get/:id',ProtectAdminRoute,getProductById);
 route.put('/product/edit/:id',ProtectAdminRoute,editProduct);

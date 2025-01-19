@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <Fragment>
-      <div className="w-screen px-7 p-10 py-10 max-h-[900px] font1 bg-slate-100">
+      <div className="w-screen p-14 py-10 max-h-[900px] font1 bg-slate-100">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
           {/* Online Shopping */}
           <div className="border-r border-gray-300 pr-8">
@@ -90,7 +90,7 @@ const Footer = () => {
         </div>
 
         {/* Footer Bottom */}
-        <div className="mt-6 text-center text-gray-500 text-xs">
+        <div className="mt-6 text-center text-gray-500 text-md">
           &copy; 2025 www.theOnu.com. All rights reserved.
         </div>
       </div>

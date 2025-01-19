@@ -21,18 +21,42 @@ function filterImageFiles(files) {
       return imageExtensions.includes('.' + fileExtension); // Only allow image files
     });
 }
-export function getImagesArrayFromProducts(product, getVideoFiles = false) {
-    const sizeRandom = getRandomItem(product.size);
-    const randomColor = getRandomItem(sizeRandom.colors);
-    
-    // Filter out video files from randomColor.images
-    if(getVideoFiles){
-        return randomColor.images || []
-    }
-    const imageFiles = filterImageFiles(randomColor.images || []);
-    
-    return imageFiles;
-  }
+export function getImagesArrayFromProducts(product) {
+    // Helper function to check if a file is a video based on its extension
+    console.log(product.size)
+    const isVideoFile = (fileName) => {
+      const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'];
+      return videoExtensions.some(extension => fileName.url.toLowerCase().endsWith(extension));
+    };
+  
+    // Function to collect images, excluding video files
+    const getImagesFromProduct = (product) => {
+      let images = [];
+  
+      // Iterate over the sizes
+      if (product.size && Array.isArray(product.size)) {
+        product.size.forEach(s => {
+          // Iterate over the colors for each size
+          if (s.colors && Array.isArray(s.colors)) {
+            s.colors.forEach(c => {
+              // Filter out video files from color images
+              if (c.images && Array.isArray(c.images)) {
+                
+                const filteredImages = c.images.filter(image => !isVideoFile(image));
+                images = [...images, ...filteredImages];
+              }
+            });
+          }
+        });
+      }
+  
+      return images;
+    };
+  
+    // Get and return filtered images
+    return getImagesFromProduct(product);
+}
+  
 
 
 export function getRandomItem(array) {

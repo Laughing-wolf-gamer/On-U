@@ -67,6 +67,7 @@ const Ppage = () => {
       // console.log("Order Data: ",orderData)
       dispatch(createbag(orderData))
       alert.success('Product added successfully in Bag')
+      
      }else{
        alert.show('You have To Login To Add This Product Into Bag')
      }
@@ -76,6 +77,7 @@ const Ppage = () => {
       // console.log("Wishlist Data: ", wishlistData)
       dispatch(createwishlist({productId:param.id,}))
       alert.success('Product added successfully to Wishlist')
+      window.location.reload();
      }else{
        alert.show('You have To Login To Add This Product To Wishlist')
      }
@@ -87,6 +89,7 @@ const Ppage = () => {
       setTimeout(() => {
         navigation('/bag')
       }, 1000);
+      window.location.reload();
     } catch (error) {
       console.error("Error Adding to Bag: ",error);
     }
@@ -533,7 +536,7 @@ const Ppage = () => {
             
             <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
             <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6'>
-              {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
+              {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} user ={user} key={pro._id}/>))}
             </ul>
             <Footer/>
           </div>

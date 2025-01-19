@@ -439,14 +439,14 @@ const Home = () => {
                   : 
                   <Loader/> }
             </div>
-            <div className='h-fit w-screen bg-slate-200 py-1'>
+            <div className='h-fit w-screen bg-slate-200 py-5'>
                 <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
                     <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
                         <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                             <Truck size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
                             <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
-                                <h3 className='font-medium text-left text-[20px] text-slate-700'>FREE SHIPPING</h3>
+                                <h3 className='font-medium text-left text-[17px] text-slate-700'>FREE SHIPPING</h3>
                                 <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
                             </div>
                         </div>
@@ -455,7 +455,7 @@ const Home = () => {
                             <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
                             <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
-                                <h3 className='font-medium text-left text-[20px] text-gray-700'>SUPPORT 24/7</h3>
+                                <h3 className='font-medium text-left text-[17px] text-gray-700'>SUPPORT 24/7</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
                             </div>
                         </div>
@@ -464,7 +464,7 @@ const Home = () => {
                             <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
                             <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
-                                <h3 className='font-medium text-left text-[20px] text-gray-700'>Money Return</h3>
+                                <h3 className='font-medium text-left text-[17px] text-gray-700'>Money Return</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
                             </div>
                         </div>
@@ -473,7 +473,7 @@ const Home = () => {
                             <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
                             <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
-                                <h3 className='font-medium text-left text-[20px] text-gray-700'>Order Discount</h3>
+                                <h3 className='font-medium text-left text-[17px] text-gray-700'>Order Discount</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
                             </div>
                         </div>
@@ -506,7 +506,7 @@ const Home = () => {
             {
                 Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
-                <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON E-COM"}/>
+                <DraggableImageSlider images={[k1, k2, k3, k4, k5, k6, k7, k8, k9, k10, k11, k12, k13, k14, k15, k16]} headers={"SPRING SUMMER 2022- FIRST ON ON-U"}/>
             }
         
             <div className='bg-slate-200 pt-8'>
@@ -553,7 +553,7 @@ const Home = () => {
             {
                 Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header}/> : 
-                <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
+                <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8,r8,r8]} headers={"NEWNESS FOR EVERY OCCASION"}/>
             }
             
             <Footer/>

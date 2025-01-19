@@ -2,14 +2,20 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
+import { BsHeart } from "react-icons/bs";
+import { Heart } from "lucide-react";
+import { createwishlist } from "../../action/orderaction";
+import { useAlert } from "react-alert";
+import { useDispatch } from "react-redux";
 
-const AutoSlidingCarousel = ({ pro }) => {
+const AutoSlidingCarousel = ({ pro ,user}) => {
   const imageArray = getImagesArrayFromProducts(pro,true);
   console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
-
+  const alert  = useAlert()
+  const dispatch = useDispatch();
   // Function to change to a specific slide
   const currentSlide = (n) => {
     setSlideIndex(n);
@@ -83,7 +89,17 @@ const AutoSlidingCarousel = ({ pro }) => {
       isVideo: im.url && (im.url.includes("video") || im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi")),
     }));
   }, [imageArray]); // Recalculate only when imageArray changes
-
+  const addToWishList = async(e)=>{
+      e.stopPropagation();
+      if (user) {
+        // console.log("Wishlist Data: ", wishlistData)
+        dispatch(createwishlist({productId:pro._id,}))
+        alert.success('Product added successfully to Wishlist')
+        window.location.reload();
+       }else{
+         alert.show('You have To Login To Add This Product To Wishlist')
+       }
+    }
   return (
     <div
       className="slideshow-container min-h-[150px] relative"
@@ -124,18 +140,11 @@ const AutoSlidingCarousel = ({ pro }) => {
           )}
         </div>
       ))}
-  
+
       {/* Navigation Dots */}
-      {/* <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 min-w-max">
-        {imageArray.map((_, i) => (
-          <div
-            key={i}
-            className={`${pro._id} inline-block w-2 h-2 mx-1 rounded-full opacity-50 cursor-pointer`}
-            onClick={() => currentSlide(i + 1)} // Change slide on dot click
-            style={dotStyle(i)} // Dynamic dot color based on current slide
-          />
-        ))}
-      </div> */}
+      <div className="absolute top-3 right-2 min-w-max hover:animate-vibrateScale" onClick={addToWishList}>
+        <Heart fill="black" size={30} strokeWidth={.3}/>
+      </div>
     </div>
   );
 };

@@ -4,6 +4,9 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['Poppins', 'sans-serif'],
+      },
       keyframes: {
         vibrateScale: {
           '0%, 100%': { transform: 'translateX(0) scale(1)' },

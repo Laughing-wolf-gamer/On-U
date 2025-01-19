@@ -7,7 +7,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getImages
 import AutoSlidingCarousel from './AutoSlidingCarousel';
 
 // Memoize the component to avoid unnecessary re-renders
-const SingleProduct = React.memo(({ pro }) => {
+const SingleProduct = React.memo(({ pro ,user}) => {
     const navigation = useNavigate();
     // Memoize the imageArray to avoid recalculating on every render
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -32,7 +32,7 @@ const SingleProduct = React.memo(({ pro }) => {
         }} className="w-full border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
             <div className='w-full min-h-fit justify-center items-center'>
                 {/* Carousel */}
-                <AutoSlidingCarousel pro={pro} />
+                <AutoSlidingCarousel pro={pro} user={user}/>
             </div>
 
             <div className="relative pb-6">

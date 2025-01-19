@@ -242,7 +242,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             <div>
                 {/* Gender Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                <h1 className='font1 text-base font-semibold mb-2'>GENDER</h1>
+                <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
                     {gendernewarray.map((e, i) => (
                         <li key={i} className='items-center'>
                             <input

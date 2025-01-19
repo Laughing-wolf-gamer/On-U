@@ -1,4 +1,4 @@
-import { ShoppingCart } from 'lucide-react';
+import { Heart, ShoppingCart } from 'lucide-react';
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { calculateDiscount, calculateDiscountPercentage, getImagesArrayFromProducts } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
@@ -8,6 +8,7 @@ import ReactPlayer from 'react-player';
 const HomeProductsPreview = ({ product }) => {
     const navigation = useNavigate();
     const imageArray = getImagesArrayFromProducts(product,true);
+    console.log("Image Array: ",imageArray);
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
@@ -72,24 +73,39 @@ const HomeProductsPreview = ({ product }) => {
                         />
                 }
             </div>
-            <div
+            <div 
                 className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2 
-                    w-full h-10 flex items-center justify-center 
-                    text-white bg-black hover:bg-gray-600 text-center 
-                    font-semibold transition-all duration-300 ease-in-out 
+                    w-full h-fit flex flex-col space-y-2 items-center justify-center 
+                    font-sans transition-all duration-300 ease-in-out 
                     ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
-                <button onClick={(e)=>{
-                  navigation(`/products/${product?._id}`);  
-                }} className="w-full flex items-center text-white justify-center space-x-2 font-medium">
-                    <ShoppingCart size={20} />
-                    <span>Add to Cart</span>
-                </button>
+                <div
+                    className={`w-full h-fit`}
+                >
+                    <button onClick={(e)=>{
+                    navigation(`/products/${product?._id}`);  
+                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-700 hover:bg-gray-400 text-center  justify-center space-x-2 font-medium">
+                        <ShoppingCart size={20} />
+                        <span className='font-sans'>Add to Cart</span>
+                    </button>
+                </div>
+                <div
+                    className={`w-full h-fit`}
+                >
+                    <button onClick={(e)=>{
+                    navigation(`/products/${product?._id}`);  
+                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-700 hover:bg-gray-400 text-center  justify-center space-x-2 font-medium">
+                        <Heart size={20} />
+                        <span className='font-sans'>Add to Wishlist</span>
+                    </button>
+                </div>
+                
+
             </div>
 
             {product && product.salePrice && product.salePrice > 0 && product.salePrice < product.price && (
                 <div
-                    className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
+                    className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-3 md:h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
                 >
                     <span className="font-semibold text-center text-xs">{amount}% OFF</span>
                 </div>
