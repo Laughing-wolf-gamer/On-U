@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useMemo } from "react";
+import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
@@ -7,6 +7,7 @@ import { Heart } from "lucide-react";
 import { createwishlist, getwishlist } from "../../action/orderaction";
 import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
+import Loader from "../Loader/Loader";
 
 const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => {
   const imageArray = getImagesArrayFromProducts(pro,true);
@@ -112,45 +113,47 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
       onMouseEnter={stopAutoSliding} // Stop auto sliding when mouse enters
       onMouseLeave={startAutoSliding} // Start auto sliding when mouse leaves
     >
-      {imageArray && imageArray.length > 0 && mediaItems.map((mediaItem, i) => (
-        <div key={i} className={`${pro._id} fade w-full`} style={slideStyle(i)}>
-          {/* Check if the file is a video or image */}
-          {mediaItem.isVideo ? (
-            // Video file handling with ReactPlayer
-            <div className="media-item overflow-hidden video-element" data-index={i} style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <ReactPlayer
-                url={mediaItem.url}
-                loop={true}
-                className="w-full h-full object-contain"
-                muted={true}
-                controls={false}
-                loading="lazy"
-                width="100%"
-                height="100%"
-                playing={videoInView[i]} // Play video only when in view
-                light={false} // Optional: thumbnail preview
-              />
-            </div>
-          ) : (
-            // Image file handling with LazyLoadImage
-            <div className="media-item" style={{ position: 'relative', width: '100%', height: '100%' }}>
-              <LazyLoadImage
-                loading="lazy"
-                src={mediaItem.url}
-                className="w-full h-full object-contain"
-                width="100%"
-                alt="product"
-                effect="blur"
-              />
-            </div>
-          )}
-        </div>
-      ))}
+      {pro ? <Fragment>
+        {imageArray && imageArray.length > 0 && mediaItems.map((mediaItem, i) => (
+          <div key={i} className={`${pro._id} fade w-full h-fit`} style={slideStyle(i)}>
+            {/* Check if the file is a video or image */}
+            {mediaItem.isVideo ? (
+              // Video file handling with ReactPlayer
+              <div className="media-item overflow-hidden video-element" data-index={i} style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <ReactPlayer
+                  url={mediaItem.url}
+                  loop={true}
+                  className="w-full h-full object-contain"
+                  muted={true}
+                  controls={false}
+                  loading="lazy"
+                  width="100%"
+                  height="100%"
+                  playing={videoInView[i]} // Play video only when in view
+                  light={false} // Optional: thumbnail preview
+                />
+              </div>
+            ) : (
+              // Image file handling with LazyLoadImage
+              <div className="media-item" style={{ position: 'relative', width: '100%', height: '100%' }}>
+                <LazyLoadImage
+                  loading="lazy"
+                  src={mediaItem.url}
+                  className="w-full h-full object-contain"
+                  width="100%"
+                  alt="product"
+                  effect="blur"
+                />
+              </div>
+            )}
+          </div>
+        ))}
+      </Fragment>:<Loader/>}
 
       {/* Navigation Dots */}
       {showWishList && (
         <div
-          className="absolute top-3 right-2 min-w-max focus:outline-none"
+          className="absolute top-3 left-2 min-w-max focus:outline-none transition duration-300 ease-out hover:-translate-y-0.5"
           onClick={addToWishList}
         >
           {isInWishList ? (
@@ -158,7 +161,9 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
               <Heart fill="red" className="text-red-500" />
             </div>
           ) : (
-            <Heart fill="white" className="text-white" />
+            <div className="transition duration-300 ease-out hover:translate-y-1">
+              <Heart fill="white" className="text-white" />
+            </div>
           )}
         </div>
       )}

@@ -55,7 +55,7 @@ const HomeProductsPreview = ({ product }) => {
 
     return (
         <div
-            className="w-[100%] h-[100%] overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
+            className="w-[100%] max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -76,7 +76,7 @@ const HomeProductsPreview = ({ product }) => {
             <div 
                 className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2 
                     w-full h-fit flex flex-col gap-1 items-center justify-center 
-                    font-sans transition-all duration-300 ease-in-out
+                    font-sans transition-all duration-300 ease-in-out md:text-sm text-[10px]
                     ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 <div
@@ -85,7 +85,7 @@ const HomeProductsPreview = ({ product }) => {
                     <button onClick={(e)=>{
                         e.stopPropagation();
                         navigation(`/products/${product?._id}`);
-                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-black bg-white focus:bg-red-400 focus:bg text-center justify-center font-sans hover:shadow-md">
+                    }} className="w-full h-7 md:h-10 flex items-center text-black bg-white focus:bg-red-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
                         <Heart size={20} />
                         <span className='font-sans'>Add to Wishlist</span>
                     </button>
@@ -95,20 +95,21 @@ const HomeProductsPreview = ({ product }) => {
                 >
                     <button onClick={(e)=>{
                         navigation(`/products/${product?._id}`);  
-                    }} className="w-full h-7 md:h-10 flex text-sm items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md">
+                    }} className="w-full h-7 md:h-10 flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md space-x-2">
                         <ShoppingCart size={20} />
                         <span className='font-sans'>Add to Cart</span>
                     </button>
                 </div>
             </div>
-
-            {product && product.salePrice && product.salePrice > 0 && product.salePrice < product.price && (
-                <div
-                    className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-3 md:h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
-                >
-                    <span className="font-semibold text-center text-xs">{amount}% OFF</span>
-                </div>
-            )}
+            <div className='md:block hidden'>
+                {product && product.salePrice && product.salePrice > 0 && product.salePrice < product.price && (
+                    <div
+                        className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-3 md:h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
+                    >
+                        <span className="font-semibold text-center text-[10px] md:text-xs">{amount}% OFF</span>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };

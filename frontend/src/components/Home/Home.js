@@ -487,11 +487,11 @@ const Home = () => {
               </ul>
             </div>
 
-            <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-auto items-center'>
+            <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-4 items-center '>
               {product && product.length && <ProductPreviewFull product={product} />}
             </div>
 
-            <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-100'>
+            <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>
               <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
               <div className='w-screen flex justify-start items-center'>
                 <ul className='flex flex-row overflow-x-scroll'>

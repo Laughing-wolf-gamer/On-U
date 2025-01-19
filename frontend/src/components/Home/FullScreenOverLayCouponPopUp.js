@@ -60,7 +60,7 @@ const FullScreenOverLayCouponPopUp = () => {
                     onClick={handleOverlayClick} // Close on click outside
                 >
                     <div
-                        className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-3 relative overflow-hidden overflow-y-auto my-auto"
+                        className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-3 relative overflow-hidden my-auto"
                         onClick={(e) => e.stopPropagation()} // Prevent click from propagating to the overlay
                     >
                         <button className='absolute w-10 h-10 text-black md:top-3 top-2 left-6 cursor-pointer' onClick={handleHateCouponClick}>

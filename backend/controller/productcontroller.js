@@ -55,6 +55,21 @@ export const getallproducts = A(async (req, res)=>{
                 }
             };
         }
+        if (req.query.size) {
+            let sizeQueryCheck = [];
+            if(Array.isArray(req.query.size)){
+                sizeQueryCheck = req.query.size;
+            }else{
+                sizeQueryCheck.push(req.query.size);
+            }
+            console.log("Size query check: ", sizeQueryCheck)
+            // Filter based on matching any size.label in the req.query.size array
+            filter.size = {
+              $elemMatch: {
+                label: { $in: sizeQueryCheck }  // Match any size.label from the query array
+              }
+            };
+        }
         if(req.query.keyword){
             
             const regx = new RegExp(req.query.keyword, 'i');

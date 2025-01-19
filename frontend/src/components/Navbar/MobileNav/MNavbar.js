@@ -54,122 +54,79 @@ const MNavbar = ({ user }) => {
     const handleShow = () => setShow(true);
     const loginunchange = () => setClass("hidden");
     const loginClose = () => setShow(false);
-
+    const [isSwiping, setIsSwiping] = useState(false);
 
     const transitions = useTransition(show, {
-
-        from: { transform: "translateX(0)" },
-        enter: { transform: "translateX(75vw)" },
-        leave: { transform: "translateX(0vw)" },
-        delay: 1000,
-
-    })
-
-    const touchstart = (e) => {
-
-        let startX = e.changedTouches[0].clientX
-        let startY = e.changedTouches[0].clientY
-        setstartX(startX)
-        setstartY(startY)
-
-    }
-
-
-
-
-    const touchhandler = (e) => {
-
-        var xm = e.changedTouches[0].clientX;
-        var ym = e.changedTouches[0].clientY;
-        var el = document.getElementById('offcanvas')
-        var total = el.clientWidth;
-        var position = xm - total;
-        var x = startX - xm
-        var y = startY - ym
-
-        if (x < 0 && y >= 0) {  // - + up
-            if (y > -x) {
-                return
+        from: { transform: "translateX(100%)" },  // Start offcanvas hidden on the right
+        enter: { transform: "translateX(0%)" },   // Transition into view
+        leave: { transform: "translateX(100%)" },  // Transition out of view
+        config: { tension: 300, friction: 20 },    // Smooth transition settings
+        delay: 100,
+      });
+      
+      const touchstart = (e) => {
+        let startX = e.changedTouches[0].clientX;
+        let startY = e.changedTouches[0].clientY;
+        setstartX(startX);
+        setstartY(startY);
+        setIsSwiping(true);
+      };
+      
+      const touchmove = (e) => {
+        if (!isSwiping) return;
+      
+        const xm = e.changedTouches[0].clientX;
+        const ym = e.changedTouches[0].clientY;
+        const el = document.getElementById('offcanvas');
+        const total = el.clientWidth;
+        const position = xm - total;
+      
+        let x = startX - xm;
+        let y = startY - ym;
+      
+        if (x >= 0 && y >= 0) {  // Swiping left and down (opening)
+          if (x > 20) {
+            if (position < 0) {
+              el.style.transform = `translateX(${position}px)`;
+            } else {
+              el.style.transform = `translateX(0px)`;
             }
-            if (y < -x) {
-                return
-            }
-
+          }
         }
-        if (x >= 0 && y >= 0) { // + + down
-            if (y > x) {
-                return
-            }
-
-            if (y < x) {
-                if (x > 20) {
-                    if (position < 0) { el.style.transform = `translateX(${position}px)` }
-                    else if (position >= 0) { el.style.transform = `translateX(0px)` }
-                }
-            }
+      
+        if (x < 0 && y < 0) {  // Swiping up-left
+          return;
         }
-        if (x < 0 && y < 0) { // - - left
-            console.log("hello")
-            if (-y > -x) {
-                return
-            }
-            if (-y < -x) {
-                return
-            }
+      
+        if (x >= 0 && y < 0) {  // Swiping right-up
+          return;
         }
-        if (x >= 0 && y < 0) { // + - right
-            if (-y > x) {
-                return
+      };
+      
+      const touchend = (e) => {
+        if (!isSwiping) return;
+      
+        const xm = e.changedTouches[0].clientX;
+        const ym = e.changedTouches[0].clientY;
+        const el = document.getElementById('offcanvas');
+        const total = el.clientWidth;
+        const position = xm - total;
+        let x = startX - xm;
+        let y = startY - ym;
+      
+        if (x >= 0 && y >= 0) {  // Swiping right-down
+          if (x > 20 && x > y) {
+            if (-position >= 60) {
+              el.style.display = 'none';
+              setShow(false);
+            } else {
+              el.style.transform = `translateX(0)`;
             }
-
-            if (y < x) {
-                if (x > 20) {
-                    if (position < 0) { el.style.transform = `translateX(${position}px)` }
-                    else if (position >= 0) { el.style.transform = `translateX(0px)` }
-                }
-            }
+          }
         }
-
-
-    }
-
-    const touchend = (e) => {
-        var xm = e.changedTouches[0].clientX;
-        var ym = e.changedTouches[0].clientY;
-        var el = document.getElementById('offcanvas')
-        var total = el.clientWidth;
-        var position = xm - total;
-        var x = startX - xm;
-        var y = startY - ym
-        if (x >= 0 && y >= 0) { // + + down
-            if (x > 20 && x > y) {
-
-                if (-position >= 60) {
-                    el.style.display = `none`;
-                    setShow(false)
-                    setClass("hidden")
-                } else {
-                    el.style.transform = `translateX(0)`
-                }
-
-            }
-
-        }
-        if (x >= 0 && y < 0) { // + - right
-
-            if (x > 20 && x > -y) {
-
-                if (-position >= 60) {
-
-                    el.style.display = `none`;
-                    setShow(false)
-                    setClass("hidden")
-                } else {
-                    el.style.transform = `translateX(0)`
-                }
-            }
-        }
-    }
+      
+        setIsSwiping(false);
+      };
 
     const logoutBTN = () =>{
         dispatch(logout())
@@ -267,7 +224,7 @@ const MNavbar = ({ user }) => {
                     {transitions((styles, item) => item && <animated.div style={styles}>
                         <Offcanvas show={show} onHide={() => (loginClose(), loginunchange())} id="offcanvas"
                             className='absolute canvas  h-[100vh] top-0 z-20 translate-x-0 bg-white focus:outline-0 overflow-y-scroll'
-                            onTouchEnd={touchend} onTouchMove={touchhandler} onTouchStart={touchstart}
+                            onTouchEnd={touchend} onTouchMove={touchmove} onTouchStart={touchstart}
                         >
                             <Offcanvas.Body className='border-none'>
                                 <img src={Mbanner} alt="Banner" className='min-h-[150px]'/>
@@ -290,7 +247,10 @@ const MNavbar = ({ user }) => {
                                 <ul>
                                     {/* Profile */}
                                     <Ripples color="#D0DDD0" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex'>
+                                        <li className='text-black font1 px-5 py-4 relative w-full flex'onClick={(e)=>{
+                                            setShow(false)
+                                            setClass("hidden")
+                                        }} >
                                             {user ? (
                                                 <Link to="/dashboard">
                                                     <span className='float-left flex items-center'>

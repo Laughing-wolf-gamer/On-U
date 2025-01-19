@@ -101,6 +101,7 @@ const MFilter = ({ product }) => {
   const [sortvi, setsortvi] = useState('hidden')
 
   let category = []
+  let size = []
   let gender = []
   let color = []
   let spARRAY = []
@@ -108,7 +109,18 @@ const MFilter = ({ product }) => {
   function categoriesarray() {
     if (product && product.length > 0) {
       product.forEach(p => category.push(p.category));
+    }
   }
+  function sizearray() {
+    if (product && product.length > 0) {
+      product.forEach(p => {
+        if(p){
+          p.size.forEach(s => {
+            size.push(s.label);
+          })
+        }
+      });
+    }
   }
 
   function genderarray() {
@@ -142,6 +154,7 @@ const MFilter = ({ product }) => {
     console.log("Prices: ", spARRAY);
   }
   categoriesarray()
+  sizearray();
   genderarray()
   colorarray()
   sparray()
@@ -153,6 +166,7 @@ const MFilter = ({ product }) => {
   let Categorynewarray = [...new Set(category)];
   let gendernewarray = [...new Set(gender)];
   let colornewarray = [...new Set(color)];
+  let sizenewArray = [...new Set(size)]
   let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
 
   const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
@@ -192,6 +206,21 @@ function price2fun(e,f){
     } else {
       // MMainlink += `?gender=${e}`
       setMMainlink(`${MMainlink}?gender=${e}`)
+    }
+  }
+  function sizefun(e) {
+    if (MMainlink.includes('?')) {
+      let newtext = e.replace(' ', '%20')
+      if (MMainlink.includes(`${newtext}`)) {
+        let newurl = MMainlink.includes(`&size=${newtext}`) ? MMainlink.replace(`&size=${newtext}`, '') : null
+        let newurl2 = MMainlink.replace(`?size=${newtext}`, '')
+        let newurlsuccess = (newurl === null ? newurl2 : newurl)
+        setMMainlink(newurlsuccess)
+      } else {
+        setMMainlink(`${MMainlink}&size=${e}`)
+      }
+    } else {
+      setMMainlink(`${MMainlink}?size=${e}`)
     }
   }
   function categoryfun(e) {
@@ -292,6 +321,7 @@ function price2fun(e,f){
     Redirect(MMainlink)
     reloadproducts()
   }
+  console.log("size: ",size);
   return (
     <Fragment>
       <div className='hidden mobilevisible fixed bottom-0 w-full '>
@@ -338,10 +368,10 @@ function price2fun(e,f){
               <h1 className={`filter2 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
               <h1 className={`filter3 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Color</h1>
               <h1 className={`filter4 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Price</h1>
+              <h1 className={`filter4 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Size</h1>
             </div>
 
             <div className='col-span-8 '>
-              {/* gender  div */}
 
               <ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
                 {
@@ -354,7 +384,6 @@ function price2fun(e,f){
                   )
                 }
               </ul>
-
               <ul className={`hidden overflow-scroll h-[86%] ulco ul2`}>
                 {
                   Categorynewarray && Categorynewarray.map((e,i) =>
@@ -400,6 +429,17 @@ function price2fun(e,f){
                       max={Math.floor(Math.max(...sp))}
                     />
                   </div>
+                }
+              </ul>
+              <ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
+                {
+                  size && size.map((e,i) =>
+
+                    <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
+                      onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+                      <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{size.filter((f) => f === e).length}</span></li>
+
+                  )
                 }
               </ul>
               {/* <IoIosCheckmark  className={`mr-4 tick${e} `}/> */}

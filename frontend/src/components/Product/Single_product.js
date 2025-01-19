@@ -35,7 +35,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
                 <AutoSlidingCarousel pro={pro} user={user} showWishList = {showWishList} wishlist = {wishlist}/>
             </div>
 
-            <div className="relative pb-6">
+            <div className="relative pb-6 flex-col flex justify-start items-left gap-1">
                 {/* Product Title */}
                 <p className="font1 text-base px-2 text-gray-800 font-semibold">
                     {productTitle}
@@ -47,7 +47,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
                 </p>
 
                 {/* Price Section */}
-                <p className="flex px-2">
+                <p className="flex flex-row justify-start items-center">
                     <span className="flex items-center text-sm font-medium text-black">
                         <BiRupee />{productSalePrice || productPrice}
                     </span>
