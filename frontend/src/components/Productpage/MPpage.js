@@ -190,7 +190,7 @@ const MPpage = () => {
 
                 {loading === false ? (
                     <div>
-                        <div className='hidden mobilevisible fixed bottom-1 w-full z-20'>
+                        <div className='hidden mobilevisible fixed bottom-0 w-full z-20'>
                             <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                 <div className="col-span-2 flex justify-center items-center p-1">
                                     <button className="bg-gray-100 text-center w-full h-full flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
