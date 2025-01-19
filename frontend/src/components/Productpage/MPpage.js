@@ -174,15 +174,8 @@ const MPpage = () => {
 
     }, [product, dispatch]);
     const isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-    console.log("All Slding Carousal: ",wishlist,isInWishList);
+    console.log("MProduct Carousal: ",wishlist,isInWishList);
     console.log("Product: ",product);
-    {isInWishList ? (
-        <div className="text-red-500 animate-shine p-1 rounded-full">
-            <Heart fill="red" className="text-red-500" />
-        </div>
-        ) : (
-        <Heart fill="white" className="text-white" />
-        )}
     return (
         <Fragment>
             
@@ -193,14 +186,20 @@ const MPpage = () => {
                         <div className='hidden mobilevisible fixed bottom-0 w-full z-20'>
                             <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                 <div className="col-span-2 flex justify-center items-center p-1">
-                                    <button className="bg-gray-100 text-center w-full h-full flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                        <Heart size={30}/>
+                                    <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+                                        {isInWishList ? (
+                                            <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                <Heart size={30} fill="red" className="text-red-500" />
+                                            </div>
+                                            ) : (
+                                                <Heart size={30}/>
+                                        )}
                                     </button>
                                 </div>
                                 <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                    <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={buyNow}>
-                                        <ShoppingBag className='mr-4' />
-                                        <span>BUY NOW</span>
+                                    <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                        <ShoppingCart className='mr-4' />
+                                        <span>ADD TO CART</span>
                                     </button>
                                 </div>
                             </div>
@@ -336,9 +335,9 @@ const MPpage = () => {
                                 </div>
                             </div>
                             <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><BsHeart className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><Heart size={30} className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
                             </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
