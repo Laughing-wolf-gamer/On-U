@@ -10,7 +10,7 @@ const previewHeader = [
 
 const ProductPreviewFull = ({ product }) => {
   const [previewProducts, setSelectedPreviewProducts] = useState([]);
-  const [activePreview, setActivePreviews] = useState('top-picks');
+  const [activePreview, setActivePreviews] = useState('best-sellers');
 
   const getRandomArrayOfProducts = (e, previewProductsTitle) => {
     if (e) {
@@ -71,7 +71,7 @@ const ProductPreviewFull = ({ product }) => {
       <div className="w-fit sm:w-fit md:min-h-fit h-auto justify-between items-center space-x-4 flex md:flex-row mb-6 font1">
         {previewHeader && previewHeader.length > 0 &&
           previewHeader.map((h, index) => (
-            <div key={index} className={`border-2 border-gray-600 border-opacity-70 m-2 p-2 flex w-fit transform transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-red-600 text-white' : 'bg-neutral-50'}`}>
+            <div key={index} className={`border-2 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}>
               <h3
                 className={`text-[16px] text-center`}
                 onClick={(e) => getRandomArrayOfProducts(e, h?.id)}
