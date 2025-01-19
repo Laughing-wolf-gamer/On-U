@@ -62,19 +62,19 @@ const FullScreenOverLayCouponPopUp = () => {
                         className="bg-white w-3/4 md:w-1/2 h-3/4 grid grid-cols-1 md:grid-cols-2 gap-4 relative"
                         onClick={(e) => e.stopPropagation()} // Prevent click from propagating to the overlay
                     >
-                        <button className='absolute w-10 h-10 text-black md:top-5 top-3 left-6 cursor-pointer' onClick={handleHateCouponClick}>
+                        <button className='absolute w-10 h-10 text-black md:top-3 top-2 left-6 cursor-pointer' onClick={handleHateCouponClick}>
                             <X/>
                         </button>
                         {/* Left Column - Form */}
-                        <div className="flex flex-col justify-between p-12">
+                        <div className="flex flex-col justify-between p-10 max-h-96">
                             <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
-                            <p className="text-gray-800">
+                            <p className="text-gray-800 flex-wrap">
                                 Join us to receive you 20% off
                                 on your first purchase. Sign up today and get the coupon!
                             </p>
 
                             {/* Input Fields */}
-                            <div className="md:space-y-8 space-y-2">
+                            <div className="md:space-y-3 space-y-2 h-fit">
                                 <div>
                                     <label className="block text-gray-600 font-medium" >
                                         Name
@@ -105,7 +105,7 @@ const FullScreenOverLayCouponPopUp = () => {
                             </div>
 
                             {/* Buttons */}
-                            <div className="mt-6 flex flex-col justify-center gap-4">
+                            <div className="mt-6 flex flex-col justify-center gap-4 h-fit">
                                 <button
                                     disabled = {loadingSent}
                                     onClick={handleGetCouponClick}
@@ -122,7 +122,7 @@ const FullScreenOverLayCouponPopUp = () => {
                             </div>
                         </div>
 
-                        <div className="hidden md:block relative">
+                        <div className="hidden md:block relative ">
                             <img
                                 src="https://th.bing.com/th/id/OIP.lHSX3U-BFmJDteFTZEeFhQHaLH?rs=1&pid=ImgDetMain" // Replace with your image URL
                                 alt="Coupon-Image"

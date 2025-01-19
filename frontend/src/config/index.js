@@ -13,11 +13,26 @@ export function getRandomItems(array, numItems) {
     const shuffled = array.slice().sort(() => Math.random() - 0.5); // Shuffle the array
     return shuffled.slice(0, numItems); // Return the first `numItems` elements
 }
-export function getImagesArrayFromProducts(product){
-    const sizeRandom = getRandomItem(product.size)
-    const randomColor = getRandomItem(sizeRandom.colors);
-    return randomColor.images || [];
+function filterImageFiles(files) {
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
+  
+    return files.filter(file => {
+      const fileExtension = file.url.toLowerCase().split('.').pop();
+      return imageExtensions.includes('.' + fileExtension); // Only allow image files
+    });
 }
+export function getImagesArrayFromProducts(product, getVideoFiles = false) {
+    const sizeRandom = getRandomItem(product.size);
+    const randomColor = getRandomItem(sizeRandom.colors);
+    
+    // Filter out video files from randomColor.images
+    if(getVideoFiles){
+        return randomColor.images || []
+    }
+    const imageFiles = filterImageFiles(randomColor.images || []);
+    
+    return imageFiles;
+  }
 
 
 export function getRandomItem(array) {

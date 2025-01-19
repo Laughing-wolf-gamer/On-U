@@ -66,7 +66,7 @@ const DraggableImageSlider = ({ images, headers }) => {
     console.log("is Draggable", dragState)
 
     return (
-        <div className="pt-1 grid grid-cols-1 min-h-[200px] bg-slate-200">
+        <div className="pt-1 px-7 grid grid-cols-1 min-h-[200px] bg-slate-200">
             <h1 className="text-3xl px-8 font-bold font1 tracking-widest text-slate-800 mb-8 mt-8">
                 {headers}
             </h1>
@@ -94,7 +94,7 @@ const DraggableImageSlider = ({ images, headers }) => {
                                     src={image}
                                     alt="banners"
                                     loading="lazy"
-                                    className="min-h-[100px] min-w-[200px] transform transition-transform duration-500 ease-in-out hover:scale-110"
+                                    className="min-h-[100px] min-w-[200px] transform transition-all duration-500 ease-in-out hover:scale-110 hover:bg-blue-500"
                                     onDragStart={handleDragStart} // Prevent image drag
                                 />
                             </li>

@@ -257,63 +257,52 @@ const MPpage = () => {
                                 inclusive of all taxes
                             </h1>
                             <h1 className="font1 text-base font-semibold mt-2 mb-2">SELECT SIZE</h1>
-                            <div className="flex flex-wrap justify-start items-center gap-2 border-b border-gray-300">
-                                {product?.size?.map((size, index) => (
-                                    <div
-                                        key={`size_${index}`}
-                                        className={`flex flex-col h-fit w-fit rounded-full justify-start p-2 items-center shadow-md gap-2 transition-transform hover:scale-110 duration-300 ease-in-out ${
-                                            currentSize?._id === size?._id
-                                                ? 'border-2 border-black bg-gray-600 text-white font-bold'
-                                                : 'bg-gray-100'
-                                        }`}
-                                        onClick={(e) => handleSetNewImageArray(size)}
-                                    >
-                                        <button className="w-12 h-12 rounded-full flex items-center justify-center font-extrabold">
-                                            {size?.label}
-                                        </button>
+                            <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
+                                {/* Size Selection */}
+                                <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
+                                {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
+                                    <div key={`size_${index}_${size._id}`} 
+                                        className={`flex flex-col items-center justify-center rounded-full p-2 shadow-md gap-2 transition-transform duration-300 ease-in-out 
+                                        ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`}
+                                        onClick={() => { handleSetNewImageArray(size); }}>
+                                    <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
+                                        {size.label}
+                                    </button>
                                     </div>
                                 ))}
-                            </div>
-                            <div className="flex flex-wrap justify-start items-center gap-4 mt-4 border-b border-gray-300">
-                                {selectedColor?.map((color, i) => (
-                                    <div
-                                        key={`color-${color?._id} ${i}`}
-                                        className="flex flex-col items-center justify-start gap-3 w-20 h-40 p-3 rounded-lg transition-all duration-300 ease-in-out transform hover:scale-105"
-                                    >
-                                        {/* Color Button */}
-                                        <button
-                                            style={{
-                                                backgroundColor: color?.label || color._id,
-                                                width: '35px',
-                                                height: '35px',
-                                            }}
-                                            className={`w-20 h-20 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ease-in-out ${
-                                                currentColor?._id === color?._id
-                                                    ? 'outline-dotted outline-offset-4 border-2 border-gray-700 shadow-xl scale-110'
-                                                    : 'scale-100 border-4 border-gray-300 hover:border-black'
-                                            }`}
-                                            onClick={(e) => {
-                                                e.preventDefault();
-                                                setCurrentColor(color);
-                                                handleSetColorImages(color);
-                                            }}
-                                        />
+                                </div>
+
+                                {/* Color Selection */}
+                                <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
+                                {selectedColor && selectedColor.length > 0 ? (
+                                    selectedColor.map((color, i) => (
+                                    <div key={`color_${i}`} 
+                                        className={`flex flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
+                                            ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
+                                        onClick={(e) => { e.preventDefault(); setCurrentColor(color); handleSetColorImages(color); }}>
+                                        <button disabled={color.quantity <= 0} 
+                                        style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
+                                        className={`${color.quantity <= 0 ? 
+                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
+                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
+                                            ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
+                                        title={color?.quantity || color?.label || "Color"} />
                                         {color.quantity <= 10 && color.quantity > 0 && (
-                                            <div className="flex flex-col justify-center items-center mt-2">
-                                                <span className="text-gray-800 text-sm font-semibold text-center">
-                                                    Only {color?.quantity} Left
-                                                </span>
-                                            </div>
+                                        <div className='flex flex-col justify-center items-center'>
+                                            <span className="text-red-900 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
+                                        </div>
                                         )}
                                         {color.quantity <= 0 && (
-                                            <div className="flex flex-col justify-center items-center mt-2">
-                                                <span className="text-gray-500 text-sm font-semibold text-center">
-                                                    Out of Stock
-                                                </span>
-                                            </div>
+                                        <div className='flex flex-col justify-center items-center'>
+                                            <span className='text-gray-500 text-sm font-extrabold text-center flex-wrap'>Out of Stock</span>
+                                        </div>
                                         )}
                                     </div>
-                                ))}
+                                    ))
+                                ) : (
+                                    <p className="text-black">No colors available</p>
+                                )}
+                                </div>
                             </div>
                         </div>
                         <PincodeChecker productId={product?._id}/>

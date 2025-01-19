@@ -31,7 +31,7 @@ const PincodeChecker = ({productId}) => {
   };
 
   return (
-    <div className="max-w-sm p-6 bg-white h-fit">
+    <div className="max-w-sm p-2 bg-white h-fit">
       <h3 className="text-sm  font-thin text-left mb-4">Pincode</h3>
       <form onSubmit={handleSubmit} className="space-x-4 justify-between items-center flex flex-row">
         <input

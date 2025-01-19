@@ -87,30 +87,31 @@ const ProductPreviewFull = ({ product }) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 row-span-3 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
             previewProducts.map((p, index) => (
-              <div key={index} className="w-80 m-1 h-full bg-white relative flex flex-col justify-start items-center hover:shadow-md pt-2">
+              <div key={index} className="w-80 m-1 h-full rounded-md bg-white relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
                 <HomeProductsPreview product={p} />
-                <div className="w-full p-4 bg-white flex flex-col justify-center items-center hover:shadow-md">
-                  <h2 className="font-serif font-bold text-gray-600 text-2xl hover:text-gray-300 transition-colors duration-200 text-center mb-5">
-                    {p?.title?.length > 20 ? `${p?.title.slice(0, 20)}...` : p?.title}
+                <div className="w-full p-2 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
+                  <h2 className="font1 text-base font-semibold text-gray-800 text-left">
+                    {p?.title?.length > 26 ? `${p?.title.slice(0, 26)}` : p?.title}
+                    {/* {p?.title} */}
                   </h2>
                   {/* Rating Section */}
-                  <div className="flex mt-2 mb-3">
+                  <div className="flex flex-row justify-center items-center">
                     {renderStars(p)}
                   </div>
-                  <div className='flex flex-row justify-between items-center w-full'>
-                    <span className="text-[20px] font-mono text-slate-700">
+                  <div className='flex flex-row justify-start items-center w-full'>
+                    <span className="font1 text-base text-slate-700">
                       {p.salePrice && p.salePrice > 0 ? (
-                        <span className="line-through text-slate-700 hover:animate-bounce">
+                        <span className="line-through text-xl font-medium text-slate-700 hover:animate-bounce">
                           ₹ {p.price}
                         </span>
                       ) : (
-                        <span className="text-slate-700 hover:animate-bounce">
+                        <span className="text-xl font-medium text-slate-700 hover:animate-bounce">
                           ₹ {p.price}
                         </span>
                       )}
                     </span>
                     {p.salePrice && p.salePrice > 0 && (
-                      <span className="ml-2 text-[20px] font-bold text-slate-900 hover:animate-vibrateScale">
+                      <span className="ml-2 text-xl font-medium text-[#f26a10] hover:animate-vibrateScale">
                         ₹ {p.salePrice}
                       </span>
                     )}

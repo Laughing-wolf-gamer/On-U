@@ -4,7 +4,7 @@ import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 
 const AutoSlidingCarousel = ({ pro }) => {
-  const imageArray = getImagesArrayFromProducts(pro);
+  const imageArray = getImagesArrayFromProducts(pro,true);
   console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
@@ -126,7 +126,7 @@ const AutoSlidingCarousel = ({ pro }) => {
       ))}
   
       {/* Navigation Dots */}
-      <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 min-w-max">
+      {/* <div className="absolute bottom-5 left-1/2 transform -translate-x-1/2 min-w-max">
         {imageArray.map((_, i) => (
           <div
             key={i}
@@ -135,7 +135,7 @@ const AutoSlidingCarousel = ({ pro }) => {
             style={dotStyle(i)} // Dynamic dot color based on current slide
           />
         ))}
-      </div>
+      </div> */}
     </div>
   );
 };

@@ -91,7 +91,7 @@ const Footer = () => {
 
         {/* Footer Bottom */}
         <div className="mt-6 text-center text-gray-500 text-xs">
-          &copy; 2024 www.On-U.com. All rights reserved.
+          &copy; 2025 www.theOnu.com. All rights reserved.
         </div>
       </div>
     </Fragment>

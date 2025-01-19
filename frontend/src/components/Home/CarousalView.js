@@ -69,12 +69,12 @@ const CarousalView = ({ b_banners, indicator }) => {
                 alt='Banner_Image'
               />
             </Link>
-            <div className='h-[80px]' />
+            {/* <div className='h-[80px]' /> */}
           </div>
         ))}
       </Carousel>
 
-      <div
+      {/* <div
         ref={sectionRef}
         className={`absolute top-20 left-32 transform z-20 transition-all duration-700 ease-in-out ${
           animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
@@ -99,7 +99,7 @@ const CarousalView = ({ b_banners, indicator }) => {
             <button className='text-sm font1 font-thin tracking-widest'>SHOP NOW</button>
           </Link>
         </div>
-      </div>
+      </div> */}
 
       {/* Left and Right Buttons */}
       <div className='absolute h-32 top-1/2 left-14 transform -translate-y-1/2 z-10'>

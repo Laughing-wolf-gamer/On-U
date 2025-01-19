@@ -373,14 +373,15 @@ const Ppage = () => {
                       <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
                         inclusive of all taxes
                       </h1>
-                      <div className='w-full justify-center items-center flex flex-col'>
+                      <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
                         {/* Size Selection */}
-                        <div className="w-full flex flex-wrap justify-start items-start p-4 gap-2">
+                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
                           {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                            <div key={`size_${index}_${size._id}`} className={`flex flex-col h-fit rounded-full p-2 items-center shadow-md justify-center gap-2 transition-transform duration-300 ease-in-out 
-                              ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`} 
-                              onClick={() => { handleSetNewImageArray(size); }}>
-                              <button className={`w-12 h-12 rounded-full flex items-center justify-center`}>
+                            <div key={`size_${index}_${size._id}`} 
+                                className={`flex flex-col items-center justify-center rounded-full p-2 shadow-md gap-2 transition-transform duration-300 ease-in-out 
+                                  ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`}
+                                onClick={() => { handleSetNewImageArray(size); }}>
+                              <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
                                 {size.label}
                               </button>
                             </div>
@@ -388,15 +389,19 @@ const Ppage = () => {
                         </div>
 
                         {/* Color Selection */}
-                        <div className="w-full flex flex-wrap justify-start items-start gap-2">
+                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
                           {selectedColor && selectedColor.length > 0 ? (
                             selectedColor.map((color, i) => (
-                              <div key={`color_${i}`} className="flex flex-col h-32 w-20 rounded-md items-center justify-start gap-2 transition-transform duration-300 ease-in-out" 
-                                onClick={(e) => { e.preventDefault(); setCurrentColor(color); handelSetColorImages(color); }}>
+                              <div key={`color_${i}`} 
+                                  className={`flex flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
+                                    ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
+                                  onClick={(e) => { e.preventDefault(); setCurrentColor(color); handelSetColorImages(color); }}>
                                 <button disabled={color.quantity <= 0} 
                                   style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
-                                  className={`${color.quantity <= 0 ? `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` : 
-                                    `w-20 h-20 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out ${currentColor?._id === color?._id ? "outline-dotted outline-offset-4 border-separate border-solid border-gray-700 shadow-md scale-110" : "scale-100 border-4 border-gray-800"}`}`}
+                                  className={`${color.quantity <= 0 ? 
+                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
+                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
+                                    ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                   title={color?.quantity || color?.label || "Color"} />
                                 {color.quantity <= 10 && color.quantity > 0 && (
                                   <div className='flex flex-col justify-center items-center'>
@@ -415,6 +420,7 @@ const Ppage = () => {
                           )}
                         </div>
                       </div>
+
 
                       {/* Add to Cart & Buy Now Buttons */}
                       <PincodeChecker productId={product?._id} />

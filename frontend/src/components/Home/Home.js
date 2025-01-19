@@ -429,7 +429,7 @@ const Home = () => {
 
 
   return (
-    <div className="w-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         window.screen.width > 1024 ?
           <Fragment >
@@ -439,12 +439,12 @@ const Home = () => {
                   : 
                   <Loader/> }
             </div>
-            <div className='h-full w-screen bg-slate-100 py-1'>
+            <div className='h-fit w-screen bg-slate-200 py-1'>
                 <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
                     <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
                         <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                             <Truck size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                            <div className='h-full w-1 bg-slate-200'/>
+                            <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
                                 <h3 className='font-medium text-left text-[20px] text-slate-700'>FREE SHIPPING</h3>
                                 <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
@@ -453,7 +453,7 @@ const Home = () => {
         
                         <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                             <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                            <div className='h-full w-1 bg-slate-200'/>
+                            <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
                                 <h3 className='font-medium text-left text-[20px] text-gray-700'>SUPPORT 24/7</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
@@ -462,7 +462,7 @@ const Home = () => {
         
                         <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                             <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                            <div className='h-full w-1 bg-slate-200'/>
+                            <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
                                 <h3 className='font-medium text-left text-[20px] text-gray-700'>Money Return</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
@@ -471,7 +471,7 @@ const Home = () => {
         
                         <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
                             <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                            <div className='h-full w-1 bg-slate-200'/>
+                            <div className='h-full w-1'/>
                             <div className='w-full text-left h-auto justify-center items-center'>
                                 <h3 className='font-medium text-left text-[20px] text-gray-700'>Order Discount</h3>
                                 <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
@@ -485,7 +485,7 @@ const Home = () => {
                 {product && product.length > 0 && <ProductPreviewFull product={product} />}
             </div>
         
-            <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} />
+            {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} /> */}
             <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} />
             {Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 

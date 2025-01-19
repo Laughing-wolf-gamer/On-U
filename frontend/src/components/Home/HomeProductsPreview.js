@@ -7,7 +7,7 @@ import ReactPlayer from 'react-player';
 
 const HomeProductsPreview = ({ product }) => {
     const navigation = useNavigate();
-    const imageArray = getImagesArrayFromProducts(product);
+    const imageArray = getImagesArrayFromProducts(product,true);
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
@@ -54,14 +54,14 @@ const HomeProductsPreview = ({ product }) => {
 
     return (
         <div
-            className="w-[90%] bg-slate-200 my-auto h-[80%] overflow-hidden relative flex flex-col transform transition-all duration-300 ease-in-out hover:scale-105"
+            className="w-[100%] h-[100%] overflow-hidden relative flex flex-col shadow-md"
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
             }}
             onMouseLeave={handleMouseLeave}
         >
-            <div className="min-w-xs h-full bg-white">
+            <div className="min-w-xs h-full">
                 {
                     imageArray && imageArray.length && 
                         <ProductImageVideoView 
@@ -79,7 +79,9 @@ const HomeProductsPreview = ({ product }) => {
                     font-semibold transition-all duration-300 ease-in-out 
                     ${isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
             >
-                <button className="w-full flex items-center text-white justify-center space-x-2 font-medium">
+                <button onClick={(e)=>{
+                  navigation(`/products/${product?._id}`);  
+                }} className="w-full flex items-center text-white justify-center space-x-2 font-medium">
                     <ShoppingCart size={20} />
                     <span>Add to Cart</span>
                 </button>
@@ -127,7 +129,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
     return (
         <div
             onClick={handleClick}
-            className="w-full h-full relative transition-opacity duration-500 ease-in-out cursor-pointer bg-gray-100"
+            className="w-full h-full relative transition-opacity duration-500 ease-in-out cursor-pointer"
         >
             {/* Check if the selected media is a video or an image */}
             {mediaIsVideo ? (
