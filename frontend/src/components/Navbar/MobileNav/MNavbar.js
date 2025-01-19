@@ -177,12 +177,12 @@ const MNavbar = ({ user }) => {
         /* dispatch(getuser())
         dispatch(loginmobile())
         dispatch(otpverifie()) */
-      }
+    }
 
-      const [serdiv, setserdiv] = useState('hidden')
-      const [state, setstate] = useState("")
+    const [serdiv, setserdiv] = useState('hidden')
+    const [state, setstate] = useState("")
 
-      function searchenter(e) {
+    function searchenter(e) {
        
         if (e.keyCode == 13) {
             if (state.trim()) {
