@@ -38,12 +38,24 @@ export const createwishlist = ({productId}) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_CREATE_WISHLIST })
         const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist`,{productId}, headerConfig());
-        console.log("Wishlist created: ",res?.data);
+        // console.log("Wishlist created: ",res?.data);
         dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
     } catch (error) {
         dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
     }
 }
+export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
+    try {
+        const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist_array`,{productIdArray}, headerConfig());
+        console.log("Wishlist created: ",res?.data);
+        return res?.data;
+        // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
+    } catch (error) {
+        // dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
+        return error?.response?.data;
+    }
+}
+
 
 export const getwishlist = () => async (dispatch) => {
     try {
@@ -51,10 +63,30 @@ export const getwishlist = () => async (dispatch) => {
         const { data } = await axios.get(`${BASE_API_URL}/api/shop/get_wishlist`,headerConfig())
         dispatch({ type: SUCCESS_GET_WISHLIST, payload: data.wishlist})
     } catch (error) {
-        dispatch({ type: FAIL_GET_WISHLIST, payload: error.response.data.message })
+        dispatch({ type: FAIL_GET_WISHLIST, payload: error?.response?.data?.message })
     }
 }
+export const addItemArrayBag = (options) => async()=>{
+    // console.log("Bag Items Array",options)
+    try {
+        const token = sessionStorage.getItem('token');
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/bag/addItemArrayBag`,options, {
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
+        // console.log("successfully: ",data);
+        // dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
+        return data;
 
+    } catch (error) {
+        return error?.response?.data?.success;
+        // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
+
+    }
+}
 export const createbag = (option) => async (dispatch) => {
     console.log(option)
     try {

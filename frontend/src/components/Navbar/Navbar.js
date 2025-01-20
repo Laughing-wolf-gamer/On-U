@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getbag, getwishlist } from '../../action/orderaction.js'
 import { BaggageClaim, SearchIcon, ShoppingBag } from 'lucide-react'
 import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
+import { getLocalStorageWishListItem } from '../../config/index.js'
 
 
 const Navbar = ({user}) => {
@@ -97,7 +98,6 @@ const Navbar = ({user}) => {
       dispatch(getbag({ userId: user.id }));
     }
   }, [state]);
-  // console.log("Nav wishlist bag: ",wishlist)
   return (
     <Fragment>
       <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
@@ -160,6 +160,11 @@ const Navbar = ({user}) => {
                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
                   <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                     <span>{wishlist.orderItems.length}</span>
+                  </div>
+                )}
+                {!user && getLocalStorageWishListItem() && getLocalStorageWishListItem().length > 0 && (
+                  <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                    <span>{getLocalStorageWishListItem().length}</span>
                   </div>
                 )}
                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">

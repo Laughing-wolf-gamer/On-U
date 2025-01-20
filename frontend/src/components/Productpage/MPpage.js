@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState, CSSProperties } from 'react';
+import React, { useEffect, Fragment, useState, CSSProperties, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkPurchasesProductToRate, postRating, singleProduct } from '../../action/productaction';
@@ -16,7 +16,7 @@ import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
@@ -24,15 +24,18 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 
 
-
+const maxScrollAmount = 1024
+let isInWishList = false
+let isInBagList = false;
 const MPpage = () => {
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const navigation = useNavigate();
     const param = useParams();
     const alert = useAlert();
     const dispatch = useDispatch();
-    const [currentColor, setCurrentColor] = useState({});
-    const [currentSize, setCurrentSize] = useState({});
+    const [currentColor, setCurrentColor] = useState(null);
+    const [currentSize, setCurrentSize] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
@@ -43,6 +46,9 @@ const MPpage = () => {
 
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
+
+    // const[isInWishList,setIsInWishList] = useState(false);
+    // const[isInBagList,setIsInBagList] = useState(false);
 
     useEffect(() => {
         dispatch(singleProduct(param.id));
@@ -95,18 +101,43 @@ const MPpage = () => {
     }
     const addToWishList = async()=>{
         if (user) {
-            await Promise.all([
-                dispatch(createwishlist({productId:param.id,})),
-                dispatch(getwishlist()),
-                dispatch(getbag({ userId: user.id }))
-            ])
-            alert.success('Product added successfully to Wishlist')
+            await dispatch(createwishlist({productId:param.id,}));
+            await dispatch(getwishlist());
+            await dispatch(getbag({ userId: user.id }))
+            if(isInWishList){
+                alert.success('Added successfully to Wishlist')
+            }else{
+                alert.success('Removed successfully from Wishlist')
+            }
         }else{
-            alert.info('You have To Login To Add This Product To Wishlist')
+            // alert.info('You have To Login To Add This Product To Wishlist')
+            setWishListProductInfo(product,param.id);
         }
+        if(user){
+            isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+            isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+        }else{
+            isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+            isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+        }
+        window.location.reload();
     }
     async function addToBag(e) {
+        if(isInBagList){
+            navigation("/bag")
+            return;
+        }
+        if(!currentColor){
+            alert.error("No Color Selected")
+            return;
+        }
+        if(!currentSize){
+            alert.error("No Size Selected")
+            return;
+        }
         if (user) {
+            // console.log("Selected color", currentColor);
+            // console.log("Selected size", currentSize);
             const orderData = {
                 userId: user.id,
                 productId: param.id,
@@ -114,26 +145,40 @@ const MPpage = () => {
                 color: currentColor,
                 size: currentSize,
             };
-            await Promise.all([
-                dispatch(createbag(orderData)),
-                dispatch(getwishlist()),
-                dispatch(getbag({ userId: user.id }))
-            ])
+            await dispatch(createbag(orderData));
+            await dispatch(getwishlist());
+            await dispatch(getbag({ userId: user.id }))
             alert.success('Product added successfully to the bag');
         } else {
-            alert.info('You need to log in to add this product to your bag');
+            // alert.info('You need to log in to add this product to your bag');
+
+            // add to session storage
+            const orderData = {
+                productId: param.id,
+                quantity: 1,
+                color: currentColor,
+                size: currentSize,
+                ProductData:product,
+            };
+            setSessionStorageBagListItem(orderData,param.id);
         }
+        if(user){
+            isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+            isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+        }else{
+            isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+            isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+        }
+        window.location.reload();
     }
 
-    /* const handleImageClick = (imageUrl) => {
-        setSelectedImage(imageUrl);
-    }; */
 
     const handleSetNewImageArray = (size) => {
         setCurrentSize(size);
         setSelectedSize(size);
         setSelectedColor(size.colors);
         setSelectedColorId(size.colors[0]._id);
+        refreshWishListAndBag();
     };
 
     const handleSetColorImages = (color) => {
@@ -171,40 +216,126 @@ const MPpage = () => {
         if(product){
             checkFetchedIsPurchased();
         }
-
+        if(user){
+            dispatch(getbag({ userId: user.id }));
+        }
+        dispatch(getwishlist())
     }, [product, dispatch]);
-    const isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-    console.log("MProduct Carousal: ",wishlist,isInWishList);
-    console.log("Product: ",product);
+    console.log("getLocalStorageWishListItem",getLocalStorageWishListItem());
+    const refreshWishListAndBag = ()=>{
+        // setIsInWishList();
+        // setIsInBagList();
+    }
+    const [isInViewport, setIsInViewport] = useState(false);
+    const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
+    const divRef = useRef(null);
+    const scrollContainerRef = useRef(null);
+
+    // Function to check if the target element is in the viewport
+    const checkIfInViewport = () => {
+        const targetDiv = divRef.current;
+        const scrollContainer = scrollContainerRef.current;
+
+        if (!targetDiv || !scrollContainer) return;
+
+        const rect = targetDiv.getBoundingClientRect();
+        const containerRect = scrollContainer.getBoundingClientRect();
+
+        // Check if the target element is within the container
+        const isVisible =
+        rect.top < containerRect.bottom &&
+        rect.bottom > containerRect.top &&
+        rect.left < containerRect.right &&
+        rect.right > containerRect.left;
+
+        setIsInViewport(isVisible);
+
+        // Update scroll position
+        setScrollAmount(scrollContainer.scrollTop);  // Log the current scroll position
+    };
+    const carouselRef = useRef(null); // This is the carousel reference
+
+    // Function to handle wheel event and prevent carousel from scrolling vertically
+    const handleWheel = (event) => {
+        const scrollContainer = scrollContainerRef.current;
+        const carouselContainer = carouselRef.current;
+
+        if (!scrollContainer || !carouselContainer) return;
+
+        // Check if the user is scrolling vertically within the scroll container
+        if (event.deltaY !== 0) {
+            // Allow scroll inside the container
+            if (scrollContainer.scrollTop + scrollContainer.clientHeight === scrollContainer.scrollHeight && event.deltaY > 0) {
+                // Prevent carousel scroll and allow the page to scroll
+                event.stopPropagation();
+                window.scrollBy(0, event.deltaY);  // Scroll window instead
+            } else {
+                // Otherwise, handle scroll normally inside the container
+                scrollContainer.scrollTop += event.deltaY;
+                event.preventDefault(); // Prevent default scroll behavior inside carousel
+            }
+        }
+    };
+    useEffect(() => {
+        // Set up the scroll event listener on the scroll container
+        const scrollContainer = scrollContainerRef.current;
+        if (scrollContainer) {
+            scrollContainer.addEventListener('scroll', checkIfInViewport);
+            scrollContainer.addEventListener('wheel', handleWheel, { passive: false });
+        }
+        // Initial check on mount
+        checkIfInViewport();
+
+        // Cleanup event listener on unmount
+        return () => {
+            if (scrollContainer) {
+                scrollContainer.removeEventListener('scroll', checkIfInViewport);
+                scrollContainer.removeEventListener('wheel', handleWheel);
+            }
+        };
+    }, []);
+    
+    
+
+    if(user){
+        isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+        isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+    }else{
+        isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+        isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+    }
     return (
         <Fragment>
             
-            <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+            <div ref={scrollContainerRef} className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
 
                 {loading === false ? (
                     <div>
-                        <div className='hidden mobilevisible fixed bottom-0 w-full z-20'>
-                            <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
-                                <div className="col-span-2 flex justify-center items-center p-1">
-                                    <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                        {isInWishList ? (
-                                            <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                <Heart size={30} fill="red" className="text-red-500" />
-                                            </div>
-                                            ) : (
-                                                <Heart size={30}/>
-                                        )}
-                                    </button>
-                                </div>
-                                <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                    <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
-                                        <ShoppingCart className='mr-4' />
-                                        <span>ADD TO CART</span>
-                                    </button>
+                        {
+                            scrollAmount < maxScrollAmount && <div className={`mobilevisible fixed bottom-0 w-full z-20 hidden`}>
+                                <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
+                                    <div className="col-span-2 flex justify-center items-center p-1">
+                                        <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+                                            {isInWishList ? (
+                                                <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                    <Heart size={30} fill="red" className="text-red-500" />
+                                                </div>
+                                                ) : (
+                                                    <Heart size={30}/>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <div className="col-span-10 text-lg flex justify-center text-center p-1" >
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                            <ShoppingCart className='mr-4' />
+                                            <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
+                        }
                         <Carousel
+                            ref={carouselRef}
                             showThumbs={false}
                             showStatus={false}
                             showArrows={false}
@@ -216,43 +347,43 @@ const MPpage = () => {
                             {selectedSizeColorImageArray &&
                                 selectedSizeColorImageArray.length > 0 &&
                                 selectedSizeColorImageArray.map((im, i) => (
-                                <div key={i}>
-                                    {im.url ? (
-                                    // Check if the file is a video (based on file extension)
-                                    im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
-                                        <div className="relative">
-                                            {/* Render video using ReactPlayer */}
-                                            <ReactPlayer
-                                                className="w-full h-full object-contain"
-                                                url={im.url}
-                                                loop={true}
-                                                muted={true}
-                                                controls={false}
-                                                playing = {true}
-                                                loading="lazy"
-                                                width="100%"
-                                                height="100%"
-                                            />
-                                            <div className="h-[30px] bg-neutral-100"></div>
-                                        </div>
-                                    ) : (
-                                        // Render image using LazyLoadImage
-                                        <div className="relative">
-                                            <LazyLoadImage
-                                                effect="blur"
-                                                src={im.url}
-                                                alt={`product ${i}`}
-                                                loading="lazy"
-                                                className="w-full h-full object-contain"
-                                            />
-                                            <div className="h-[30px] bg-white"></div>
-                                        </div>
-                                    )
-                                    ) : (
-                                        // Fallback if there's no URL, display a fallback message or content
-                                        <div>No media found</div>
-                                    )}
-                                </div>
+                                    <div key={i}>
+                                        {im.url ? (
+                                        // Check if the file is a video (based on file extension)
+                                        im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
+                                            <div className="relative">
+                                                {/* Render video using ReactPlayer */}
+                                                <ReactPlayer
+                                                    className="w-full h-full object-contain"
+                                                    url={im.url}
+                                                    loop={true}
+                                                    muted={true}
+                                                    controls={false}
+                                                    playing = {true}
+                                                    loading="lazy"
+                                                    width="100%"
+                                                    height="100%"
+                                                />
+                                                <div className="h-[30px] bg-neutral-100"></div>
+                                            </div>
+                                        ) : (
+                                            // Render image using LazyLoadImage
+                                            <div className="relative">
+                                                <LazyLoadImage
+                                                    effect="blur"
+                                                    src={im.url}
+                                                    alt={`product ${i}`}
+                                                    loading="lazy"
+                                                    className="w-full h-full object-fill"
+                                                />
+                                                <div className="h-[30px] bg-white"></div>
+                                            </div>
+                                        )
+                                        ) : (
+                                            // Fallback if there's no URL, display a fallback message or content
+                                            <div>No media found</div>
+                                        )}
+                                    </div>
                                 ))}
                         </Carousel>
                         <div className="bg-white p-4">
@@ -324,11 +455,6 @@ const MPpage = () => {
                                     </div>
                                 </div>
                             </div>
-                            <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><Heart size={30} className='mr-4' /><span>ADD TO WISHLIST NOW</span></button>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
-                            </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
@@ -374,6 +500,32 @@ const MPpage = () => {
                                 <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
                                 <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
                                 <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
+                            </div>
+                            <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
+                                {/* <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button> */}
+                                {/* <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><Heart size={30} className='mr-4' /><span>ADD TO WISHLIST NOW</span></button> */}
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
+                            </div>
+                            <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
+                                <div className={`grid grid-cols-12 w-full font1 relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
+                                    <div className="col-span-2 flex justify-center items-center p-1">
+                                        <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+                                            {isInWishList ? (
+                                                <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                    <Heart size={30} fill="red" className="text-red-500" />
+                                                </div>
+                                                ) : (
+                                                    <Heart size={30}/>
+                                            )}
+                                        </button>
+                                    </div>
+                                    <div className="col-span-10 text-lg flex justify-center text-center p-1" >
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                            <ShoppingCart className='mr-4' />
+                                            <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                             <div className='w-full px-4 md:px-2'>
                                 {/* Reviews Section */}
@@ -451,13 +603,21 @@ const MPpage = () => {
                                     </Fragment>}
                                 </div>
                                 </div>
-
-                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                                <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
-                                <ul className='grid grid-cols-2 gap-2'>
-                                    {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} key={pro._id} />))}
-                                </ul>
-                            </div>
+                                {
+                                    similar && similar.length > 0 && similar.filter(s => s?._id !== product?._id).length > 0 && <div className="mt-2 pb-6 pt-4 relative bg-white px-4">
+                                        <h1 className="font1 flex items-center mt-4 font-semibold px-1 py-2">SIMILAR PRODUCTS</h1>
+                                        <div className="overflow-x-auto">
+                                            <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
+                                            {similar.map((pro) => (
+                                                <li key={pro._id} className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
+                                                <Single_product pro={pro} />
+                                                </li>
+                                            ))}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                }
+                                
                         </div>
                         <Footer />
                     </div>

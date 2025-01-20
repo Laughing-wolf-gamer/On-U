@@ -23,7 +23,7 @@ function filterImageFiles(files) {
 }
 export function getImagesArrayFromProducts(product) {
   // Helper function to check if a file is a video based on its extension
-  console.log("all colors",product.AllColors)
+  console.log("all colors",product)
   const isVideoFile = (fileName) => {
     const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'];
     return videoExtensions.some(extension => fileName.url.toLowerCase().endsWith(extension));
@@ -134,6 +134,53 @@ export const headerConfig = ()=>{
 }
 export const removeSpaces = (inputString) => {
     return inputString.replace(/\s+/g, '');
+}
+
+export const getLocalStorageBag = ()=>{
+  const bag = JSON.parse(sessionStorage.getItem("bagItem")) || [];
+  return bag;
+}
+export const getLocalStorageWishListItem = ()=>{
+  const wishList = JSON.parse(sessionStorage.getItem("wishListItem")) || [];
+  return wishList;
+}
+export const setSessionStorageBagListItem = (orderData,productId)=>{
+  let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+  if (!bagItem) {
+      bagItem = [];
+  }
+  // console.log("bag: ",b)
+  let index = bagItem?.findIndex((item) => item.productId === productId);
+  if (index !== -1) {
+      if(bagItem[index].size._id === orderData.size._id && bagItem[index].color._id === orderData.color._id) {
+          bagItem[index].quantity += 1;
+      }else{
+          bagItem.push(orderData);
+      }
+
+  } else {
+      bagItem.push(orderData);
+  }
+  sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+}
+export const setWishListProductInfo = (product,productId)=>{
+  const wishListData = {
+    productId: {...product},
+  };
+  let wishListItem = JSON.parse(sessionStorage.getItem("wishListItem"));
+  if (!wishListItem) {
+      wishListItem = [];
+  }
+  // console.log("bag: ",b)
+  let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
+  if (index === -1) {
+      wishListItem.push(wishListData);
+      sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+  }else{
+      wishListItem.splice(index,1);
+      sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+  }
+  console.log("wishListItem Addded or remove: ",wishListItem);
 }
 
 

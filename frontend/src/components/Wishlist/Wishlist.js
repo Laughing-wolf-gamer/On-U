@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getuser, clearErrors } from '../../action/useraction'
 import {useAlert} from 'react-alert'
 import Nowishlist from './Nowishlist'
+import { getLocalStorageWishListItem } from '../../config'
 
 
 const Wishlist = () => {
@@ -20,12 +21,24 @@ const Wishlist = () => {
     const [state1, setstate1] = useState(false)
     const [state2, setstate2] = useState(false)
     const {deletewish:dellll} = useSelector(state=>state.deletewish)
-
-
+    const [sessionStorageWishList,setSessionStorageWishList] = useState(getLocalStorageWishListItem())
+    console.log("SessionStorageWishList: ", sessionStorageWishList);
 
     function delwish(e,product) {
         e.stopPropagation()
-        dispatch(deletewish({deletingProductId: product}))
+        if(user){
+            dispatch(deletewish({deletingProductId: product}))
+        }else{
+            if(sessionStorageWishList.length > 0){
+                const itemsToDelete = sessionStorageWishList.find(s => s.productId?._id === product);
+                if(itemsToDelete){
+                    sessionStorageWishList.splice(sessionStorageWishList.indexOf(itemsToDelete), 1);
+                    sessionStorage.setItem('wishListItem', JSON.stringify(sessionStorageWishList));
+                    setSessionStorageWishList(getLocalStorageWishListItem());
+                    Alert.success('Product removed successfully from wishlist')
+                }
+            }
+        }
         setstate2(false)
     }
     if (state2=== false && dellll === true) {
@@ -37,25 +50,9 @@ const Wishlist = () => {
     function movetobag(user, product) {
         console.log("User", user)
         if (user) {
-            /* const orderData ={
-                userId:user.id,
-                productId:product, 
-                quantity:1,
-                color:currentColor,
-                size:currentSize,
-            } */
-            // console.log("Order Data: ",orderData)
-            // dispatch(createbag(orderData))
-            // Alert.success('Product added successfully in Bag')
         }else{
             Alert.show('You have To Login To Add This Product Into Bag')
         }
-        /* const option ={
-            user:user,
-            orderItems:[
-              {product:product, qty:1}
-            ]}
-        dispatch(createbag(option)) */
         Alert.success('Product added successfully in Bag')
 
         delwish(user,product)
@@ -88,29 +85,36 @@ const Wishlist = () => {
 
         dispatch(getwishlist())
     }, [dispatch, error, userloading, isAuthentication, user]);
-    console.log("Wish List Data: ",wishlist);
+    let currentWishListItem = wishlist && wishlist?.orderItems;
+    if(isAuthentication){
+        currentWishListItem = wishlist && wishlist?.orderItems || [];
+    }else{
+        currentWishListItem = sessionStorageWishList;
+    }
+    console.log("currentWishListItem ",currentWishListItem);
     return (
         <Fragment>
         {
            
-            isAuthentication === true ?
-
             <Fragment>
             {
                 loadingWishList === false &&
                 <Fragment>
-                    {(wishlist && wishlist?.orderItems && wishlist?.orderItems.length > 0)  ?
+                    {(currentWishListItem && currentWishListItem.length > 0)  ?
                         <Fragment>
-                            <h1 className='font1 text-lg font-semibold px-4'>My Wishlist <span className='font-sans font-normal'> {wishlist.orderItems.length} items</span></h1>
+                            <h1 className='font1 text-lg font-semibold px-4'>My Wishlist <span className='font-sans font-normal'> {currentWishListItem.length} items</span></h1>
                             <br />
                             <div className='2xl:px-4 xl:px-4 lg:px-4 '>
                                 <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 '>
-                                    {user && wishlist && wishlist.orderItems.map((pro) => (
-                                        <div key={pro?.productId?._id}  onClick={(e)=>{
-                                            redirect(`/products/${pro?.productId?._id}`);
+                                    {currentWishListItem && currentWishListItem.length > 0 && currentWishListItem.map((pro) => (
+                                        <div key={pro?.productId?._id || pro?.productId}  onClick={(e)=>{
+                                            redirect(`/products/${pro?.productId?._id || pro?.productId}`);
                                         }} className='border-[0.5px] border-slate-300 relative'>
-                                            <div className='text-xl cursor-pointer text-white bg-gray-900 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={(e)=>delwish(e,pro?.productId._id)}><MdClear className='font-extralight '/></div>
-                                            <Single_product pro={pro?.productId} user = {user} showWishList = {false}/>
+                                            <div className='text-xl cursor-pointer text-white bg-gray-900 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={(e)=>delwish(e,pro?.productId._id || pro?.productId)}><MdClear className='font-extralight '/></div>
+                                            {
+                                                pro && <Single_product pro={pro?.productId?._id || pro?.productId} user = {user} showWishList = {false}/>
+                                            }
+                                            
                                         </div>
                                     ))}
                                 </ul>
@@ -132,8 +136,7 @@ const Wishlist = () => {
                 </Fragment>
             }
             </Fragment>
-            :
-            <Nowishlist/>
+            
         }
         </Fragment>
     )

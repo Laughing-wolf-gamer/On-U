@@ -4,8 +4,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';
+import { getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem } from '../../config';
+import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../action/orderaction';
 
 const Login = () => {
+  const sessionStorageBag = getLocalStorageBag();
+  const sessionStorageWishList = getLocalStorageWishListItem();
   const [logInData, setLogInData] = useState('');
   const [otpData, setOtpData] = useState(null);
   const [otp, setOtp] = useState('');
@@ -46,6 +50,12 @@ const Login = () => {
       console.log("Verified OTP: ",response);
       const{success,message,result} = response;
       if(success && result){
+        try {
+          await checkSavedWishListData();
+          await checkSavedBagData();
+        } catch (error) {
+          console.error("Failed to check saved wish list data")
+        }
         Alert.success('Login Successful');
         setOtpData(null); // Clear OTP data after successful verification
         setOtp('');
@@ -55,6 +65,24 @@ const Login = () => {
       }
     }
   };
+  const checkSavedWishListData = async()=>{
+    const wishListData = getLocalStorageWishListItem();
+    console.log("After Login Wishlist data: ", wishListData);
+    if(wishListData){
+      dispatch(createAndSendProductsArrayWishList(wishListData));
+      // sessionStorage.setItem("bagItem", JSON.stringify([]));
+    }
+  }
+  const checkSavedBagData = async()=>{
+    const savedBagData = getLocalStorageBag();
+    
+    const response = await dispatch(addItemArrayBag(savedBagData));
+    
+    console.log("After Login Bag data: ", response);
+    if(response && response.success){
+      sessionStorage.setItem("bagItem", JSON.stringify([]));
+    }
+  }
 
   const handleCloseOtpModal = () => {
     setOtpData(false);

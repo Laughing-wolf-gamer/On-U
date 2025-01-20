@@ -14,20 +14,27 @@ import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import LoadingSpinner from '../Product/LoadingSpinner'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
 import { LazyLoadImage } from 'react-lazy-load-image-component'
-import { ShoppingBag, ShoppingCart } from 'lucide-react'
+import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
 import eventManager from '../../EventManager'
 import { useFunctionContext } from '../../Contaxt/FunctionContext'
-
+let isInWishList = false
+let isInBagList = false;
 const Ppage = () => {
   const navigation = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
+  // const[isInWishList,setIsInWishList] = useState(false);
+  // const[isInBagList,setIsInBagList] = useState(false);
+  const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+  const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+
+
 
   const { callFunction } = useFunctionContext();
 	const[selectedSize, setSelectedSize] = useState(null);
@@ -45,7 +52,6 @@ const Ppage = () => {
 
   const { product, loading, similar } = useSelector(state => state.Sproduct)
   const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
-  const {error, bag} = useSelector(state => state.bag)
   const {error:warning} = useSelector(state => state.wishlist)
   function Addclass() {
     var foo1 = document.querySelector(`.imgfulldiv`)
@@ -57,7 +63,19 @@ const Ppage = () => {
   }
 
   async function addtobag() {
-    console.log("User", user)
+    // console.log("User", user)
+    if(isInBagList){
+      navigation("/bag")
+      return;
+    }
+    if(!currentColor){
+        alert.error("No Color Selected")
+        return;
+    }
+    if(!currentSize){
+        alert.error("No Size Selected")
+        return;
+    }
     if (user) {
       const orderData ={
         userId:user.id,
@@ -66,28 +84,52 @@ const Ppage = () => {
         color:currentColor,
         size:currentSize,
       }
-      await Promise.all([
-        dispatch(createbag(orderData)),
-        dispatch(getwishlist()),
+        await dispatch(createbag(orderData))
+        await dispatch(getwishlist())
         dispatch(getbag({ userId: user.id }))
-      ])
-      alert.success('Product added successfully in Bag')
-     }else{
-       alert.show('You have To Login To Add This Product Into Bag')
-     }
+        alert.success('Product  successfully in Bag')
+      }else{
+      //  alert.show('You have To Login To Add This Product Into Bag')
+      const orderData = {
+        productId: param.id,
+        quantity: 1,
+        color: currentColor,
+        size: currentSize,
+        ProductData:product,
+      };
+      setSessionStorageBagListItem(orderData,param.id);
+    }
+    if(user){
+        isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+        isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+      }else{
+        isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+        isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+      }
+      window.location.reload();
   }
   const addToWishList = async()=>{
     if (user) {
-      // console.log("Wishlist Data: ", wishlistData)
-      await Promise.all([
-        dispatch(createwishlist({productId:param.id,})),
-        dispatch(getwishlist()),
-        dispatch(getbag({ userId: user.id }))
-      ])
-      alert.success('Product added successfully to Wishlist, ')
-     }else{
-       alert.show('You have To Login To Add This Product To Wishlist')
-     }
+      await dispatch(createwishlist({productId:param.id,}));
+      await dispatch(getwishlist());
+      await dispatch(getbag({ userId: user.id }))
+      if(isInWishList){
+        alert.success('Added successfully to Wishlist')
+      }else{
+        alert.success('Removed successfully from Wishlist')
+      }
+    }else{
+      //  alert.show('You have To Login To Add This Product To Wishlist')
+      setWishListProductInfo(product,param.id);
+    }
+    if(user){
+      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+      isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+    }else{
+      isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+      isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+    }
+    window.location.reload();
   }
 
   const handleBuyNow = async () => {
@@ -114,33 +156,29 @@ const Ppage = () => {
     }
 
 
-    const checkFetchedIsPurchased = async ()=>{
-      console.log("Checking: ",product);
-      const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
-      // console.log("response On Is Purchased: ", didPurchased.success);
-      setHasPurchased(didPurchased?.success || false);
-    }
+  const checkFetchedIsPurchased = async ()=>{
+    console.log("Checking: ",product);
+    const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
+    setHasPurchased(didPurchased?.success || false);
+  }
   useEffect(() => {
-    
-
     if (state === false) {
       dispatch(getuser())
       dispatch(singleProduct(param.id))
-      
       setstate(true)
     }
     
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0;
-    if(error){
+    /* if(error){
       alert.error(error)
       dispatch(clearErrors())
-    }
+    } */
     if(warning){
       alert.error(warning)
       dispatch(clearErrors())
     }
-  }, [dispatch, param, error, alert, warning]);
+  }, [dispatch, param, alert, warning]);
   const handleImageClick = (imageUrl) => {
     setSelectedImage(imageUrl);
   };
@@ -149,7 +187,6 @@ const Ppage = () => {
     setCurrentSize(newSize);
     setSelectedSize(newSize);
     setSelectedColor(newSize.colors);
-    // setCurrentColor(newSize.colors[0]);
     setSelectedColorId(newSize.colors[0]._id);
   }
   const handelSetColorImages = (color) => {
@@ -173,19 +210,21 @@ const Ppage = () => {
 		if(product){
       checkFetchedIsPurchased();
     }
-	},[product,dispatch])
+    if(user){
+      dispatch(getwishlist());
+      dispatch(getbag({ userId: user.id }));
+    }
+    // refreshWishListAndBag();
+	},[product,user,dispatch])
   useEffect(()=>{
     if(selectedSize){
 			setSelectedColor(selectedSize.colors);
       const currentColor = selectedSize.colors[0];
 			setSelectedSize_color_Image_Array(currentColor.images);
 			setSelectedColorId(currentColor._id);
-			// console.log("Colors: ",currentColor.quantity);
 			setSelectedImage(currentColor.images[0]);
 		}
-    // console.log("Selected Size New ",currentSize);
   },[selectedSize])
-  console.log("All Products: ",selectedSize_color_Image_Array)
   const isVideo = useMemo(() => {
     if (!selectedImage || !selectedImage.url) return false;
 
@@ -197,7 +236,13 @@ const Ppage = () => {
         url.endsWith(".avi")
     );
   }, [selectedImage]);
-  console.log("hasPurchased: ",hasPurchased);
+  if(user){
+      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+      isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+    }else{
+      isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+      isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+  }
   return (
     <div className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
@@ -437,10 +482,13 @@ const Ppage = () => {
                     </div>
                     <div className='w-[90%] h-fit justify-center items-center flex flex-col'>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
-                        <ShoppingCart size={20} className='m-4' /> <span>ADD TO CART</span>
+                        <ShoppingCart size={20} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
                       </button>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
-                        <BsHeart size={20} className='m-4' /><span>ADD TO WISHLIST NOW</span>
+                        {
+                          isInWishList ? <Heart fill='red' size={30} className='m-4' />: <Heart size={30} className='m-4' />
+                        }
+                        <span>ADD TO WISHLIST NOW</span>
                       </button>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
                         <ShoppingBag size={20} className='m-4' /><span>BUY NOW</span>

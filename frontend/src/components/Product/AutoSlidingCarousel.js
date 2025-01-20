@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { getImagesArrayFromProducts, hexToRgba } from "../../config";
+import { getImagesArrayFromProducts, getLocalStorageBag, getLocalStorageWishListItem, hexToRgba, setSessionStorageBagListItem, setWishListProductInfo } from "../../config";
 import ReactPlayer from "react-player";
 import { BsHeart } from "react-icons/bs";
 import { Heart } from "lucide-react";
@@ -9,10 +9,17 @@ import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
 import Loader from "../Loader/Loader";
 
+
+let isInWishList = false
 const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => {
+  if(user){
+    isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id) || false
+  }else{
+    isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id === pro?._id) || false;
+  }
   const imageArray = getImagesArrayFromProducts(pro,true);
   const [addedToWishList,setAddedToWishList] = useState(false);
-  console.log("Image Array: ", imageArray);
+  // console.log("Image Array: ", imageArray);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
@@ -92,21 +99,28 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
     }));
   }, [imageArray]); // Recalculate only when imageArray changes
   const addToWishList = async(e)=>{
-      e.stopPropagation();
-      if (user) {
-          setAddedToWishList(true);
-          // console.log("Wishlist Data: ", wishlistData)
-          await dispatch(createwishlist({productId:pro._id,}))
-          dispatch(getwishlist())
-          alert.success('Product added successfully to Wishlist')
-          // window.location.reload();
-       }else{
-         alert.show('You have To Login To Add This Product To Wishlist')
-       }
+    // e.stopPropagation();
+    if (user) {
+      setAddedToWishList(true);
+      await dispatch(createwishlist({productId:pro._id,}))
+      await dispatch(getwishlist())
+    }else{
+      //  alert.show('You have To Login To Add This Product To Wishlist')
+      setWishListProductInfo(pro,pro?._id);
     }
-    const isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id)
-    console.log("All Slding Carousal: ",wishlist,isInWishList);
-
+    if(isInWishList){
+      alert.success('Added successfully to Wishlist')
+    }else{
+      alert.success('Removed successfully from Wishlist')
+    }
+    if(user){
+      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id)
+    }else{
+      isInWishList = getLocalStorageWishListItem().find(b => b.productId._id === pro?._id) || false;
+    }
+  }
+  console.log("isInWishList: ",isInWishList,getLocalStorageWishListItem());
+  
   return (
     <div
       className="slideshow-container min-h-[150px] relative"

@@ -5,6 +5,7 @@ import { IoIosHeartEmpty } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
+import { useDispatch } from 'react-redux';
 
 // Memoize the component to avoid unnecessary re-renders
 const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}) => {
@@ -35,7 +36,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
                 <AutoSlidingCarousel pro={pro} user={user} showWishList = {showWishList} wishlist = {wishlist}/>
             </div>
 
-            <div className="relative pb-6 flex-col flex justify-start items-left gap-1">
+            <div className="relative pb-6 flex-col flex justify-start items-left gap-3">
                 {/* Product Title */}
                 <p className="font1 text-base px-2 text-gray-800 font-semibold">
                     {productTitle}
@@ -53,10 +54,10 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
                     </span>
                     {productSalePrice && (
                         <>
-                            <span className="flex items-center text-sm font-medium text-slate-400 line-through ml-2">
+                            <span className="flex items-center text-sm font-medium text-slate-400 line-through">
                                 <BiRupee />{Math.round(productPrice)}
                             </span>
-                            <span className="flex items-center text-xs font-medium text-[#f26a10] ml-2">
+                            <span className="flex items-center text-xs font-medium text-[#f26a10]">
                                 ({-Math.round((productSalePrice / productPrice) * 100 - 100)}% OFF)
                             </span>
                         </>

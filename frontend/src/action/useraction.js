@@ -237,7 +237,7 @@ export const logout = () => async (dispatch) => {
         console.log("logout")
         const res = await axios.post(`${BASE_API_URL}/api/auth/logout`)
         console.log("Loggin Aoutine");
-        sessionStorage.clear();
+        sessionStorage.removeItem("token");
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
     } catch (Error) {
         dispatch({ type: FAIL_LOGOUT, payload: Error.response.data.message })

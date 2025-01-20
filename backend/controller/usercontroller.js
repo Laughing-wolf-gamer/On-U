@@ -90,6 +90,7 @@ export const loginOtpCheck = A(async(req,res,next)=>{
       return next( new Errorhandler('Email not found', 404))
     }
   }
+  console.log("user: ",user);
   if(!user.otp){
     return next( new Errorhandler('OTP not found', 404))
   }

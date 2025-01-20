@@ -64,10 +64,10 @@ export const paymentVerification = async (req, res) => {
                 });
             
                 await orderData.save();
-                const createdShipRocketOrder = await generateOrderForShipment(orderData,randomOrderShipRocketId)
+                /* const createdShipRocketOrder = await generateOrderForShipment(orderData,randomOrderShipRocketId)
                 if(!createdShipRocketOrder){
                     return res.status(500).json({ success: false, message: "Failed to create ShipRocket Order" });
-                }
+                } */
                 const removingAmountPromise = orderDetails.map(async item => {
                     try {
                         console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);

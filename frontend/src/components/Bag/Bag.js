@@ -12,79 +12,28 @@ import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import LoadingSpinner from '../Product/LoadingSpinner';
 import Emptybag from './Emptybag';
-import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../../config';
+import { BASE_API_URL, capitalizeFirstLetterOfEachWord, getLocalStorageBag, headerConfig } from '../../config';
 import { Circle, X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
-import { BiRupee } from 'react-icons/bi';
-const handelGetAmountAfterApplyingCoupon = (coupon,bag,user)=>{
-    let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-    let totalMRP = 0;
-    bag.orderItems.forEach(item => {
-        // Check if salePrice is available, else fallback to regular price
-        const productSellingPrice = item.productId.salePrice || item.productId.price;
-
-        // Calculate total sale price (totalSP) - salePrice multiplied by quantity (if salePrice exists)
-        if (item.productId.salePrice && item.productId.price > 0) {
-            totalSP += item.productId.salePrice * item.quantity; // salePrice * quantity
-        } else {
-            totalSP += item.productId.price * item.quantity; // If no salePrice, use regular price
-        }
-
-        // Calculate the discount only if there is a sale price
-        let discount = 0;
-        if(item.productId.salePrice && item.productId.price > 0){
-            discount = item.productId.price - item.productId.salePrice; // Calculate discount percentage and multiply by quantity to account for multiple items
-            // console.log("Discount: ", discount);  // This is the discount percentage for each item
-        }
-        totalDiscount += discount * item.quantity; // Multiply by quantity to account for multiple items
-
-        // Add the regular price or sale price multiplied by quantity for MRP
-
-        totalProductSellingPrice += (productSellingPrice * item.quantity) + bag?.ConvenienceFees; // Regular price or salePrice * quantity
-        totalMRP += item.productId.price * item.quantity;
-        const setCouponDiscountAmount = ()=>{
-            if(coupon.CouponType === "Percentage"){
-                totalProductSellingPrice = totalProductSellingPrice - (totalProductSellingPrice * (coupon.Discount / 100));
-            }else{
-                totalProductSellingPrice = totalProductSellingPrice - coupon.Discount;
-            }
-        }
-        if(coupon.MinOrderAmount > 0){
-            if(coupon.MinOrderAmount > totalProductSellingPrice){
-                setCouponDiscountAmount();
-            }
-        }else{
-            totalProductSellingPrice -= bag?.ConvenienceFees;
-        }
-        /*
-            CouponCode: "ABCDH12"
-            CouponName: "Coupon1"
-            CouponType: "Percentage"
-            CustomerLogin: false
-            Discount: 10
-            FreeShipping: true
-            MinOrderAmount: 0
-            Status: "Inactive"
-            ValidDate: "2025-01-09T18:48:22.540Z"
-         */
-    });
-}
 const Bag = () => {
-    const navigation = useNavigate()
-    const dispatch = useDispatch();
-    const[convenienceFees,setConvenienceFees] = useState(-1);
-    const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
-    const {allAddresses} = useSelector(state => state.getAllAddress)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const [sessionStorageBag,setSessionStorageItems] = useState(getLocalStorageBag());
+
+
+    const {allAddresses} = useSelector(state => state.getAllAddress)
+    const[convenienceFees,setConvenienceFees] = useState(-1);
+    const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
     const alert = useAlert();
     const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
     const[totalSellingPrice,setTotalMRP] = useState(0)
     const [discountedAmount, setDiscountAmount] = useState(0);
     const[couponDiscountData,setCouponDiscountData] = useState(null);
+    const navigation = useNavigate()
+    const dispatch = useDispatch();
     // const [id, setId] = useState('');
     // const [initialized, setInitialized] = useState(false);
 
@@ -110,83 +59,155 @@ const Bag = () => {
 
 
     useEffect(() => {
-        if (bag?.orderItems) {
-            let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-            let totalMRP = 0;
-
-            bag.orderItems.forEach(item => {
-                const { productId, quantity } = item;
-                const { salePrice, price } = productId;
-                
-                // Use salePrice if available, else fallback to regular price
-                const productSellingPrice = salePrice || price;
-
-                // Calculate the total sale price (totalSP) based on salePrice or regular price
-                const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                totalSP += itemTotalPrice;
-
-                // Calculate the discount only if there is a sale price
-                if (salePrice && price > 0) {
-                    const discount = price - salePrice;
-                    totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                }
-
-                // Total product selling price includes salePrice or regular price + convenience fees
-                totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
-
-                // Calculate the total MRP (Maximum Retail Price) based on regular price
-                totalMRP += price * quantity;
-            });
-            console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
-            if (bag.Coupon) {
-                const coupon = bag.Coupon;
-                const { CouponType, Discount, MinOrderAmount } = coupon;
-
-                const applyCouponDiscount = () => {
-                    if (CouponType === "Percentage") {
-                        totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
-                        setCouponDiscountData({})
-                    } else {
-                        totalProductSellingPrice -= Discount;
+        if(bag){
+            if (bag?.orderItems) {
+                let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+                let totalMRP = 0;
+    
+                bag.orderItems.forEach(item => {
+                    const { productId, quantity } = item;
+                    const { salePrice, price } = productId;
+                    
+                    // Use salePrice if available, else fallback to regular price
+                    const productSellingPrice = salePrice || price;
+    
+                    // Calculate the total sale price (totalSP) based on salePrice or regular price
+                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+                    totalSP += itemTotalPrice;
+    
+                    // Calculate the discount only if there is a sale price
+                    if (salePrice && price > 0) {
+                        const discount = price - salePrice;
+                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
                     }
-                };
-
-                // Apply coupon discount only if applicable
-                if (MinOrderAmount > 0) {
-                    if(totalProductSellingPrice >= MinOrderAmount){
+    
+                    // Total product selling price includes salePrice or regular price + convenience fees
+                    totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+    
+                    // Calculate the total MRP (Maximum Retail Price) based on regular price
+                    totalMRP += price * quantity;
+                });
+                console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
+                if (bag.Coupon) {
+                    const coupon = bag.Coupon;
+                    const { CouponType, Discount, MinOrderAmount } = coupon;
+    
+                    const applyCouponDiscount = () => {
+                        if (CouponType === "Percentage") {
+                            totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+                            setCouponDiscountData({})
+                        } else {
+                            totalProductSellingPrice -= Discount;
+                        }
+                    };
+    
+                    // Apply coupon discount only if applicable
+                    if (MinOrderAmount > 0) {
+                        if(totalProductSellingPrice >= MinOrderAmount){
+                            applyCouponDiscount();
+                        }
+                    }else{
                         applyCouponDiscount();
                     }
-                }else{
-                    applyCouponDiscount();
+                    if (bag.Coupon.FreeShipping) {
+                        totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+                    }
                 }
-                if (bag.Coupon.FreeShipping) {
-                    totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+                setTotalProductSellingPrice(totalProductSellingPrice);
+                setDiscountAmount(totalDiscount);
+                setTotalMRP(totalMRP);
+            }
+        }else{
+            if(sessionStorageBag){
+                if (sessionStorageBag) {
+                    let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+                    let totalMRP = 0;
+        
+                    sessionStorageBag.forEach(item => {
+                        const { ProductData, quantity } = item;
+                        const { salePrice, price } = ProductData;
+                        
+                        // Use salePrice if available, else fallback to regular price
+                        const productSellingPrice = salePrice || price;
+        
+                        // Calculate the total sale price (totalSP) based on salePrice or regular price
+                        const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+                        totalSP += itemTotalPrice;
+        
+                        // Calculate the discount only if there is a sale price
+                        if (salePrice && price > 0) {
+                            const discount = price - salePrice;
+                            totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+                        }
+        
+                        // Total product selling price includes salePrice or regular price + convenience fees
+                        totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+        
+                        // Calculate the total MRP (Maximum Retail Price) based on regular price
+                        totalMRP += price * quantity;
+                    });
+                    console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
+                    /* if (bag.Coupon) {
+                        const coupon = bag.Coupon;
+                        const { CouponType, Discount, MinOrderAmount } = coupon;
+        
+                        const applyCouponDiscount = () => {
+                            if (CouponType === "Percentage") {
+                                totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+                                setCouponDiscountData({})
+                            } else {
+                                totalProductSellingPrice -= Discount;
+                            }
+                        };
+        
+                        // Apply coupon discount only if applicable
+                        if (MinOrderAmount > 0) {
+                            if(totalProductSellingPrice >= MinOrderAmount){
+                                applyCouponDiscount();
+                            }
+                        }else{
+                            applyCouponDiscount();
+                        }
+                        if (bag.Coupon.FreeShipping) {
+                            totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+                        }
+                    } */
+                    setTotalProductSellingPrice(totalProductSellingPrice);
+                    setDiscountAmount(totalDiscount);
+                    setTotalMRP(totalMRP);
                 }
             }
-
-            // Log the results to check the calculations
-            // console.log("Total Product Selling Price: ", totalProductSellingPrice);
-            // console.log("Total Discount: ", totalDiscount);
-            // console.log("Total MRP: ", totalMRP);
-
-            // Update state
-            setTotalProductSellingPrice(totalProductSellingPrice);
-            setDiscountAmount(totalDiscount);
-            setTotalMRP(totalMRP);
         }
-    }, [bag]);
+    }, [bag,sessionStorageBag]);
 
 
     const updateQty = async (e, itemId) => {
         console.log("Item ID: ", itemId);
         console.log("Qty Value: ", e.target.value);
-        await dispatch(getqtyupdate({ id: itemId, qty: Number(e.target.value) }));
-        dispatch(getbag({ userId: user.id }));
+        if(isAuthentication){
+            await dispatch(getqtyupdate({ id: itemId, qty: Number(e.target.value) }));
+            dispatch(getbag({ userId: user.id }));
+        }else{
+            const itemsToUpdate = sessionStorageBag.find(item => item.productId === itemId);
+            console.log("Items to update: ", itemsToUpdate)
+            if(itemsToUpdate){
+                itemsToUpdate.quantity = Number(e.target.value);
+                sessionStorage.setItem("bagItem",JSON.stringify(sessionStorageBag));
+                setSessionStorageItems(getLocalStorageBag());
+            }
+        }
     };
 
     const handleDeleteBag = async (productId,bagOrderItemId) => {
-        await dispatch(deleteBag({productId,bagOrderItemId}));
-        dispatch(getbag({ userId: user.id }));
+        if(isAuthentication){
+            await dispatch(deleteBag({productId,bagOrderItemId}));
+            dispatch(getbag({ userId: user.id }));
+        }else{
+            const itemsToDelete = sessionStorageBag.filter(item => item.productId!== productId);
+            sessionStorage.setItem("bagItem",JSON.stringify(itemsToDelete));
+            setSessionStorageItems(getLocalStorageBag());
+            // dispatch(getbag({ userId: user.id }));
+        }
     };
 
     const handleAddressChange = (e) => {
@@ -273,7 +294,7 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    console.log("bag Data: ",bag);
+    console.log("bag Data: ",sessionStorageBag);
     
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
@@ -462,28 +483,126 @@ const Bag = () => {
                             }
                         </Fragment>
                     )}
+                    {user && showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={totalProductSellingPrice} closePopup={() => {
+                        dispatch(getbag({ userId: user.id }));
+                        dispatch(getAddress())
+                        setShowPayment(false)
+                    }} />}
                 </div>
             ) : (
-                <div className='flex w-full h-screen justify-center items-center'>
-                    <div className="bg-white flex flex-col p-6 rounded-lg shadow-md w-[90%] sm:w-[400px]">
-                            <h2 className="text-xl font-semibold text-gray-800">Please log in to access your bag</h2>
-                            <p className="text-gray-500 mt-4">You must be logged in to view and manage your shopping bag.</p>
-                        <div className="mt-6">
-                            <button
-                                onClick={(e)=>navigation('/Login')}
-                                className="w-full bg-gray-500 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-300"
-                            >
-                                Log In
-                            </button>
+                <div>
+                    {sessionStorageBag && sessionStorageBag.length > 0 ? (
+                        <div className="relative max-w-screen-lg mx-auto">
+                            <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
+                                <div className="flex space-x-2 text-[#696B79]">
+                                    <span className={`font-semibold ${!showPayment ? "text-blue-400":''}`}>BAG</span>
+                                    <span>--------</span>
+                                    <span className={`font-semibold ${!showPayment && selectedAddress ? "text-blue-400":''}`}>ADDRESS</span>
+                                    <span>--------</span>
+                                    <span className={`font-semibold ${showPayment && selectedAddress ? "text-blue-400":''}`}>PAYMENT</span>
+                                </div>
+                                <div className="flex items-center">
+                                    <BsShieldFillCheck className="text-blue-400 text-3xl" />
+                                    <span className="ml-2 text-[#535766] text-xs">100% SECURE</span>
+                                </div>
+                            </div>
+
+                            <div className="flex flex-col lg:flex-row mt-4 gap-6">
+                                <div className="flex-1">
+                                    {sessionStorageBag  && sessionStorageBag.length > 0 && sessionStorageBag.map((item,i) => (
+                                        <div key={i} className="flex items-center border-b py-4">
+                                            <Link to={`/products/${item.ProductData?._id}`}>
+                                                <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-24 h-24 object-contain" />
+                                            </Link>
+                                            <div className="ml-4 flex-1">
+                                                <h3 className="font-semibold">{item?.ProductData?.title}</h3>
+                                                <p className="text-sm">Size: {item?.size?.label}</p>
+                                                <div className="flex items-center space-x-2 text-sm text-blue-400">
+                                                    {
+                                                        item?.ProductData?.salePrice ? (
+                                                            <>
+                                                                <span>₹{Math.round(item.ProductData.salePrice)}</span>
+                                                                <span className="line-through text-[#94969f]">₹{item.ProductData.price}</span>
+                                                                <span className="text-[#f26a10] font-normal hover:animate-vibrateScale">( ₹{-Math.round(item.ProductData?.salePrice / item.ProductData?.price * 100 - 100)}% OFF )</span>
+                                                            </>
+
+                                                        ):(
+                                                            <span>₹ {item.ProductData.price}</span>
+                                                        )
+                                                    }
+                                                </div>
+                                                <div className="mt-2">
+                                                    Qty:
+                                                    <select
+                                                        value={item?.quantity}
+                                                        onChange={(e) => updateQty(e, item.ProductData._id)}
+                                                        className="ml-2 h-10 w-14 px-2 border rounded"
+                                                    >
+                                                        {/* Create options from 1 to item.size.quantity */}
+                                                        {[...Array(item?.size?.quantity || []).keys()].map(num => (
+                                                            <option key={num + 1} value={num + 1}>
+                                                                {num + 1}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+                                                </div>
+
+                                            </div>
+                                            <X
+                                                className="text-xl text-gray-700 hover:animate-vibrateScale transition-transform duration-300 hover:text-gray-600 cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleDeleteBag(item.ProductData._id,item._id);
+                                                }}
+                                            />
+                                        </div>
+                                    ))}
+                                </div>
+
+                                <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg">
+                                    <h3 className="font-semibold mb-2">PRICE DETAILS ({sessionStorageBag.length} items)</h3>
+                                    <div className="flex justify-between mb-2">
+                                        <span>Total MRP</span>
+                                        <span>₹{bag && bag?.totalMRP || totalSellingPrice}</span>
+                                    </div>
+                                    <div className="flex justify-between mb-2">
+                                        <span>You Saved</span>
+                                        <span>₹{Math.round(bag &&bag?.totalDiscount || discountedAmount)}</span>
+                                    </div>
+                                    <div className="flex justify-between mb-2">
+                                        <span>Coupon</span>
+                                        <span className={`${bag &&bag?.Coupon?.CouponCode ? "text-red-600":""}`} >{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
+                                    </div>
+                                    <div className="flex justify-between mb-4">
+                                        <span>Convenience Fee</span>
+                                        <span className={`${bag && bag.Coupon && bag.Coupon.FreeShipping ? "line-through":""}`}>₹{convenienceFees}</span>
+                                    </div>
+                                    <div className="flex justify-between font-semibold text-xl">
+                                        <span>Total</span>
+                                        <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                    </div>
+                                    <div className="flex justify-center items-center flex-row bg-black mt-5">
+                                        <button onClick={()=>navigation("/Login")} className='w-full rounded-[60px] flex items-center justify-center p-3 font-semibold text-xl'>
+                                            <span className='text-white'>Log In To Process Payment</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>                       
+                            
                         </div>
-                    </div>
+                    ) : (
+                        <Fragment>
+                            {bagLoading ?  <LoadingOverlay isLoading={bagLoading} />:
+                                <div className="min-h-screen flex justify-center items-center bg-slate-100">
+                                    <Emptybag/>                                   
+                                </div>
+                            }
+                        </Fragment>
+                    )}
+                    
                 </div>
             )}
-            {user && showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={totalProductSellingPrice} closePopup={() => {
-                dispatch(getbag({ userId: user.id }));
-                dispatch(getAddress())
-                setShowPayment(false)
-            }} />}
+            
             <Footer/>
         </div>
     );
