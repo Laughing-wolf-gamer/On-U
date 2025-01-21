@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOrders } from '../../../action/orderaction';
 import { getRandomItem } from '../../../config';
@@ -99,7 +99,7 @@ const OrderCard = ({ order, onViewDetails }) => {
 };
   
 const OrdersReturns = () => {
-  const{allorder} = useSelector(state => state.getallOrders);
+  const{allorder,loading:orderLoading} = useSelector(state => state.getallOrders);
   const navigation = useNavigate();
   const dispatch = useDispatch();
   const [selectedOrder, setSelectedOrder] = useState(null);
@@ -114,19 +114,47 @@ const OrdersReturns = () => {
   useEffect(()=>{
     dispatch(fetchAllOrders());
   },[dispatch])
-  console.log("All Order And Returns all Orders: ",allorder);
+  // console.log("All Order And Returns all Orders: ",allorder);
   return (
     <div className="space-y-6 w-full flex flex-col items-center">
       <h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
-      {allorder && allorder.length > 0 ? (
-          allorder.map((order, index) => (
-            <OrderCard key={index} order={order} onViewDetails={handleViewDetails}/>
-          ))
-      ) : (
-          <p className="text-gray-500">No orders yet.</p>
-      )}          
+      {
+        orderLoading ? (
+          // If no orders or loading, show skeletons
+          Array(9)
+            .fill(0)
+            .map((_, index) => <OrderCardSkeleton key={index} />)
+        ):(
+          <Fragment>
+            {allorder && allorder.length > 0 ? (
+                allorder.map((order, index) => (
+                  <OrderCard key={index} order={order} onViewDetails={handleViewDetails}/>
+                ))
+            ) : (
+                <p className="text-gray-500">No orders yet.</p>
+            )}          
+          </Fragment>
+        )
+      }
     </div>
   );
 };
+const OrderCardSkeleton = () => {
+  return (
+    <div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 animate-pulse">
+      {/* Delivery Status Progress Bar */}
+      <div className="w-full flex-wrap justify-center items-center">
+        <div className="h-6 w-3/4 bg-gray-300 rounded"></div> {/* Placeholder for delivery status progress */}
+      </div>
 
+      <div className="flex justify-between items-center space-x-6">
+        <div className="flex-1 space-y-2">
+          <div className="h-4 bg-gray-300 rounded w-3/4"></div> {/* Order ID placeholder */}
+          <div className="h-4 bg-gray-300 rounded w-1/2"></div> {/* Total items placeholder */}
+          <div className="h-4 bg-gray-300 rounded w-2/3"></div> {/* Order status placeholder */}
+        </div>
+      </div>
+    </div>
+  );
+};
 export default OrdersReturns;

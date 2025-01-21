@@ -30,7 +30,7 @@ const Ppage = () => {
   const { activeToast, showToast } = useToast();
   const checkAndCreateToast = (type,message) => {
     console.log("check Toast: ",type, message,activeToast);
-    if(activeToast !== message){
+      if(activeToast !== message){
         switch(type){
             case "error":
                 toast.error(message)
@@ -49,8 +49,8 @@ const Ppage = () => {
                 break;
         }
         showToast(message);
-    }
-}
+      }
+  }
   const navigation = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
   const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
@@ -58,12 +58,11 @@ const Ppage = () => {
 
 
 
-  const { callFunction } = useFunctionContext();
 	const[selectedSize, setSelectedSize] = useState(null);
 	const[selectedColor, setSelectedColor] = useState([]);
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
-	const[selectedColorId,setSelectedColorId] = useState(null);
+	// const[selectedColorId,setSelectedColorId] = useState(null);
   const param = useParams()
   // const alert  = useAlert()
   const dispatch = useDispatch()
@@ -203,13 +202,13 @@ const Ppage = () => {
     setCurrentSize(newSize);
     setSelectedSize(newSize);
     setSelectedColor(newSize.colors);
-    setSelectedColorId(newSize.colors[0]._id);
+    // setSelectedColorId(newSize.colors[0]._id);
   }
   const handelSetColorImages = (color) => {
     setSelectedSize_color_Image_Array(color.images)
 
     setSelectedImage(color.images[0]);
-    setSelectedColorId(color._id);
+    // setSelectedColorId(color._id);
   }
   useEffect(()=>{
     if(product){
@@ -219,7 +218,7 @@ const Ppage = () => {
 
       const currentColor = product.size[0].colors[0];
 
-      setSelectedColorId(currentColor._id);
+      // setSelectedColorId(currentColor._id);
       setSelectedImage(currentColor.images[0]);
       setSelectedSize_color_Image_Array(currentColor.images);
     }
@@ -237,7 +236,7 @@ const Ppage = () => {
 			setSelectedColor(selectedSize.colors);
       const currentColor = selectedSize.colors[0];
 			setSelectedSize_color_Image_Array(currentColor.images);
-			setSelectedColorId(currentColor._id);
+			// setSelectedColorId(currentColor._id);
 			setSelectedImage(currentColor.images[0]);
 		}
   },[selectedSize])
@@ -261,7 +260,7 @@ const Ppage = () => {
       isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
   }
   return (
-    <div className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div className="w-screen px-10 h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         loading === false ?
           <div>

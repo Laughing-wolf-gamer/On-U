@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddress, removeAddress, updateAddress } from '../../../action/useraction';
 import AddAddressPopup from '../../Bag/AddAddressPopup';
@@ -6,9 +6,35 @@ import { Circle, SeparatorVertical, X } from 'lucide-react';
 import { useAlert } from 'react-alert';
 import { capitalizeFirstLetterOfEachWord } from '../../../config';
 import LoadingOverlay from '../../../utils/LoadingOverLay';
+import { useToast } from '../../../Contaxt/ToastProvider';
+import toast from 'react-hot-toast';
 
 const SavedAddresses = () => {
-  const alert = useAlert();
+
+  const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
   const dispatch = useDispatch();
   const { allAddresses, loading: addressStateLoading } = useSelector(state => state.getAllAddress);
   const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
@@ -25,13 +51,13 @@ const SavedAddresses = () => {
   // Handle saving new address
   const handleSaveAddress = async (newAddress) => {
     await dispatch(updateAddress(newAddress));
-    alert.success('Address added successfully');
+    checkAndCreateToast("success",'Address added successfully');
     dispatch(getAddress());
   };
 
   const removeAddressByIndex = async (addressIndex) => {
     await dispatch(removeAddress(addressIndex));
-    alert.success('Address removed successfully');
+    checkAndCreateToast("success",'Address removed successfully');
     dispatch(getAddress());
   };
 
@@ -70,17 +96,27 @@ const SavedAddresses = () => {
     );
   };
 
+
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
-      <LoadingOverlay isLoading={addressStateLoading} />
       <h2 className="font-semibold text-lg text-gray-900 mb-4">Saved Addresses</h2>
 
       {/* Display saved addresses */}
-      {allAddresses && allAddresses.length > 0 ? (
-        allAddresses.map((address, index) => renderAddress(index, address))
-      ) : (
-        <p className="text-gray-600">No addresses saved.</p>
-      )}
+      {
+        addressStateLoading ? (
+          // If no orders or loading, show skeletons
+          Array(4)
+            .fill(0)
+            .map((_, index) => <AddressSkeleton key={index} />)
+        ):(<Fragment>
+          {allAddresses && allAddresses.length > 0 ? (
+            allAddresses.map((address, index) => renderAddress(index, address))
+          ) : (
+            <p className="text-gray-600">No addresses saved.</p>
+          )}
+
+        </Fragment>)
+      }
 
       {/* Button to open the "Add Address" popup */}
       <button
@@ -96,6 +132,21 @@ const SavedAddresses = () => {
         onClose={handleClosePopup}
         onSave={handleSaveAddress}
       />
+    </div>
+  );
+};
+
+const AddressSkeleton = () => {
+  return (
+    <div className="flex flex-col space-y-4 text-sm text-gray-700 animate-pulse">
+      {/* Skeleton for key-value pair */}
+      <div className="justify-between items-center flex">
+        <div className="w-1/3 h-4 bg-gray-300 rounded"></div> {/* Skeleton for label (key) */}
+        <div className="w-2/3 h-4 bg-gray-300 rounded"></div> {/* Skeleton for value */}
+      </div>
+
+      {/* Skeleton for horizontal line */}
+      <div className="border-b border-gray-300 my-2 w-full h-px bg-gray-300"></div>
     </div>
   );
 };

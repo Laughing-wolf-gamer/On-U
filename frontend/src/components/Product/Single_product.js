@@ -5,7 +5,6 @@ import { IoIosHeartEmpty } from 'react-icons/io';
 import { Link, useNavigate } from 'react-router-dom';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
-import { useDispatch } from 'react-redux';
 
 // Memoize the component to avoid unnecessary re-renders
 const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}) => {
@@ -31,8 +30,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
             navigation(`/products/${pro._id}`)
             window.location.reload();
         }} className="w-full border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
-            <div className='w-full min-h-fit justify-center items-center'>
-                {/* Carousel */}
+            <div className='w-full min-h-[200px] justify-center items-center'>
                 <AutoSlidingCarousel pro={pro} user={user} showWishList = {showWishList} wishlist = {wishlist}/>
             </div>
 

@@ -1,33 +1,56 @@
 import React, { useState, useEffect, Fragment } from 'react';
 import { BsShieldFillCheck } from 'react-icons/bs';
-import { GrClose } from 'react-icons/gr';
 import { useSelector, useDispatch } from 'react-redux';
-import { getbag, getqtyupdate, deletebag, deleteBag, verifyingOrder } from '../../action/orderaction';
+import { getbag, getqtyupdate, deleteBag } from '../../action/orderaction';
 import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
 import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
 import './bag.css';
-import { Select } from '@mui/material';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
-import LoadingSpinner from '../Product/LoadingSpinner';
 import Emptybag from './Emptybag';
 import { BASE_API_URL, capitalizeFirstLetterOfEachWord, getLocalStorageBag, headerConfig } from '../../config';
-import { Circle, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
+import toast from 'react-hot-toast';
+import { useToast } from '../../Contaxt/ToastProvider';
+
+
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const [sessionStorageBag,setSessionStorageItems] = useState(getLocalStorageBag());
-
-
     const {allAddresses} = useSelector(state => state.getAllAddress)
+
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const[convenienceFees,setConvenienceFees] = useState(-1);
     const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
-    const alert = useAlert();
     const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
     const[totalSellingPrice,setTotalMRP] = useState(0)
     const [discountedAmount, setDiscountAmount] = useState(0);
@@ -52,7 +75,7 @@ const Bag = () => {
         // Assuming you have a function to update the user's address in the backend
         await dispatch(updateAddress(newAddress));
         await dispatch(getuser());
-        alert.success('Address added successfully');
+        checkAndCreateToast("success",'Address added successfully');
     };
 
     
@@ -215,7 +238,7 @@ const Bag = () => {
             // navigate('/processPayment');
             setShowPayment(true);
         } else {
-            alert.error('Please select a delivery address');
+            checkAndCreateToast("error",'Please select a delivery address');
         }
     };
     useEffect(() => {
@@ -225,14 +248,14 @@ const Bag = () => {
         if (user) {
 
             if (!isAuthentication) {
-                alert.info('Log in to access BAG');
+                checkAndCreateToast("info",'Log in to access BAG');
             } else {
                 dispatch(getbag({ userId: user.id }));
                 dispatch(getAddress())
             }
             setAddress(user?.user?.addresses[0]);
         }
-    }, [dispatch,deleteBagResult, user, isAuthentication, alert]);
+    }, [dispatch,deleteBagResult, user, isAuthentication]);
 
     
     const verifyAnyOrdersPayment = async()=>{
@@ -243,14 +266,14 @@ const Bag = () => {
             console.log("Verifying Order Response: ",response.data);
             sessionStorage.removeItem("checkoutData")
             if(response?.data.success){
-                alert.success("Payment Successful");
+                checkAndCreateToast("success","Payment Successful");
                 if(user){
                     setTimeout(() => {
                         dispatch(getbag({ userId: user.id }));
                     }, 1000);
                 }
             }else{
-                alert.error("Payment Failed");
+                checkAndCreateToast("error","Payment Failed");
             }
             
         } catch (error) {
@@ -276,7 +299,7 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    console.log("bag Data: ",bag);
+    // console.log("bag Data: ",bag);
     
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
@@ -432,7 +455,7 @@ const Bag = () => {
                                                 if (selectedAddress) {
                                                     placeOrder();
                                                 } else {
-                                                    alert.error('Please select a delivery address');
+                                                    checkAndCreateToast("error",'Please select a delivery address');
                                                 }
                                             }}
                                             className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
@@ -458,7 +481,7 @@ const Bag = () => {
                         </div>
                     ) : (
                         <Fragment>
-                            {bagLoading ?  <LoadingOverlay isLoading={bagLoading} />:
+                            {bagLoading ?  <SkeletonLoader />:
                                 <div className="min-h-screen flex justify-center items-center bg-slate-100">
                                     <Emptybag/>                                   
                                 </div>
@@ -574,7 +597,7 @@ const Bag = () => {
                         </div>
                     ) : (
                         <Fragment>
-                            {bagLoading ?  <LoadingOverlay isLoading={bagLoading} />:
+                            {bagLoading ?  <SkeletonLoader />:
                                 <div className="min-h-screen flex justify-center items-center bg-slate-100">
                                     <Emptybag/>                                   
                                 </div>
@@ -589,6 +612,108 @@ const Bag = () => {
         </div>
     );
 };
+
+const SkeletonLoader = () => {
+    return (
+        <Fragment>
+            <div className="relative max-w-screen-lg mx-auto">
+                {/* Step Indicator */}
+                <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
+                    <div className="flex space-x-2 text-[#696B79]">
+                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
+                        <span>--------</span>
+                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
+                        <span>--------</span>
+                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
+                    </div>
+                    <div className="flex items-center">
+                        <div className="w-8 h-8 bg-gray-300 animate-pulse rounded-full"></div>
+                        <span className="ml-2 w-24 h-3 bg-gray-300 animate-pulse"></span>
+                    </div>
+                </div>
+
+                {/* Bag and Price Details */}
+                <div className="flex flex-col lg:flex-row mt-4 gap-6">
+                    <div className="flex-1 space-y-4">
+                        {/* Loading Items */}
+                        {[...Array(3)].map((_, index) => (
+                            <div key={index} className="flex items-center border-b py-4 space-x-4">
+                                <div className="w-24 h-24 bg-gray-300 animate-pulse rounded-lg"></div>
+                                <div className="flex-1 space-y-3">
+                                    <div className="w-full h-6 bg-gray-300 animate-pulse"></div>
+                                    <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                                    <div className="flex space-x-4">
+                                        <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                                        <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                                    </div>
+                                    <div className="w-24 h-6 bg-gray-300 animate-pulse"></div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg space-y-4">
+                        {/* Price Details Skeleton */}
+                        <div className="w-32 h-4 bg-gray-300 animate-pulse"></div>
+                        <div className="flex justify-between mb-2">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex justify-between mb-2">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex justify-between mb-2">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex justify-between mb-4">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex justify-between font-semibold text-xl">
+                            <div className="w-24 h-6 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-6 bg-gray-300 animate-pulse"></div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Address List */}
+                <div className="mt-6 bg-gray-100 p-4 rounded-lg">
+                    <h3 className="font-semibold mb-2 w-24 h-4 bg-gray-300 animate-pulse"></h3>
+                    <div className="space-y-4">
+                        {[...Array(3)].map((_, index) => (
+                            <div key={index} className="p-4 border rounded-lg space-y-2">
+                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
+                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
+                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Payment Checkout Section */}
+                <div className="mt-6 bg-gray-100 p-4 rounded-lg">
+                    <h3 className="font-semibold mb-4 text-center w-32 h-4 bg-gray-300 animate-pulse"></h3>
+                    <div className="space-y-4">
+                        <div className="flex justify-between items-center">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-16 h-6 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex justify-between items-center">
+                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
+                            <div className="w-32 h-4 bg-gray-300 animate-pulse"></div>
+                        </div>
+                        <div className="flex flex-col space-y-2">
+                            <div className="w-full h-10 bg-gray-300 animate-pulse rounded-lg"></div>
+                            <div className="w-full h-10 bg-gray-300 animate-pulse rounded-lg"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </Fragment>
+    )
+}
 
 
 export default Bag;

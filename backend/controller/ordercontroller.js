@@ -255,6 +255,8 @@ export const getallOrders = A(async (req, res, next) => {
         res.status(500).json({success:false,message:"Internal server Error"});
     }
 })
+
+
 export const getOrderById = async (req, res, next) => {
     try {
         const{orderId} = req.params
@@ -318,6 +320,8 @@ export const createwishlist = async (req, res, next) => {
 export const getwishlist = async (req, res) => {
     try {
         // console.log("Get wishlist: ",req.user.id)
+        const userId = req.user.id;
+        if(!userId) return res.status(404).json({success:false,message: "No WishList Found!",wishlist:[]}); //
         const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
         console.log("All Wishlist: ", wishlist);
         res.status(200).json({
@@ -326,7 +330,8 @@ export const getwishlist = async (req, res) => {
         })
         
     } catch (error) {
-        console.error("Error getting: ",error);  
+        console.error("Error getting: ",error);
+        res.status(500).json({message: "Internal server error"});  
     }
 }
 

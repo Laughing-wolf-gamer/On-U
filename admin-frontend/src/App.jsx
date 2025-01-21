@@ -26,6 +26,7 @@ import AdminContactQueryViewPage from "./pages/admin-view/AdminContactQueryViewP
 import WarehouseAdmin from "./pages/admin-view/WarehouseAdmin"
 import AdminPrivacyPolicyPage from "./pages/admin-view/AdminPrivacyPolicyPage"
 import AdminTermsConditionsPage from "./pages/admin-view/AdminTermsConditionsPage"
+import { Toaster } from "react-hot-toast"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -84,6 +85,7 @@ function App() {
                 </Route>
                 <Route path="*" element = {<NotFound user={user} isAuthenticated={isAuthenticated}/>}/>
             </Routes>
+            <Toaster />
         </div>
     )
 }

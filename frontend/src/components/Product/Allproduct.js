@@ -13,11 +13,12 @@ import Footer from '../Footer/Footer';
 import Filter from './Filter';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
+import ProductCardSkeleton from './ProductCardSkeleton';
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
-    const { product, pro, loading, error, length } = useSelector(state => state.Allproducts);
+    const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('Recommended');
     const Redirect = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
@@ -74,14 +75,14 @@ const Allproductpage = ({user}) => {
             dispatch(clearErrors());
         }
         if (state === false) {
-            if (loading === false) {
+            if (productLoading === false) {
                 if (window.scroll > 0) {
                     document.documentElement.scrollTo = 0;
                 }
                 setstate(true);
             }
         }
-    }, [dispatch, error, state, loading, state1]);
+    }, [dispatch, error, state, productLoading, state1]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
@@ -96,7 +97,7 @@ const Allproductpage = ({user}) => {
             </div>
             <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-gray-200 text-slate-900">
                 <span className=" font1  text-sm capitalize">NO OF ITEMS</span>
-                <span className="text-gray-700 font-light">- {loading === false ? pro?.length : '...'} items</span>
+                <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
             </div>
 
             {/* Filter__title div */}
@@ -137,14 +138,21 @@ const Allproductpage = ({user}) => {
             <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 bg-slate-100 shadow-md shadow-black">
                 {/* Filter */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
-                    {loading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
+                    {productLoading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
 
                 <div className="w-full 2xl:col-span-10 xl:col-span-20 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
-                    {loading === true ? (
-                        <Loader />
+                    {productLoading === true ? (
+                        <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-5 xl:gap-5 lg:gap-5">
+                            {
+                                Array(10)
+                                .fill(0)
+                                .map((_, index) => <ProductCardSkeleton key={index} />)
+                            }
+                            
+                        </ul>
                     ) : (
-                        loading === false && (
+                        productLoading === false && (
                             <Fragment>
                                 <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-5 xl:gap-5 lg:gap-5">
                                     {pro && pro?.map((p) => (<Single_product pro={p} user={user} key={p._id} wishlist={wishlist} />))}
