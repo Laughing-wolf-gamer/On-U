@@ -9,6 +9,7 @@ import WebSiteModel from '../model/websiteData.model.js'
 import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 import { sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
+import logger from '../utilis/loggerUtils.js'
 
 export const createPaymentOrder = async (req, res, next) => {
     try {
@@ -34,65 +35,97 @@ export const createPaymentOrder = async (req, res, next) => {
 
 export const verifyPayment = async (req, res, next) => {
     try {
+        // Check for user existence
         if (!req.user) {
             return res.status(400).json({ success: false, message: "No User Found" });
         }
-        const{paymentData,SelectedAddress,orderDetails,totalAmount,bagId} = req.body;
+
+        const { paymentData, SelectedAddress, orderDetails, totalAmount, bagId } = req.body;
+
         console.log("Payment Verification Request: ", req.body);
-        console.log("Payments Data: ",bagId);
-        if(!paymentData){
-            return res.status(404).json({Success: false, message:"All Fields are required"})
+
+        // Validate if paymentData exists
+        if (!paymentData) {
+            return res.status(400).json({ success: false, message: "All Fields are required" });
         }
+
+        // Fetch payment status
         const paymentStatus = await fetchPayments(paymentData.order_id);
         console.log("Payment Status: ", paymentStatus);
-        if(!paymentStatus){
-            return res.status(404).json({Success: false, message:"Payment not found"})
+
+        // If no payment status found
+        if (!paymentStatus || paymentStatus.length === 0) {
+            return res.status(404).json({ success: false, message: "Payment not found" });
         }
-        if(paymentStatus.length > 0){
-        if(paymentStatus[0].payment_status === "SUCCESS"){
-        const bagData = await Bag.findById(bagId).populate('orderItems.productId');
-        if(bagData){
-            console.log("Bag Data: ",bagData);
-            const orderData = new OrderModel({
-                userId: req?.user?.id,
-                orderItems:orderDetails,
-                SelectedAddress: SelectedAddress,
-                TotalAmount:totalAmount,
-                paymentMode:paymentStatus[0].payment_group,
-                status:'Order Confirmed',
-            });
-        
-            await orderData.save();
-        
-            const removingAmountPromise = orderDetails.map(async item => {
-                try {
-                    console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
-                    await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
-                } catch (err) {
-                    console.error(`Error removing product: ${item?.productId?._id}`, err);
-                }
-            });
-        
-            await Promise.all(removingAmountPromise);
-        
-            // Uncomment and handle bag removal if needed
-            const bagToRemove = await Bag.findByIdAndDelete(bagId);
-            console.log("Bag Removed:", bagToRemove);
-            res.status(200).json({ success: true, message: "Order Created Successfully", result: "SUCCESS",userId:req.user?.id });
-            return;
-        }
-            }else{
-                res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
-                return;
+
+        // Check if the payment status is "SUCCESS"
+        if (paymentStatus[0].payment_status === "SUCCESS") {
+            const bagData = await Bag.findById(bagId).populate('orderItems.productId');
+
+            // If bag data exists
+            if (bagData) {
+                console.log("Bag Data: ", bagData);
+
+                // Create new order
+                const orderData = new OrderModel({
+                    userId: req.user.id,
+                    orderItems: orderDetails,
+                    SelectedAddress: SelectedAddress,
+                    TotalAmount: totalAmount,
+                    paymentMode: paymentStatus[0].payment_group,
+                    status: 'Order Confirmed',
+                });
+
+                await orderData.save();
+                console.log("Order Created Successfully: ", orderData);
+
+                // Handle product removal in parallel
+                const removeProductPromises = orderDetails.map(async (item) => {
+                    try {
+                        console.log(`Removing Product: ${item.productId._id}, Color: ${item.color.label}, Size: ${item.size}, Quantity: ${item.quantity}`);
+                        await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+                    } catch (err) {
+                        console.error(`Error removing product: ${item.productId._id}`, err);
+                    }
+                });
+
+                await Promise.all(removeProductPromises);
+
+                // Remove the bag from the database
+                await Bag.findByIdAndDelete(bagId);
+                console.log("Bag Removed: ", bagId);
+
+                return res.status(200).json({
+                    success: true,
+                    message: "Order Created Successfully",
+                    result: "SUCCESS",
+                    userId: req.user.id
+                });
             }
         }
-        res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
+
+        // Handle case where payment is not successful
+        return res.status(200).json({
+            success: true,
+            message: 'Payment Not Completed!',
+            result: "FAILED",
+            userId: req.user.id
+        });
+
     } catch (error) {
-        console.error(`Error  while verifying payment request`,error);
-        if(res.headersSent) return;
-        res.status(500).json({Success:false, message: 'Internal Server Error',userId:req.user?.id });
+        console.error('Error while verifying payment request:', error);
+
+        // Avoid sending multiple responses if headers already sent
+        if (res.headersSent) return;
+
+        return res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+            userId: req.user?.id
+        });
     }
-}
+};
+
 
 
 export const createorder = async (req, res, next) => {
@@ -190,7 +223,6 @@ const removeProduct = async(productId,color,size,quantity) => {
         product.AllColors = AllColors;
         if (product.size && product.size.length > 0) {
             let totalStock = 0;
-            // updateFields.size = activeSize
             product.size.forEach(s => {
                 let sizeStock = 0;
                 if(s.colors){
@@ -200,7 +232,6 @@ const removeProduct = async(productId,color,size,quantity) => {
                 }
                 totalStock += sizeStock;
             })
-            // console.log("Colors: ",AllColors);
             if(totalStock > 0) product.totalStock = totalStock;
         };
         await product.save();
@@ -224,8 +255,7 @@ export const getallOrders = A(async (req, res, next) => {
         res.status(500).json({success:false,message:"Internal server Error"});
     }
 })
-export const getOrderById = A(async (req, res, next) => {
-    // console.log("Order Id: ",req.params,req.user);
+export const getOrderById = async (req, res, next) => {
     try {
         const{orderId} = req.params
         if(!orderId){
@@ -244,45 +274,45 @@ export const getOrderById = A(async (req, res, next) => {
         console.error("Error Getting Order Details: ",error);
         res.status(500).json({success:false,message:"Internal server Error"});
     }
-})
+}
 
 export const createwishlist = async (req, res, next) => {
-try {
-    const id = req.user.id;
-    const{productId} = req.body;
-    console.log("Creating Wish List: ",req.body);
-    if(!id){
-        return res.status(200).json({success:false,message: "user Is Not Logged In"})
-    }
-    if(!productId) {
-        return res.status(200).json({success:false,message: "Product id Required"});
-    }
-    let previousWishList = await WhishList.findOne({userId:id})
-    // console.log("Creating Wish List: ",previousWishList);
-    if(previousWishList){
-        const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
-        if (isAlreadyPresent) {
-            console.log("Product already present",isAlreadyPresent);
-            // return res.status(409).json({ success: false, message: "Product already in wishlist" });
-            const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
-            previousWishList.orderItems.splice(index, 1);
-            await previousWishList.save();
-            return res.status(200).json({success:true,message: "Product removed from wishlist"})
+    try {
+        const id = req.user.id;
+        const{productId} = req.body;
+        console.log("Creating Wish List: ",req.body);
+        if(!id){
+            return res.status(200).json({success:false,message: "user Is Not Logged In"})
         }
-        previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
+        if(!productId) {
+            return res.status(200).json({success:false,message: "Product id Required"});
+        }
+        let previousWishList = await WhishList.findOne({userId:id})
+        // console.log("Creating Wish List: ",previousWishList);
+        if(previousWishList){
+            const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
+            if (isAlreadyPresent) {
+                console.log("Product already present",isAlreadyPresent);
+                // return res.status(409).json({ success: false, message: "Product already in wishlist" });
+                const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
+                previousWishList.orderItems.splice(index, 1);
+                await previousWishList.save();
+                return res.status(200).json({success:true,message: "Product removed from wishlist"})
+            }
+            previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
+            await previousWishList.save();
+            return res.status(200).json({success:true,message: "Product added to wishlist"})
+        }
+        previousWishList = new WhishList({userId:id, orderItems:[{
+            productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
+        }]})
         await previousWishList.save();
-        return res.status(200).json({success:true,message: "Product added to wishlist"})
+        // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
+        res.status(200).json({success:true,message: "Product added to wishlist"})
+    } catch (error) {
+        console.error("Error creating wishlist: ",error);
+        res.status(500).json({message: "Internal server error"});
     }
-    previousWishList = new WhishList({userId:id, orderItems:[{
-        productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
-    }]})
-    await previousWishList.save();
-    // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
-    res.status(200).json({success:true,message: "Product added to wishlist"})
-} catch (error) {
-    console.error("Error creating wishlist: ",error);
-    res.status(500).json({message: "Internal server error"});
-}
 }
 
 export const getwishlist = async (req, res) => {
@@ -291,8 +321,8 @@ export const getwishlist = async (req, res) => {
         const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
         console.log("All Wishlist: ", wishlist);
         res.status(200).json({
-        success:true,
-        wishlist: wishlist || []
+            success:true,
+            wishlist: wishlist || []
         })
         
     } catch (error) {
@@ -393,7 +423,7 @@ export const addItemsArrayToBag = async(req,res)=>{
             if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
             if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
             await bag.save();
-            console.log("User Bag: ",bag);
+            // console.log("User Bag: ",bag);
         }else{
             const emittingResponse = req.body.map(async (p)=>{
                 const product = FindUserBag.orderItems.find(p => p.productId._id.toString() == p.productId)
@@ -439,7 +469,7 @@ export const addItemsArrayToWishList = async(req,res)=>{
             const emitPromise = allArray.map(async(productId) =>{
                 const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
                 if (!isAlreadyPresent) {
-                previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
+                    previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
                 }
             })
             await Promise.all(emitPromise)
@@ -460,7 +490,7 @@ export const addItemsArrayToWishList = async(req,res)=>{
 
 export const addItemsToBag = async (req, res) => {
     try {
-        // console.log("Bag Body",req.body)
+        console.log("Bag Body",req.body)
         const {userId,productId,quantity,color,size} = req.body
         if(!userId || !productId || !quantity || !color || !size){
             return res.status(400).json({message: "Please provide all the required fields"})
@@ -485,35 +515,30 @@ export const addItemsToBag = async (req, res) => {
                 FindUserBag.orderItems.push({productId,quantity,color,size})
             }
             const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
-
+            console.log("Total Product Selling Price: ", totalProductSellingPrice, totalSP, totalDiscount, totalMRP)
             if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
             if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
             if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
             if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
             await FindUserBag.save()
-
-
-
-            // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
-            // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
         }
         const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
         // console.log("Bag Items: ",bag)
         res.status(200).json({success:true,message:"Successfully added Items to Bag",bag})
     } catch (error) {
-        console.error("Error Occurred during creating bag", error)
+        console.error("Error Occurred during creating bag: ", error)
         res.status(500).json({message: "Internal Server Error"})
     }
 
 }
 const getItemsData = async (bag) => {
+    console.log("getItemsData Bag Items: ",bag.orderItems)
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0;
 
     // Use for...of to handle async properly
     for (const item of bag.orderItems) {
-        const { productId, color, size, quantity } = item;
-        // console.log("Bag Item: ", item);
+        const { productId, quantity } = item;
 
         // Await the database query
         const productData = await ProductModel.findById(productId?._id || productId);
@@ -521,17 +546,17 @@ const getItemsData = async (bag) => {
 
         // Calculate item totals
         const productSellingPrice = salePrice || price;
-        const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+        const itemTotalPrice = (salePrice && salePrice > 0 ? salePrice : price) * quantity;
         totalSP += itemTotalPrice;
 
         // Calculate discount if both salePrice and price are valid
-        if (salePrice && price > 0) {
+        if (salePrice && price && price > 0) {
             const discount = price - salePrice;
             totalDiscount += discount * quantity;
         }
 
         // Add to the product selling price
-        totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+        totalProductSellingPrice += (productSellingPrice * quantity);
 
         // Add to MRP
         totalMRP += price * quantity;
@@ -545,7 +570,6 @@ const getItemsData = async (bag) => {
         const applyCouponDiscount = () => {
             if (CouponType === "Percentage") {
                 totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
-                setCouponDiscountData({});
             } else {
                 totalProductSellingPrice -= Discount;
             }
@@ -565,6 +589,10 @@ const getItemsData = async (bag) => {
             totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
         }
     }
+
+    // Optionally, if convenience fee is applied once:
+    totalProductSellingPrice += bag?.ConvenienceFees || 0;
+
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP };
 };
 
@@ -688,7 +716,7 @@ export const updateqtybag = async (req, res, next) => {
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
-        // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+        console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
         if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
         if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
@@ -705,13 +733,13 @@ export const updateqtybag = async (req, res, next) => {
 
     } catch (error) {
         console.error("Error Occurred during updating bag:", error.message);
+        logger.error("Error occured during updating bag", error.message);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
 
 
 export const deletebag = async (req, res) => {
-    // console.log("Deleting Bag: ",req.user)
     try {
         const {productId} = req.body
         const bag = await Bag.findOne({userId: req.user.id});
@@ -725,7 +753,8 @@ export const deletebag = async (req, res) => {
         res.status(200).json({success:true,message:"Successfully deleted Bag",bag})
         
     } catch (error) {
-        console.error("Error Occurred during deleting bag ", error.message)
+        console.error("Error Occurred during deleting bag ", error.message);
+        logger.error("Error occured during deleting bag", error.message);
         res.status(500).json({message: "Internal Server Error"})
     }
 }

@@ -170,18 +170,11 @@ const Ppage = () => {
     
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0;
-    /* if(error){
-      alert.error(error)
-      dispatch(clearErrors())
-    } */
     if(warning){
       alert.error(warning)
       dispatch(clearErrors())
     }
   }, [dispatch, param, alert, warning]);
-  const handleImageClick = (imageUrl) => {
-    setSelectedImage(imageUrl);
-  };
   const handleSetNewImageArray = (newSize)=>{
     console.log("selected Size: ",newSize);
     setCurrentSize(newSize);

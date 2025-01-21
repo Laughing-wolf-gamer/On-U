@@ -9,21 +9,9 @@ import Product from './routes/productroute.js';
 import Order from './routes/orderroutes.js';
 import paymentRoutes from './routes/payment.route.js';
 import razorPayRoute from './routes/razerPayPayment.route.js';
-import errorMiddleware from './Middelwares/error.js';
-import path from 'path';
-import dotenv from 'dotenv';
-// import { fileURLToPath } from "url";
 import shipRocketHookRoute from './routes/logisticRoutes.js';
-// const __dirname = path.resolve();
-
-// const __filename = fileURLToPath(import.meta.url);
-// const __dirname = path.dirname(__filename);
 
 const app = express();
-
-if (process.env.NODE_ENV !== 'PRODUCTION') {
-  dotenv.config(/* { path: "backend/config/config.env" } */);
-}
 
 app.use(express.json());
 app.use(cookieParser());

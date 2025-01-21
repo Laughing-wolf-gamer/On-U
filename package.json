@@ -22,7 +22,9 @@
     "razorpay": "^2.9.5",
     "twilio": "^5.4.1",
     "util": "^0.12.4",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "name": "e-commerce",
   "type": "module",

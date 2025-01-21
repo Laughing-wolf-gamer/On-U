@@ -6,8 +6,9 @@ import { BASE_API_URL, BASE_CLIENT_URL, DevMode, headerConfig } from "../../conf
 import { cashfree } from "../../utils/pgUtils";
 import axios from "axios";
 import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { X } from "lucide-react";
 
-const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, closePopup, user }) => {
+const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
     const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
@@ -15,7 +16,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
     const [discount, setDiscount] = useState(0);
     const [isPaymentStart, setIsPaymentStart] = useState(false);
     const alert = useAlert();
-    const originalPrice = 1000;
+    // const originalPrice = 1000;
 
     // Apply coupon discount
     const applyCoupon = async (e) => {
@@ -189,12 +190,12 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
             <div className="bg-white text-gray-900 p-6 rounded-lg relative shadow-xl w-full max-w-md mx-4 sm:mx-0">
                 {/* Header Section */}
-                <div className="w-full bg-black justify-center flex flex-col items-center shadow-md p-4 mb-6 rounded-t-lg">
+                <div className="w-full bg-black justify-center flex flex-col relative items-center shadow-md p-4 mb-6 rounded-lg ">
                     <button
                         onClick={closePopup}
-                        className="absolute top-4 right-4 text-3xl font-bold cursor-pointer text-white hover:text-gray-400"
+                        className="absolute top-2 right-2 cursor-pointer text-white hover:text-gray-400"
                     >
-                        ×
+                        <X size={20}/>
                     </button>
                     <h2 className="text-center text-2xl font-semibold text-white">Payment Details</h2>
                 </div>
@@ -257,11 +258,11 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount, clos
                 <div className="mt-6 space-y-4">
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Original Price:</span>
-                        <span>₹{originalPrice}</span>
+                        <span>₹{originalsAmount}</span>
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Discount:</span>
-                        <span>₹{discount}</span>
+                        <span>{discount}</span>
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>
