@@ -112,7 +112,7 @@ const Wishlist = () => {
                                         }} className='border-[0.5px] border-slate-300 relative'>
                                             <div className='text-xl cursor-pointer text-white bg-gray-900 rounded-full absolute right-3 top-3 z-[5] h-max w-max' onClick={(e)=>delwish(e,pro?.productId._id || pro?.productId)}><MdClear className='font-extralight '/></div>
                                             {
-                                                pro && <Single_product pro={pro?.productId?._id || pro?.productId} user = {user} showWishList = {false}/>
+                                                pro && <Single_product pro={pro?.productId || pro?.productId} user = {user} showWishList = {false}/>
                                             }
                                             
                                         </div>
