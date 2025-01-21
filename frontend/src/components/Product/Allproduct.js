@@ -13,7 +13,7 @@ import Footer from '../Footer/Footer';
 import Filter from './Filter';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
-
+const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
@@ -112,78 +112,99 @@ const Allproductpage = ({user}) => {
                             </span>
                         </div>
 
-                        <div className='text-sm w-max pl-5 py-2 mt-12 hover:bg-gray-200' onClick={() => (datefun(1), setSortValue('What`s New'))}>
+                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={() => (datefun(1), setSortValue('What`s New'))}>
                             <span className='font1 text-gray-800'>What`s New</span>
                         </div>
-                        <div className='text-sm w-max pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Popularity'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Popularity'))}>
                             <span className='font1 text-gray-800'>Popularity</span>
                         </div>
-                        <div className='text-sm w-max pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Better Discount'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Better Discount'))}>
                             <span className='font1 text-gray-800'>Better Discount</span>
                         </div>
-                        <div className='text-sm w-max pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Price: High To Low'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Price: High To Low'))}>
                             <span className='font1 text-gray-800'>Price: High To Low</span>
                         </div>
-                        <div className='text-sm w-max pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(1), setSortValue('Price: Low To High'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(1), setSortValue('Price: Low To High'))}>
                             <span className='font1 text-gray-800'>Price: Low To High</span>
                         </div>
-                        <div className='text-sm w-max pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Customer Rating'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Customer Rating'))}>
                             <span className='font1 text-gray-800'>Customer Rating</span>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div className='w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 mb-10 bg-gray-900'>
+            <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 bg-slate-100 shadow-md shadow-black">
                 {/* Filter */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
                     {loading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
-                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-slate-200 text-slate-900">
-                    {loading === true ? (<Loader />) :
-                        (loading === false &&
-                            <Fragment>
-                                <ul className='grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-10 xl:gap-10 lg:gap-10 '>
-                                    {pro && pro?.map((p) => (<Single_product pro={p} user = {user} key={p._id} wishlist = {wishlist}/>))}
-                                </ul>
-                                {window.screen.width >= 1024 && length && length > 50 &&
-                                    <div className='paginationBox font1 border-t-[1px] border-gray-700 py-4 hidden 2xl:block xl:block lg:block relative'>
-                                        <span className='left-0 absolute text-sm text-gray-500'>Page {currentPage} of {Math.ceil(length / 50)}</span>
-                                        {currentPage === 1 ? "" :
-                                            <button className='mr-10 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black' onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}>
-                                                <IoIosArrowBack /><h1>Previous</h1>
-                                            </button>
-                                        }
 
-                                        <Pagination
-                                            activePage={currentPage}
-                                            itemsCountPerPage={50}
-                                            totalItemsCount={length}
-                                            onChange={setCurrentPageNo}
-                                            nextPageText={false}
-                                            prevPageText={false}
-                                            firstPageText={false}
-                                            lastPageText={false}
-                                            itemClassFirst='hidden'
-                                            itemClassPrev='hidden'
-                                            itemClassNext='hidden'
-                                            itemClassLast='hidden'
-                                            itemClass="page-item"
-                                            linkClass="page-link"
-                                            activeClass="pageItemActive"
-                                            activeLinkClass="pageLinkActive"
-                                        />
-                                        {currentPage === Math.ceil(length / 50) ? '' :
-                                            <button className='ml-10 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black' onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}>
-                                                <h1>Next</h1> <IoIosArrowForward />
-                                            </button>
-                                        }
-                                    </div>
-                                }
+                <div className="w-full 2xl:col-span-10 xl:col-span-20 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                    {loading === true ? (
+                        <Loader />
+                    ) : (
+                        loading === false && (
+                            <Fragment>
+                                <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-5 xl:gap-5 lg:gap-5">
+                                    {pro && pro?.map((p) => (<Single_product pro={p} user={user} key={p._id} wishlist={wishlist} />))}
+                                </ul>
+
+                                <div className="paginationBox font1 border-t-[1px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+
+                                    {/* Pagination Info */}
+                                    <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
+                                        Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
+                                    </span>
+
+                                    {/* Previous Button */}
+                                    {currentPage === 1 ? "" : (
+                                        <button
+                                            className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                            onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}
+                                        >
+                                            <IoIosArrowBack /><h1>Previous</h1>
+                                        </button>
+                                    )}
+
+                                    {/* Pagination Component */}
+                                    <Pagination
+                                        activePage={currentPage}
+                                        itemsCountPerPage={maxAmountPerPage}
+                                        totalItemsCount={length}
+                                        onChange={setCurrentPageNo}
+                                        nextPageText={false}
+                                        prevPageText={false}
+                                        firstPageText={false}
+                                        lastPageText={false}
+                                        itemClassFirst="hidden"
+                                        itemClassPrev="hidden"
+                                        itemClassNext="hidden"
+                                        itemClassLast="hidden"
+                                        itemClass="page-item"
+                                        linkClass="page-link"
+                                        activeClass="pageItemActive"
+                                        activeLinkClass="pageLinkActive"
+                                    />
+
+                                    {/* Next Button */}
+                                    {currentPage === Math.ceil(length / maxAmountPerPage) ? '' : (
+                                        <button
+                                            className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                            onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}
+                                        >
+                                            <h1>Next</h1> <IoIosArrowForward />
+                                        </button>
+                                    )}
+                                </div>
+                                {/* {length && length > maxAmountPerPage && (
+                                )} */}
                             </Fragment>
-                        )}
+                        )
+                    )}
                 </div>
             </div>
+
             {(window.screen.width < 1024 && product) && <MFilter product={product} />}
             <Footer />
         </div>

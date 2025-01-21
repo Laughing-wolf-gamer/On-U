@@ -175,7 +175,7 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
               <Heart fill="red" className="text-red-500" />
             </div>
           ) : (
-            <div className="transition duration-300 ease-out hover:translate-y-1">
+            <div className="transition duration-300 ease-out focus:translate-y-2 hover:translate-y-1">
               <Heart fill="white" className="text-white" />
             </div>
           )}

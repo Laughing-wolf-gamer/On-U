@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';
-import { getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem } from '../../config';
+import { getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo } from '../../config';
 import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../action/orderaction';
 
 const Login = () => {
@@ -69,8 +69,13 @@ const Login = () => {
     const wishListData = getLocalStorageWishListItem();
     console.log("After Login Wishlist data: ", wishListData);
     if(wishListData){
-      dispatch(createAndSendProductsArrayWishList(wishListData));
-      // sessionStorage.setItem("bagItem", JSON.stringify([]));
+      const response =  dispatch(createAndSendProductsArrayWishList(wishListData));
+      if(response){
+        if(response.success){
+            // sessionStorage.setItem("bagItem", JSON.stringify([]));
+            sessionStorage.setItem("wishListItem", JSON.stringify([]));
+        }
+      }
     }
   }
   const checkSavedBagData = async()=>{
@@ -134,34 +139,34 @@ const Login = () => {
       {/* OTP Modal */}
       {otpData && (
         <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-[90%] sm:w-[80%] md:w-[60%] max-w-lg">
+            <div className="bg-white p-8 shadow-xl w-[90%] sm:w-[80%] md:w-[60%] max-w-lg">
             <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Enter OTP</h2>
 
             <input
-              type="number"
-              maxLength={6}
-              className="w-full p-4 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-4 focus:ring-gray-400 mb-4 text-lg placeholder-gray-400"
-              onChange={handleOtpChange}
-              value={otp}
-              placeholder="Enter OTP"
+                type="number"
+                maxLength={6}
+                className="w-full p-4 border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-400 mb-4 text-lg placeholder-gray-400"
+                onChange={handleOtpChange}
+                value={otp}
+                placeholder="Enter OTP"
             />
             <div className="flex justify-between gap-4">
-              <button
-                className="w-[48%] py-3 bg-gray-600 text-white font-semibold rounded-lg shadow-md hover:bg-gray-700 transition duration-200"
+                <button
+                className="w-[48%] py-3 bg-gray-600 text-white font-semibold shadow-md hover:bg-gray-700 transition duration-200"
                 onClick={handleOtpVerify}
-              >
+                >
                 Verify OTP
-              </button>
-              <button
-                className="w-[48%] py-3 bg-gray-500 text-white font-semibold rounded-lg shadow-md hover:bg-gray-600 transition duration-200"
+                </button>
+                <button
+                className="w-[48%] py-3 bg-gray-500 text-white font-semibold shadow-md hover:bg-gray-600 transition duration-200"
                 onClick={handleCloseOtpModal}
-              >
+                >
                 Close
-              </button>
+                </button>
             </div>
-          </div>
+            </div>
         </div>
-      )}
+        )}
     </Fragment>
   );
 };

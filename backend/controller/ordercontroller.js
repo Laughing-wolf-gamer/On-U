@@ -590,7 +590,7 @@ export const getbag = async (req, res) => {
 
     
     // Fetch all products from the bag's orderItems at once (reduce redundant DB calls)
-    const productIds = bag.orderItems.map(o => o.productId?._id || o.productId);// returns an array;
+    const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString());// returns an array;
     console.log("Bag Items: ", productIds);
     const products = await ProductModel.find({ _id: { $in: productIds } });
 

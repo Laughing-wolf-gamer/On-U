@@ -9,6 +9,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
   
     let category = [];
     let subcategory = [];
+    let size = []
     let gender = [];
     let color = [];
     let spARRAY = [];
@@ -31,6 +32,17 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             product.forEach(p => gender.push(p.gender));
         }
     };
+    function sizearray() {
+        if (product && product.length > 0) {
+          product.forEach(p => {
+            if(p){
+              p.size.forEach(s => {
+                size.push(s.label);
+              })
+            }
+          });
+        }
+      }
 
     const colorarray = () => {
         if (product && product.length > 0) {
@@ -366,15 +378,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
-                {/* {
-                    spARRAY.length > 1 && <Fragment>
-                        <PriceSlider spARRAY={spARRAY}/>
-                    </Fragment>
-                } */}
-
-                {/* Clear All Filters Button */}
-                <button className='bg-slate-200 text-gray-700 p-2 h-10 text-center mx-auto mt-5 justify-center items-center flex w-[50%] rounded-[10px]' onClick={clearAllFilters}>
-                    <span className='w-full h-full text-center'>Clear All Filters</span>
+                <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
+                    <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>
             </div>
         </Fragment>

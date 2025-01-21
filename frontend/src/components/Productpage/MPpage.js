@@ -304,6 +304,7 @@ const MPpage = () => {
         isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
         isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
     }
+    console.log("Current Scroll Amount:",scrollAmount,"Max Scroll Amount:",maxScrollAmount);
     return (
         <Fragment>
             
@@ -312,7 +313,7 @@ const MPpage = () => {
                 {loading === false ? (
                     <div>
                         {
-                            scrollAmount < maxScrollAmount && <div className={`mobilevisible fixed bottom-0 w-full z-20 hidden`}>
+                            scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-20 hidden`}>
                                 <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>

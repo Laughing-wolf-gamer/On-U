@@ -66,7 +66,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
             </div>
 
             {/* Hover Details */}
-            <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-slate-400 transition-all duration-300 ease-in-out`}>
+            <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-white transition-all duration-300 ease-in-out`}>
                 <div className="w-12/12 text-center flex items-center justify-center py-1 font1 border-[1px] border-slate-300 cursor-pointer hover:bg-[#f26a10] hover:text-white">
                     <IoIosHeartEmpty className="text-lg mr-1" />
                     <span>ADD TO CART</span>

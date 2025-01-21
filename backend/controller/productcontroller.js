@@ -163,45 +163,45 @@ export const getallproducts = A(async (req, res)=>{
                 };
             }
         }
-        console.log("Filter: ", filter);
+        // console.log("Filter: ", filter);
         // const { page = 1} = req.query; // Default to page 1 and limit 10
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments(filter);
         // Parse page and limit as integers
-        if(Number(req.query.width) >= 1024){
-            let itemsPerPage = 50;
-            const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+        /* if(Number(req.query.width) >= 1024){
+        } */
+        let itemsPerPage = 20;
+        const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
 
-            // Calculate the number of items to skip
-            const skip = (currentPage - 1) * itemsPerPage;
-            
-            // Get total count of products matching the filter
-            
+        // Calculate the number of items to skip
+        const skip = (currentPage - 1) * itemsPerPage;
+        
+        // Get total count of products matching the filter
+        
 
-            // Calculate total pages
-            const totalPages = Math.ceil(totalProducts / itemsPerPage);
-            console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
+        // Calculate total pages
+        const totalPages = Math.ceil(totalProducts / itemsPerPage);
+        console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
 
-            // Fetch paginated products
-            const products = await ProductModel.find(filter)
-                .sort(sort)
-                .limit(itemsPerPage)
-                .skip(skip);
-            // console.log("Fetched Products: ", products);
-            return res.status(200).json({
-                products: allProducts,
-                pro:products,
-                length: totalProducts
-            });
-        }
-        // Find products using the built query filter
+        // Fetch paginated products
+        const productsPagination = await ProductModel.find(filter)
+            .sort(sort)
+            .limit(itemsPerPage)
+            .skip(skip);
+        // console.log("Fetched Products: ", products);
+        return res.status(200).json({
+            products: allProducts,
+            pro:productsPagination,
+            length: totalProducts
+        });
+        /* // Find products using the built query filter  Testing...................$$$$$
         const products = await ProductModel.find(filter).sort(sort);
         // console.log("Fetched Products: ", products);
         return res.status(200).json({
             products: allProducts,
             pro:products,
             length: totalProducts
-        });
+        }); */
     } catch (error) {
         console.error("Error Fetching Products: ",error);
         res.status(500).json({success:false,message:'Internal server Error',result:{
