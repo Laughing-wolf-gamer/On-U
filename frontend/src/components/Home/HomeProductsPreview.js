@@ -134,7 +134,7 @@ const HomeProductsPreview = ({ product }) => {
                     <div className="absolute right-0 top-4 transform z-20 w-fit h-8 p-3 justify-center items-center flex bg-gray-300 animate-pulse rounded-tl-lg rounded-bl-lg"></div> // Skeleton discount badge
                 ) : (
                     <div
-                        className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-7 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
+                        className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
                     >
                         <span className="font-semibold text-center text-[10px] md:text-xs">{amount}% OFF</span>
                     </div>
