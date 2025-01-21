@@ -14,7 +14,7 @@ export const createPaymentOrder = async (req, res, next) => {
     try {
         console.log("Order User ID:", req.user?.id);
         if (!req.user) {
-        return res.status(400).json({ success: false, message: "No User Found" });
+            return res.status(400).json({ success: false, message: "No User Found" });
         }
         
         const { bagId, orderItems, totalAmount,address, paymentMode, orderStatus } = req.body;
@@ -22,10 +22,8 @@ export const createPaymentOrder = async (req, res, next) => {
         
         console.log("orderRecept Data: ", orderData);
         if (!orderData) {
-        return res.status(400).json({ success: false, message: "Please Provide All the Data" });
+            return res.status(400).json({ success: false, message: "Please Provide All the Data" });
         }
-
-        ;
         res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
 
     } catch (error) {
@@ -88,7 +86,7 @@ export const verifyPayment = async (req, res, next) => {
                 return;
             }
         }
-    res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
+        res.status(200).json({Success: true, message: 'Payment Not Completed!',result: "FAILED",userId:req.user?.id });
     } catch (error) {
         console.error(`Error  while verifying payment request`,error);
         if(res.headersSent) return;
@@ -160,93 +158,92 @@ export const createorder = async (req, res, next) => {
 
 
 const removeProduct = async(productId,color,size,quantity) => {
-try {
-    const product = await ProductModel.findById(productId);
-    if(!product) {
-    console.log("Product Not Found: ",productId);
-    return
-    } ;
-    const activeSize = product.size.find(s => s?.label == size);
-    if(!activeSize) {
-    console.log("Size Not Found: ",size);
-    return
-    }
-    const activeColor = activeSize.colors.find(c => c?.label == color);
-    if(!activeColor) {
-    console.log("Color Not Found: ",color);
-    return
-    }
-    const colorReducedAmount = activeColor.quantity - quantity
-    const sizeReducedAmount = activeSize.quantity - quantity
-    console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
-    activeColor.quantity = colorReducedAmount;
-    activeSize.quantity = sizeReducedAmount;
-    const AllColors = []
-    product.size.forEach(s => {
-    if(s.colors){
-        s.colors.forEach(c => {
-        AllColors.push(c);
-        });
-    }
-    });
-    product.AllColors = AllColors;
-    if (product.size && product.size.length > 0) {
-    let totalStock = 0;
-    // updateFields.size = activeSize
-    product.size.forEach(s => {
-        let sizeStock = 0;
-        if(s.colors){
-            s.colors.forEach(c => {
-                sizeStock += c.quantity;
-            });
+    try {
+        const product = await ProductModel.findById(productId);
+        if(!product) {
+            console.log("Product Not Found: ",productId);
+            return
+        };
+        const activeSize = product.size.find(s => s?.label == size);
+        if(!activeSize) {
+            console.log("Size Not Found: ",size);
+            return
         }
-        totalStock += sizeStock;
-    })
-    // console.log("Colors: ",AllColors);
-    if(totalStock > 0) product.totalStock = totalStock;
-    };
-    await product.save();
-    console.log("Product Updated: ",product);
-} catch (error) {
-    console.error("Error Removing Product: ",error)
-}
+        const activeColor = activeSize.colors.find(c => c?.label == color);
+        if(!activeColor) {
+            console.log("Color Not Found: ",color);
+            return
+        }
+        const colorReducedAmount = activeColor.quantity - quantity
+        const sizeReducedAmount = activeSize.quantity - quantity
+        console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
+        activeColor.quantity = colorReducedAmount;
+        activeSize.quantity = sizeReducedAmount;
+        const AllColors = []
+        product.size.forEach(s => {
+            if(s.colors){
+                s.colors.forEach(c => {
+                    AllColors.push(c);
+                });
+            }
+        });
+        product.AllColors = AllColors;
+        if (product.size && product.size.length > 0) {
+            let totalStock = 0;
+            // updateFields.size = activeSize
+            product.size.forEach(s => {
+                let sizeStock = 0;
+                if(s.colors){
+                    s.colors.forEach(c => {
+                        sizeStock += c.quantity;
+                    });
+                }
+                totalStock += sizeStock;
+            })
+            // console.log("Colors: ",AllColors);
+            if(totalStock > 0) product.totalStock = totalStock;
+        };
+        await product.save();
+        console.log("Product Updated: ",product);
+    } catch (error) {
+        console.error("Error Removing Product: ",error)
+    }
 }
 export const getallOrders = A(async (req, res, next) => {
-try {
-    console.log("Order User",req.user);  
-    if(!req.user){
-    return res.status(400).json({success:false,message:"No User Found!",result:[]});
+    try {
+        console.log("Order User",req.user);  
+        if(!req.user){
+            return res.status(400).json({success:false,message:"No User Found!",result:[]});
+        }
+        const orders = await OrderModel.find({userId:req.user.id});
+        
+        res.status(200).json({success:true,message:"Successfully Fetched Orders",result:orders || []})
+
+    } catch (error) {
+        console.error("Error Fetching Orders...",error)
+        res.status(500).json({success:false,message:"Internal server Error"});
     }
-    const orders = await OrderModel.find({userId:req.user.id});
-    
-    res.status(200).json({success:true,message:"Successfully Fetched Orders",result:orders || []})
-
-} catch (error) {
-    console.error("Error Fetching Orders...",error)
-    res.status(500).json({success:false,message:"Internal server Error"});
-}
-
 })
 export const getOrderById = A(async (req, res, next) => {
-// console.log("Order Id: ",req.params,req.user);
-try {
-    const{orderId} = req.params
-    if(!orderId){
-    return res.status(404).json({success:false,message:"Please Provide OrderId: ",result:null})
+    // console.log("Order Id: ",req.params,req.user);
+    try {
+        const{orderId} = req.params
+        if(!orderId){
+            return res.status(404).json({success:false,message:"Please Provide OrderId: ",result:null})
+        }
+        if(!req.user){
+            return res.status(404).json({success:false,message:"Please Provide User: ",result:null})
+        }
+        const order = await OrderModel.findById(orderId);
+        if(order.userId.toString() !== req.user.id){
+            return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
+        }
+        res.status(200).json({success:true,message:"Found Order",result:order});
+        
+    } catch (error) {
+        console.error("Error Getting Order Details: ",error);
+        res.status(500).json({success:false,message:"Internal server Error"});
     }
-    if(!req.user){
-    return res.status(404).json({success:false,message:"Please Provide User: ",result:null})
-    }
-    const order = await OrderModel.findById(orderId);
-    if(order.userId.toString() !== req.user.id){
-    return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
-    }
-    res.status(200).json({success:true,message:"Found Order",result:order});
-    
-} catch (error) {
-    console.error("Error Getting Order Details: ",error);
-    res.status(500).json({success:false,message:"Internal server Error"});
-}
 })
 
 export const createwishlist = async (req, res, next) => {
@@ -255,29 +252,29 @@ try {
     const{productId} = req.body;
     console.log("Creating Wish List: ",req.body);
     if(!id){
-    return res.status(200).json({success:false,message: "user Is Not Logged In"})
+        return res.status(200).json({success:false,message: "user Is Not Logged In"})
     }
     if(!productId) {
-    return res.status(200).json({success:false,message: "Product id Required"});
+        return res.status(200).json({success:false,message: "Product id Required"});
     }
     let previousWishList = await WhishList.findOne({userId:id})
     // console.log("Creating Wish List: ",previousWishList);
     if(previousWishList){
-    const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
-    if (isAlreadyPresent) {
-        console.log("Product already present",isAlreadyPresent);
-        // return res.status(409).json({ success: false, message: "Product already in wishlist" });
-        const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
-        previousWishList.orderItems.splice(index, 1);
+        const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
+        if (isAlreadyPresent) {
+            console.log("Product already present",isAlreadyPresent);
+            // return res.status(409).json({ success: false, message: "Product already in wishlist" });
+            const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
+            previousWishList.orderItems.splice(index, 1);
+            await previousWishList.save();
+            return res.status(200).json({success:true,message: "Product removed from wishlist"})
+        }
+        previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
         await previousWishList.save();
-        return res.status(200).json({success:true,message: "Product removed from wishlist"})
-    }
-    previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
-    await previousWishList.save();
-    return res.status(200).json({success:true,message: "Product added to wishlist"})
+        return res.status(200).json({success:true,message: "Product added to wishlist"})
     }
     previousWishList = new WhishList({userId:id, orderItems:[{
-    productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
+        productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
     }]})
     await previousWishList.save();
     // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
@@ -289,288 +286,286 @@ try {
 }
 
 export const getwishlist = async (req, res) => {
-try {
-    // console.log("Get wishlist: ",req.user.id)
-    const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
-    console.log("All Wishlist: ", wishlist);
-    res.status(200).json({
-    success:true,
-    wishlist: wishlist || []
-    })
-    
-} catch (error) {
-    console.error("Error getting: ",error);  
-}
+    try {
+        // console.log("Get wishlist: ",req.user.id)
+        const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
+        console.log("All Wishlist: ", wishlist);
+        res.status(200).json({
+        success:true,
+        wishlist: wishlist || []
+        })
+        
+    } catch (error) {
+        console.error("Error getting: ",error);  
+    }
 }
 
 export const applyCouponToBag = async(req,res)=>{
-try {
-    const{id} = req.user;
-    const{bagId} = req.params;
-    const{couponCode} = req.body;
-    
-    const coupon = await Coupon.findOne({CouponCode: couponCode});
-    console.log("Coupon Code: ",coupon)
-    if(!coupon){
-    return res.status(404).json({message: "Coupon Not Found"})
+    try {
+        const{id} = req.user;
+        const{bagId} = req.params;
+        const{couponCode} = req.body;
+        
+        const coupon = await Coupon.findOne({CouponCode: couponCode});
+        console.log("Coupon Code: ",coupon)
+        if(!coupon){
+            return res.status(404).json({message: "Coupon Not Found"})
+        }
+        if (coupon.ValidDate < Date.now()) {
+            return res.status(400).json({ message: "Coupon is expired" });
+        }
+        const bag = await  Bag.findById(bagId);
+        console.error("Coupon bag",bag);
+        if(!bag){
+            return res.status(404).json({message: "Bag Not Found"})
+        }
+        if(bag.Coupon){
+            return res.status(400).json({message: "Bag already has a coupon"})
+        }
+        if(bag.userId.toString() !== id){
+            return res.status(400).json({message: "Coupon cannot be applied to this bag"})
+        }
+        bag.Coupon = coupon._id;
+        coupon.Status = "Inactive";
+        
+        await Promise.all([
+            coupon.save(),
+            bag.save()
+        ])
+        res.status(200).json({success:true,message: "Coupon Applied Successfully"})
+    } catch (error) {
+        console.error("Failed to apply coupon: ",error);
+        res.status(500).json({success:false,message:"Internal server error"});
     }
-    if (coupon.ValidDate < Date.now()) {
-    return res.status(400).json({ message: "Coupon is expired" });
-    }
-    const bag = await  Bag.findById(bagId);
-    console.error("Coupon bag",bag);
-    if(!bag){
-    return res.status(404).json({message: "Bag Not Found"})
-    }
-    if(bag.Coupon){
-    return res.status(400).json({message: "Bag already has a coupon"})
-    }
-    if(bag.userId.toString() !== id){
-    return res.status(400).json({message: "Coupon cannot be applied to this bag"})
-    }
-    bag.Coupon = coupon._id;
-    coupon.Status = "Inactive";
-    
-    await Promise.all([
-    coupon.save(),
-    bag.save()
-    ])
-    res.status(200).json({success:true,message: "Coupon Applied Successfully"})
-} catch (error) {
-    console.error("Failed to apply coupon: ",error);
-    res.status(500).json({success:false,message:"Internal server error"});
-}
 
 }
 export const removeCouponToBag = async(req,res)=>{
-try {
-    const{id} = req.user;
-    const{bagId} = req.params;
-    const{couponCode} = req.body;
-    const bag = await Bag.findById(bagId).populate("Coupon");
-    console.error("Coupon bag",bag);
-    if(!bag){
-    return res.status(404).json({message: "Bag Not Found"})
+    try {
+        const{id} = req.user;
+        const{bagId} = req.params;
+        const{couponCode} = req.body;
+        const bag = await Bag.findById(bagId).populate("Coupon");
+        // console.error("Coupon bag",bag);
+        if(!bag){
+            return res.status(404).json({message: "Bag Not Found"})
+        }
+        
+        const coupon = await Coupon.findOne({CouponCode: couponCode});
+        console.log("Coupon Code: ",coupon)
+        if(!coupon){
+            return res.status(404).json({message: "Coupon Not Found"})
+        }
+        if(!bag.Coupon){
+            return res.status(400).json({message: "No Coupon Found"})
+        }
+        if(bag.userId.toString() !== id){
+            return res.status(400).json({message: "Coupon cannot be applied to this bag"})
+        }
+        bag.Coupon = null;
+        coupon.Status = "Active";
+        
+        await Promise.all([
+            coupon.save(),
+            bag.save()
+        ])
+        res.status(200).json({success:true,message: "Coupon Removed Successfully"})
+    } catch (error) {
+        console.error("Failed to apply coupon: ",error);
+        res.status(500).json({success:false,message:"Internal server error"});
     }
-    
-    const coupon = await Coupon.findOne({CouponCode: couponCode});
-    console.log("Coupon Code: ",coupon)
-    if(!coupon){
-    return res.status(404).json({message: "Coupon Not Found"})
-    }
-    if(!bag.Coupon){
-    return res.status(400).json({message: "No Coupon Found"})
-    }
-    if(bag.userId.toString() !== id){
-    return res.status(400).json({message: "Coupon cannot be applied to this bag"})
-    }
-    bag.Coupon = null;
-    coupon.Status = "Active";
-    
-    await Promise.all([
-    coupon.save(),
-    bag.save()
-    ])
-    res.status(200).json({success:true,message: "Coupon Removed Successfully"})
-} catch (error) {
-    console.error("Failed to apply coupon: ",error);
-    res.status(500).json({success:false,message:"Internal server error"});
-}
 
 }
 
 export const addItemsArrayToBag = async(req,res)=>{
-try {
-    console.log("Bag Array: ",req.body);
-    const userId = req.user.id;
-    if(!userId){
-    return res.status(400).json({message: "User Not Logged In"})
-    }
-    const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
-    const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
-    if(!FindUserBag){
-    const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:req.body.map(p => ({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size}))})
-    const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
-    if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
-    if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
-    if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-    if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
-    await bag.save();
-    console.log("User Bag: ",bag);
-    }else{
-    const emittingResponse = req.body.map(async (p)=>{
-        const product = FindUserBag.orderItems.find(p => p.productId._id.toString() == p.productId)
-        if(product){
-        product.quantity = product.quantity + p.quantity
-        }else{
-        FindUserBag.orderItems.push({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size})
+    try {
+        console.log("Bag Array: ",req.body);
+        const userId = req.user.id;
+        if(!userId){
+            return res.status(400).json({message: "User Not Logged In"})
         }
-        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+        const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
+        const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
+        if(!FindUserBag){
+            const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:req.body.map(p => ({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size}))})
+            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+            if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
+            if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+            if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
+            if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+            await bag.save();
+            console.log("User Bag: ",bag);
+        }else{
+            const emittingResponse = req.body.map(async (p)=>{
+                const product = FindUserBag.orderItems.find(p => p.productId._id.toString() == p.productId)
+                if(product){
+                    if(product.quantity !== p.quantity){
+                        product.quantity = product.quantity + p.quantity
+                    }
+                }else{
+                    FindUserBag.orderItems.push({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size})
+                }
+                const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
 
-        if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
-        if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
-        if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
-        if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
-    })
-    await Promise.all(emittingResponse)
-    await FindUserBag.save()
+                if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
+                if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
+                if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
+                if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
+            })
+            await Promise.all(emittingResponse)
+            await FindUserBag.save()
+        }
+        // const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
+        console.log("User Bag: ",FindUserBag);
+        res.status(200).json({success:true,message: "Items added to bag"})
+    } catch (error) {
+        console.error("Failed to add items array: ",error);
+        res.status(500).json({success:false,message:"Internal server error",});
     }
-    // const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
-    console.log("User Bag: ",FindUserBag);
-    res.status(200).json({success:true,message: "Items added to bag"})
-} catch (error) {
-    console.error("Failed to add items array: ",error);
-    res.status(500).json({success:false,message:"Internal server error",});
-}
 }
 export const addItemsArrayToWishList = async(req,res)=>{
-try {
-    const userId = req.user.id;
-    const{productIdArray} = req.body;
-    console.log("Wish list Array: ",productIdArray);
-    if(!productIdArray){
-    return res.status(200).json({success:false,message: "Product Array Not Found"})
-    }
-    let previousWishList = await WhishList.findOne({userId:userId})
-    const allArray = productIdArray.map((p => p.productId._id));
-    console.log("Saved wishList: ",allArray.map(p => ({
-        productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
-    })));
-    if(previousWishList){
-        const emitPromise = allArray.map(async(productId) =>{
-            const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
-            if (!isAlreadyPresent) {
-            previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
-            }
-        })
-        await Promise.all(emitPromise)
+    try {
+        const userId = req.user.id;
+        const{productIdArray} = req.body;
+        console.log("Wish list Array: ",productIdArray);
+        if(!productIdArray){
+            return res.status(200).json({success:false,message: "Product Array Not Found"})
+        }
+        let previousWishList = await WhishList.findOne({userId:userId})
+        const allArray = productIdArray.map((p => p.productId._id));
+        console.log("Saved wishList: ",allArray.map(p => ({
+            productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
+        })));
+        if(previousWishList){
+            const emitPromise = allArray.map(async(productId) =>{
+                const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
+                if (!isAlreadyPresent) {
+                previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
+                }
+            })
+            await Promise.all(emitPromise)
+            await previousWishList.save();
+            res.status(200).json({success:true,message: "Items added to Wish List"})
+            return;
+        }
+        previousWishList = new WhishList({userId:userId, orderItems:allArray.map(p => ({
+            productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
+        }))})
         await previousWishList.save();
         res.status(200).json({success:true,message: "Items added to Wish List"})
-        return;
+    } catch (error) {
+        console.error("Failed to add items array: ",error);
+        res.status(500).json({success:false,message:"Internal server error",});
     }
-    previousWishList = new WhishList({userId:userId, orderItems:allArray.map(p => ({
-    productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
-    }))})
-    await previousWishList.save();
-    res.status(200).json({success:true,message: "Items added to Wish List"})
-} catch (error) {
-    console.error("Failed to add items array: ",error);
-    res.status(500).json({success:false,message:"Internal server error",});
-}
 }
 
 export const addItemsToBag = async (req, res) => {
-try {
-    // console.log("Bag Body",req.body)
-    const {userId,productId,quantity,color,size} = req.body
-    if(!userId || !productId || !quantity || !color || !size){
-    return res.status(400).json({message: "Please provide all the required fields"})
+    try {
+        // console.log("Bag Body",req.body)
+        const {userId,productId,quantity,color,size} = req.body
+        if(!userId || !productId || !quantity || !color || !size){
+            return res.status(400).json({message: "Please provide all the required fields"})
+        }
+        
+        const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
+        if(!FindUserBag){
+            const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
+            const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
+            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+            if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
+            if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+            if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
+            if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+            
+            await bag.save();
+        }else{
+            const product = FindUserBag.orderItems.find(p => p.productId._id == productId)
+            if(product){
+                product.quantity = product.quantity + quantity
+            }else{
+                FindUserBag.orderItems.push({productId,quantity,color,size})
+            }
+            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+
+            if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
+            if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
+            if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
+            if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
+            await FindUserBag.save()
+
+
+
+            // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+            // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+        }
+        const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
+        // console.log("Bag Items: ",bag)
+        res.status(200).json({success:true,message:"Successfully added Items to Bag",bag})
+    } catch (error) {
+        console.error("Error Occurred during creating bag", error)
+        res.status(500).json({message: "Internal Server Error"})
     }
-    
-    const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
-    if(!FindUserBag){
-
-    const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
-    const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
-    const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
-    if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
-    if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
-    if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-    if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
-
-
-    await bag.save();
-    }else{
-    const product = FindUserBag.orderItems.find(p => p.productId._id == productId)
-    if(product){
-        product.quantity = product.quantity + quantity
-    }else{
-        FindUserBag.orderItems.push({productId,quantity,color,size})
-    }
-    const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
-
-    if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
-    if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
-    if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
-    if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
-    await FindUserBag.save()
-
-
-
-    // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
-    // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
-    }
-    const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
-    // console.log("Bag Items: ",bag)
-    res.status(200).json({success:true,message:"Successfully added Items to Bag",bag})
-} catch (error) {
-    console.error("Error Occurred during creating bag", error)
-    res.status(500).json({message: "Internal Server Error"})
-}
 
 }
 const getItemsData = async (bag) => {
-let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-let totalMRP = 0;
+    let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+    let totalMRP = 0;
 
-// Use for...of to handle async properly
-for (const item of bag.orderItems) {
-    const { productId, color, size, quantity } = item;
-    // console.log("Bag Item: ", item);
+    // Use for...of to handle async properly
+    for (const item of bag.orderItems) {
+        const { productId, color, size, quantity } = item;
+        // console.log("Bag Item: ", item);
 
-    // Await the database query
-    const productData = await ProductModel.findById(productId?._id || productId);
-    const { salePrice, price } = productData;
+        // Await the database query
+        const productData = await ProductModel.findById(productId?._id || productId);
+        const { salePrice, price } = productData;
 
-    // Calculate item totals
-    const productSellingPrice = salePrice || price;
-    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-    totalSP += itemTotalPrice;
+        // Calculate item totals
+        const productSellingPrice = salePrice || price;
+        const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+        totalSP += itemTotalPrice;
 
-    // Calculate discount if both salePrice and price are valid
-    if (salePrice && price > 0) {
-        const discount = price - salePrice;
-        totalDiscount += discount * quantity;
+        // Calculate discount if both salePrice and price are valid
+        if (salePrice && price > 0) {
+            const discount = price - salePrice;
+            totalDiscount += discount * quantity;
+        }
+
+        // Add to the product selling price
+        totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+
+        // Add to MRP
+        totalMRP += price * quantity;
     }
 
-    // Add to the product selling price
-    totalProductSellingPrice += (productSellingPrice * quantity) + (bag?.ConvenienceFees || 0);
+    // If coupon logic is required:
+    if (bag.Coupon) {
+        const coupon = bag.Coupon;
+        const { CouponType, Discount, MinOrderAmount } = coupon;
 
-    // Add to MRP
-    totalMRP += price * quantity;
-}
+        const applyCouponDiscount = () => {
+            if (CouponType === "Percentage") {
+                totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+                setCouponDiscountData({});
+            } else {
+                totalProductSellingPrice -= Discount;
+            }
+        };
 
-// If coupon logic is required:
-if (bag.Coupon) {
-    const coupon = bag.Coupon;
-    const { CouponType, Discount, MinOrderAmount } = coupon;
-
-    const applyCouponDiscount = () => {
-        if (CouponType === "Percentage") {
-            totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
-            setCouponDiscountData({});
+        // Apply coupon discount only if applicable
+        if (MinOrderAmount > 0) {
+            if (totalProductSellingPrice >= MinOrderAmount) {
+                applyCouponDiscount();
+            }
         } else {
-            totalProductSellingPrice -= Discount;
-        }
-    };
-
-    // Apply coupon discount only if applicable
-    if (MinOrderAmount > 0) {
-        if (totalProductSellingPrice >= MinOrderAmount) {
             applyCouponDiscount();
         }
-    } else {
-        applyCouponDiscount();
-    }
 
-    // Apply free shipping discount
-    if (bag.Coupon.FreeShipping) {
-        totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+        // Apply free shipping discount
+        if (bag.Coupon.FreeShipping) {
+            totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+        }
     }
-}
-//  console.log("Total: ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP )
-
-return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP };
+    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP };
 };
 
 function calculateTotalAmount(products) {
