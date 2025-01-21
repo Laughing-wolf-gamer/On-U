@@ -7,11 +7,8 @@ import './Ppage.css';
 import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { BsTag } from 'react-icons/bs';
-import { BsHeart } from 'react-icons/bs';
-import { BsHandbag } from 'react-icons/bs';
 import Single_product from '../Product/Single_product';
 import { createbag, createwishlist, getbag, getwishlist} from '../../action/orderaction';
-import { useAlert } from 'react-alert';
 import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
@@ -24,15 +21,41 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 
 
+import toast from 'react-hot-toast';
+import { useToast } from '../../Contaxt/ToastProvider';
+
 const maxScrollAmount = 1024
 let isInWishList = false
 let isInBagList = false;
 const MPpage = () => {
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const navigation = useNavigate();
     const param = useParams();
-    const alert = useAlert();
     const dispatch = useDispatch();
     const [currentColor, setCurrentColor] = useState(null);
     const [currentSize, setCurrentSize] = useState(null);
@@ -96,7 +119,7 @@ const MPpage = () => {
                 navigation('/bag')
             }, 200);
         } else {
-            alert.error('You need to log in to add this product purchase.');
+            checkAndCreateToast("error",'You need to log in to add this product purchase.');
         }
     }
     const addToWishList = async()=>{
@@ -105,9 +128,11 @@ const MPpage = () => {
             await dispatch(getwishlist());
             await dispatch(getbag({ userId: user.id }))
             if(isInWishList){
-                alert.success('Added successfully to Wishlist')
+                // alert.success('Added successfully to Wishlist')
+                checkAndCreateToast("success",'Added successfully to Wishlist');
             }else{
-                alert.success('Removed successfully from Wishlist')
+                // alert.success('Removed successfully from Wishlist')
+                checkAndCreateToast("success",'Removed successfully from Wishlist');
             }
         }else{
             // alert.info('You have To Login To Add This Product To Wishlist')
@@ -128,11 +153,12 @@ const MPpage = () => {
             return;
         }
         if(!currentColor){
-            alert.error("No Color Selected")
+            checkAndCreateToast("error",'No Color Selected');
+            // alert.error("No Color Selected")
             return;
         }
         if(!currentSize){
-            alert.error("No Size Selected")
+            checkAndCreateToast("error","No Size Selected")
             return;
         }
         if (user) {
@@ -148,7 +174,7 @@ const MPpage = () => {
             await dispatch(createbag(orderData));
             await dispatch(getwishlist());
             await dispatch(getbag({ userId: user.id }))
-            alert.success('Product added successfully to the bag');
+            toast.success('Product added successfully to the bag');
         } else {
             // alert.info('You need to log in to add this product to your bag');
 
@@ -304,7 +330,7 @@ const MPpage = () => {
         isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
         isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
     }
-    console.log("Current Scroll Amount:",scrollAmount,"Max Scroll Amount:",maxScrollAmount);
+    // console.log("Current Scroll Amount:",scrollAmount,"Max Scroll Amount:",maxScrollAmount);
     return (
         <Fragment>
             
@@ -317,13 +343,15 @@ const MPpage = () => {
                                 <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                            {isInWishList ? (
-                                                <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                    <Heart size={30} fill="red" className="text-red-500" />
-                                                </div>
+                                            {isInWishList ? 
+                                                (
+                                                    <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                        <Heart size={30} fill="red" className="text-red-500" />
+                                                    </div>
                                                 ) : (
                                                     <Heart size={30}/>
-                                            )}
+                                                )
+                                            }
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
@@ -341,6 +369,10 @@ const MPpage = () => {
                             showStatus={false}
                             showArrows={false}
                             showIndicators={true}
+                            swipeable={true}
+                            emulateTouch
+                            infiniteLoop
+                            preventMovementUntilSwipeScrollTolerance
                             renderIndicator={(onClickHandler, isSelected, index, label) =>
                                 indicator(onClickHandler, isSelected, index, label)
                             }
@@ -353,7 +385,6 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
-                                                {/* Render video using ReactPlayer */}
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -631,3 +662,6 @@ const MPpage = () => {
 };
 
 export default MPpage;
+
+
+

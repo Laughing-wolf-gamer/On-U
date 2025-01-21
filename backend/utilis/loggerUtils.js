@@ -28,14 +28,12 @@ const logger = winston.createLogger({
                 logFormat
             )
         }),
-        // Daily rotating file transport for logging to a file
         new DailyRotateFile({
             filename: 'logs/app-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
             level: 'info',  // Adjust level for production
             maxFiles: '14d', // Keep logs for 14 days
         }),
-        // Optionally, create a separate error log file
         new DailyRotateFile({
             filename: 'logs/error-%DATE%.log',
             datePattern: 'YYYY-MM-DD',

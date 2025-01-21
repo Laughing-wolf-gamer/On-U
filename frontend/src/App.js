@@ -26,7 +26,7 @@ import FAQ from "./components/About-Screen/FAQ.js";
 import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js";
 import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
 import { FunctionProvider } from "./Contaxt/FunctionContext.js";
-
+import toast, { Toaster } from 'react-hot-toast';
 
 
 
@@ -100,6 +100,7 @@ function App() {
         
         
       </Router>
+      <Toaster />
     </FunctionProvider>
   );
 }

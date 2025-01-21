@@ -4,9 +4,6 @@ import { checkPurchasesProductToRate, postRating, singleProduct } from '../../ac
 import { useDispatch, useSelector } from 'react-redux'
 import Loader from '../Loader/Loader'
 import './Ppage.css'
-import { BsHandbag } from 'react-icons/bs'
-import { BsHeart } from 'react-icons/bs'
-import { BsTag } from 'react-icons/bs'
 import { BiSpreadsheet } from 'react-icons/bi'
 import elementClass from 'element-class'
 import Single_product from '../Product/Single_product'
@@ -17,20 +14,45 @@ import Footer from '../Footer/Footer'
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
-import LoadingSpinner from '../Product/LoadingSpinner'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
-import eventManager from '../../EventManager'
 import { useFunctionContext } from '../../Contaxt/FunctionContext'
+import toast from 'react-hot-toast'
+import { useToast } from '../../Contaxt/ToastProvider'
+
+
+
+
 let isInWishList = false
 let isInBagList = false;
 const Ppage = () => {
+  const { activeToast, showToast } = useToast();
+  const checkAndCreateToast = (type,message) => {
+    console.log("check Toast: ",type, message,activeToast);
+    if(activeToast !== message){
+        switch(type){
+            case "error":
+                toast.error(message)
+                break;
+            case "warning":
+                toast.warning(message)
+                break;
+            case "info":
+                toast.info(message)
+                break;
+            case "success":
+                toast.success(message)
+                break;
+            default:
+                toast.info(message)
+                break;
+        }
+        showToast(message);
+    }
+}
   const navigation = useNavigate();
   const [isFocused, setIsFocused] = useState(false);
-  // const[isInWishList,setIsInWishList] = useState(false);
-  // const[isInBagList,setIsInBagList] = useState(false);
   const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
   const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
 
@@ -43,7 +65,7 @@ const Ppage = () => {
 	const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
 	const[selectedColorId,setSelectedColorId] = useState(null);
   const param = useParams()
-  const alert  =useAlert()
+  // const alert  = useAlert()
   const dispatch = useDispatch()
   const [currentColor,setCurrentColor] = useState(null)
   const[currentSize,setCurrentSize] = useState(null)
@@ -69,11 +91,11 @@ const Ppage = () => {
       return;
     }
     if(!currentColor){
-        alert.error("No Color Selected")
+      checkAndCreateToast("error","No Color Selected")
         return;
     }
     if(!currentSize){
-        alert.error("No Size Selected")
+        checkAndCreateToast("error","No Size Selected")
         return;
     }
     if (user) {
@@ -87,7 +109,7 @@ const Ppage = () => {
         await dispatch(createbag(orderData))
         await dispatch(getwishlist())
         dispatch(getbag({ userId: user.id }))
-        alert.success('Product  successfully in Bag')
+        checkAndCreateToast("success",'Product  successfully in Bag')
       }else{
       //  alert.show('You have To Login To Add This Product Into Bag')
       const orderData = {
@@ -114,9 +136,9 @@ const Ppage = () => {
       await dispatch(getwishlist());
       await dispatch(getbag({ userId: user.id }))
       if(isInWishList){
-        alert.success('Added successfully to Wishlist')
+        checkAndCreateToast("success",'Added successfully to Wishlist')
       }else{
-        alert.success('Removed successfully from Wishlist')
+        checkAndCreateToast("success",'Removed successfully from Wishlist')
       }
     }else{
       //  alert.show('You have To Login To Add This Product To Wishlist')
@@ -141,6 +163,7 @@ const Ppage = () => {
       window.location.reload();
     } catch (error) {
       console.error("Error Adding to Bag: ",error);
+      checkAndCreateToast("success","Error adding to Bag");
     }
   }
 
@@ -171,10 +194,10 @@ const Ppage = () => {
     document.body.scrollTop = 0
     document.documentElement.scrollTop = 0;
     if(warning){
-      alert.error(warning)
+      checkAndCreateToast("warning",warning)
       dispatch(clearErrors())
     }
-  }, [dispatch, param, alert, warning]);
+  }, [dispatch, param, warning]);
   const handleSetNewImageArray = (newSize)=>{
     console.log("selected Size: ",newSize);
     setCurrentSize(newSize);
@@ -218,6 +241,7 @@ const Ppage = () => {
 			setSelectedImage(currentColor.images[0]);
 		}
   },[selectedSize])
+
   const isVideo = useMemo(() => {
     if (!selectedImage || !selectedImage.url) return false;
 
