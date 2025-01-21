@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getbag, getwishlist } from '../../action/orderaction.js'
 import { BaggageClaim, SearchIcon, ShoppingBag } from 'lucide-react'
 import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
-import { getLocalStorageWishListItem } from '../../config/index.js'
+import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
 
 
 const Navbar = ({user}) => {
@@ -177,6 +177,11 @@ const Navbar = ({user}) => {
                 {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
                   <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                     <span>{bag.orderItems.length}</span>
+                  </div>
+                )}
+                {!user && getLocalStorageBag() && getLocalStorageBag().length > 0 && (
+                  <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                    <span>{getLocalStorageBag().length}</span>
                   </div>
                 )}
                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">

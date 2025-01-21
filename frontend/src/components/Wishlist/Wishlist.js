@@ -74,7 +74,7 @@ const Wishlist = () => {
         if (state === false) {
             if (userloading === false) {
                 if (isAuthentication === false) {
-                    Alert.info('Log in to access wishlist')
+                    // Alert.info('Log in to access wishlist')
                     setstate(true)
                 } else {
                     setstate(true)
@@ -91,7 +91,7 @@ const Wishlist = () => {
     }else{
         currentWishListItem = sessionStorageWishList;
     }
-    console.log("currentWishListItem ",currentWishListItem);
+    // console.log("currentWishListItem ",currentWishListItem);
     return (
         <Fragment>
         {

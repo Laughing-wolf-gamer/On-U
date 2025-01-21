@@ -427,20 +427,26 @@ export const addItemsArrayToWishList = async(req,res)=>{
       return res.status(200).json({success:false,message: "Product Array Not Found"})
     }
     let previousWishList = await WhishList.findOne({userId:userId})
+    const allArray = productIdArray.map((p => p.productId._id));
+    console.log("Saved wishList: ",allArray.map(p => ({
+        productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
+    })));
     if(previousWishList){
-      const emitPromise = productIdArray.map(async(productId) =>{
-        const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId._id);
-        if (!isAlreadyPresent) {
-          previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId._id)});
-          await previousWishList.save();
-        }
-      })
-      await Promise.all(emitPromise)
-      return res.status(200).json({success:true,message: "Items added to Wish List"})
+        const emitPromise = allArray.map(async(productId) =>{
+            const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
+            if (!isAlreadyPresent) {
+            previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
+            }
+        })
+        await Promise.all(emitPromise)
+        await previousWishList.save();
+        res.status(200).json({success:true,message: "Items added to Wish List"})
+        return;
     }
-    previousWishList = new WhishList({userId:id, orderItems:productIdArray.map(p => ({
-      productId: mongoose.Types.ObjectId(p._id),  // Ensure productId is cast to ObjectId
+    previousWishList = new WhishList({userId:userId, orderItems:allArray.map(p => ({
+      productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
     }))})
+    await previousWishList.save();
     res.status(200).json({success:true,message: "Items added to Wish List"})
   } catch (error) {
     console.error("Failed to add items array: ",error);

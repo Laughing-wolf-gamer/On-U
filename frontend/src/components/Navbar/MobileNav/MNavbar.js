@@ -27,7 +27,7 @@ import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
 import { ShoppingCart } from 'lucide-react'
-import { getLocalStorageWishListItem } from '../../../config'
+import { getLocalStorageBag, getLocalStorageWishListItem } from '../../../config'
 
 
 const MNavbar = ({ user }) => {
@@ -189,6 +189,11 @@ const MNavbar = ({ user }) => {
                                 {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
                                     <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                                         <span>{bag.orderItems.length}</span>
+                                    </div>
+                                )}
+                                {!user && getLocalStorageBag()  && getLocalStorageBag().length > 0 && (
+                                    <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+                                        <span>{getLocalStorageBag().length}</span>
                                     </div>
                                 )}
                                 <Link to='/bag'><ShoppingCart size={26} color='black'/></Link>
