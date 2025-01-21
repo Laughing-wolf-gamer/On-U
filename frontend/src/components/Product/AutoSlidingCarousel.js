@@ -145,7 +145,7 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
   
   return (
     <div
-      className="slideshow-container min-h-[450px] relative"
+      className="slideshow-container min-h-[120px] bg-gray-200 relative"
       onMouseEnter={stopAutoSliding} // Stop auto sliding when mouse enters
       onMouseLeave={startAutoSliding} // Start auto sliding when mouse leaves
     >

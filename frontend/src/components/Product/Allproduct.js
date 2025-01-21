@@ -149,7 +149,6 @@ const Allproductpage = ({user}) => {
                                 .fill(0)
                                 .map((_, index) => <ProductCardSkeleton key={index} />)
                             }
-                            
                         </ul>
                     ) : (
                         productLoading === false && (

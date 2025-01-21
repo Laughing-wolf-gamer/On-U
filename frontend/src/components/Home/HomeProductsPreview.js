@@ -8,7 +8,6 @@ import ReactPlayer from 'react-player';
 const HomeProductsPreview = ({ product }) => {
     const navigation = useNavigate();
     const imageArray = getImagesArrayFromProducts(product,true);
-    console.log("Image Array: ",imageArray);
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);

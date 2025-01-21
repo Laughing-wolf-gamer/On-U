@@ -10,8 +10,8 @@ export const isAuthenticateuser = A(async(req, res, next)=>{
        return next( new ErrorHandler('User token has been expired or not been generated', 400)) 
     }
     jwt.verify(token, process.env.SECRETID,(err, user) => {
-        if(err) next(new ErrorHandler('User not found', 403))
-		console.log("Auth: User: ",user);
+        if(err) next(new ErrorHandler('Not Logged in', 403))
+		// console.log("Auth: User: ",user);
         req.user = user;
         next();
     });

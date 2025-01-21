@@ -1,5 +1,5 @@
 import React, { Fragment, CSSProperties, useEffect, useState, useRef } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
 import d1 from '../images/d1.webp'
@@ -126,7 +126,7 @@ import Loader from '../Loader/Loader'
 const Home = () => {
   const { product} = useSelector(state => state.Allproducts)
   const { banners,loading:bannerLoading} = useSelector(state => state.banners)
-
+  const navigation = useNavigate();
   const dispatch = useDispatch();
   const indicatorStyles: CSSProperties = {
     background: '#CFCECD',
@@ -326,7 +326,27 @@ const Home = () => {
             </div>
         
             {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} /> */}
-            <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} />
+            {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
+
+            {
+              Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 && <div className='bg-slate-200 pt-8'>
+                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_3.header}</h1>
+                <div className='grid grid-cols-4 justify-center items-center'>
+                    {
+                        !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 ? 
+                        Wide_Screen_Section_3.urls.map((j, index) => (
+                            <div onClick={()=>navigation("/products")} key={`j_banners_${index}`} className='bg-black justify-center min-h-[200px] m-1 items-center flex'>
+                              <LazyLoadImage effect='blur' src={Wide_Screen_Section_8.urls[0]} alt="" className=" w-full h-full object-cover" />
+                            </div>
+                        )) : (
+                            <Fragment>
+                                <Loader/>
+                            </Fragment>
+                        )
+                    }
+                </div>
+            </div>
+            }
             {!bannerLoading && Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
                 <Loader/>
