@@ -14,7 +14,7 @@ export const instance = new Razorpay({
 export const createOrder = async (req, res) => {
     try {
         console.log("Payment Amount:", req.body);
-        const{amount} = req.body;
+        const { amount ,selectedAddress, orderDetails, totalAmount, bagId } = req.body;
         const options = {
             amount: Number(amount * 100),
             currency: "INR",
@@ -23,6 +23,9 @@ export const createOrder = async (req, res) => {
         };
         const order = await instance.orders.create(options);
         console.log("Payment Order Created",order);
+        if(!order){
+            order
+        }
         res.status(200).json({ success: true, order,keyId:process.env.RAZER_PG_ID});
     } catch (error) {
         console.error("Payment Order Creation Error: ", error);
@@ -69,11 +72,13 @@ export const paymentVerification = async (req, res) => {
         const randomOrderShipRocketId = generateRandomId();
         const orderData = new OrderModel({
             ShipRocketOrderId: randomOrderShipRocketId,
-            userId: req.user.id,
+            userId: id,
+            razorpay_order_id:razorpay_order_id,
             orderItems: orderDetails,
             SelectedAddress: selectedAddress,
             TotalAmount: totalAmount,
             paymentMode: 'Prepaid',
+            paymentStatus:"Paid",
             status: 'Order Confirmed',
         });
 
@@ -82,7 +87,7 @@ export const paymentVerification = async (req, res) => {
         // Process product quantity updates concurrently
         const removingAmountPromise = orderDetails.map(async (item) => {
             try {
-                console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
+                // console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
                 await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
             } catch (err) {
                 console.error(`Error removing product: ${item?.productId?._id}`, err);
@@ -95,14 +100,14 @@ export const paymentVerification = async (req, res) => {
         await Bag.findByIdAndDelete(bagId);
 
         // Send confirmation email
-        await sendOrderPlacedMail(req.user.id, orderData);
+        await sendOrderPlacedMail(id, orderData);
 
         // Respond with success message
         res.status(200).json({
             success: true,
             message: 'Order Created Successfully',
             result: 'SUCCESS',
-            userId: req.user.id,
+            userId: id,
         });
 
     } catch (error) {
@@ -180,6 +185,9 @@ const removeProduct = async (productId, color, size, quantity) => {
 
 export const OnPaymentCallBack = async (req,res)=>{
     try {
+        const webhookSecret = process.env.RAZORPAY_WEBHOOK_SECRET;
+        const receivedSignature = req.headers['x-razorpay-signature'];
+        const payload = JSON.stringify(req.body);
         const SECREAT = 1234567890;
         console.dir(req.body, { depth: null});
         res.status(200).json({ success: true, message: 'Payment Successful' });

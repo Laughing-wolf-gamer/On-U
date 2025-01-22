@@ -11,6 +11,8 @@ const ordersSchema = new mongoose.Schema({
         type:Object,
         required:true,
     }],
+    razorpay_order_id:{type:String},
+    paymentId:{type:String},
     TotalAmount:{type:Number,required:true},
     SelectedAddress:{type:Object,required:true},
     paymentMode:{type:String,default:"PrePaid",required:true},
