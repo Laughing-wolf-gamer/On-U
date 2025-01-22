@@ -114,14 +114,14 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 callback_url: `${BASE_CLIENT_URL}/bag`
             }, headerConfig());
             if (!data.success) {
-                alert.error("Failed to create order, please try again later");
+                alert.error("Failed to create order, please try again To Process Payment!");
                 return;
             }
             const options = {
                 key: data.keyId,
                 amount: data.order.amount,
                 currency: "INR",
-                name: "On-U",
+                name: user?.user?.name || "Test User",
                 description: "Test Transaction",
                 order_id: data.order.id,
                 handler: function (response) {

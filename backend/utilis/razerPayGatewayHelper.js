@@ -18,6 +18,8 @@ export const createOrder = async (req, res) => {
         const options = {
             amount: Number(amount * 100),
             currency: "INR",
+            receipt: `order_receipt_${Date.now()}`,
+            payment_capture: 1, // auto-capture payment (1) or manual (0)
         };
         const order = await instance.orders.create(options);
         console.log("Payment Order Created",order);
@@ -27,126 +29,153 @@ export const createOrder = async (req, res) => {
         res.status(404).json({success: false,message:"Internal Server Error",});
     }
 };
+
 export const paymentVerification = async (req, res) => {
     try {
-        const{id} = req.user;
-        if(!id){
+        const { id } = req.user;
+        if (!id) {
             return res.status(401).json({
                 success: false,
-                message: 'User not authenticated'
+                message: 'User not authenticated',
             });
         }
-        const { razorpay_payment_id, razorpay_order_id, razorpay_signature ,selectedAddress,orderDetails,totalAmount,bagId} = req.body;
-    
-        const body = razorpay_order_id + "|" + razorpay_payment_id;
-    
-        const expectedSignature = crypto.createHmac("sha256", process.env.RAZER_PG_SECRETE).update(body.toString()).digest("hex");
-    
-        const isAuthentic = expectedSignature === razorpay_signature;
-    
-        if (isAuthentic) {
-            const bagData = await Bag.findById(bagId).populate('orderItems.productId');
-            if(bagData){
-                console.log("Bag Data: ",bagData);
-                const generateRandomId = () => {
-                    return Math.floor(10000000 + Math.random() * 90000000); // Generates a random 8-digit number
-                };
-                
-                const randomOrderShipRocketId = generateRandomId();
-                const orderData = new OrderModel({
-                    ShipRocketOrderId:randomOrderShipRocketId,
-                    userId: req?.user?.id,
-                    orderItems:orderDetails,
-                    SelectedAddress: selectedAddress,
-                    TotalAmount:totalAmount,
-                    paymentMode:"Prepaid",
-                    status:'Order Confirmed',
-                });
-            
-                await orderData.save();
-                const createdShipRocketOrder = await generateOrderForShipment(orderData,randomOrderShipRocketId)
-                if(!createdShipRocketOrder){
-                    return res.status(500).json({ success: false, message: "Failed to create ShipRocket Order" });
-                }
-                const removingAmountPromise = orderDetails.map(async item => {
-                    try {
-                        console.log("All Orders Items: ", item.productId._id, item.color.label, item.size, item.quantity);
-                        await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
-                    } catch (err) {
-                        console.error(`Error removing product: ${item?.productId?._id}`, err);
-                    }
-                });
-            
-                await Promise.all(removingAmountPromise);
-            
-                // Uncomment and handle bag removal if needed
-                await Bag.findByIdAndDelete(bagId);
-                // console.log("Bag Removed:", bagToRemove);
-                sendOrderPlacedMail(req.user.id,orderData)// sending Message Mail....
-                return res.status(200).json({ success: true, message: "Order Created Successfully", result: "SUCCESS",userId:req.user?.id });
-            }
-            res.status(200).jons({success: false, message: "Payment Not Successful"})
-            // res.status(200).json({success:true,razorpayPaymentId:razorpay_payment_id})
-        } else {
-            res.status(200).json({success: false,message:"Payment Not Authenticated"});
-        }
-    } catch (error) {
-        console.error("Payment Verification Error: ", error);
-        res.status(404).json({success: false,message:"Internal Server Error",});
-    }
-};
-const removeProduct = async(productId,color,size,quantity) => {
-    try {
-        const product = await ProductModel.findById(productId);
-        if(!product) {
-            console.log("Product Not Found: ",productId);
-            return
-        } ;
-        const activeSize = product.size.find(s => s?.label == size);
-        if(!activeSize) {
-            console.log("Size Not Found: ",size);
-            return
-        }
-        const activeColor = activeSize.colors.find(c => c?.label == color);
-        if(!activeColor) {
-            console.log("Color Not Found: ",color);
-            return
-        }
-        const colorReducedAmount = activeColor.quantity - quantity
-        const sizeReducedAmount = activeSize.quantity - quantity
-        console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
-        activeColor.quantity = colorReducedAmount;
-        activeSize.quantity = sizeReducedAmount;
-        const AllColors = []
-        product.size.forEach(s => {
-            if(s.colors){
-            s.colors.forEach(c => {
-                AllColors.push(c);
+
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, selectedAddress, orderDetails, totalAmount, bagId } = req.body;
+
+        // Generate expected signature
+        const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZER_PG_SECRETE)
+            .update(body)
+            .digest('hex');
+
+        if (expectedSignature !== razorpay_signature) {
+            return res.status(400).json({
+                success: false,
+                message: 'Payment not authenticated',
             });
+        }
+
+        const bagData = await Bag.findById(bagId).populate('orderItems.productId');
+        if (!bagData) {
+            return res.status(404).json({ success: false, message: 'Bag not found' });
+        }
+
+        console.log('Bag Data:', bagData);
+
+        // Generate random order ID for ShipRocket
+        const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+
+        const randomOrderShipRocketId = generateRandomId();
+        const orderData = new OrderModel({
+            ShipRocketOrderId: randomOrderShipRocketId,
+            userId: req.user.id,
+            orderItems: orderDetails,
+            SelectedAddress: selectedAddress,
+            TotalAmount: totalAmount,
+            paymentMode: 'Prepaid',
+            status: 'Order Confirmed',
+        });
+
+        await orderData.save();
+
+        // Process product quantity updates concurrently
+        const removingAmountPromise = orderDetails.map(async (item) => {
+            try {
+                console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
+                await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+            } catch (err) {
+                console.error(`Error removing product: ${item?.productId?._id}`, err);
             }
         });
-        product.AllColors = AllColors;
-        if (product.size && product.size.length > 0) {
-            let totalStock = 0;
-            // updateFields.size = activeSize
-            product.size.forEach(s => {
-                let sizeStock = 0;
-                if(s.colors){
-                    s.colors.forEach(c => {
-                    sizeStock += c.quantity;
-                    });
-                }
-                totalStock += sizeStock;
-            })
-            // console.log("Colors: ",AllColors);
-            if(totalStock > 0) product.totalStock = totalStock;
-        };
-        await product.save();
-        console.log("Product Updated: ",product);
+
+        await Promise.all(removingAmountPromise);
+
+        // Delete the bag after order creation
+        await Bag.findByIdAndDelete(bagId);
+
+        // Send confirmation email
+        await sendOrderPlacedMail(req.user.id, orderData);
+
+        // Respond with success message
+        res.status(200).json({
+            success: true,
+            message: 'Order Created Successfully',
+            result: 'SUCCESS',
+            userId: req.user.id,
+        });
+
     } catch (error) {
-        console.error("Error Removing Product: ",error)
+        console.error('Payment Verification Error:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Internal Server Error',
+        });
     }
 }
+
+
+const removeProduct = async (productId, color, size, quantity) => {
+    try {
+        const product = await ProductModel.findById(productId);
+        if (!product) {
+            console.log("Product Not Found:", productId);
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        // Find the active size
+        const activeSize = product.size.find(s => s?.label === size);
+        if (!activeSize) {
+            console.log("Size Not Found:", size);
+            return res.status(404).json({ success: false, message: "Size not found" });
+        }
+
+        // Find the active color
+        const activeColor = activeSize.colors.find(c => c?.label === color);
+        if (!activeColor) {
+            console.log("Color Not Found:", color);
+            return res.status(404).json({ success: false, message: "Color not found" });
+        }
+
+        // Calculate the reduced amounts for color and size
+        const colorReducedAmount = activeColor.quantity - quantity;
+        const sizeReducedAmount = activeSize.quantity - quantity;
+
+        // Check for insufficient stock
+        if (colorReducedAmount < 0 || sizeReducedAmount < 0) {
+            console.log("Insufficient stock for color or size");
+            return res.status(400).json({ success: false, message: "Not enough stock to remove" });
+        }
+
+        // Update quantities
+        activeColor.quantity = colorReducedAmount;
+        activeSize.quantity = sizeReducedAmount;
+
+        // Rebuild the AllColors array and calculate total stock in one loop
+        let totalStock = 0;
+        const AllColors = product.size.flatMap(s => {
+            if (s.colors) {
+                s.colors.forEach(c => totalStock += c.quantity); // Accumulate total stock
+                return s.colors;
+            }
+            return [];
+        });
+
+        product.AllColors = AllColors;
+        product.totalStock = totalStock > 0 ? totalStock : undefined;
+
+        // Save the updated product
+        await product.save();
+        console.log("Product Updated:", product);
+
+        // Respond with success
+        res.status(200).json({ success: true, message: "Product removed successfully" });
+    } catch (error) {
+        console.error("Error Removing Product:", error);
+        res.status(500).json({ success: false, message: "Error removing product", error: error.message });
+    }
+};
+
 
 
 export const OnPaymentCallBack = async (req,res)=>{

@@ -1,10 +1,15 @@
 import winston from 'winston';
+import dotenv from 'dotenv';
 import DailyRotateFile from 'winston-daily-rotate-file';
 import path from 'path';
 
+dotenv.config();
+
+const logLevel = process.env.NODE_ENV === 'production' ? 'warn' : 'info';
+
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
-const logLevel = process.env.NODE_ENV === 'production' ? 'warn' : 'info';
+
 // Define custom log format
 const logFormat = printf(({ level, message, timestamp, stack }) => {
     if (stack) {
@@ -31,15 +36,17 @@ const logger = winston.createLogger({
             )
         }),
         new DailyRotateFile({
-            filename: path.join(__dirname, 'logs', 'app-%DATE%.log'),
+            filename: 'logs/OnU-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
-            level: 'info',  // Adjust level for production
+            level: logLevel,  // Adjust level for production
+            maxSize: '20m',
             maxFiles: '14d', // Keep logs for 14 days
         }),
         new DailyRotateFile({
-            filename: path.join(__dirname, 'logs', 'app-%DATE%.log'),
+            filename: 'logs/OnU-%DATE%.log',
             datePattern: 'YYYY-MM-DD',
-            level: 'error', // Only log errors to this file
+            level: logLevel, // Only log errors to this file
+            maxSize: '20m',
             maxFiles: '14d',
         })
     ]
