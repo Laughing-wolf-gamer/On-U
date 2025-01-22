@@ -104,7 +104,7 @@ const Allproductpage = ({user}) => {
             <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-slate-200">
                 <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
                 <div className="col-span-7 text-gray-400 text-xs">SIZE</div>
-                <div className="col-span-3 relative cursor-pointer">
+                <div className="col-span-3 relative cursor-pointer pb-4">
                     <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
                         <div className=' text-sm w-max pl-4 pr-24 py-2 float-right relative items-center'>
                             Sort by :<span className='font1 font-semibold text-gray-800'>{sortvalue}</span>

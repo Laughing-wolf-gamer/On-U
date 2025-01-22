@@ -56,13 +56,13 @@ const ProductPreviewFull = ({ product }) => {
   return (
     <Fragment>
       {/* Title Section */}
-      <div className="w-fit md:w-full gap-x-7 flex flex-row md:flex-1 h-fit p-1 justify-center items-center">
+      {/* <div className="w-fit md:w-full gap-x-7 flex flex-row md:flex-1 h-fit p-1 justify-center items-center">
         <div className="w-20 h-0.5 bg-gray-700 rounded-xl"></div>
         <p className="text-xl sm:text-sm md:text-[28px] text-gray-700 font-sans font1 text-center">
           DAILY DEALS!
         </p>
         <div className="w-16 md:w-20 h-0.5 bg-gray-700 rounded-xl"></div>
-      </div>
+      </div> */}
 
       {/* Preview Headers Section */}
       <div className="w-fit sm:w-fit md:min-h-fit h-auto justify-between items-center space-x-4 flex md:flex-row mb-6 font1">
