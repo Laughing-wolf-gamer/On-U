@@ -135,7 +135,7 @@ const AdminOrderLayout = () => {
                         {/* Table Body */}
                         <div className="divide-y divide-gray-200">
                             {
-                                displayedOrders.map((order) => (
+                                displayedOrders && displayedOrders.length > 0 && displayedOrders.map((order) => (
                                     <div key={order?._id} className="grid grid-cols-5 gap-4 p-4 hover:bg-gray-100">
                                         <div className="text-sm sm:text-base">{order?._id}</div>
                                         <div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleString()}</div>

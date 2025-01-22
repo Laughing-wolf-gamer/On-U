@@ -475,32 +475,6 @@ export const filterOptions = {
         { id: 'tag-heuer', label: 'TAG Heuer' },
     ]
 }
-/* export const categoryOptions = {
-    "men":'Men',
-    "women":'Women',
-    "kids":'Kids',
-    "watch":'Watch',
-    "electronics":'Electronics',
-    "clothing":'Clothing',
-}
-export const brandOptions = {
-    "apple":'Apple',
-    "samsung":'Samsung',
-    "huawei":'Huawei',
-    "xiaomi":'Xiaomi',
-    "oppo":'Oppo',
-    "puma":'Puma',
-    "rebook":'Rebook',
-    "h&m":'H&M',
-    "footwear":'Footwear',
- 
-}
-export const sortOptions = [
-    {id:'price-low-to-high',label:'Price Low to High'},
-    {id:'price-high-to-low',label:'Price High to Low'},
-    {id:'title-a-2-z',label:'A 2 Z'},
-    {id:'title-z-2-a',label:'Z 2 A'},
-] */
 
 
 export const GetBadgeColor = (status)=>{
