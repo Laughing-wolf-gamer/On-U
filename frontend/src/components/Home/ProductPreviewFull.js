@@ -37,9 +37,9 @@ const ProductPreviewFull = ({ product }) => {
       <div className="w-fit sm:w-fit md:min-h-fit h-auto justify-between items-center space-x-4 flex md:flex-row mb-6 font1">
         {previewHeader && previewHeader.length > 0 &&
           previewHeader.map((h, index) => (
-            <div onClick={(e) => getRandomArrayOfProducts(h?.id)} key={index} className={`border-2 px-5 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}>
+            <div onClick={(e) => getRandomArrayOfProducts(h?.id)} key={index} className={`border-2 md:px-5 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}>
               <h3
-                className={`text-[16px] text-center`}
+                className={`md:text-[16px] text-sm text-center`}
               >
                 {h?.title}
               </h3>
@@ -115,7 +115,7 @@ const ProductPreviewFull = ({ product }) => {
         </div>
     </div>
     <div className='w-full h-28 text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all'>
-      <div onClick={()=> navigation('/products')} className='px-2 w-[13%] bg-gray-900 hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
+      <div onClick={()=> navigation('/products')} className='px-2 w-fit flex-wrap text-sm md:text-lg bg-gray-900 hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
         <span>VIEW MORE</span>
       </div>
     </div>
