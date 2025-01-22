@@ -36,14 +36,6 @@ export const getallproducts = A(async (req, res)=>{
         const sort = {};
 
         // Color filter (match any of the colors in the list)
-        /* if (req.query.color) {
-            const colorNames = req.query.color.split(','); // Split the color query into an array of color names
-            filter.color = {
-              $elemMatch: {
-                id: { $in: colorNames } // Check if any object in the 'colors' array has a matching 'name' field
-              }
-            };
-        } */
         if (req.query.color) {
             const colorNames = req.query.color.split(','); // Split the color query into an array of color names
             console.log("Color Names:", colorNames);
@@ -211,6 +203,36 @@ export const getallproducts = A(async (req, res)=>{
         }})
     }
 })
+export const getRandomProducts = async (req, res)=>{
+    const { category } = req.body;  // Get category from request body
+    try {
+        await Pr
+        const matchStage = category ? { $match: { category: category } } : {};  // Optional category filter
+        
+        // MongoDB aggregation pipeline
+        const randomProducts = await ProductModel.aggregate([
+            ...category ? [matchStage] : [],  // Only apply the category filter if it's provided
+            { $sample: { size: 10 } }  // Randomly select 10 products
+        ]);
+
+        // Send response with random products
+        res.status(200).json({
+            success: true,
+            message: "Products are available",
+            result: randomProducts || []
+        });
+
+    } catch (error) {
+        // Handle errors and send appropriate response
+        console.error("Error fetching random products:", error);
+        res.status(500).json({
+            success: false,
+            message: "Failed to fetch random products",
+            error: error.message
+        });
+    }
+
+}
 export const checkUserPurchasedProduct = async (req, res) => {
     try {
         const userId = req.user.id; // Get the user's ID

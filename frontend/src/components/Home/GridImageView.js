@@ -1,6 +1,16 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-
+import { getRandomItem } from '../../config';
+const clothingItems = [
+  "Half Shirt",
+  "Casual Shirt",
+  "Formal Shirt",
+  "Joggers",
+  "Jeans",
+  "Cotton Pant",
+  "T-shirt",
+  "Cargo"
+];
 const GridImageView = ({ imageToShow }) => {
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop();  // Get the file extension
@@ -43,6 +53,9 @@ const GridImageView = ({ imageToShow }) => {
             <span>Unsupported file type</span>
           )
         }
+        <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold text-xl'>
+          <span> {getRandomItem(clothingItems).toUpperCase()} </span>
+        </div>
 
       </div>
     </div>

@@ -16,12 +16,13 @@ import axios from 'axios';
 import Footer from '../Footer/Footer';
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
+import { getRandomArrayOfProducts } from '../../action/productaction';
 
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
-    const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
+    const { randomProducts,loading:productLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const [sessionStorageBag,setSessionStorageItems] = useState(getLocalStorageBag());
     const {allAddresses} = useSelector(state => state.getAllAddress)
@@ -256,6 +257,7 @@ const Bag = () => {
             }
             setAddress(user?.user?.addresses[0]);
         }
+        dispatch(getRandomArrayOfProducts());
     }, [dispatch,deleteBagResult, user, isAuthentication]);
 
     
@@ -300,7 +302,7 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    // console.log("bag Data: ",bag);
+    console.log("Random Products: ",randomProducts);
     
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">

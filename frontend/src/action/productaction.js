@@ -9,7 +9,10 @@ import {
     CLEAR_ERRORS,
     REQUEST_OPTIONS,
     SUCCESS_OPTIONS,
-    FAIL_OPTIONS
+    FAIL_OPTIONS,
+    SUCCESS_RANDOM_PRODUCT,
+    FAIL_RANDOM_PRODUCT,
+    REQUEST_RANDOM_PRODUCT
 } from '../const/productconst'
 import axios from 'axios'
 
@@ -22,11 +25,23 @@ export const Allproduct = (e=1) => async (dispatch) => {
         //let link1 = link ? link +=  `&width=${window.screen.width}`;
         // const { data } = await axios.get(`http://localhost:8000/api/shop/products${link}`)
         const res = await axios.get(`${BASE_API_URL}/api/shop/products${link}`)
-        console.log("products: ", res.data);
+        // console.log("products: ", res.data);
         const data = res.data;
         dispatch({ type: SUCCESS_PRODUCTS, payload: data?.products, pro:data?.pro, length:data?.length })
     } catch (error) {
         dispatch({ type: FAIL_PRODUCTS, payload: error.response?.data?.message })
+    }
+}
+
+export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
+    try {
+        dispatch({ type: REQUEST_RANDOM_PRODUCT })
+        const res = await axios.get(`${BASE_API_URL}/api/shop/products/random`)
+        console.log("Random products: ", res.data);
+        const data = res.data;
+        dispatch({ type: SUCCESS_RANDOM_PRODUCT, payload: data?.products, pro:data?.pro, length:data?.length })
+    } catch (error) {
+        dispatch({ type: FAIL_RANDOM_PRODUCT, payload: error.response?.data?.message })
     }
 }
 

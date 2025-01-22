@@ -122,7 +122,7 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
     }));
   }, [imageArray]); // Recalculate only when imageArray changes
   const addToWishList = async(e)=>{
-    // e.stopPropagation();
+    e.stopPropagation();
     if (user) {
       await dispatch(createwishlist({productId:pro._id,}))
       await dispatch(getwishlist())

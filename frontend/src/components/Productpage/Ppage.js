@@ -17,7 +17,6 @@ import namer from 'color-namer';
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
 import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
-import { useFunctionContext } from '../../Contaxt/FunctionContext'
 import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
 
@@ -171,7 +170,7 @@ const Ppage = () => {
       isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
       isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
     }
-    window.location.reload();
+    // window.location.reload();
   }
 
   const handleBuyNow = async () => {
@@ -301,12 +300,12 @@ const Ppage = () => {
   }, []);
   console.log("Current Scroll Amount: ",scrollPosition);
   return (
-    <div ref={scrollableDivRef} className="w-screen px-14 h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         loading === false ?
           <div>
-            <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden'>
-              <div className='w-[62%] flex flex-col h-full'>
+            <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden mb-6'>
+              <div className='w-[60%] flex flex-col h-full'>
                 {
                   scrollPosition > 10 && scrollPosition < maxScrollAmount ? (
                     <div className='w-[37%] flex fixed'>
@@ -338,7 +337,7 @@ const Ppage = () => {
                 }
                 {
                   scrollPosition >= maxScrollAmount && (
-                    <div className='w-[37%] flex absolute bottom-0 left-9'>
+                    <div className='w-[37%] flex absolute bottom-1 left-8'>
                       <div className='w-[90%] h-full justify-start items-center flex'>
                           <RightImageContent 
                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -353,8 +352,6 @@ const Ppage = () => {
                   )
                 }
               </div>
-                
-
               {/* Content div for large screen */}
               <div className='w-full h-full flex flex-col '>
                   {/* Left Column (Add to Cart Section) */}
@@ -413,16 +410,6 @@ const Ppage = () => {
                                     `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                     ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                   title={color?.quantity || color?.label || "Color"} />
-                                {/* {color.quantity <= 10 && color.quantity > 0 && (
-                                  <div className='flex flex-col justify-center items-center'>
-                                    <span className="text-red-700 text-sm font-extrabold mt-2 text-center text-[12px] flex-wrap">Only {color?.quantity} Left</span>
-                                  </div>
-                                )}
-                                {color.quantity <= 0 && (
-                                  <div className='flex flex-col justify-center items-center'>
-                                    <span className='text-gray-500 text-sm font-extrabold text-center flex-wrap'>Out of Stock</span>
-                                  </div>
-                                )} */}
                               </div>
                             ))
                           ) : (
@@ -435,16 +422,18 @@ const Ppage = () => {
                       {/* Add to Cart & Buy Now Buttons */}
                       <PincodeChecker productId={product?._id} />
                     </div>
-                    <div className='w-[90%] h-fit justify-center items-center flex flex-col'>
-                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
-                        <ShoppingCart size={20} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
-                      </button>
-                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
-                        {
-                          isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
-                        }
-                        <span>ADD TO WISHLIST NOW</span>
-                      </button>
+                    <div className='w-[60%] h-fit justify-center items-center flex flex-col'>
+                      <div className='grid grid-cols-2 justify-center items-center gap-2'>
+                        <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
+                          <ShoppingCart size={20} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
+                        </button>
+                        <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
+                          {
+                            isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
+                          }
+                          <span>ADD TO WISHLIST NOW</span>
+                        </button>
+                      </div>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
                         <ShoppingBag size={20} className='m-4' /><span>BUY NOW</span>
                       </button>
@@ -516,25 +505,6 @@ const Ppage = () => {
                       <div className='reviews-section'>
                         <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
                         <div className='reviews-list mt-4 overflow-y-auto'>
-                          {/* {product && product.Rating && product.Rating.length > 0 && product.Rating.map((review, index) => {
-                            const randomStars = review.rating; // Random stars between 1 and 5
-                            return (
-                              <div key={index} className='review-item mb-4'>
-                                <div className='flex items-center'>
-                                  <div className='stars'>
-                                    {[...Array(randomStars)].map((_, i) => (
-                                      <span key={i} className='star text-black'>★</span>
-                                    ))}
-                                    {[...Array(5 - randomStars)].map((_, i) => (
-                                      <span key={i} className='star text-gray-300'>★</span>
-                                    ))}
-                                  </div>
-                                  <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
-                                </div>
-                                <p className='text-gray-700 mt-2'>{review?.comment}</p>
-                              </div>
-                            );
-                          })} */}
                           {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
                         </div>
                         {hasPurchased ? (
@@ -621,16 +591,19 @@ const Ppage = () => {
                 </div>
 
             </div>
+            <div className='w-full justify-center flex flex-col'>
+              <h1 className='font1 flex items-center mt-4 font-semibold p-8'>SIMILAR PRODUCTS</h1>
+              <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
+                {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} user ={user} key={pro._id}/>))}
+              </ul>
+
+            </div>
             
-            <h1 className='font1 flex items-center mt-4 font-semibold px-6 py-2'>SIMILAR PRODUCTS</h1>
-            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6'>
-              {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} user ={user} key={pro._id}/>))}
-            </ul>
-            <Footer/>
           </div>
           :
           <Loader />
       }
+      <Footer/>
 
     </div>
   )
