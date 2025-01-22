@@ -334,13 +334,13 @@ const Home = () => {
                   <h1 className='text-3xl px-8 font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
                     {Wide_Screen_Section_3.header}
                   </h1>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 justify-center items-center">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-center items-center">
                       {
                           Wide_Screen_Section_3.urls.map((url, index) => (
                             <div
                               key={`Index_${index}`}
                               className="h-[600px] relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
-                              <GridImageView imageToShow={url} />
+                                <GridImageView imageToShow={url} />
                             </div>
                           )) 
                       }
