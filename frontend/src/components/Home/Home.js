@@ -121,6 +121,7 @@ import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 import DraggableImageSlider from './DraggableImageSlider'
 import FullScreenOverLayCouponPopUp from './FullScreenOverLayCouponPopUp'
 import Loader from '../Loader/Loader'
+import GridImageView from './GridImageView'
 
 
 const Home = () => {
@@ -321,32 +322,39 @@ const Home = () => {
                 </div>
             </div>
         
-            <div className='py-8 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
+            <div className='py-8 px-10 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
                 {product && product.length > 0 && <ProductPreviewFull product={product} />}
             </div>
         
             {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} /> */}
             {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
-
             {
-              Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 && <div className='bg-slate-200 pt-8'>
-                <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_3.header}</h1>
-                <div className='grid grid-cols-4 justify-center items-center'>
-                    {
-                        !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 ? 
-                        Wide_Screen_Section_3.urls.map((j, index) => (
-                            <div onClick={()=>navigation("/products")} key={`j_banners_${index}`} className='bg-black justify-center min-h-[200px] m-1 items-center flex'>
-                              <LazyLoadImage effect='blur' src={Wide_Screen_Section_8.urls[0]} alt="" className=" w-full h-full object-cover" />
+              !bannerLoading && Wide_Screen_Section_3.urls && Wide_Screen_Section_3.urls.length > 0 ? (
+                <div className="w-screen h-fit flex flex-col bg-slate-200 px-4 md:px-8">
+                  <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>
+                    {Wide_Screen_Section_3.header}
+                  </h1>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-3 justify-center items-center">
+                      {
+                          Wide_Screen_Section_3.urls.map((url, index) => (
+                            <div
+                              key={`Index_${index}`}
+                              className="h-[600px] relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
+                              <GridImageView imageToShow={url} />
                             </div>
-                        )) : (
-                            <Fragment>
-                                <Loader/>
-                            </Fragment>
-                        )
-                    }
+                          )) 
+                      }
+                  </div>
                 </div>
-            </div>
+              ): (
+                <Fragment>
+                  <Loader />
+                </Fragment>
+              )
             }
+            
+
+
             {!bannerLoading && Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
                 <Loader/>

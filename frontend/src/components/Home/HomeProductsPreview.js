@@ -112,13 +112,13 @@ const HomeProductsPreview = ({ product }) => {
                     <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button
                 ) : (
                     <>
-                        <div className={`w-full h-fit md:h-10 flex items-center justify-center font-sans`}>
+                        <div className={`w-full h-7 md:h-10 flex items-center justify-center font-sans`}>
                             <button onClick={(e) => { e.stopPropagation(); navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-black bg-white focus:bg-red-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
                                 <Heart size={20} />
                                 <span className="font-sans">Add to Wishlist</span>
                             </button>
                         </div>
-                        <div className={`w-full h-fit md:h-10  flex items-center justify-center font-sans`}>
+                        <div className={`w-full h-7 md:h-10  flex items-center justify-center font-sans`}>
                             <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md space-x-2">
                                 <ShoppingCart size={20} />
                                 <span className="font-sans">Add to Cart</span>
@@ -166,8 +166,9 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
 
     // Handle the navigation on click, memoized to avoid unnecessary re-renders
     const handleClick = useCallback((e) => {
-        e.preventDefault();
-        navigation(`/products/${product?._id}`);
+        if(product){
+            navigation(`/products/${product?._id}`);
+        }
     }, [navigation, product]);
 
     // Early return if there is no valid image array or selected media

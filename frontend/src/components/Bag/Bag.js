@@ -21,6 +21,7 @@ import { useToast } from '../../Contaxt/ToastProvider';
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
+    const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const [sessionStorageBag,setSessionStorageItems] = useState(getLocalStorageBag());
     const {allAddresses} = useSelector(state => state.getAllAddress)

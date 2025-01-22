@@ -1,4 +1,4 @@
-import React, { useEffect, Fragment, useState, useMemo } from 'react'
+import React, { useEffect, Fragment, useState, useMemo, useRef } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { checkPurchasesProductToRate, postRating, singleProduct } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,8 +22,29 @@ import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
 
 
-
-
+const reviews = [
+  {
+    rating: 5,
+    comment: "Excellent product! Exceeded my expectations.",
+  },
+  {
+    rating: 4,
+    comment: "Great quality, but a bit expensive.",
+  },
+  {
+    rating: 3,
+    comment: "Average product. It works, but I was expecting more.",
+  },
+  {
+    rating: 2,
+    comment: "Not as described. Poor quality.",
+  },
+  {
+    rating: 1,
+    comment: "Terrible! It broke after one use.",
+  },
+];
+const maxScrollAmount = 1024
 let isInWishList = false
 let isInBagList = false;
 const Ppage = () => {
@@ -127,7 +148,7 @@ const Ppage = () => {
         isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
         isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
       }
-      window.location.reload();
+      // window.location.reload();
   }
   const addToWishList = async()=>{
     if (user) {
@@ -241,7 +262,7 @@ const Ppage = () => {
 		}
   },[selectedSize])
 
-  const isVideo = useMemo(() => {
+  const memoIsVideo = useMemo(() => {
     if (!selectedImage || !selectedImage.url) return false;
 
     const url = selectedImage.url;
@@ -259,167 +280,85 @@ const Ppage = () => {
       isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
       isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
   }
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const scrollableDivRef = useRef(null); // Create a ref to access the div element
+
+  useEffect(() => {
+    // Function to handle the scroll event
+    const handleScroll = () => {
+      // Get the scroll position of the specific div
+      setScrollPosition(scrollableDivRef.current.scrollTop);
+    };
+
+    // Attach the scroll event listener when the component mounts
+    const divElement = scrollableDivRef.current;
+    divElement.addEventListener('scroll', handleScroll);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      divElement.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+  console.log("Current Scroll Amount: ",scrollPosition);
   return (
-    <div className="w-screen px-10 h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div ref={scrollableDivRef} className="w-screen px-14 h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
         loading === false ?
           <div>
-            <div className='flex-row flex justify-between items-start px-3 gap-4'>
-              <div className='w-[40%] h-[30%] justify-start items-start flex'>
-                <div className='w-full h-fit justify-center items-start flex-col flex'>
-                    {selectedImage ? (
-                      isVideo ? (
-                        // Video handling using ReactPlayer
-                        <div className="relative h-[40%] p-3 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
-                          <ReactPlayer
-                            className="w-full h-[70%] object-contain rounded-md border"
-                            url={selectedImage.url || selectedImage}
-                            loop={true}
-                            muted={true}
-                            controls={false}
-                            width="100%"
-                            height="100%"
-                            playing={true} // Set to true if you want to auto-play
-                            light={false}   // Optional: Display a thumbnail preview before play
+            <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden'>
+              <div className='w-[62%] flex flex-col h-full'>
+                {
+                  scrollPosition > 10 && scrollPosition < maxScrollAmount ? (
+                    <div className='w-[37%] flex fixed'>
+                      <div className='w-[90%] h-full justify-start items-center flex'>
+                          <RightImageContent 
+                            selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
+                            Addclass ={Addclass} 
+                            setSelectedImage = {setSelectedImage} 
+                            selectedImage ={selectedImage} 
+                            isFocused = {isFocused}
+                            setIsFocused = {setIsFocused}
                           />
                         </div>
-                      ) : (
-                        // Image handling (ImageZoom)
-                        <ImageZoom imageSrc={selectedImage.url || selectedImage} />
-                      )
-                    ) : (
-                      // Loading Spinner
-                      <Loader />
-                    )}
-                    <div className='h-20 w-fit justify-center items-center flex-row flex col-span-7 mt-4'>
-                      <div className='grid grid-cols-6 h-full col-span-4 gap-2 px-3'> {/* Reduced grid-cols from 8 to 6 */}
-                        {
-                          selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
-                          selectedSize_color_Image_Array.map((e, index) => {
-                            // Check if the media is a video or an image
-                            const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
-                            console.log("Selected color Images: ", isVideo);
-                            return (
-                              <div
-                                key={index}
-                                className="w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-200 transform transition-transform duration-300 ease-in-out"
-                                onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
-                                onClick={() => { Addclass(); setSelectedImage(e); }}
-                              >
-                                {isVideo ? (
-                                  <ReactPlayer
-                                    className="w-full h-[80px] object-contain hover:scale-110"
-                                    url={e.url || e}
-                                    playing={isFocused} // Play only when the element is in focus
-                                    controls={false} // Hide video controls
-                                    muted
-                                    width="100%"
-                                    height="100%"
-                                    light={false} // No thumbnail before video plays
-                                    onFocus={() => setIsFocused(true)} // Start playing when focused
-                                    onBlur={() => setIsFocused(false)} // Stop playing when out of focus
-                                    config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
-                                  />
-                                ) : (
-                                  <img
-                                    src={e.url || e}
-                                    className="w-full h-[80px] object-contain hover:scale-110"
-                                    alt="productImage"
-                                    loading="lazy" // Ensure image is lazily loaded
-                                  />
-                                )}
-                              </div>
-                            );
-                          })
-                        }
-                      </div>
                     </div>
-                    <div className='w-[80%] px-2'> {/* Adjust the width of the reviews section */}
-                      {/* Reviews Section */}
-                      <div className='reviews-section'>
-                        <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
-                        <div className='reviews-list mt-4 overflow-y-auto'>
-                          {product && product.Rating && product.Rating.length > 0 && product.Rating.map((review, index) => {
-                            const randomStars = review.rating; // Random stars between 1 and 5
-                            return (
-                              <div key={index} className='review-item mb-4'>
-                                <div className='flex items-center'>
-                                  {/* Display random star rating */}
-                                  <div className='stars'>
-                                    {[...Array(randomStars)].map((_, i) => (
-                                      <span key={i} className='star text-black'>★</span>
-                                    ))}
-                                    {[...Array(5 - randomStars)].map((_, i) => (
-                                      <span key={i} className='star text-gray-300'>★</span>
-                                    ))}
-                                  </div>
-                                  <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
-                                </div>
-                                <p className='text-gray-700 mt-2'>{review?.comment}</p>
-                              </div>
-                            );
-                          })}
+                  ):(
+                    <div className='w-full flex'>
+                      <div className='w-full h-full justify-start items-center flex'>
+                          <RightImageContent 
+                            selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
+                            Addclass ={Addclass} 
+                            setSelectedImage = {setSelectedImage} 
+                            selectedImage ={selectedImage} 
+                            isFocused = {isFocused}
+                            setIsFocused = {setIsFocused}
+                          />
                         </div>
-                        {hasPurchased ? (
-                          <div className='w-screen justify-center items-center flex-row flex'>
-                            <div className='w-full flex flex-col justify-start items-center'>
-                              {/* Review Input Section */}
-                              <div className='mt-6 w-full'>
-                                <h4 className='text-lg font-semibold'>Write a Review</h4>
-                                <form className='mt-4'>
-                                  {/* Review Text Input */}
-                                  <div className='mb-4'>
-                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                                    <textarea
-                                      onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
-                                      id='reviewText'
-                                      name='reviewText'
-                                      rows='4'
-                                      placeholder='Write your review here...'
-                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                    />
-                                  </div>
-
-                                  {/* Star Rating Input */}
-                                  <div className='mb-4'>
-                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                    <input
-                                      onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
-                                      id='starRating'
-                                      name='starRating'
-                                      type='number'
-                                      min='1'
-                                      max='5'
-                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                      placeholder='Rate from 1 to 5'
-                                    />
-                                  </div>
-
-                                  {/* Submit Button */}
-                                  <div className='flex justify-start'>
-                                    <button
-                                      onClick={PostRating}
-                                      className='bg-gray-500 text-white px-4 py-2 rounded-md'
-                                    >
-                                      Submit Review
-                                    </button>
-                                  </div>
-                                </form>
-                              </div>
-                            </div>
-                          </div>
-                        ) :(
-                          null
-                        )}
-                      </div>
                     </div>
-                </div>
+                  )
+                }
+                {
+                  scrollPosition >= maxScrollAmount && (
+                    <div className='w-[37%] flex absolute bottom-0 left-9'>
+                      <div className='w-[90%] h-full justify-start items-center flex'>
+                          <RightImageContent 
+                            selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
+                            Addclass ={Addclass} 
+                            setSelectedImage = {setSelectedImage} 
+                            selectedImage ={selectedImage} 
+                            isFocused = {isFocused}
+                            setIsFocused = {setIsFocused}
+                          />
+                        </div>
+                    </div>
+                  )
+                }
               </div>
+                
 
               {/* Content div for large screen */}
-              <div className='w-full h-full flex flex-row '>
+              <div className='w-full h-full flex flex-col '>
                   {/* Left Column (Add to Cart Section) */}
-                  <div className='w-[60%] flex flex-col justify-start items-start p-4'>
+                  <div className='w-full flex flex-col justify-start items-start p-4'>
                     <div className='border-b-[1px] border-slate-300 pb-6 pt-4'>
                       <h1 className='font1 text-2xl font-semibold text-slate-800'>
                         {capitalizeFirstLetterOfEachWord(product?.title)}
@@ -500,9 +439,9 @@ const Ppage = () => {
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
                         <ShoppingCart size={20} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
                       </button>
-                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
+                      <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
                         {
-                          isInWishList ? <Heart fill='red' size={30} className='m-4' />: <Heart size={30} className='m-4' />
+                          isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
                         }
                         <span>ADD TO WISHLIST NOW</span>
                       </button>
@@ -513,7 +452,7 @@ const Ppage = () => {
                   </div>
 
                   {/* Right Column (Product Details Section) */}
-                  <div className='w-[40%] flex flex-col justify-start items-start p-4'>
+                  <div className='w-full flex flex-col justify-start items-start p-4'>
                     
                     {/* Price and Discount Section */}
                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
@@ -572,7 +511,85 @@ const Ppage = () => {
                       <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
                       <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
                     </div>
+                    <div className='w-[80%] px-2'> {/* Adjust the width of the reviews section */}
+                      {/* Reviews Section */}
+                      <div className='reviews-section'>
+                        <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
+                        <div className='reviews-list mt-4 overflow-y-auto'>
+                          {/* {product && product.Rating && product.Rating.length > 0 && product.Rating.map((review, index) => {
+                            const randomStars = review.rating; // Random stars between 1 and 5
+                            return (
+                              <div key={index} className='review-item mb-4'>
+                                <div className='flex items-center'>
+                                  <div className='stars'>
+                                    {[...Array(randomStars)].map((_, i) => (
+                                      <span key={i} className='star text-black'>★</span>
+                                    ))}
+                                    {[...Array(5 - randomStars)].map((_, i) => (
+                                      <span key={i} className='star text-gray-300'>★</span>
+                                    ))}
+                                  </div>
+                                  <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
+                                </div>
+                                <p className='text-gray-700 mt-2'>{review?.comment}</p>
+                              </div>
+                            );
+                          })} */}
+                          {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
+                        </div>
+                        {hasPurchased ? (
+                          <div className='w-screen justify-center items-center flex-row flex'>
+                            <div className='w-full flex flex-col justify-start items-center'>
+                              {/* Review Input Section */}
+                              <div className='mt-6 w-full'>
+                                <h4 className='text-lg font-semibold'>Write a Review</h4>
+                                <form className='mt-4'>
+                                  {/* Review Text Input */}
+                                  <div className='mb-4'>
+                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                                    <textarea
+                                      onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
+                                      id='reviewText'
+                                      name='reviewText'
+                                      rows='4'
+                                      placeholder='Write your review here...'
+                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                    />
+                                  </div>
 
+                                  {/* Star Rating Input */}
+                                  <div className='mb-4'>
+                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                                    <input
+                                      onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
+                                      id='starRating'
+                                      name='starRating'
+                                      type='number'
+                                      min='1'
+                                      max='5'
+                                      className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                      placeholder='Rate from 1 to 5'
+                                    />
+                                  </div>
+
+                                  {/* Submit Button */}
+                                  <div className='flex justify-start'>
+                                    <button
+                                      onClick={PostRating}
+                                      className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                                    >
+                                      Submit Review
+                                    </button>
+                                  </div>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        ) :(
+                          null
+                        )}
+                      </div>
+                    </div>
                     {/* Average Rating */}
                     {product?.Rating && product?.Rating.length > 0 && (
                       <div className='average-rating mt-6'>
@@ -615,6 +632,165 @@ const Ppage = () => {
           <Loader />
       }
 
+    </div>
+  )
+}
+
+
+const ProductReviews = ({ reviews }) => {
+  const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
+
+  const handleToggleReviews = () => {
+    setShowMore(!showMore); // Toggle the state between true/false
+  };
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
+
+      <div
+        className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
+      >
+        {/* Display only the first 3 reviews or more based on showMore */}
+        {reviews.slice(0, 3).map((review, index) => {
+          const randomStars = review.rating; // Random stars between 1 and 5
+          return (
+            <div key={index} className="review-item mb-4">
+              <div className="flex items-center">
+                <div className="stars">
+                  {[...Array(randomStars)].map((_, i) => (
+                    <span key={i} className="star text-black">★</span>
+                  ))}
+                  {[...Array(5 - randomStars)].map((_, i) => (
+                    <span key={i} className="star text-gray-300">★</span>
+                  ))}
+                </div>
+                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+              </div>
+              <p className="text-gray-700 mt-2">{review.comment}</p>
+            </div>
+          );
+        })}
+
+        {/* If showMore is true, display all reviews */}
+        {showMore &&
+          reviews.slice(3).map((review, index) => {
+            const randomStars = review.rating;
+            return (
+              <div key={index} className="review-item mb-4">
+                <div className="flex items-center">
+                  <div className="stars">
+                    {[...Array(randomStars)].map((_, i) => (
+                      <span key={i} className="star text-black">★</span>
+                    ))}
+                    {[...Array(5 - randomStars)].map((_, i) => (
+                      <span key={i} className="star text-gray-300">★</span>
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                </div>
+                <p className="text-gray-700 mt-2">{review.comment}</p>
+              </div>
+            );
+          })
+        }
+
+        {/* "View More" / "Show Less" Toggle Button */}
+        <button
+          onClick={handleToggleReviews}
+          className="mt-4 text-blue-500 hover:underline"
+        >
+          {showMore ? 'Show Less' : 'View More'}
+        </button>
+      </div>
+    </div>
+  );
+};
+
+const RightImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedImage,selectedImage,isFocused,setIsFocused})=>{
+  const memoIsVideo = useMemo(() => {
+    if (!selectedImage || !selectedImage.url) return false;
+
+    const url = selectedImage.url;
+    return (
+        url.includes("video") || 
+        url.endsWith(".mp4") || 
+        url.endsWith(".mov") || 
+        url.endsWith(".avi")
+    );
+  }, [selectedImage]);
+  return(
+    <div className='w-full min-w-full h-full justify-start items-start flex-row flex'>
+      <div className='h-fit w-20 justify-center items-center flex-col flex col-span-7 mt-4'>
+        <div className='grid grid-cols-1 h-full col-span-6 gap-2 px-3'> {/* Reduced grid-cols from 8 to 6 */}
+          {
+            selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
+            selectedSize_color_Image_Array.map((e, index) => {
+              // Check if the media is a video or an image
+              const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
+              console.log("Selected color Images: ", isVideo);
+              return (
+                <div
+                  key={index}
+                  className={`w-full h-full ${selectedImage === e ? "border-2":""}  border-black rounded-md overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
+                  onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
+                  onClick={() => { Addclass(); setSelectedImage(e); }}
+                >
+                  {isVideo ? (
+                    <ReactPlayer
+                      className="w-full h-[80px] object-cover hover:scale-110"
+                      url={e.url || e}
+                      playing={isFocused} // Play only when the element is in focus
+                      controls={false} // Hide video controls
+                      muted
+                      width="100%"
+                      height="100%"
+                      light={false} // No thumbnail before video plays
+                      onFocus={() => setIsFocused(true)} // Start playing when focused
+                      onBlur={() => setIsFocused(false)} // Stop playing when out of focus
+                      config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
+                    />
+                  ) : (
+                    <img
+                      src={e.url || e}
+                      className="w-full h-[80px] object-contain hover:scale-110"
+                      alt="productImage"
+                      loading="lazy" // Ensure image is lazily loaded
+                    />
+                  )}
+                </div>
+              );
+            })
+          }
+        </div>
+      </div>
+      <div className='w-full h-full justify-center items-center'>
+        {selectedImage ? (
+              memoIsVideo ? (
+                // Video handling using ReactPlayer
+                <div className="relative h-full p-1 w-full justify-center items-center overflow-hidden hover:shadow-md">
+                  <ReactPlayer
+                    className="w-full h-full object-contain rounded-md"
+                    url={selectedImage.url || selectedImage}
+                    loop={true}
+                    muted={true}
+                    controls={false}
+                    width="100%"
+                    height="100%"
+                    playing={true} // Set to true if you want to auto-play
+                    light={false}   // Optional: Display a thumbnail preview before play
+                  />
+                </div>
+              ) : (
+                // Image handling (ImageZoom)
+                <ImageZoom imageSrc={selectedImage.url || selectedImage} />
+              )
+            ) : (
+              // Loading Spinner
+              <Loader />
+            )}
+
+      </div>
     </div>
   )
 }

@@ -112,14 +112,14 @@ const MPpage = () => {
         );
     }
 
-    function buyNow(e) {
+    function buyNow() {
         if (user) {
-            addToBag(e);
+            addToBag();
             setTimeout(() => {
                 navigation('/bag')
             }, 200);
         } else {
-            checkAndCreateToast("error",'You need to log in to add this product purchase.');
+            checkAndCreateToast("info",'You need to log in to add this product purchase.');
         }
     }
     const addToWishList = async()=>{
@@ -147,7 +147,7 @@ const MPpage = () => {
         }
         window.location.reload();
     }
-    async function addToBag(e) {
+    async function addToBag() {
         if(isInBagList){
             navigation("/bag")
             return;

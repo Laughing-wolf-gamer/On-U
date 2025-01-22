@@ -211,7 +211,7 @@ const AdminHomeFeatures = () => {
                                     Header: {item.Header}
                                 </h3>
                             )}
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative">
+                            {/* <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative">
                                 {item.Url && item.Url.length > 0 ? item.Url?.map((url, idx) => (
                                     <div
                                         key={idx}
@@ -238,7 +238,8 @@ const AdminHomeFeatures = () => {
                                         <p>No Images Uploaded!</p>
                                     </div>
                                 )}
-                            </div>
+                            </div> */}
+                            <GridImageView item={item} setIsConfirmDeleteWindow={setIsConfirmDeleteWindow} isConfirmDeleteWindow = {isConfirmDeleteWindow} setDeletingImageCategory={setDeletingImageCategory}/>
                         </div>
                     ))
                 ) : (
@@ -252,6 +253,96 @@ const AdminHomeFeatures = () => {
                 setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
             }}/>
         </div>
+    );
+};
+const GridImageView = ({ item, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
+    // Initialize loading states for each item in the Url array, all true initially
+    const [loadingStates, setLoadingStates] = useState(item.Url.map(() => true));
+  
+    // Helper function to determine if the file is a video or an image
+    const getFileType = (url) => {
+      const fileExtension = url.split('.').pop().toLowerCase();
+      const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+      const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(fileExtension);
+      return { isImage, isVideo };
+    };
+  
+    // Handle media load and update loading state for the specific media item
+    const handleMediaLoad = (index) => {
+      setLoadingStates((prevState) => {
+        const updatedStates = [...prevState];
+        updatedStates[index] = false; // Set loading state to false for the specific item
+        return updatedStates;
+      });
+    };
+  
+    // Check if all items are loaded
+    const allItemsLoaded = loadingStates.every((state) => state === false);
+  
+    useEffect(() => {
+      if (allItemsLoaded) {
+        // Optionally, you can add some action after all items have finished loading
+        console.log('All items loaded');
+      }
+    }, [allItemsLoaded]);
+  
+    return (
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative">
+        {item.Url && item.Url.length > 0 ? (
+          item.Url.map((url, index) => {
+            const { isImage, isVideo } = getFileType(url);
+  
+            return (
+              <div key={index} className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden">
+                {/* Skeleton loader while the media is loading */}
+                {loadingStates[index] && (
+                  <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
+                    <p className="text-black font-bold">Loading...</p>
+                  </div>
+                )}
+  
+                {/* Image */}
+                {isImage ? (
+                  <img
+                    src={url}
+                    alt={`Image ${index + 1}`}
+                    className="w-full h-full object-contain rounded-lg shadow-sm"
+                    onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
+                  />
+                ) : isVideo ? (
+                  <video
+                    className="w-full h-full object-contain rounded-lg shadow-sm"
+                    controls={false}
+                    muted
+                    autoPlay
+                    onLoadedData={() => handleMediaLoad(index)} // Trigger loading state on video load
+                  >
+                    <source src={url} type={`video/${url.split('.').pop()}`} />
+                    Your browser does not support the video tag.
+                  </video>
+                ) : (
+                  <p>Unsupported file type</p>
+                )}
+  
+                {/* Delete Button */}
+                <Button
+                  onClick={() => {
+                    setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+                    setDeletingImageCategory({ itemId: item._id, idx: index });
+                  }}
+                  className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg"
+                >
+                  <X size={16} />
+                </Button>
+              </div>
+            );
+          })
+        ) : (
+          <div className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden">
+            <p>No Images Uploaded!</p>
+          </div>
+        )}
+      </div>
     );
 };
 
