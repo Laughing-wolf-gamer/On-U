@@ -1,5 +1,7 @@
 import winston from 'winston';
 import DailyRotateFile from 'winston-daily-rotate-file';
+import path from 'path';
+
 
 const { combine, timestamp, printf, colorize, errors } = winston.format;
 const logLevel = process.env.NODE_ENV === 'production' ? 'warn' : 'info';
@@ -29,13 +31,13 @@ const logger = winston.createLogger({
             )
         }),
         new DailyRotateFile({
-            filename: 'logs/app-%DATE%.log',
+            filename: path.join(__dirname, 'logs', 'app-%DATE%.log'),
             datePattern: 'YYYY-MM-DD',
             level: 'info',  // Adjust level for production
             maxFiles: '14d', // Keep logs for 14 days
         }),
         new DailyRotateFile({
-            filename: 'logs/error-%DATE%.log',
+            filename: path.join(__dirname, 'logs', 'app-%DATE%.log'),
             datePattern: 'YYYY-MM-DD',
             level: 'error', // Only log errors to this file
             maxFiles: '14d',
