@@ -564,7 +564,7 @@ const MPpage = () => {
                                     )}
                                     </div>
                                 </div>
-                            <SizeChartModal/>
+                                <SizeChartModal/>
                             </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
