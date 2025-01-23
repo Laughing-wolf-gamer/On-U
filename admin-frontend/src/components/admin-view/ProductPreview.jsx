@@ -13,6 +13,7 @@ import { getProductsById } from '@/store/admin/product-slice';
 import BulletPointsForm from './BulletPointsForm';
 import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
 import FileUploadComponent from './FileUploadComponent';
+import { FaEdit } from "react-icons/fa";
 const ProductPreview = ({
 	productDataId,
 	showPopUp,
@@ -380,7 +381,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [newSize, setNewSize] = useState(null);
 	const [updatingColors, setUpdatingColors] = useState([]);
-	const [selectedColorImages, setSelectedColorImages] = useState([]);
+	const [selectedColorImages, setSelectedColorImages] = useState({sizeId:'',images:[]});
 	const [colorOptions, setColorOptions] = useState([]);
 
 
@@ -536,8 +537,9 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	};
 
 	// Handle color click (to show selected color's images)
-	const handleColorClick = (images) => {
-		setSelectedColorImages(images);
+	const handleColorClick = (sizeId,images) => {
+		console.log("handleColorClick: ",sizeId,images);
+		setSelectedColorImages({sizeId,images});
 	};
 
 	const handelRemoveColor = async (sizeId,colorId) => {
@@ -635,7 +637,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	}
 
 	const memoizedColorImages = useMemo(() => {
-		return selectedColorImages.map((item, index) => {
+		return selectedColorImages.images.map((item, index) => {
 			const isVideo = item?.url?.includes('video');
 			return (
 				<div key={index} className="w-24 h-24">
@@ -767,7 +769,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							setSizeDeletingData({sizeId:size._id});
 							setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 						}} 
-						className="absolute top-2 right-6 text-white p-2 rounded-full bg-red-700"
+						className="absolute top-2 right-6 text-white p-5 rounded-full bg-red-700"
 					>
 						Remove Size: {size.label}
 					</Button>
@@ -779,7 +781,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							<div
 								key={index}
 								className="flex relative items-center justify-between gap-2 bg-gray-200 p-3 rounded-md shadow-md cursor-pointer flex-wrap"
-								onClick={() => handleColorClick(color?.images || [])}
+								onClick={() => handleColorClick(size._id,color?.images || [])}
 							>
 								<div
 									className="w-10 h-10 rounded-full border-2"
@@ -834,15 +836,16 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 										setActiveSelectedColor(color._id);
 										setActiveSelectedSize(size._id)
 										setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-                                        setSelectedColorImages([]);
+                                        setSelectedColorImages({sizeId:'',images:[]});
 									}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
-										<FilePenLine />
+										{/* <FilePenLine /> */}
+										<FaEdit />
 									</Button>
 								</div>
 							</div>
 						))}
 					</div>
-					{selectedColorImages && selectedColorImages.length > 0 && (
+					{selectedColorImages && selectedColorImages.sizeId && selectedColorImages.sizeId == size?._id  && selectedColorImages.images.length > 0 && (
 						<div className="mt-4">
 							<h3 className="text-lg font-semibold">Selected Color Images:</h3>
 							<div className="flex gap-4 mt-2">
