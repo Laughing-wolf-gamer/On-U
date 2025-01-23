@@ -40,7 +40,7 @@ const ImageZoom = ({ imageSrc }) => {
       <img
         src={imageSrc}
         alt="Zoomable"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}

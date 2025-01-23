@@ -11,7 +11,7 @@ const clothingItems = [
   "T-shirt",
   "Cargo"
 ];
-const GridImageView = ({ imageToShow }) => {
+const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop();  // Get the file extension
   const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);  // Check if the file is a video
@@ -54,7 +54,7 @@ const GridImageView = ({ imageToShow }) => {
           )
         }
         <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold text-xl'>
-          <span> {getRandomItem(clothingItems).toUpperCase()} </span>
+          <span> {getRandomItem(categoriesOptions || clothingItems)?.toUpperCase()} </span>
         </div>
 
       </div>

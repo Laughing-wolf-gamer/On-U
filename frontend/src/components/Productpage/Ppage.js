@@ -42,8 +42,49 @@ const reviews = [
     rating: 1,
     comment: "Terrible! It broke after one use.",
   },
+  {
+    rating: 4,
+    comment: "Really good overall. The performance is great, just wish it had more features.",
+  },
+  {
+    rating: 5,
+    comment: "I love it! Exactly what I needed, and the price was reasonable for the quality.",
+  },
+  {
+    rating: 3,
+    comment: "It's okay, but I expected better durability. It's decent for the price.",
+  },
+  {
+    rating: 2,
+    comment: "Disappointing. It didn’t perform as expected, and the build quality feels cheap.",
+  },
+  {
+    rating: 1,
+    comment: "I regret purchasing this. It stopped working after a couple of days.",
+  },
+  {
+    rating: 4,
+    comment: "Very happy with this! It does what it promises, but the packaging could’ve been better.",
+  },
+  {
+    rating: 5,
+    comment: "Fantastic! I’ll definitely be buying again. This has become my go-to product.",
+  },
+  {
+    rating: 3,
+    comment: "It’s fine, but it doesn’t stand out from other similar products in the market.",
+  },
+  {
+    rating: 2,
+    comment: "Not worth the money. The product was underwhelming and didn’t meet my needs.",
+  },
+  {
+    rating: 1,
+    comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
+  },
 ];
-const maxScrollAmount = 1024
+
+const maxScrollAmount = 1200
 let isInWishList = false
 let isInBagList = false;
 const Ppage = () => {
@@ -305,10 +346,10 @@ const Ppage = () => {
         loading === false ?
           <div>
             <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden mb-6'>
-              <div className='w-[60%] flex flex-col h-full'>
+              <div className='w-[70%] flex flex-col h-full'>
                 {
                   scrollPosition > 10 && scrollPosition < maxScrollAmount ? (
-                    <div className='w-[37%] flex fixed'>
+                    <div className='w-[42%] flex fixed'>
                       <div className='w-[90%] h-full justify-start items-center flex'>
                           <RightImageContent 
                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -337,7 +378,7 @@ const Ppage = () => {
                 }
                 {
                   scrollPosition >= maxScrollAmount && (
-                    <div className='w-[37%] flex absolute bottom-1 left-8'>
+                    <div className='w-[44%] flex absolute bottom-4 left-0'>
                       <div className='w-[90%] h-full justify-start items-center flex'>
                           <RightImageContent 
                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -353,16 +394,17 @@ const Ppage = () => {
                 }
               </div>
               {/* Content div for large screen */}
-              <div className='w-full h-full flex flex-col '>
+              <div className='w-full h-full flex flex-col pl-9'>
                   {/* Left Column (Add to Cart Section) */}
-                  <div className='w-full flex flex-col justify-start items-start p-4'>
-                    <div className='border-b-[1px] border-slate-300 pb-6 pt-4'>
+                  <div className='w-full flex flex-col justify-start items-start p-2'>
+                    <div className='pt-1'>
                       <h1 className='font1 text-2xl font-semibold text-slate-800'>
                         {capitalizeFirstLetterOfEachWord(product?.title)}
                       </h1>
                       <h1 className='text-xl text-[#808080e8] font-light'>
                         {capitalizeFirstLetterOfEachWord(product?.gender)}
                       </h1>
+                      <AverageRatingView ratings={product.Rating || reviews}/>
                     </div>
                     
                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4 w-full'>
@@ -382,11 +424,11 @@ const Ppage = () => {
                       </h1>
                       <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
                         {/* Size Selection */}
-                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
+                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
                           {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
                             <div key={`size_${index}_${size._id}`} 
-                                className={`flex flex-col items-center justify-center rounded-full p-2 shadow-md gap-2 transition-transform duration-300 ease-in-out 
-                                  ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`}
+                                className={`flex flex-col items-center justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                  ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
                                 onClick={() => { handleSetNewImageArray(size); }}>
                               <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
                                 {size.label}
@@ -406,7 +448,7 @@ const Ppage = () => {
                                 <button disabled={color.quantity <= 0} 
                                   style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
                                   className={`${color.quantity <= 0 ? 
-                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
+                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-100` :
                                     `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                     ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                   title={color?.quantity || color?.label || "Color"} />
@@ -431,7 +473,7 @@ const Ppage = () => {
                           {
                             isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
                           }
-                          <span>ADD TO WISHLIST NOW</span>
+                          <span>ADD TO WISHLIST</span>
                         </button>
                       </div>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
@@ -505,7 +547,7 @@ const Ppage = () => {
                       <div className='reviews-section'>
                         <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
                         <div className='reviews-list mt-4 overflow-y-auto'>
-                          {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
+                          {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
                         </div>
                         {hasPurchased ? (
                           <div className='w-screen justify-center items-center flex-row flex'>
@@ -560,32 +602,7 @@ const Ppage = () => {
                         )}
                       </div>
                     </div>
-                    {/* Average Rating */}
-                    {product?.Rating && product?.Rating.length > 0 && (
-                      <div className='average-rating mt-6'>
-                        <h4 className='text-lg font-semibold'>Average Rating:</h4>
-                        <div className='flex items-center'>
-                          {(() => {
-                            const totalStars = product.Rating.reduce((acc, review) => acc + review.rating, 0);
-                            const avgStars = totalStars / product.Rating.length;
-                            const roundedAvg = Math.round(avgStars * 10) / 10;
-                            return (
-                              <>
-                                <div className='stars'>
-                                  {[...Array(Math.floor(roundedAvg))].map((_, i) => (
-                                    <span key={i} className='star text-black'>★</span>
-                                  ))}
-                                  {[...Array(5 - Math.floor(roundedAvg))].map((_, i) => (
-                                    <span key={i} className='star text-gray-300'>★</span>
-                                  ))}
-                                </div>
-                                <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
-                              </>
-                            );
-                          })()}
-                        </div>
-                      </div>
-                    )}
+                    
                     
                   </div>
                 </div>
@@ -609,6 +626,37 @@ const Ppage = () => {
   )
 }
 
+
+const AverageRatingView = ({ ratings }) => {
+  if (!ratings || ratings.length === 0) return null;
+
+  // Calculate the average rating
+  const totalStars = ratings.reduce((acc, review) => acc + review.rating, 0);
+  const avgStars = totalStars / ratings.length;
+  const roundedAvg = Math.round(avgStars * 10) / 10; // Rounded to 1 decimal place
+  const fullStars = Math.floor(roundedAvg);
+  const emptyStars = 5 - fullStars;
+
+  return (
+    <Fragment>
+      <div className='average-rating mt-6'>
+        <div className='flex items-center'>
+          <div className='stars'>
+            {/* Render filled stars */}
+            {[...Array(fullStars)].map((_, i) => (
+              <span key={i} className='star text-[30px] text-black'>★</span>
+            ))}
+            {/* Render empty stars */}
+            {[...Array(emptyStars)].map((_, i) => (
+              <span key={i} className='star text-[30px] text-gray-300'>★</span>
+            ))}
+          </div>
+          <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+        </div>
+      </div>
+    </Fragment>
+  );
+};
 
 const ProductReviews = ({ reviews }) => {
   const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
@@ -694,7 +742,7 @@ const RightImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedI
   }, [selectedImage]);
   return(
     <div className='w-full min-w-full h-full justify-start items-start flex-row flex'>
-      <div className='h-fit w-20 justify-center items-center flex-col flex col-span-7 mt-4'>
+      <div className='h-fit w-32 justify-center items-center flex-col flex col-span-7 mt-4'>
         <div className='grid grid-cols-1 h-full col-span-6 gap-2 px-3'> {/* Reduced grid-cols from 8 to 6 */}
           {
             selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&

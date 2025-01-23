@@ -275,10 +275,10 @@ export const getAboutData = async(req,res)=>{
 export const getAllOptions = async(req,res)=>{
 	try {
 		const allOptions = await Option.find({});
-		res.status(200).json({Success:true,message:"Fetch All Options",result:allOptions || []})
+		res.status(200).json({success:true,message:"Fetch All Options",result:allOptions || []})
 	} catch (error) {
 		console.error(`Error Fetching Options`,error);
-		res.status(500).json({Success:false,message:"Failed to fetch all options"})
+		res.status(500).json({success:false,message:"Failed to fetch all options"})
 	}
 }
 // Fetch all options of a specific type

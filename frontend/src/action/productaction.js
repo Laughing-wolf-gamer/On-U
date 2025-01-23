@@ -39,7 +39,7 @@ export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
         const res = await axios.get(`${BASE_API_URL}/api/shop/products/random`)
         console.log("Random products: ", res.data);
         const data = res.data;
-        dispatch({ type: SUCCESS_RANDOM_PRODUCT, payload: data?.products, pro:data?.pro, length:data?.length })
+        dispatch({ type: SUCCESS_RANDOM_PRODUCT, payload: data?.result})
     } catch (error) {
         dispatch({ type: FAIL_RANDOM_PRODUCT, payload: error.response?.data?.message })
     }
@@ -67,10 +67,24 @@ export const fetchAllOptions = () => async (dispatch) => {
         // const { data } = await axios.get(`/api/v1/options`)
         const res = await axios.get(`${BASE_API_URL}/api/common/options/get/all`);
         const data = res?.data;
-        console.log("Options: ", res);
+        console.log("Options: ", data.result);
         dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
     } catch (error) {
         dispatch({ type: FAIL_OPTIONS, payload: error.response?.data?.message })
+    }
+}
+export const getOptionsByType = ({type}) => async () => {
+    try {
+        // dispatch({ type: REQUEST_OPTIONS })
+        // const { data } = await axios.get(`/api/v1/options`)
+        const res = await axios.get(`${BASE_API_URL}/api/common/options/getByType/${type}`);
+        const data = res?.data;
+        console.log("Single Options: ", data.result);
+        return data.result || null;
+        // dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
+    } catch (error) {
+        // dispatch({ type: FAIL_OPTIONS, payload: error.response?.data?.message })
+        return null;
     }
 }
 export const postRating = ({productId,ratingData})=> async()=>{

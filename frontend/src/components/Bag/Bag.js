@@ -17,6 +17,7 @@ import Footer from '../Footer/Footer';
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
 import { getRandomArrayOfProducts } from '../../action/productaction';
+import SingleProduct from '../Product/Single_product';
 
 
 const Bag = () => {
@@ -610,12 +611,27 @@ const Bag = () => {
                     
                 </div>
             )}
+            <ProductGrid randomProducts={randomProducts} user={user}/>
             
             <Footer/>
         </div>
     );
 };
-
+const ProductGrid = ({ randomProducts, user }) => {
+    if (!randomProducts || randomProducts.length === 0) {
+      return <div>No products available</div>;
+    }
+  
+    return (
+      <div className="grid grid-cols-4 gap-4 mt-4">
+        {randomProducts.map((p, index) => (
+          <div key={index} className="col-span-1">
+            <SingleProduct pro={p} user={user} showWishList={true} />
+          </div>
+        ))}
+      </div>
+    );
+  };
 const SkeletonLoader = () => {
     return (
         <Fragment>

@@ -206,7 +206,6 @@ export const getallproducts = A(async (req, res)=>{
 export const getRandomProducts = async (req, res)=>{
     const { category } = req.body;  // Get category from request body
     try {
-        await Pr
         const matchStage = category ? { $match: { category: category } } : {};  // Optional category filter
         
         // MongoDB aggregation pipeline

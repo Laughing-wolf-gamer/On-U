@@ -115,7 +115,7 @@ import { featchallbanners } from '../../action/banner.action'
 import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 import { getuser } from '../../action/useraction'
 import CarousalView from './CarousalView'
-import { Allproduct } from '../../action/productaction'
+import { Allproduct, fetchAllOptions, getOptionsByType } from '../../action/productaction'
 import ProductPreviewFull from './ProductPreviewFull'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 import DraggableImageSlider from './DraggableImageSlider'
@@ -126,6 +126,8 @@ import GridImageView from './GridImageView'
 
 const Home = () => {
   const { product} = useSelector(state => state.Allproducts)
+  // const { AllOptions} = useSelector(state => state.allOptions)
+  const [categoriesOptions,setCategoryOptions] = useState([]);
   const { banners,loading:bannerLoading} = useSelector(state => state.banners)
   const navigation = useNavigate();
   const dispatch = useDispatch();
@@ -167,10 +169,23 @@ const Home = () => {
       />
     );
   }
+  const getSingleOptions = async ()=>{
+    try {
+      const catResponse = await dispatch(getOptionsByType({type: 'category'}))
+      
+      if(catResponse){
+        setCategoryOptions(catResponse.map(c => c.value));
+      }
+    } catch (error) {
+      console.error("Error getting: ", error);
+    }
+  }
   useEffect(()=>{
+    // dispatch(fetchAllOptions())
     dispatch(getuser());
     dispatch(featchallbanners());
     dispatch(Allproduct())
+    getSingleOptions();
   },[dispatch])
   
   useEffect(() => {
@@ -258,7 +273,8 @@ const Home = () => {
     Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
   }
   
-  console.log("All Banners: ",Wide_Screen_Section_8);
+  // console.log("All Options: ",AllOptions);
+  console.log("Categories options: ", categoriesOptions)
 
   const [showComponent, setShowComponent] = useState(null);
 
@@ -340,7 +356,7 @@ const Home = () => {
                             <div
                               key={`Index_${index}`}
                               className="h-[600px] relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
-                                <GridImageView imageToShow={url} />
+                                <GridImageView imageToShow={url} categoriesOptions = {categoriesOptions}/>
                             </div>
                           )) 
                       }
