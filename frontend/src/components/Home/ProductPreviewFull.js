@@ -114,8 +114,8 @@ const ProductPreviewFull = ({ product }) => {
           }
         </div>
     </div>
-    <div className='w-full h-28 text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all'>
-      <div onClick={()=> navigation('/products')} className='px-2 w-fit flex-wrap text-sm md:text-lg bg-gray-900 hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
+    <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all'>
+      <div onClick={()=> navigation('/products')} className='px-8 w-fit flex-wrap text-sm md:text-lg bg-gray-900 hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
         <span>VIEW MORE</span>
       </div>
     </div>

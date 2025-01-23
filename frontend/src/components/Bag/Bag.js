@@ -612,7 +612,6 @@ const Bag = () => {
                 </div>
             )}
             <ProductGrid randomProducts={randomProducts} user={user}/>
-            
             <Footer/>
         </div>
     );
@@ -623,13 +622,13 @@ const ProductGrid = ({ randomProducts, user }) => {
     }
   
     return (
-      <div className="grid grid-cols-4 gap-4 mt-4">
-        {randomProducts.map((p, index) => (
-          <div key={index} className="col-span-1">
-            <SingleProduct pro={p} user={user} showWishList={true} />
-          </div>
-        ))}
-      </div>
+        <div className="grid grid-cols-4 gap-4 mt-4">
+            {randomProducts.map((p, index) => (
+                <div key={index} className="col-span-1">
+                    <SingleProduct pro={p} user={user} showWishList={true} />
+                </div>
+            ))}
+        </div>
     );
   };
 const SkeletonLoader = () => {
