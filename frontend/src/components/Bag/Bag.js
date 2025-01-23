@@ -18,6 +18,7 @@ import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';
+import Loader from '../Loader/Loader';
 
 
 const Bag = () => {
@@ -218,19 +219,6 @@ const Bag = () => {
         }
     };
 
-    /* const handleAddressChange = (e) => {
-        setAddress({ ...address, [e.target.name]: e.target.value });
-    };
-
-    const handleAddressSubmit = () => {
-        if (Object.values(address).every(value => value.trim() !== '')) {
-            setIsAddressFilled(true);
-            alert.success('Address added successfully');
-        } else {
-            alert.error('Please fill out all the fields');
-        }
-    };
- */
     const handleAddressSelection = (address) => {
         setSelectedAddress(address);
     };
@@ -311,7 +299,7 @@ const Bag = () => {
                 <div>
                     
                     {!bagLoading && bag?.orderItems?.length > 0 ? (
-                        <div className="relative max-w-screen-lg mx-auto">
+                        <div className="relative w-screen px-5 mx-auto">
                             <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
                                 <div className="flex space-x-2 text-[#696B79]">
                                     <span className={`font-semibold ${!showPayment ? "text-blue-400":''}`}>BAG</span>
@@ -501,7 +489,7 @@ const Bag = () => {
             ) : (
                 <div>
                     {sessionStorageBag && sessionStorageBag.length > 0 ? (
-                        <div className="relative max-w-screen-lg mx-auto">
+                        <div className="relative w-screen px-5 mx-auto">
                             <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
                                 <div className="flex space-x-2 text-[#696B79]">
                                     <span className={`font-semibold ${!showPayment ? "text-blue-400":''}`}>BAG</span>
@@ -611,7 +599,13 @@ const Bag = () => {
                     
                 </div>
             )}
-            <ProductGrid randomProducts={randomProducts} user={user}/>
+            <div className='w-full justify-center flex flex-col'>
+              <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
+              <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
+                {randomProducts && randomProducts.length > 0 && randomProducts.slice(0,10).map((pro) => (<SingleProduct pro={pro} user ={user} key={pro._id}/>))}
+              </ul>
+
+            </div>
             <Footer/>
         </div>
     );

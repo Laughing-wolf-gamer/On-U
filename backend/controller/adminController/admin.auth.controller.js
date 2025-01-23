@@ -180,6 +180,59 @@ export const addNewSizeToProduct = async (req, res) => {
     res.status(500).json({ Success: false, message: 'Internal Server Error' });
   }
 };
+export const updateImages = async(req,res)=>{
+  try {
+    const { productId, sizeId, colorId, images } = req.body;
+    console.log("Updating Images: ", productId, sizeId, colorId, images);
+    const alreadyPresetProduct = await ProductModel.findById(productId);
+    if(!alreadyPresetProduct){
+      return res.status(404).json({ Success: false, message: 'Product not found' });
+    }
+    // Update the color quantity directly within the product document
+    const product = await ProductModel.findOneAndUpdate(
+      { _id: productId, "size._id": sizeId, "size.colors._id": colorId }, // Find product, size, and color by IDs
+      { 
+        $set: { 
+          "size.$[size].colors.$[color].images": images // Update color quantity in the specified size
+        }
+      },
+      {
+        arrayFilters: [
+          { "size._id": sizeId }, // Array filter to match the size
+          { "color._id": colorId } // Array filter to match the color within the size
+        ],
+        new: true // Return the updated document
+      }
+    );
+
+    if (!product) {
+      return res.status(404).json({ Success: false, message: 'Product, Size, or Color not found' });
+    }
+
+    // Recalculate the total stock for the entire product
+    let totalStock = 0;
+    product.size.forEach(size => {
+      if (size.colors) {
+        let sizeStock = size.quantity; // Start with the size's own quantity
+        size.colors.forEach(color => {
+          sizeStock += color.quantity; // Add color quantities to the size stock
+        });
+        totalStock += sizeStock;
+      }
+    });
+
+    // Update the total stock of the product
+    const UpdatedProduct = await ProductModel.updateOne(
+      { _id: productId },
+      { $set: { totalStock: totalStock } }
+    );
+
+    res.status(200).json({ Success: true, message: 'Color Stock Updated Successfully' ,result:UpdatedProduct});
+  } catch (error) {
+    console.log("Error Updating Color Stock: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+}
 
 export const removeSizeFromProduct = async (req, res) => {
   try {
@@ -330,12 +383,6 @@ export const UpdateColorStock = async (req, res) => {
     if(!alreadyPresetProduct){
       return res.status(404).json({ Success: false, message: 'Product not found' });
     }
-    /* if(!alreadyPresetProduct.size){
-      return res.status(404).json({ Success: false, message: 'Size not found' });
-    }
-    if(!alreadyPresetProduct.size.colors){
-      return res.status(404).json({ Success: false, message: 'Color not found' });
-    } */
     // Update the color quantity directly within the product document
     const product = await ProductModel.findOneAndUpdate(
       { _id: productId, "size._id": sizeId, "size.colors._id": colorId }, // Find product, size, and color by IDs

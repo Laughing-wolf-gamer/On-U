@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { Minus, Plus, X, XCircle } from 'lucide-react';
+import { File, FilePenLine, Minus, Plus, X, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { BASE_URL, Header } from '@/config';
 import SizeSelector from './SizeSelector';
@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { getProductsById } from '@/store/admin/product-slice';
 import BulletPointsForm from './BulletPointsForm';
 import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
+import FileUploadComponent from './FileUploadComponent';
 const ProductPreview = ({
 	productDataId,
 	showPopUp,
@@ -365,6 +366,11 @@ const ProductPreview = ({
 };
   
 const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
+	const[isFileUploadPopUpOpen,setIsFileUploadPopUpOpen] = useState(false);
+	const[activeSelectedSize,setActiveSelectedSize] = useState(null);
+	const[activeSelectedColor,setActiveSelectedColor] = useState(null);
+
+
 	const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
 	const[sizeDeletingData,setSizeDeletingData] = useState(null);
 	const[colorDeletingData, setColorDeletingData] = useState(null)
@@ -578,7 +584,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setSizeDeletingData(null);
 		}
 	}
-	console.log("SizesArray: ",sizeQuantities);
+	// console.log("SizesArray: ",sizeQuantities);
 	useEffect(()=>{
 		console.log("SizesArray: ",SizesArray);
 		setSizeQuantities(
@@ -602,6 +608,32 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 		}
 		return null;
 	};
+
+	const updateImageImageBuyColorId = async (colorId,sizeId,imagesArray) => {
+		setIsLoading(true);
+		try {
+			/* console.log("Updating Image: ",productId,
+				sizeId,
+				colorId,
+				imagesArray
+			); */
+			const response = await axios.patch(`${BASE_URL}/admin/product/update/updateImages`, {
+				productId,
+				sizeId,
+				colorId,
+				images:imagesArray
+			},Header());
+			console.log(`Image Updated: `, response.data);
+		} catch (error) {
+			console.error("Error updating: ",error);
+		}finally{
+			setIsLoading(false);
+			setActiveSelectedColor(null);
+			setActiveSelectedSize(null);
+
+		}
+	}
+
 	const memoizedColorImages = useMemo(() => {
 		return selectedColorImages.map((item, index) => {
 			const isVideo = item?.url?.includes('video');
@@ -632,7 +664,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	return (
 		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> {/* Make the container a column layout */}
 			<div className='flex justify-center items-center gap-4'>
-			
 				<Button
 					disabled={isLoading}
 					onClick={() => setToggleAddNewSize(!toggleAddNewSize)}
@@ -733,7 +764,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					<Button 
 						disabled={isLoading} 
 						onClick={() => {
-							// handelRemoveSize(size._id)
 							setSizeDeletingData({sizeId:size._id});
 							setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 						}} 
@@ -749,50 +779,66 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							<div
 								key={index}
 								className="flex relative items-center justify-between gap-2 bg-gray-200 p-3 rounded-md shadow-md cursor-pointer flex-wrap"
-								// style={{ backgroundColor: color.label }}
 								onClick={() => handleColorClick(color?.images || [])}
 							>
 								<div
 									className="w-10 h-10 rounded-full border-2"
 									style={{ backgroundColor: color.label }}
 								>
-
 								</div>
 								<span className="text-sm text-black font-extrabold">
 									{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${color._id}`])}
 								</span>
 								<span className="text-sm text-black font-extrabold">{color.label}</span>
-	
+
 								{/* Color Quantity Control */}
 								<div className="flex items-center gap-2 w-fit px-7">
-									<Button
-										disabled={isLoading}
-										onClick={() => handleColorQuantityChange(size._id, color._id, -1)}
-										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
-									>
-										<Minus />
-									</Button>
-									<span className="text-gray-800 font-extrabold">{sizeQuantities[`${size._id}-${color._id}`]}</span>
-									<Button
-										disabled={isLoading}
-										onClick={() => handleColorQuantityChange(size._id, color._id, 1)}
-										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
-									>
-										<Plus />
-									</Button>
+								<Button
+									disabled={isLoading}
+									onClick={(e) => {
+										e.stopPropagation();
+										handleColorQuantityChange(size._id, color._id, -1)
+									}}
+									className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
+								>
+									<Minus />
+								</Button>
+								<span className="text-gray-800 font-extrabold">{sizeQuantities[`${size._id}-${color._id}`]}</span>
+								<Button
+									disabled={isLoading}
+									onClick={(e) => {
+										e.stopPropagation();
+										handleColorQuantityChange(size._id, color._id, 1)
+									}}
+									className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
+								>
+									<Plus />
+								</Button>
 								</div>
+
 								{/* Remove Color Button */}
 								<Button
 									disabled={isLoading}
 									onClick={() => {
-										// handelRemoveColor(size._id, color._id)
-										setColorDeletingData({sizeId:size._id,colorId:color._id})
+										setColorDeletingData({sizeId: size._id, colorId: color._id})
 										setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 									}}
 									className="text-white w-6 h-6 px-2 absolute top-0 right-0 bg-black p-2 rounded-full"
 								>
-									<X />
+								<X />
 								</Button>
+
+								{/* File Upload Button with Icon */}
+								<div className="bottom-0 left-0 p-2">
+									<Button onClick = {()=> {
+										setActiveSelectedColor(color._id);
+										setActiveSelectedSize(size._id)
+										setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+                                        setSelectedColorImages([]);
+									}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
+										<FilePenLine />
+									</Button>
+								</div>
 							</div>
 						))}
 					</div>
@@ -812,7 +858,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				setSizeDeletingData(null);
 			}} onConfirm={()=>{
 				if(colorDeletingData){
-					// handelRemoveColor(size._id, color._id)
 					handelRemoveColor(colorDeletingData.sizeId, colorDeletingData.colorId);
 				}
 				if(sizeDeletingData){
@@ -820,10 +865,59 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				}
 				setIsConfirmDeleteWindow(!isConfirmDeleteWindow);	
 			}}/>
+			<FileUploadPopUpWindow sizeId={activeSelectedSize} colorId={activeSelectedColor} isOpen={isFileUploadPopUpOpen} onCancel={()=> {
+				setActiveSelectedColor(null);
+				setActiveSelectedSize(null);
+				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+			}}
+			onConfirm = {(imageArray)=>{
+				updateImageImageBuyColorId(activeSelectedColor,activeSelectedSize,imageArray)
+				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+			}} />
 			
 		</div>
 	);
 	
+};
+const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onCancel, onConfirm }) => {
+	const[isLoading,setIsLoading] = useState(false);
+	const [imageArray,setImageArray] = useState([]);
+	if (!isOpen) return null;
+	return (
+		<div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+			<div className="bg-white p-6 rounded-lg shadow-lg w-96">
+				<div className="justify-end space-y-4 flex flex-col">
+					<FileUploadComponent
+						maxFiles={5}
+						tag={colorId}
+						sizeTag={sizeId}
+						onSetImageUrls={(e) => {
+							setImageArray(e);
+						}}
+						isLoading = {isLoading}
+						setIsLoading={setIsLoading}
+					/>
+					<Button
+						disabled={isLoading}
+						onClick={(e)=>{
+							onConfirm(imageArray);
+						}}
+						className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
+					>
+						Confirm
+					</Button>
+					<Button
+						disabled={isLoading}
+						onClick={onCancel}
+						className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none"
+					>
+						Cancel
+					</Button>
+					
+				</div>
+			</div>
+		</div>
+	);
 };
 
 

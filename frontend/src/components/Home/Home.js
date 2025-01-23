@@ -346,7 +346,7 @@ const Home = () => {
             {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
             {
               !bannerLoading && Wide_Screen_Section_3.urls && Wide_Screen_Section_3.urls.length > 0 ? (
-                <div className="w-screen h-fit flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center">
+                <div className="w-screen h-fit flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
                   <h1 className='text-3xl px-8 font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
                     {Wide_Screen_Section_3.header}
                   </h1>
@@ -394,7 +394,7 @@ const Home = () => {
               }
           
               <div className='bg-slate-200 pt-8'>
-                  <h1 className='text-3xl px-8 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                  <h1 className='text-3xl px-2 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
                   <div className='grid grid-cols-2 col-span-12'>
                       {
                           !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 

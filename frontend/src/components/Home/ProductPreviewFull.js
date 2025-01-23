@@ -11,7 +11,6 @@ const previewHeader = [
 
 const ProductPreviewFull = ({ product }) => {
   const navigation = useNavigate();
-  const[viewMore,setViewMore] = useState(false);
   const [previewProducts, setSelectedPreviewProducts] = useState([]);
   const [activePreview, setActivePreviews] = useState('best-sellers');
 
@@ -31,25 +30,30 @@ const ProductPreviewFull = ({ product }) => {
 
   return (
     <Fragment>
-      {/* Title Section */}
-
       {/* Preview Headers Section */}
       <div className="w-fit sm:w-fit md:min-h-fit h-auto justify-between items-center space-x-4 flex md:flex-row mb-6 font1">
         {previewHeader && previewHeader.length > 0 &&
           previewHeader.map((h, index) => (
-            <div onClick={(e) => getRandomArrayOfProducts(h?.id)} key={index} className={`border-2 md:px-5 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}>
+            <button onClick={(e) => {
+              if(h?.id !== activePreview){
+                console.log("Selected New")
+                getRandomArrayOfProducts(h?.id)
+              }else{
+                e.preventDefault();
+              }
+            }} key={index} className={`border-2 md:px-5 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}>
               <h3
                 className={`md:text-[16px] text-sm text-center`}
               >
                 {h?.title}
               </h3>
-            </div>
+            </button>
           ))
         }
       </div>
 
       {/* Product Previews Section */}
-      <div className="w-screen h-fit flex flex-row bg-slate-200 px-4 md:px-8">
+      <div className="w-screen h-fit flex flex-row bg-slate-200 px-10 md:px-8">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
             previewProducts.slice(0, 5).filter(s => s.salePrice != null).map((p, index) => (
@@ -115,7 +119,7 @@ const ProductPreviewFull = ({ product }) => {
         </div>
     </div>
     <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all'>
-      <div onClick={()=> navigation('/products')} className='px-8 w-fit flex-wrap text-sm md:text-lg bg-gray-900 hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
+      <div onClick={()=> navigation('/products')} className='px-8 w-fit flex-wrap text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
         <span>VIEW MORE</span>
       </div>
     </div>

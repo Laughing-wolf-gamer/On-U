@@ -24,6 +24,71 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
 
+
+const reviews = [
+    {
+      rating: 5,
+      comment: "Excellent product! Exceeded my expectations.",
+    },
+    {
+      rating: 4,
+      comment: "Great quality, but a bit expensive.",
+    },
+    {
+      rating: 3,
+      comment: "Average product. It works, but I was expecting more.",
+    },
+    {
+      rating: 2,
+      comment: "Not as described. Poor quality.",
+    },
+    {
+      rating: 1,
+      comment: "Terrible! It broke after one use.",
+    },
+    {
+      rating: 4,
+      comment: "Really good overall. The performance is great, just wish it had more features.",
+    },
+    {
+      rating: 5,
+      comment: "I love it! Exactly what I needed, and the price was reasonable for the quality.",
+    },
+    {
+      rating: 3,
+      comment: "It's okay, but I expected better durability. It's decent for the price.",
+    },
+    {
+      rating: 2,
+      comment: "Disappointing. It didn’t perform as expected, and the build quality feels cheap.",
+    },
+    {
+      rating: 1,
+      comment: "I regret purchasing this. It stopped working after a couple of days.",
+    },
+    {
+      rating: 4,
+      comment: "Very happy with this! It does what it promises, but the packaging could’ve been better.",
+    },
+    {
+      rating: 5,
+      comment: "Fantastic! I’ll definitely be buying again. This has become my go-to product.",
+    },
+    {
+      rating: 3,
+      comment: "It’s fine, but it doesn’t stand out from other similar products in the market.",
+    },
+    {
+      rating: 2,
+      comment: "Not worth the money. The product was underwhelming and didn’t meet my needs.",
+    },
+    {
+      rating: 1,
+      comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
+    },
+];
+
+
 const maxScrollAmount = 1024
 let isInWishList = false
 let isInBagList = false;
@@ -225,9 +290,10 @@ const MPpage = () => {
 
     useEffect(() => {
         if (product) {
-            setSelectedSize(product.size[0]);
-            setSelectedColor(product.size[0].colors);
-            const color = product.size[0].colors[0];
+            const availableSize = product.size.find(item => item.quantity > 0);
+            setSelectedSize(availableSize);
+            setSelectedColor(availableSize.colors);
+            const color = availableSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
             setSelectedColorId(color._id);
             setSelectedImage(color.images[0]);
@@ -346,7 +412,7 @@ const MPpage = () => {
                                             {isInWishList ? 
                                                 (
                                                     <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                        <Heart size={30} fill="red" className="text-red-500" />
+                                                        <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
                                                     </div>
                                                 ) : (
                                                     <Heart size={30}/>
@@ -406,7 +472,7 @@ const MPpage = () => {
                                                     src={im.url}
                                                     alt={`product ${i}`}
                                                     loading="lazy"
-                                                    className="w-full h-full object-fill"
+                                                    className="w-full h-full object-contain"
                                                 />
                                                 <div className="h-[30px] bg-white"></div>
                                             </div>
@@ -454,31 +520,42 @@ const MPpage = () => {
                                     <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
                                     {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
                                         <div key={`size_${index}_${size._id}`} 
-                                            className={`flex flex-col items-center justify-center rounded-full p-2 shadow-md gap-2 transition-transform duration-300 ease-in-out 
-                                            ${currentSize?._id === size?._id ? "border-2 border-gray-800 bg-gray-600 text-white font-bold scale-110" : "bg-white"}`}
-                                            onClick={() => { handleSetNewImageArray(size); }}>
-                                        <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                            {size.label}
-                                        </button>
+                                            className={`flex relative flex-col items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-transform duration-300 border-[1px] border-gray-400 ease-in-out 
+                                            ${currentSize?._id === size?._id ? " bg-gray-600 text-white scale-110" : "bg-slate-100 border-2 text-black"}`}
+                                            onClick={() => { handleSetNewImageArray(size); }}
+                                        >
+                                            <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
+                                                {size.label}
+                                            </button>
+                                            {size?.quantity <= 0 && (
+                                                <div className="absolute bottom-0 translate-y-2 w-16 h-5  flex-row rounded-full flex items-center justify-center bg-red-500 text-white font-normal text-[7px] text-center">
+                                                    <span>Out of Stock</span>
+                                                </div>
+                                            )}
                                         </div>
                                     ))}
                                     </div>
 
                                     {/* Color Selection */}
-                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
+                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-5 gap-1">
                                     {selectedColor && selectedColor.length > 0 ? (
                                         selectedColor.map((color, i) => (
                                         <div key={`color_${i}`} 
-                                            className={`flex flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
-                                                ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
-                                            onClick={(e) => { e.preventDefault(); setCurrentColor(color); handleSetColorImages(color); }}>
+                                            className={`flex relative flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
+                                                ${color.quantity <= 10 ? "h-fit w-14" : "h-fit w-fit"}`}
+                                            onClick={(e) => { setCurrentColor(color); handleSetColorImages(color); }}>
                                             <button disabled={color.quantity <= 0} 
                                             style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
                                             className={`${color.quantity <= 0 ? 
                                                 `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
                                                 `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
-                                                ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
+                                                ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-[3px] border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                             title={color?.quantity || color?.label || "Color"} />
+                                            {color?.quantity <= 0 && (
+                                                <div className="absolute bottom-0 translate-y-2 w-20 h-5 flex-row rounded-full flex items-center justify-center bg-red-500 text-white font-normal text-[7px] text-center">
+                                                    <span>Out of Stock</span>
+                                                </div>
+                                            )}
                                         </div>
                                         ))
                                     ) : (
@@ -534,8 +611,6 @@ const MPpage = () => {
                                 <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                             </div>
                             <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
-                                {/* <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToBag}><ShoppingCart className='mr-4'/> <span>ADD TO CART</span></button> */}
-                                {/* <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-[1px] border-slate-300 rounded-md hover:border-[1px] hover:border-slate-900" onClick={addToWishList}><Heart size={30} className='mr-4' /><span>ADD TO WISHLIST NOW</span></button> */}
                                 <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
                             </div>
                             <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
@@ -553,7 +628,7 @@ const MPpage = () => {
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
                                         <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
-                                            <ShoppingCart className='mr-4' />
+                                            <ShoppingCart className='mr-4' size={30}/>
                                             <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
                                         </button>
                                     </div>
@@ -564,26 +639,9 @@ const MPpage = () => {
                                 <div className='reviews-section'>
                                     <h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
                                     <div className='reviews-list mt-4 overflow-y-auto h-72'>
-                                        {product &&product?.Rating &&product?.Rating.length > 0 && product?.Rating?.map((review, index) => {
-                                            const randomStars = review.rating; // Random stars between 1 and 5
-                                            return (
-                                                <div key={index} className='review-item mb-6'>
-                                                    <div className='flex items-center justify-start'>
-                                                        {/* Display random star rating */}
-                                                        <div className='stars'>
-                                                            {[...Array(randomStars)].map((_, i) => (
-                                                                <span key={i} className='star text-black'>★</span>
-                                                            ))}
-                                                            {[...Array(5 - randomStars)].map((_, i) => (
-                                                                <span key={i} className='star text-gray-300'>★</span>
-                                                            ))}
-                                                        </div>
-                                                        <span className='ml-2 text-sm text-gray-500'>{randomStars} Stars</span>
-                                                    </div>
-                                                    <p className='text-gray-700 mt-2'>{review?.comment}</p>
-                                                </div>
-                                            );
-                                        })}
+                                        <div className='reviews-list mt-4 overflow-y-auto'>
+                                            {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
+                                        </div>
                                     </div>
                                     {hasPurchased && <Fragment>
                                         {/* Review Input Section */}
@@ -640,11 +698,11 @@ const MPpage = () => {
                                         <h1 className="font1 flex items-center mt-4 font-semibold px-1 py-2">SIMILAR PRODUCTS</h1>
                                         <div className="overflow-x-auto">
                                             <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-                                            {similar.map((pro) => (
-                                                <li key={pro._id} className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-                                                <Single_product pro={pro} />
-                                                </li>
-                                            ))}
+                                                {similar.map((pro) => (
+                                                    <li key={pro._id} className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
+                                                    <Single_product pro={pro} />
+                                                    </li>
+                                                ))}
                                             </ul>
                                         </div>
                                     </div>
@@ -659,6 +717,105 @@ const MPpage = () => {
             </div>
         </Fragment>
     );
+};
+const ProductReviews = ({ reviews }) => {
+  const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
+
+  const handleToggleReviews = () => {
+    setShowMore(!showMore); // Toggle the state between true/false
+  };
+
+  return (
+    <div>
+      <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
+
+      <div
+        className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
+      >
+        {/* Display only the first 3 reviews or more based on showMore */}
+        {reviews.slice(0, 3).map((review, index) => {
+          const randomStars = review.rating; // Random stars between 1 and 5
+          return (
+            <div key={index} className="review-item mb-4">
+              <div className="flex items-center">
+                <div className="stars">
+                  {[...Array(randomStars)].map((_, i) => (
+                    <span key={i} className="star text-black">★</span>
+                  ))}
+                  {[...Array(5 - randomStars)].map((_, i) => (
+                    <span key={i} className="star text-gray-300">★</span>
+                  ))}
+                </div>
+                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+              </div>
+              <p className="text-gray-700 mt-2">{review.comment}</p>
+            </div>
+          );
+        })}
+
+        {/* If showMore is true, display all reviews */}
+        {showMore &&
+          reviews.slice(3).map((review, index) => {
+            const randomStars = review.rating;
+            return (
+              <div key={index} className="review-item mb-4">
+                <div className="flex items-center">
+                  <div className="stars">
+                    {[...Array(randomStars)].map((_, i) => (
+                      <span key={i} className="star text-black">★</span>
+                    ))}
+                    {[...Array(5 - randomStars)].map((_, i) => (
+                      <span key={i} className="star text-gray-300">★</span>
+                    ))}
+                  </div>
+                  <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                </div>
+                <p className="text-gray-700 mt-2">{review.comment}</p>
+              </div>
+            );
+          })
+        }
+
+        {/* "View More" / "Show Less" Toggle Button */}
+        <button
+          onClick={handleToggleReviews}
+          className="mt-4 text-blue-500 hover:underline"
+        >
+          {showMore ? 'Show Less' : 'View More'}
+        </button>
+      </div>
+    </div>
+  );
+};
+const AverageRatingView = ({ ratings }) => {
+  if (!ratings || ratings.length === 0) return null;
+
+  // Calculate the average rating
+  const totalStars = ratings.reduce((acc, review) => acc + review.rating, 0);
+  const avgStars = totalStars / ratings.length;
+  const roundedAvg = Math.round(avgStars * 10) / 10; // Rounded to 1 decimal place
+  const fullStars = Math.floor(roundedAvg);
+  const emptyStars = 5 - fullStars;
+
+  return (
+    <Fragment>
+      <div className='average-rating mt-6'>
+        <div className='flex items-center'>
+          <div className='stars'>
+            {/* Render filled stars */}
+            {[...Array(fullStars)].map((_, i) => (
+              <span key={i} className='star text-[30px] text-black'>★</span>
+            ))}
+            {/* Render empty stars */}
+            {[...Array(emptyStars)].map((_, i) => (
+              <span key={i} className='star text-[30px] text-gray-300'>★</span>
+            ))}
+          </div>
+          <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+        </div>
+      </div>
+    </Fragment>
+  );
 };
 
 export default MPpage;

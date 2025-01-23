@@ -1,6 +1,6 @@
 import express from 'express';
 import { addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, removeCoupon, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
-import { addNewColorToSize, addNewSizeToProduct, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
+import { addNewColorToSize, addNewSizeToProduct, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
@@ -48,6 +48,7 @@ route.patch('/product/update/addNewColorToSize',isAuthenticateuser,ProtectAdminR
 
 route.patch('/product/update/removeColorFromSize',isAuthenticateuser,ProtectAdminRoute,removeColorFromSize);
 route.patch('/product/update/removeSizeFromProduct',isAuthenticateuser,ProtectAdminRoute,removeSizeFromProduct);
+route.patch('/product/update/updateImages',isAuthenticateuser,ProtectAdminRoute,updateImages);
 
 
 

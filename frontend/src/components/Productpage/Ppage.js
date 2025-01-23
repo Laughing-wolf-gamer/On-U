@@ -273,9 +273,9 @@ const Ppage = () => {
   }
   useEffect(()=>{
     if(product){
-      setSelectedSize(product.size[0]);
-      setCurrentSize(product.size[0]);
-      setSelectedColor(product.size[0]?.colors);
+      setSelectedSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
+      setCurrentSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
+      setSelectedColor(product.size[0].quantity <= 0 ? product.size[1].colors: product.size[0].colors);
 
       const currentColor = product.size[0].colors[0];
 
@@ -348,7 +348,7 @@ const Ppage = () => {
             <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden mb-6'>
               <div className='w-[70%] flex flex-col h-full'>
                 {
-                  scrollPosition > 10 && scrollPosition < maxScrollAmount ? (
+                  scrollPosition > 0 && scrollPosition < maxScrollAmount ? (
                     <div className='w-[42%] flex fixed'>
                       <div className='w-[90%] h-full justify-start items-center flex'>
                           <RightImageContent 
@@ -426,13 +426,18 @@ const Ppage = () => {
                         {/* Size Selection */}
                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
                           {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                            <div key={`size_${index}_${size._id}`} 
-                                className={`flex flex-col items-center justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                            <div key={`size_${index}_${size._id}`}
+                                className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
                                   ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
                                 onClick={() => { handleSetNewImageArray(size); }}>
                               <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
                                 {size.label}
                               </button>
+                              {size?.quantity <= 0 && (
+                                  <div className="absolute bottom-0 w-20 h-fit flex-row rounded-full flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
+                                    <span>Out of Stock</span>
+                                  </div>
+                                )}
                             </div>
                           ))}
                         </div>
@@ -442,9 +447,9 @@ const Ppage = () => {
                           {selectedColor && selectedColor.length > 0 ? (
                             selectedColor.map((color, i) => (
                               <div key={`color_${i}`} 
-                                  className={`flex flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
+                                  className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
                                     ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
-                                  onClick={(e) => { e.preventDefault(); setCurrentColor(color); handelSetColorImages(color); }}>
+                                  onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}>
                                 <button disabled={color.quantity <= 0} 
                                   style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
                                   className={`${color.quantity <= 0 ? 
@@ -452,6 +457,12 @@ const Ppage = () => {
                                     `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                     ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                   title={color?.quantity || color?.label || "Color"} />
+                                  
+                                {color?.quantity <= 0 && (
+                                  <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
+                                    <span className='w-full flex justify-center flex-row'>Out of Stock</span>
+                                  </div>
+                                )}
                               </div>
                             ))
                           ) : (
@@ -465,19 +476,19 @@ const Ppage = () => {
                       <PincodeChecker productId={product?._id} />
                     </div>
                     <div className='w-[60%] h-fit justify-center items-center flex flex-col'>
-                      <div className='grid grid-cols-2 justify-center items-center gap-2'>
+                      <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                         <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
-                          <ShoppingCart size={20} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
+                          <ShoppingCart size={30} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
                         </button>
-                        <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
+                        <button className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
                           {
                             isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
                           }
-                          <span>ADD TO WISHLIST</span>
+                          <span>{isInWishList ? "GO TO WISHLIST":"ADD TO WISHLIST"}</span>
                         </button>
                       </div>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
-                        <ShoppingBag size={20} className='m-4' /><span>BUY NOW</span>
+                        <ShoppingBag size={30} className='m-4' /><span>BUY NOW</span>
                       </button>
                     </div>
                   </div>
@@ -609,7 +620,7 @@ const Ppage = () => {
 
             </div>
             <div className='w-full justify-center flex flex-col'>
-              <h1 className='font1 flex items-center mt-4 font-semibold p-8'>SIMILAR PRODUCTS</h1>
+              <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
               <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
                 {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} user ={user} key={pro._id}/>))}
               </ul>
@@ -743,7 +754,7 @@ const RightImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedI
   return(
     <div className='w-full min-w-full h-full justify-start items-start flex-row flex'>
       <div className='h-fit w-32 justify-center items-center flex-col flex col-span-7 mt-4'>
-        <div className='grid grid-cols-1 h-full col-span-6 gap-2 px-3'> {/* Reduced grid-cols from 8 to 6 */}
+        <div className='flex flex-col flex-wrap w-[76px] h-full justify-between items-center space-y-6'> {/* Reduced grid-cols from 8 to 6 */}
           {
             selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
             selectedSize_color_Image_Array.map((e, index) => {
@@ -759,7 +770,7 @@ const RightImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedI
                 >
                   {isVideo ? (
                     <ReactPlayer
-                      className="w-full h-[80px] object-cover hover:scale-110"
+                      className="w-full h-full object-fill hover:scale-110"
                       url={e.url || e}
                       playing={isFocused} // Play only when the element is in focus
                       controls={false} // Hide video controls
@@ -774,7 +785,7 @@ const RightImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedI
                   ) : (
                     <img
                       src={e.url || e}
-                      className="w-full h-[80px] object-contain hover:scale-110"
+                      className="w-full h-full object-contain hover:scale-110"
                       alt="productImage"
                       loading="lazy" // Ensure image is lazily loaded
                     />
