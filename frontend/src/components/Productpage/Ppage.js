@@ -16,9 +16,10 @@ import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { Heart, Ruler, ShoppingBag, ShoppingCart } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
+import SizeChartModal from './SizeChartModal'
 
 
 const reviews = [
@@ -120,6 +121,7 @@ const Ppage = () => {
 
 
 	const[selectedSize, setSelectedSize] = useState(null);
+  const[showSizeChart,setShowSizeChart] = useState(false);
 	const[selectedColor, setSelectedColor] = useState([]);
 	const [selectedImage, setSelectedImage] = useState(null);
 	const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
@@ -441,7 +443,6 @@ const Ppage = () => {
                             </div>
                           ))}
                         </div>
-
                         {/* Color Selection */}
                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
                           {selectedColor && selectedColor.length > 0 ? (
@@ -470,8 +471,6 @@ const Ppage = () => {
                           )}
                         </div>
                       </div>
-
-
                       {/* Add to Cart & Buy Now Buttons */}
                       <PincodeChecker productId={product?._id} />
                     </div>
@@ -547,6 +546,7 @@ const Ppage = () => {
                         <li key={index} className='list-none mt-2'>{e?.point}</li>
                       ))}
                     </div>
+                      <SizeChartModal/>
 
                     {/* Additional Info */}
                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>

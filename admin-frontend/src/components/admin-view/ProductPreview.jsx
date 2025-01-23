@@ -823,7 +823,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 										setColorDeletingData({sizeId: size._id, colorId: color._id})
 										setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 									}}
-									className="text-white w-6 h-6 px-2 absolute top-0 right-0 bg-black p-2 rounded-full"
+									className="text-white w-6 h-6 px-2 absolute top-[-10px] right-[-10px] bg-black p-2 rounded-full"
 								>
 								<X />
 								</Button>

@@ -23,6 +23,7 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
+import SizeChartModal from './SizeChartModal';
 
 
 const reviews = [
@@ -563,6 +564,7 @@ const MPpage = () => {
                                     )}
                                     </div>
                                 </div>
+                            <SizeChartModal/>
                             </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
