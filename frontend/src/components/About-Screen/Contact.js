@@ -85,6 +85,7 @@ const Contact = () => {
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log("Submit Form: ",sendingFormData);
+        checkAndCreateToast("success","Message sent! We will get back to you shortly.");
         // Handle form submission (e.g., send to a server or display a success message)
         // alert.info("Message sent! We will get back to you shortly.");
         sendContactQuery();
