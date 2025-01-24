@@ -174,7 +174,7 @@ export const sendAboutData = createAsyncThunk('/common/sendAboutData',async(data
 export const sendTermsAndConditions = createAsyncThunk('/common/website/sendTermsAndConditions',async(data)=>{
     try {
         const response = await axios.put(`${BASE_URL}/api/common/website/terms-and-conditions`,data,Header());
-        console.log('Response: ', response.data);
+        console.log('Terms And Condition Response: ', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error Sending Terms and Conditions: `,error);
@@ -183,10 +183,11 @@ export const sendTermsAndConditions = createAsyncThunk('/common/website/sendTerm
 export const sendPrivacyAndPolicy = createAsyncThunk('/common/website/privacy-and-policy',async (data)=>{
     try {
         const response = await axios.put(`${BASE_URL}/api/common/website/privacy-and-policy`,data,Header());
-        console.log('Response: ', response.data);
+        console.log('Privacy and Policy Response: ', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error Sending Privacy and Policy: `,error);
+        return null;
     }
 })
 export const sendContactUsPage = createAsyncThunk('/common/contact-us',async(data) =>{
@@ -196,6 +197,7 @@ export const sendContactUsPage = createAsyncThunk('/common/contact-us',async(dat
         return response.data;
     } catch (error) {
         console.error(`Error Sending Contact Us Page Data: `,error);
+        return null;
     }
 })
 
@@ -223,13 +225,11 @@ export const fetchAllOptions = createAsyncThunk('/common/fetchAllOptions',async(
         // console.log("All Options: ",response.data);
         return response.data;
     } catch (error) {
-        console.error("Error Fething All Options: ",error);   
+        console.error("Error Fetching All Options: ",error);   
     }
 })
 
-export const fetchOptionsByType = createAsyncThunk(
-    '/common/fetchOptionsByType',
-    async (type) => {
+export const fetchOptionsByType = createAsyncThunk('/common/fetchOptionsByType', async (type) => {
         try {
             // Check the type and fetch the corresponding data
             const response = await axios.get(`${BASE_URL}/api/common/options/getByType/${type}`);
@@ -243,34 +243,28 @@ export const fetchOptionsByType = createAsyncThunk(
 );
   
 // Add a new filter option (e.g., category, subcategory)
-export const addNewOption = createAsyncThunk(
-    '/common/addOption',
-    async ({ type, value }) => {
-        try {
-            const response = await axios.post(`${BASE_URL}/api/common/options/add`, { type, value },Header());
-            return response.data; // Return the added option
-        } catch (error) {
-            console.error('Error adding option:', error);
-            throw error;
-        }
+export const addNewOption = createAsyncThunk('/common/addOption', async ({ type, value }) => {
+    try {
+        const response = await axios.post(`${BASE_URL}/api/common/options/add`, { type, value },Header());
+        return response.data; // Return the added option
+    } catch (error) {
+        console.error('Error adding option:', error);
+        throw error;
     }
-);
+});
   
 // Delete an option (e.g., category, subcategory)
 export const deleteOption = createAsyncThunk('/common/deleteOption', async (data) => {
-        try {
-            // const token = sessionStorage.getItem('token');
-            // console.log(token);
-            console.log("Delete Data: ",data);
-            const response = await axios.post(`${BASE_URL}/api/common/options/removeByType`,{removingData:JSON.stringify(data)},Header());
-            console.log("Response: ",response.data);
-            return response.data; // Return the type and value of the deleted option
-        } catch (error) {
-            console.error('Error deleting option:', error);
-            throw error;
-        }
+    try {
+        // console.log("Delete Data: ",data);
+        const response = await axios.post(`${BASE_URL}/api/common/options/removeByType`,{removingData:JSON.stringify(data)},Header());
+        console.log("Response: ",response.data);
+        return response.data; // Return the type and value of the deleted option
+    } catch (error) {
+        console.error('Error deleting option:', error);
+        throw error;
     }
-);
+});
 
 
 
