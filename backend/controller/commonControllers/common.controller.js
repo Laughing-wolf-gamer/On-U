@@ -121,6 +121,7 @@ export const setAboutData = async(req,res)=>{
 }
 export const setTermsAndConditions = async(req,res)=>{
     try {
+		console.log("Setting Terms and Conditions: ",req.body);
         const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'terms-and-conditions'}); 
         if(!alreadyFoundWebsiteData){
             const about = new WebSiteModel({TermsAndConditions: req.body,tag: 'terms-and-conditions'});
@@ -130,8 +131,8 @@ export const setTermsAndConditions = async(req,res)=>{
         }
         alreadyFoundWebsiteData.TermsAndConditions = req.body;
         await alreadyFoundWebsiteData.save();
-        console.log("TermsAndConditions ",about)
-        res.status(200).json({Success:true,message: 'Terms And Condtions set successfully'});
+        console.log("TermsAndConditions ",alreadyFoundWebsiteData)
+        res.status(200).json({Success:true,message: 'Terms And Conditions set successfully'});
     } catch (error) {
         console.log("Error: ",error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
@@ -158,7 +159,7 @@ export const setPrivacyPolicy = async (req, res) =>{
         }
         alreadyFoundWebsiteData.PrivacyAndPrivacy = req.body;
         await alreadyFoundWebsiteData.save();
-        console.log("privacy-and-policy ",about)
+        console.log("privacy-and-policy ",alreadyFoundWebsiteData)
         res.status(200).json({Success:true,message: 'Privacy and Policy set successfully'});
     } catch (error) {
         console.error("Error: ",error);

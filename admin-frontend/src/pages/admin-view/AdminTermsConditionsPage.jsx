@@ -32,9 +32,9 @@ const AdminTermsConditionsPage = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
+        console.log("Form Data Submitted:", formData);
         dispatch(sendTermsAndConditions(formData));
         // Handle form submission logic, for example an API call to save data.
-        console.log("Form Data Submitted:", formData);
     };
 
     useEffect(() => {
@@ -70,7 +70,7 @@ const AdminTermsConditionsPage = () => {
                         Effective Date
                     </label>
                     <input
-                        type="text"
+                        type="date"
                         id="effectiveDate"
                         name="effectiveDate"
                         value={formData.effectiveDate}
@@ -92,7 +92,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -108,7 +108,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -124,7 +124,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -140,7 +140,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -156,7 +156,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -172,7 +172,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -188,7 +188,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -204,7 +204,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -220,7 +220,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -236,7 +236,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -252,7 +252,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -268,7 +268,7 @@ const AdminTermsConditionsPage = () => {
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
                         rows="4"
-                        required
+                        // required
                     />
                     </div>
 
@@ -284,7 +284,7 @@ const AdminTermsConditionsPage = () => {
                         value={formData.phoneNumber}
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-                        required
+                        // required
                     />
                     </div>
 
@@ -300,7 +300,7 @@ const AdminTermsConditionsPage = () => {
                         value={formData.businessAddress}
                         onChange={handleChange}
                         className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-                        required
+                        // required
                     />
                     </div>
 

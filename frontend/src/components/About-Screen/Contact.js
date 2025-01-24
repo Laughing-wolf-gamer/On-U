@@ -119,22 +119,25 @@ const Contact = () => {
                         Contact Us
                     </h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 2xl:grid-cols-2 gap-5 transform transition-all">
-                        <div className="w-full h-full justify-center items-center flex hover:scale-110 duration-300 ease-in-out">
-                            <iframe
-                                title="Location Map"
-                                className="w-full h-full rounded-lg"
-                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114084.435365314!2d92.71320744717394!3d26.67604922960301!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3744c20b7dfbbb95%3A0x12c7aa98abf85080!2sTezpur%2C%20Assam!5e0!3m2!1sen!2sin!4v1737715098951!5m2!1sen!2sin"
-                                allowFullScreen
-                            ></iframe>
+                        <div className="w-full justify-center h-full items-center flex border-2 border-gray-700 overflow-hidden shadow-md rounded-md">
+                            <div className="w-full h-full justify-center items-center flex hover:scale-110 duration-300 ease-in-out">
+                                <iframe
+                                    title="Location Map"
+                                    className="w-full h-full rounded-lg"
+                                    src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d114084.435365314!2d92.71320744717394!3d26.67604922960301!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3744c20b7dfbbb95%3A0x12c7aa98abf85080!2sTezpur%2C%20Assam!5e0!3m2!1sen!2sin!4v1737715098951!5m2!1sen!2sin"
+                                    allowFullScreen
+                                ></iframe>
+                            </div>
+
                         </div>
             
                         {/* Form Section */}
-                        <div className="w-full h-full flex justify-center items-center">
+                        <div className="w-full h-full flex justify-center items-center bg-white p-3 rounded-md shadow-md">
                             {formData && formData.formDataForContactUs && formData.formDataForContactUs.length > 0 && (
                                 <form onSubmit={handleSubmit} className="space-y-2 w-full">
                                     <div className="flex flex-col justify-start items-start w-full h-fit p-6">
                                         {formData.formDataForContactUs.map((field, i) => (
-                                            <div key={i} className="w-full">
+                                            <div key={i} className="w-full ">
                                                 <div className="w-full justify-start items-center relative">
                                                     <label
                                                         htmlFor={field?.fieldName}
@@ -148,6 +151,7 @@ const Contact = () => {
                                                     <input
                                                         required
                                                         type="text"
+                                                        placeholder={`Enter ${field?.fieldName}`}
                                                         id={`${field?.fieldName}_field ${i}`}
                                                         name={field?.fieldName.toLowerCase()}
                                                         value={sendingFormData[field?.fieldName]}
@@ -157,7 +161,7 @@ const Contact = () => {
                                                                 value: e.target.value,
                                                             });
                                                         }}
-                                                        className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                                                        className="mt-2 p-4 w-full border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 transition-all duration-300"
                                                     />
                                                 )}
                                             </div>
