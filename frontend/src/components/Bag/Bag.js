@@ -3,7 +3,6 @@ import { BsShieldFillCheck } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
 import { getbag, getqtyupdate, deleteBag } from '../../action/orderaction';
 import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
-import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
 import './bag.css';
 import AddAddressPopup from './AddAddressPopup';

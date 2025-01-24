@@ -3,17 +3,36 @@ import './Login.css';
 import { clearErrors, registerUser } from '../../action/useraction';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { FcGoogle } from 'react-icons/fc';
-import GoogleLogin from 'react-google-login';
-import { useAlert } from 'react-alert';
 import { fetchAddressForm } from '../../action/common.action';
-import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
-import { removeSpaces } from '../../config';
+import toast from 'react-hot-toast';
+import { useToast } from '../../Contaxt/ToastProvider';
 
 const Registeruser = () => {
-    const Alert = useAlert();
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const redirect = useNavigate();
-    const { formData } = useSelector(state => state.fetchFormBanners);
     const { user, error, loading } = useSelector(state => state.Registeruser);
     const [name, setname] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
@@ -29,7 +48,7 @@ const Registeruser = () => {
     const onsubmit = async (e) => {
         e.preventDefault();
         if (!name ||!phoneNumber ||!gender ||!email) {
-            Alert.error('All Fields are required!');
+            checkAndCreateToast("error",'All Fields are required!');
             return;
         }
         const myForm = {
@@ -38,14 +57,7 @@ const Registeruser = () => {
             gender: gender,
             email: email,
         };
-        await dispatch(registerUser(myForm));
-    };
-    const handleChangeAddressData = (e) => {
-        /* const { name, value } = e.target;
-        setNewAddress((prev) => ({
-            ...prev,
-            [name]: value,
-        })); */
+        dispatch(registerUser(myForm));
     };
 
     useEffect(() => {
@@ -53,12 +65,11 @@ const Registeruser = () => {
             dispatch(clearErrors());
         }
         if (user) {
-            Alert.success('Otp Sent To Your EmailID');
+            checkAndCreateToast("success",'Otp Sent To Your Email-ID');
             redirect('/verifying');
         }
         dispatch(fetchAddressForm());
     }, [error, user, dispatch]);
-    // console.log("address form. ", formData);
     return (
         <Fragment>
             <form onSubmit={(e) => onsubmit(e)}>

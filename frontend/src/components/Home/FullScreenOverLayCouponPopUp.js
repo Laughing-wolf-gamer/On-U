@@ -1,14 +1,38 @@
 import { X } from 'lucide-react';
 import React, { Fragment, useEffect, useState } from 'react'
-import { useAlert } from 'react-alert';
 import { sendGetCoupon } from '../../action/common.action';
 import { useDispatch } from 'react-redux';
 import popUp from '../images/popUp-image.jpg'
+import { useToast } from '../../Contaxt/ToastProvider';
+import toast from 'react-hot-toast';
 const FullScreenOverLayCouponPopUp = () => {
     console.log("Pop Up images: ",popUp);
     const [isOpen, setIsOpen] = useState(true);
     const [name, setName] = useState('');
-    const alert = useAlert();
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const [email, setEmail] = useState('');
     const dispatch = useDispatch();
     const[loadingSent,setLoadingSent] = useState(false);
@@ -17,12 +41,12 @@ const FullScreenOverLayCouponPopUp = () => {
         const sentSuccessful = await dispatch(sendGetCoupon({fullName:name, email:email}))
         console.log("email Sent: ",sentSuccessful);
         if(sentSuccessful?.success){
-            alert.success(sentSuccessful?.message || "Email sent successfully");
+            checkAndCreateToast("success",sentSuccessful?.message || "Email sent successfully");
             setName('');
             setEmail('');
             setIsOpen(false);
         }else{
-            alert.error(sentSuccessful?.message|| 'Invalid email or name');
+            checkAndCreateToast("error",sentSuccessful?.message|| 'Invalid email or name');
         }
         setLoadingSent(false);
     };

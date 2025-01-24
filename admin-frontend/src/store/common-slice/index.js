@@ -162,13 +162,31 @@ export const fetchAddressFormData = createAsyncThunk('/common/fetchAddressFormDa
 })
 export const sendAboutData = createAsyncThunk('/common/sendAboutData',async(data)=>{
     try {
-        const token = sessionStorage.getItem('token');
         // console.log(token);
         const response = await axios.put(`${BASE_URL}/api/common/website/about`,data,Header());
         console.log('Response: ', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error Sending About Page Data: `,error);
+    }
+})
+
+export const sendTermsAndConditions = createAsyncThunk('/common/website/sendTermsAndConditions',async(data)=>{
+    try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/terms-and-conditions`,data,Header());
+        console.log('Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Sending Terms and Conditions: `,error);
+    }
+})
+export const sendPrivacyAndPolicy = createAsyncThunk('/common/website/privacy-and-policy',async (data)=>{
+    try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/privacy-and-policy`,data,Header());
+        console.log('Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Sending Privacy and Policy: `,error);
     }
 })
 export const sendContactUsPage = createAsyncThunk('/common/contact-us',async(data) =>{

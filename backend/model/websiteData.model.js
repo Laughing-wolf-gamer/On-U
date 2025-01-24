@@ -6,6 +6,8 @@ const websiteSchema = new mongoose.Schema({
     Address:Array,
     ConvenienceFees:Number,
     ContactUsePageData:Object,
+    TermsAndConditions:Object,
+    PrivacyAndPrivacy:Object,
 },{timestamps:true})
 
 const WebSiteModel = mongoose.model('websiteData', websiteSchema)

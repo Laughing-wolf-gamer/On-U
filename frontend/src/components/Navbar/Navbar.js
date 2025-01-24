@@ -107,7 +107,10 @@ const Navbar = ({user}) => {
                         <li className='w-max flex items-stretch'>
                             
                             <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
-                                <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-sans text-center text-gray-800'>On U</h1></Link>
+                                <div className='shine-effect relative'>
+                                    <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-sans text-center text-gray-800'>On U</h1></Link>
+
+                                </div>
                             </div>
                             
                         </li>

@@ -1,17 +1,40 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Single_product from '../Product/Single_product'
 import { useDispatch, useSelector } from 'react-redux'
-import { createbag, deletewish, getwishlist } from '../../action/orderaction'
+import { deletewish, getwishlist } from '../../action/orderaction'
 import { MdClear } from 'react-icons/md'
 import wish from '../images/emptywish.PNG'
 import { Link, useNavigate } from 'react-router-dom'
 import { getuser, clearErrors } from '../../action/useraction'
-import { useAlert } from 'react-alert'
-import Nowishlist from './Nowishlist'
 import { getLocalStorageWishListItem } from '../../config'
+import { useToast } from '../../Contaxt/ToastProvider'
+import toast from 'react-hot-toast'
 
 const Wishlist = () => {
-    const Alert = useAlert()
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const navigation = useNavigate()
     const dispatch = useDispatch()
     const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data)
@@ -33,7 +56,7 @@ const Wishlist = () => {
                     sessionStorageWishList.splice(sessionStorageWishList.indexOf(itemsToDelete), 1);
                     sessionStorage.setItem('wishListItem', JSON.stringify(sessionStorageWishList));
                     setSessionStorageWishList(getLocalStorageWishListItem());
-                    Alert.success('Product removed successfully from wishlist')
+                    checkAndCreateToast("info",'Product removed successfully from wishlist')
                 }
             }
         }

@@ -1,5 +1,31 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, 
+    addHomeCarousalMultiple, 
+    addOption, 
+    createContactQuery, 
+    FetchAllFilters, 
+    getAboutData, 
+    getAddressField, 
+    getAllOptions, 
+    getContactQuery, 
+    getContactUsPageData, 
+    getConvenienceFees, 
+    getHomeBanners, 
+    getOptions, 
+    getPrivacyAndPolicy, 
+    getTermsAndConditions,
+    patchConvenienceOptions, 
+    removeAddressFormField, 
+    removeHomeCarousal, 
+    removeOptionsByType, 
+    sendMailToGetCoupon, 
+    setAboutData, 
+    setAddressField, 
+    setContactUsePageData, 
+    setPrivacyPolicy, 
+    setTermsAndConditions
+} from '../../controller/commonControllers/common.controller.js';
+
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -19,6 +45,11 @@ route.get('/website/convenienceFees',getConvenienceFees)
 route.put('/website/contact-us',isAuthenticateuser,ProtectAdminRoute,setContactUsePageData)
 route.get('/website/contact-us',getContactUsPageData)
 
+route.put('/website/terms-and-conditions',isAuthenticateuser,ProtectAdminRoute,setTermsAndConditions)
+route.get('/website/terms-and-conditions',isAuthenticateuser,ProtectAdminRoute,getTermsAndConditions)
+
+route.put('/website/privacy-and-policy',isAuthenticateuser,ProtectAdminRoute,setPrivacyPolicy)
+route.get('/website/privacy-and-policy',isAuthenticateuser,ProtectAdminRoute,getPrivacyAndPolicy)
 
 
 route.post('/website/send-contact-query',createContactQuery)
@@ -26,6 +57,8 @@ route.get('/website/get-contact-query',getContactQuery)
 route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
 route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);
 route.get('/website/address',getAddressField);
+
+
 
 route.get('/options/get/all',getAllOptions)
 route.get('/options/getByType/:type', getOptions);

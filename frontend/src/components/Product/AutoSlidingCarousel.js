@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { getImagesArrayFromProducts, getLocalStorageBag, getLocalStorageWishListItem, hexToRgba, setSessionStorageBagListItem, setWishListProductInfo } from "../../config";
+import { getImagesArrayFromProducts, getLocalStorageWishListItem, hexToRgba, setWishListProductInfo } from "../../config";
 import ReactPlayer from "react-player";
-import { BsHeart } from "react-icons/bs";
 import { Heart } from "lucide-react";
 import { createwishlist, getwishlist } from "../../action/orderaction";
-import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
-import Loader from "../Loader/Loader";
 import { useToast } from "../../Contaxt/ToastProvider";
 import toast from "react-hot-toast";
 

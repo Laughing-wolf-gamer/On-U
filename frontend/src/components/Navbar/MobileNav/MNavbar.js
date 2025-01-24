@@ -3,26 +3,17 @@ import './MNavbar.css'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { FiSearch } from 'react-icons/fi'
 import { BsHeart } from 'react-icons/bs'
-import { BsHandbag } from 'react-icons/bs'
-import { GoDiffAdded } from 'react-icons/go'
 import Offcanvas from 'react-bootstrap/Offcanvas'
 import { useTransition, animated } from 'react-spring'
 import Mbanner from '../../images/Nbanner.webp'
 import Ripples from 'react-ripples'
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io'
-import MMen from './Msubmenu/Men'
-import MWoMen from './Msubmenu/Women'
-import MKids from './Msubmenu/Kids'
 import Mhome from './Msubmenu/Home'
-import Mbeauty from './Msubmenu/Beauty'
 import { Link, useNavigate } from 'react-router-dom'
-import {logout, getuser, otpverifie, loginmobile} from '../../../action/useraction'
+import {logout} from '../../../action/useraction'
 import { useDispatch, useSelector} from 'react-redux'
-import { useAlert } from 'react-alert'
-import {registermobile} from '../../../action/useraction'
 import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
-import { Alert } from '@mui/material'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
@@ -181,7 +172,9 @@ const MNavbar = ({ user }) => {
                     <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row justify-center items-center'>
                             <AiOutlineMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
-                            <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
+                                <div className='shine-effect relative'>
+                                    <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
+                                </div>
                         </div>
 
                         <div className='right-2 absolute flex-row justify-center items-center'>

@@ -2,10 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddress, removeAddress, updateAddress } from '../../../action/useraction';
 import AddAddressPopup from '../../Bag/AddAddressPopup';
-import { Circle, SeparatorVertical, X } from 'lucide-react';
-import { useAlert } from 'react-alert';
+import { X } from 'lucide-react';
 import { capitalizeFirstLetterOfEachWord } from '../../../config';
-import LoadingOverlay from '../../../utils/LoadingOverLay';
 import { useToast } from '../../../Contaxt/ToastProvider';
 import toast from 'react-hot-toast';
 

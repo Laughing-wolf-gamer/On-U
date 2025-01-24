@@ -1,21 +1,43 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { applyCouponToBag, create_order, createPaymentOrder, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
-import { useAlert } from "react-alert";
-import { BASE_API_URL, BASE_CLIENT_URL, DevMode, headerConfig } from "../../config";
-import { cashfree } from "../../utils/pgUtils";
+import { useDispatch } from "react-redux";
+import { applyCouponToBag, create_order, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
+import { BASE_API_URL, BASE_CLIENT_URL, headerConfig } from "../../config";
 import axios from "axios";
-import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { useRazorpay } from "react-razorpay";
 import { X } from "lucide-react";
+import toast from "react-hot-toast";
+import { useToast } from "../../Contaxt/ToastProvider";
 
 const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
-    const { error, isLoading, Razorpay } = useRazorpay();
+    const { error:razerypayError, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
     const [discount, setDiscount] = useState(0);
     const [isPaymentStart, setIsPaymentStart] = useState(false);
-    const alert = useAlert();
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     // const originalPrice = 1000;
 
     // Apply coupon discount
@@ -25,7 +47,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             await dispatch(applyCouponToBag({ bagId: bag._id, couponCode: coupon }));
             closePopup();
         } else {
-            alert.info("Please select a coupon and apply it before proceeding with payment");
+            checkAndCreateToast("info","Please select a coupon and apply it before proceeding with payment");
         }
     };
 
@@ -42,13 +64,11 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
         setPaymentMethod(paymentMode);
     };
 
-    const handleCashFreePayment = async () => {
+    /* const handleCashFreePayment = async () => {
         if (!bag.orderItems || !bag.orderItems.length || bag.orderItems.length <= 0) {
-            alert("Your cart is empty, please add items to proceed");
             return;
         }
         if (selectedAddress === null) {
-            alert("Please select an address to proceed");
             return;
         }
 
@@ -79,8 +99,8 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
             sessionStorage.setItem("checkoutData", JSON.stringify({ paymentData: responseResult?.result, bagId: bag?._id, SelectedAddress: selectedAddress, totalAmount, orderDetails }));
             if (responseResult?.success) {
-                alert.success(`Order Placed Successfully ${responseResult?.message}`);
-                const ReturnUrlBase = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";
+                checkAndCreateToast("success",`Order Placed Successfully ${responseResult?.message}`);
+                const ReturnUrlBase = BASE_CLIENT_URL;
                 let checkoutOptions = {
                     paymentSessionId: responseResult?.result?.payment_session_id,
                     redirectTarget: '_self',
@@ -89,20 +109,21 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
 
                 cashfree?.checkout(checkoutOptions).then(function (result) {
                     if (result.error) {
-                        alert.error(result.error.message);
+                        checkAndCreateToast("error",result.error.message);
                         setIsPaymentStart(false);
                     }
                     if (result.redirect) {
-                        alert.info("Redirecting to Payment Gateway");
+                        checkAndCreateToast("info","Redirecting to Payment Gateway");
                     }
                 });
             }
         } catch (error) {
             console.error(`Error creating order: `, error);
+            checkAndCreateToast("success","Order failed to created")
         } finally {
             setIsPaymentStart(false);
         }
-    }
+    } */
 
     const handleRazerPayPayment = async () => {
         try {
@@ -114,7 +135,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 callback_url: `${BASE_CLIENT_URL}/bag`
             }, headerConfig());
             if (!data.success) {
-                alert.error("Failed to create order, please try again To Process Payment!");
+                checkAndCreateToast("error","Failed to create order, please try again To Process Payment!");
                 return;
             }
             const options = {
@@ -134,7 +155,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                         totalAmount,
                         orderDetails: bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity })),
                     }));
-                    alert.success("RazerPay Payment Success");
+                    checkAndCreateToast("success","RazerPay Payment Success");
                     window.open(`${BASE_CLIENT_URL}/bag`, "_self");
                 },
                 prefill: {
@@ -151,7 +172,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             };
             const razor = new Razorpay(options);
             razor.on("payment.failed", function (response) {
-                alert.error("Payment Failed, Please try again");
+                checkAndCreateToast("error","Payment Failed, Please try again" + razerypayError);
             });
             razor.open();
         } catch (error) {
@@ -178,7 +199,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 handleRazerPayPayment();
             }
         } else {
-            alert("Please select a payment method.");
+            checkAndCreateToast("info","Please select a payment method.");
         }
     };
 

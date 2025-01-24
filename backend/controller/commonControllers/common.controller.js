@@ -119,7 +119,62 @@ export const setAboutData = async(req,res)=>{
         res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
 }
-
+export const setTermsAndConditions = async(req,res)=>{
+    try {
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'terms-and-conditions'}); 
+        if(!alreadyFoundWebsiteData){
+            const about = new WebSiteModel({TermsAndConditions: req.body,tag: 'terms-and-conditions'});
+            await about.save();
+            console.log("TermsAndConditions: ",about)
+            return;
+        }
+        alreadyFoundWebsiteData.TermsAndConditions = req.body;
+        await alreadyFoundWebsiteData.save();
+        console.log("TermsAndConditions ",about)
+        res.status(200).json({Success:true,message: 'Terms And Condtions set successfully'});
+    } catch (error) {
+        console.log("Error: ",error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+export const getTermsAndConditions = async (req, res) =>{
+    try {
+        const termsAndConditions = await WebSiteModel.findOne({tag:"terms-and-conditions"})
+        if(!termsAndConditions) return res.status(404).json({Success: false, message: "Terms and Conditions not found"});
+        res.status(200).json({Success: true, message: 'Terms and Conditions retrieved successfully', result: termsAndConditions});
+    } catch (error) {
+        console.error("Error: ",error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+export const setPrivacyPolicy = async (req, res) =>{
+    try {
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'privacy-and-policy'}); 
+        if(!alreadyFoundWebsiteData){
+            const privacyAndPolicy = new WebSiteModel({TermsAndConditions: req.body,tag: 'privacy-and-policy'});
+            await privacyAndPolicy.save();
+            console.log("privacy-and-policy: ",privacyAndPolicy)
+            return;
+        }
+        alreadyFoundWebsiteData.PrivacyAndPrivacy = req.body;
+        await alreadyFoundWebsiteData.save();
+        console.log("privacy-and-policy ",about)
+        res.status(200).json({Success:true,message: 'Privacy and Policy set successfully'});
+    } catch (error) {
+        console.error("Error: ",error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+export const getPrivacyAndPolicy = async (req, res) =>{
+    try {
+        const privacyAndPolicy = await WebSiteModel.findOne({tag:"privacy-and-policy"})
+        if(!privacyAndPolicy) return res.status(404).json({Success: false, message: "privacy-and-policys not found"});
+        res.status(200).json({Success: true, message: 'privacy-and-policy retrieved successfully', result: privacyAndPolicy});
+    } catch (error) {
+        console.error("Error: ",error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
 export const setContactUsePageData = async (req, res) => {
 	try {
 		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag:"contact-us"});
@@ -271,7 +326,6 @@ export const getAboutData = async(req,res)=>{
 
 
 
-
 export const getAllOptions = async(req,res)=>{
 	try {
 		const allOptions = await Option.find({});
@@ -385,6 +439,9 @@ export const sendMailToGetCoupon = async (req,res)=>{
 		res.status(500).json({ success:false,message: 'Failed to send email' });
 	}
 }
+
+
+
 
 
   
