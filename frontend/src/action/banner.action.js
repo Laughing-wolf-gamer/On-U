@@ -14,11 +14,11 @@ export const featchallbanners = () => async (dispatch) => {
         console.log("Fetching Banners...");
         // const config = { headers: { "Content-Type": "application/json" } }
         const res = await axios.get(`${BASE_API_URL}/api/common/fetch/all`)
-        console.log("Fetch Banners Response: ",res);
         const data = res?.data;
+        console.log("Fetch Banners Response: ",data);
         dispatch({ type: SUCCESS_FEATCH_BANNERS, payload: data?.result || []})
     } catch (error) {
-        dispatch({ type: FAIL_FEATCH_BANNERS, payload: error.response.data.message })
+        dispatch({ type: FAIL_FEATCH_BANNERS, payload: error?.response?.data?.message || "Failed Fetching Banners" })
     }
 }
 
