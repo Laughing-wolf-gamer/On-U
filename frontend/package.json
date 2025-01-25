@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@cashfreepayments/cashfree-js": "^1.0.5",
     "@emotion/react": "^11.9.0",
     "@emotion/styled": "^11.8.1",
     "@loadingio/loading.css": "^3.1.0",
@@ -14,10 +15,12 @@
     "@testing-library/user-event": "^13.5.0",
     "axios": "^0.26.0",
     "caniuse-lite": "^1.0.30001689",
-    "crypto-browserify": "^3.12.0",
+    "color-name-list": "^11.2.0",
+    "color-namer": "^1.4.0",
     "dotenv": "^16.4.7",
+    "e-commerce": "file:..",
     "element-class": "^0.2.2",
-    "leaflet": "^1.9.4",
+    "events": "^3.3.0",
     "lucide-react": "^0.468.0",
     "react": "^17.0.2",
     "react-alert": "^7.0.3",
@@ -25,12 +28,15 @@
     "react-bootstrap": "^2.1.2",
     "react-dom": "^17.0.2",
     "react-google-login": "^5.2.2",
+    "react-hot-toast": "^2.5.1",
     "react-icons": "^4.3.1",
     "react-js-pagination": "^3.0.3",
     "react-lazy": "^1.1.0",
     "react-lazy-load-image-component": "^1.5.4",
-    "react-leaflet": "^5.0.0",
+    "react-loading-skeleton": "^3.5.0",
     "react-material-ui-carousel": "^3.3.3",
+    "react-player": "^2.16.0",
+    "react-razorpay": "^3.0.1",
     "react-redux": "^7.2.8",
     "react-responsive-carousel": "^3.2.23",
     "react-ripples": "^2.2.1",
@@ -41,6 +47,9 @@
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
+    "swiper": "^11.1.15",
+    "tailwind-scrollbar": "^3.1.0",
+    "typeface-poppins": "^1.1.13",
     "web-vitals": "^2.1.4",
     "webfontloader": "^1.6.28"
   },
@@ -69,10 +78,20 @@
     ]
   },
   "devDependencies": {
+    "assert": "^2.1.0",
     "autoprefixer": "^10.4.2",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.1",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
     "path-browserify": "^1.0.1",
     "postcss": "^8.4.6",
-    "tailwindcss": "^3.0.24"
+    "process": "^0.11.10",
+    "react-app-rewired": "^2.2.1",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tailwindcss": "^3.0.24",
+    "url": "^0.11.4"
   },
-  "proxy": "http://localhost:4000"
+  "proxy": "http://localhost:8003"
 }

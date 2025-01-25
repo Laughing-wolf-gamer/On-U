@@ -18,7 +18,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
 
   const logoutBTN = () =>{
     dispatch(logout())
-    sessionStorage.clear();
+    sessionStorage.removeItem('token')
     
     alert.show('Logout Successfully')
   }
@@ -27,55 +27,58 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
    <Fragment>
      
        { transitions((styles, item) => item && <animated.div style={styles}>
-        <div className={`container absolute  top-20 right-4  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-white cursor-pointer`}
+        <div className={`container absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-gray-100 text-gray-900 cursor-pointer`}
           onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
         >
           <div className='px-8 py-8 '>
             <div className=' w-full'>
-               <h1 className='font1 font-semibold'>Welcome</h1>
+                <Link to='/'>
+                  <h1 className='font1 font-semibold'>Welcome</h1>
+                </Link>
                {user ? "" : <h1 className='font1 font-extralight text-sm '>To access account and manage orders  <br /></h1>}
                 
                 {
                 user ? 
-                <div>
-                    {`${user?.name}`} <br />
-                    <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
-                </div>
+                  <div>
+                      {`${user?.user?.name}`} <br />
+                      <Link to='/dashboard' className='font1 hover:font-semibold'>Dashboard</Link>
+                  </div>
                 
                 :
                      
                    <Link className='dec' to="/Login">
-                   <button className=' font1 font-semibold text-slate-800 text-sm border-[1px] px-3 py-2 
-                   border-slate-600 hover:border-slate-700 '>LOGIN/&nbsp;SIGNUP</button>
+                    <button className=' font1 font-semibold text-gray-900 text-sm border-[1px] px-3 py-2 
+                    border-slate-500 hover:border-slate-900 '>LOGIN/&nbsp;SIGNUP</button>
                    </Link>
  
                   }
                
                
                 <hr className='my-4' />
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Orders</h1>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Wishlist</h1>
+                <Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Bag</Link>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
+                <Link to="/contact">
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
+                </Link>
                 <div className='flex'>
-                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-[#ff3f6c] flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-gray-700 flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
                 </div>
                
 
                 <hr className='my-4' />
-
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Coupons</h1>
                 <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Cards</h1>
-                <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
+                <Link to={`dashboard`}>
+                  <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
+                </Link>
                 <br />
 
                 {
                   user ? 
-                   <button className=' font1 font-smibold text-[#ff3f6c] text-sm border-[1px] px-3 py-2 
-                   border-[#d4d5d8] hover:border-[#ff3f6c] ' onClick={logoutBTN}>LOGOUT</button>
+                   <button className=' font1 font-smibold text-gray-600 text-sm border-[1px] px-3 py-2 
+                   border-[#d4d5d8] hover:border-[#2d2c2c] ' onClick={logoutBTN}>LOGOUT</button>
                 :
-
                 ""
                 }
    

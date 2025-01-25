@@ -20,17 +20,17 @@ const Search = () => {
     }
     return (
         <Fragment>
-            <form className="flex flex-row w-full h-full justify-between items-center gap-2" onSubmit={searchenter}>
+            <form className="flex flex-row w-[600px] h-full justify-between items-center gap-2" onSubmit={searchenter}>
                 <input
                     type="text"
                     placeholder="Search for products, brands and more"
-                    className="rounded-3xl w-full h-full pl-4"
-                    style={{ backgroundColor: "#ECEBDE" }}
+                    className="rounded-xl w-full h-full pl-4 text-white placeholder-black outline-none border-2 border-solid border-gray-100 focus:border-slate-500 bg-gray-50"
+                    style={{ backgroundColor: "#BCCCDC" }}
                     onChange={(e) => setstate(e.target.value)}
                 />
             </form>
-
         </Fragment>
+
     )
 }
 

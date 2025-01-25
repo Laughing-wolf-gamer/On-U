@@ -1,164 +1,101 @@
-import React,{Fragment} from 'react'
-import g1 from '../images/googleplay.png'
-import g2 from '../images/appleplay.png'
-import g3 from '../images/original.png'
-import g4 from '../images/return.png'
-import {AiFillFacebook, AiFillYoutube} from 'react-icons/ai'
-import {ImTwitter, ImInstagram} from 'react-icons/im'
-import { Link } from 'react-router-dom'
+import React, { Fragment } from "react";
+import g1 from "../images/googleplay.png";
+import g2 from "../images/appleplay.png";
+import g3 from "../images/original.png";
+import g4 from "../images/return.png";
+import { AiFillFacebook, AiFillYoutube } from "react-icons/ai";
+import { ImTwitter, ImInstagram } from "react-icons/im";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
     <Fragment>
-    {
-      window.screen.width > 1024 ?
+      <div className="w-screen p-14 py-10 max-h-[900px] font1 bg-slate-100">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
+          {/* Online Shopping */}
+          <div className="border-r border-gray-300 pr-8">
+            <h1 className="text-lg font-bold mb-4 text-gray-800">ONLINE SHOPPING</h1>
+            <Link to="/products">
+              <ul className="text-sm space-y-2">
+                <li className="hover:underline text-gray-700">Men</li>
+                <li className="hover:underline text-gray-700">Women</li>
+                <li className="hover:underline text-gray-700">Kids</li>
+              </ul>
+            </Link>
+          </div>
 
-      <Fragment>
-      <div className='w-10/12 mx-auto grid grid-cols-12 mt-12 font1'>
-       <div className="col-span-2">
-         <h1 className=' text-sm font-extrabold '>ONLINE&nbsp;SHOPPING</h1>
-         <ul className=' text-sm text-black pt-6'>
-           <li>Men</li>
-           <li>Women</li>
-           <li>Kids</li>
-           {/* <li>Home & Living</li>
-           <li>Beauty</li>
-           <li>Gift Cards</li>
-           <li>ONU Insider</li> */}
-         </ul>
-       </div>
+          {/* Useful Links */}
+          <div className="border-r border-gray-300 pr-8">
+            <h1 className="text-lg font-bold text-gray-800 mb-4">USEFUL LINKS</h1>
+            <ul className="text-sm space-y-2">
+              <Link to="/about">
+                <li className="hover:underline text-gray-700">About Us</li>
+              </Link>
+              <Link to="/contact">
+                <li className="hover:underline text-gray-700">Contact Us</li>
+              </Link>
+              <Link to="/faq">
+                <li className="hover:underline text-gray-700">FAQ</li>
+              </Link>
+              <Link to="/tc">
+                <li className="hover:underline text-gray-700">Terms And Conditions</li>
+              </Link>
+              <Link to="/privacyPolicy">
+                <li className="hover:underline text-gray-700">Privacy Policy</li>
+              </Link>
+            </ul>
+          </div>
 
-       <div className="col-span-2">
-       <h1 className='text-sm font-extrabold col-span-2'>USEFUL LINKS</h1>
-       <ul className='text-sm text-black pt-6'>
-         <Link to='/about'><li className="hover:underline">About Us</li></Link>
-         <Link to='/contact'><li className="hover:underline">Contact Us</li></Link>
-         <li className="">FAQ</li>
-         <li className="">T&C</li>
-         <li className="">Terms Of Use</li>
-         <li className="">Track Orders</li>
-         <li className="">Shipping</li>
-         <li className="">Cancellation</li>
-         <li className="">Returns</li>
-         <li className="">Whitehat</li>
-         <li className="">Blog</li>
-         <li className="">Careers</li>
-         <li className="">Privacy Policy</li>
-         <li className="">Site Map</li>
-         <li className="">Corporate Information</li>
-         </ul>
-       </div>
+          {/* App and Social Media */}
+          <div className="border-r border-gray-300 pr-8">
+            <h1 className="text-lg font-bold mb-4 text-gray-800">EXPERIENCE ON-U APP</h1>
+            <div className="grid grid-cols-2 gap-4 mb-6 w-52 md:w-auto">
+              <img src={g1} alt="Google Play" />
+              <img src={g2} alt="Apple Store" />
+            </div>
+            <h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
+            <div className="flex space-x-4 md:text-2xl text-lg text-gray-800">
+              <AiFillFacebook />
+              <ImTwitter />
+              <AiFillYoutube />
+              <ImInstagram />
+            </div>
+          </div>
 
-       <div className="col-span-4">
-       {/* <h1 className='text-sm font-bold col-span-2'>EXPERIENCE ON-U APP ON MOBILE</h1> */}
-        <div className='grid grid-cols-2 gap-4 pt-6 w-[50%]'>
-          <img src={g1} alt="" />
-          <img src={g2} alt="" />
+          {/* Features */}
+          <div>
+            <div className="flex items-center mb-6">
+              <img src={g3} alt="Original Products" className="w-12 mr-4" />
+              <div>
+                <h1 className="font-normal text-gray-800">100% ORIGINAL</h1>
+                <span className="text-gray-600">Guarantee for all products on On-U.com</span>
+              </div>
+            </div>
+            <div className="flex items-center text-gray-400">
+              <img src={g4} alt="Easy Returns" className="w-12 mr-4" />
+              <div>
+                <h1 className="font-normal text-gray-800">Return within 30 days</h1>
+                <span className="font-thin text-gray-500"> Of receiving your order</span>
+              </div>
+            </div>
+          </div>
         </div>
-        <h1 className='text-sm font-extrabold col-span-2 mt-6'>KEEP IN TOUCH</h1>
-        <br />
-        <div className='flex'>
-          <span className='text-2xl text-slate-800 mr-4'><AiFillFacebook /></span>
-          <span className='text-2xl text-slate-800 mr-4'><ImTwitter /></span>
-          <span className='text-2xl text-slate-800 mr-4'><AiFillYoutube /></span>
-          <span className='text-2xl text-slate-800 mr-4'><ImInstagram /></span>
-        </div>
-       
-       </div>
-       <div className="col-span-4">
-            <div className='grid grid-cols-6 text-black'>
-                  <div className="col-span-1"><img src={g3} alt="" className='w-14' /></div>
-                  <div className="col-span-5">
-                    
-                  <span className='font-bold text-black'>100% ORIGINAL</span>  guarantee <br />
-                    for all products at on_u.com
-                  </div>
-            </div>
-            <br />
-            <div className='grid grid-cols-6 text-black'>
-                <div className="col-span-1"><img src={g4} alt="" className='w-12' /></div>
-                <div className="col-span-5">
-                  
-                <span className='font-semibold'>Return within 30days</span> of<br />
-                receiving your order
-            </div>
-            </div>
-       </div>
 
-      </div>
-      <div className='w-10/12 mx-auto font1 text-base text-black'>
-        <h1 className='font-extrabolds text-black mb-4 mt-4 text-sm'>POPULAR SEARCHES</h1>
-        <h1>
-        Makeup | Dresses For Girls | T-Shirts {/* | Sandals | Headphones | Babydolls | Blazers For Men | Handbags | Ladies Watches | Bags | Sport Shoes | Reebok Shoes | Puma Shoes | Boxers | Wallets | Tops | Earrings | Fastrack Watches | Kurtis | Nike | Smart Watches | Titan Watches | Designer Blouse | Gowns | Rings | Cricket Shoes | Forever 21 | Eye Makeup | Photo Frames | Punjabi Suits | Bikini | Onu Fashion Show | Lipstick | Saree | Watches | Dresses | Lehenga | Nike Shoes | Goggles | Bras | Suit | Chinos | Shoes | Adidas Shoes | Woodland Shoes | Jewellery | Designers Sarees */}
-        </h1>
-      </div>
-      <div className='relative w-10/12 mx-auto text-black'>
-        <span className='absolute right-0'> © 2024 www.On-U.com. All rights reserved.</span> 
+        {/* Popular Searches */}
+        <div className="text-sm mt-10">
+          <h1 className="font-extrabold text-black mb-4">POPULAR SEARCHES</h1>
+          <p className="text-gray-700">
+            Shirts | Dresses For Girls | T-Shirts | Sandals
+          </p>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="mt-6 text-center text-gray-500 text-md">
+          &copy; 2025 www.theOnu.com. All rights reserved.
+        </div>
       </div>
     </Fragment>
+  );
+};
 
-    :
-
-    <Fragment>
-        <div className='w-10/12 mx-auto font1 mt-4'>
-       <div className="w-full">
-         <h1 className=' text-base font-extrabold'>SHOP&nbsp;&nbsp;FOR</h1>
-         <ul className=' text-sm text-slate-500 pt-2 flex '>
-           <li className='mr-2'>Men</li>|
-           <li className='mr-2 ml-2'>Women</li>|
-           <li className='mr-2 ml-2'>Kids</li>|
-         </ul>
-       </div>
-
-       <div className="mt-4">
-       <h1 className='text-base font-extrabold '>EXPERIENCE ON-U APP ON MOBILE</h1>
-        <div className='grid grid-cols-2 gap-4 pt-2 w-[60%]'>
-          <img src={g1} alt="" />
-          <img src={g2} alt="" />
-        </div>
-        <h1 className='text-base font-extrabold mt-4'>KEEP IN TOUCH</h1>
-        
-        <div className='flex mt-2'>
-        <span className='text-3xl text-slate-500 mr-4'><AiFillFacebook/></span>
-        <span className='text-3xl text-slate-500 mr-4'><ImTwitter/></span>
-        <span className='text-3xl text-slate-500 mr-4'><AiFillYoutube/></span>
-        <span className='text-3xl text-slate-500 mr-4'><ImInstagram/></span>
-        </div>
-       
-       </div>
-
-       <div className="mt-4 w-full">
-        <h1 className='text-base font-extrabold'>USEFUL LINKS</h1>
-        <div className='text-sm text-slate-700 pt-2 leading-7 w-[100%] overflow-clip'>
-          <a className="mr-2 leading-7">Contact Us</a>|
-          <a className="mr-2 leading-7 ml-2">FAQ</a>|
-          <a className="mr-2 leading-7 ml-2">T&C</a>|
-          <a className="mr-2 leading-7 ml-2">Terms Of Use</a>|
-          <a className="mr-2 leading-7 ml-2">Track Orders</a>|
-          <a className="mr-2 leading-7 ml-2">Shipping</a>|
-          <a className="mr-2 leading-7 ml-2">Cancellation</a>|
-          <a className="mr-2 leading-7 ml-2">Returns</a>|
-          <a className="mr-2 leading-7 ml-2">Whitehat</a>|
-          <a className="mr-2 leading-7 ml-2">Blog</a>|
-          <a className="mr-2 leading-7 ml-2">Careers</a>|
-          <a className="mr-2 leading-7 ml-2">Privacy Policy</a>|
-          <a className="mr-2 leading-7 ml-2">Site Map</a>|
-          <a className="mr-2 leading-7 ml-2">Corporate Information</a>
-         </div>
-       </div>
-
-       <div className='flex mx-auto text-slate-400 mt-4 mb-20'>
-        <div className=' text-xs float-left'> © 2024 www.On-U.com All rights reserved</div>
-      </div>
-      </div>
-     
-    </Fragment>
-
-    }
-
-</Fragment>
-    
-  )
-}
-
-export default Footer
+export default Footer;

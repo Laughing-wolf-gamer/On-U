@@ -14,15 +14,16 @@ const Otpverify = () => {
   const [otp, setotp] = useState('')
   const dispatch = useDispatch()
   const { user, error, loading } = useSelector(state => state.Registeruser)
+  const { userVerify} = useSelector(state => state.userdetails)
 
   const H = window.innerHeight
   const Hpx = H - 56
 
-  const continues = (e) => {
+  const continues = async (e) => {
     e.preventDefault();
-    console.log(otp, user)
+    console.log(otp, userVerify)
 
-    dispatch(otpverifie({otp:otp,mobileno:user?.user?.phoneNumber}))
+    await dispatch(otpverifie({otp:otp,mobileno:user?.user?.phoneNumber}))
   
     if (error) {
       let par = document.getElementById('error')
@@ -42,10 +43,14 @@ const Otpverify = () => {
     if (loading === false) {
       
     }
-   
-  }, [user, loading, redirect,alert]);
-  console.log("User: ",user);
-
+    if(userVerify){
+      if(userVerify.verify === "verified"){
+        redirect('/')
+      }
+    }
+  }, [userVerify,user, loading, redirect,alert]);
+  console.log("User: ",user)
+  console.log("Verifying User: ",userVerify)
   return (
 
     <Fragment>

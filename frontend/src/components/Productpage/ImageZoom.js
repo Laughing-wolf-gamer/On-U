@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 const ImageZoom = ({ imageSrc }) => {
+  const zoomSize = 120; // Size of the zoomed square
   const [zoomStyle, setZoomStyle] = useState({});
   const [showZoom, setShowZoom] = useState(false);
 
@@ -16,16 +17,17 @@ const ImageZoom = ({ imageSrc }) => {
     const width = rect.width;
     const height = rect.height;
 
-    const zoomSize = 100; // Size of the zoomed square
+    
     const bgX = (x / width) * 100; // Calculate background position as percentage
     const bgY = (y / height) * 100;
 
+    // Center the zoom square on the mouse position
     setZoomStyle({
-      top: `${y - zoomSize / 2}px`,
-      left: `${x - zoomSize / 2}px`,
-      backgroundPosition: `${bgX}% ${bgY}%`,
-      backgroundImage: `url(${imageSrc})`,
-      backgroundSize: `${width * 2}px ${height * 2}px`, // Adjust zoom level
+      top: `${y - zoomSize / 2}px`,  // Center the zoom box vertically on the mouse
+      left: `${x - zoomSize / 2}px`, // Center the zoom box horizontally on the mouse
+      backgroundPosition: `${bgX}% ${bgY}%`, // Set the background position to follow the mouse
+      backgroundImage: `url(${imageSrc})`,  // Apply the original image as background
+      backgroundSize: `${width * 2}px ${height * 2}px`, // Adjust zoom level (double the image size)
     });
   };
 
@@ -34,12 +36,11 @@ const ImageZoom = ({ imageSrc }) => {
   };
 
   return (
-    <div className="relative h-full w-full border-[0.5px] overflow-hidden">
-      {/* Main Image */}
+    <div className="relative h-full p-1 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
       <img
         src={imageSrc}
         alt="Zoomable"
-        className="w-full h-full object-cover"
+        className="w-full h-full object-contain"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
@@ -51,8 +52,8 @@ const ImageZoom = ({ imageSrc }) => {
           className="absolute pointer-events-none border-2 border-gray-300 rounded"
           style={{
             ...zoomStyle,
-            width: "200px", // Size of zoomed square
-            height: "200px",
+            width: `${zoomSize}px`,  // Size of the zoomed square
+            height: `${zoomSize}px`,
           }}
         ></div>
       )}

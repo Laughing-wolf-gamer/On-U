@@ -1,25 +1,30 @@
 import mongoose from 'mongoose'
 
 const BagSchema = new mongoose.Schema({
-    user:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"MynUser",
+        ref:"user",
         required:true
     },
+    Coupon:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:"coupon",
+    },
+    ConvenienceFees:Number,
     orderItems: [{
-        product:{
+        productId:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:"myntraproduct",
-            
+            ref:"product",
             required:true,
         },
-        qty:{
-            type:Number, 
-            default: 1, 
-            required:true
-        },
+        color:Object,
+        size:Object,
+        quantity:Number,
     }],
-   
+    totalProductSellingPrice:Number,
+    totalSP:Number,
+    totalMRP:Number,
+    totalDiscount:Number,
 })
 
 const Bag = mongoose.model('Bag', BagSchema)

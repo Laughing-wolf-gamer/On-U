@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 const bannerImagesSchema = new mongoose.Schema({
 	CategoryType:String,// Wide,Mobile
+	Header:String,
 	Size:String,
 	Url:[],
 

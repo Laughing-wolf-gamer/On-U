@@ -4,7 +4,6 @@ import User from '../model/usermodel.js'
 import A from './resolveandcatch.js'
 
 const ProtectAdminRoute = A(async(req, res, next)=>{
-    // const { token } = req.cookies;
     const header = req.headers['authorization'];
     // if(!header) return res.status(401).json({Success:false,message: 'No Headers Found!'});
     if(!header) return next(new Error('No Headers Found',401));
@@ -15,13 +14,15 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
     }
 
     const verifytoken = jwt.verify(token, process.env.SECRETID)
+    if(!verifytoken) return next(new Error('User not found', 403));
     const user = await User.findById(verifytoken.id)
 	if (!user) {
         return next(new ErrorHandler('User not found', 404))
     }
-	if(user.role !== 'admin') {
+	if(user.role === 'user') {
         return next(new ErrorHandler('Unauthorized to access this route', 401))
     }
+    console.log("Admin User: ",user);
 	req.user = user;
     next()
 })

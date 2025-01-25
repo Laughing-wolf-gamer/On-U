@@ -34,26 +34,132 @@ export const Topwear = [
    
 
 ]
+export const Mens_Category = [
+    {
+        title: 'T-Shirts',
+        url: '#'
+    },
+    {
+        title: 'Casual Shirts',
+        url: '#'
+    },
+    {
+        title: 'Formal Shirts',
+        url: '#'
+    },
+    {
+        title: 'Sweatshirts',
+        url: '#'
+    },
+    {
+        title: 'Sweaters',
+        url: '#'
+    },
+    {
+        title: 'Jackets',
+        url: '#'
+    },
+    {
+        title: 'Blazers & Coats',
+        url: '#'
+    },
+    {
+        title: 'Suits',
+        url: '#Rain Jackets'
+    },
+]
+export const M_ProductsDetails = [
+    {
+        Gender:'Mens',
+        category:[
+            {
+                title:"Topwear",
+                    subcategories:[
+                        "T-Shirt",
+                        "Shirt",
+                        "Jacket",
+                        "Sweatshirt",
+                    ]
+            },
+            {
+                title:"Bottom Wear",
+                    subcategories:[
+                        "Jeans",
+                        "Trousers",
+                        "Shorts",
+                        "Track Pants",
+                    ]
+            }
+        ]
+
+    },
+    {
+        Gender:'Womens',
+        category:[
+            {
+                title:"Topwear",
+                subcategories:[
+                    "T-Shirt",
+                    "Shirt",
+                    "Jacket",
+                    "Sweatshirt",
+                ]
+            },
+            {
+                title:"Bottom Wear",
+                subcategories:[
+                    "Jeans",
+                    "Trousers",
+                    "Shorts",
+                    "Track Pants",
+                ]
+            }
+        ]
+
+    },
+];
+export const Women_Category = [
+    {
+        title: 'T-Shirts',
+        url: '#'
+    },
+    {
+        title: 'Casual Shirts',
+        url: '#'
+    },
+    {
+        title: 'Formal Shirts',
+        url: '#'
+    },
+    {
+        title: 'Sweatshirts',
+        url: '#'
+    },
+]
+export const Kids_Category = [
+    {
+        title: 'T-Shirts',
+        url: '#'
+    },
+    {
+        title: 'Casual Shirts',
+        url: '#'
+    },
+    {
+        title: 'Formal Shirts',
+        url: '#'
+    },
+    {
+        title: 'Sweatshirts',
+        url: '#'
+    },
+]
 
 export const indian_festive = [
     {
         title: 'Kurtas & Kurta Sets',
         url: '#'
     },
-    /* {
-        title: 'Sherwanis',
-        url: '#'
-    },
-    {
-        title: 'Nehru Jackets',
-        url: '#'
-    },
-    {
-        title: 'Dhotis',
-        url: '#'
-    } */
-    
-
 ]
 
 export const bottomwear = [

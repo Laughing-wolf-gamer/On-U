@@ -1,4 +1,4 @@
-import { BASE_API_URL } from '../config'
+import { BASE_API_URL, headerConfig } from '../config'
 import {
     REQUEST_USER_NO,
     SUCCESS_USER_NO,
@@ -26,20 +26,39 @@ import {
     FAIL_REGISTER_USER,
     LOGIN_USER_DATA,
     SUCCESS_LOGIN_USER,
-    FAIL_LOGIN_USER
+    FAIL_LOGIN_USER,
+    REQUEST_UPDATE_ADDRESS,
+    SUCCESS_UPDATE_ADDRESS,
+    FAIL_UPDATE_ADDRESS,
+    REQUEST_ALL_ADDRESS,
+    FAIL_ALL_ADDRESS,
+    SUCCESS_ALL_ADDRESS
 } from '../const/userconst'
 import axios from 'axios'
 
-export const loginmobile = ({phonenumber}) => async (dispatch) => {
+export const loginmobile = ({logInData}) => async () => {
     try {
-        console.log("logIn Data: ", phonenumber)
+        console.log("logIn Data: ", logInData)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {logInData})
+        console.log("Login Data: ", data)
+        return data;
+    } catch (error) {
+        return null;
+    }
+}
+export const loginVerify = (verifyData)=> async(dispatch)=>{
+    try {
+        console.log("verify OTP Data: ", verifyData)
         dispatch({ type: LOGIN_USER_DATA })
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {phonenumber})
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile/verify`, verifyData)
+        console.log("Verify OTP Data: ", data)
         const token = data?.result?.token
         sessionStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
+        return data;
     } catch (error) {
         dispatch({ type: FAIL_LOGIN_USER, payload: error.response?.data?.message })
+        return null;
     }
 }
 export const registerUser = (userData) => async (dispatch) => {
@@ -75,24 +94,77 @@ export const getuser = () => async (dispatch) => {
         dispatch({ type: FAIL_USER, payload: error.response?.data?.message })
     }
 }
+export const updateAddress = (address) => async (dispatch) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        console.log("Address Data: ", address)
+        dispatch({ type: REQUEST_UPDATE_ADDRESS })
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
+            withCredentials:true,
+            headers: {
+                Authorization:`Bearer ${token}`,
+                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+            },
+        })
+        console.log("Updated Data: ", data)
+        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data?.success })
+    } catch (error) {
+        dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
+    }
+}
+export const removeAddress = (addressIndex) => async (dispatch) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        console.log("Address Index: ", addressIndex)
+        dispatch({ type: REQUEST_UPDATE_ADDRESS })
+        const { data } = await axios.patch(`${BASE_API_URL}/api/auth/removeAddress`,{addressId:addressIndex},headerConfig())
+        console.log("Updated Data: ", data)
+        dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data.success })
+    } catch (error) {
+        dispatch({ type: FAIL_UPDATE_ADDRESS, payload: error.message })
+    }
+}
+export const getAddress = () => async (dispatch) => {
+    try {
+        const token = sessionStorage.getItem('token');
+        console.log(token);
+        dispatch({ type: REQUEST_ALL_ADDRESS })
+        if(!token){
+            dispatch({ type: FAIL_ALL_ADDRESS, payload: null})
+            return;
+        }
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/getAddress`,headerConfig())
+        dispatch({ type: SUCCESS_ALL_ADDRESS, payload: data.allAddresses})
+    } catch (error) {
+        dispatch({ type: FAIL_ALL_ADDRESS, payload: error.response?.data?.message })
+    }
+}
+
+export const getConvinceFees = ()=>async()=>{
+    try {
+        const response = await axios.get(`${BASE_API_URL}/api/common/website/convenienceFees`);
+        return response.data.result;
+    } catch (error) {
+        console.error("Failed to get: ",error);
+    }
+}
 
 export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
-
     try {
-
         dispatch({ type: REQUEST_VERIFY_OTP })
-        console.log("Otp: ",otp)
-        /* const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        const mobileno = Number(mobile.phonenumber) */
-
-
+        console.log("Otp: ",otp, "MobileNo. ",mobileno)
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify/${mobileno}/${otp}`)
+        console.log("Data: ", data)
+        if(data.result.verify === 'verified'){
+            const token = data?.token
+            console.log("Token: ", token)
+            if(token){
+                sessionStorage.setItem('token', token)
+            }
+        }
         dispatch({ type: SUCCESS_VERIFY_OTP, payload: data?.result })
-
     } catch (Error) {
-      
         dispatch({ type: FAIL_VERIFY_OTP, payload: Error.response.data.message })
-
     }
 }
 
@@ -116,21 +188,27 @@ export const resendotp = () => async (dispatch) => {
 }
 
 export const updateuser = (userdata) => async (dispatch) => {
-    /* try {
+    try {
         dispatch({ type: REQUEST_UPDATE_USER })
+        // console.log("Update User Data: ", userdata)
         // const mobile = JSON.parse(localStorage.getItem('mobileno'))
         // const mobileno = Number(mobile.phonenumber)
-        const config = { headers: { "Content-Type": "application/json" } }
+        // const config = { headers: { "Content-Type": "application/json" } }
 
-        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser/${mobileno}`, userdata,config )
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser`, userdata,headerConfig())
+        console.log("Update User Data: ", data.result)
+        if(data.token){
+            const token = data?.token
+            console.log("Token: ", token)
+            sessionStorage.removeItem('token');
+            sessionStorage.setItem('token', data.token)
 
-        dispatch({ type: SUCCESS_UPDATE_USER, payload: data.user })
+        }
+        dispatch({ type: SUCCESS_UPDATE_USER, payload: data.result })
 
     } catch (Error) {
-    
         dispatch({ type: FAIL_UPDATE_USER, payload: Error.response.data.message })
-
-    } */
+    }
 }
 
 export const updatedetailsuser = (userdata, id) => async (dispatch) => {
@@ -157,15 +235,12 @@ export const logout = () => async (dispatch) => {
    
     try {
         console.log("logout")
-
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/user/logout` )
-        sessionStorage.clear();
+        const res = await axios.post(`${BASE_API_URL}/api/auth/logout`)
+        console.log("Loggin Aoutine");
+        sessionStorage.removeItem("token");
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
-
     } catch (Error) {
-    
         dispatch({ type: FAIL_LOGOUT, payload: Error.response.data.message })
-
     }
 }
 

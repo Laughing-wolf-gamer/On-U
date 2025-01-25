@@ -1,19 +1,18 @@
 import mongoose from 'mongoose'
 
 const wishlist = new mongoose.Schema({
-    user:{
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:"MynUser",
+        ref:"user",
         required:true
     },
-    orderItems: [
-        {
-            product:{
+    orderItems: [{
+        productId:{
             type:mongoose.Schema.Types.ObjectId,
-            ref:"myntraproduct",
-            required:true}
-        }
-    ],
+            ref:"product",
+            required:true,
+        },
+    }],
    
 })
 

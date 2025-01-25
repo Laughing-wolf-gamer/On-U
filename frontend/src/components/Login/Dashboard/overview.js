@@ -1,54 +1,83 @@
-import React, {Fragment} from 'react'
-import Footer from '../../Footer/Footer'
-import Sidebar from './sidebar'
+import React, { Fragment, useEffect, useState } from 'react';
+import Footer from '../../Footer/Footer';
+import OrdersReturns from './OrdersReturns';
+import SavedAddresses from './SavedAddresses';
+import OverViewSideBar from './OverViewSideBar';
+import UserDetails from './UserDetails';
+import { useNavigate } from 'react-router-dom';
+import { AlignJustify } from 'lucide-react';
 
-const overview = ({user}) => {
+const Overview = ({ user }) => {
+  const navigation = useNavigate();
+  const [activeSection, setActiveSection] = useState('User-Details');
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // If no user, show warning
+  if (!user) {
+    return (
+        <Fragment>
+            <div className="bg-gray-100 overflow-y-auto h-screen flex flex-col items-center justify-center scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
+                <div className="text-center h-full flex flex-col justify-center items-center p-8 w-[90%] xl:w-[70%]">
+                    <h1 className="text-xl font-extrabold text-gray-800">Not Logged In</h1>
+                    <p className="text-gray-600 my-4">Please log in to access your account.</p>
+                    <button
+                        onClick={(e) => navigation('/Login')}
+                        className="bg-gray-700 text-white px-6 py-3 rounded-lg hover:bg-gray-600 transition duration-300"
+                    >
+                        Log In
+                    </button>
+                </div>
+            </div>
+            <Footer />
+        </Fragment>
+    );
+  }
+
   return (
-      <Fragment>
-          <div>
-              <div className=' py-4 border-b-[1px] mx-auto w-[90%]  mt-5 2xl:w-[70%] xl:w-[70%] lg:w-[70%]'>
-                  <h1 className='font-semibold text-lg font1'>Account</h1>
-                  <p className='text-xs'>{user?.name}</p>
-              </div>
-              <div className='flex w-[90%] h-auto mx-auto 2xl:w-[70%] xl:w-[70%] lg:w-[70%]'>
-              <div className='w-[30%] border-r-2 2xl:w-[20%] xl:w-[20%] lg:w-[20%]'>
-              <Sidebar/>
-              </div>
-              <div className=' w-[70%] h-full 2xl:w-[80%] xl:w-[80%] lg:w-[80%] '>
-                <div className='w-[100%] mx-auto text-xs 2xl:w-[60%] xl:w-[60%] lg:w-[60%] 2xl:text-base xl:text-base lg:text-base'>
-                <h1 className='font-semibold text-lg font1 border-b-[1px] my-4 py-4'>Profile Details</h1>
-                <div className='flex w-full'>
-                <div className='w-[40%] '>
-                <h1 className='my-4 ml-[4px]'>Full&nbsp;Name</h1>
-                <h1 className='my-4 ml-[4px]'>Mobile&nbsp;Number</h1>
-                <h1 className='my-4 ml-[4px]'>Email&nbsp;ID</h1>
-                <h1 className='my-4 ml-[4px]'>Gender</h1>
-                <h1 className='my-4 ml-[4px]'>Date&nbsp;of&nbsp;Birth</h1>
-                <h1 className='my-4 ml-[4px]'>Location</h1>
-                </div>
-                <div className='w-[60%]'>
-                <h1 className='my-4'>{user?.name}</h1>
-                <h1 className='my-4'>{user?.phonenumber}</h1>
-                <h1 className='my-4'>{user?.email}</h1>
-                <h1 className='my-4'>{user?.gender}</h1>
-                <h1 className='my-4'>{user?.dob ? user?.dob : "Not Set"}</h1>
-                <h1 className='my-4'>{user?.address?.citystate}</h1>
-                </div>
-                </div>
-               
+    <Fragment>
+        <div className="bg-gray-50 min-h-screen text-gray-800">
+        {/* Account Header */}
+        <div className="py-6 border-b mx-auto w-[90%] mt-5 2xl:w-[70%] px-4 xl:w-[70%] lg:w-[70%] bg-gray-200 shadow-md rounded-lg">
+            <h1 className="font-semibold text-2xl text-gray-800">Account</h1>
+            <p className="text-sm text-gray-600">{user?.user?.name}</p>
+        </div>
 
-                </div>
-              
-              </div>
-              </div>
-             
-          </div>
+        <div className="flex flex-col lg:flex-row mt-4">
+            {/* Toggle Button for Small Screens */}
+            <button
+            className="lg:hidden p-4 bg-gray-300 text-gray-800"
+            onClick={() => setSidebarOpen(!sidebarOpen)}
+            >
+            <AlignJustify />
+            </button>
 
-          <Footer/>
-        
-      </Fragment>
-    
-  )
-}
+            {/* Sidebar */}
+            <div
+            className={`w-full lg:w-[15%] justify-center items-center mt-4 flex-col ml-3 p-6 rounded-lg shadow-md border-r-2 ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
+            >
+            <OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
+            </div>
 
-export default overview
+            {/* Profile Details */}
+            <div className="w-full lg:w-[80%] py-3 px-4">
+            <div className="bg-gray-100 p-6 rounded-lg shadow-md w-full mx-auto text-sm">
+                {/* Render active section */}
+                {activeSection === 'User-Details' && <UserDetails user={user?.user} />}
+                {activeSection === 'Orders-Returns' && <OrdersReturns />}
+                {activeSection === 'Saved-Addresses' && <SavedAddresses />}
+            </div>
+            </div>
+        </div>
+
+        </div>
+        {/* Footer */}
+        <Footer />
+    </Fragment>
+  );
+};
+
+export default Overview;

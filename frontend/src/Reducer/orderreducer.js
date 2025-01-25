@@ -20,10 +20,19 @@ REQUEST_UPDATE_QTY_BAG,
    SUCCESS_DELETE_WISH,
    REQUEST_DELETE_WISH,
       FAIL_DELETE_WISH,
-    CLEAR_ERRORS
+    CLEAR_ERRORS,
+    REQUEST_CREATE_ORDER,
+    SUCCESS_CREATE_ORDER,
+    FAIL_CREATE_ORDER,
+    REQUEST_GET_ORDER,
+    SUCCESS_GET_ORDER,
+    FAIL_GET_ORDER,
+    REQUEST_GET_ALL_ORDER,
+    SUCCESS_GET_ALL_ORDER,
+    FAIL_GET_ALL_ORDER
 } from '../const/orderconst'
 
-export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
+export const create_wishlist_reducer = (state = {wishlist:[]}, action) =>{
     switch (action.type) {
         case REQUEST_CREATE_WISHLIST:
             return {
@@ -32,7 +41,7 @@ export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
         case SUCCESS_CREATE_WISHLIST:
             return {
                 loading: false,
-                wishlist:action.payload,
+                wishlist:action.payload || [],
             };
         case FAIL_CREATE_WISHLIST:
                 return {
@@ -49,7 +58,7 @@ export const create_wishlist_reducer = (state = {wishlist:{}}, action) =>{
     }
 }
 
-export const get_wishlist_reducer = (state = {wishlist:{}}, action) =>{
+export const get_wishlist_reducer = (state = {wishlist:[]}, action) =>{
     switch (action.type) {
         case REQUEST_GET_WISHLIST:
             return {
@@ -58,7 +67,7 @@ export const get_wishlist_reducer = (state = {wishlist:{}}, action) =>{
         case SUCCESS_GET_WISHLIST:
             return {
                 loading: false,
-                wishlist:action.payload,
+                wishlist:action.payload || [],
             };
         case FAIL_GET_WISHLIST:
                 return {
@@ -101,7 +110,7 @@ export const create_bag_reducer = (state = {bag:{}}, action) =>{
     }
 }
 
-export const get_bag_reducer = (state = {bag:{}}, action) =>{
+export const get_bag_reducer = (state = {bag:null}, action) =>{
     switch (action.type) {
         case REQUEST_GET_BAG:
             return {
@@ -153,7 +162,7 @@ export const update_qty_bag_reducer = (state = {updatebag:{}}, action) =>{
     }
 }
 
-export const delete_bag_reducer = (state = {deletebag:{}}, action) =>{
+export const delete_bag_reducer = (state = {deleteBagResult:false}, action) =>{
     switch (action.type) {
         case SUCCESS_DELETE_BAG:
             return {
@@ -162,9 +171,86 @@ export const delete_bag_reducer = (state = {deletebag:{}}, action) =>{
         case REQUEST_DELETE_BAG:
             return {
                 loading: false,
-                deletebag:action.payload,
+                deleteBagResult:action.payload,
             };
         case FAIL_DELETE_BAG:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+
+
+export const create_order_reducer = (state = {order:{}}, action) =>{
+    switch (action.type) {
+        case REQUEST_CREATE_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_CREATE_ORDER:
+            return {
+                loading: false,
+                order:action.payload,
+            };
+        case FAIL_CREATE_ORDER:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+export const get_all_order_reducer = (state = {allorder:[]}, action) =>{
+    switch (action.type) {
+        case REQUEST_GET_ALL_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_GET_ALL_ORDER:
+            return {
+                loading: false,
+                allorder:action.payload || [],
+            };
+        case FAIL_GET_ALL_ORDER:
+                return {
+                    loading: false,
+                    error:action.payload
+                };
+        case CLEAR_ERRORS:
+                    return {
+                        ...state,
+                        error: null
+                };
+        default:
+            return state;
+    }
+}
+export const get_order_by_id_reducer = (state = {orderbyid:null}, action) =>{
+    switch (action.type) {
+        case REQUEST_GET_ORDER:
+            return {
+                loading: true,
+            };
+        case SUCCESS_GET_ORDER:
+            return {
+                loading: false,
+                orderbyid:action.payload || null,
+            };
+        case FAIL_GET_ORDER:
                 return {
                     loading: false,
                     error:action.payload

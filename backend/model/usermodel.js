@@ -38,9 +38,11 @@ const userModelSchema = new mongoose.Schema({
     },
     role:{
         type:String,
-        default:'user'
+        default:'user',
+        enum: ['user','superAdmin','admin'], 
+        required: true,
     }
-})
+},{timestamps:true})
 
 userModelSchema.methods.getJWTToken = function () {
     return jwt.sign({id:this._id}, process.env.SECRETID, {expiresIn: '2d'})

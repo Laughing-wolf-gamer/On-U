@@ -1,25 +1,28 @@
 import mongoose from 'mongoose'
 
 const ordersSchema = new mongoose.Schema({
-    user:{
+    ShipRocketOrderId:{type:String,required:true},
+    userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user",
         required:true
     },
     orderItems: [{
-        type:mongoose.Schema.Types.ObjectId,
-        ref:"product",
-        qty:Number,
-        required:true
+        type:Object,
+        required:true,
     }],
-    
-    paymentInfo:{
-        status: { type: String, required: true },
-    },
-    
+    razorpay_order_id:{type:String},
+    paymentId:{type:String},
+    TotalAmount:{type:Number,required:true},
+    SelectedAddress:{type:Object,required:true},
+    paymentMode:{type:String,default:"PrePaid",required:true},
+    status: { type: String, default:"Processing", required: true },
+    current_status: { type: String,default:"Processing"},
+    current_timestamp:{type:String,},
+    courier_name:{type:String,default:""},
+    scans:[{type:Object,default:[]}],
+},{timestamps:true})
 
-},{timeStamps:true,})
+const OrderModel = mongoose.model('order', ordersSchema)
 
-const Order = mongoose.model('MynOrder', ordersSchema)
-
-export default Order
+export default OrderModel

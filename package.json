@@ -1,29 +1,39 @@
 {
   "dependencies": {
+    "axios": "^1.7.9",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.2",
+    "cashfree-pg": "^4.3.6",
     "cloudinary": "^2.5.1",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
+    "crypto": "^1.0.1",
+    "crypto-js": "^4.2.0",
+    "dotenv": "^16.4.7",
     "express": "^4.17.3",
     "fast-two-sms": "^3.0.0",
     "imagekit": "^3.2.5",
     "jsonwebtoken": "^8.5.1",
+    "lucide-react": "^0.469.0",
     "mongoose": "^6.13.5",
     "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
     "path-browserify": "^1.0.1",
-    "razorpay": "^2.8.1",
+    "razorpay": "^2.9.5",
+    "twilio": "^5.4.1",
     "util": "^0.12.4",
-    "validator": "^13.7.0"
+    "validator": "^13.7.0",
+    "winston": "^3.17.0",
+    "winston-daily-rotate-file": "^5.0.0"
   },
   "name": "e-commerce",
   "type": "module",
   "version": "1.0.0",
   "main": "backend/services.js",
   "scripts": {
+    "dev": "nodemon backend/services.js",
     "start": "node backend/services.js",
-    "dev": "nodemon backend/services.js"
+    "build": "pnpm run build --prefix frontend && pnpm run build --prefix admin-frontend"
   },
   "author": "abhishek",
   "license": "ISC",

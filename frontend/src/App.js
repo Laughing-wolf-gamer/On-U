@@ -21,6 +21,13 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BASE_API_URL } from "./config/index.js";
 import About from "./components/About-Screen/About.js";
 import Contact from "./components/About-Screen/Contact.js";
+import OrderDetailsPage from "./components/Login/Dashboard/OrderDetailsPage.js";
+import FAQ from "./components/About-Screen/FAQ.js";
+import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js";
+import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
+import { FunctionProvider } from "./Contaxt/FunctionContext.js";
+import toast, { Toaster } from 'react-hot-toast';
+
 
 
 function App() {
@@ -48,7 +55,7 @@ function App() {
       console.log(url)
         if (url === window.location.protocol+"//" + window.location.host + '/Login') {
           
-           window.location.href = window.location.protocol + "//"+window.location.host
+          window.location.href = window.location.protocol + "//"+window.location.host
         }
         if (url === window.location.protocol+"//" + window.location.host + '/verifying') {
           
@@ -64,30 +71,37 @@ function App() {
    console.log("Base Server API",BASE_API_URL);
   console.log("User Logged In: ",user);
   return (
-    <Router>
-      <Navbar user={user}/>
-      <MNavbar user={user}/>
-      <Coupon />
-      <Routes>
-        <Route path="/" element={<Home/>}/>
-        <Route path="/Login" element={<Login/>}/>
-        <Route path="/verifying" element={<Otpverify/>}/>
-        <Route path='/registeruser' element={<Registeruser/>}/>
-        <Route path='/dashboard' element={<Overview user={user}/>}/>
-        {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
-        {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
-        <Route path='/products' element={<Allproductpage/>}/>
-        {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
-        {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
-        <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
-        <Route path='/bag' element={<Bag user={user}/>}/>
-        <Route path='/address/bag' element={<Address user={user}/>}/>
-        <Route path='/about' element={<About />}/>
-        <Route path='/contact' element={<Contact />}/>
-      </Routes>
-      
-      
-    </Router>
+    <FunctionProvider>
+      <Router>
+        <Navbar user={user}/>
+        <MNavbar user={user}/>
+        {/* <Coupon /> */}
+        <Routes>
+          <Route path="/" element={<Home/>}/>
+          <Route path="/Login" element={<Login/>}/>
+          <Route path="/verifying" element={<Otpverify/>}/>
+          <Route path='/registeruser' element={<Registeruser/>}/>
+          <Route path='/dashboard' element={<Overview user={user}/>}/>
+          {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
+          {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
+          <Route path='/products' element={<Allproductpage user = {user}/>}/>
+          {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
+          {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
+          <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
+          <Route path='/bag' element={<Bag user={user}/>}/>
+          {user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
+          <Route path='/address/bag' element={<Address user={user}/>}/>
+          <Route path='/about' element={<About />}/>
+          <Route path='/contact' element={<Contact />}/>
+          <Route path='/faq' element={<FAQ />}/>
+          <Route path='/tc' element={<TermsAndConditions />}/>
+          <Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
+        </Routes>
+        
+        
+      </Router>
+      <Toaster />
+    </FunctionProvider>
   );
 }
 
