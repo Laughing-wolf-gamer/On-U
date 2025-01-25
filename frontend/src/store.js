@@ -65,7 +65,7 @@ const middleware = [thunk];  // Use the named 'thunk' export
 const store = createStore(
   reducer,
   initialState,
-  process.env.NODE_ENV === 'development'
+  process.env.REACT_APP_NODE_ENV === 'development'
     ? composeWithDevTools(applyMiddleware(...middleware))  // Enable DevTools if in development mode
     : applyMiddleware(...middleware)  // Apply middleware normally otherwise
 );
