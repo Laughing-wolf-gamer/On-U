@@ -53,7 +53,7 @@ const ProductPreviewFull = ({ product }) => {
       </div>
 
       {/* Product Previews Section */}
-      <div className="w-screen h-fit flex flex-row bg-slate-200 px-10 md:px-8">
+      <div className="w-screen h-fit flex flex-row bg-slate-200 px-10 md:px-10">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
             previewProducts.slice(0, 5).filter(s => s.salePrice != null).map((p, index) => (

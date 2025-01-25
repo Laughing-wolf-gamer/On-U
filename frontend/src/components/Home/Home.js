@@ -338,7 +338,7 @@ const Home = () => {
                 </div>
             </div>
         
-            <div className='py-8 px-10 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
+            <div className='py-8 px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
                 {product && product.length > 0 && <ProductPreviewFull product={product} />}
             </div>
         

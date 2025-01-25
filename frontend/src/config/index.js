@@ -195,4 +195,7 @@ export const DevMode = true;
 // export const BASE_API_URL = DevMode ? process.env.REACT_APP_API_URL : "https://api.theonu.in";
 export const BASE_API_URL = process.env.REACT_APP_API_URL;
 // export const BASE_CLIENT_URL = DevMode ? process.env.REACT_APP_CLIENT_URL : "https://theonu.in";
+
+
+// new Updated...
 export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
