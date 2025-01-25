@@ -313,13 +313,21 @@ const Ppage = () => {
             url.endsWith(".avi")
         );
     }, [selectedImage]);
-    if(user){
-        isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-        isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+    useEffect(()=>{
+
+        if(user){
+            if(wishlist){
+                isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
+    
+            }
+            if(bag){
+                isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
+            }
         }else{
-        isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-        isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-    }
+            isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
+            isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+        }
+    },[user,bag,wishlist])
     const [scrollPosition, setScrollPosition] = useState(0);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
@@ -345,24 +353,24 @@ const Ppage = () => {
         {
             loading === false ?
             <div>
-                <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden mb-6 px-10'>
+                <div className='flex-row h-full flex justify-between items-start ml-20 relative gap-4 overflow-hidden mb-6'>
                 <div className='w-[70%] flex flex-col h-full'>
                     {
-                        scrollPosition > 0 && scrollPosition < maxScrollAmount ? (
-                            <div className='w-[40%] flex fixed'>
-                            <div className='w-[90%] h-full justify-start items-center flex'>
-                                <RightImageContent 
-                                    selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
-                                    Addclass ={Addclass} 
-                                    setSelectedImage = {setSelectedImage} 
-                                    selectedImage ={selectedImage} 
-                                    isFocused = {isFocused}
-                                    setIsFocused = {setIsFocused}
-                                />
-                                </div>
+                    scrollPosition > 0 && scrollPosition < maxScrollAmount ? (
+                        <div className='w-[42%] flex fixed'>
+                        <div className='w-[90%] h-full justify-start items-center flex'>
+                            <RightImageContent 
+                                selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
+                                Addclass ={Addclass} 
+                                setSelectedImage = {setSelectedImage} 
+                                selectedImage ={selectedImage} 
+                                isFocused = {isFocused}
+                                setIsFocused = {setIsFocused}
+                            />
                             </div>
+                        </div>
                     ):(
-                        <div className={`${user ? "min-w-full":"w-full"} flex flex-row`}>
+                        <div className='w-full flex'>
                         <div className='w-full h-full justify-start items-center flex'>
                             <RightImageContent 
                                 selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -377,24 +385,24 @@ const Ppage = () => {
                     )
                     }
                     {
-                      scrollPosition >= maxScrollAmount && (
-                          <div className='w-[44%] flex absolute bottom-4 left-0'>
-                          <div className='w-[90%] h-full justify-start items-center flex'>
-                              <RightImageContent 
-                                  selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
-                                  Addclass ={Addclass} 
-                                  setSelectedImage = {setSelectedImage} 
-                                  selectedImage ={selectedImage} 
-                                  isFocused = {isFocused}
-                                  setIsFocused = {setIsFocused}
-                              />
-                              </div>
-                          </div>
-                      )
+                    scrollPosition >= maxScrollAmount && (
+                        <div className='w-[44%] flex absolute bottom-4 left-0'>
+                        <div className='w-[90%] h-full justify-start items-center flex'>
+                            <RightImageContent 
+                                selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
+                                Addclass ={Addclass} 
+                                setSelectedImage = {setSelectedImage} 
+                                selectedImage ={selectedImage} 
+                                isFocused = {isFocused}
+                                setIsFocused = {setIsFocused}
+                            />
+                            </div>
+                        </div>
+                    )
                     }
                 </div>
                 {/* Content div for large screen */}
-                <div className={`w-full h-full flex flex-col pl-2`}>
+                <div className='w-full h-full flex flex-col pl-9'>
                     {/* Left Column (Add to Cart Section) */}
                     <div className='w-full flex flex-col justify-start items-start p-2'>
                         <div className='pt-1'>
@@ -404,7 +412,7 @@ const Ppage = () => {
                         <h1 className='text-xl text-[#808080e8] font-light'>
                             {capitalizeFirstLetterOfEachWord(product?.gender)}
                         </h1>
-                        <AverageRatingView ratings={product.Rating || reviews}/>
+                        <AverageRatingView ratings={reviews}/>
                         </div>
                         
                         <div className='border-b-[1px] border-slate-200 pb-6 pt-4 w-full'>
@@ -495,7 +503,16 @@ const Ppage = () => {
                         
                         {/* Price and Discount Section */}
                         <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                          <h1 className='font1'>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></h1>
+                        {/* <h1 className='font1 text-base font-semibold text-slate-800'>
+                            {product?.salePrice && product.salePrice > 0 && (
+                            <span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>
+                            )}
+                            <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
+                            {product?.salePrice && product.salePrice > 0 && (
+                            <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
+                            )}
+                        </h1> */}
+                        <h1 className='font1'>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></h1>
                         </div>
 
                         {/* Bullet Points */}
