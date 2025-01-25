@@ -76,68 +76,82 @@ const Wishlist = () => {
         <Fragment>
             {
                 loadingWishList ? (
-                    <div className="bg-gray-900 text-white overflow-y-auto h-screen flex flex-col items-center justify-center">
-                        <h1 className="text-2xl font-semibold text-gray-200 mb-6">Loading your Wishlist...</h1>
-                        <div className="w-full px-4 mt-6 grid grid-cols-2 gap-8 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                            {/* Skeleton Loader for Product Cards */}
-                            {Array(6).fill().map((_, index) => (
-                                <div key={index} className="bg-gray-800 p-4 rounded-lg shadow-md animate-pulse">
-                                    <div className="h-36 bg-gray-700 rounded-lg mb-4"></div>
-                                    <div className="h-4 bg-gray-600 mb-2"></div>
-                                    <div className="h-4 bg-gray-600 mb-2"></div>
-                                    <div className="w-20 h-8 bg-gray-600 rounded-md"></div>
-                                </div>
-                            ))}
+                <div className="bg-slate-200 text-gray-700 overflow-y-auto h-screen flex flex-col items-center justify-center">
+                    <h1 className="text-2xl font-semibold text-gray-200 mb-6">Loading your Wishlist...</h1>
+                    <div className="w-full px-4 mt-6 grid grid-cols-2 gap-8 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                    {/* Skeleton Loader for Product Cards */}
+                    {Array(6).fill().map((_, index) => (
+                        <div key={index} className="bg-gray-300 p-4 rounded-lg shadow-md animate-pulse">
+                        <div className="h-36 bg-gray-500 rounded-lg mb-4"></div>
+                        <div className="h-4 bg-gray-500 mb-2"></div>
+                        <div className="h-4 bg-gray-500 mb-2"></div>
+                        <div className="w-20 h-8 bg-gray-500 rounded-md"></div>
                         </div>
+                    ))}
                     </div>
+                </div>
                 ) : (
+                <Fragment>
+                    {(currentWishListItem && currentWishListItem.length > 0) ? (
                     <Fragment>
-                        {(currentWishListItem && currentWishListItem.length > 0) ? (
-                            <Fragment>
-                                <h1 className="font1 text-2xl font-semibold text-slate-800 px-4">
-                                    My Wishlist <span className="font-medium text-sm text-slate-500">({currentWishListItem.length} items)</span>
-                                </h1>
-                                <div className="px-4 mt-6">
-                                    <ul className="grid grid-cols-2 gap-8 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
-                                        {currentWishListItem.map((pro) => (
-                                            <li key={pro?.productId?._id || pro?.productId} className="relative group">
-                                                <div className="bg-white shadow-lg rounded-lg overflow-hidden">
-                                                    <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 md:opacity-0 opacity-100 group-hover:opacity-100 transition duration-300 cursor-pointer">
-                                                        <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId._id || pro?.productId)} />
-                                                    </div>
-                                                    <div className="cursor-pointer" onClick={(e) => {
-                                                        if(pro?.productId?._id){
-                                                            navigation(`/products/${pro?.productId?._id}`);
-                                                        }else{
-                                                            navigation(`/products/${pro?.productId}`);
-                                                        }
-                                                    }}>
-                                                        <Single_product pro={pro?.productId} user={user} showWishList={false} />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
+                        <h1 className="font1 text-2xl font-semibold text-slate-800 px-4">
+                        My Wishlist
+                        <span className="font-medium text-sm text-slate-500">
+                            ({currentWishListItem.length} items)
+                        </span>
+                        </h1>
+
+                        <div className="px-4 mt-6">
+                        {/* Wishlist Grid */}
+                        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
+                            {currentWishListItem.map((pro) => (
+                            <li
+                                key={pro?.productId?._id || pro?.productId}
+                                className="relative group transform hover:scale-105 transition-transform duration-300"
+                            >
+                                <div className="bg-white shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
+                                {/* Wishlist Item Image & Information */}
+                                <div
+                                    className="cursor-pointer min-h-[200px]"
+                                    onClick={(e) => {
+                                    const productId = pro?.productId?._id || pro?.productId;
+                                    navigation(`/products/${productId}`);
+                                    }}
+                                >
+                                    <Single_product pro={pro?.productId} user={user} showWishList={false} />
                                 </div>
-                            </Fragment>
-                        ) : (
-                            <Fragment>
-                                <div className="w-full h-screen flex justify-center items-center">
-                                    <div className="text-center">
-                                        <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
-                                        <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
-                                        <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
-                                        <Link to="/products">
-                                            <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">Continue Shopping</button>
-                                        </Link>
-                                    </div>
+
+                                {/* Wishlist Item Remove Button */}
+                                <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                                    <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId._id || pro?.productId)} />
                                 </div>
-                            </Fragment>
-                        )}
+                                </div>
+                            </li>
+                            ))}
+                        </ul>
+                        </div>
                     </Fragment>
+                    ) : (
+                    <Fragment>
+                        <div className="w-full h-screen flex justify-center items-center">
+                        <div className="text-center">
+                            <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
+                            <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
+                            <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
+                            <Link to="/products">
+                            <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
+                                Continue Shopping
+                            </button>
+                            </Link>
+                        </div>
+                        </div>
+                    </Fragment>
+                    )}
+                </Fragment>
                 )
             }
-        </Fragment>
+            </Fragment>
+
     )
 }
 

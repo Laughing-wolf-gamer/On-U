@@ -267,9 +267,9 @@ export const checkUserPurchasedProduct = async (req, res) => {
         // If the user has orders
         if (orderPurchasedProductByUserId && orderPurchasedProductByUserId.length > 0) {
             // Check if any of the order items include the productId
-            console.log("Product Id: ",productId);
+            // console.log("Product Id: ",productId);
             for (const order of orderPurchasedProductByUserId) {
-                console.log("OrderPurchasedProductByUserId: ", order.orderItems)
+                // console.log("OrderPurchasedProductByUserId: ", order.orderItems)
                 // Ensure orderItems is an array and contains the productId
                 if (order.orderItems && order.orderItems.some(item => item.productId._id === productId)) {
                     

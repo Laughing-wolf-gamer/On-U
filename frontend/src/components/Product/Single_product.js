@@ -46,7 +46,7 @@ const SingleProduct = React.memo(({ pro ,user,wishlist = [],showWishList = true}
                 </p>
 
                 {/* Price Section */}
-                <p className="flex flex-row justify-start items-center">
+                <p className="flex flex-row justify-start items-center space-x-2">
                     <span className="flex items-center text-sm font-medium text-black">
                         <BiRupee />{productSalePrice || productPrice}
                     </span>

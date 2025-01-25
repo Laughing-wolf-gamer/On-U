@@ -181,7 +181,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
     // Function to handle media load completion
     const handleMediaLoad = () => {
         setIsMediaLoaded(true);
-        console.log("loading...");
+        // console.log("loading...");
         if(onLoad){
             onLoad();
         }

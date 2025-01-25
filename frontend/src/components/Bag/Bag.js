@@ -294,337 +294,346 @@ const Bag = () => {
     console.log("Random Products: ",randomProducts);
     
     return (
-        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
-            {isAuthentication ? (
-                <div>
-                    
-                    {!bagLoading && bag?.orderItems?.length > 0 ? (
-                        <div className="relative w-screen px-5 mx-auto">
-                            <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
-                                <div className="flex space-x-2 text-[#696B79]">
-                                    <span className={`font-semibold ${!showPayment ? "text-blue-400":''}`}>BAG</span>
-                                    <span>--------</span>
-                                    <span className={`font-semibold ${!showPayment && selectedAddress ? "text-blue-400":''}`}>ADDRESS</span>
-                                    <span>--------</span>
-                                    <span className={`font-semibold ${showPayment && selectedAddress ? "text-blue-400":''}`}>PAYMENT</span>
+        <Fragment>
+            <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
+                {isAuthentication ? (
+                    <div>
+                        
+                        {!bagLoading && bag?.orderItems?.length > 0 ? (
+                            <div className="relative w-full px-10 mx-auto">
+
+                                {/* Navigation */}
+                                <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
+                                <div className="flex space-x-8 text-gray-800">
+                                    <span className={`font-semibold text-lg ${!showPayment ? "text-blue-400" : "text-gray-400"}`}>BAG</span>
+                                    <span className="text-gray-400">--------</span>
+                                    <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-400" : "text-gray-400"}`}>ADDRESS</span>
+                                    <span className="text-gray-400">--------</span>
+                                    <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-400" : "text-gray-400"}`}>PAYMENT</span>
                                 </div>
-                                <div className="flex items-center">
+                                <div className="flex items-center space-x-3">
                                     <BsShieldFillCheck className="text-blue-400 text-3xl" />
                                     <span className="ml-2 text-[#535766] text-xs">100% SECURE</span>
                                 </div>
-                            </div>
-
-                            <div className="flex flex-col lg:flex-row mt-4 gap-6">
-                                <div className="flex-1">
-                                    {bag && bag?.orderItems && bag?.orderItems?.length > 0 && bag?.orderItems?.map((item,i) => (
-                                        <div key={i} className="flex items-center border-b py-4">
-                                            <Link to={`/products/${item.productId?._id}`}>
-                                                <img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-24 h-24 object-contain" />
-                                            </Link>
-                                            <div className="ml-4 flex-1">
-                                                <h3 className="font-semibold">{item?.productId?.title}</h3>
-                                                <p className="text-sm">Size: {item?.size?.label}</p>
-                                                <div className="flex items-center space-x-2 text-sm text-blue-400">
-                                                    {
-                                                        item?.productId?.salePrice ? (
-                                                            <>
-                                                                <span>₹{Math.round(item.productId.salePrice)}</span>
-                                                                <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                                <span className="text-[#f26a10] font-normal hover:animate-vibrateScale">( ₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF )</span>
-                                                            </>
-
-                                                        ):(
-                                                            <span>₹ {item.productId.price}</span>
-                                                        )
-                                                    }
-                                                </div>
-                                                <div className="mt-2">
-                                                    Qty:
-                                                    <select
-                                                        value={item?.quantity}
-                                                        onChange={(e) => updateQty(e, item.productId._id)}
-                                                        className="ml-2 h-10 w-14 px-2 border rounded"
-                                                    >
-                                                        {/* Create options from 1 to item.size.quantity */}
-                                                        {[...Array(item?.size?.quantity || []).keys()].map(num => (
-                                                            <option key={num + 1} value={num + 1}>
-                                                                {num + 1}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-
-                                            </div>
-                                            <X
-                                                className="text-xl text-gray-700 hover:animate-vibrateScale transition-transform duration-300 hover:text-gray-600 cursor-pointer"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleDeleteBag(item.productId._id,item._id);
-                                                }}
-                                            />
-                                        </div>
-                                    ))}
                                 </div>
-
-                                <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg">
-                                    <h3 className="font-semibold mb-2">PRICE DETAILS ({bag.orderItems.length} items)</h3>
-                                    <div className="flex justify-between mb-2">
+                            
+                                {/* Main Content */}
+                                <div className="flex flex-col lg:flex-row gap-12 mt-12">
+                                {/* Product Listing */}
+                                <div className="flex-1 space-y-6">
+                                    {bag?.orderItems?.length > 0 ? (
+                                    bag?.orderItems?.map((item, i) => (
+                                        <div key={i} className="flex items-center border-b py-6 space-x-6">
+                                        <Link to={`/products/${item.productId?._id}`} className="w-28 h-28">
+                                            <img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-full h-full object-contain rounded-lg" />
+                                        </Link>
+                                        <div className="ml-6 flex-1">
+                                            <h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
+                                            <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+                                            <div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
+                                            {item?.productId?.salePrice ? (
+                                                <>
+                                                <span>₹{Math.round(item.productId.salePrice)}</span>
+                                                <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
+                                                <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
+                                                </>
+                                            ) : (
+                                                <span>₹ {item.productId.price}</span>
+                                            )}
+                                            </div>
+                                            <div className="mt-4 flex items-center space-x-4">
+                                            <label className="text-sm">Qty:</label>
+                                            <select
+                                                value={item?.quantity}
+                                                onChange={(e) => updateQty(e, item.productId._id)}
+                                                className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            >
+                                                {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+                                                <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                                ))}
+                                            </select>
+                                            </div>
+                                        </div>
+                                        <X
+                                            className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
+                                            onClick={(e) => {
+                                            e.preventDefault();
+                                            handleDeleteBag(item.productId._id, item._id);
+                                            }}
+                                        />
+                                        </div>
+                                    ))
+                                    ) : (
+                                    <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
+                                    )}
+                                </div>
+                            
+                                {/* Price Details */}
+                                <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-lg shadow-md">
+                                    <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({bag?.orderItems.length} items)</h3>
+                                    <div className="space-y-5">
+                                    <div className="flex justify-between text-sm text-gray-700">
                                         <span>Total MRP</span>
                                         <span>₹{bag?.totalMRP || totalSellingPrice}</span>
                                     </div>
-                                    <div className="flex justify-between mb-2">
+                                    <div className="flex justify-between text-sm text-gray-700">
                                         <span>You Saved</span>
                                         <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
                                     </div>
-                                    <div className="flex justify-between mb-2">
+                                    <div className="flex justify-between text-sm text-gray-700">
                                         <span>Coupon</span>
-                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600":""}`} >{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
+                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                        {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                        </span>
                                     </div>
-                                    <div className="flex justify-between mb-4">
+                                    <div className="flex justify-between text-sm text-gray-700 mb-5">
                                         <span>Convenience Fee</span>
-                                        <span className={`${bag.Coupon && bag.Coupon.FreeShipping ? "line-through":""}`}>₹{convenienceFees}</span>
+                                        <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+                                        ₹{convenienceFees}
+                                        </span>
                                     </div>
-                                    <div className="flex justify-between font-semibold text-xl">
+                                    <div className="flex justify-center space-x-4 rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors">
                                         <span>Total</span>
-                                        <span>₹{Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+                                        <span>₹ {Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+                                    </div>
                                     </div>
                                 </div>
-                            </div>
-
-                            {/* Address List */}
-                            <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                                <h3 className="font-semibold mb-2">Your Addresses</h3> 
+                                </div>
+                            
+                                {/* Address List */}
+                                <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+                                <h3 className="font-semibold mb-4">Your Addresses</h3>
                                 <div className="space-y-4">
-                                    {user && user.user && allAddresses && allAddresses.length > 0 ? (
-                                        allAddresses.map((addr, index) => (
-                                            <div
-                                                key={index}
-                                                className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
-                                                onClick={() => handleAddressSelection(addr)}
-                                            >
-                                            {/* Loop through each key-value pair in the address object */}
-                                            {Object.entries(addr).map(([key, value]) => (
-                                                <div key={key} className="flex justify-between">
-                                                    <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                                                    <span>{value}</span>
-                                                </div>
-                                            ))}
-
-                                            {/* If the address is selected, show "Default Address" */}
-                                            {selectedAddress === addr && <span className="text-xs text-white ">Default Address</span>}
+                                    {user && user.user && allAddresses?.length > 0 ? (
+                                    allAddresses.map((addr, index) => (
+                                        <div
+                                        key={index}
+                                        className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
+                                        onClick={() => handleAddressSelection(addr)}
+                                        >
+                                        {Object.entries(addr).map(([key, value]) => (
+                                            <div key={key} className="flex justify-between">
+                                            <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                            <span>{value}</span>
                                             </div>
-                                        ))
+                                        ))}
+                                        {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
+                                        </div>
+                                    ))
                                     ) : (
-                                        <p>No addresses available. Please add an address.</p>
+                                    <p>No addresses available. Please add an address.</p>
                                     )}
                                 </div>
                                 </div>
-
-                            {/* Payment Checkout Section */}
-                            <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                                <h3 className="font-semibold mb-4 text-center">Payment Checkout</h3>
-                                <div className="space-y-4">
+                            
+                                {/* Payment Checkout Section */}
+                                <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+                                <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
+                                <div className="space-y-6">
                                     <div className="flex justify-between items-center">
-                                        <span>Order Total:</span>
-                                        <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
+                                    <span>Order Total:</span>
+                                    <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
-                                        <span>Selected Address:</span>
-                                        <span className="text-sm">
-                                            {selectedAddress
-                                                ? Object.keys(selectedAddress).map((key, index) => (
-                                                    <div key={index}>
-                                                    <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
-                                                    </div>
-                                                ))
-                                                : "No address selected"
-                                            }
-                                        </span>
+                                    <span>Selected Address:</span>
+                                    <span className="text-sm">
+                                        {selectedAddress
+                                        ? Object.keys(selectedAddress).map((key, index) => (
+                                            <div key={index}>
+                                                <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
+                                            </div>
+                                            ))
+                                        : "No address selected"
+                                        }
+                                    </span>
                                     </div>
-                                    <div className="flex flex-col space-y-2">
-                                        <button
-                                            onClick={() => {
-                                                if (selectedAddress) {
-                                                    placeOrder();
-                                                } else {
-                                                    checkAndCreateToast("error",'Please select a delivery address');
-                                                }
-                                            }}
-                                            className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
-                                        >
-                                            Proceed to Payment
-                                        </button>
-                                        <button
-                                            onClick={handleOpenPopup}
-                                            className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
-                                        >
-                                            Add New Address
-                                        </button>
+                                    <div className="flex flex-col space-y-4">
+                                    <button
+                                        onClick={() => {
+                                        if (selectedAddress) {
+                                            placeOrder();
+                                        } else {
+                                            checkAndCreateToast("error", 'Please select a delivery address');
+                                        }
+                                        }}
+                                        className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
+                                    >
+                                        Proceed to Payment
+                                    </button>
+                                    <button
+                                        onClick={handleOpenPopup}
+                                        className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
+                                    >
+                                        Add New Address
+                                    </button>
                                     </div>
                                 </div>
-                            </div>
-                            <AddAddressPopup
+                                </div>
+                            
+                                {/* Add Address Popup */}
+                                <AddAddressPopup
                                 isOpen={isAddressPopupOpen}
                                 onClose={handleClosePopup}
                                 onSave={handleSaveAddress}
-                            />
-                            
-                            
-                        </div>
-                    ) : (
-                        <Fragment>
-                            {bagLoading ?  <SkeletonLoader />:
-                                <div className="min-h-screen flex justify-center items-center bg-slate-100">
-                                    <Emptybag/>                                   
+                                />
+                            </div>
+                        
+                        ) : (
+                            <Fragment>
+                                {bagLoading ?  <SkeletonLoader />:
+                                    <div className="min-h-screen flex justify-center items-center bg-slate-100">
+                                        <Emptybag/>                                   
+                                    </div>
+                                }
+                            </Fragment>
+                        )}
+                        {user && showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={totalProductSellingPrice} originalsAmount = {totalSellingPrice} closePopup={() => {
+                            dispatch(getbag({ userId: user.id }));
+                            dispatch(getAddress())
+                            setShowPayment(false)
+                        }} />}
+                    </div>
+                ) : (
+                    <div>
+                        {sessionStorageBag && sessionStorageBag.length > 0 ? (
+                            <div className="relative w-full px-10 mx-auto">
+
+                            {/* Navigation */}
+                            <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
+                            <div className="flex space-x-8 text-gray-800">
+                                <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+                                <span className="text-gray-400">|</span>
+                                <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+                                <span className="text-gray-400">|</span>
+                                <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
+                            </div>
+                            <div className="flex items-center space-x-3">
+                                <BsShieldFillCheck className="text-blue-600 text-2xl" />
+                                <span className="text-xs text-gray-600">100% SECURE</span>
+                            </div>
+                            </div>
+                        
+                            {/* Main Content */}
+                            <div className="flex flex-col lg:flex-row gap-12 mt-12">
+                            {/* Product Listing */}
+                            <div className="flex-1 space-y-6">
+                                {sessionStorageBag && sessionStorageBag.length > 0 ? sessionStorageBag.map((item, i) => (
+                                <div key={i} className="flex items-center border-b py-6 space-x-8">
+                                    <Link to={`/products/${item.ProductData?._id}`} className="w-28 h-28">
+                                    <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
+                                    </Link>
+                                    <div className="flex-1">
+                                    <h3 className="font-semibold text-lg text-gray-800">{item?.ProductData?.title}</h3>
+                                    <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+                                    <div className="flex items-center space-x-4 text-sm text-blue-500 mt-2">
+                                        {item?.ProductData?.salePrice ? (
+                                        <>
+                                            <span>₹{Math.round(item.ProductData.salePrice)}</span>
+                                            <span className="line-through text-gray-400">₹{item.ProductData.price}</span>
+                                            <span className="text-orange-600">({Math.round(100 - (item.ProductData?.salePrice / item.ProductData?.price) * 100)}% OFF)</span>
+                                        </>
+                                        ) : (
+                                        <span>₹ {item.ProductData.price}</span>
+                                        )}
+                                    </div>
+                                    <div className="mt-4 flex items-center space-x-4">
+                                        <label className="text-sm">Qty:</label>
+                                        <select
+                                        value={item?.quantity}
+                                        onChange={(e) => updateQty(e, item.ProductData._id)}
+                                        className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                        >
+                                        {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+                                            <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                        ))}
+                                        </select>
+                                    </div>
+                                    </div>
+                                    <X
+                                    className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        handleDeleteBag(item.ProductData._id, item._id);
+                                    }}
+                                    />
                                 </div>
-                            }
-                        </Fragment>
-                    )}
-                    {user && showPayment && selectedAddress && bag && <PaymentProcessingPage selectedAddress = {selectedAddress} user={user} bag={bag} totalAmount={totalProductSellingPrice} originalsAmount = {totalSellingPrice} closePopup={() => {
-                        dispatch(getbag({ userId: user.id }));
-                        dispatch(getAddress())
-                        setShowPayment(false)
-                    }} />}
-                </div>
-            ) : (
-                <div>
-                    {sessionStorageBag && sessionStorageBag.length > 0 ? (
-                        <div className="relative w-screen px-5 mx-auto">
-                            <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
-                                <div className="flex space-x-2 text-[#696B79]">
-                                    <span className={`font-semibold ${!showPayment ? "text-blue-400":''}`}>BAG</span>
-                                    <span>--------</span>
-                                    <span className={`font-semibold ${!showPayment && selectedAddress ? "text-blue-400":''}`}>ADDRESS</span>
-                                    <span>--------</span>
-                                    <span className={`font-semibold ${showPayment && selectedAddress ? "text-blue-400":''}`}>PAYMENT</span>
+                                )) : (
+                                <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
+                                )}
+                            </div>
+                        
+                            {/* Price Details */}
+                            <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
+                                <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionStorageBag.length} items)</h3>
+                                <div className="space-y-5">
+                                <div className="flex justify-between text-sm text-gray-700">
+                                    <span>Total MRP</span>
+                                    <span>₹{bag?.totalMRP || totalSellingPrice}</span>
                                 </div>
-                                <div className="flex items-center">
-                                    <BsShieldFillCheck className="text-blue-400 text-3xl" />
-                                    <span className="ml-2 text-[#535766] text-xs">100% SECURE</span>
+                                <div className="flex justify-between text-sm text-gray-700">
+                                    <span>You Saved</span>
+                                    <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
+                                </div>
+                                <div className="flex justify-between text-sm text-gray-700">
+                                    <span>Coupon</span>
+                                    <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                    {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between text-sm text-gray-700 mb-5">
+                                    <span>Convenience Fee</span>
+                                    <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+                                    ₹{convenienceFees}
+                                    </span>
+                                </div>
+                                <div className="flex justify-between font-semibold text-xl text-gray-900">
+                                    <span>Total</span>
+                                    <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                </div>
+                                </div>
+                                <div className="mt-6">
+                                <button
+                                    onClick={() => navigation("/Login")}
+                                    className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
+                                >
+                                    Log In To Process Payment
+                                </button>
                                 </div>
                             </div>
-
-                            <div className="flex flex-col lg:flex-row mt-4 gap-6">
-                                <div className="flex-1">
-                                    {sessionStorageBag  && sessionStorageBag.length > 0 && sessionStorageBag.map((item,i) => (
-                                        <div key={i} className="flex items-center border-b py-4">
-                                            <Link to={`/products/${item.ProductData?._id}`}>
-                                                <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-24 h-24 object-contain" />
-                                            </Link>
-                                            <div className="ml-4 flex-1">
-                                                <h3 className="font-semibold">{item?.ProductData?.title}</h3>
-                                                <p className="text-sm">Size: {item?.size?.label}</p>
-                                                <div className="flex items-center space-x-2 text-sm text-blue-400">
-                                                    {
-                                                        item?.ProductData?.salePrice ? (
-                                                            <>
-                                                                <span>₹{Math.round(item.ProductData.salePrice)}</span>
-                                                                <span className="line-through text-[#94969f]">₹{item.ProductData.price}</span>
-                                                                <span className="text-[#f26a10] font-normal hover:animate-vibrateScale">( ₹{-Math.round(item.ProductData?.salePrice / item.ProductData?.price * 100 - 100)}% OFF )</span>
-                                                            </>
-
-                                                        ):(
-                                                            <span>₹ {item.ProductData.price}</span>
-                                                        )
-                                                    }
-                                                </div>
-                                                <div className="mt-2">
-                                                    Qty:
-                                                    <select
-                                                        value={item?.quantity}
-                                                        onChange={(e) => updateQty(e, item.ProductData._id)}
-                                                        className="ml-2 h-10 w-14 px-2 border rounded"
-                                                    >
-                                                        {/* Create options from 1 to item.size.quantity */}
-                                                        {[...Array(item?.size?.quantity || []).keys()].map(num => (
-                                                            <option key={num + 1} value={num + 1}>
-                                                                {num + 1}
-                                                            </option>
-                                                        ))}
-                                                    </select>
-                                                </div>
-
-                                            </div>
-                                            <X
-                                                className="text-xl text-gray-700 hover:animate-vibrateScale transition-transform duration-300 hover:text-gray-600 cursor-pointer"
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    handleDeleteBag(item.ProductData._id,item._id);
-                                                }}
-                                            />
-                                        </div>
-                                    ))}
-                                </div>
-
-                                <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg">
-                                    <h3 className="font-semibold mb-2">PRICE DETAILS ({sessionStorageBag.length} items)</h3>
-                                    <div className="flex justify-between mb-2">
-                                        <span>Total MRP</span>
-                                        <span>₹{bag && bag?.totalMRP || totalSellingPrice}</span>
-                                    </div>
-                                    <div className="flex justify-between mb-2">
-                                        <span>You Saved</span>
-                                        <span>₹{Math.round(bag &&bag?.totalDiscount || discountedAmount)}</span>
-                                    </div>
-                                    <div className="flex justify-between mb-2">
-                                        <span>Coupon</span>
-                                        <span className={`${bag &&bag?.Coupon?.CouponCode ? "text-red-600":""}`} >{bag?.Coupon?.CouponCode ? bag?.Coupon?.CouponCode:"No Coupon Applied"}</span>
-                                    </div>
-                                    <div className="flex justify-between mb-4">
-                                        <span>Convenience Fee</span>
-                                        <span className={`${bag && bag.Coupon && bag.Coupon.FreeShipping ? "line-through":""}`}>₹{convenienceFees}</span>
-                                    </div>
-                                    <div className="flex justify-between font-semibold text-xl">
-                                        <span>Total</span>
-                                        <span>₹{Math.round(totalProductSellingPrice)}</span>
-                                    </div>
-                                    <div className="flex justify-center items-center flex-row bg-black mt-5">
-                                        <button onClick={()=>navigation("/Login")} className='w-full rounded-[60px] flex items-center justify-center p-3 font-semibold text-xl'>
-                                            <span className='text-white'>Log In To Process Payment</span>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>                       
-                            
+                            </div>
+                        
                         </div>
-                    ) : (
-                        <Fragment>
-                            {bagLoading ?  <SkeletonLoader />:
-                                <div className="min-h-screen flex justify-center items-center bg-slate-100">
-                                    <Emptybag/>                                   
-                                </div>
-                            }
-                        </Fragment>
-                    )}
-                    
+                                                
+                        
+                        ) : (
+                            <Fragment>
+                                {bagLoading ?  <SkeletonLoader />:
+                                    <div className="min-h-screen flex justify-center items-center">
+                                        <Emptybag/>                                   
+                                    </div>
+                                }
+                            </Fragment>
+                        )}
+                        
+                    </div>
+                )}
+                <div className="w-full flex flex-col items-center">
+                    <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6 px-6 md:px-12">
+                        Discover More
+                    </h1>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 px-4 sm:px-8 md:px-12 pb-10">
+                        {randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 10).map((pro) => (
+                            <SingleProduct pro={pro} user={user} key={pro._id} />
+                        ))}
+                    </ul>
                 </div>
-            )}
-            <div className='w-full justify-center flex flex-col'>
-              <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
-              <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
-                {randomProducts && randomProducts.length > 0 && randomProducts.slice(0,10).map((pro) => (<SingleProduct pro={pro} user ={user} key={pro._id}/>))}
-              </ul>
 
+                <Footer/>
             </div>
-            <Footer/>
-        </div>
+        </Fragment>
     );
 };
-const ProductGrid = ({ randomProducts, user }) => {
-    if (!randomProducts || randomProducts.length === 0) {
-      return <div>No products available</div>;
-    }
-  
-    return (
-        <div className="grid grid-cols-4 gap-4 mt-4">
-            {randomProducts.map((p, index) => (
-                <div key={index} className="col-span-1">
-                    <SingleProduct pro={p} user={user} showWishList={true} />
-                </div>
-            ))}
-        </div>
-    );
-  };
+
 const SkeletonLoader = () => {
     return (
         <Fragment>

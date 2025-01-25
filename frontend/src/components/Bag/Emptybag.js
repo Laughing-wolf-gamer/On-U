@@ -1,27 +1,29 @@
-import React, {Fragment} from 'react'
-import emptybag from '../images/empty-bag.webp'
-import {useNavigate} from 'react-router-dom'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import React from "react";
+import emptybag from '../images/empty-bag.webp';
+import { useNavigate } from "react-router-dom";
 
-const Emptybag = () => {
-    const redirect = useNavigate()
+const EmptyBag = () => {
+  const redirect = useNavigate()
 
-    function handleMoveToShoppingView() {
-      redirect('/products')
-    }
+  function handleMoveToShoppingView() {
+    redirect('/products')
+  }
   return (
-    <Fragment>
-        <div className='w-full h-full justify-center flex-1 items-center'>
-            <div className='h-max text-center w-max mx-auto my-auto'>
-              <LazyLoadImage src={emptybag} alt={`empty_Bag`} className='w-[150px] mt-10 mb-10 mx-auto min-h-[150px]' />
-              <h1 className='text-[#282c3f] font-bold font1 text-[22px]'>Hey, it feels so light!</h1>
-              <h1 className='text-[#a0a3a8] text-[14px] '>There is nothing in your bag. Let's add some items.</h1>
-              <button className='py-2 px-4 font1 font-bold text-[14px] text-gray-700 border-[1px] border-gray-500 rounded-sm mt-4' onClick={handleMoveToShoppingView}>CONTINUE SHOPPING</button>
-            </div>
-               
-        </div>
-    </Fragment>
-  )
-}
+    <div className="flex flex-col w-full h-screen items-center justify-center bg-gray-50 text-center px-6 py-12">
+      <div className="w-full max-w-md bg-white p-10 rounded-xl shadow-lg">
+        <img
+          src={emptybag} // Replace with your actual image path
+          alt="Empty Bag"
+          className="mx-auto mb-8 w-36 h-36 object-contain"
+        />
+        <h2 className="text-4xl font-semibold text-gray-800 mb-4">Oops! Your Bag is Empty</h2>
+        <p className="text-gray-600 mb-8 text-lg leading-relaxed">It looks like you haven't added anything yet. Browse our collection and start shopping now!</p>
+        <button onClick={handleMoveToShoppingView} className="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300 text-lg shadow-md">
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+  );
+};
 
-export default Emptybag
+export default EmptyBag;

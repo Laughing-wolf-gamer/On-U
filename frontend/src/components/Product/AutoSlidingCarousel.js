@@ -170,20 +170,22 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
                     height="100%"
                     playing={videoInView[i]} // Play video only when in view
                     light={false} // Optional: thumbnail preview
+                    onStart={() => setVideoInView((prev) => [...prev, true])} // Start video when in view
+                    onEnded={() => setVideoInView((prev) => [...prev, false])} // Stop video after it ends
                   />
                 </div>
               ) : (
                 // Image file handling with LazyLoadImage (Skeleton for Image)
                 <div className="media-item" style={{ position: 'relative', width: '100%', height: '100%' }}>
                   {/* Skeleton loader for image */}
-                  <div className="w-full h-full bg-gray-200 animate-pulse" style={{ position: 'absolute', top: 0, left: 0 }}></div>
-                  <LazyLoadImage
+                  {/* <div className="w-full h-full bg-gray-200 animate-pulse" style={{ position: 'absolute', top: 0, left: 0 }}></div> */}
+                  <img
                     loading="lazy"
                     src={mediaItem.url}
                     className="w-full h-full object-contain"
                     width="100%"
                     alt="product"
-                    effect="blur"
+                    onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
                   />
                 </div>
               )}
@@ -192,7 +194,7 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
         </Fragment>
       ) : (
         // Show loading spinner or something else here while data is not available
-        <div>Loading...</div>
+        <div className="w-full h-48 bg-gray-300 animate-pulse"></div>
       )}
 
       {/* Navigation Dots */}
