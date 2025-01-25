@@ -1,7 +1,6 @@
 import { Heart, ShoppingCart } from 'lucide-react';
 import React, { useState, useEffect, useMemo, useCallback, Fragment } from 'react';
-import { calculateDiscount, calculateDiscountPercentage, getImagesArrayFromProducts } from '../../config';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
@@ -74,7 +73,7 @@ const HomeProductsPreview = ({ product }) => {
     const handleMediaLoad = () => {
         setIsMediaLoaded(true); // Set media as loaded when it's ready
     };
-    console.log("loading: ",isMediaLoaded);
+    // console.log("loading: ",isMediaLoaded);
 
     return (
         <div
@@ -113,7 +112,10 @@ const HomeProductsPreview = ({ product }) => {
                 ) : (
                     <>
                         <div className={`w-full h-7 md:h-10 flex items-center justify-center font-sans`}>
-                            <button onClick={(e) => { e.stopPropagation(); navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-black bg-white focus:bg-red-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
+                            <button onClick={(e) => { 
+                                e.stopPropagation();
+                                navigation(`/products/${product?._id}`);
+                            }} className="w-full h-full flex items-center text-black bg-white focus:bg-gray-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
                                 <Heart size={20} />
                                 <span className="font-sans">Add to Wishlist</span>
                             </button>
