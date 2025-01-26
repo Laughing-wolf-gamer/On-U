@@ -36,7 +36,7 @@ const ImageZoom = ({ imageSrc }) => {
   };
 
   return (
-    <div className="relative h-full p-1 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
+    <div className="relative w-full h-[600px] p-1 justify-start flex-row flex items-start bg-gray-100 hover:rounded-md">
       <img
         src={imageSrc}
         alt="Zoomable"

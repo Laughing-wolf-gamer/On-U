@@ -1,105 +1,196 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 
-const Filter = ({products,dispatchFetchAllProduct}) => {
-  const [showCategory, setShowCategory] = useState(false);
-  const [showGender, setShowGender] = useState(false);
-  const [showColor, setShowColor] = useState(false);
-  const [showPrice, setShowPrice] = useState(false);
+const Filter = ({products}) => {
+  const navigate = useNavigate();
+  const location = useLocation();
 
-  const toggleCategory = () => setShowCategory(!showCategory);
-  const toggleGender = () => setShowGender(!showGender);
-  const toggleColor = () => setShowColor(!showColor);
-  const togglePrice = () => setShowPrice(!showPrice);
+  // Initial state for filters
+  const [filters, setFilters] = useState({
+    gender: 'all',
+    category: 'all',
+    subcategory: 'all',
+    sizes: [],
+    colors: [],
+    priceRange: [0, 1000],
+  });
+
+  // Helper function to parse the query string into an object
+  const parseQueryParams = (queryString) => {
+    const urlParams = new URLSearchParams(queryString);
+    const params = {
+      gender: urlParams.get('gender') || 'all',
+      category: urlParams.get('category') || 'all',
+      subcategory: urlParams.get('subcategory') || 'all',
+      sizes: urlParams.getAll('sizes'),
+      colors: urlParams.getAll('colors'),
+      priceRange: [
+        parseInt(urlParams.get('minPrice') || '0', 10),
+        parseInt(urlParams.get('maxPrice') || '1000', 10),
+      ],
+    };
+    return params;
+  };
+
+  // Update state based on query params in URL
+  useEffect(() => {
+    const params = parseQueryParams(location.search);
+    setFilters(params);
+  }, [location.search]);
+
+  // Handle the changes of filters and update the URL
+  const handleChange = (e) => {
+    const { name, value, type, checked } = e.target;
+    if (type === 'checkbox') {
+      // For checkboxes (sizes, colors)
+      const updatedValues = checked
+        ? [...filters[name], value]
+        : filters[name].filter((item) => item !== value);
+
+      setFilters({ ...filters, [name]: updatedValues });
+    } else {
+      setFilters({ ...filters, [name]: value });
+    }
+  };
+
+  // Update the query string in the URL when a filter changes
+  const updateUrlQuery = () => {
+    const queryParams = new URLSearchParams();
+
+    // Add query params to URL
+    queryParams.set('gender', filters.gender);
+    queryParams.set('category', filters.category);
+    queryParams.set('subcategory', filters.subcategory);
+    filters.sizes.forEach((size) => queryParams.append('sizes', size));
+    filters.colors.forEach((color) => queryParams.append('colors', color));
+    queryParams.set('minPrice', filters.priceRange[0]);
+    queryParams.set('maxPrice', filters.priceRange[1]);
+
+    // Update the browser URL
+    navigate(`?${queryParams.toString()}`, { replace: true });
+  };
+
+  // Handle price range change
+  const handlePriceRangeChange = (e) => {
+    const value = parseInt(e.target.value, 10);
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      priceRange: [prevFilters.priceRange[0], value],
+    }));
+  };
+
+  // Handle the filter submission
+  useEffect(() => {
+    updateUrlQuery();
+  }, [filters]);
 
   return (
-    <div className="w-64 p-4 bg-gray-50 rounded-lg shadow-md">
-      {/* Category Filter */}
-      <div className="mb-4">
-          <button
-            className="w-full text-left bg-green-500 text-white py-2 px-4 rounded-md focus:outline-none"
-            onClick={toggleCategory}
-          >
-            Category
-          </button>
-          {showCategory && (
-            <div className="mt-2 space-y-2">
-              <label className="block">
-                <input type="checkbox" /> Electronics
-              </label>
-              <label className="block">
-                <input type="checkbox" /> Clothing
-              </label>
-              <label className="block">
-                <input type="checkbox" /> Books
-              </label>
-            </div>
-          )}
-      </div>
+    <div className="w-80 p-5 bg-gray-50 rounded-lg shadow-lg">
+      <h3 className="text-xl font-semibold mb-5">Filter Products</h3>
 
       {/* Gender Filter */}
       <div className="mb-4">
-        <button
-          className="w-full text-left bg-blue-500 text-white py-2 px-4 rounded-md focus:outline-none"
-          onClick={toggleGender}
+        <label htmlFor="gender" className="block font-medium text-sm mb-2">Gender</label>
+        <select
+          id="gender"
+          name="gender"
+          value={filters.gender}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Gender
-        </button>
-        {showGender && (
-          <div className="mt-2 space-y-2">
-            <label className="block">
-              <input type="checkbox" /> Male
-            </label>
-            <label className="block">
-              <input type="checkbox" /> Female
-            </label>
-          </div>
-        )}
+          <option value="all">All</option>
+          <option value="men">Men</option>
+          <option value="women">Women</option>
+          <option value="unisex">Unisex</option>
+        </select>
       </div>
 
-      {/* Color Filter */}
+      {/* Category Filter */}
       <div className="mb-4">
-        <button
-          className="w-full text-left bg-red-500 text-white py-2 px-4 rounded-md focus:outline-none"
-          onClick={toggleColor}
+        <label htmlFor="category" className="block font-medium text-sm mb-2">Category</label>
+        <select
+          id="category"
+          name="category"
+          value={filters.category}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Color
-        </button>
-        {showColor && (
-          <div className="mt-2 space-y-2">
-            <label className="block">
-              <input type="checkbox" /> Red
-            </label>
-            <label className="block">
-              <input type="checkbox" /> Blue
-            </label>
-            <label className="block">
-              <input type="checkbox" /> Green
-            </label>
-          </div>
-        )}
+          <option value="all">All</option>
+          <option value="clothing">Clothing</option>
+          <option value="footwear">Footwear</option>
+          <option value="accessories">Accessories</option>
+        </select>
       </div>
 
-      {/* Price Filter */}
+      {/* Subcategory Filter */}
       <div className="mb-4">
-        <button
-          className="w-full text-left bg-yellow-500 text-white py-2 px-4 rounded-md focus:outline-none"
-          onClick={togglePrice}
+        <label htmlFor="subcategory" className="block font-medium text-sm mb-2">Subcategory</label>
+        <select
+          id="subcategory"
+          name="subcategory"
+          value={filters.subcategory}
+          onChange={handleChange}
+          className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
-          Price
-        </button>
-        {showPrice && (
-          <div className="mt-2 space-y-2">
-            <label className="block">
-              <input type="radio" name="price" /> $0 - $50
+          <option value="all">All</option>
+          <option value="shirts">Shirts</option>
+          <option value="pants">Pants</option>
+          <option value="shoes">Shoes</option>
+        </select>
+      </div>
+
+      {/* Sizes Filter */}
+      <div className="mb-4">
+        <label className="block font-medium text-sm mb-2">Sizes</label>
+        <div className="flex flex-wrap gap-3">
+          {['S', 'M', 'L', 'XL'].map((size) => (
+            <label key={size} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                value={size}
+                checked={filters.sizes.includes(size)}
+                onChange={handleChange}
+                name="sizes"
+                className="h-4 w-4"
+              />
+              {size}
             </label>
-            <label className="block">
-              <input type="radio" name="price" /> $50 - $100
+          ))}
+        </div>
+      </div>
+
+      {/* Colors Filter */}
+      <div className="mb-4">
+        <label className="block font-medium text-sm mb-2">Colors</label>
+        <div className="flex flex-wrap gap-3">
+          {['Red', 'Blue', 'Black', 'White'].map((color) => (
+            <label key={color} className="flex items-center gap-2">
+              <input
+                type="checkbox"
+                value={color}
+                checked={filters.colors.includes(color)}
+                onChange={handleChange}
+                name="colors"
+                className="h-4 w-4"
+              />
+              {color}
             </label>
-            <label className="block">
-              <input type="radio" name="price" /> $100 - $200
-            </label>
-          </div>
-        )}
+          ))}
+        </div>
+      </div>
+
+      {/* Price Range Filter */}
+      <div className="mb-4">
+        <label htmlFor="price-range" className="block font-medium text-sm mb-2">Price Range</label>
+        <input
+          type="range"
+          min="0"
+          max="1000"
+          value={filters.priceRange[1]}
+          onChange={handlePriceRangeChange}
+          className="w-full h-2 bg-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+        <div className="text-center mt-2">{`$0 - $${filters.priceRange[1]}`}</div>
       </div>
     </div>
   );

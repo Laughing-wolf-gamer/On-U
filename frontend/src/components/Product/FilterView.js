@@ -1,9 +1,11 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import PriceSlider from './PriceSlider';
 import { capitalizeFirstLetterOfEachWord } from '../../config';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchAllOptions } from '../../action/productaction';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
-    // console.log("Filter Products array: ", product);
+    const{options} = useSelector(state => state.AllOptions);
+    const dispatch = useDispatch();
     const [colorul, setcolorul] = useState('max-h-72');
     const [colorulbtn, setcolorulbtn] = useState('block');
   
@@ -13,8 +15,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     let gender = [];
     let color = [];
     let spARRAY = [];
-    const result = [[], [], []];
-    
+    const n = 3
+    const result = [[], [], []] //we create it, then we'll fill it    
     // Generate category, gender, color, and price arrays
     const categoriesarray = () => {
         if (product && product.length > 0) {
@@ -34,13 +36,15 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     };
     function sizearray() {
         if (product && product.length > 0) {
-          product.forEach(p => {
-            if(p){
-              p.size.forEach(s => {
-                size.push(s.label);
-              })
-            }
-          });
+            product.forEach(p => {
+                if(p){
+                    p.size.forEach(s => {
+                        if(!size.includes(s.label)){
+                            size.push(s.label);
+                        }
+                    })
+                }
+            });
         }
       }
 
@@ -69,6 +73,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         genderarray();
         colorarray();
         sparray();
+        sizearray();
     },[
         product
     ])
@@ -77,23 +82,105 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     genderarray();
     colorarray();
     sparray();
-
+    sizearray();
+    
     // Remove duplicates and sort price array
     let Categorynewarray = [...new Set(category)];
     let gendernewarray = [...new Set(gender)];
     let colornewarray = [...new Set(color)];
     let subcategorynewarray = [...new Set(subcategory)];
     let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
+    
+    const setPriceFilter= ()=>{
+        const wordsPerLine = Math.ceil(sp.length / 3)
+        for (let line = 0; line < n; line++) {
+            for (let i = 0; i < wordsPerLine; i++) {
+                const value = sp[i + line * wordsPerLine]
+                if (!value) continue //avoid adding "undefined" values
+                result[line].push(value)
 
+            }
+        }
+    }
     // Update the URL based on the selected category
     const categoryfun = (e) => {
-        let url = new URL(window.location.href);
+        /* let url = new URL(window.location.href);
         if (url.searchParams.has('category')) {
             url.searchParams.set('category', e);
         } else {
             url.searchParams.append('category', e);
         }
         window.history.replaceState(null, "", url.toString());
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        } */
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('category'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
+        } else {
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
+        }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('category');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('category', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
+    
+        // Fetch products based on the updated URL parameters
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+    const sizefun = (e) => {
+        /* let url = new URL(window.location.href);
+        if (url.searchParams.has('size')) {
+            url.searchParams.set('size', e);
+        } else {
+            url.searchParams.append('size', e);
+        }
+        window.history.replaceState(null, "", url.toString());
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        } */
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('size'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
+        } else {
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
+        }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('size');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('size', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
+    
+        // Fetch products based on the updated URL parameters
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
         }
@@ -132,22 +219,31 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     const colorfun = (e) => {
         let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('color'); // This will return an array
     
-        // Update the color filter in the URL
-        if (url.searchParams.has('color')) {
-            if (url.searchParams.get('color') === e) {
-                url.searchParams.delete('color'); // Remove color filter if selected color is the same
-            } else {
-                url.searchParams.set('color', e); // Set the new color filter
-            }
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            url.searchParams.append('color', e); // Add color filter if not already present
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
     
-        // Update the URL in the browser without reloading the page
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('color');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('color', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
         window.history.replaceState(null, "", url.toString());
     
-        // Fetch the products based on the new filters
+        // Fetch products based on the updated URL parameters
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
         }
@@ -187,13 +283,47 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     // Handle gender filter
     const genderfun = (e) => {
-        let url = new URL(window.location.href);
+        /* let url = new URL(window.location.href);
         url.searchParams.set('gender', e);
         window.history.replaceState(null, "", url.toString());
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
+        } */
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('gender'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
+        } else {
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
+        }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('gender');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('gender', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
+    
+        // Fetch products based on the updated URL parameters
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
         }
     };
+    function sparraynew(){
+        let filersp = spARRAY.filter((f)=>f <=  Math.max(...result[1]) )
+        let newfiltersp = filersp.filter((f)=>f >=  Math.min(...result[1]))
+        return newfiltersp.length
+    } 
 
     // Function to clear all filters from the URL
     const clearAllFilters = () => {
@@ -209,7 +339,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // Check if any filters are selected from URL and update UI accordingly
     const check = () => {
         const params = new URLSearchParams(window.location.search);
-
+        console.log("Params: ",params);
         // Set category checkboxes based on URL params
         const selectedCategories = params.getAll('category');
         selectedCategories.forEach((cat) => {
@@ -246,7 +376,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     useEffect(() => {
         check();
     }, []);
-    console.log("subcategorynewarray: ",subcategorynewarray)
+    useEffect(()=>{
+        dispatch(fetchAllOptions());
+    },[dispatch])
+    setPriceFilter();
+    console.log("All options: ",options);
     
 
     return (
@@ -255,19 +389,52 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Gender Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                 <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
-                    {gendernewarray.map((e, i) => (
+                    {gendernewarray.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedCategories = params.getAll('gender'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                genderfun(e); // This will update the URL with the selected gender
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="gender"
+                                    value={e}
+                                    id={`cat_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-sans font-normal text-slate-400'> 
+                                        ({gender.filter((f) => f === e).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
+                    })}
+                    {/* {gendernewarray.map((e, i) => (
                         <li key={i} className='items-center'>
                             <input
-                                type="radio"
+                                type="checkbox"
                                 name="gender"
                                 value={e}
                                 className='mb-2 accent-gray-500'
                                 id={`id${i}`}
-                                onClick={() => genderfun(e)}
+                                onClick={(event) => {
+                                    event.preventDefault();
+                                    genderfun(e); // This will update the URL with the selected gender
+                                }}
                             />
                             <label className='font1 text-sm font-semibold ml-2 mr-4 mb-2'>{capitalizeFirstLetterOfEachWord(e)}</label>
                         </li>
-                    ))}
+                    ))} */}
                 </ul>
 
                 {/* Categories Filter */}
@@ -298,6 +465,40 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({category.filter((f) => f === e).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
+                    })}
+                </ul>
+                {/* Categories Filter */}
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
+                    {size.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedCategories = params.getAll('size'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                sizefun(e); // This will update the URL with the selected category
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value={e}
+                                    id={`cat_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-serif font-normal text-slate-400'> 
+                                        ({size.filter((f) => f === e).length})
                                     </span>
                                 </label>
                             </div>
@@ -378,11 +579,144 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
+                {/* <ul className={`pl-8 border-b-[1px] border-slate-200 py-4  overflow-hidden relative `}>
+                    <h1 className='font1 text-base font-semibold mb-2'>PRICE</h1>
+                
+                    <li className='items-center '>
+                    <input type="checkbox" name="color" value={`price1`}  className='mb-2 accent-pink-500' onClick={()=>price1fun(Math.max(...result[0]))} id={`id${Math.max(...result[0])+1}`} />
+                    
+                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))} <span className='text-xs font-serif font-normal text-slate-400'> ({spARRAY.filter((f) => f <=  Math.max(...result[0])).length})</span> </label>
+                    </li>
+
+                    <li className='items-center '>
+                    <input type="checkbox" name="color" value={`price2`}  className='mb-2 accent-pink-500' onClick={()=>price2fun(Math.min(...result[1]), Math.max(...result[1]))} id={`id${Math.max(...result[1])+1}`} />
+                    
+                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))} <span className='text-xs font-serif font-normal text-slate-400'> ({sparraynew()})</span> </label>
+                    </li>
+
+                    <li className='items-center '>
+                    <input type="checkbox" name="color" value={`price2`}  className='mb-2 accent-pink-500' onClick={()=>price3fun(Math.min(...result[2]))}  id={`id${Math.min(...result[2])+1}`} />
+                    
+                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))} <span className='text-xs font-serif font-normal text-slate-400'> ({spARRAY.filter((f) => f >=  Math.min(...result[2])).length})</span> </label>
+                    </li>
+                    
+                </ul> */}
+                <PriceFilter result={result} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>
             </div>
         </Fragment>
+    );
+};
+
+const PriceFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) => {
+    const [selectedPriceRange, setSelectedPriceRange] = useState({
+      price1: false,
+      price2: false,
+      price3: false,
+    });
+  
+    useEffect(() => {
+      // Get the price parameters from the URL
+      const url = new URL(window.location.href);
+      const maxPrice = url.searchParams.get('sellingPrice[$lte]');
+      
+      // Check which price range matches the URL's 'sellingPrice[$lte]'
+      setSelectedPriceRange({
+        price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
+        price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
+        price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
+      });
+    }, [result]); // Run this whenever the 'result' changes (which is likely to happen when data is fetched or updated)
+  
+    const price1fun = (maxPrice) => {
+      // Set the URL search parameter
+      const url = new URL(window.location.href);
+      url.searchParams.set('sellingPrice[$lte]', maxPrice);
+      window.history.replaceState(null, "", url.toString());
+  
+      if (dispatchFetchAllProduct) {
+        dispatchFetchAllProduct();
+      }
+    };
+  
+    const price2fun = (minPrice, maxPrice) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('sellingPrice[$lte]', maxPrice);
+      window.history.replaceState(null, "", url.toString());
+  
+      if (dispatchFetchAllProduct) {
+        dispatchFetchAllProduct();
+      }
+    };
+  
+    const price3fun = (minPrice) => {
+      const url = new URL(window.location.href);
+      url.searchParams.set('sellingPrice[$lte]', minPrice);
+      window.history.replaceState(null, "", url.toString());
+  
+      if (dispatchFetchAllProduct) {
+        dispatchFetchAllProduct();
+      }
+    };
+  
+    return (
+        <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 overflow-hidden relative`}>
+            <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+    
+            <li className="items-center">
+            <input
+                type="checkbox"
+                name="color"
+                value={`price1`}
+                className="mb-2 accent-pink-500"
+                onClick={() => price1fun(Math.max(...result[0]))}
+                checked={selectedPriceRange.price1}
+                id={`id${Math.max(...result[0]) + 1}`}
+            />
+            <label className="font1 text-sm ml-2 mr-4 mb-2">
+                Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
+                <span className="text-xs font-serif font-normal text-slate-400">
+                ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
+                </span>
+            </label>
+            </li>
+    
+            <li className="items-center">
+            <input
+                type="checkbox"
+                name="color"
+                value={`price2`}
+                className="mb-2 accent-pink-500"
+                onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
+                checked={selectedPriceRange.price2}
+                id={`id${Math.max(...result[1]) + 1}`}
+            />
+            <label className="font1 text-sm ml-2 mr-4 mb-2">
+                Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
+                <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
+            </label>
+            </li>
+    
+            <li className="items-center">
+            <input
+                type="checkbox"
+                name="color"
+                value={`price3`}
+                className="mb-2 accent-pink-500"
+                onClick={() => price3fun(Math.min(...result[2]))}
+                checked={selectedPriceRange.price3}
+                id={`id${Math.min(...result[2]) + 1}`}
+            />
+            <label className="font1 text-sm ml-2 mr-4 mb-2">
+                Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
+                <span className="text-xs font-serif font-normal text-slate-400">
+                ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
+                </span>
+            </label>
+            </li>
+        </ul>
     );
 };
 

@@ -83,7 +83,7 @@ export const allOptions = (state = {options:[]}, action) =>{
         case SUCCESS_OPTIONS:
             return {
                 loading: false,
-                options:action.payload,
+                options:action.payload || [],
             };
 
         case FAIL_OPTIONS:

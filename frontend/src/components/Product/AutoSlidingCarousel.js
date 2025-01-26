@@ -1,53 +1,59 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { getImagesArrayFromProducts, getLocalStorageBag, getLocalStorageWishListItem, hexToRgba, setSessionStorageBagListItem, setWishListProductInfo } from "../../config";
+import { getImagesArrayFromProducts, getLocalStorageWishListItem, hexToRgba, setWishListProductInfo } from "../../config";
 import ReactPlayer from "react-player";
-import { BsHeart } from "react-icons/bs";
 import { Heart } from "lucide-react";
 import { createwishlist, getwishlist } from "../../action/orderaction";
-import { useAlert } from "react-alert";
 import { useDispatch } from "react-redux";
-import Loader from "../Loader/Loader";
-import { useToast } from "../../Contaxt/ToastProvider";
 import toast from "react-hot-toast";
+import { useToast } from "../../Contaxt/ToastProvider";
 
+let isInWishList = false;
 
-let isInWishList = false
-const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => {
+const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
   const { activeToast, showToast } = useToast();
-  const checkAndCreateToast = (type,message) => {
-    console.log("check Toast: ",type, message,activeToast);
-      if(activeToast !== message){
-        switch(type){
-            case "error":
-                toast.error(message)
-                break;
-            case "warning":
-                toast.warning(message)
-                break;
-            case "info":
-                toast.info(message)
-                break;
-            case "success":
-                toast.success(message)
-                break;
-            default:
-                toast.info(message)
-                break;
-        }
-        showToast(message);
+  const checkAndCreateToast = (type, message) => {
+    console.log("check Toast: ", type, message, activeToast);
+    if (activeToast !== message) {
+      switch (type) {
+        case "error":
+          toast.error(message);
+          break;
+        case "warning":
+          toast.warning(message);
+          break;
+        case "info":
+          toast.info(message);
+          break;
+        case "success":
+          toast.success(message);
+          break;
+        default:
+          toast.info(message);
+          break;
       }
-  }
-  if(user){
-    isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id) || false
-  }else{
-    isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id === pro?._id) || false;
-  }
-  const imageArray = getImagesArrayFromProducts(pro,true);
+      showToast(message);
+    }
+  };
+
+  /* if (user) {
+    isInWishList =
+      wishlist &&
+      wishlist.orderItems &&
+      wishlist.orderItems.length > 0 &&
+      wishlist.orderItems.some((w) => w.productId?._id === pro?._id) ||
+      false;
+  } else {
+    isInWishList =
+      getLocalStorageWishListItem().find((b) => b.productId?._id === pro?._id) || false;
+  } */
+
+  const imageArray = getImagesArrayFromProducts(pro, true);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
   const dispatch = useDispatch();
+
   // Function to change to a specific slide
   const currentSlide = (n) => {
     setSlideIndex(n);
@@ -55,7 +61,11 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
 
   // Function to start auto sliding
   const startAutoSliding = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current); // Clear any existing interval
+    }
     timerRef.current = setInterval(() => {
+      toast.info("Timer changed: ");
       setSlideIndex((prevIndex) => (prevIndex % imageArray.length) + 1); // Loop through slides
     }, 7000); // Change slide every 7 seconds
   };
@@ -63,7 +73,7 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
   // Function to stop auto sliding
   const stopAutoSliding = () => {
     if (timerRef.current) {
-      clearInterval(timerRef.current);
+      clearInterval(timerRef.current); // Stop the auto sliding
     }
   };
 
@@ -118,80 +128,103 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
   const mediaItems = useMemo(() => {
     return imageArray.map((im) => ({
       url: im.url,
-      isVideo: im.url && (im.url.includes("video") || im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi")),
+      isVideo:
+        im.url &&
+        (im.url.includes("video") ||
+          im.url.endsWith(".mp4") ||
+          im.url.endsWith(".mov") ||
+          im.url.endsWith(".avi")),
     }));
   }, [imageArray]); // Recalculate only when imageArray changes
-  const addToWishList = async(e)=>{
+
+  const addToWishList = async (e) => {
     e.stopPropagation();
     if (user) {
-      await dispatch(createwishlist({productId:pro._id,}))
-      await dispatch(getwishlist())
-    }else{
-      //  alert.show('You have To Login To Add This Product To Wishlist')
-      setWishListProductInfo(pro,pro?._id);
+      await dispatch(createwishlist({ productId: pro._id }));
+      await dispatch(getwishlist());
+    } else {
+      setWishListProductInfo(pro, pro?._id);
     }
-    if(isInWishList){
-      checkAndCreateToast("success",'Added successfully to Wishlist')
-    }else{
-      checkAndCreateToast("success",'Removed successfully from Wishlist')
+    if (isInWishList) {
+      checkAndCreateToast("success", "Added successfully to Wishlist");
+    } else {
+      checkAndCreateToast("success", "Removed successfully from Wishlist");
     }
-    if(user){
-      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === pro?._id)
-    }else{
-      isInWishList = getLocalStorageWishListItem().find(b => b.productId._id === pro?._id) || false;
+    if (user) {
+      isInWishList =
+        wishlist &&
+        wishlist.orderItems &&
+        wishlist.orderItems.length > 0 &&
+        wishlist.orderItems.some((w) => w.productId?._id === pro?._id);
+    } else {
+      isInWishList =
+        getLocalStorageWishListItem().find((b) => b.productId._id === pro?._id) || false;
     }
-  }
-  // console.log("isInWishList: ",isInWishList,getLocalStorageWishListItem());
-  
+  };
+
   return (
     <div
-      className="slideshow-container min-h-[120px] bg-gray-200 relative"
-      onMouseEnter={stopAutoSliding} // Stop auto sliding when mouse enters
-      onMouseLeave={startAutoSliding} // Start auto sliding when mouse leaves
+      className="slideshow-container min-h-[10vw] w-full bg-gray-200 relative"
+      onMouseEnter={startAutoSliding} // Start auto sliding when mouse enters
+      onMouseLeave={stopAutoSliding} // Stop auto sliding when mouse leaves
     >
       {pro ? (
-        <Fragment>
-          {imageArray && imageArray.length > 0 && mediaItems.map((mediaItem, i) => (
-            <div key={i} className={`${pro._id} fade w-full h-fit`} style={slideStyle(i)}>
-              {/* Skeleton Loader */}
-              {mediaItem.isVideo ? (
-                // Video file handling with ReactPlayer (Skeleton for Video)
-                <div className="media-item overflow-hidden video-element" data-index={i} style={{ position: 'relative', width: '100%', height: '100%' }}>
-                  {/* Skeleton loader for video */}
-                  <div className="w-full h-full bg-gray-200 animate-pulse" style={{ position: 'absolute', top: 0, left: 0 }}></div>
-                  <ReactPlayer
-                    url={mediaItem.url}
-                    loop={true}
-                    className="w-full h-full object-contain"
-                    muted={true}
-                    controls={false}
-                    loading="lazy"
-                    width="100%"
-                    height="100%"
-                    playing={videoInView[i]} // Play video only when in view
-                    light={false} // Optional: thumbnail preview
-                    onStart={() => setVideoInView((prev) => [...prev, true])} // Start video when in view
-                    onEnded={() => setVideoInView((prev) => [...prev, false])} // Stop video after it ends
-                  />
-                </div>
-              ) : (
-                // Image file handling with LazyLoadImage (Skeleton for Image)
-                <div className="media-item" style={{ position: 'relative', width: '100%', height: '100%' }}>
-                  {/* Skeleton loader for image */}
-                  {/* <div className="w-full h-full bg-gray-200 animate-pulse" style={{ position: 'absolute', top: 0, left: 0 }}></div> */}
-                  <img
-                    loading="lazy"
-                    src={mediaItem.url}
-                    className="w-full h-full object-contain"
-                    width="100%"
-                    alt="product"
-                    onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
-                  />
-                </div>
-              )}
-            </div>
-          ))}
-        </Fragment>
+        <div className="w-full min-h-full justify-start items-center flex flex-col">
+          {imageArray &&
+            imageArray.length > 0 &&
+            mediaItems.map((mediaItem, i) => (
+              <div
+                key={i}
+                className={`${pro._id} fade w-full h-fit`}
+                style={slideStyle(i)}
+              >
+                {/* Skeleton Loader */}
+                {mediaItem.isVideo ? (
+                  // Video file handling with ReactPlayer (Skeleton for Video)
+                  <div
+                    className="media-item overflow-hidden video-element"
+                    data-index={i}
+                    style={{ position: "relative", width: "100%", height: "100%" }}
+                  >
+                    {/* Skeleton loader for video */}
+                    <div
+                      className="w-full h-full bg-gray-200 animate-pulse"
+                      style={{ position: "absolute", top: 0, left: 0 }}
+                    ></div>
+                    <ReactPlayer
+                      url={mediaItem.url}
+                      loop={true}
+                      className="w-full h-full object-cover"
+                      muted={true}
+                      controls={false}
+                      loading="lazy"
+                      width="100%"
+                      height="100%"
+                      playing={videoInView[i]} // Play video only when in view
+                      light={false} // Optional: thumbnail preview
+                      onStart={() => setVideoInView((prev) => [...prev, true])} // Start video when in view
+                      onEnded={() => setVideoInView((prev) => [...prev, false])} // Stop video after it ends
+                    />
+                  </div>
+                ) : (
+                  // Image file handling with LazyLoadImage (Skeleton for Image)
+                  <div
+                    className="media-item"
+                    style={{ position: "relative", width: "100%", height: "100%" }}
+                  >
+                    <img
+                      loading="lazy"
+                      src={mediaItem.url}
+                      className="w-full h-full object-cover"
+                      width="100%"
+                      alt="product"
+                      onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
+                    />
+                  </div>
+                )}
+              </div>
+            ))}
+        </div>
       ) : (
         // Show loading spinner or something else here while data is not available
         <div className="w-full h-48 bg-gray-300 animate-pulse"></div>
@@ -214,8 +247,8 @@ const AutoSlidingCarousel = ({ pro ,user,wishlist = [],showWishList = true}) => 
           )}
         </div>
       )}
-      
     </div>
   );
 };
+
 export default AutoSlidingCarousel;

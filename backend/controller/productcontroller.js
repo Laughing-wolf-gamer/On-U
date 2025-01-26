@@ -29,7 +29,7 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = A(async (req, res)=>{
     try {
-        console.log("Query ", req.query);
+        console.log("Product Query ", req.query);
 
         // Build the query filter based on incoming request parameters
         const filter = {};
@@ -38,8 +38,6 @@ export const getallproducts = A(async (req, res)=>{
         // Color filter (match any of the colors in the list)
         if (req.query.color) {
             const colorNames = req.query.color.split(','); // Split the color query into an array of color names
-            console.log("Color Names:", colorNames);
-
             // Filter for products that have at least one color in AllColors matching the query
             filter.AllColors = {
                 $elemMatch: {
@@ -57,9 +55,9 @@ export const getallproducts = A(async (req, res)=>{
             console.log("Size query check: ", sizeQueryCheck)
             // Filter based on matching any size.label in the req.query.size array
             filter.size = {
-              $elemMatch: {
-                label: { $in: sizeQueryCheck }  // Match any size.label from the query array
-              }
+                $elemMatch: {
+                    label: { $in: sizeQueryCheck }  // Match any size.label from the query array
+                }
             };
         }
         if(req.query.keyword){
@@ -84,10 +82,27 @@ export const getallproducts = A(async (req, res)=>{
 
         // Category filter
         if (req.query.category) {
-            filter.category = req.query.category;
+            // filter.category = req.query.category;
+            let categoryQueryCheck = [];
+            if(Array.isArray(req.query.category)){
+                categoryQueryCheck = req.query.category;
+            }else{
+                categoryQueryCheck.push(req.query.category);
+            }
+            console.log("Category query check: ", categoryQueryCheck)
+            // Filter based on matching any size.label in the req.query.size array
+            filter.category = { $in: categoryQueryCheck };
         }
         if(req.query.subcategory){
-            filter.subCategory = req.query.subcategory;
+            // filter.subCategory = req.query.subcategory;
+            let subcategoryQueryCheck = [];
+            if(Array.isArray(req.query.subcategory)){
+                subcategoryQueryCheck = req.query.subcategory;
+            }else{
+                subcategoryQueryCheck.push(req.query.subcategory);
+            }
+            console.log("Category query check: ", subcategoryQueryCheck)
+            filter.subcategory = { $in: subcategoryQueryCheck };
         }
         if (req.query.price) {
             const priceRange = req.query.price.split(',');

@@ -14,9 +14,12 @@ import Filter from './Filter';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
 import ProductCardSkeleton from './ProductCardSkeleton';
+import { useQueryContext } from '../../Contaxt/QueryContext';
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
+    const { updateQueryParams, getQueryString } = useQueryContext();
+    const queryString = getQueryString();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('Recommended');
@@ -88,6 +91,7 @@ const Allproductpage = ({user}) => {
         window.scrollTo(0, 0);
         dispatch(getwishlist())
     }, []);
+    console.log("Query",queryString )
 
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
@@ -141,24 +145,23 @@ const Allproductpage = ({user}) => {
                     {productLoading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
 
-                <div className="w-full 2xl:col-span-10 xl:col-span-20 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
                     {productLoading === true ? (
-                        <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-5 xl:gap-5 lg:gap-5">
-                            {
-                                Array(10)
-                                .fill(0)
-                                .map((_, index) => <ProductCardSkeleton key={index} />)
-                            }
-                        </ul>
+                    <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
+                        {Array(10).fill(0).map((_, index) => <ProductCardSkeleton key={index} />)}
+                    </ul>
                     ) : (
                         productLoading === false && (
-                            <Fragment>
-                                <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-5 xl:gap-5 lg:gap-5">
-                                    {pro && pro?.map((p) => (<Single_product pro={p} user={user} key={p._id} wishlist={wishlist} />))}
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start'>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+                                    {pro && pro?.map((p) => (
+                                        <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
+                                            <Single_product pro={p} user={user} wishlist={wishlist} />
+                                        </div>
+                                    ))}
                                 </ul>
 
                                 <div className="paginationBox font1 border-t-[1px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
-
                                     {/* Pagination Info */}
                                     <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
                                         Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
@@ -204,14 +207,11 @@ const Allproductpage = ({user}) => {
                                         </button>
                                     )}
                                 </div>
-                                {/* {length && length > maxAmountPerPage && (
-                                )} */}
-                            </Fragment>
+                            </div>
                         )
                     )}
                 </div>
             </div>
-
             {(window.screen.width < 1024 && product) && <MFilter product={product} />}
             <Footer />
         </div>

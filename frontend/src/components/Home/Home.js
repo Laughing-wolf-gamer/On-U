@@ -346,89 +346,91 @@ const Home = () => {
             {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
             {
               !bannerLoading && Wide_Screen_Section_3.urls && Wide_Screen_Section_3.urls.length > 0 ? (
-                <div className="w-screen h-fit flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
+                <div className="w-full h-auto flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
                   <h1 className='text-3xl px-8 font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
                     {Wide_Screen_Section_3.header}
                   </h1>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4 justify-center items-center">
-                      {
-                          Wide_Screen_Section_3.urls.map((url, index) => (
-                            <div
-                              key={`Index_${index}`}
-                              className="h-[600px] relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
-                                <GridImageView imageToShow={url} categoriesOptions = {categoriesOptions}/>
-                            </div>
-                          )) 
-                      }
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-center items-center">
+                    {
+                      Wide_Screen_Section_3.urls.map((url, index) => (
+                        <div
+                          key={`Index_${index}`}
+                          className="h-auto max-w-full relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
+                          <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
+                        </div>
+                      ))
+                    }
                   </div>
                 </div>
-              ): (
+              ) : (
                 <Fragment>
                   <Loader />
                 </Fragment>
               )
             }
+
             
 
-            <div className='w-full flex flex-col justify-start items-center px-10 bg-slate-200 overflow-hidden'>
+            <div className='w-full flex flex-col justify-start items-center px-4 md:px-10 bg-slate-200 overflow-hidden'>
               {!bannerLoading && Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
-                  <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
-                  <Loader/>
+                <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
+                <Loader/>
               }
-          
+
               {!bannerLoading && Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/> : 
                 <Loader/>
               }
-          
+
               {
                 !bannerLoading && Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : 
                 <Loader/>
               }
-          
+
               {
-                  !bannerLoading &&  Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
-                  <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
-                  <Loader/>
+                !bannerLoading && Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
+                <Loader/>
               }
-          
-              <div className='bg-slate-200 pt-8'>
-                  <h1 className='text-3xl px-2 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
-                  <div className='grid grid-cols-2 col-span-12'>
-                      {
-                          !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
-                          Wide_Screen_Section_8.urls.map((j, index) => (
-                              <Link key={`j_banners_${index}`} to='/products' className='m-1'>
-                                  <LazyLoadImage effect='blur' src={j} alt="" className="min-h-[200px] rounded-lg shadow-md" />
-                              </Link>
-                          )) : (
-                              <Fragment>
-                                  <Loader/>
-                              </Fragment>
-                          )
-                      }
-                  </div>
+
+              <div className='bg-slate-200 pt-8 pb-8 w-full'>
+                <h1 className='text-3xl px-2 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
+                  {
+                    !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
+                    Wide_Screen_Section_8.urls.map((j, index) => (
+                      <Link key={`j_banners_${index}`} to='/products' className='m-1'>
+                        <LazyLoadImage effect='blur' src={j} alt={`wind_Screen_Section_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md" />
+                      </Link>
+                    )) : (
+                      <Fragment>
+                        <Loader/>
+                      </Fragment>
+                    )
+                  }
+                </div>
               </div>
-          
+
               {
-                  !bannerLoading && Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
-                  <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
-                  <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
+                !bannerLoading && Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
+                <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
               }
-          
+
               {
-                  !bannerLoading && Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
-                  <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
-                  <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
+                !bannerLoading && Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
+                <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
               }
-          
+
               {
-                  !bannerLoading && Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
-                  <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows = {false}/> : 
-                  <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8,r8,r8]} headers={"NEWNESS FOR EVERY OCCASION"} showArrows = {false}/>
+                !bannerLoading && Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
+                <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows={false}/> : 
+                <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8, r8, r8]} headers={"NEWNESS FOR EVERY OCCASION"} showArrows={false}/>
               }
             </div>
+
             
             <Footer/>
           </Fragment >

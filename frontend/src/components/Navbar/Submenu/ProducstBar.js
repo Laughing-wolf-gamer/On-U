@@ -1,10 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useTransition, animated } from 'react-spring';
 import { fetchAllOptions } from '../../../action/productaction.js';
+import { useQueryContext } from '../../../Contaxt/QueryContext.js';
 
 const ProductsBar = ({ show, CMenu, parentCallback }) => {
+	const { updateQueryParams, getQueryString } = useQueryContext();
+	const navigation = useNavigate(); // Use for navigation (if using React Router)
 	const transitions = useTransition(show, {
 		from: { opacity: 0 },
 		enter: { opacity: 1 },
@@ -20,7 +23,21 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 	useEffect(() => {
 		dispatch(fetchAllOptions());
 	}, [dispatch]);
-
+	const handelSetQuery = (gender,category) => {
+		console.log("Gender: ",gender, "category: ",category)
+		// Create the URL with query parameters
+		const queryParams = new URLSearchParams();
+    
+		if (gender) queryParams.set('gender', gender.toLowerCase());
+		if (category) queryParams.set('category', category.toLowerCase());
+	
+		// Construct the URL for the /products page
+		const url = `/products?${queryParams.toString()}`;
+	
+		// Navigate to the new URL (using React Router)
+		// history.push(url);
+		navigation(url);
+	};
 	useEffect(() => {
 		if (options && options.length > 0) {
 			const categories = options.filter((item) => item.type === 'category');
@@ -30,8 +47,8 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 			const changedProducts = genders.map((g) => ({
 				Gender: g.value,
 				category: categories.map((c) => ({
-				title: c.value,
-				subcategories: subcategories.filter((s) => s.categoryId === c.id).map((s) => s.value),
+					title: c.value,
+					subcategories: subcategories.filter((s) => s.categoryId === c.id).map((s) => s.value),
 				})),
 			}));
 
@@ -57,15 +74,17 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 						<div className="grid grid-cols-5 px-8 py-4 cursor-pointer">
 							<div className="h-[418px] gap-5">
 								<CategorySection
-									title="Mens"
+									title="Men"
 									categories={getGenderCategories('Men')}
 									parentCallback={parentCallback}
+									handelSetQuery = {handelSetQuery}
 								/>
 							<hr className="py-1" />
 								<CategorySection
 									title="Women"
 									categories={getGenderCategories('Women')}
 									parentCallback={parentCallback}
+									handelSetQuery = {handelSetQuery}
 							/>
 							</div>
 							<div className="h-[418px]">
@@ -73,6 +92,7 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 									title="Kids"
 									categories={getGenderCategories('Kids')}
 									parentCallback={parentCallback}
+									handelSetQuery = {handelSetQuery}
 								/>
 							</div>
 						</div>
@@ -86,18 +106,18 @@ const ProductsBar = ({ show, CMenu, parentCallback }) => {
 };
 
 // Reusable Category Section Component
-const CategorySection = ({ title, categories, parentCallback }) => (
+const CategorySection = ({ title, categories, parentCallback ,handelSetQuery}) => (
 	<div>
 		<h1 className="text-red-600 text-sm font-semibold py-1 mx-2">{title}</h1>
-		{categories && categories.slice(0,5).map((category) => (
-			<Link to="/products" key={category.title}>
+		{categories && categories.slice(0,5).map((category,i) => (
+			<div onClick={(e)=> handelSetQuery(title,category.title)} key={i}>
 				<li
 					className="litext list-none py-0.5 m-2 hover:font-semibold"
 					onClick={() => parentCallback('hidden', false)}
 				>
 					{category.title}
 				</li>
-			</Link>
+			</div>
 		))}
 	</div>
 );

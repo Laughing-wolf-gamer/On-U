@@ -62,18 +62,9 @@ const HomeProductsPreview = ({ product }) => {
     }, [product]);
 
     // Handle hover state
-    /* const handleMouseEnter = (index) => {
-        setIsHovered(true);
-    }; */
-
-    /* const handleMouseLeave = () => {
-        setIsHovered(false);
-    }; */
-
     const handleMediaLoad = () => {
         setIsMediaLoaded(true); // Set media as loaded when it's ready
     };
-    // console.log("loading: ",isMediaLoaded);
 
     return (
         <div
