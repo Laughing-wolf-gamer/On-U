@@ -682,9 +682,33 @@ const AverageRatingView = ({ ratings }) => {
 
 const ProductReviews = ({ reviews }) => {
   const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
+  const containerRef = useRef(null);
+  const touchStartY = useRef(0);
+  const touchEndY = useRef(0);
 
   const handleToggleReviews = () => {
     setShowMore(!showMore); // Toggle the state between true/false
+  };
+
+  const handleTouchStart = (e) => {
+    touchStartY.current = e.touches[0].clientY; // Capture initial touch position
+  };
+
+  const handleTouchMove = (e) => {
+    if (containerRef.current) {
+      const touchMoveY = e.touches[0].clientY;
+      const touchDifference = touchStartY.current - touchMoveY;
+
+      // Only apply scrolling if there is a significant touch movement
+      if (Math.abs(touchDifference) > 5) {
+        containerRef.current.scrollTop += touchDifference;
+        touchStartY.current = touchMoveY; // Update touch start position
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    touchEndY.current = touchStartY.current; // Update the end touch position
   };
 
   return (
@@ -692,7 +716,11 @@ const ProductReviews = ({ reviews }) => {
       <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
 
       <div
-        className={`overflow-y-auto max-h-[300px]`} // Making the review container scrollable
+        ref={containerRef}
+        className="overflow-y-auto max-h-[300px] relative"
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         {/* Display only the first 3 reviews or more based on showMore */}
         {reviews.slice(0, 4).map((review, index) => {
@@ -737,8 +765,8 @@ const ProductReviews = ({ reviews }) => {
             );
           })
         }
-
       </div>
+
       {/* "View More" / "Show Less" Toggle Button */}
       <button
         onClick={handleToggleReviews}

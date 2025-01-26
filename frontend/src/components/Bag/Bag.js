@@ -9,7 +9,7 @@ import './bag.css';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import Emptybag from './Emptybag';
-import { BASE_API_URL, capitalizeFirstLetterOfEachWord, getLocalStorageBag, headerConfig } from '../../config';
+import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../../config';
 import { X } from 'lucide-react';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 import axios from 'axios';
@@ -19,14 +19,15 @@ import { useToast } from '../../Contaxt/ToastProvider';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';
 import Loader from '../Loader/Loader';
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
+    const { sessionBagData,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage } = useSessionStorage();
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
     const { randomProducts,loading:productLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
-    const [sessionStorageBag,setSessionStorageItems] = useState(getLocalStorageBag());
     const {allAddresses} = useSelector(state => state.getAllAddress)
 
     const { activeToast, showToast } = useToast();
@@ -151,11 +152,11 @@ const Bag = () => {
                 setDiscountAmount(totalDiscount);
                 setTotalMRP(totalMRP);
             }
-        } else if (sessionStorageBag) {
+        } else if (sessionBagData) {
             let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
             let totalMRP = 0;
         
-            sessionStorageBag.forEach(item => {
+            sessionBagData.forEach(item => {
                 const { ProductData, quantity } = item;
                 const { salePrice, price } = ProductData;
                 
@@ -180,7 +181,7 @@ const Bag = () => {
             });
         
             // Add convenience fees to the total product selling price (only once, not for each item)
-            totalProductSellingPrice += (sessionStorageBag?.ConvenienceFees || 0);
+            totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
         
             console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
             setTotalProductSellingPrice(totalProductSellingPrice);
@@ -188,7 +189,7 @@ const Bag = () => {
             setTotalMRP(totalMRP);
         }
         
-    }, [bag,sessionStorageBag]);
+    }, [bag,sessionBagData]);
 
 
     const updateQty = async (e, itemId) => {
@@ -198,13 +199,14 @@ const Bag = () => {
             await dispatch(getqtyupdate({ id: itemId, qty: Number(e.target.value) }));
             dispatch(getbag({ userId: user.id }));
         }else{
-            const itemsToUpdate = sessionStorageBag.find(item => item.productId === itemId);
+            updateBagQuantity(itemId, e.target.value)
+            /* const itemsToUpdate = sessionStorageBag.find(item => item.productId === itemId);
             console.log("Items to update: ", itemsToUpdate)
             if(itemsToUpdate){
-                itemsToUpdate.quantity = Number(e.target.value);
-                sessionStorage.setItem("bagItem",JSON.stringify(sessionStorageBag));
-                setSessionStorageItems(getLocalStorageBag());
-            }
+                // itemsToUpdate.quantity = Number(e.target.value);
+                // sessionStorage.setItem("bagItem",JSON.stringify(sessionStorageBag));
+                // setSessionStorageItems(getLocalStorageBag());
+            } */
         }
     };
 
@@ -213,9 +215,10 @@ const Bag = () => {
             await dispatch(deleteBag({productId,bagOrderItemId}));
             dispatch(getbag({ userId: user.id }));
         }else{
-            const itemsToDelete = sessionStorageBag.filter(item => item.productId!== productId);
+            /* const itemsToDelete = sessionStorageBag.filter(item => item.productId!== productId);
             sessionStorage.setItem("bagItem",JSON.stringify(itemsToDelete));
-            setSessionStorageItems(getLocalStorageBag());
+            setSessionStorageItems(getLocalStorageBag()); */
+            removeBagSessionStorage(productId)
         }
     };
 
@@ -495,7 +498,7 @@ const Bag = () => {
                     </div>
                 ) : (
                     <div>
-                        {sessionStorageBag && sessionStorageBag.length > 0 ? (
+                        {sessionBagData && sessionBagData.length > 0 ? (
                             <div className="relative w-full px-10 mx-auto">
 
                             {/* Navigation */}
@@ -517,7 +520,7 @@ const Bag = () => {
                             <div className="flex flex-col lg:flex-row gap-12 mt-12">
                             {/* Product Listing */}
                             <div className="flex-1 space-y-6">
-                                {sessionStorageBag && sessionStorageBag.length > 0 ? sessionStorageBag.map((item, i) => (
+                                {sessionBagData && sessionBagData.length > 0 ? sessionBagData.map((item, i) => (
                                 <div key={i} className="flex items-center border-b py-6 space-x-8">
                                     <Link to={`/products/${item.ProductData?._id}`} className="w-28 h-28">
                                     <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
@@ -564,7 +567,7 @@ const Bag = () => {
                         
                             {/* Price Details */}
                             <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
-                                <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionStorageBag.length} items)</h3>
+                                <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionBagData.length} items)</h3>
                                 <div className="space-y-5">
                                 <div className="flex justify-between text-sm text-gray-700">
                                     <span>Total MRP</span>
