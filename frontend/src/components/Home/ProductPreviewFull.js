@@ -46,9 +46,13 @@ const ProductPreviewFull = ({ product ,user}) => {
     const queryParams = new URLSearchParams();
     
     if (activePreview) queryParams.set('specialCategory', activePreview);
-    if(!activePreview) return;
+    if(!activePreview) {
+      navigation("/products")
+      return;
+    };
     const url = `/products?${queryParams.toString()}`;
     navigation(url);
+    
   }
 
   return (
