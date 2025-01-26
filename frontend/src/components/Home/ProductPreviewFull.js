@@ -42,6 +42,14 @@ const ProductPreviewFull = ({ product ,user}) => {
  useEffect(()=>{
   dispatch(getwishlist());
  },[dispatch])
+  const handleMoveToQuery = ()=>{
+    const queryParams = new URLSearchParams();
+    
+    if (activePreview) queryParams.set('specialCategory', activePreview);
+    if(!activePreview) return;
+    const url = `/products?${queryParams.toString()}`;
+    navigation(url);
+  }
 
   return (
     <Fragment>
@@ -140,7 +148,7 @@ const ProductPreviewFull = ({ product ,user}) => {
       </div>
 
       <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all pt-10'>
-        <div onClick={() => navigation('/products')} className='px-8 w-fit flex-wrap text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
+        <div onClick={handleMoveToQuery} className='px-8 w-fit flex-wrap text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
           <span>VIEW MORE</span>
         </div>
       </div>

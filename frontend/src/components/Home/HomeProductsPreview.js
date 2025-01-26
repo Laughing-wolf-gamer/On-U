@@ -41,18 +41,18 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const addToWishList = async (e) => {
         e.stopPropagation();
         if (user) {
-          const response = await dispatch(createwishlist({ productId: product._id }));
-          await dispatch(getwishlist());
-          checkAndCreateToast("success", "Wishlist Updated Successfully");
-          console.log("Wishlist Updated Successfully: ",response);
-          if(response){
-            // updateButtonStates();
-            setIsInWishList(response);
-          }
+            const response = await dispatch(createwishlist({ productId: product._id }));
+            await dispatch(getwishlist());
+            checkAndCreateToast("success", "Wishlist Updated Successfully");
+            console.log("Wishlist Updated Successfully: ",response);
+            if(response){
+                // updateButtonStates();
+                setIsInWishList(response);
+            }
         } else {
-          setWishListProductInfo(product, product._id);
-          checkAndCreateToast("success", "Bag is Updated Successfully");
-          updateButtonStates();
+            setWishListProductInfo(product, product._id);
+            checkAndCreateToast("success", "Bag is Updated Successfully");
+            updateButtonStates();
         }
       };
     // Handle mouse enter event
