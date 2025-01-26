@@ -72,6 +72,7 @@ const productModelSchema = new mongoose.Schema({
     subCategory:{
         type:String,
     },
+    specialCategory:{type:String},
     totalStock:{type: Number},
     Rating:[
         {
@@ -89,6 +90,7 @@ const productModelSchema = new mongoose.Schema({
     length:{type:Number},
     weight:{type:Number},
     breadth:{type:Number},
+    
 },{timestamps:true})
 
 productModelSchema.index({title: 1})

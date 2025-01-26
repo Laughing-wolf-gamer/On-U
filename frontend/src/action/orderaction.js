@@ -36,12 +36,13 @@ import { BASE_API_URL, headerConfig } from '../config'
 
 export const createwishlist = ({productId}) => async (dispatch) => {
     try {
-        dispatch({ type: REQUEST_CREATE_WISHLIST })
+        // dispatch({ type: REQUEST_CREATE_WISHLIST })
         const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist`,{productId}, headerConfig());
-        // console.log("Wishlist created: ",res?.data);
-        dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
+        // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res?.data?.success})
+        return res?.data?.success;
     } catch (error) {
-        dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
+        // dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
+        return false;
     }
 }
 export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
@@ -93,7 +94,7 @@ export const createbag = (option) => async (dispatch) => {
         const token = sessionStorage.getItem('token');
         // console.log(token);
         // console.log(option)
-        dispatch({ type: REQUEST_CREATE_BAG })
+        // dispatch({ type: REQUEST_CREATE_BAG })
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/create_bag`,option, {
             withCredentials:true,
             headers: {
@@ -102,11 +103,12 @@ export const createbag = (option) => async (dispatch) => {
             },
         })
 
-        dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
-
+        // dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
+        return data?.success || false;
     } catch (error) {
 
-        dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
+        // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
+        return false;
 
     }
 }

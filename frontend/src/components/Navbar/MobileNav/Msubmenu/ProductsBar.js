@@ -26,6 +26,21 @@ const MProductsBar = ({showProducts}) => {
 	const toggleGender = (gender) => {
 		setActiveGender(activeGender === gender ? null : gender);
 	};
+	const handelSetQuery = (gender,subcategory,category) => {
+		console.log("Gender: ",gender, "category: ",category)
+		// Create the URL with query parameters
+		const queryParams = new URLSearchParams();
+    
+		if (gender) queryParams.set('gender', gender.toLowerCase());
+		if (category) queryParams.set('category', category.toLowerCase());
+		if (subcategory) queryParams.set('subcategory', subcategory.toLowerCase());
+	
+		// Construct the URL for the /products page
+		const url = `/products?${queryParams.toString()}`;
+	
+		// Navigate to the new URL (using React Router)
+		navigation(url);
+	};
 
 	// Toggle visibility of category subcategories
 	const toggleCategory = (gender, category) => {
@@ -107,7 +122,9 @@ const MProductsBar = ({showProducts}) => {
 								{activeCategory[`${product.Gender}-${category.title}`] && (
 									<div className="pl-6 space-y-1">
 										{category.subcategories.map((subcategory) => (
-											<Ripples onClick={(e)=>{navigation("/products")}} key={subcategory} className="text-black font-extralight px-5 py-4 relative w-full flex ">
+											<Ripples onClick={(e)=>{
+												handelSetQuery(activeGender,subcategory,category.title)
+											}} key={subcategory} className="text-black font-extralight px-5 py-4 relative w-full flex ">
 												<span>{subcategory}</span>
 											</Ripples>
 										))}

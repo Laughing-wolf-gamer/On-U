@@ -309,6 +309,19 @@ export const addProductsFromElement = [
         required:true,
     },
     {
+        label:"Special Category",
+        name:'specialCategory',
+        componentType:'select',
+        placeHolder:'Select Product Category',
+        options:[
+            {id:'none',label:"None"},
+            {id:'topPicks',label:"Top Picks"},
+            {id:'bestSeller',label:"Best Seller"},
+            {id:'luxuryItems',label:"Luxury Items"},
+        ],
+        required:false,
+    },
+    {
         label:"SubCategory",
         name:'subCategory',
         componentType:'select',

@@ -142,6 +142,7 @@ export const getLocalStorageBag = ()=>{
 }
 export const getLocalStorageWishListItem = ()=>{
   const wishList = JSON.parse(sessionStorage.getItem("wishListItem")) || [];
+  console.log("WishList",wishList);
   return wishList;
 }
 export const setSessionStorageBagListItem = (orderData,productId)=>{

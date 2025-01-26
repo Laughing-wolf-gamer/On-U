@@ -416,6 +416,8 @@ const AdminProducts = () => {
           {/* Product Preview */}
           {currentPreviewProductId && (
             <ProductPreview
+              categories = {categories}
+              subcategories = {subcategories}
               setFormData={setFormData}
               UpdateEditedData={(productId,e)=>{
 

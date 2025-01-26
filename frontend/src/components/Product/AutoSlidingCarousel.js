@@ -8,10 +8,10 @@ import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useToast } from "../../Contaxt/ToastProvider";
 
-let isInWishList = false;
-
 const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
   const { activeToast, showToast } = useToast();
+  const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+  const [isInWishList, setIsInWishList] = useState(false);
   const checkAndCreateToast = (type, message) => {
     console.log("check Toast: ", type, message, activeToast);
     if (activeToast !== message) {
@@ -36,23 +36,16 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     }
   };
 
-  /* if (user) {
-    isInWishList =
-      wishlist &&
-      wishlist.orderItems &&
-      wishlist.orderItems.length > 0 &&
-      wishlist.orderItems.some((w) => w.productId?._id === pro?._id) ||
-      false;
-  } else {
-    isInWishList =
-      getLocalStorageWishListItem().find((b) => b.productId?._id === pro?._id) || false;
-  } */
 
-  const imageArray = getImagesArrayFromProducts(pro, true);
+  const [imageArray,setImageArray] = useState([]);
   const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
   const [videoInView, setVideoInView] = useState(new Array(imageArray.length).fill(false)); // Track video visibility
   const timerRef = useRef(null); // Ref to hold the timer for auto sliding
   const dispatch = useDispatch();
+
+  useEffect(()=>{
+    setImageArray(getImagesArrayFromProducts(pro, true))
+  },[pro])
 
   // Function to change to a specific slide
   const currentSlide = (n) => {
@@ -65,7 +58,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
       clearInterval(timerRef.current); // Clear any existing interval
     }
     timerRef.current = setInterval(() => {
-      toast.info("Timer changed: ");
+      // toast.info("Timer changed: ");
       setSlideIndex((prevIndex) => (prevIndex % imageArray.length) + 1); // Loop through slides
     }, 7000); // Change slide every 7 seconds
   };
@@ -79,14 +72,20 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
 
   // Effect hook to initialize carousel and cleanup on unmount
   useEffect(() => {
-    startAutoSliding(); // Start auto sliding when the component mounts
+    // startAutoSliding(); // Start auto sliding when the component mounts
 
-    return () => {
+    /* return () => {
       if (timerRef.current) {
         clearInterval(timerRef.current); // Cleanup interval on unmount
       }
-    };
+    }; */
   }, []); // Empty dependency array means this runs only once when the component mounts
+  useEffect(() => {
+      // Check if the user is logged in
+      if(wishlist){
+        updateButtonStates();
+      }
+    }, [user, wishlist, pro]); 
 
   // Track visibility of video elements using IntersectionObserver
   const observer = useRef(
@@ -101,6 +100,14 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
       });
     }, { threshold: 0.5 }) // 50% visibility before triggering play
   );
+  const updateButtonStates = () => {
+      if (user) {
+        // console.log("Updateing wishList: ",wishlist);
+        setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === pro?._id));
+      } else {
+        setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === pro?._id));
+      }
+    };
 
   useEffect(() => {
     const videoElements = document.querySelectorAll(".video-element");
@@ -139,37 +146,33 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
 
   const addToWishList = async (e) => {
     e.stopPropagation();
+    setIsWishListUpdating(true);
     if (user) {
-      await dispatch(createwishlist({ productId: pro._id }));
+      const response = await dispatch(createwishlist({ productId: pro._id }));
       await dispatch(getwishlist());
+      checkAndCreateToast("success", "Wishlist Updated Successfully");
+      console.log("Wishlist Updated Successfully: ",response);
+      if(response){
+        // updateButtonStates();
+        setIsInWishList(response);
+      }
+      setIsWishListUpdating(false);
     } else {
-      setWishListProductInfo(pro, pro?._id);
-    }
-    if (isInWishList) {
-      checkAndCreateToast("success", "Added successfully to Wishlist");
-    } else {
-      checkAndCreateToast("success", "Removed successfully from Wishlist");
-    }
-    if (user) {
-      isInWishList =
-        wishlist &&
-        wishlist.orderItems &&
-        wishlist.orderItems.length > 0 &&
-        wishlist.orderItems.some((w) => w.productId?._id === pro?._id);
-    } else {
-      isInWishList =
-        getLocalStorageWishListItem().find((b) => b.productId._id === pro?._id) || false;
+      setWishListProductInfo(pro, pro._id);
+      checkAndCreateToast("success", "Bag is Updated Successfully");
+      updateButtonStates();
+      setIsWishListUpdating(false);
     }
   };
 
   return (
     <div
-      className="slideshow-container min-h-[10vw] w-full bg-gray-200 relative"
+      className="slideshow-container w-full h-72 bg-gray-200 relative overflow-hidden"
       onMouseEnter={startAutoSliding} // Start auto sliding when mouse enters
       onMouseLeave={stopAutoSliding} // Stop auto sliding when mouse leaves
     >
       {pro ? (
-        <div className="w-full min-h-full justify-start items-center flex flex-col">
+        <div className="w-full h-fit justify-center items-start flex flex-col">
           {imageArray &&
             imageArray.length > 0 &&
             mediaItems.map((mediaItem, i) => (
@@ -194,7 +197,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                     <ReactPlayer
                       url={mediaItem.url}
                       loop={true}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       muted={true}
                       controls={false}
                       loading="lazy"
@@ -215,7 +218,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                     <img
                       loading="lazy"
                       src={mediaItem.url}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-contain"
                       width="100%"
                       alt="product"
                       onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

@@ -299,7 +299,7 @@ export const createwishlist = async (req, res, next) => {
                 const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
                 previousWishList.orderItems.splice(index, 1);
                 await previousWishList.save();
-                return res.status(200).json({success:true,message: "Product removed from wishlist"})
+                return res.status(200).json({success:false,message: "Product removed from wishlist"})
             }
             previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
             await previousWishList.save();
@@ -532,7 +532,7 @@ export const addItemsToBag = async (req, res) => {
         res.status(200).json({success:true,message:"Successfully added Items to Bag",bag})
     } catch (error) {
         console.error("Error Occurred during creating bag: ", error)
-        res.status(500).json({message: "Internal Server Error"})
+        res.status(500).json({success:false,message: "Internal Server Error"})
     }
 
 }

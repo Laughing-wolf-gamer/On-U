@@ -12,6 +12,7 @@ const Filter = ({products}) => {
     subcategory: 'all',
     sizes: [],
     colors: [],
+    specialCategory:[],
     priceRange: [0, 1000],
   });
 
@@ -59,6 +60,7 @@ const Filter = ({products}) => {
 
     // Add query params to URL
     queryParams.set('gender', filters.gender);
+    queryParams.set('specialCategory', filters.specialCategory);
     queryParams.set('category', filters.category);
     queryParams.set('subcategory', filters.subcategory);
     filters.sizes.forEach((size) => queryParams.append('sizes', size));

@@ -14,6 +14,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     let size = []
     let gender = [];
     let color = [];
+    let specialCategory = [];
     let spARRAY = [];
     const n = 3
     const result = [[], [], []] //we create it, then we'll fill it    
@@ -23,11 +24,21 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             product.forEach(p => category.push(p.category));
         }
     };
+    const specialCategoryArray = () => {
+        if (product && product.length > 0) {
+            product.forEach(p => {
+                if(p.specialCategory !== "none" && p.specialCategory !== undefined){
+                    specialCategory.push(p.specialCategory)
+                }
+            });
+        }
+    };
     const subcategoryarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => subcategory.push(p.subCategory));
         }
     };
+
 
     const genderarray = () => {
         if (product && product.length > 0) {
@@ -74,6 +85,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         colorarray();
         sparray();
         sizearray();
+        specialCategoryArray();
     },[
         product
     ])
@@ -83,12 +95,14 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     colorarray();
     sparray();
     sizearray();
+    specialCategoryArray();
     
     // Remove duplicates and sort price array
     let Categorynewarray = [...new Set(category)];
     let gendernewarray = [...new Set(gender)];
     let colornewarray = [...new Set(color)];
     let subcategorynewarray = [...new Set(subcategory)];
+    let specialCategorynewarray = [...new Set(specialCategory)];
     let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
     
     const setPriceFilter= ()=>{
@@ -104,16 +118,6 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     }
     // Update the URL based on the selected category
     const categoryfun = (e) => {
-        /* let url = new URL(window.location.href);
-        if (url.searchParams.has('category')) {
-            url.searchParams.set('category', e);
-        } else {
-            url.searchParams.append('category', e);
-        }
-        window.history.replaceState(null, "", url.toString());
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        } */
         let url = new URL(window.location.href);
 
         // Get the current 'subcategory' array from the URL (if any)
@@ -144,17 +148,38 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             dispatchFetchAllProduct();
         }
     };
-    const sizefun = (e) => {
-        /* let url = new URL(window.location.href);
-        if (url.searchParams.has('size')) {
-            url.searchParams.set('size', e);
+    const specialCategoryFun = (e) => {
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSpecialCategory = url.searchParams.getAll('specialCategory'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSpecialCategory.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSpecialCategory = selectedSpecialCategory.filter(sub => sub !== e);
         } else {
-            url.searchParams.append('size', e);
+            // If the subcategory is not selected, add it to the array
+            selectedSpecialCategory.push(e);
         }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('specialCategory');
+        selectedSpecialCategory.forEach(sub => {
+            url.searchParams.append('specialCategory', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
         window.history.replaceState(null, "", url.toString());
+    
+        // Fetch products based on the updated URL parameters
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
-        } */
+        }
+    };
+    const sizefun = (e) => {
         let url = new URL(window.location.href);
 
         // Get the current 'subcategory' array from the URL (if any)
@@ -380,7 +405,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         dispatch(fetchAllOptions());
     },[dispatch])
     setPriceFilter();
-    console.log("All options: ",options);
+    console.log("All options: ",specialCategory);
     
 
     return (
@@ -388,7 +413,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             <div>
                 {/* Gender Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
+                    <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
                     {gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -419,22 +444,39 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                             </div>
                         );
                     })}
-                    {/* {gendernewarray.map((e, i) => (
-                        <li key={i} className='items-center'>
-                            <input
-                                type="checkbox"
-                                name="gender"
-                                value={e}
-                                className='mb-2 accent-gray-500'
-                                id={`id${i}`}
-                                onClick={(event) => {
-                                    event.preventDefault();
-                                    genderfun(e); // This will update the URL with the selected gender
-                                }}
-                            />
-                            <label className='font1 text-sm font-semibold ml-2 mr-4 mb-2'>{capitalizeFirstLetterOfEachWord(e)}</label>
-                        </li>
-                    ))} */}
+                </ul>
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-normal mb-2'>SPECIAL CATEGORY</h1>
+                    {specialCategorynewarray.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedCategories = params.getAll('specialCategory'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                specialCategoryFun(e); // This will update the URL with the selected gender
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="specialCategory"
+                                    value={e}
+                                    id={`cat_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-sans font-normal text-slate-400'> 
+                                        ({specialCategorynewarray.filter((f) => f === e).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
+                    })}
                 </ul>
 
                 {/* Categories Filter */}
@@ -579,28 +621,6 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
-                {/* <ul className={`pl-8 border-b-[1px] border-slate-200 py-4  overflow-hidden relative `}>
-                    <h1 className='font1 text-base font-semibold mb-2'>PRICE</h1>
-                
-                    <li className='items-center '>
-                    <input type="checkbox" name="color" value={`price1`}  className='mb-2 accent-pink-500' onClick={()=>price1fun(Math.max(...result[0]))} id={`id${Math.max(...result[0])+1}`} />
-                    
-                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))} <span className='text-xs font-serif font-normal text-slate-400'> ({spARRAY.filter((f) => f <=  Math.max(...result[0])).length})</span> </label>
-                    </li>
-
-                    <li className='items-center '>
-                    <input type="checkbox" name="color" value={`price2`}  className='mb-2 accent-pink-500' onClick={()=>price2fun(Math.min(...result[1]), Math.max(...result[1]))} id={`id${Math.max(...result[1])+1}`} />
-                    
-                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))} <span className='text-xs font-serif font-normal text-slate-400'> ({sparraynew()})</span> </label>
-                    </li>
-
-                    <li className='items-center '>
-                    <input type="checkbox" name="color" value={`price2`}  className='mb-2 accent-pink-500' onClick={()=>price3fun(Math.min(...result[2]))}  id={`id${Math.min(...result[2])+1}`} />
-                    
-                    <label className='font1 text-sm ml-2 mr-4 mb-2'> Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))} <span className='text-xs font-serif font-normal text-slate-400'> ({spARRAY.filter((f) => f >=  Math.min(...result[2])).length})</span> </label>
-                    </li>
-                    
-                </ul> */}
                 <PriceFilter result={result} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>

@@ -14,7 +14,7 @@ import { capitalizeFirstLetterOfEachWord } from '../../config'
 
 const MFilter = ({ product }) => {
   const dispatch = useDispatch()
-  const Redirect = useNavigate()
+  const navigation = useNavigate()
 
   function classtoggle(e) {
     // let foo = document.getElementsByClassName('foo')
@@ -38,7 +38,7 @@ const MFilter = ({ product }) => {
           let newurl2 = url.includes(`&date=-1`) ? url.replace(`&date=-1`, `&date=${e}`) : null
           let newurlsuccess = (newurl === null ? newurl2 : newurl)
           //  window.location = newurlsuccess 
-          Redirect(newurlsuccess)
+          navigation(newurlsuccess)
           dispatch(getproduct())
         }
         if (url.includes('?date')) {
@@ -46,19 +46,19 @@ const MFilter = ({ product }) => {
           let newurl2 = url.includes(`?date=-1`) ? url.replace(`?date=-1`, `?date=${e}`) : null
           let newurlsuccess = (newurl === null ? newurl2 : newurl)
           //  window.location = newurlsuccess
-          Redirect(newurlsuccess)
+          navigation(newurlsuccess)
           dispatch(getproduct())
         }
       } else {
         url += `&date=${e}`
         //  window.location = url
-        Redirect(url)
+        navigation(url)
         dispatch(getproduct())
       }
     } else {
       url += `?date=${e}`
       //   window.location = url
-      Redirect(url)
+      navigation(url)
       dispatch(getproduct())
     }
   }
@@ -71,7 +71,7 @@ const MFilter = ({ product }) => {
           let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null
           let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null
           let newurlsuccess = (newurl === null ? newurl2 : newurl)
-          Redirect(newurlsuccess)
+          navigation(newurlsuccess)
           dispatch(getproduct())
           //  window.location = newurlsuccess 
         }
@@ -79,13 +79,13 @@ const MFilter = ({ product }) => {
           let newurl = url.includes(`?low=1`) ? url.replace(`?low=1`, `?low=${e}`) : null
           let newurl2 = url.includes(`?low=-1`) ? url.replace(`?low=-1`, `?low=${e}`) : null
           let newurlsuccess = (newurl === null ? newurl2 : newurl)
-          Redirect(newurlsuccess)
+          navigation(newurlsuccess)
           dispatch(getproduct())
           //  window.location = newurlsuccess
         }
       } else {
         let newurl = window.location.search += `&low=${e}`
-        Redirect(newurl)
+        navigation(newurl)
         dispatch(getproduct())
         //  url += `&low=${e}`
         //  Redirect(url)
@@ -93,7 +93,7 @@ const MFilter = ({ product }) => {
       }
     } else {
       //   url += `?low=${e}`
-      Redirect(`?low=${e}`)
+      navigation(`?low=${e}`)
       dispatch(getproduct())
     }
   }
@@ -101,6 +101,8 @@ const MFilter = ({ product }) => {
   const [sortvi, setsortvi] = useState('hidden')
 
   let category = []
+  let subcategory = []
+  let specialCategory = []
   let size = []
   let gender = []
   let color = []
@@ -108,17 +110,40 @@ const MFilter = ({ product }) => {
 
   function categoriesarray() {
     if (product && product.length > 0) {
-      product.forEach(p => category.push(p.category));
+      product.forEach(p => {
+        if(!category.includes(p.category)){
+          category.push(p.category)
+        }
+      });
+    }
+  }
+  function subCategoriesarray() {
+    console.log("Product: ",product);
+    if (product && product.length > 0) {
+      product.forEach(p => {
+        if(!subcategory.includes(p.subCategory)){
+          subcategory.push(p.subCategory)
+        }
+      });
+    }
+  }
+  function specialCategoriesarray() {
+    if (product && product.length > 0) {
+      product.forEach(p => {
+        if(!specialCategory.includes(p.specialCategory) && p.specialCategory !== "none" && p.specialCategory !== undefined){
+          specialCategory.push(p.specialCategory)
+        }
+      });
     }
   }
   function sizearray() {
     if (product && product.length > 0) {
       product.forEach(p => {
-        if(p){
-          p.size.forEach(s => {
+        p.size.forEach(s => {
+          if(!size.includes(s.label)){
             size.push(s.label);
-          })
-        }
+          }
+        })
       });
     }
   }
@@ -130,8 +155,7 @@ const MFilter = ({ product }) => {
           gender.push(p.gender)
         }
       });
-  }
-    console.log("Gender: ",gender);
+    }
   }
 
   function colorarray() {
@@ -153,17 +177,26 @@ const MFilter = ({ product }) => {
     });
     console.log("Prices: ", spARRAY);
   }
+  useEffect(()=>{
+    categoriesarray()
+    sizearray();
+    genderarray()
+    colorarray()
+    sparray()
+    specialCategoriesarray();
+    subCategoriesarray();
+  },[product])
+  
   categoriesarray()
   sizearray();
   genderarray()
   colorarray()
   sparray()
- /*  useEffect(()=>{
-    if(product){
-    }
-  },[product]) */
-
+  specialCategoriesarray();
+  subCategoriesarray();
   let Categorynewarray = [...new Set(category)];
+  let specialCategoryNewArray = [...new Set(specialCategory)];
+  let subCategoryNewArray = [...new Set(subcategory)];
   let gendernewarray = [...new Set(gender)];
   let colornewarray = [...new Set(color)];
   let sizenewArray = [...new Set(size)]
@@ -238,6 +271,40 @@ function price2fun(e,f){
     } else {
       let newtext = e.replace(/ /g, '%20')
       setMMainlink(`${MMainlink}?category=${newtext}`)
+    }
+  }
+  function subCategoryfun(e) {
+    if (MMainlink.includes('?')) {
+      let newtext = e.replace(/ /g, '%20')
+      if (MMainlink.includes(`${newtext}`)) {
+        let newurl = MMainlink.includes(`&subcategory=${newtext}`) ? MMainlink.replace(`&subcategory=${newtext}`, '') : null
+        let newurl2 = MMainlink.replace(`?subcategory=${newtext}`, '')
+        let newurlsuccess = (newurl === null ? newurl2 : newurl)
+        setMMainlink(newurlsuccess)
+      } else {
+        let newtext = e.replace(/ /g, '%20')
+        setMMainlink(`${MMainlink}&subcategory=${newtext}`)
+      }
+    } else {
+      let newtext = e.replace(/ /g, '%20')
+      setMMainlink(`${MMainlink}?subcategory=${newtext}`)
+    }
+  }
+  function specialCategoryfun(e) {
+    if (MMainlink.includes('?')) {
+      let newtext = e.replace(/ /g, '%20')
+      if (MMainlink.includes(`${newtext}`)) {
+        let newurl = MMainlink.includes(`&specialCategory=${newtext}`) ? MMainlink.replace(`&specialCategory=${newtext}`, '') : null
+        let newurl2 = MMainlink.replace(`?specialCategory=${newtext}`, '')
+        let newurlsuccess = (newurl === null ? newurl2 : newurl)
+        setMMainlink(newurlsuccess)
+      } else {
+        let newtext = e.replace(/ /g, '%20')
+        setMMainlink(`${MMainlink}&specialCategory=${newtext}`)
+      }
+    } else {
+      let newtext = e.replace(/ /g, '%20')
+      setMMainlink(`${MMainlink}?specialCategory=${newtext}`)
     }
   }
 
@@ -318,10 +385,9 @@ function price2fun(e,f){
   function clearall() {
     setMMainlink('')
     setfilter(filter === 'hidden' ? 'block' : 'hidden')
-    Redirect(MMainlink)
+    navigation(MMainlink)
     reloadproducts()
   }
-  console.log("size: ",size);
   return (
     <Fragment>
       <div className='hidden mobilevisible fixed bottom-0 w-full '>
@@ -369,6 +435,8 @@ function price2fun(e,f){
               <h1 className={`filter3 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Color</h1>
               <h1 className={`filter4 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Price</h1>
               <h1 className={`filter4 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Size</h1>
+              <h1 className={`filter2 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Sub Categories</h1>
+              <h1 className={`filter2 foo w-full border-b-[1px] font1 text-lg py-3 pl-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
             </div>
 
             <div className='col-span-8 '>
@@ -442,7 +510,28 @@ function price2fun(e,f){
                   )
                 }
               </ul>
-              {/* <IoIosCheckmark  className={`mr-4 tick${e} `}/> */}
+              <ul className={`hidden overflow-scroll h-[86%] ulco ul6`}>
+                {
+                  subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
+
+                    <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
+                      onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+                      <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
+
+                  )
+                }
+              </ul>
+              <ul className={`hidden overflow-scroll h-[86%] ulco ul7`}>
+                {
+                  specialCategoryNewArray && specialCategoryNewArray.length > 0 && specialCategoryNewArray.map((e,i) =>
+
+                    <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
+                      onClick={() => (specialCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+                      <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{specialCategoryNewArray.filter((f) => f === e).length}</span></li>
+
+                  )
+                }
+              </ul>
             </div>
 
           </div>

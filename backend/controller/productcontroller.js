@@ -60,6 +60,17 @@ export const getallproducts = A(async (req, res)=>{
                 }
             };
         }
+        if (req.query.specialCategory) {
+            let specialCategoryCheck = [];
+            if(Array.isArray(req.query.specialCategory)){
+                specialCategoryCheck = req.query.specialCategory;
+            }else{
+                specialCategoryCheck.push(req.query.specialCategory);
+            }
+            console.log("specialCategoryCheck query check: ", specialCategoryCheck)
+            // Filter based on matching any size.label in the req.query.size array
+            filter.specialCategory = { $in: specialCategoryCheck };
+        }
         if(req.query.keyword){
             
             const regx = new RegExp(req.query.keyword, 'i');
@@ -76,10 +87,6 @@ export const getallproducts = A(async (req, res)=>{
             };
             Object.assign(filter, createSearchQuery);  // Merge search query with the filter
         }
-        /* if(req.query.price){
-            filter.price = req.query.price ? { $gte: req.query.price } : { $gte: 0 };
-        } */
-
         // Category filter
         if (req.query.category) {
             // filter.category = req.query.category;

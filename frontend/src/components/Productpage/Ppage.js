@@ -85,10 +85,14 @@ const reviews = [
   },
 ];
 
-const maxScrollAmount = 1085.5999755859375
-let isInWishList = false
-let isInBagList = false;
+const maxScrollAmount = 1085.5999755859375,maxScrollWithReviewInput = 1600
+// let isInWishList = false
+// let isInBagList = false;
 const Ppage = () => {
+  const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
+  const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+  const [isInWishList, setIsInWishList] = useState(false);
+  const [isInBagList, setIsInBagList] = useState(false);
   const { activeToast, showToast } = useToast();
   const checkAndCreateToast = (type,message) => {
     console.log("check Toast: ",type, message,activeToast);
@@ -146,83 +150,100 @@ const Ppage = () => {
     elementClass(foo1).remove('visible')
   }
 
-  async function addtobag() {
-    // console.log("User", user)
-    if(isInBagList){
-      navigation("/bag")
+  const addtobag = async () => {
+    if (isInBagList) {
+      navigation("/bag");
       return;
     }
-    if(!currentColor){
-      checkAndCreateToast("error","No Color Selected")
-        return;
+    if (!currentColor) {
+      checkAndCreateToast("error", "No Color Selected");
+      return;
     }
-    if(!currentSize){
-        checkAndCreateToast("error","No Size Selected")
-        return;
+    if (!currentSize) {
+      checkAndCreateToast("error", "No Size Selected");
+      return;
     }
     if (user) {
-      const orderData ={
-        userId:user.id,
-        productId:param.id, 
-        quantity:1,
-        color:currentColor,
-        size:currentSize,
+      const orderData = {
+        userId: user.id,
+        productId: param.id,
+        quantity: 1,
+        color: currentColor,
+        size: currentSize,
+      };
+      const response = await dispatch(createbag(orderData));
+      if(response){
+        // await dispatch(getwishlist());
+        dispatch(getbag({ userId: user.id }));
       }
-        await dispatch(createbag(orderData))
-        await dispatch(getwishlist())
-        dispatch(getbag({ userId: user.id }))
-        checkAndCreateToast("success",'Product  successfully in Bag')
-      }else{
-      //  alert.show('You have To Login To Add This Product Into Bag')
+      setIsInBagList(response);
+    } else {
+      // Add to localStorage logic
       const orderData = {
         productId: param.id,
         quantity: 1,
         color: currentColor,
         size: currentSize,
-        ProductData:product,
+        ProductData: product,
       };
-      setSessionStorageBagListItem(orderData,param.id);
+      setSessionStorageBagListItem(orderData, param.id);
     }
-    /* if(user){
-        isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-        isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-      }else{
-        isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-        isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-      } */
-      // window.location.reload();
-  }
-  const addToWishList = async()=>{
+    checkAndCreateToast("success", "Product successfully in Bag");
+    updateButtonStates();
+  };
+  const updateButtonStates = () => {
     if (user) {
-      await dispatch(createwishlist({productId:param.id,}));
+      // console.log("Updateing wishList: ",wishlist);
+      setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+      setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
+    } else {
+      setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
+      setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
+    }
+  };
+  const addToWishList = async () => {
+    setIsWishListUpdating(true);
+    if (user) {
+      const response = await dispatch(createwishlist({ productId: param.id }));
       await dispatch(getwishlist());
-      await dispatch(getbag({ userId: user.id }))
-      if(isInWishList){
-        checkAndCreateToast("success",'Added successfully to Wishlist')
-      }else{
-        checkAndCreateToast("success",'Removed successfully from Wishlist')
+      checkAndCreateToast("success", "Wishlist Updated Successfully");
+      console.log("Wishlist Updated Successfully: ",response);
+      if(response){
+        // updateButtonStates();
+        setIsInWishList(response);
       }
-    }else{
-      //  alert.show('You have To Login To Add This Product To Wishlist')
-      setWishListProductInfo(product,param.id);
+      setIsWishListUpdating(false);
+    } else {
+      setWishListProductInfo(product, param.id);
+      checkAndCreateToast("success", "Bag is Updated Successfully");
+      updateButtonStates();
+      setIsWishListUpdating(false);
     }
-    if(user){
-      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-      isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-    }else{
-      isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-      isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-    }
-    // window.location.reload();
-  }
+  };
 
   const handleBuyNow = async () => {
+    if (!currentColor) {
+      checkAndCreateToast("error", "No Color Selected");
+      return;
+    }
+    if (!currentSize) {
+      checkAndCreateToast("error", "No Size Selected");
+      return;
+    }
     try {
-      await addtobag();
-      setTimeout(() => {
+      const orderData = {
+        userId: user.id,
+        productId: param.id,
+        quantity: 1,
+        color: currentColor,
+        size: currentSize,
+      };
+      const response = await dispatch(createbag(orderData));
+      if(response){
+        setIsInBagList(response);
         navigation('/bag')
-      }, 1000);
-      window.location.reload();
+      }
+      // window.location.reload();
     } catch (error) {
       console.error("Error Adding to Bag: ",error);
       checkAndCreateToast("success","Error adding to Bag");
@@ -259,6 +280,7 @@ const Ppage = () => {
       checkAndCreateToast("warning",warning)
       dispatch(clearErrors())
     }
+    // dispatch(getwishlist());
   }, [dispatch, param, warning]);
   const handleSetNewImageArray = (newSize)=>{
     console.log("selected Size: ",newSize);
@@ -289,11 +311,17 @@ const Ppage = () => {
       checkFetchedIsPurchased();
     }
     if(user){
-      dispatch(getwishlist());
       dispatch(getbag({ userId: user.id }));
+      // dispatch(getwishlist());
     }
     // refreshWishListAndBag();
 	},[product,user,dispatch])
+  useEffect(() => {
+    // Check if the user is logged in
+    if(!loadingWishList && !bagLoading){
+      updateButtonStates();
+    }
+  }, [user, wishlist, bag, product,loadingWishList]); 
   useEffect(()=>{
     if(selectedSize){
 			setSelectedColor(selectedSize.colors);
@@ -315,13 +343,6 @@ const Ppage = () => {
         url.endsWith(".avi")
     );
   }, [selectedImage]);
-  /* if(user){
-      isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-      isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-    }else{
-      isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-      isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-  } */
   const [scrollPosition, setScrollPosition] = useState(0);
   const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
@@ -341,7 +362,12 @@ const Ppage = () => {
         divElement.removeEventListener('scroll', handleScroll);
     };
   }, []);
-  console.log("Current Scroll Amount: ",scrollPosition);
+  useEffect(()=>{
+    setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
+  },[hasPurchased])
+  // console.log("isIn Bag / is In Wishlist",isInBagList,isInWishList,user);
+  console.log("current Scroll Amount: ",scrollPosition);
+  
   return (
     <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       {
@@ -350,7 +376,7 @@ const Ppage = () => {
             <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
               <div className='w-[50%] min-h-[200px] flex flex-col px-7'>
                 {
-                  <div className={`w-[50%] ${scrollPosition < maxScrollAmount ? "fixed z-30 mt-5":" flex absolute bottom-4 left-7"} `}>
+                  <div className={`w-[50%] ${scrollPosition < currentMaxScrollAmount ? "fixed z-30 mt-5":" flex absolute bottom-4 left-7"} `}>
                     <div className='w-full h-full justify-start items-center flex'>
                         <LeftImageContent 
                           selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -443,16 +469,24 @@ const Ppage = () => {
                       {/* Add to Cart & Buy Now Buttons */}
                       <PincodeChecker productId={product?._id} />
                     </div>
-                    <div className='w-[60%] h-fit justify-center items-center flex flex-col'>
+                    <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
                       <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                         <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" onClick={addtobag}>
                           <ShoppingCart size={30} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
                         </button>
                         <button className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" onClick={addToWishList}>
                           {
-                            isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
+                            loadingWishList ? <Fragment>
+                              <p>Is Updating</p>
+                            </Fragment>:(
+                              <Fragment>
+                                {
+                                  isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
+                                }
+                                <span>{isInWishList ? "GO TO WISHLIST":"ADD TO WISHLIST"}</span>
+                              </Fragment>    
+                            )
                           }
-                          <span>{isInWishList ? "GO TO WISHLIST":"ADD TO WISHLIST"}</span>
                         </button>
                       </div>
                       <button className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" onClick={handleBuyNow}>
@@ -466,15 +500,6 @@ const Ppage = () => {
                     
                     {/* Price and Discount Section */}
                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                      {/* <h1 className='font1 text-base font-semibold text-slate-800'>
-                        {product?.salePrice && product.salePrice > 0 && (
-                          <span className="mr-4 font-bold">&#8377; {Math.round(product?.salePrice)}</span>
-                        )}
-                        <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
-                        {product?.salePrice && product.salePrice > 0 && (
-                          <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
-                        )}
-                      </h1> */}
                       <h1 className='font1'>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></h1>
                     </div>
 

@@ -4,9 +4,8 @@ import { getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 
-const HomeProductsPreview = ({ product }) => {
+const HomeProductsPreview = ({ product, selectedColorImages = [] }) => {
     const navigation = useNavigate();
-    const imageArray = getImagesArrayFromProducts(product,true);
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
@@ -16,7 +15,7 @@ const HomeProductsPreview = ({ product }) => {
         setIsHovered(true);
         setHoveredImageIndex(index);
         const newTimer = setInterval(() => {
-            setHoveredImageIndex((prevIndex) => (prevIndex + 1) % imageArray.length);
+            setHoveredImageIndex((prevIndex) => (prevIndex + 1) % selectedColorImages.length);
         }, 1000); // Change image every 1000ms
         setTimer(newTimer);
         clearInterval(newTimer);
@@ -34,17 +33,12 @@ const HomeProductsPreview = ({ product }) => {
 
     // Cleanup timer when component unmounts
     useEffect(() => {
-        // Clear interval if the component is unmounted or if timer changes
         return () => {
             if (timer) {
                 clearInterval(timer);
             }
         };
     }, [timer]);
-
-    /* const amount = product.salePrice && product.salePrice > 0 && product.salePrice < product.price 
-        ? calculateDiscountPercentage(product?.price, product?.salePrice) 
-        : product?.price; */
 
     // Auto hover effect for smaller screens
     if (window.screen.width < 1024 && !isHovered) {
@@ -68,7 +62,7 @@ const HomeProductsPreview = ({ product }) => {
 
     return (
         <div
-            className="w-[100%] max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
+            className="w-full sm:w-full md:w-full lg:w-full max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -80,9 +74,9 @@ const HomeProductsPreview = ({ product }) => {
                 {!isMediaLoaded && (
                     <div className="w-full h-full animate-pulse bg-gray-100"></div> // Skeleton loader
                 )}
-                {imageArray && imageArray.length > 0 && (
+                {selectedColorImages && selectedColorImages.length > 0 && (
                     <ProductImageVideoView
-                        imageArray={imageArray}
+                        imageArray={selectedColorImages}
                         hoveredImageIndex={hoveredImageIndex}
                         product={product}
                         navigation={navigation}
@@ -93,28 +87,28 @@ const HomeProductsPreview = ({ product }) => {
 
             {/* Skeleton for Buttons */}
             <div
-                className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2 
-                    w-full h-fit flex flex-col gap-1 items-center justify-center 
-                    font-sans transition-all duration-300 ease-in-out md:text-sm text-[10px]
+                className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2
+                    w-full h-fit flex flex-col gap-1 items-center justify-center
+                    font-sans transition-all duration-300 ease-in-out md:text-sm text-xs
                     ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 {!product ? (
                     <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button
                 ) : (
                     <>
-                        <div className={`w-full h-7 md:h-10 flex items-center justify-center font-sans`}>
-                            <button onClick={(e) => { 
+                        <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
+                            <button onClick={(e) => {
                                 e.stopPropagation();
                                 navigation(`/products/${product?._id}`);
                             }} className="w-full h-full flex items-center text-black bg-white focus:bg-gray-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
                                 <Heart size={20} />
-                                <span className="font-sans">Add to Wishlist</span>
+                                <span className="font-sans text-xs md:text-sm">Add to Wishlist</span>
                             </button>
                         </div>
-                        <div className={`w-full h-7 md:h-10  flex items-center justify-center font-sans`}>
+                        <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
                             <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md space-x-2">
                                 <ShoppingCart size={20} />
-                                <span className="font-sans">Add to Cart</span>
+                                <span className="font-sans text-xs md:text-sm">Add to Cart</span>
                             </button>
                         </div>
                     </>
@@ -172,12 +166,10 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
     // Function to handle media load completion
     const handleMediaLoad = () => {
         setIsMediaLoaded(true);
-        // console.log("loading...");
         if(onLoad){
             onLoad();
         }
     };
-    // console.log("loading: ",isMediaLoaded);
 
     return (
         <div
@@ -189,7 +181,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                 <div className="absolute inset-0 bg-gray-300 animate-pulse">
                     <div className="w-full h-full bg-gray-200 animate-pulse" />
                 </div>
-            )} 
+            )}
             <Fragment>
                 {/* Check if the selected media is a video or an image */}
                 {mediaIsVideo ? (
@@ -218,7 +210,6 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                     />
                 )}
             </Fragment>
-
         </div>
     );
 };

@@ -90,9 +90,10 @@ const reviews = [
 
 
 const maxScrollAmount = 1024
-let isInWishList = false
-let isInBagList = false;
 const MPpage = () => {
+    const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+    const [isInWishList, setIsInWishList] = useState(false);
+    const [isInBagList, setIsInBagList] = useState(false);
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { activeToast, showToast } = useToast();
@@ -177,58 +178,20 @@ const MPpage = () => {
         );
     }
 
-    function buyNow() {
-        if (user) {
-            addToBag();
-            setTimeout(() => {
-                navigation('/bag')
-            }, 200);
-        } else {
-            checkAndCreateToast("info",'You need to log in to add this product purchase.');
-        }
-    }
-    const addToWishList = async()=>{
-        if (user) {
-            await dispatch(createwishlist({productId:param.id,}));
-            await dispatch(getwishlist());
-            await dispatch(getbag({ userId: user.id }))
-            if(isInWishList){
-                // alert.success('Added successfully to Wishlist')
-                checkAndCreateToast("success",'Added successfully to Wishlist');
-            }else{
-                // alert.success('Removed successfully from Wishlist')
-                checkAndCreateToast("success",'Removed successfully from Wishlist');
-            }
-        }else{
-            // alert.info('You have To Login To Add This Product To Wishlist')
-            setWishListProductInfo(product,param.id);
-        }
-        if(user){
-            isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-            isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-        }else{
-            isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-            isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-        }
-        window.location.reload();
-    }
-    async function addToBag() {
-        if(isInBagList){
-            navigation("/bag")
+    const addtobag = async () => {
+        if (isInBagList) {
+            navigation("/bag");
             return;
         }
-        if(!currentColor){
-            checkAndCreateToast("error",'No Color Selected');
-            // alert.error("No Color Selected")
+        if (!currentColor) {
+            checkAndCreateToast("error", "No Color Selected");
             return;
         }
-        if(!currentSize){
-            checkAndCreateToast("error","No Size Selected")
+        if (!currentSize) {
+            checkAndCreateToast("error", "No Size Selected");
             return;
         }
         if (user) {
-            // console.log("Selected color", currentColor);
-            // console.log("Selected size", currentSize);
             const orderData = {
                 userId: user.id,
                 productId: param.id,
@@ -237,30 +200,77 @@ const MPpage = () => {
                 size: currentSize,
             };
             await dispatch(createbag(orderData));
-            await dispatch(getwishlist());
-            await dispatch(getbag({ userId: user.id }))
-            toast.success('Product added successfully to the bag');
+            // await dispatch(getwishlist());
+            dispatch(getbag({ userId: user.id }));
         } else {
-            // alert.info('You need to log in to add this product to your bag');
-
-            // add to session storage
+            // Add to localStorage logic
             const orderData = {
                 productId: param.id,
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
-                ProductData:product,
+                ProductData: product,
             };
-            setSessionStorageBagListItem(orderData,param.id);
+            setSessionStorageBagListItem(orderData, param.id);
         }
-        if(user){
-            isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-            isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-        }else{
-            isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-            isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
+        checkAndCreateToast("success", "Product successfully in Bag");
+        updateButtonStates();
+    };
+    const updateButtonStates = () => {
+        if (user) {
+            // console.log("Updateing wishList: ",wishlist);
+            setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+            setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
+        } else {
+            setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
+            setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
         }
-        window.location.reload();
+    };
+    const addToWishList = async () => {
+        if (user) {
+            const response = await dispatch(createwishlist({ productId: param.id }));
+            // await dispatch(getbag({ userId: user.id }));
+            await dispatch(getwishlist());
+            checkAndCreateToast("success", "Wishlist Updated Successfully");
+            console.log("Wishlist Updated Successfully: ",response);
+            if(response){
+                // updateButtonStates();
+                setIsInWishList(response);
+            }
+        } else {
+            setWishListProductInfo(product, param.id);
+            checkAndCreateToast("success", "Bag is Updated Successfully");
+            updateButtonStates();
+        }
+    
+    };
+
+    const handleBuyNow = async () => {
+        if (!currentColor) {
+            checkAndCreateToast("error", "No Color Selected");
+            return;
+        }
+        if (!currentSize) {
+            checkAndCreateToast("error", "No Size Selected");
+            return;
+        }
+        try {
+            const orderData = {
+                userId: user.id,
+                productId: param.id,
+                quantity: 1,
+                color: currentColor,
+                size: currentSize,
+            };
+            const response = await dispatch(createbag(orderData));
+            if(response){
+                setIsInBagList(response);
+                navigation('/bag')
+            }
+        } catch (error) {
+            console.error("Error Adding to Bag: ",error);
+            checkAndCreateToast("success","Error adding to Bag");
+        }
     }
 
 
@@ -287,6 +297,12 @@ const MPpage = () => {
         const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
         setHasPurchased(didPurchased?.success || false);
     }
+    useEffect(() => {
+            // Check if the user is logged in
+            if(!loadingWishList && !bagLoading){
+            updateButtonStates();
+            }
+      }, [user, wishlist, bag, product,loadingWishList]); 
 
     useEffect(() => {
         if (product) {
@@ -389,13 +405,13 @@ const MPpage = () => {
     
     
 
-    if(user){
+    /* if(user){
         isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
         isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
     }else{
         isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
         isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-    }
+    } */
     // console.log("Current Scroll Amount:",scrollAmount,"Max Scroll Amount:",maxScrollAmount);
     return (
         <Fragment>
@@ -421,7 +437,7 @@ const MPpage = () => {
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addtobag}>
                                             <ShoppingCart className='mr-4' />
                                             <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
                                         </button>
@@ -611,23 +627,29 @@ const MPpage = () => {
                                 <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                             </div>
                             <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={buyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
                             </div>
                             <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
                                 <div className={`grid grid-cols-12 w-full font1 relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                            {isInWishList ? (
-                                                <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                    <Heart size={30} fill="red" className="text-red-500" />
-                                                </div>
-                                                ) : (
-                                                    <Heart size={30}/>
-                                            )}
+                                            {
+                                                loadingWishList ? <Fragment>
+                                                    <p>U</p>
+                                                </Fragment>:(
+                                                    <Fragment>
+                                                    {
+                                                        isInWishList ? <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                            <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
+                                                        </div>: <Heart size={30}/>
+                                                    }
+                                                    </Fragment>    
+                                                )
+                                            }
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addtobag}>
                                             <ShoppingCart className='mr-4' size={30}/>
                                             <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
                                         </button>

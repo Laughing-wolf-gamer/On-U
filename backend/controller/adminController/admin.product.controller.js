@@ -173,6 +173,7 @@ export const addNewProduct = async (req, res) => {
             gender,
             category,
             subCategory,
+            specialCategory,
             price,
             salePrice,
             Rating,
@@ -219,6 +220,7 @@ export const addNewProduct = async (req, res) => {
             gender,
             category,
             subCategory,
+            specialCategory:specialCategory,
             price,
             salePrice: salePrice && salePrice > 0 ? salePrice : null,
             totalStock,
@@ -344,6 +346,7 @@ export const editProduct = async (req, res) => {
             gender,
             category,
             subCategory,
+            specialCategory,
             price,
             salePrice,
             width,
@@ -371,7 +374,6 @@ export const editProduct = async (req, res) => {
                 }
                 totalStock += sizeStock;
             })
-            // console.log("Colors: ",AllColors);
             if(totalStock > 0) updateFields.totalStock = totalStock;
         };
         if (description && description.length > 0) updateFields.description = description;
@@ -380,6 +382,7 @@ export const editProduct = async (req, res) => {
         if (gender && gender.length > 0) updateFields.gender = gender;
         if (category && category.length > 0) updateFields.category = category;
         if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
+        if (specialCategory &&  specialCategory.length > 0) updateFields.specialCategory = specialCategory;
         if (price > 0) updateFields.price = price;
         if (salePrice) updateFields.salePrice = salePrice && salePrice > 0 ? salePrice: null;
         if(width && width > 0) updateFields.width = Number(width);

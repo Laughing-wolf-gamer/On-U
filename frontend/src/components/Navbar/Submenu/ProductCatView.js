@@ -5,8 +5,7 @@ import { useTransition, animated } from 'react-spring';
 import { fetchAllOptions } from '../../../action/productaction.js';
 import { useQueryContext } from '../../../Contaxt/QueryContext.js';
 
-const ProductsBar = ({ show, CMenu, parentCallback }) => {
-	const { updateQueryParams, getQueryString } = useQueryContext();
+const ProductCatView = ({ show, CMenu, parentCallback }) => {
 	const navigation = useNavigate(); // Use for navigation (if using React Router)
 	const transitions = useTransition(show, {
 		from: { opacity: 0 },
@@ -122,4 +121,4 @@ const CategorySection = ({ title, categories, parentCallback ,handelSetQuery}) =
 	</div>
 );
 
-export default ProductsBar;
+export default ProductCatView;

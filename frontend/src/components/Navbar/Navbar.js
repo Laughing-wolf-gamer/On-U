@@ -5,7 +5,7 @@ import { BsHandbag, BsHeart } from 'react-icons/bs'
 import Search from './Search.js'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
-import ProductsBar from './Submenu/ProducstBar.js'
+import ProductCatView from './Submenu/ProductCatView.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { getbag, getwishlist } from '../../action/orderaction.js'
 import { SearchIcon } from 'lucide-react'
@@ -191,7 +191,7 @@ const Navbar = ({user}) => {
                         </ul>
                     </div>
                 </div>
-                <ProductsBar show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
+                <ProductCatView show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
                 <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
         </div>
         </Fragment>

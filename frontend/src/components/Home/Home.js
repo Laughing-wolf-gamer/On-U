@@ -346,16 +346,16 @@ const Home = () => {
             {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
             {
               !bannerLoading && Wide_Screen_Section_3.urls && Wide_Screen_Section_3.urls.length > 0 ? (
-                <div className="w-full h-auto flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
+                <div className="w-screen h-auto flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
                   <h1 className='text-3xl px-8 font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
                     {Wide_Screen_Section_3.header}
                   </h1>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 justify-center items-center">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 2xl:grid-cols-6 justify-center items-center">
                     {
                       Wide_Screen_Section_3.urls.map((url, index) => (
                         <div
                           key={`Index_${index}`}
-                          className="h-auto max-w-full relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
+                          className="h-auto min-w-full relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
                           <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
                         </div>
                       ))
@@ -371,7 +371,7 @@ const Home = () => {
 
             
 
-            <div className='w-full flex flex-col justify-start items-center px-4 md:px-10 bg-slate-200 overflow-hidden'>
+            <div className='w-screen flex flex-col justify-start items-center px-4 md:px-10 bg-slate-200 overflow-hidden'>
               {!bannerLoading && Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
                 <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
                 <Loader/>

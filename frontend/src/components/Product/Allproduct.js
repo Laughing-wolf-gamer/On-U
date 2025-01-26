@@ -142,73 +142,71 @@ const Allproductpage = ({user}) => {
             <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 bg-slate-100 shadow-md shadow-black">
                 {/* Filter */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
-                    {productLoading === false && product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
+                    {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
 
                 <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
-                    {productLoading === true ? (
-                    <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
-                        {Array(10).fill(0).map((_, index) => <ProductCardSkeleton key={index} />)}
-                    </ul>
-                    ) : (
-                        productLoading === false && (
-                            <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                    {pro && pro?.map((p) => (
-                                        <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
-                                            <Single_product pro={p} user={user} wishlist={wishlist} />
-                                        </div>
-                                    ))}
-                                </ul>
+                    {productLoading ? (
+                        <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
+                            {Array(10).fill(0).map((_, index) => <ProductCardSkeleton key={index} />)}
+                        </ul>
+                    ):(
+                        <div className='min-h-[100vw] flex flex-col justify-between items-start'>
+                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
+                                {pro && pro.length && pro.length > 0 && pro.map((p) => (
+                                    <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
+                                        <Single_product pro={p} user={user} wishlist={wishlist} />
+                                    </div>
+                                ))}
+                            </ul>
 
-                                <div className="paginationBox font1 border-t-[1px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
-                                    {/* Pagination Info */}
-                                    <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
-                                        Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
-                                    </span>
+                            <div className="paginationBox font1 border-t-[1px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                                {/* Pagination Info */}
+                                <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
+                                    Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
+                                </span>
 
-                                    {/* Previous Button */}
-                                    {currentPage === 1 ? "" : (
-                                        <button
-                                            className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
-                                            onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}
-                                        >
-                                            <IoIosArrowBack /><h1>Previous</h1>
-                                        </button>
-                                    )}
+                                {/* Previous Button */}
+                                {currentPage === 1 ? "" : (
+                                    <button
+                                        className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                        onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}
+                                    >
+                                        <IoIosArrowBack /><h1>Previous</h1>
+                                    </button>
+                                )}
 
-                                    {/* Pagination Component */}
-                                    <Pagination
-                                        activePage={currentPage}
-                                        itemsCountPerPage={maxAmountPerPage}
-                                        totalItemsCount={length}
-                                        onChange={setCurrentPageNo}
-                                        nextPageText={false}
-                                        prevPageText={false}
-                                        firstPageText={false}
-                                        lastPageText={false}
-                                        itemClassFirst="hidden"
-                                        itemClassPrev="hidden"
-                                        itemClassNext="hidden"
-                                        itemClassLast="hidden"
-                                        itemClass="page-item"
-                                        linkClass="page-link"
-                                        activeClass="pageItemActive"
-                                        activeLinkClass="pageLinkActive"
-                                    />
+                                {/* Pagination Component */}
+                                <Pagination
+                                    activePage={currentPage}
+                                    itemsCountPerPage={maxAmountPerPage}
+                                    totalItemsCount={length}
+                                    onChange={setCurrentPageNo}
+                                    nextPageText={false}
+                                    prevPageText={false}
+                                    firstPageText={false}
+                                    lastPageText={false}
+                                    itemClassFirst="hidden"
+                                    itemClassPrev="hidden"
+                                    itemClassNext="hidden"
+                                    itemClassLast="hidden"
+                                    itemClass="page-item"
+                                    linkClass="page-link"
+                                    activeClass="pageItemActive"
+                                    activeLinkClass="pageLinkActive"
+                                />
 
-                                    {/* Next Button */}
-                                    {currentPage === Math.ceil(length / maxAmountPerPage) ? '' : (
-                                        <button
-                                            className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
-                                            onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}
-                                        >
-                                            <h1>Next</h1> <IoIosArrowForward />
-                                        </button>
-                                    )}
-                                </div>
+                                {/* Next Button */}
+                                {currentPage === Math.ceil(length / maxAmountPerPage) ? '' : (
+                                    <button
+                                        className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                        onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}
+                                    >
+                                        <h1>Next</h1> <IoIosArrowForward />
+                                    </button>
+                                )}
                             </div>
-                        )
+                        </div>
                     )}
                 </div>
             </div>
