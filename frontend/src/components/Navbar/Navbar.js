@@ -11,11 +11,15 @@ import { getbag, getwishlist } from '../../action/orderaction.js'
 import { SearchIcon } from 'lucide-react'
 import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 
 
 const Navbar = ({user}) => {
     const dispatch = useDispatch();
     const { state } = useFunctionContext();
+    const[currentWishListCount,setWishListCount] = useState(0);
+    const[currentBagCount,setBagCount] = useState(0);
+    const { sessionData,sessionBagData } = useSessionStorage();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
@@ -97,6 +101,11 @@ const Navbar = ({user}) => {
             dispatch(getbag({ userId: user.id }));
         }
     }, [state]);
+    useEffect(() => {
+        setWishListCount(sessionData.length);
+        setBagCount(sessionBagData.length);
+    }, [sessionData,sessionBagData]);
+    console.log("Nav Bar sessionBagData: ",sessionBagData);
     return (
         <Fragment>
             <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
@@ -160,9 +169,9 @@ const Navbar = ({user}) => {
                                         <span>{wishlist.orderItems.length}</span>
                                     </div>
                                 )}
-                                {!user && getLocalStorageWishListItem() && getLocalStorageWishListItem().length > 0 && (
+                                {!user && currentWishListCount > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{getLocalStorageWishListItem().length}</span>
+                                        <span>{currentWishListCount}</span>
                                     </div>
                                 )}
                                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
@@ -177,9 +186,9 @@ const Navbar = ({user}) => {
                                         <span>{bag.orderItems.length}</span>
                                     </div>
                                 )}
-                                {!user && getLocalStorageBag() && getLocalStorageBag().length > 0 && (
+                                {!user && currentBagCount > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{getLocalStorageBag().length}</span>
+                                        <span>{currentBagCount}</span>
                                     </div>
                                 )}
                                 <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">

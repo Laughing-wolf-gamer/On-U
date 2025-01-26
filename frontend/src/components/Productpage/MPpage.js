@@ -13,7 +13,7 @@ import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
@@ -23,6 +23,7 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
 
 const reviews = [
@@ -91,7 +92,7 @@ const reviews = [
 
 const maxScrollAmount = 1024
 const MPpage = () => {
-    const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+    const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
@@ -298,11 +299,11 @@ const MPpage = () => {
         setHasPurchased(didPurchased?.success || false);
     }
     useEffect(() => {
-            // Check if the user is logged in
-            if(!loadingWishList && !bagLoading){
+        // Check if the user is logged in
+        if(!loadingWishList && !bagLoading){
             updateButtonStates();
-            }
-      }, [user, wishlist, bag, product,loadingWishList]); 
+        }
+      }, [user, wishlist, bag, product,loadingWishList,sessionData,sessionBagData]); 
 
     useEffect(() => {
         if (product) {

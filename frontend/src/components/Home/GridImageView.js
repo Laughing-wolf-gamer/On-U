@@ -12,6 +12,7 @@ const clothingItems = [
   "Cargo"
 ];
 const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
+  const activeClothingItem = getRandomItem(categoriesOptions)
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop();  // Get the file extension
   const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);  // Check if the file is a video
@@ -22,9 +23,16 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
   const handleMediaLoad = () => {
     setIsLoading(false);  // Set loading to false once the media has finished loading
   };
+  const handleMoveToQuery = ()=>{
+    const queryParams = new URLSearchParams();
+    
+		if (activeClothingItem) queryParams.set('category', activeClothingItem.toLowerCase());
+    const url = `/products?${queryParams.toString()}`;
+    navigation(url);
+  }
 
   return (
-    <div onClick={() => navigation("/products")} className="relative w-full h-full rounded-lg overflow-hidden">
+    <div onClick={handleMoveToQuery} className="relative w-full h-full rounded-lg overflow-hidden">
       <div className="min-w-xs h-full relative">
         {isLoading && (
           <div className="w-full max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"></div>  // Skeleton loader view
@@ -54,7 +62,9 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
           )
         }
         <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold text-xl'>
-          <span> {getRandomItem(categoriesOptions || clothingItems)?.toUpperCase()} </span>
+          {
+            activeClothingItem && <span> {activeClothingItem.toUpperCase()} </span>
+          }
         </div>
 
       </div>

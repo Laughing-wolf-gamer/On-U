@@ -1,9 +1,8 @@
 import React, { Fragment, useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useTransition, animated } from 'react-spring';
 import { fetchAllOptions } from '../../../action/productaction.js';
-import { useQueryContext } from '../../../Contaxt/QueryContext.js';
 
 const ProductCatView = ({ show, CMenu, parentCallback }) => {
 	const navigation = useNavigate(); // Use for navigation (if using React Router)
@@ -27,8 +26,8 @@ const ProductCatView = ({ show, CMenu, parentCallback }) => {
 		// Create the URL with query parameters
 		const queryParams = new URLSearchParams();
     
-		if (gender) queryParams.set('gender', gender.toLowerCase());
 		if (category) queryParams.set('category', category.toLowerCase());
+		if (gender) queryParams.set('gender', gender.toLowerCase());
 	
 		// Construct the URL for the /products page
 		const url = `/products?${queryParams.toString()}`;

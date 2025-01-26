@@ -7,7 +7,7 @@ import { Provider } from 'react-redux'
 import {positions, transitions, Provider as Alertprovider} from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import { ToastProvider } from './Contaxt/ToastProvider';
-import { QueryProvider } from './Contaxt/QueryContext';
+import { SessionStorageProvider } from './Contaxt/SessionStorageContext';
 
 const option = {
   timeout: 2000,
@@ -22,9 +22,9 @@ ReactDOM.render(
       <Alertprovider template={AlertTemplate} {...option}>
         <React.StrictMode >
             <ToastProvider>
-              <QueryProvider>
+              <SessionStorageProvider>
                 <App />
-              </QueryProvider>
+              </SessionStorageProvider>
             </ToastProvider>
         </React.StrictMode>
       </Alertprovider>

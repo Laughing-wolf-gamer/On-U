@@ -77,7 +77,7 @@ function App() {
         <MNavbar user={user}/>
         {/* <Coupon /> */}
         <Routes>
-          <Route path="/" element={<Home/>}/>
+          <Route path="/" element={<Home user={user}/>}/>
           <Route path="/Login" element={<Login/>}/>
           <Route path="/verifying" element={<Otpverify/>}/>
           <Route path='/registeruser' element={<Registeruser/>}/>

@@ -175,11 +175,11 @@ export const setWishListProductInfo = (product,productId)=>{
   // console.log("bag: ",b)
   let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
   if (index === -1) {
-      wishListItem.push(wishListData);
-      sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+    wishListItem.push(wishListData);
+    sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
   }else{
-      wishListItem.splice(index,1);
-      sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+    wishListItem.splice(index,1);
+    sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
   }
   console.log("wishListItem Addded or remove: ",wishListItem);
 }

@@ -7,19 +7,19 @@ import './Ppage.css'
 import { BiSpreadsheet } from 'react-icons/bi'
 import elementClass from 'element-class'
 import Single_product from '../Product/Single_product'
-import {useAlert} from 'react-alert'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem, setSessionStorageBagListItem, setWishListProductInfo} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag} from '../../config'
 import ImageZoom from './ImageZoom'
 import namer from 'color-namer';
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Heart, Ruler, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
 import SizeChartModal from './SizeChartModal'
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 
 
 const reviews = [
@@ -89,6 +89,7 @@ const maxScrollAmount = 1085.5999755859375,maxScrollWithReviewInput = 1600
 // let isInWishList = false
 // let isInBagList = false;
 const Ppage = () => {
+  const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
   const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
   const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
   const [isInWishList, setIsInWishList] = useState(false);
@@ -197,7 +198,7 @@ const Ppage = () => {
       setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
       setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
     } else {
-      setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
+      setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
       setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
     }
   };
@@ -231,22 +232,38 @@ const Ppage = () => {
       return;
     }
     try {
-      const orderData = {
-        userId: user.id,
-        productId: param.id,
-        quantity: 1,
-        color: currentColor,
-        size: currentSize,
-      };
-      const response = await dispatch(createbag(orderData));
-      if(response){
+      if (user) {
+        const orderData = {
+          userId: user.id,
+          productId: param.id,
+          quantity: 1,
+          color: currentColor,
+          size: currentSize,
+        };
+        const response = await dispatch(createbag(orderData));
         setIsInBagList(response);
-        navigation('/bag')
+        if(response){
+          navigation("/bag");
+        }
+      } else {
+        // Add to localStorage logic
+        const orderData = {
+          productId: param.id,
+          quantity: 1,
+          color: currentColor,
+          size: currentSize,
+          ProductData: product,
+        };
+        setSessionStorageBagListItem(orderData, param.id);
+        navigation("/bag");
       }
+      checkAndCreateToast("success", "Product successfully in Bag");
+      updateButtonStates();
       // window.location.reload();
+      
     } catch (error) {
       console.error("Error Adding to Bag: ",error);
-      checkAndCreateToast("success","Error adding to Bag");
+      checkAndCreateToast("error","Error adding to Bag");
     }
   }
 
@@ -321,7 +338,7 @@ const Ppage = () => {
     if(!loadingWishList && !bagLoading){
       updateButtonStates();
     }
-  }, [user, wishlist, bag, product,loadingWishList]); 
+  }, [user, wishlist, bag, product,loadingWishList,sessionData,sessionBagData]); 
   useEffect(()=>{
     if(selectedSize){
 			setSelectedColor(selectedSize.colors);

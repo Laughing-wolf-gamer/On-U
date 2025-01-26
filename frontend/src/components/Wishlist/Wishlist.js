@@ -1,17 +1,17 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import Single_product from '../Product/Single_product'
 import { useDispatch, useSelector } from 'react-redux'
-import { createbag, deletewish, getwishlist } from '../../action/orderaction'
+import { deletewish, getwishlist } from '../../action/orderaction'
 import { MdClear } from 'react-icons/md'
 import wish from '../images/emptywish.PNG'
 import { Link, useNavigate } from 'react-router-dom'
 import { getuser, clearErrors } from '../../action/useraction'
 import { useAlert } from 'react-alert'
-import Nowishlist from './Nowishlist'
-import { getLocalStorageWishListItem } from '../../config'
-import { Pagination } from '@mui/material'
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 
 const Wishlist = () => {
+    const { sessionData,setWishListProductInfo } = useSessionStorage();
+    const[currentWishListItem,setCurrentWishListItem] = useState([]);
     const Alert = useAlert()
     const navigation = useNavigate()
     const dispatch = useDispatch()
@@ -20,23 +20,14 @@ const Wishlist = () => {
     const [state, setState] = useState(false)
     const [state1, setState1] = useState(false)
     const [state2, setState2] = useState(false)
-    const [sessionStorageWishList, setSessionStorageWishList] = useState(getLocalStorageWishListItem())
 
-    const handleDelWish = async (e, product) => {
+    const handleDelWish = async (e, productId,product) => {
         e.stopPropagation()
         if (user) {
-            await dispatch(deletewish({ deletingProductId: product }))
+            await dispatch(deletewish({ deletingProductId: productId }))
             dispatch(getwishlist())
         } else {
-            if (sessionStorageWishList.length > 0) {
-                const itemsToDelete = sessionStorageWishList.find(s => s.productId?._id === product);
-                if (itemsToDelete) {
-                    sessionStorageWishList.splice(sessionStorageWishList.indexOf(itemsToDelete), 1);
-                    sessionStorage.setItem('wishListItem', JSON.stringify(sessionStorageWishList));
-                    setSessionStorageWishList(getLocalStorageWishListItem());
-                    Alert.success('Product removed successfully from wishlist')
-                }
-            }
+            setWishListProductInfo(product,productId);
         }
         setState2(false)
     }
@@ -65,13 +56,14 @@ const Wishlist = () => {
 
         dispatch(getwishlist())
     }, [dispatch, error, userloading, isAuthentication, user]);
-
-    let currentWishListItem = wishlist && wishlist?.orderItems;
-    if (isAuthentication) {
-        currentWishListItem = wishlist && wishlist?.orderItems || [];
-    } else {
-        currentWishListItem = sessionStorageWishList;
-    }
+    useEffect(()=>{
+        if (isAuthentication) {
+            setCurrentWishListItem(wishlist && wishlist?.orderItems || [])
+        } else {
+            setCurrentWishListItem(sessionData);
+        }
+    },[dispatch,sessionData])
+    
 
     return (
         <Fragment>
@@ -111,7 +103,7 @@ const Wishlist = () => {
                             </ul> */}
                             {/* Wishlist Grid */}
                             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                {currentWishListItem.map((pro) => (
+                                {currentWishListItem && currentWishListItem.length > 0 && currentWishListItem.map((pro) => (
                                     <li
                                         key={pro?.productId?._id || pro?.productId}
                                         className="w-full h-fit max-w-sm m-4 group"  // Reduced height (e.g., 120px for each item)
@@ -126,15 +118,16 @@ const Wishlist = () => {
                                             >
                                                 <Single_product pro={pro?.productId} user={user} showWishList={false} />
                                             </div>
-                                            
-                                            {/* The remove button will be visible on hover */}
-                                            <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                                                <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId._id || pro?.productId)} />
+
+                                            {/* The remove button will be visible on hover on larger screens, and visible by default on smaller screens */}
+                                            <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
+                                                <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId._id || pro?.productId, pro)} />
                                             </div>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
+
 
                         </div>
                     ) : (

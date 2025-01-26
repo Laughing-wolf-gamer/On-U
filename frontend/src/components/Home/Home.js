@@ -124,7 +124,7 @@ import Loader from '../Loader/Loader'
 import GridImageView from './GridImageView'
 
 
-const Home = () => {
+const Home = ({user}) => {
   const { product} = useSelector(state => state.Allproducts)
   // const { AllOptions} = useSelector(state => state.allOptions)
   const [categoriesOptions,setCategoryOptions] = useState([]);
@@ -339,7 +339,7 @@ const Home = () => {
             </div>
         
             <div className='py-8 px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
-                {product && product.length > 0 && <ProductPreviewFull product={product} />}
+                {product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
             </div>
         
             {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} /> */}
@@ -535,7 +535,7 @@ const Home = () => {
             </div>
 
             <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-4 items-center '>
-              {product && product.length && <ProductPreviewFull product={product} />}
+              {product && product.length && <ProductPreviewFull product={product} user={user}/>}
             </div>
 
             <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>

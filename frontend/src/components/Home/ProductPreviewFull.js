@@ -2,6 +2,8 @@ import React, { Fragment, useEffect, useState } from 'react';
 import HomeProductsPreview from './HomeProductsPreview';
 import { calculateDiscountPercentage, generateArrayOfRandomItems } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { getwishlist } from '../../action/orderaction';
 
 const previewHeader = [
   { id: 'topPicks', title: 'Top Picks' },
@@ -9,7 +11,9 @@ const previewHeader = [
   { id: 'luxuryItems', title: 'Luxury Items' }
 ];
 
-const ProductPreviewFull = ({ product }) => {
+const ProductPreviewFull = ({ product ,user}) => {
+  const dispatch = useDispatch();
+  const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
   const navigation = useNavigate();
   const [previewProducts, setSelectedPreviewProducts] = useState([]);
   const [activePreview, setActivePreviews] = useState('bestSeller');
@@ -35,7 +39,9 @@ const ProductPreviewFull = ({ product }) => {
       [productId]: colorImages
     }));
   };
- 
+ useEffect(()=>{
+  dispatch(getwishlist());
+ },[dispatch])
 
   return (
     <Fragment>
@@ -72,7 +78,7 @@ const ProductPreviewFull = ({ product }) => {
 
               return (
                 <div className="h-full rounded-md bg-blue-400 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
-                  <HomeProductsPreview product={p} selectedColorImages={selectedColor} />
+                  <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                   <div className="w-full p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                     <h2 className="font1 text-sm md:text-base font-semibold font-sans text-gray-800 text-left truncate">
                       {p?.shortTitle?.length > 26 ? `${p?.shortTitle.slice(0, 10)}` : p?.shortTitle}

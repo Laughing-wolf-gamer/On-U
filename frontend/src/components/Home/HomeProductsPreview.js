@@ -1,15 +1,60 @@
 import { Heart, ShoppingCart } from 'lucide-react';
 import React, { useState, useEffect, useMemo, useCallback, Fragment } from 'react';
-import { getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
+import { createwishlist, getwishlist } from '../../action/orderaction';
+import { useToast } from '../../Contaxt/ToastProvider';
+import toast from 'react-hot-toast';
 
-const HomeProductsPreview = ({ product, selectedColorImages = [] }) => {
+const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
+    const { sessionData, setWishListProductInfo } = useSessionStorage();
+    const [isInWishList, setIsInWishList] = useState(false);
     const navigation = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
-
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type, message) => {
+        console.log("check Toast: ", type, message, activeToast);
+        if (activeToast !== message) {
+        switch (type) {
+            case "error":
+            toast.error(message);
+            break;
+            case "warning":
+            toast.warning(message);
+            break;
+            case "info":
+            toast.info(message);
+            break;
+            case "success":
+            toast.success(message);
+            break;
+            default:
+            toast.info(message);
+            break;
+        }
+        showToast(message);
+        }
+    };
+    const addToWishList = async (e) => {
+        e.stopPropagation();
+        if (user) {
+          const response = await dispatch(createwishlist({ productId: product._id }));
+          await dispatch(getwishlist());
+          checkAndCreateToast("success", "Wishlist Updated Successfully");
+          console.log("Wishlist Updated Successfully: ",response);
+          if(response){
+            // updateButtonStates();
+            setIsInWishList(response);
+          }
+        } else {
+          setWishListProductInfo(product, product._id);
+          checkAndCreateToast("success", "Bag is Updated Successfully");
+          updateButtonStates();
+        }
+      };
     // Handle mouse enter event
     const handleMouseEnter = (index) => {
         setIsHovered(true);
@@ -19,6 +64,20 @@ const HomeProductsPreview = ({ product, selectedColorImages = [] }) => {
         }, 1000); // Change image every 1000ms
         setTimer(newTimer);
         clearInterval(newTimer);
+    };
+    useEffect(() => {
+        // Check if the user is logged in
+        if(wishlist){
+            updateButtonStates();
+        }
+    }, [user, wishlist, product,sessionData]);
+    const updateButtonStates = () => {
+        if (user) {
+            // console.log("Updateing wishList: ",wishlist);
+            setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+        } else {
+            setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
+        }
     };
 
     // Handle mouse leave event
@@ -97,17 +156,16 @@ const HomeProductsPreview = ({ product, selectedColorImages = [] }) => {
                 ) : (
                     <>
                         <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
-                            <button onClick={(e) => {
-                                e.stopPropagation();
-                                navigation(`/products/${product?._id}`);
-                            }} className="w-full h-full flex items-center text-black bg-white focus:bg-gray-400 focus:bg text-center justify-center font-sans hover:shadow-md space-x-2">
-                                <Heart size={20} />
+                            <button onClick={addToWishList} className="w-full h-full flex items-center text-black bg-white text-center justify-center font-sans hover:shadow-md space-x-2">
+                                {
+                                    isInWishList ? <div className='animate-vibrateScale'><Heart size={30} fill='red' strokeWidth={0}/></div>:<Heart size={30} />
+                                }
                                 <span className="font-sans text-xs md:text-sm">Add to Wishlist</span>
                             </button>
                         </div>
                         <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
-                            <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-800 hover:bg-gray-900 focus:bg-gray-700 text-center justify-center font-sans hover:shadow-md space-x-2">
-                                <ShoppingCart size={20} />
+                            <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-sans hover:shadow-md space-x-2">
+                                <ShoppingCart size={30} />
                                 <span className="font-sans text-xs md:text-sm">Add to Cart</span>
                             </button>
                         </div>

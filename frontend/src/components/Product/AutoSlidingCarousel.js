@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
 import { LazyLoadImage } from "react-lazy-load-image-component";
-import { getImagesArrayFromProducts, getLocalStorageWishListItem, hexToRgba, setWishListProductInfo } from "../../config";
+import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 import { Heart } from "lucide-react";
 import { createwishlist, getwishlist } from "../../action/orderaction";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { useToast } from "../../Contaxt/ToastProvider";
+import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
 
 const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
-  const { activeToast, showToast } = useToast();
-  const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+  const { sessionData, setWishListProductInfo } = useSessionStorage();
   const [isInWishList, setIsInWishList] = useState(false);
+  const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+  const { activeToast, showToast } = useToast();
   const checkAndCreateToast = (type, message) => {
     console.log("check Toast: ", type, message, activeToast);
     if (activeToast !== message) {
@@ -85,7 +87,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
       if(wishlist){
         updateButtonStates();
       }
-    }, [user, wishlist, pro]); 
+    }, [user, wishlist, pro,sessionData]); 
 
   // Track visibility of video elements using IntersectionObserver
   const observer = useRef(
@@ -101,13 +103,13 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     }, { threshold: 0.5 }) // 50% visibility before triggering play
   );
   const updateButtonStates = () => {
-      if (user) {
-        // console.log("Updateing wishList: ",wishlist);
-        setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === pro?._id));
-      } else {
-        setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === pro?._id));
-      }
-    };
+    if (user) {
+      // console.log("Updateing wishList: ",wishlist);
+      setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === pro?._id));
+    } else {
+      setIsInWishList(sessionData.some(b => b.productId?._id === pro?._id));
+    }
+  };
 
   useEffect(() => {
     const videoElements = document.querySelectorAll(".video-element");

@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
-import Loader from '../Loader/Loader';
 import { IoIosArrowDown } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
@@ -10,16 +9,14 @@ import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import MFilter from './MFilter';
 import Footer from '../Footer/Footer';
-import Filter from './Filter';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
 import ProductCardSkeleton from './ProductCardSkeleton';
-import { useQueryContext } from '../../Contaxt/QueryContext';
+
+
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
-    const { updateQueryParams, getQueryString } = useQueryContext();
-    const queryString = getQueryString();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('Recommended');
@@ -91,7 +88,6 @@ const Allproductpage = ({user}) => {
         window.scrollTo(0, 0);
         dispatch(getwishlist())
     }, []);
-    console.log("Query",queryString )
 
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
@@ -145,11 +141,17 @@ const Allproductpage = ({user}) => {
                     {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
 
-                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                <div className="w-full  2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
                     {productLoading ? (
-                        <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
-                            {Array(10).fill(0).map((_, index) => <ProductCardSkeleton key={index} />)}
-                        </ul>
+                        <div className='min-h-[100vw] flex flex-col justify-between items-start'>
+                            <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
+                                {Array(10).fill(0).map((_, index) => (
+                                    <div key={index} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
+                                        <ProductCardSkeleton key={index} />
+                                    </div>
+                                ))}
+                            </ul>
+                        </div>
                     ):(
                         <div className='min-h-[100vw] flex flex-col justify-between items-start'>
                             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">

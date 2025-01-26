@@ -28,9 +28,13 @@ import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
 import { ShoppingCart } from 'lucide-react'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../../config'
+import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 
 
 const MNavbar = ({ user }) => {
+    const[currentWishListCount,setWishListCount] = useState(0);
+    const[currentBagCount,setBagCount] = useState(0);
+    const { sessionData,sessionBagData } = useSessionStorage();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const dispatch = useDispatch()
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
@@ -172,7 +176,13 @@ const MNavbar = ({ user }) => {
           dispatch(getwishlist())
         }
     },[user])
-    console.log("Nav Bar bag: ",bag?.orderItems?.length)
+    useEffect(() => {
+        // Optionally you can trigger updates based on other session storage events here
+        console.log("Nav Bar sessionBagData: ",sessionBagData);
+        setWishListCount(sessionData.length);
+        setBagCount(sessionBagData.length);
+    }, [sessionData,sessionBagData]);
+    // console.log("Nav Bar bag: ",bag?.orderItems?.length)
     return (
         <Fragment>
             <div className='MNavbar hidden sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10' >
@@ -191,9 +201,9 @@ const MNavbar = ({ user }) => {
                                         <span>{bag.orderItems.length}</span>
                                     </div>
                                 )}
-                                {!user && getLocalStorageBag()  && getLocalStorageBag().length > 0 && (
+                                {!user && currentBagCount > 0 && (
                                     <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{getLocalStorageBag().length}</span>
+                                        <span>{currentBagCount}</span>
                                     </div>
                                 )}
                                 <Link to='/bag'><ShoppingCart size={26} color='black'/></Link>
@@ -204,9 +214,9 @@ const MNavbar = ({ user }) => {
                                         <span>{wishlist.orderItems.length}</span>
                                     </div>
                                 )}
-                                {!user && getLocalStorageWishListItem()  && getLocalStorageWishListItem().length > 0 && (
+                                {!user && currentWishListCount > 0 && (
                                     <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{getLocalStorageWishListItem().length}</span>
+                                        <span>{currentWishListCount}</span>
                                     </div>
                                 )}
                                 <Link to='/my_wishlist'><BsHeart size={26} color='black'/></Link>
