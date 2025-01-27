@@ -3,7 +3,7 @@ import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
 import { IoIosArrowDown } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -48,6 +48,7 @@ const Allproductpage = ({user}) => {
             dispatch(getproduct());
         }
     };
+
 
     const datefun = (e) => {
         let url = window.location.search;
@@ -113,28 +114,27 @@ const Allproductpage = ({user}) => {
                             </span>
                         </div>
 
-                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={() => (datefun(1), setSortValue('What`s New'))}>
+                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),datefun(1), setSortValue('What`s New'))}>
                             <span className='font1 text-gray-800'>What`s New</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Popularity'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),setSortValue('Popularity'))}>
                             <span className='font1 text-gray-800'>Popularity</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Better Discount'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), pricefun(-1), setSortValue('Better Discount'))}>
                             <span className='font1 text-gray-800'>Better Discount</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(-1), setSortValue('Price: High To Low'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),pricefun(-1), setSortValue('Price: High To Low'))}>
                             <span className='font1 text-gray-800'>Price: High To Low</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (pricefun(1), setSortValue('Price: Low To High'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),pricefun(1), setSortValue('Price: Low To High'))}>
                             <span className='font1 text-gray-800'>Price: Low To High</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={() => (setSortValue('Customer Rating'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),setSortValue('Customer Rating'))}>
                             <span className='font1 text-gray-800'>Customer Rating</span>
                         </div>
                     </div>
                 </div>
             </div>
-
             <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 bg-slate-100 shadow-md shadow-black">
                 {/* Filter */}
                 <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
@@ -212,8 +212,57 @@ const Allproductpage = ({user}) => {
                     )}
                 </div>
             </div>
+            {
+                pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={()=>{
+
+                }}/>
+            }
+            
             {(window.screen.width < 1024 && product) && <MFilter product={product} />}
             <Footer />
+        </div>
+    );
+};
+
+const NoProductsFoundOverlay = ({ isOpen, onClose }) => {
+    if (!isOpen) return null;  // Don't render anything if the overlay is not open.
+  
+    return (
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-4">
+            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
+                No Products Matched with Filters
+            </h2>
+            <p className="text-gray-600 mb-6 text-center">
+                We couldn’t find any products matching your filters. Please try adjusting the filters or clear them to see all products.
+            </p>
+            
+            <div className="flex justify-center space-x-4">
+                <button
+                onClick={onClose}
+                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
+                >
+                Try Different Filters
+                </button>
+    
+                <button
+                onClick={() => window.location.href = '/products'}
+                className="px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition duration-300"
+                >
+                View All Products
+                </button>
+            </div>
+    
+            {/* Close Button */}
+            <button
+                onClick={onClose}
+                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
+            >
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M6 18L18 6M6 6l12 12" />
+                </svg>
+            </button>
+            </div>
         </div>
     );
 };

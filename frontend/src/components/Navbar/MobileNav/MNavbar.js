@@ -299,7 +299,11 @@ const MNavbar = ({ user }) => {
                                             <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                         </li>
                                     </Ripples>
-                                    <MProductsBar showProducts={Menu2}/>
+                                    <MProductsBar showProducts={Menu2} onClose = {()=>{
+                                        setShow(false)
+                                        setClass("hidden")
+                                        setMenu2("hidden")
+                                    }}/>
                                     <Ripples color="re" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex 'onClick={(e)=>{
                                             setShow(false)

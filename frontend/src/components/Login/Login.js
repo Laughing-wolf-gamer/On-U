@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from 'react';
 import './Login.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAlert } from 'react-alert';

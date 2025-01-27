@@ -18,24 +18,24 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const checkAndCreateToast = (type, message) => {
         console.log("check Toast: ", type, message, activeToast);
         if (activeToast !== message) {
-        switch (type) {
-            case "error":
-            toast.error(message);
-            break;
-            case "warning":
-            toast.warning(message);
-            break;
-            case "info":
-            toast.info(message);
-            break;
-            case "success":
-            toast.success(message);
-            break;
-            default:
-            toast.info(message);
-            break;
-        }
-        showToast(message);
+            switch (type) {
+                case "error":
+                toast.error(message);
+                break;
+                case "warning":
+                toast.warning(message);
+                break;
+                case "info":
+                toast.info(message);
+                break;
+                case "success":
+                toast.success(message);
+                break;
+                default:
+                toast.info(message);
+                break;
+            }
+            showToast(message);
         }
     };
     const addToWishList = async (e) => {
@@ -121,7 +121,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 
     return (
         <div
-            className="w-full sm:w-full md:w-full lg:w-full max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow"
+            className={`w-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -129,7 +129,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
             onMouseLeave={handleMouseLeave}
         >
             {/* Skeleton for Product Image/Video */}
-            <div className="min-w-xs h-full relative">
+            <div className="w-full h-full relative">
                 {!isMediaLoaded && (
                     <div className="w-full h-full animate-pulse bg-gray-100"></div> // Skeleton loader
                 )}
@@ -145,11 +145,10 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
             </div>
 
             {/* Skeleton for Buttons */}
-            <div
-                className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2
-                    w-full h-fit flex flex-col gap-1 items-center justify-center
-                    font-sans transition-all duration-300 ease-in-out md:text-sm text-xs
-                    ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
+            <div className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2
+                w-full h-auto flex flex-col gap-1 items-center justify-center
+                font-sans transition-all duration-300 ease-in-out md:text-sm text-xs
+                ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 {!product ? (
                     <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button

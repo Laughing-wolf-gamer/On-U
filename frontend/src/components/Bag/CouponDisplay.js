@@ -28,7 +28,7 @@ const coupons = [
 ];
 
 const CouponsDisplay = () => {
-    const{AllCoupons} = useSelector(state=>state.AllCoupons);
+    const{AllCoupons} = useSelector(state=> state.AllCoupons);
     const dispatch = useDispatch();
     useEffect(()=>{
         // Fetch all coupons

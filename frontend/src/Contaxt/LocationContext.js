@@ -57,6 +57,7 @@ export const LocationContextProvider = ({ children }) => {
                     } else {
                         checkAndCreateToast("error","An error occurred while fetching the location.");
                     }
+                    console.log("GeoLocation Error: ",err);
                 },
                 {
                     enableHighAccuracy: true,

@@ -26,21 +26,22 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
 
     const renderPrice = () => (
         <p className="flex items-center px-1 space-x-3">
-            <span className="text-sm font-medium text-black">
+            <span className="text-[12px] sm:text-base font-medium text-black">
                 ₹{salePrice || price}
             </span>
             {salePrice && (
-                <div className='w-full justify-start space-x-3 flex flex-row items-start'>
-                    <span className="text-sm font-medium text-slate-400 line-through">
+                <div className="w-full justify-start space-x-3 flex flex-row items-center">
+                    <span className="text-[12px] sm:text-base font-medium text-slate-400 line-through">
                         ₹{Math.round(price)}
                     </span>
-                    <span className="text-xs font-medium text-[#f26a10]">
+                    <span className="text-[8px] sm:text-sm font-medium text-[#f26a10]">
                         ({-Math.round((salePrice / price) * 100 - 100)}% OFF)
                     </span>
                 </div>
             )}
         </p>
     );
+      
 
     const renderSizeOptions = () => (
         <div className="flex-row flex justify-start items-center">
@@ -52,21 +53,24 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     );
 
     const renderHoverDetails = () => (
-        <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-white transition-all duration-300 ease-in-out`}>
+        <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-white transition-all duration-300 ease-in-out sm:hidden md:block`}>
             <div className="w-full text-center flex items-center justify-center py-1 font1 border-[1px] border-slate-300 cursor-pointer hover:bg-[#f26a10] hover:text-white">
                 <IoIosHeartEmpty className="text-lg mr-1" />
-                <span>ADD TO CART</span>
+                <span className="text-sm sm:text-base md:text-lg lg:text-xl">ADD TO CART</span>
             </div>
-                {renderPrice()}
+            {renderPrice()}
             <div className="relative p-4 flex justify-start items-start">
+                {/* Any additional content or components you want to include */}
             </div>
         </div>
-    );
+      );
+      
+      
 
     return (
-        <div onClick={handleNavigation} className="w-full min-h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
+        <div onClick={handleNavigation} className="w-full h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
             {/* Product Image Carousel */}
-            <div className="w-full min-h-fit justify-center items-center">
+            <div className="w-full bg-blue-300 min-h-full justify-center items-center">
                 <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />
             </div>
             
@@ -78,7 +82,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
             </div>
 
             {/* Hover Details */}
-            {renderHoverDetails()}
+            {/* {renderHoverDetails()} */}
         </div>
     );
 });

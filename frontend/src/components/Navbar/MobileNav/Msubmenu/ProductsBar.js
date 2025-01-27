@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../../../action/productaction';
 
-const MProductsBar = ({showProducts}) => {
+const MProductsBar = ({showProducts,onClose}) => {
 	const{options} = useSelector(state => state.AllOptions)
 	const[productsOptions,setProductsOptions] = useState([])
 	const [categories, setCategories] = useState([]);
@@ -37,6 +37,9 @@ const MProductsBar = ({showProducts}) => {
 	
 		// Construct the URL for the /products page
 		const url = `/products?${queryParams.toString()}`;
+		if(onClose){
+			onClose();
+		}
 	
 		// Navigate to the new URL (using React Router)
 		navigation(url);

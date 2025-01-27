@@ -142,7 +142,7 @@ export const getallproducts = A(async (req, res)=>{
         } */
 
         if (req.query.date) {
-            sort.date = req.query.date === 'asc' ? 1 : -1; // Sort by date if specified
+            sort.date = req.query.date === '1' ? 1 : -1; // Sort by date if specified
         }
 
         // Gender filter

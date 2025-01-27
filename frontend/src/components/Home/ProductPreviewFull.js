@@ -58,7 +58,7 @@ const ProductPreviewFull = ({ product ,user}) => {
   return (
     <Fragment>
       {/* Preview Headers Section */}
-      <div className="w-fit sm:w-fit md:min-h-fit h-auto justify-between items-center space-x-4 flex md:flex-row mb-6 font1">
+      <div className="w-auto h-auto justify-between items-center space-x-4 flex mb-6 font1">
         {previewHeader && previewHeader.length > 0 &&
           previewHeader.map((h, index) => (
             <button
@@ -71,9 +71,9 @@ const ProductPreviewFull = ({ product ,user}) => {
                 }
               }}
               key={index}
-              className={`border-2 md:px-5 border-gray-600 border-opacity-70 p-2 flex w-fit transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
+              className={`border-2 px-5 border-gray-600 border-opacity-70 p-2 flex w-auto transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
             >
-              <h3 className={`md:text-[16px] text-sm text-center`}>
+              <h3 className="text-center text-sm md:text-[16px]">
                 {h?.title}
               </h3>
             </button>
@@ -81,8 +81,9 @@ const ProductPreviewFull = ({ product ,user}) => {
         }
       </div>
 
+
       {/* Product Previews Section */}
-      <div className="w-screen h-fit flex flex-row bg-slate-200 px-10">
+      <div className="w-screen h-fit flex flex-row bg-slate-200 md:px-10 sm:px-8 xl:px-10 2xl:px-10 px-1">
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
             previewProducts.map((p, index) => {
