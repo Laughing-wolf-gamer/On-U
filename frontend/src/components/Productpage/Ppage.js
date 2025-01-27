@@ -12,7 +12,6 @@ import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../..
 import Footer from '../Footer/Footer'
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag} from '../../config'
 import ImageZoom from './ImageZoom'
-import namer from 'color-namer';
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
 import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
@@ -416,7 +415,7 @@ const Ppage = () => {
                                     <h1 className='text-xl text-[#808080e8] font-light'>
                                         {capitalizeFirstLetterOfEachWord(product?.gender)}
                                     </h1>
-                                    <AverageRatingView ratings={product.Rating || reviews}/>
+                                    <AverageRatingView ratings={/* product.Rating || */ reviews}/>
                                     </div>
                                     
                                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4 w-full'>
@@ -638,7 +637,7 @@ const Ppage = () => {
                         <div className='w-full justify-center flex flex-col'>
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                             <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
-                                {similar && similar.length > 0 && similar.map((pro) => (<Single_product pro={pro} user ={user} key={pro._id}/>))}
+                                {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (<Single_product pro={similar[0]} user ={user} key={pro._id}/>))}
                             </ul>
                         </div>
                     </div>
@@ -717,13 +716,14 @@ const AverageRatingView = ({ ratings }) => {
 const ProductReviews = ({ reviews }) => {
     const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
     const containerRef = useRef(null);
+
     const touchStartY = useRef(0);
     const touchEndY = useRef(0);
+    const isDragging = useRef(false); // Track mouse drag status
+    const initialClientY = useRef(0); // Store initial mouse Y position
+    const initialScrollTop = useRef(0); // Store initial scroll position
 
-    const handleToggleReviews = () => {
-        setShowMore(!showMore); // Toggle the state between true/false
-    };
-
+    // For touch events
     const handleTouchStart = (e) => {
         touchStartY.current = e.touches[0].clientY; // Capture initial touch position
     };
@@ -745,16 +745,51 @@ const ProductReviews = ({ reviews }) => {
         touchEndY.current = touchStartY.current; // Update the end touch position
     };
 
+    // For mouse events
+    const handleMouseDown = (e) => {
+        e.preventDefault(); // Prevent default scrolling behavior
+        isDragging.current = true;
+        initialClientY.current = e.clientY; // Capture initial mouse Y position
+        initialScrollTop.current = containerRef.current.scrollTop; // Capture initial scroll position
+        containerRef.current.style.cursor = 'grabbing'; // Change cursor to grabbing
+    };
+
+    const handleMouseMove = (e) => {
+        if (isDragging.current && containerRef.current) {
+            const deltaY = e.clientY - initialClientY.current; // Calculate mouse movement
+            containerRef.current.scrollTop = initialScrollTop.current - deltaY; // Update scroll position
+        }
+    };
+
+    const handleMouseUp = () => {
+        isDragging.current = false;
+        containerRef.current.style.cursor = 'grab'; // Revert cursor back to default
+    };
+
+    const handleMouseLeave = () => {
+        if (isDragging.current) {
+            handleMouseUp();
+        }
+    };
+
+    const handleToggleReviews = () => {
+        setShowMore(!showMore); // Toggle the state between true/false
+    };
+
     return (
         <div>
             <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
-
             <div
                 ref={containerRef}
-                className="overflow-y-auto max-h-[300px] relative"
+                className="overflow-y-auto max-h-[300px] relative px-1 cursor-grab"
+                style={{ userSelect: 'none' }} // Disable text selection during drag
                 onTouchStart={handleTouchStart}
                 onTouchMove={handleTouchMove}
                 onTouchEnd={handleTouchEnd}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+                onMouseLeave={handleMouseLeave}
             >
                 {/* Display only the first 3 reviews or more based on showMore */}
                 {reviews.slice(0, 4).map((review, index) => {
@@ -763,12 +798,12 @@ const ProductReviews = ({ reviews }) => {
                         <div key={index} className="review-item mb-4">
                             <div className="flex items-center">
                                 <div className="stars">
-                                {[...Array(randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-black">★</span>
-                                ))}
-                                {[...Array(5 - randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-gray-300">★</span>
-                                ))}
+                                    {[...Array(randomStars)].map((_, i) => (
+                                        <span key={i} className="star text-black">★</span>
+                                    ))}
+                                    {[...Array(5 - randomStars)].map((_, i) => (
+                                        <span key={i} className="star text-gray-300">★</span>
+                                    ))}
                                 </div>
                                 <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
                             </div>
@@ -784,15 +819,15 @@ const ProductReviews = ({ reviews }) => {
                         return (
                             <div key={index} className="review-item mb-4">
                                 <div className="flex items-center">
-                                <div className="stars">
-                                    {[...Array(randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-black">★</span>
-                                    ))}
-                                    {[...Array(5 - randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-gray-300">★</span>
-                                    ))}
-                                </div>
-                                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                                    <div className="stars">
+                                        {[...Array(randomStars)].map((_, i) => (
+                                            <span key={i} className="star text-black">★</span>
+                                        ))}
+                                        {[...Array(5 - randomStars)].map((_, i) => (
+                                            <span key={i} className="star text-gray-300">★</span>
+                                        ))}
+                                    </div>
+                                    <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
                                 </div>
                                 <p className="text-gray-700 mt-2">{review.comment}</p>
                             </div>
