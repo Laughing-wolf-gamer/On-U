@@ -33,7 +33,7 @@ export const getallproducts = A(async (req, res)=>{
 
         // Build the query filter based on incoming request parameters
         const filter = {};
-        const sort = {};
+        let sort = {};
 
         // Color filter (match any of the colors in the list)
         if (req.query.color) {
@@ -141,8 +141,11 @@ export const getallproducts = A(async (req, res)=>{
             }
         } */
 
-        if (req.query.date) {
+        /* if (req.query.date) {
             sort.date = req.query.date === '1' ? 1 : -1; // Sort by date if specified
+        } */
+        if(req.query.sortBy){
+            sort = handleSort(req.query.sortBy);
         }
 
         // Gender filter
@@ -225,6 +228,47 @@ export const getallproducts = A(async (req, res)=>{
         }})
     }
 })
+const handleSort = (sortBy) => {
+    // Create a default sort object
+    let sort = {};
+  
+    switch (sortBy) {
+        case "newItems":
+            // Sort by creation date (newest first)
+            sort.createdAt = -1;
+            break;
+        
+        case "popularity":
+            // Assuming you want to sort by a custom popularity field
+            sort.averageRating = -1;  // Descending order for most popular
+            break;
+    
+        case "discount":
+            // Assuming you have a discount field, you can sort based on that
+            sort.salePrice = -1; // Descending order for higher discounts
+            break;  
+        case "high-to-low":
+            // Sort by price in descending order
+            sort.price = -1;  // Highest price first
+            break;
+    
+        case "low-to-high":
+            // Sort by price in ascending order
+            sort.price = 1;   // Lowest price first
+            break;
+        default:
+            // Default sorting (e.g., by price if no valid `sortBy` provided)
+            if (sortBy === "low-to-high") {
+                sort.price = 1;  // Default to ascending price sorting
+            } else {
+                // If no sortBy parameter is given or an unknown value, default to creation date
+                sort.createdAt = -1; // Newest first
+            }
+        break;
+    }
+  
+    return sort;
+};
 export const getRandomProducts = async (req, res)=>{
     const { category } = req.body;  // Get category from request body
     try {

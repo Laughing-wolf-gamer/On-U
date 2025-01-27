@@ -60,6 +60,7 @@ export const createNewCoupon = async(req,res)=>{
         const {
             couponName,
             couponCode,
+            couponDescription,
             couponType,
             discount,
             minOrderAmount,
@@ -75,6 +76,7 @@ export const createNewCoupon = async(req,res)=>{
             CouponName:couponName,
             CouponCode:couponCode,
             CouponType:couponType,
+            Description:couponDescription,
             Discount:discount,
             MinOrderAmount:minOrderAmount,
             CustomerLogin:customerLogin,
@@ -111,6 +113,7 @@ export const editCoupon = async (req,res)=>{
         const{couponId} = req.params;
         const {
             couponName,
+            couponDescription,
             couponCode,
             couponType,
             discount,
@@ -123,7 +126,9 @@ export const editCoupon = async (req,res)=>{
             validDate,
         } = req.body;
         const updateFields = {};
+        console.log("editing coupon: ",req.body);
         if (couponName && couponName.length > 0) updateFields.CouponName = couponName;
+        if (couponDescription && couponDescription.length > 0) updateFields.Description = couponDescription;
         if (couponCode && couponCode.length > 0) updateFields.CouponCode = couponCode;
         if (couponType && couponType.length > 0) updateFields.CouponType = couponType;
         if (discount && discount.length > 0) updateFields.Discount = discount;

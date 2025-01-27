@@ -10,7 +10,22 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
 
-    if (!imageArray?.length) return null;
+    if (!pro || !imageArray?.length) {
+        // If no product data is available, show skeleton loader
+        return (
+            <div className="w-full h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden animate-pulse">
+                {/* Skeleton Image Carousel */}
+                <div className="w-full bg-gray-200 min-h-[200px] rounded-md"></div>
+
+                {/* Skeleton Product Details */}
+                <div className="relative pb-3 flex-col flex justify-between items-left gap-3 p-4">
+                    <div className="w-3/4 h-6 bg-gray-200 rounded-md"></div> {/* Skeleton for title */}
+                    <div className="w-1/2 h-4 bg-gray-200 rounded-md mt-2"></div> {/* Skeleton for sub-category */}
+                    <div className="w-1/3 h-6 bg-gray-200 rounded-md mt-2"></div> {/* Skeleton for price */}
+                </div>
+            </div>
+        );
+    }
 
     const productTitle = pro?.title?.length > 20
         ? `${capitalizeFirstLetterOfEachWord(pro?.title.slice(0, 20))}...`
@@ -21,7 +36,6 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
 
     const handleNavigation = () => {
         navigation(`/products/${pro._id}`);
-        window.location.reload();
     };
 
     const renderPrice = () => (
@@ -34,14 +48,13 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
                     <span className="text-[12px] sm:text-base font-medium text-slate-400 line-through">
                         ₹{Math.round(price)}
                     </span>
-                    <span className="text-[8px] sm:text-sm font-medium text-[#f26a10]">
+                    <span className="text-[8px] sm:text-sm font-medium text-red-500 hover:animate-vibrateScale">
                         ({-Math.round((salePrice / price) * 100 - 100)}% OFF)
                     </span>
                 </div>
             )}
         </p>
     );
-      
 
     const renderSizeOptions = () => (
         <div className="flex-row flex justify-start items-center">
@@ -63,17 +76,15 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
                 {/* Any additional content or components you want to include */}
             </div>
         </div>
-      );
-      
-      
+    );
 
     return (
-        <div onClick={handleNavigation} className="w-full h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
+        <div onClick={handleNavigation} className="w-fit h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
             {/* Product Image Carousel */}
-            <div className="w-full bg-blue-300 min-h-full justify-center items-center">
+            <div className="w-full bg-blue-300 flex min-h-fit justify-center items-center">
                 <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />
             </div>
-            
+
             {/* Product Details Section */}
             <div className="relative pb-3 flex-col flex justify-between items-left gap-3 p-1">
                 <p className="font1 text-base sm:text-lg md:text-xl px-2 text-gray-800 font-semibold">{productTitle.slice(0,10)}</p>

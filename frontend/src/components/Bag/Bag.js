@@ -604,7 +604,7 @@ const Bag = () => {
                         
                     </div>
                 )}
-                <CouponsDisplay/>
+                <CouponsDisplay user={user} />
                 <div className="w-full flex flex-col items-center">
                     <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6 px-6 md:px-12">
                         Discover More

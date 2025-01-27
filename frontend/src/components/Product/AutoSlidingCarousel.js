@@ -62,7 +62,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     timerRef.current = setInterval(() => {
       // toast.info("Timer changed: ");
       setSlideIndex((prevIndex) => (prevIndex % imageArray.length) + 1); // Loop through slides
-    }, 7000); // Change slide every 7 seconds
+    }, 5000); // Change slide every 7 seconds
   };
 
   // Function to stop auto sliding
@@ -174,7 +174,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
       onMouseLeave={stopAutoSliding} // Stop auto sliding when mouse leaves
     >
       {pro ? (
-        <div className="w-full h-fit justify-center items-start flex flex-col">
+        <div className="w-full h-full justify-center items-start flex flex-col">
           {imageArray &&
             imageArray.length > 0 &&
             mediaItems.map((mediaItem, i) => (
@@ -199,7 +199,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                     <ReactPlayer
                       url={mediaItem.url}
                       loop={true}
-                      className="w-full h-full object-contain"
+                      className="w-full min-h-64 object-contain"
                       muted={true}
                       controls={false}
                       loading="lazy"
@@ -220,7 +220,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                     <img
                       loading="lazy"
                       src={mediaItem.url}
-                      className="w-full h-full object-contain"
+                      className="w-full h-64 object-cover"
                       width="100%"
                       alt="product"
                       onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

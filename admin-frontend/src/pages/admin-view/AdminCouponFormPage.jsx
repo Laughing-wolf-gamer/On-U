@@ -13,6 +13,7 @@ const AdminCouponFormPage = () => {
 
     // State to handle form data and coupons list
     const [couponName, setCouponName] = useState('');
+    const [couponDescription, setCouponDescription] = useState('');
     const [couponCode, setCouponCode] = useState('');
     const [couponType, setCouponType] = useState('Percentage');
     const [discount, setDiscount] = useState('');
@@ -45,6 +46,7 @@ const AdminCouponFormPage = () => {
         const newCoupon = {
             couponName,
             couponCode,
+            couponDescription,
             couponType,
             discount,
             minOrderAmount,
@@ -70,6 +72,7 @@ const AdminCouponFormPage = () => {
     // Reset the form fields after submission
     const resetForm = () => {
         setCouponName('');
+        setCouponDescription('');
         setCouponCode('');
         setCouponType('Percentage');
         setDiscount('');
@@ -84,6 +87,7 @@ const AdminCouponFormPage = () => {
     // Open the modal to edit coupon
     const openEditModal = (coupon) => {
         setCouponName(coupon?.CouponName);
+        setCouponDescription(coupon?.Description);
         setCouponCode(coupon?.CouponCode);
         setCouponType(coupon?.CouponType);
         setDiscount(coupon?.Discount);
@@ -265,103 +269,110 @@ const AdminCouponFormPage = () => {
             {/* Create Coupon Modal */}
             {isModalOpen && (
                 <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96">
-                        <h2 className="text-xl font-bold mb-4 text-center">{modalCoupon ? "Edit Coupon" : "Create Coupon"}</h2>
-                        <form className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Coupon Name"
-                                value={couponName}
-                                onChange={(e) => setCouponName(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                                required
-                            />
-                            <input
-                                type="text"
-                                placeholder="Coupon Code"
-                                value={couponCode}
-                                onChange={(e) => setCouponCode(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                                required
-                            />
-                            <select
-                                value={couponType}
-                                onChange={(e) => setCouponType(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            >
-                                <option value="Percentage">Percentage</option>
-                                <option value="Price">Price</option>
-                            </select>
-                            <input
-                                type="number"
-                                placeholder="Discount"
-                                value={discount}
-                                onChange={(e) => setDiscount(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            />
-                            <input
-                                type="number"
-                                placeholder="Min Coupon Amount"
-                                value={minOrderAmount}
-                                onChange={(e) => setMinOrderAmount(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            />
-                            <label className="flex items-center justify-start">
-                                <input
-                                    type="checkbox"
-                                    checked={customerLogin}
-                                    onChange={() => setCustomerLogin(!customerLogin)}
-                                    className="mr-2"
-                                />
-                                Customer Login Required
-                            </label>
-                            <label className="flex items-center justify-start">
-                                <input
-                                    type="checkbox"
-                                    checked={freeShipping}
-                                    onChange={() => setFreeShipping(!freeShipping)}
-                                    className="mr-2"
-                                />
-                                Free Shipping
-                            </label>
-                            <select
-                                value={category}
-                                onChange={(e) => setCategory(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            >
-                                {allCategories && allCategories.length > 0 && allCategories.map((cat, i) => (
-                                    <option key={i} value={cat?.value}>{cat.value}</option>
-                                ))}
-                            </select>
-                            <input
-                                type="date"
-                                value={validDate}
-                                onChange={(e) => setValidDate(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            />
-                            <select
-                                value={status}
-                                onChange={(e) => setStatus(e.target.value)}
-                                className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            >
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
+                    <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96 max-h-full overflow-y-auto">
+                    <h2 className="text-xl font-bold mb-4 text-center">{modalCoupon ? "Edit Coupon" : "Create Coupon"}</h2>
+                    <form className="space-y-4">
+                        <input
+                        type="text"
+                        placeholder="Coupon Name"
+                        value={couponName}
+                        onChange={(e) => setCouponName(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        required
+                        />
+                        <textarea
+                        type="text"
+                        placeholder="Coupon Description"
+                        value={couponDescription}
+                        onChange={(e) => setCouponDescription(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        rows="6"
+                        />
+                        <input
+                        type="text"
+                        placeholder="Coupon Code"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        required
+                        />
+                        <select
+                        value={couponType}
+                        onChange={(e) => setCouponType(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        >
+                        <option value="Percentage">Percentage</option>
+                        <option value="Price">Price</option>
+                        </select>
+                        <input
+                        type="number"
+                        placeholder="Discount"
+                        value={discount}
+                        onChange={(e) => setDiscount(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        />
+                        <input
+                        type="number"
+                        placeholder="Min Coupon Amount"
+                        value={minOrderAmount}
+                        onChange={(e) => setMinOrderAmount(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        />
+                        <label className="flex items-center justify-start">
+                        <input
+                            type="checkbox"
+                            checked={customerLogin}
+                            onChange={() => setCustomerLogin(!customerLogin)}
+                            className="mr-2"
+                        />
+                        Customer Login Required
+                        </label>
+                        <label className="flex items-center justify-start">
+                        <input
+                            type="checkbox"
+                            checked={freeShipping}
+                            onChange={() => setFreeShipping(!freeShipping)}
+                            className="mr-2"
+                        />
+                        Free Shipping
+                        </label>
+                        <select
+                        value={category}
+                        onChange={(e) => setCategory(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        >
+                        {allCategories && allCategories.length > 0 && allCategories.map((cat, i) => (
+                            <option key={i} value={cat?.value}>{cat.value}</option>
+                        ))}
+                        </select>
+                        <input
+                        type="date"
+                        value={validDate}
+                        onChange={(e) => setValidDate(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        />
+                        <select
+                        value={status}
+                        onChange={(e) => setStatus(e.target.value)}
+                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                        >
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                        </select>
 
-                            <div className="flex justify-between">
-                                <Button onClick = {(e)=>{
-                                    handleSubmit()
-                                }} type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-md">
-                                    {modalCoupon ? 'Update' : 'Create'}
-                                </Button>
-                                <Button onClick={() => setIsModalOpen(false)} className="bg-gray-300 text-black px-6 py-2 rounded-md">
-                                    Cancel
-                                </Button>
-                            </div>
-                        </form>
+                        <div className="flex justify-between">
+                        <Button onClick={(e) => handleSubmit()} type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-md">
+                            {modalCoupon ? 'Update' : 'Create'}
+                        </Button>
+                        <Button onClick={() => setIsModalOpen(false)} className="bg-gray-300 text-black px-6 py-2 rounded-md">
+                            Cancel
+                        </Button>
+                        </div>
+                    </form>
                     </div>
                 </div>
-            )}
+                )}
+
         </div>
     );
 };

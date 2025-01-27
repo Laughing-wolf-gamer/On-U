@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 // Schema for the options (category, subcategory, color, size, gender)
 const couponSchema = new mongoose.Schema({
     CouponName:{type:String,required:true},
+    Description:{type:String},
     CouponCode:{type:String,required:true},
     CouponType:{type:String,required:true,enum:['Percentage','Price']},
     Discount:{type:Number,},

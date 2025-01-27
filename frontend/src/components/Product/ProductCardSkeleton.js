@@ -2,7 +2,7 @@ import React from 'react'
 
 const ProductCardSkeleton = () => {
   return (
-    <div className="w-48 h-48 border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer animate-pulse">
+    <div className="w-full h-full border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer animate-pulse">
       <div className='w-full min-h-fit justify-center items-center'>
         {/* Skeleton for the carousel */}
         <div className="w-full h-96 bg-gray-300 rounded-lg"></div>

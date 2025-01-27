@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCoupons } from '../../action/common.action';
 
@@ -6,33 +6,33 @@ import { fetchAllCoupons } from '../../action/common.action';
 const coupons = [
     {
         id: 1,
-        code: 'SAVE20',
-        discount: '20% Off',
-        expiryDate: '2025-02-28',
-        description: 'Get 20% off your next purchase!',
+        CouponCode: 'SAVE20',
+        Discount: '20% Off',
+        ValidDate: '2025-02-28',
+        Description: 'Get 20% off your next purchase!',
     },
     {
         id: 2,
-        code: 'FREESHIP',
-        discount: 'Free Shipping',
-        expiryDate: '2025-01-31',
-        description: 'Enjoy free shipping on orders over $50.',
+        CouponCode: 'FREESHIP',
+        Discount: 'Free Shipping',
+        ValidDate: '2025-01-31',
+        Description: 'Enjoy free shipping on orders over $50.',
     },
     {
         id: 3,
-        code: 'WELCOME10',
-        discount: '10% Off',
-        expiryDate: '2025-03-15',
-        description: 'New customers get 10% off their first order.',
+        CouponCode: 'WELCOME10',
+        Discount: '10% Off',
+        ValidDate: '2025-03-15',
+        Description: 'New customers get 10% off their first order.',
     },
 ];
 
-const CouponsDisplay = () => {
-    const{AllCoupons} = useSelector(state=> state.AllCoupons);
+const CouponsDisplay = ({user}) => {
+    const{AllCoupons} = useSelector(state=>state.AllCoupons);
     const dispatch = useDispatch();
     useEffect(()=>{
         // Fetch all coupons
-        const queryLink = `Status=Active&Date=${Date.now().toLocaleString()}`;
+        const queryLink = `Status=Active&Date=${Date.now().toLocaleString()}&CustomerLogin=${user === "true" ? "true" : "false"}`;
         dispatch(fetchAllCoupons(queryLink));
     },[dispatch])
     console.log("All Coupons: ",AllCoupons);
@@ -42,30 +42,52 @@ const CouponsDisplay = () => {
 
             {/* Coupons grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {coupons.map((coupon) => (
-                    <div
-                        key={coupon.id}
-                        className="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
-                    >
-                        {/* Coupon Info */}
-                        <div className="flex items-center justify-between mb-4">
-                            <h3 className="text-lg font-semibold text-gray-800">{coupon.discount}</h3>
-                            <span className="text-sm text-gray-500">{coupon.expiryDate}</span>
-                        </div>
-                        <p className="text-gray-600 mb-4">{coupon.description}</p>
+                {AllCoupons && AllCoupons.length > 0 ? (
+                    coupons.map((coupon) => (
+                        <div
+                            key={coupon._id}
+                            className="bg-white p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
+                        >
+                            {/* Coupon Info */}
+                            <div className="flex items-center justify-between mb-4">
+                                <h3 className="text-lg font-semibold text-gray-800">
+                                    {
+                                        coupon.FreeShipping ? "Free shipping" : <Fragment>
+                                            {
+                                                coupon.CouponType === 'Percentage'
+                                                ? `${coupon.Discount} % OFF`
+                                                    : `��${coupon.Discount} OFF`
+                                            }
+                                        </Fragment>
+                                    }
+                                    
+                                </h3>
+                                <span className="text-sm text-gray-500">
+                                    {new Date(coupon.ValidDate).toLocaleDateString()}
+                                </span>
+                            </div>
 
-                        {/* Coupon Code */}
-                        <div className="flex items-center justify-between">
-                            <span className="text-xl font-bold text-gray-600">{coupon.code}</span>
-                            <button
-                                onClick={() => navigator.clipboard.writeText(coupon.code)}
-                                className="bg-gray-500 text-white py-2 px-4 rounded-lg text-sm transition-colors hover:bg-gray-600"
-                            >
-                                Copy Code
-                            </button>
+                            {/* Coupon Description */}
+                            <p className="text-gray-600 mb-4 break-words whitespace-normal">{coupon.Description}</p>
+
+
+                            {/* Coupon Code */}
+                            <div className="flex items-center justify-between">
+                                <span className="text-xl font-bold text-gray-600">{coupon.CouponCode}</span>
+                                <button
+                                    onClick={() => navigator.clipboard.writeText(coupon.CouponCode)}
+                                    className="bg-gray-500 text-white py-2 px-4 rounded-lg text-sm transition-colors hover:bg-gray-600"
+                                >
+                                    Copy Code
+                                </button>
+                            </div>
                         </div>
+                    ))
+                ) : (
+                    <div className="col-span-full text-center text-gray-600">
+                        <p>No coupons available.</p>
                     </div>
-                ))}
+                )}
             </div>
         </div>
     );

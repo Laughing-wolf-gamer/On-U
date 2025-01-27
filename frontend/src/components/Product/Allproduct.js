@@ -17,9 +17,10 @@ import ProductCardSkeleton from './ProductCardSkeleton';
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
+    const [sortBy, setSortBy] = useState('averageReview');  // Default value
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
-    const [sortvalue, setSortValue] = useState('Recommended');
+    const [sortvalue, setSortValue] = useState('What`s New');
     const Redirect = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -31,26 +32,47 @@ const Allproductpage = ({user}) => {
     const dispatchFetchAllProduct = () => {
         dispatch(getproduct(currentPage));
     };
-
-    const pricefun = (e) => {
+    /* const pricefun = (e) => {
         let url = window.location.search;
         if (url.includes('?')) {
-            if (url.includes('low')) {
+            if (url.includes('sortBy')) {
                 let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null;
                 let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null;
                 let newurlsuccess = (newurl === null ? newurl2 : newurl);
-                Redirect(newurlsuccess);
+                // Redirect(newurlsuccess);
                 dispatch(getproduct());
             }
         } else {
             let newurl = window.location.search += `&low=${e}`;
-            Redirect(newurl);
+            // Redirect(newurl);
             dispatch(getproduct());
         }
+    }; */
+    const handleSortChange = (newSortBy) => {
+        // Set the new sortBy value in your component state
+        setSortBy(newSortBy);
+      
+        // Get the current URL
+        const currentUrl = new URL(window.location.href);
+      
+        // Get the query parameters from the current URL
+        const urlParams = new URLSearchParams(currentUrl.search);
+      
+        // Set or update the sortBy query parameter
+        urlParams.set('sortBy', newSortBy);
+      
+        // Generate the new URL with the updated query parameters
+        const newUrl = `${currentUrl.pathname}?${urlParams.toString()}`;
+      
+        console.log('New URL:', newUrl);
+      
+        // Update the URL without refreshing the page
+        window.history.pushState({}, '', newUrl);
+        dispatchFetchAllProduct();
     };
 
 
-    const datefun = (e) => {
+    /* const datefun = (e) => {
         let url = window.location.search;
         if (url.includes('?')) {
             if (url.includes('date')) {
@@ -61,7 +83,7 @@ const Allproductpage = ({user}) => {
                 dispatch(getproduct());
             }
         }
-    };
+    }; */
 
     const [state, setstate] = useState(false);
     const [state1, setstate1] = useState(false);
@@ -91,72 +113,68 @@ const Allproductpage = ({user}) => {
     }, []);
 
     return (
-        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
-            <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-slate-200 text-slate-900">
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3">
+            <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-gray-300 text-slate-900">
                 <span className='font-light'>Home</span>
                 <span className='font-light capitalize'>{window.location.pathname}</span>
             </div>
-            <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-gray-200 text-slate-900">
-                <span className=" font1  text-sm capitalize">NO OF ITEMS</span>
+            <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-neutral-100 text-slate-900">
+                <span className="font1 text-sm capitalize">NO OF ITEMS</span>
                 <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
             </div>
 
             {/* Filter__title div */}
-            <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-slate-200">
+            <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-slate-100">
                 <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
-                <div className="col-span-7 text-gray-400 text-xs">SIZE</div>
+                <div className="col-span-7 text-gray-500 text-xs">SIZE</div>
                 <div className="col-span-3 relative cursor-pointer pb-4">
                     <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
                         <div className=' text-sm w-max pl-4 pr-24 py-2 float-right relative items-center'>
-                            Sort by :<span className='font1 font-semibold text-gray-800'>{sortvalue}</span>
+                            Sort by: <span className='font1 font-semibold text-gray-800'>{sortvalue}</span>
                             <span className='absolute right-4 font-serif text-lg text-gray-600'>
                                 <IoIosArrowDown />
                             </span>
                         </div>
 
-                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),datefun(1), setSortValue('What`s New'))}>
+                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newItems"), setSortValue('What`s New'))}>
                             <span className='font1 text-gray-800'>What`s New</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),setSortValue('Popularity'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
                             <span className='font1 text-gray-800'>Popularity</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), pricefun(-1), setSortValue('Better Discount'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
                             <span className='font1 text-gray-800'>Better Discount</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),pricefun(-1), setSortValue('Price: High To Low'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
                             <span className='font1 text-gray-800'>Price: High To Low</span>
                         </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),pricefun(1), setSortValue('Price: Low To High'))}>
+                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
                             <span className='font1 text-gray-800'>Price: Low To High</span>
-                        </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(),setSortValue('Customer Rating'))}>
-                            <span className='font1 text-gray-800'>Customer Rating</span>
                         </div>
                     </div>
                 </div>
             </div>
-            <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 bg-slate-100 shadow-md shadow-black">
+
+            <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 shadow-md shadow-black">
                 {/* Filter */}
-                <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-slate-200 text-slate-900">
+                <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-gray-200 text-slate-900">
                     {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                 </div>
 
-                <div className="w-full  2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
                     {productLoading ? (
                         <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                            <ul className="grid grid-cols-2 2xl:grid-cols-4 xl:grid-cols-4 lg:grid-cols-4 2xl:gap-4 xl:gap-4 lg:gap-4">
+                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
                                 {Array(10).fill(0).map((_, index) => (
-                                    <div key={index} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
-                                        <ProductCardSkeleton key={index} />
-                                    </div>
+                                    <ProductCardSkeleton key={index} />
                                 ))}
                             </ul>
                         </div>
-                    ):(
+                    ) : (
                         <div className='min-h-[100vw] flex flex-col justify-between items-start'>
                             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                {pro && pro.length && pro.length > 0 && pro.map((p) => (
-                                    <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1"> {/* Adjust height to reduce cell size */}
+                                {pro && pro.length > 0 && pro.map((p) => (
+                                    <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1">
                                         <Single_product pro={p} user={user} wishlist={wishlist} />
                                     </div>
                                 ))}
@@ -213,14 +231,13 @@ const Allproductpage = ({user}) => {
                 </div>
             </div>
             {
-                pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={()=>{
-
-                }}/>
+                pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={() => { }} />
             }
-            
-            {(window.screen.width < 1024 && product) && <MFilter product={product} />}
+
+            {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
             <Footer />
         </div>
+
     );
 };
 

@@ -4,16 +4,24 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../action/productaction';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
+    const [category, setCategory] = useState('');
+    const [subcategory, setSubcategory] = useState('');
+    const [color, setColor] = useState('');
+    const [footWearSize, setFootWearSize] = useState('');
+    const [clothingWearSize, setClothingWearSize] = useState('');
+    const [gender, setGender] = useState('');
+
     const{options} = useSelector(state => state.AllOptions);
+
     const dispatch = useDispatch();
     const [colorul, setcolorul] = useState('max-h-72');
     const [colorulbtn, setcolorulbtn] = useState('block');
   
-    let category = [];
-    let subcategory = [];
+    let AllProductsCategory = [];
+    let AllProductsSubcategory = [];
     let size = []
-    let gender = [];
-    let color = [];
+    let AllProductsGender = [];
+    let AllProductsColor = [];
     let specialCategory = [];
     let spARRAY = [];
     const n = 3
@@ -21,7 +29,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // Generate category, gender, color, and price arrays
     const categoriesarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => category.push(p.category));
+            product.forEach(p => AllProductsCategory.push(p.category));
         }
     };
     const specialCategoryArray = () => {
@@ -35,14 +43,14 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     };
     const subcategoryarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => subcategory.push(p.subCategory));
+            product.forEach(p => AllProductsSubcategory.push(p.subCategory));
         }
     };
 
 
     const genderarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => gender.push(p.gender));
+            product.forEach(p => AllProductsGender.push(p.gender));
         }
     };
     function sizearray() {
@@ -63,9 +71,9 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 p.AllColors.forEach(c => {
-                    const alreadyExists = color.find((col) => col.label === c.label);
+                    const alreadyExists = AllProductsColor.find((col) => col.label === c.label);
                     if(!alreadyExists){
-                        color.push(c);
+                        AllProductsColor.push(c);
                     }
                 });
             });
@@ -83,25 +91,25 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         subcategoryarray();
         genderarray();
         colorarray();
-        sparray();
         sizearray();
+        
         specialCategoryArray();
-    },[
-        product
-    ])
+        sparray();
+    },[product])
     categoriesarray();
     subcategoryarray();
     genderarray();
     colorarray();
-    sparray();
     sizearray();
+    
     specialCategoryArray();
+    sparray();
     
     // Remove duplicates and sort price array
-    let Categorynewarray = [...new Set(category)];
-    let gendernewarray = [...new Set(gender)];
-    let colornewarray = [...new Set(color)];
-    let subcategorynewarray = [...new Set(subcategory)];
+    let Categorynewarray = [...new Set(AllProductsCategory)];
+    let gendernewarray = [...new Set(AllProductsGender)];
+    let colornewarray = [...new Set(AllProductsColor)];
+    let subcategorynewarray = [...new Set(AllProductsSubcategory)];
     let specialCategorynewarray = [...new Set(specialCategory)];
     let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
     
@@ -404,17 +412,59 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     useEffect(()=>{
         dispatch(fetchAllOptions());
     },[dispatch])
+    useEffect(() => {
+        setAllOptions();
+    }, [options, dispatch]);
     setPriceFilter();
-    console.log("All options: ",specialCategory);
+    const setAllOptions = () => {
+        if (options && options.length > 0) {
+            options.map(item => {
+                switch (item.type) {
+                case 'category':
+                    setCategory(options.filter(item => item.type === 'category'));
+                    break;
+                case 'subcategory':
+                    setSubcategory(options.filter(item => item.type === 'subcategory'));
+                    break;
+                case 'color':
+                    setColor(options.filter(item => item.type === 'color') || []);
+                    break;
+                case 'footWearSize':
+                    setFootWearSize(options.filter(item => item.type === 'footWearSize'));
+                    break;
+                case 'clothingSize':
+                    setClothingWearSize(options.filter(item => item.type === 'clothingSize'));
+                    break;
+                case 'gender':
+                    setGender(options.filter(item => item.type === 'gender'));
+                    break;
+                }
+            });
+        }
+    };
+    useEffect(()=>{
+        if(category && subcategory && color && footWearSize && clothingWearSize && gender){
+            setAllData();
+        }
+    },[category,subcategory,color,footWearSize,clothingWearSize,gender])
+    const setAllData = ()=>{
+        // AllProductsCategory = category.map(item => item.value)
+        // AllProductsSubcategory = subcategory.map(item => item.value)
+        // AllProductsColor = color.map(item => item.value)
+        // let NewProductsFootWearSize = footWearSize.map(item => item.value)
+        // size = clothingWearSize.map(item => item.value)
+        // AllProductsGender = gender.map(item => item.value)
+    }
+    // console.log("All options: ",AllProductsCategory,AllProductsSubcategory);
     
 
     return (
         <Fragment>
-            <div>
+            <div className='border-b-2 py-4'>
                 {/* Gender Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-1'>
                     <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
-                    {gendernewarray.map((e, i) => {
+                    {gendernewarray && gendernewarray.length > 0 && gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
                         const selectedCategories = params.getAll('gender'); // Get all categories from URL
@@ -438,7 +488,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-sans font-normal text-slate-400'> 
-                                        ({gender.filter((f) => f === e).length})
+                                        ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
                                 </label>
                             </div>
@@ -482,7 +532,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Categories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
-                    {Categorynewarray.map((e, i) => {
+                    {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
                         const selectedCategories = params.getAll('category'); // Get all categories from URL
@@ -506,7 +556,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
-                                        ({category.filter((f) => f === e).length})
+                                        ({AllProductsCategory.filter((f) => f === e).length})
                                     </span>
                                 </label>
                             </div>
@@ -516,7 +566,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Categories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
-                    {size.map((e, i) => {
+                    {size && size.length > 0 && size.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
                         const selectedCategories = params.getAll('size'); // Get all categories from URL
@@ -572,7 +622,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({subcategory.filter((f) => f === e).length})</span>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
                         );
@@ -583,7 +633,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Color Filter */}
                 <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-hidden relative`}>
                     <h1 className='font1 text-base font-semibold mb-2'>COLOR</h1>
-                    {colornewarray.slice(0, colorul === 'max-h-max' ? colornewarray.length : 5).map((e, i) => {
+                    {AllProductsColor && AllProductsColor.length > 0 && AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
                         // Check if the current color 'e.label' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
                         const selectedColors = params.getAll('color'); // Get all color values from URL
@@ -604,13 +654,13 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         colorfun(e.label); // This will update the URL with the selected color
                                     }}
                                 />
-                                <div style={{ backgroundColor: e.label }} className='w-10 h-5 border border-slate-400'></div>
+                                <div style={{ backgroundColor: e.label }} className='w-24 h-10 border border-slate-400'></div>
                             </li>
                         );
                     })}
                     
                     {/* Show "+ More" button if the number of colors exceeds 5 */}
-                    {colornewarray.length > 5 && colorul !== 'max-h-max' && (
+                    {AllProductsColor.length > 5 && colorul !== 'max-h-max' && (
                         <button 
                             className={`absolute bottom-1 right-2 font1 text-gray-600 ${colorulbtn}`} 
                             onClick={() => {
@@ -632,53 +682,53 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
 const PriceFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) => {
     const [selectedPriceRange, setSelectedPriceRange] = useState({
-      price1: false,
-      price2: false,
-      price3: false,
+        price1: false,
+        price2: false,
+        price3: false,
     });
   
     useEffect(() => {
-      // Get the price parameters from the URL
-      const url = new URL(window.location.href);
-      const maxPrice = url.searchParams.get('sellingPrice[$lte]');
-      
-      // Check which price range matches the URL's 'sellingPrice[$lte]'
-      setSelectedPriceRange({
-        price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
-        price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
-        price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
-      });
+        // Get the price parameters from the URL
+        const url = new URL(window.location.href);
+        const maxPrice = url.searchParams.get('sellingPrice[$lte]');
+        
+        // Check which price range matches the URL's 'sellingPrice[$lte]'
+        setSelectedPriceRange({
+            price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
+            price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
+            price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
+        });
     }, [result]); // Run this whenever the 'result' changes (which is likely to happen when data is fetched or updated)
   
     const price1fun = (maxPrice) => {
-      // Set the URL search parameter
-      const url = new URL(window.location.href);
-      url.searchParams.set('sellingPrice[$lte]', maxPrice);
-      window.history.replaceState(null, "", url.toString());
-  
-      if (dispatchFetchAllProduct) {
-        dispatchFetchAllProduct();
-      }
+        // Set the URL search parameter
+        const url = new URL(window.location.href);
+        url.searchParams.set('sellingPrice[$lte]', maxPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
     };
   
     const price2fun = (minPrice, maxPrice) => {
-      const url = new URL(window.location.href);
-      url.searchParams.set('sellingPrice[$lte]', maxPrice);
-      window.history.replaceState(null, "", url.toString());
-  
-      if (dispatchFetchAllProduct) {
-        dispatchFetchAllProduct();
-      }
+        const url = new URL(window.location.href);
+        url.searchParams.set('sellingPrice[$lte]', maxPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
     };
   
     const price3fun = (minPrice) => {
-      const url = new URL(window.location.href);
-      url.searchParams.set('sellingPrice[$lte]', minPrice);
-      window.history.replaceState(null, "", url.toString());
-  
-      if (dispatchFetchAllProduct) {
-        dispatchFetchAllProduct();
-      }
+        const url = new URL(window.location.href);
+        url.searchParams.set('sellingPrice[$lte]', minPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
     };
   
     return (
@@ -686,55 +736,55 @@ const PriceFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) =>
             <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
     
             <li className="items-center">
-            <input
-                type="checkbox"
-                name="color"
-                value={`price1`}
-                className="mb-2 accent-pink-500"
-                onClick={() => price1fun(Math.max(...result[0]))}
-                checked={selectedPriceRange.price1}
-                id={`id${Math.max(...result[0]) + 1}`}
-            />
-            <label className="font1 text-sm ml-2 mr-4 mb-2">
-                Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
-                <span className="text-xs font-serif font-normal text-slate-400">
-                ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
-                </span>
-            </label>
-            </li>
-    
-            <li className="items-center">
-            <input
-                type="checkbox"
-                name="color"
-                value={`price2`}
-                className="mb-2 accent-pink-500"
-                onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
-                checked={selectedPriceRange.price2}
-                id={`id${Math.max(...result[1]) + 1}`}
-            />
-            <label className="font1 text-sm ml-2 mr-4 mb-2">
-                Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
-                <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
-            </label>
-            </li>
-    
-            <li className="items-center">
-            <input
-                type="checkbox"
-                name="color"
-                value={`price3`}
-                className="mb-2 accent-pink-500"
-                onClick={() => price3fun(Math.min(...result[2]))}
-                checked={selectedPriceRange.price3}
-                id={`id${Math.min(...result[2]) + 1}`}
-            />
-            <label className="font1 text-sm ml-2 mr-4 mb-2">
-                Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
-                <span className="text-xs font-serif font-normal text-slate-400">
-                ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
-                </span>
-            </label>
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price1`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price1fun(Math.max(...result[0]))}
+                    checked={selectedPriceRange.price1}
+                    id={`id${Math.max(...result[0]) + 1}`}
+                />
+                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
+                    <span className="text-xs font-serif font-normal text-slate-400">
+                    ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
+                    </span>
+                </label>
+                </li>
+        
+                <li className="items-center">
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price2`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
+                    checked={selectedPriceRange.price2}
+                    id={`id${Math.max(...result[1]) + 1}`}
+                />
+                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
+                    <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
+                </label>
+                </li>
+        
+                <li className="items-center">
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price3`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price3fun(Math.min(...result[2]))}
+                    checked={selectedPriceRange.price3}
+                    id={`id${Math.min(...result[2]) + 1}`}
+                />
+                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
+                    <span className="text-xs font-serif font-normal text-slate-400">
+                    ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
+                    </span>
+                </label>
             </li>
         </ul>
     );

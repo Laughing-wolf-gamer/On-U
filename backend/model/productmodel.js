@@ -92,7 +92,11 @@ const productModelSchema = new mongoose.Schema({
     breadth:{type:Number},
     
 },{timestamps:true})
-
+productModelSchema.virtual('averageRating').get(function () {
+    if (this.Rating.length === 0) return 0;
+    const total = this.Rating.reduce((acc, review) => acc + review.rating, 0);
+    return total / this.Rating.length;
+});
 productModelSchema.index({title: 1})
 
 const ProductModel = mongoose.model('product', productModelSchema)

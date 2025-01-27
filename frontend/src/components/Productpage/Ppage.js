@@ -85,7 +85,7 @@ const reviews = [
   },
 ];
 
-const maxScrollAmount = 1085.5999755859375,maxScrollWithReviewInput = 1600
+const maxScrollAmount = 1270.4000244140625,maxScrollWithReviewInput = 1600
 const Ppage = () => {
     const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
     const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
@@ -208,7 +208,6 @@ const Ppage = () => {
         }
     };
     const addToWishList = async () => {
-        setIsWishListUpdating(true);
         if (user) {
             const response = await dispatch(createwishlist({ productId: param.id }));
             await dispatch(getwishlist());
@@ -218,12 +217,10 @@ const Ppage = () => {
                 // updateButtonStates();
                 setIsInWishList(response);
             }
-            setIsWishListUpdating(false);
         } else {
             setWishListProductInfo(product, param.id);
             checkAndCreateToast("success", "Bag is Updated Successfully");
             updateButtonStates();
-            setIsWishListUpdating(false);
         }
     };
 
@@ -634,9 +631,9 @@ const Ppage = () => {
                             </div>
 
                         </div>
-                        <div className='w-full justify-center flex flex-col'>
+                        <div className='w-full justify-center flex flex-col '>
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 px-6 pb-8'>
+                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 pb-8 px-10'>
                                 {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (<Single_product pro={similar[0]} user ={user} key={pro._id}/>))}
                             </ul>
                         </div>
@@ -872,7 +869,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                         return (
                             <div
                             key={index}
-                            className={`w-full h-full ${selectedImage === e ? "border-2":""}  border-black rounded-md overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
+                            className={`w-full h-full ${selectedImage === e ? "border-2":""}  border-purple-600 rounded-md overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
                             onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
                             onClick={() => { Addclass(); setSelectedImage(e); }}
                             >
