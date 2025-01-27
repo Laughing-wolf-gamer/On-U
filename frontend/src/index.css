@@ -16,10 +16,10 @@ code {
     monospace;
 }
 @font-face {
-  font-family: 'Whitney';
-  font-style: normal;
-  font-weight: 500;
-  src: local('Whitney'), url('https://fonts.cdnfonts.com/s/38487/whitneymedium.woff') format('woff');
+    font-family: 'Whitney';
+    font-style: normal;
+    font-weight: 500;
+    src: local('Whitney'), url('https://fonts.cdnfonts.com/s/38487/whitneymedium.woff') format('woff');
 }
 
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');

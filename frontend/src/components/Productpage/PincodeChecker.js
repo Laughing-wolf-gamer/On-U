@@ -16,8 +16,7 @@ const PincodeChecker = ({productId}) => {
         e.preventDefault();
 
         try {
-            // console.log("Pincode: ",pincode, " is Proudct:",productId);
-            const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/${pincode}/${productId}`,);
+            const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${pincode}&productId=${productId}`,);
 
             if (response.data.result) {
                 console.log("Delivery is available!",response.data.result);

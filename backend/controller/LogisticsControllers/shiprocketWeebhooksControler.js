@@ -117,7 +117,7 @@ export const removeWareHouseById = async(req,res)=>{
 
 export const checkAvailability = async (req,res)=>{
     try {
-        const {pincode,productId} = req.params;
+        const {pincode,productId} = req.query;
         console.log("Checking availability: ",pincode);
         const product = await ProductModel.findById(productId);
         if(!product){
