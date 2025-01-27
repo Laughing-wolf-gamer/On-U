@@ -121,7 +121,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 
     return (
         <div
-            className={`w-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
+            className={`w-full h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -131,7 +131,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
             {/* Skeleton for Product Image/Video */}
             <div className="w-full h-full relative">
                 {!isMediaLoaded && (
-                    <div className="w-full h-full animate-pulse bg-gray-100"></div> // Skeleton loader
+                    <div className="w-full min-h-full animate-pulse bg-gray-100"></div> // Skeleton loader
                 )}
                 {selectedColorImages && selectedColorImages.length > 0 && (
                     <ProductImageVideoView
@@ -239,34 +239,33 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                     <div className="w-full h-full bg-gray-200 animate-pulse" />
                 </div>
             )}
-            <Fragment>
-                {/* Check if the selected media is a video or an image */}
-                {mediaIsVideo ? (
-                    <ReactPlayer
-                        className="w-full h-full object-contain"
-                        url={selectedMedia.url}
-                        playing
-                        controls={false}
-                        loading="lazy"
-                        muted
-                        width="100%"
-                        height="100%"
-                        light={false} // Show thumbnail before playing video
-                        onReady={handleMediaLoad} // Trigger media load completion
-                    />
-                ) : (
-                    <img
-                        effect="blur"
-                        src={selectedMedia.url}
-                        width="100%"
-                        height="100%"
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                        alt={`Product ${hoveredImageIndex}`}
-                        onLoad={handleMediaLoad} // Trigger media load completion
-                    />
-                )}
-            </Fragment>
+                <Fragment>
+                    {/* Check if the selected media is a video or an image */}
+                    {mediaIsVideo ? (
+                        <ReactPlayer
+                            className="w-full h-full object-contain"
+                            url={selectedMedia.url}
+                            playing
+                            controls={false}
+                            loading="lazy"
+                            muted
+                            width="100%"
+                            height="100%"
+                            light={false} // Show thumbnail before playing video
+                            onReady={handleMediaLoad} // Trigger media load completion
+                        />
+                    ) : (
+                        <img
+                            src={selectedMedia.url}
+                            width="100%"
+                            height="100%"
+                            className="w-full h-full object-cover"
+                            loading="lazy"
+                            alt={`Product ${hoveredImageIndex}`}
+                            onLoad={handleMediaLoad} // Trigger media load completion
+                        />
+                    )}
+                </Fragment>
         </div>
     );
 };

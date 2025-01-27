@@ -545,9 +545,17 @@ const MPpage = () => {
                                                 {size.label}
                                             </button>
                                             {size?.quantity <= 0 && (
-                                                <div className="absolute bottom-0 translate-y-2 w-16 h-5  flex-row rounded-full flex items-center justify-center bg-red-500 text-white font-normal text-[7px] text-center">
-                                                    <span>Out of Stock</span>
-                                                </div>
+                                                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                        {/* Diagonal Line 1 */}
+                                                        <div className="absolute w-[5px] h-[50px] bg-red-900 transform rotate-45"></div>
+                                                        {/* Diagonal Line 2 */}
+                                                        <div className="absolute w-[5px] h-[50px] bg-red-900 transform -rotate-45"></div>
+                                                    </div>
+                                                {/* <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
+                                                <span className='w-full flex justify-center flex-row'>Out of Stock</span>
+                                                </div> */}
+                                            </div>
                                             )}
                                         </div>
                                     ))}
@@ -562,17 +570,26 @@ const MPpage = () => {
                                                 ${color.quantity <= 10 ? "h-fit w-14" : "h-fit w-fit"}`}
                                             onClick={(e) => { setCurrentColor(color); handleSetColorImages(color); }}>
                                             <button disabled={color.quantity <= 0} 
-                                            style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
-                                            className={`${color.quantity <= 0 ? 
-                                                `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
-                                                `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
-                                                ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-[3px] border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
-                                            title={color?.quantity || color?.label || "Color"} />
-                                            {color?.quantity <= 0 && (
-                                                <div className="absolute bottom-0 translate-y-2 w-20 h-5 flex-row rounded-full flex items-center justify-center bg-red-500 text-white font-normal text-[7px] text-center">
-                                                    <span>Out of Stock</span>
+                                                style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
+                                                className={`${color.quantity <= 0 ? 
+                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
+                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
+                                                    ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-[3px] border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
+                                                title={color?.quantity || color?.label || "Color"} 
+                                                />
+                                                {color?.quantity <= 0 && (
+                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                            {/* Diagonal Line 1 */}
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-900 transform rotate-45"></div>
+                                                            {/* Diagonal Line 2 */}
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-900 transform -rotate-45"></div>
+                                                        </div>
+                                                    {/* <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
+                                                    <span className='w-full flex justify-center flex-row'>Out of Stock</span>
+                                                    </div> */}
                                                 </div>
-                                            )}
+                                                )}
                                         </div>
                                         ))
                                     ) : (

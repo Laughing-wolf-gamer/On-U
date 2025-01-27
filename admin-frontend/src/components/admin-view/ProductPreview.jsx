@@ -31,14 +31,14 @@ const ProductPreview = ({
 		const dispatch = useDispatch();
 	
 		const fetchProductData = async () => {
-		try {
-			if (!productDataId) return;
-			const response = await dispatch(getProductsById(productDataId));
-			// console.log("Product Data: ", response?.payload?.result);
-			setProductData(response?.payload?.result || null);
-		} catch (error) {
-			console.error("Error Fetching Product Data: ", error);
-		}
+			try {
+				if (!productDataId) return;
+				const response = await dispatch(getProductsById(productDataId));
+				// console.log("Product Data: ", response?.payload?.result);
+				setProductData(response?.payload?.result || null);
+			} catch (error) {
+				console.error("Error Fetching Product Data: ", error);
+			}
 		};
 	
 		useEffect(() => {

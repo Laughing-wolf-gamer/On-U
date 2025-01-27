@@ -157,16 +157,8 @@ export const getallproducts = A(async (req, res)=>{
 
         // Selling price range filter
         if (req.query.sellingPrice) {
-            // const priceRange = req.query.sellingPrice.split(',');
             console.log("Price Range: ", req.query.sellingPrice);
-            /* console.log("price:")
-            if (priceRange.length === 2) {
-                filter.price = {
-                    $gte: parseFloat(priceRange[0]),
-                    $lte: parseFloat(priceRange[1])
-                };
-            } */
-           filter.price = req.query.sellingPrice;
+            filter.price = req.query.sellingPrice;
         }
         
 

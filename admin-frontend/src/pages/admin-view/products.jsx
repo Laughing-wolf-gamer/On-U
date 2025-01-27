@@ -137,9 +137,11 @@ const AdminProducts = () => {
   const [sizes, setSizes] = useState([]);
   const [genders, setGenders] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const specialCategory = addProductsFromElement.find(e => e.name === "specialCategory").options.filter(s => s.id !== 'none');
   const [filters, setFilters] = useState({
     category: "",
     subCategory: "",
+    specialCategory:'',
     gender: "",
     color: "",
     size: "",
@@ -280,13 +282,14 @@ const AdminProducts = () => {
   };
 
   const filteredProducts = products.filter((product) => {
-    if (!filters.category && !filters.subCategory && !filters.gender && !filters.color && !filters.size) return true;
+    if (!filters.category && !filters.subCategory && !filters.gender && !filters.color && !filters.size && !filters.specialCategory) return true;
 
     const categoryMatch = filters.category ? product.category.toLowerCase() === filters.category.toLowerCase() : true;
+    const specialCategoryMatch = filters.specialCategory ? product.specialCategory.toLowerCase() === filters.specialCategory.toLowerCase() : true;
     const subCategoryMatch = filters.subCategory ? product.subCategory.toLowerCase() === filters.subCategory.toLowerCase() : true;
     const genderMatch = filters.gender ? product.gender.toLowerCase() === filters.gender.toLowerCase() : true;
 
-    return categoryMatch && subCategoryMatch && genderMatch;
+    return categoryMatch && subCategoryMatch && genderMatch && specialCategoryMatch;
   });
   const sortedProducts = filteredProducts.sort((a, b) => {
     // Sorting by Date
@@ -336,6 +339,26 @@ const AdminProducts = () => {
                   <SelectItem value="default">Default</SelectItem>
                     {categories.map((category, i) => (
                       <SelectItem key={i} value={category.value}>{category.value}</SelectItem>
+                    ))}
+                  </SelectContent>
+              </Select>
+            </div>
+            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
+              <Label className="text-lg font-semibold">Special Category :</Label>
+              <Select 
+                id="specialCategory"
+                name="specialCategory"
+                value={filters.specialCategory}
+                onValueChange={(e)=>handleFilterChange("specialCategory",e)} 
+                className = "border border-gray-300 p-2 rounded w-full md:w-auto"
+              >
+                <SelectTrigger className="w-full border border-gray-300 rounded-md">
+                    <SelectValue placeholder={filters.specialCategory || "All Special Category"} />
+                  </SelectTrigger>
+                  <SelectContent>
+                  <SelectItem value="default">Default</SelectItem>
+                    {specialCategory.map((special, i) => (
+                      <SelectItem key={i} value={special.id}>{special.label}</SelectItem>
                     ))}
                   </SelectContent>
               </Select>

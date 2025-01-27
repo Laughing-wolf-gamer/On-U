@@ -84,13 +84,13 @@ const ProductPreviewFull = ({ product ,user}) => {
 
       {/* Product Previews Section */}
       <div className="w-screen h-fit flex flex-row bg-slate-200 md:px-10 sm:px-8 xl:px-10 2xl:px-10 px-1">
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 space-x-4 justify-center items-center">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 space-x-4 justify-center items-center">
           {previewProducts && previewProducts.length > 0 &&
             previewProducts.map((p, index) => {
               const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
 
               return (
-                <div className="w-[220px] m-2 rounded-md bg-blue-400 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                <div className="w-[220px] h-[400px] m-2 rounded-md bg-blue-400 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                   <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                   <div className="w-full p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                     <h2 className="font1 text-sm md:text-base font-semibold font-sans text-gray-800 text-left truncate">

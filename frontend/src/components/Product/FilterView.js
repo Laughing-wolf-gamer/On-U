@@ -2,6 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { capitalizeFirstLetterOfEachWord } from '../../config';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../action/productaction';
+import { Slider } from '@mui/material';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const [category, setCategory] = useState('');
@@ -82,7 +83,10 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     const sparray = () => {
         product.forEach(p => {
-            spARRAY.push(p.price);
+            const currentPrice = p.price;
+            if(!spARRAY.includes(currentPrice)){
+                spARRAY.push(currentPrice);
+            }
         });
         // console.log("SubCategory: ", subcategory);
     };
@@ -671,7 +675,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
-                <PriceFilter result={result} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
+                <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>
@@ -680,29 +684,50 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     );
 };
 
-const PriceFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) => {
-    const [selectedPriceRange, setSelectedPriceRange] = useState({
-        price1: false,
-        price2: false,
-        price3: false,
-    });
-  
+const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}) => {
+    const[currentMinPrice,setCurrentMinPrice] = useState(0);
+    const[currentMaxPrice,setCurrentMaxPrice] = useState(0);
+    const [minPrice, setMinPrice] = useState(Math.min(...result[0]));
+    const [maxPrice, setMaxPrice] = useState(Math.max(...result[1]));
+    const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
+    const priceHandler = (event, newPrice)=>{
+        
+        setPrice(newPrice)
+        setCurrentMinPrice(newPrice[0]);
+        setCurrentMaxPrice(newPrice[1]);
+    }
     useEffect(() => {
         // Get the price parameters from the URL
         const url = new URL(window.location.href);
-        const maxPrice = url.searchParams.get('sellingPrice[$lte]');
+        const urlMinPrice = url.searchParams.get('sellingPrice[$gte]');
+        const urlMaxPrice = url.searchParams.get('sellingPrice[$lte]');
         
-        // Check which price range matches the URL's 'sellingPrice[$lte]'
-        setSelectedPriceRange({
-            price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
-            price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
-            price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
-        });
-    }, [result]); // Run this whenever the 'result' changes (which is likely to happen when data is fetched or updated)
+        if (urlMinPrice && urlMaxPrice) {
+            setMinPrice(Number(spARRAY[0]));
+            setMaxPrice(Number(spARRAY[spARRAY.length - 1]));
+            setPrice([Number(urlMinPrice), Number(urlMaxPrice)]);
+        }
+    }, [spARRAY]); // Run this whenever the 'result' changes
   
-    const price1fun = (maxPrice) => {
-        // Set the URL search parameter
+    const handlePriceChange = (e) => {
+        // setMaxPrice(newMaxPrice);
+    
         const url = new URL(window.location.href);
+        url.searchParams.set('sellingPrice[$gte]', currentMinPrice);
+        url.searchParams.set('sellingPrice[$lte]',currentMaxPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+  
+    const handleMinPriceChange = (e) => {
+        // const newMinPrice = Math.max(e.target.value, minRange);
+        // setMinPrice(newMinPrice);
+    
+        const url = new URL(window.location.href);
+        url.searchParams.set('sellingPrice[$gte]', minPrice);
         url.searchParams.set('sellingPrice[$lte]', maxPrice);
         window.history.replaceState(null, "", url.toString());
     
@@ -710,84 +735,31 @@ const PriceFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) =>
             dispatchFetchAllProduct();
         }
     };
-  
-    const price2fun = (minPrice, maxPrice) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('sellingPrice[$lte]', maxPrice);
-        window.history.replaceState(null, "", url.toString());
-    
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        }
-    };
-  
-    const price3fun = (minPrice) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('sellingPrice[$lte]', minPrice);
-        window.history.replaceState(null, "", url.toString());
-    
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        }
-    };
-  
+    console.log("Url: ",spARRAY);
     return (
-        <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 overflow-hidden relative`}>
-            <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
-    
-            <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price1`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price1fun(Math.max(...result[0]))}
-                    checked={selectedPriceRange.price1}
-                    id={`id${Math.max(...result[0]) + 1}`}
-                />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
-                    Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
-                    <span className="text-xs font-serif font-normal text-slate-400">
-                    ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
-                    </span>
-                </label>
-                </li>
-        
-                <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price2`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
-                    checked={selectedPriceRange.price2}
-                    id={`id${Math.max(...result[1]) + 1}`}
-                />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
-                    Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
-                    <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
-                </label>
-                </li>
-        
-                <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price3`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price3fun(Math.min(...result[2]))}
-                    checked={selectedPriceRange.price3}
-                    id={`id${Math.min(...result[2]) + 1}`}
-                />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
-                    Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
-                    <span className="text-xs font-serif font-normal text-slate-400">
-                    ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
-                    </span>
-                </label>
-            </li>
-        </ul>
+      <div className="pl-8 border-b-[1px] border-slate-200 px-8 py-4 overflow-hidden relative">
+        <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+        <Slider
+            value={price}
+            onChange={priceHandler}
+            valueLabelDisplay="auto"
+            color='secondary'
+            aria-labelledby="range-slider"
+            min={Math.floor(minPrice)}
+            max={Math.floor(maxPrice)}
+            onChangeCommitted={()=>{
+                handlePriceChange();
+            }}
+        />
+  
+        <div className=" text-xs font-serif font-normal text-slate-400 justify-center items-center ">
+            Showing products between Rs. {Math.floor(minPrice)} and Rs. {Math.floor(maxPrice)}.
+            <br />
+            <span>({sparraynew()})</span>
+        </div>
+      </div>
     );
 };
+  
 
 export default FilterView;

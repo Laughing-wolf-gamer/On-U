@@ -81,7 +81,7 @@ export const UpdateSizeStock = async (req, res) => {
   try {
     const { productId, sizeId, updatedAmount } = req.body;
     console.log("Updating Size Stock: ", productId, sizeId, updatedAmount);
-
+    
     // Update the size quantity directly in the database
     const result = await ProductModel.updateOne(
       { _id: productId, "size._id": sizeId }, // Find the product by productId and sizeId
@@ -101,6 +101,7 @@ export const UpdateSizeStock = async (req, res) => {
     }
 
     // Calculate the new total stock
+    const AllColors = []
     let totalStock = 0;
     product.size.forEach(s => {
       if (s.colors) {
@@ -111,11 +112,20 @@ export const UpdateSizeStock = async (req, res) => {
         totalStock += sizeStock;
       }
     });
+    product.size.forEach(s => {
+      if(s.colors){
+        s.colors.forEach(c => {
+            const colorsImageArray = c.images.filter(c => c !== "");
+            c.images = colorsImageArray;
+            AllColors.push(c);
+        });
+      }
+    });
 
     // Update the total stock of the product directly
     const UpdateProduct = await ProductModel.updateOne(
       { _id: productId },
-      { $set: { totalStock: totalStock } },
+      { $set: { totalStock: totalStock ,AllColors:AllColors} },
       { new: true }
     );
 
@@ -220,11 +230,20 @@ export const updateImages = async(req,res)=>{
         totalStock += sizeStock;
       }
     });
-
+    const AllColors = [];
+    product.size.forEach(s => {
+      if (s.colors) {
+        s.colors.forEach(c => {
+          const colorsImageArray = c.images.filter(image => image !== "");
+          c.images = colorsImageArray; // Remove empty image entries
+          AllColors.push(c);
+        });
+      }
+    });
     // Update the total stock of the product
     const UpdatedProduct = await ProductModel.updateOne(
       { _id: productId },
-      { $set: { totalStock: totalStock } }
+      { $set: { totalStock: totalStock,AllColors:AllColors } }
     );
 
     res.status(200).json({ Success: true, message: 'Color Stock Updated Successfully' ,result:UpdatedProduct});
@@ -273,11 +292,21 @@ export const removeColorFromSize = async (req, res) => {
         totalStock += sizeStock;
       }
     });
+    const AllColors = [];
+    product.size.forEach(s => {
+      if(s.colors){
+        s.colors.forEach(c => {
+            const colorsImageArray = c.images.filter(c => c !== "");
+            c.images = colorsImageArray;
+            AllColors.push(c);
+        });
+      }
+    });
 
     // Update the total stock of the product
     const UpdatedProduct = await ProductModel.updateOne(
       { _id: productId },
-      { $set: { totalStock: totalStock } },
+      { $set: { totalStock: totalStock ,AllColors:AllColors} },
       {new:true}
     );
 
@@ -415,7 +444,7 @@ export const UpdateColorStock = async (req, res) => {
         totalStock += sizeStock;
       }
     });
-
+    
     // Update the total stock of the product
     const UpdatedProduct = await ProductModel.updateOne(
       { _id: productId },

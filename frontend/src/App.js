@@ -97,7 +97,7 @@ function App() {
             
         </Router>
         <Toaster 
-            position="bottom-center"
+            position="top-center"
             reverseOrder={false}
         />
         </FunctionProvider>
