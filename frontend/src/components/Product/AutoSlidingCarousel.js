@@ -169,7 +169,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
 
   return (
     <div
-      className="slideshow-container w-full md:h-64 lg:h-64 h-full 2xl:h-64 bg-gray-200 relative overflow-hidden"
+      className="slideshow-container min-w-full h-full bg-gray-200 relative overflow-hidden"
       onMouseEnter={startAutoSliding} // Start auto sliding when mouse enters
       onMouseLeave={stopAutoSliding} // Stop auto sliding when mouse leaves
     >
@@ -220,7 +220,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                     <img
                       loading="lazy"
                       src={mediaItem.url}
-                      className="w-full h-64 object-cover"
+                      className="w-full h-72 object-cover"
                       width="100%"
                       alt="product"
                       onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

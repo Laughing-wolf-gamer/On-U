@@ -345,54 +345,41 @@ const Home = ({user}) => {
             {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2?.header} /> */}
             {/* <DraggableImageSlider images={Wide_Screen_Section_3.urls} headers={Wide_Screen_Section_3.header} /> */}
             {
-              !bannerLoading && Wide_Screen_Section_3.urls && Wide_Screen_Section_3.urls.length > 0 ? (
-                <div className="w-screen h-auto flex flex-col bg-slate-200 px-4 md:px-8 justify-center items-center pb-7">
-                  <h1 className='text-3xl px-8 font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
-                    {Wide_Screen_Section_3.header}
-                  </h1>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 2xl:grid-cols-6 justify-center items-center">
-                    {
-                      Wide_Screen_Section_3.urls.map((url, index) => (
+              <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 px-12">
+                <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
+                  {Wide_Screen_Section_3.header}
+                </h1>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
+                  {
+                     !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
+                      // Skeleton Loader View when no URLs
+                      Array(8).fill(0).map((_, index) => (
+                          <div key={`skeleton_${index}`} className="w-[300px] h-[500px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+                          </div>
+                      ))
+                    ) : (
+                      // Actual content when URLs are available
+                      Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
                         <div
                           key={`Index_${index}`}
                           className="h-auto min-w-full relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105">
                           <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
                         </div>
                       ))
-                    }
-                  </div>
+                    )
+                  }
                 </div>
-              ) : (
-                <Fragment>
-                  <Loader />
-                </Fragment>
-              )
+              </div>
+            
             }
 
             
-
-            {!bannerLoading && Wide_Screen_Section_4 && Wide_Screen_Section_4.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header}/> : 
-              <Loader/>
-            }
-
-            {!bannerLoading && Wide_Screen_Section_5 && Wide_Screen_Section_5.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header}/> : 
-              <Loader/>
-            }
-
-            {
-              !bannerLoading && Wide_Screen_Section_6 && Wide_Screen_Section_6.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header}/> : 
-              <Loader/>
-            }
-
-            {
-              !bannerLoading && Wide_Screen_Section_7 && Wide_Screen_Section_7.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header}/> : 
-              <Loader/>
-            }
-            <div className='bg-slate-200 w-screen justify-center items-center flex flex-col px-10'>
+            <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
+            <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>
+            <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header} bannerLoading = {bannerLoading}/> 
+            <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header} bannerLoading = {bannerLoading}/>
+            <div className='bg-slate-200 w-screen justify-center items-center flex flex-col px-12'>
               <h1 className='text-3xl px-2 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
               <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
                 {
@@ -409,23 +396,10 @@ const Home = ({user}) => {
                 }
               </div>
             </div>
-            {
-              !bannerLoading && Wide_Screen_Section_9 && Wide_Screen_Section_9.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header}/> : 
-              <DraggableImageSlider images={[o1, o2, o3, o4, o5, o6, o7]} headers={"BEST OF KIDS-WEAR"}/>
-            }
+            <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header} bannerLoading = {bannerLoading}/>
 
-            {
-              !bannerLoading && Wide_Screen_Section_10 && Wide_Screen_Section_10.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header}/> : 
-              <DraggableImageSlider images={[q1, q2, q3, q4, q5, q6, q7, q8]} headers={"SPRING SUMMER SEASON CHECKLIST"}/>
-            }
-
-            {
-              !bannerLoading && Wide_Screen_Section_11 && Wide_Screen_Section_11.urls.length > 0 ? 
-              <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows={false}/> : 
-              <DraggableImageSlider images={[r1, r2, r3, r4, r5, r6, r7, r8, r8, r8]} headers={"NEWNESS FOR EVERY OCCASION"} showArrows={false}/>
-            }            
+            <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header} bannerLoading = {bannerLoading}/>
+            <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows={false} bannerLoading = {bannerLoading}/> 
             <Footer/>
           </Fragment >
           :

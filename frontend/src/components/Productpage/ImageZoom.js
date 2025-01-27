@@ -36,11 +36,11 @@ const ImageZoom = ({ imageSrc }) => {
   };
 
   return (
-    <div className="relative w-full h-[600px] p-1 justify-start flex-row flex items-start bg-gray-100 hover:rounded-md">
+    <div className="relative w-full h-[700px] 2xl:h-[800px] justify-start flex-row flex items-start bg-gray-100 hover:rounded-md">
       <img
         src={imageSrc}
         alt="Zoomable"
-        className="w-full h-full object-contain"
+        className="w-full h-full object-contain 2xl:object-cover"
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}

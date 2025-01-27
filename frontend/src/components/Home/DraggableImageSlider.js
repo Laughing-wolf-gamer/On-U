@@ -3,7 +3,7 @@ import React, { useState, useRef, Fragment } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useNavigate } from 'react-router-dom';
 
-const DraggableImageSlider = ({ images, headers, showArrows = true }) => {
+const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoading = false}) => {
     const navigation = useNavigate();
     const sliderRef = useRef(null);
     
@@ -75,7 +75,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true }) => {
     };
 
     return (
-        <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-10">
+        <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-12">
             <h1 className="text-3xl font-bold font1 tracking-widest text-slate-800 mb-8">
                 {headers}
             </h1>
@@ -113,25 +113,38 @@ const DraggableImageSlider = ({ images, headers, showArrows = true }) => {
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        {images.map((image, index) => (
-                            <div
-                                key={`q_banners_${index}`}
-                                onClick={handleImageClick}
-                                className="m-2 min-h-[100px] min-w-[200px] transform transition-transform duration-500 ease-in-out hover:scale-110 mr-4"
-                            >
-                                <li>
-                                    <LazyLoadImage
-                                        effect="blur"
-                                        src={image}
-                                        alt="banners"
-                                        loading="lazy"
-                                        width="100%"
-                                        height="100%"
-                                        onDragStart={handleDragStart} // Prevent image drag
-                                    />
-                                </li>
-                            </div>
-                        ))}
+                        {!bannerLoading && images.length === 0 ? (
+                            // Create 5 skeletons as placeholders for the image slider
+                            Array(10).fill(0).map((_, index) => (
+                                <div
+                                    key={`skeleton_${index}`}
+                                    className="m-2 min-h-[300px] min-w-[200px] transform transition-transform duration-500 ease-in-out bg-gray-300 rounded-lg animate-pulse"
+                                >
+                                    <div className="w-full h-full bg-gray-400 rounded-md"></div>
+                                </div>
+                            ))
+                        ) : (
+                            // Actual content when images are available
+                            images.map((image, index) => (
+                                <div
+                                    key={`q_banners_${index}`}
+                                    onClick={handleImageClick}
+                                    className="m-2 min-h-[100px] min-w-[200px] transform transition-transform duration-500 ease-in-out hover:scale-110 mr-4"
+                                >
+                                    <li>
+                                        <LazyLoadImage
+                                            effect="blur"
+                                            src={image}
+                                            alt="banners"
+                                            loading="lazy"
+                                            width="100%"
+                                            height="100%"
+                                            onDragStart={handleDragStart} // Prevent image drag
+                                        />
+                                    </li>
+                                </div>
+                            ))
+                        )}
                     </ul>
                 </div>
             </div>

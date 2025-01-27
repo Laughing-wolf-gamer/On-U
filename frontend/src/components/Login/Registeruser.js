@@ -9,6 +9,7 @@ import { useAlert } from 'react-alert';
 import { fetchAddressForm } from '../../action/common.action';
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 import { removeSpaces } from '../../config';
+import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 
 const Registeruser = () => {
     const Alert = useAlert();
@@ -160,6 +161,24 @@ const Registeruser = () => {
                             >
                                 Already have an account? Log In
                             </Link>
+                            <div className="flex justify-center gap-4 mt-6">
+                                <a href="https://facebook.com" target="_blank" rel="noopener noreferrer">
+                                    {/* <facebo className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl" /> */}
+                                    <ImFacebook className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl"/>
+                                </a>
+                                <a href="https://google.com" target="_blank" rel="noopener noreferrer">
+                                    {/* <FontAwesomeIcon icon={faGoogle} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" /> */}
+                                    <ImGoogle className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
+                                </a>
+                                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
+                                    {/* <FontAwesomeIcon icon={faTwitter} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" /> */}
+                                    <ImTwitter className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
+                                </a>
+                                <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
+                                    {/* <FontAwesomeIcon icon={faInstagram} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" /> */}
+                                    <ImInstagram className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

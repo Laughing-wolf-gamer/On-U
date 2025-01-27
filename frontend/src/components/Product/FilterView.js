@@ -460,7 +460,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     return (
         <Fragment>
-            <div className='border-b-2 py-4'>
+            <div className='space-y-4'>
                 {/* Gender Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-1'>
                     <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>

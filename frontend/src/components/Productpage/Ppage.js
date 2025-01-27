@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalS
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react'
+import { Heart, ShoppingBag, ShoppingCart, X } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
 import SizeChartModal from './SizeChartModal'
@@ -451,31 +451,45 @@ const Ppage = () => {
                                         </div>
                                         {/* Color Selection */}
                                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
-                                        {selectedColor && selectedColor.length > 0 ? (
-                                            selectedColor.map((color, i) => (
-                                            <div key={`color_${i}`} 
-                                                className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
-                                                    ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
-                                                onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}>
-                                                <button disabled={color.quantity <= 0} 
-                                                style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
-                                                className={`${color.quantity <= 0 ? 
-                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-100` :
-                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
-                                                    ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
-                                                title={color?.quantity || color?.label || "Color"} />
-                                                
-                                                {color?.quantity <= 0 && (
-                                                <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
-                                                    <span className='w-full flex justify-center flex-row'>Out of Stock</span>
-                                                </div>
-                                                )}
+                                            {selectedColor && selectedColor.length > 0 ? (
+                                                selectedColor.map((color, i) => (
+                                                    <div key={`color_${i}`} 
+                                                        className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
+                                                        ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
+                                                        onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}>
+
+                                                        <button 
+                                                        disabled={color.quantity <= 0} 
+                                                        style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
+                                                        className={`${color.quantity <= 0 ? 
+                                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-100` :
+                                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
+                                                            ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
+                                                            title={color?.quantity || color?.label || "Color"} 
+                                                        />
+
+                                                        {/* Diagonal Lines Over Button */}
+                                                        {color?.quantity > 0 && (
+                                                            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                                <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                                    {/* Diagonal Line 1 */}
+                                                                    <div className="absolute w-[2px] h-full bg-red-500 transform rotate-45"></div>
+                                                                    {/* Diagonal Line 2 */}
+                                                                    <div className="absolute w-[2px] h-full bg-red-500 transform -rotate-45"></div>
+                                                                </div>
+                                                                <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
+                                                                <span className='w-full flex justify-center flex-row'>Out of Stock</span>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <p className="text-black">No colors available</p>
+                                            )}
                                             </div>
-                                            ))
-                                        ) : (
-                                            <p className="text-black">No colors available</p>
-                                        )}
-                                        </div>
+
+
                                     </div>
                                     {/* Add to Cart & Buy Now Buttons */}
                                     <PincodeChecker productId={product?._id} />
@@ -858,7 +872,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
     }, [selectedImage]);
     return(
         <div className='w-full min-h-full justify-start items-start flex-row flex'>
-            <div className='h-full w-24 justify-center items-center flex-col flex col-span-4'>
+            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4'>
                 <div className='flex flex-col w-[70px] min-h-fit justify-between items-center'> {/* Reduced grid-cols from 8 to 6 */}
                 {
                     selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
@@ -869,13 +883,13 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                         return (
                             <div
                             key={index}
-                            className={`w-full h-full ${selectedImage === e ? "border-2":""}  border-purple-600 rounded-md overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
+                            className={`w-full h-[100px] ${selectedImage === e ? "border-2":""}  border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
                             onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
                             onClick={() => { Addclass(); setSelectedImage(e); }}
                             >
                             {isVideo ? (
                                 <ReactPlayer
-                                    className="w-full h-full object-fill hover:scale-110"
+                                    className="w-full h-full object-cover hover:scale-110"
                                     url={e.url || e}
                                     playing={isFocused} // Play only when the element is in focus
                                     controls={false} // Hide video controls
@@ -890,7 +904,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                             ) : (
                                 <LazyLoadImage
                                     src={e.url || e}
-                                    className="w-full h-full object-contain hover:scale-110"
+                                    className="w-full h-full object-cover hover:scale-110"
                                     alt="productImage"
                                     loading="lazy" // Ensure image is lazily loaded
                                 />
@@ -905,7 +919,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                 {selectedImage ? (
                     memoIsVideo ? (
                         // Video handling using ReactPlayer
-                        <div className="relative h-full p-1 w-full justify-center items-center overflow-hidden hover:shadow-md">
+                        <div className="relative h-full w-full justify-center items-center overflow-hidden hover:shadow-md">
                             <ReactPlayer
                                 className="w-full h-full object-contain rounded-md"
                                 url={selectedImage.url || selectedImage}
@@ -919,7 +933,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                             />
                         </div>
                     ) : (
-                        <div className="relative h-full w-full p-1 justify-start items-start overflow-hidden hover:shadow-md">
+                        <div className="relative h-full w-full justify-start items-start overflow-hidden hover:shadow-md">
                             <ImageZoom imageSrc={selectedImage.url || selectedImage} />
                         </div>
                     )

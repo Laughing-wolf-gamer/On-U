@@ -113,130 +113,140 @@ const Allproductpage = ({user}) => {
     }, []);
 
     return (
-        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3">
-            <div className="hidden 2xl:block xl:block lg:block font2 text-sm px-8 py-2 bg-gray-300 text-slate-900">
-                <span className='font-light'>Home</span>
-                <span className='font-light capitalize'>{window.location.pathname}</span>
-            </div>
-            <div className="hidden 2xl:block xl:block lg:block font2 px-8 pb-2 bg-neutral-100 text-slate-900">
-                <span className="font1 text-sm capitalize">NO OF ITEMS</span>
-                <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
-            </div>
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
+            <div className='w-full 2xl:w-[2000px] 2xl:justify-start 2xl:items-center'>
+                <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
+                    <div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
+                        <span className=''>Home</span>
+                        <span className='font-light capitalize'>{window.location.pathname}</span>
+                    </div>
+                </div>
 
-            {/* Filter__title div */}
-            <div className="hidden 2xl:grid xl:grid lg:grid grid-cols-12 font2 px-8 border-b-[1px] border-gray-700 py-2 items-center bg-slate-100">
-                <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
-                <div className="col-span-7 text-gray-500 text-xs">SIZE</div>
-                <div className="col-span-3 relative cursor-pointer pb-4">
-                    <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
-                        <div className=' text-sm w-max pl-4 pr-24 py-2 float-right relative items-center'>
-                            Sort by: <span className='font1 font-semibold text-gray-800'>{sortvalue}</span>
-                            <span className='absolute right-4 font-serif text-lg text-gray-600'>
-                                <IoIosArrowDown />
-                            </span>
-                        </div>
+                <div className='text-slate-900 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
+                    <div className="hidden 2xl:block xl:block lg:block font2 pb-2">
+                        <span className="font1 text-sm capitalize">NO OF ITEMS</span>
+                        <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
+                    </div>
+                </div>
 
-                        <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newItems"), setSortValue('What`s New'))}>
-                            <span className='font1 text-gray-800'>What`s New</span>
-                        </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
-                            <span className='font1 text-gray-800'>Popularity</span>
-                        </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
-                            <span className='font1 text-gray-800'>Better Discount</span>
-                        </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
-                            <span className='font1 text-gray-800'>Price: High To Low</span>
-                        </div>
-                        <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
-                            <span className='font1 text-gray-800'>Price: Low To High</span>
+                {/* Filter__title div */}
+                <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-2 items-center bg-slate-100 2xl:px-10">
+                    <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
+                    <div className="col-span-7 text-gray-500 text-xs">SIZE</div>
+                    <div className="col-span-3 relative cursor-pointer pb-4">
+                        <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
+                            <div className='text-sm w-max pl-4 pr-24 py-2 float-right relative items-center'>
+                                Sort by: <span className='font1 font-semibold text-gray-800'>{sortvalue}</span>
+                                <span className='absolute right-4 font-serif text-lg text-gray-600'>
+                                    <IoIosArrowDown />
+                                </span>
+                            </div>
+
+                            <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newItems"), setSortValue('What`s New'))}>
+                                <span className='font1 text-gray-800'>What`s New</span>
+                            </div>
+                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
+                                <span className='font1 text-gray-800'>Popularity</span>
+                            </div>
+                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
+                                <span className='font1 text-gray-800'>Better Discount</span>
+                            </div>
+                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
+                                <span className='font1 text-gray-800'>Price: High To Low</span>
+                            </div>
+                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
+                                <span className='font1 text-gray-800'>Price: Low To High</span>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 pb-5 shadow-md shadow-black">
-                {/* Filter */}
-                <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-gray-200 text-slate-900">
-                    {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
-                </div>
-
-                <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
-                    {productLoading ? (
-                        <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                {Array(10).fill(0).map((_, index) => (
-                                    <ProductCardSkeleton key={index} />
-                                ))}
-                            </ul>
+                <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 bg-white 2xl:px-10">
+                    {/* Filter */}
+                    <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-gray-50">
+                        <div className='2xl:px-10 pb-4'>
+                            {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                         </div>
-                    ) : (
-                        <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                {pro && pro.length > 0 && pro.map((p) => (
-                                    <div key={p._id} className="w-full min-h-[10vw] max-w-xs m-1">
-                                        <Single_product pro={p} user={user} wishlist={wishlist} />
-                                    </div>
-                                ))}
-                            </ul>
+                    </div>
 
-                            <div className="paginationBox font1 border-t-[1px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
-                                {/* Pagination Info */}
-                                <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
-                                    Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
-                                </span>
-
-                                {/* Previous Button */}
-                                {currentPage === 1 ? "" : (
-                                    <button
-                                        className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
-                                        onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}
-                                    >
-                                        <IoIosArrowBack /><h1>Previous</h1>
-                                    </button>
-                                )}
-
-                                {/* Pagination Component */}
-                                <Pagination
-                                    activePage={currentPage}
-                                    itemsCountPerPage={maxAmountPerPage}
-                                    totalItemsCount={length}
-                                    onChange={setCurrentPageNo}
-                                    nextPageText={false}
-                                    prevPageText={false}
-                                    firstPageText={false}
-                                    lastPageText={false}
-                                    itemClassFirst="hidden"
-                                    itemClassPrev="hidden"
-                                    itemClassNext="hidden"
-                                    itemClassLast="hidden"
-                                    itemClass="page-item"
-                                    linkClass="page-link"
-                                    activeClass="pageItemActive"
-                                    activeLinkClass="pageLinkActive"
-                                />
-
-                                {/* Next Button */}
-                                {currentPage === Math.ceil(length / maxAmountPerPage) ? '' : (
-                                    <button
-                                        className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
-                                        onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}
-                                    >
-                                        <h1>Next</h1> <IoIosArrowForward />
-                                    </button>
-                                )}
+                    <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                        {productLoading ? (
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start'>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
+                                    {Array(10).fill(0).map((_, index) => (
+                                        <ProductCardSkeleton key={index} />
+                                    ))}
+                                </ul>
                             </div>
-                        </div>
-                    )}
-                </div>
-            </div>
-            {
-                pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={() => { }} />
-            }
+                        ) : (
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-10'>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-x-16 gap-x-5 gap-y-10">
+                                    {pro && pro.length > 0 && pro.map((p) => (
+                                        <div key={p._id} className="w-full">
+                                            <Single_product pro={p} user={user} wishlist={wishlist} />
+                                        </div>
+                                    ))}
+                                </ul>
 
-            {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
+                                <div className="paginationBox font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                                    {/* Pagination Info */}
+                                    <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
+                                        Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
+                                    </span>
+
+                                    {/* Previous Button */}
+                                    {currentPage === 1 ? "" : (
+                                        <button
+                                            className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                            onClick={() => (setCurrentPage(currentPage - 1), setCurrentPageNo(currentPage - 1))}
+                                        >
+                                            <IoIosArrowBack /><h1>Previous</h1>
+                                        </button>
+                                    )}
+
+                                    {/* Pagination Component */}
+                                    <Pagination
+                                        activePage={currentPage}
+                                        itemsCountPerPage={maxAmountPerPage}
+                                        totalItemsCount={length}
+                                        onChange={setCurrentPageNo}
+                                        nextPageText={false}
+                                        prevPageText={false}
+                                        firstPageText={false}
+                                        lastPageText={false}
+                                        itemClassFirst="hidden"
+                                        itemClassPrev="hidden"
+                                        itemClassNext="hidden"
+                                        itemClassLast="hidden"
+                                        itemClass="page-item"
+                                        linkClass="page-link"
+                                        activeClass="pageItemActive"
+                                        activeLinkClass="pageLinkActive"
+                                    />
+
+                                    {/* Next Button */}
+                                    {currentPage === Math.ceil(length / maxAmountPerPage) ? '' : (
+                                        <button
+                                            className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                                            onClick={() => (setCurrentPage(currentPage + 1), setCurrentPageNo(currentPage + 1))}
+                                        >
+                                            <h1>Next</h1> <IoIosArrowForward />
+                                        </button>
+                                    )}
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+                {
+                    pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={() => { }} />
+                }
+
+                {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
+            </div>
             <Footer />
         </div>
+
 
     );
 };
