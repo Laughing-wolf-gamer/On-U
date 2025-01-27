@@ -3,7 +3,6 @@ import { BsShieldFillCheck } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
 import { getbag, getqtyupdate, deleteBag } from '../../action/orderaction';
 import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
-import { useAlert } from 'react-alert';
 import { useNavigate, Link } from 'react-router-dom';
 import './bag.css';
 import AddAddressPopup from './AddAddressPopup';
@@ -11,15 +10,14 @@ import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import Emptybag from './Emptybag';
 import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../../config';
 import { X } from 'lucide-react';
-import LoadingOverlay from '../../utils/LoadingOverLay';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
 import toast from 'react-hot-toast';
 import { useToast } from '../../Contaxt/ToastProvider';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';
-import Loader from '../Loader/Loader';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
+import CouponsDisplay from './CouponDisplay';
 
 
 const Bag = () => {
@@ -54,20 +52,16 @@ const Bag = () => {
             showToast(message);
         }
     }
+    const navigation = useNavigate()
+    const dispatch = useDispatch();
+
     const[convenienceFees,setConvenienceFees] = useState(-1);
     const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
     const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
     const[totalSellingPrice,setTotalMRP] = useState(0)
     const [discountedAmount, setDiscountAmount] = useState(0);
-    const[couponDiscountData,setCouponDiscountData] = useState(null);
-    const navigation = useNavigate()
-    const dispatch = useDispatch();
-    // const [id, setId] = useState('');
-    // const [initialized, setInitialized] = useState(false);
-
     const [address, setAddress] = useState(null);
 
-    const [isAddressFilled, setIsAddressFilled] = useState(false);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
@@ -79,7 +73,7 @@ const Bag = () => {
         // const updatedAddresses = [...user.user.addresses, newAddress];
         // Assuming you have a function to update the user's address in the backend
         await dispatch(updateAddress(newAddress));
-        await dispatch(getuser());
+        dispatch(getuser());
         checkAndCreateToast("success",'Address added successfully');
     };
 
@@ -200,13 +194,6 @@ const Bag = () => {
             dispatch(getbag({ userId: user.id }));
         }else{
             updateBagQuantity(itemId, e.target.value)
-            /* const itemsToUpdate = sessionStorageBag.find(item => item.productId === itemId);
-            console.log("Items to update: ", itemsToUpdate)
-            if(itemsToUpdate){
-                // itemsToUpdate.quantity = Number(e.target.value);
-                // sessionStorage.setItem("bagItem",JSON.stringify(sessionStorageBag));
-                // setSessionStorageItems(getLocalStorageBag());
-            } */
         }
     };
 
@@ -215,9 +202,6 @@ const Bag = () => {
             await dispatch(deleteBag({productId,bagOrderItemId}));
             dispatch(getbag({ userId: user.id }));
         }else{
-            /* const itemsToDelete = sessionStorageBag.filter(item => item.productId!== productId);
-            sessionStorage.setItem("bagItem",JSON.stringify(itemsToDelete));
-            setSessionStorageItems(getLocalStorageBag()); */
             removeBagSessionStorage(productId)
         }
     };
@@ -434,8 +418,8 @@ const Bag = () => {
                                 <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
                                 <div className="space-y-6">
                                     <div className="flex justify-between items-center">
-                                    <span>Order Total:</span>
-                                    <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
+                                        <span>Order Total:</span>
+                                        <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
                                     </div>
                                     <div className="flex justify-between items-center">
                                     <span>Selected Address:</span>
@@ -620,6 +604,7 @@ const Bag = () => {
                         
                     </div>
                 )}
+                <CouponsDisplay/>
                 <div className="w-full flex flex-col items-center">
                     <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6 px-6 md:px-12">
                         Discover More
@@ -631,7 +616,7 @@ const Bag = () => {
                     </ul>
                 </div>
 
-                <Footer/>
+            <Footer/>
             </div>
         </Fragment>
     );

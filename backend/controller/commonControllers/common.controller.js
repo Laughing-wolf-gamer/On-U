@@ -4,6 +4,7 @@ import Coupon from "../../model/Coupon.model.js";
 import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
 import WebSiteModel from "../../model/websiteData.model.js";
+import logger from "../../utilis/loggerUtils.js";
 import { sendCouponMail } from "../emailController.js";
 
 export const getHomeBanners = async (req,res)=>{
@@ -362,9 +363,44 @@ export const removeOptionsByType = async (req, res) => {
 	} catch (error) {
 		console.error("Error Deleting Options ",error);
 		res.status(500).json({ message: 'Server error' });
+        logger.error(`Error Deleting Options: `,error);
 	}
 };
-
+export const fetchCouponsByQuery = async (req,res)=>{
+    try {
+        // const {query} = req.query;
+        console.log("Fetching Coupons Query: ",req.query);
+        const filter = {};
+        if(req.query){
+            if(req.query.Status){
+                filter.Status = "Active";
+            }
+            if(req.query.MinimumAmount){
+                filter.MinimumAmount = {$lte: query.MinimumAmount}
+            }
+            if(req.query.FreeShipping){
+                filter.FreeShipping = req.query.FreeShipping === 'true' ? true : false;
+            }
+            if(req.query.CustomerLogin){
+                filter.CustomerLogin = req.query.CustomerLogin === 'true' ? true : false;
+            }
+            if(req.query.Discount){
+                filter.Discount ={ $gt: req.query.Discount};
+            }
+            if(req.query.Category){
+                filter.Category = req.query.Category;
+            }
+        }
+        filter.ValidDate = {$lt: new Date()}
+        const foundCoupons = await Coupon.find(filter).limit(10);
+        console.log("Fetched Coupons: ",foundCoupons);
+        res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
+    } catch (error) {
+        console.error(`Error getting Coupons: `,error);
+        res.status(500).json({success: false, message: `Internal Server Error ${error.message}`});
+        logger.error(`Error getting Coupons: `,error);
+    }
+}
 
 export const sendMailToGetCoupon = async (req,res)=>{
 	try {

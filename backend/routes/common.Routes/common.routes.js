@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -37,4 +37,8 @@ route.post('/options/add',isAuthenticateuser,ProtectAdminRoute, addOption);
 route.post('/options/removeByType',isAuthenticateuser,ProtectAdminRoute,removeOptionsByType);
 
 route.post('/coupons/sendCoupon',sendMailToGetCoupon)
+
+
+
+route.get('/coupons/all',fetchCouponsByQuery);
 export default route

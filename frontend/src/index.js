@@ -8,6 +8,7 @@ import {positions, transitions, Provider as Alertprovider} from 'react-alert'
 import AlertTemplate from 'react-alert-template-basic'
 import { ToastProvider } from './Contaxt/ToastProvider';
 import { SessionStorageProvider } from './Contaxt/SessionStorageContext';
+import { LocationContextProvider } from './Contaxt/LocationContext';
 
 const option = {
   timeout: 2000,
@@ -23,7 +24,9 @@ ReactDOM.render(
         <React.StrictMode >
             <ToastProvider>
               <SessionStorageProvider>
-                <App />
+                <LocationContextProvider>
+                    <App />
+                </LocationContextProvider>
               </SessionStorageProvider>
             </ToastProvider>
         </React.StrictMode>

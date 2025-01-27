@@ -5,7 +5,7 @@ import { registeruser, getuser, resendotp, updateuser, otpverifie, updatedetails
 import {allOptions, Allproducts, randomProducts, singleProduct} from './Reducer/productreducer'
 import { create_bag_reducer, create_order_reducer, create_wishlist_reducer, delete_bag_reducer, delete_wish_reducer, get_all_order_reducer, get_bag_reducer, get_order_by_id_reducer, get_wishlist_reducer, update_qty_bag_reducer } from './Reducer/orderreducer';
 import { fetch_banners_reducer } from './Reducer/bannerreducer';
-import { fetch_All_Options, fetch_form_banners } from './Reducer/common.reducer';
+import { fetch_All_Coupons, fetch_All_Options, fetch_form_banners } from './Reducer/common.reducer';
 
 
 const reducer = combineReducers({
@@ -19,6 +19,7 @@ const reducer = combineReducers({
       userdetails: otpverifie,
       Allproducts:Allproducts,
       AllOptions:allOptions,
+      AllCoupons:fetch_All_Coupons,
 
       Sproduct: singleProduct,
       getAllAddress:getAddress,

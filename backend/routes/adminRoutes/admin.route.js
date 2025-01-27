@@ -59,8 +59,6 @@ route.delete('/product/coupons/remove/:couponId',isAuthenticateuser,ProtectAdmin
 route.get('/product/coupons/all',isAuthenticateuser,ProtectAdminRoute,fetchAllCoupons);
 
 
-
-
 // shipent logistic
 
 

@@ -7,6 +7,9 @@ import {
     FETCH_ALL_OPTIONS_REQUEST,
     FETCH_ALL_OPTIONS_SUCCESS,
     FETCH_ALL_OPTIONS_FAIL,
+    FETCH_ALL_COUPONS_REQUEST,
+    FETCH_ALL_COUPONS_SUCCESS,
+    FETCH_ALL_COUPONS_FAIL,
 } from '../const/common.const'
 import { BASE_API_URL } from '../config'
 
@@ -50,7 +53,17 @@ export const fetchAllOptions = ()=> async(dispatch)=>{
     }
 }
 
-
+export const fetchAllCoupons = (query)=> async(dispatch)=>{
+    try {
+        dispatch({ type: FETCH_ALL_COUPONS_REQUEST })
+        const response = await axios.get(`${BASE_API_URL}/api/common/coupons/all?${query}`);
+        console.log("All Coupons: ",response.data);
+        dispatch({ type: FETCH_ALL_COUPONS_SUCCESS, payload: response.data.result })
+    } catch (error) {
+        console.error("Error fetching all Coupons: ",error);
+        dispatch({ type: FETCH_ALL_COUPONS_FAIL, payload: error?.response?.data?.message })
+    }
+}
 export const clearErrors = () => async (dispatch) => {
     dispatch({
         type: CLEAR_ERRORS
