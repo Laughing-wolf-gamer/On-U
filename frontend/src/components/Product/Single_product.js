@@ -79,7 +79,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     );
 
     return (
-        <div onClick={handleNavigation} className="w-fit h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
+        <div onClick={handleNavigation} className="w-[220px] h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
             {/* Product Image Carousel */}
             <div className="w-full bg-blue-300 flex min-h-fit justify-center items-center">
                 <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />
@@ -87,7 +87,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
 
             {/* Product Details Section */}
             <div className="relative pb-3 flex-col flex justify-between items-left gap-3 p-1">
-                <p className="font1 text-base sm:text-lg md:text-xl px-2 text-gray-800 font-semibold">{productTitle.slice(0,10)}</p>
+                <p className="font1 text-base sm:text-lg overflow-hidden md:text-xl px-2 text-gray-800 font-semibold">{productTitle.slice(0,10)}</p>
                 <p className="overflow-hidden px-2 text-xs text-left text-ellipsis h-4 whitespace-nowrap text-slate-500">{productSubCategory}</p>
                 {renderPrice()}
             </div>

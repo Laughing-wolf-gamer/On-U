@@ -654,11 +654,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         colorfun(e.label); // This will update the URL with the selected color
                                     }}
                                 />
-                                <div style={{ backgroundColor: e.label }} className='w-24 h-10 border border-slate-400'></div>
+                                <div style={{ backgroundColor: e.label }} className='w-20 h-7 border border-slate-400'></div>
                             </li>
                         );
                     })}
-                    
+                
                     {/* Show "+ More" button if the number of colors exceeds 5 */}
                     {AllProductsColor.length > 5 && colorul !== 'max-h-max' && (
                         <button 

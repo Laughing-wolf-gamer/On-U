@@ -243,7 +243,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                 {/* Check if the selected media is a video or an image */}
                 {mediaIsVideo ? (
                     <ReactPlayer
-                        className="w-full h-full object-fill"
+                        className="w-full h-full object-contain"
                         url={selectedMedia.url}
                         playing
                         controls={false}
