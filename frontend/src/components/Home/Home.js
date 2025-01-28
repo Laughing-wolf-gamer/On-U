@@ -230,10 +230,7 @@ const Home = ({user}) => {
                 window.screen.width > 1024 ?
                     <Fragment >
                         <div className='pt-1 w-[100vw] h-fit relative bg-slate-200'>
-                            {!bannerLoading && Wide_Screen_Section_1 && Wide_Screen_Section_1?.urls.length > 0 ? 
-                            <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} />
-                            : 
-                            <Loader/> }
+                            <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} bannerLoading = {bannerLoading}/>
                         </div>
                         <div className='h-fit w-screen bg-slate-200 py-5'>
                             <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
@@ -324,7 +321,7 @@ const Home = ({user}) => {
                                     !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
                                         Wide_Screen_Section_8.urls.map((j, index) => (
                                             <Link key={`j_banners_${index}`} to='/products' className='m-1'>
-                                                <LazyLoadImage effect='blur' src={j} alt={`wind_Screen_Section_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md" />
+                                                <LazyLoadImage effect='blur' src={j} alt={`${Wide_Screen_Section_8.header}_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md"/>
                                             </Link>
                                         )) : (
                                             // Skeleton Loader View when no URLs
@@ -337,7 +334,6 @@ const Home = ({user}) => {
                             </div>
                         </div>
                         <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header} bannerLoading = {bannerLoading}/>
-
                         <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows={false} bannerLoading = {bannerLoading}/> 
                         <Footer/>
@@ -375,18 +371,18 @@ const Home = ({user}) => {
                     <div className='bg-slate-200'>
                         <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                         <ul className='flex overflow-x-scroll'>
-                            {Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
+                            {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
                                 Small_Screen_Section_3.urls.map((d, index) => (
-                                    <Link key={`dealsOfDaty_banners${index}`} to='/products'>
-                                        <li className='w-max mr-2'>
-                                            <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`dealsofday_${index}`} className="w-[50vw] min-h-[200px]" />
-                                        </li>
-                                    </Link>
-                                )) : (
+                                <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
                                     <li className='w-max mr-2'>
-                                        <div className="w-[50vw] min-h-[200px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                        <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
                                     </li>
-                                )}
+                                </Link>
+                            )) : (
+                                <li className='w-max mr-2'>
+                                    <div className="w-[50vw] min-h-[200px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                </li>
+                            )}
                         </ul>
                     </div>
 
@@ -398,20 +394,26 @@ const Home = ({user}) => {
                         <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                         <div className='w-screen flex justify-start items-center'>
                             <ul className='flex flex-row overflow-x-scroll'>
-                                {Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 && Small_Screen_Section_4?.urls.map((c, index) => (
+                                {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
                                     <Link key={index} to='/products' className='m-2'>
                                         <li className=''>
-                                            <LazyLoadImage effect='blur' loading='lazy' src={c} alt="categoryToBag" className="min-h-[80px] min-w-[120px]" />
+                                            <LazyLoadImage effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
                                         </li>
                                     </Link>
-                                ))}
+                                )):(
+                                    Array(8).fill(0).map((_, index) => (
+                                        <li key={`skeleton_${index}`} className='m-2'>
+                                            <div className="w-[120px] h-[80px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                        </li>
+                                    ))
+                                )}
                             </ul>
                         </div>
                     </div>
 
                     <div className='pt-4 w-[100vw] bg-slate-200'>
                         <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                            {Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
+                            {!bannerLoading && Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
                                 Small_Screen_Section_5.urls.map((mc, index) => (
                                     <Link key={`mc_banners_${index}`} to='/products'>
                                         <div>
@@ -420,56 +422,12 @@ const Home = ({user}) => {
                                         </div>
                                     </Link>
                             )) : (
-                                <>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc1} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc2} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc3} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc4} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc5} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc6} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc7} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                    <Link to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mc8} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                                </>
+                                // Skeleton Loader for the Carousel Items
+                                <div className="flex w-full justify-center space-x-4">
+                                    {Array.from({ length: 5 }).map((_, index) => (
+                                        <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
+                                    ))}
+                                </div>
                             )}
                         </Carousel>
                     </div>

@@ -573,9 +573,9 @@ const Ppage = () => {
                                     <p>{product?.material}</p>
                                     <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
                                     <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
-                                    {product?.specification && product.specification.length > 0 && product.specification.map((e, index) => (
-                                        <li key={index} className='list-none mt-2'>{e?.point}</li>
-                                    ))}
+                                        {product?.specification && product.specification.length > 0 && product.specification.map((e, index) => (
+                                            <li key={index} className='list-none mt-2'>{e?.point}</li>
+                                        ))}
                                     </div>
                                     <SizeChartModal/>
                                     {/* Additional Info */}
@@ -591,53 +591,53 @@ const Ppage = () => {
                                                 {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
                                             </div>
                                             {hasPurchased ? (
-                                            <div className='w-screen justify-center items-center flex-row flex'>
-                                                <div className='w-full flex flex-col justify-start items-center'>
-                                                    {/* Review Input Section */}
-                                                    <div className='mt-6 w-full'>
-                                                        <h4 className='text-lg font-semibold'>Write a Review</h4>
-                                                        <form className='mt-4'>
-                                                        {/* Review Text Input */}
-                                                        <div className='mb-4'>
-                                                            <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                                                            <textarea
-                                                            onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
-                                                            id='reviewText'
-                                                            name='reviewText'
-                                                            rows='4'
-                                                            placeholder='Write your review here...'
-                                                            className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                                            />
-                                                        </div>
+                                                <div className='w-screen justify-center items-center flex-row flex'>
+                                                    <div className='w-full flex flex-col justify-start items-center'>
+                                                        {/* Review Input Section */}
+                                                        <div className='mt-6 w-full'>
+                                                            <h4 className='text-lg font-semibold'>Write a Review</h4>
+                                                            <form className='mt-4'>
+                                                                {/* Review Text Input */}
+                                                                <div className='mb-4'>
+                                                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                                                                    <textarea
+                                                                        onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
+                                                                        id='reviewText'
+                                                                        name='reviewText'
+                                                                        rows='4'
+                                                                        placeholder='Write your review here...'
+                                                                        className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                                                    />
+                                                                </div>
 
-                                                        {/* Star Rating Input */}
-                                                        <div className='mb-4'>
-                                                            <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                                            <input
-                                                            onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
-                                                            id='starRating'
-                                                            name='starRating'
-                                                            type='number'
-                                                            min='1'
-                                                            max='5'
-                                                            className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                                            placeholder='Rate from 1 to 5'
-                                                            />
-                                                        </div>
+                                                                {/* Star Rating Input */}
+                                                                <div className='mb-4'>
+                                                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                                                                    <input
+                                                                        onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
+                                                                        id='starRating'
+                                                                        name='starRating'
+                                                                        type='number'
+                                                                        min='1'
+                                                                        max='5'
+                                                                        className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                                                        placeholder='Rate from 1 to 5'
+                                                                    />
+                                                                </div>
 
-                                                        {/* Submit Button */}
-                                                        <div className='flex justify-start'>
-                                                            <button
-                                                            onClick={PostRating}
-                                                            className='bg-gray-500 text-white px-4 py-2 rounded-md'
-                                                            >
-                                                            Submit Review
-                                                            </button>
+                                                                {/* Submit Button */}
+                                                                <div className='flex justify-start'>
+                                                                    <button
+                                                                        onClick={PostRating}
+                                                                        className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                                                                    >
+                                                                    Submit Review
+                                                                    </button>
+                                                                </div>
+                                                            </form>
                                                         </div>
-                                                        </form>
                                                     </div>
                                                 </div>
-                                            </div>
                                             ) :(
                                                 null
                                             )}
