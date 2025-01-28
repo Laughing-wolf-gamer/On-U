@@ -102,32 +102,6 @@ const MPpage = () => {
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
     const {checkAndCreateToast} = useSettingsContext();
 
-
-    /* const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(!activeToast){
-            switch(type){
-                case "error":
-                    toast.error(message)
-                    break;
-                case "warning":
-                    toast.warning(message)
-                    break;
-                case "info":
-                    toast.info(message)
-                    break;
-                case "success":
-                    toast.success(message)
-                    break;
-                default:
-                    toast.info(message)
-                    break;
-            }
-            showToast(message);
-        }
-    } */
-    
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
     const [currentColor, setCurrentColor] = useState(null);
@@ -144,12 +118,7 @@ const MPpage = () => {
 
     const divRef = useRef(null);
     const scrollContainerRef = useRef(null);
-
     
-
-    // const[isInWishList,setIsInWishList] = useState(false);
-    // const[isInBagList,setIsInBagList] = useState(false);
-
     useEffect(() => {
         dispatch(singleProduct(param.id));
         document.documentElement.scrollTop = 0;
