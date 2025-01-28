@@ -10,7 +10,7 @@ import { useToast } from "../../Contaxt/ToastProvider";
 import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
 
 const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
-    const { sessionData, setWishListProductInfo } = useSessionStorage();
+    const { sessionData,sessionBagData, setWishListProductInfo } = useSessionStorage();
     const [isInWishList, setIsInWishList] = useState(false);
     const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type, message) => {
@@ -151,10 +151,10 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
             const response = await dispatch(createwishlist({ productId: pro._id }));
             await dispatch(getwishlist());
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            console.log("Wishlist Updated Successfully: ",response);
+            // console.log("Wishlist Updated Successfully: ",response);
             if(response){
-                // updateButtonStates();
                 setIsInWishList(response);
+                // updateButtonStates();
             }
         } else {
             setWishListProductInfo(pro, pro._id);
@@ -162,6 +162,10 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
             updateButtonStates();
         }
     };
+    useEffect(() => {
+        updateButtonStates();
+        console.log("Wishlist Updated Successfully",sessionData);
+    }, [sessionData,sessionBagData]);
 
     return (
         <div
@@ -216,7 +220,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                                     <img
                                         loading="lazy"
                                         src={mediaItem.url}
-                                        className="w-full 2xl:h-72 lg:h-72 md:h-64 sm:h-52 h-48 object-cover"
+                                        className="w-full h-[80%] object-contain"
                                         width="100%"
                                         alt="product"
                                         onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

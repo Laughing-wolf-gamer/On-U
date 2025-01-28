@@ -18,13 +18,14 @@ import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import CouponsDisplay from './CouponDisplay';
+import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { sessionBagData,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage } = useSessionStorage();
     const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
-    const { randomProducts,loading:productLoading, error } = useSelector(state => state.RandomProducts);
+    const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const {allAddresses} = useSelector(state => state.getAllAddress)
 
@@ -177,7 +178,7 @@ const Bag = () => {
             // Add convenience fees to the total product selling price (only once, not for each item)
             totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
         
-            console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
+            // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
             setTotalProductSellingPrice(totalProductSellingPrice);
             setDiscountAmount(totalDiscount);
             setTotalMRP(totalMRP);
@@ -291,13 +292,13 @@ const Bag = () => {
 
                                 {/* Navigation */}
                                 <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
-                                <div className="flex space-x-8 text-gray-800">
-                                    <span className={`font-semibold text-lg ${!showPayment ? "text-blue-400" : "text-gray-400"}`}>BAG</span>
-                                    <span className="text-gray-400">--------</span>
-                                    <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-400" : "text-gray-400"}`}>ADDRESS</span>
-                                    <span className="text-gray-400">--------</span>
-                                    <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-400" : "text-gray-400"}`}>PAYMENT</span>
-                                </div>
+                                    <div className="flex space-x-8 text-gray-800">
+                                        <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+                                        <span className="text-gray-400">|</span>
+                                        <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+                                        <span className="text-gray-400">|</span>
+                                        <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
+                                    </div>
                                 <div className="flex items-center space-x-3">
                                     <BsShieldFillCheck className="text-blue-400 text-3xl" />
                                     <span className="ml-2 text-[#535766] text-xs">100% SECURE</span>
@@ -316,42 +317,41 @@ const Bag = () => {
                                         </Link>
                                         <div className="ml-6 flex-1">
                                             <h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
-                                            <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+                                                <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
                                             <div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-                                            {item?.productId?.salePrice ? (
-                                                <>
-                                                <span>₹{Math.round(item.productId.salePrice)}</span>
-                                                <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
-                                                </>
-                                            ) : (
-                                                <span>₹ {item.productId.price}</span>
-                                            )}
+                                                {item?.productId?.salePrice ? (
+                                                    <>
+                                                    <span>₹{Math.round(item.productId.salePrice)}</span>
+                                                    <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
+                                                    <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
+                                                    </>
+                                                ) : (
+                                                    <span>₹ {item.productId.price}</span>
+                                                )}
                                             </div>
                                             <div className="mt-4 flex items-center space-x-4">
-                                            <label className="text-sm">Qty:</label>
-                                            <select
-                                                value={item?.quantity}
-                                                onChange={(e) => updateQty(e, item.productId._id)}
-                                                className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                            >
-                                                {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-                                                <option key={num + 1} value={num + 1}>{num + 1}</option>
-                                                ))}
-                                            </select>
+                                                <label className="text-sm">Qty:</label>
+                                                <select
+                                                    value={item?.quantity}
+                                                    onChange={(e) => updateQty(e, item.productId._id)}
+                                                    className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                >
+                                                    {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+                                                    <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                                    ))}
+                                                </select>
                                             </div>
                                         </div>
                                         <X
                                             className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
                                             onClick={(e) => {
-                                            e.preventDefault();
-                                            handleDeleteBag(item.productId._id, item._id);
+                                                handleDeleteBag(item.productId._id, item._id);
                                             }}
                                         />
                                         </div>
                                     ))
                                     ) : (
-                                    <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
+                                        <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
                                     )}
                                 </div>
                             
@@ -394,14 +394,14 @@ const Bag = () => {
                                     {user && user.user && allAddresses?.length > 0 ? (
                                     allAddresses.map((addr, index) => (
                                         <div
-                                        key={index}
-                                        className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
-                                        onClick={() => handleAddressSelection(addr)}
+                                            key={index}
+                                            className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
+                                            onClick={() => handleAddressSelection(addr)}
                                         >
                                         {Object.entries(addr).map(([key, value]) => (
                                             <div key={key} className="flex justify-between">
-                                            <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                                            <span>{value}</span>
+                                                <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                                <span>{value}</span>
                                             </div>
                                         ))}
                                         {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
@@ -415,46 +415,46 @@ const Bag = () => {
                             
                                 {/* Payment Checkout Section */}
                                 <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-                                <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
-                                <div className="space-y-6">
-                                    <div className="flex justify-between items-center">
-                                        <span>Order Total:</span>
-                                        <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
+                                    <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
+                                    <div className="space-y-6">
+                                        <div className="flex justify-between items-center">
+                                            <span>Order Total:</span>
+                                            <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
+                                        </div>
+                                        <div className="flex justify-between items-center">
+                                        <span>Selected Address:</span>
+                                        <span className="text-sm">
+                                            {selectedAddress
+                                            ? Object.keys(selectedAddress).map((key, index) => (
+                                                <div key={index}>
+                                                    <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
+                                                </div>
+                                                ))
+                                            : "No address selected"
+                                            }
+                                        </span>
+                                        </div>
+                                        <div className="flex flex-col space-y-4">
+                                        <button
+                                            onClick={() => {
+                                                if (selectedAddress) {
+                                                    placeOrder();
+                                                } else {
+                                                    checkAndCreateToast("error", 'Please select a delivery address');
+                                                }
+                                            }}
+                                            className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
+                                        >
+                                            Proceed to Payment
+                                        </button>
+                                        <button
+                                            onClick={handleOpenPopup}
+                                            className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
+                                        >
+                                            Add New Address
+                                        </button>
+                                        </div>
                                     </div>
-                                    <div className="flex justify-between items-center">
-                                    <span>Selected Address:</span>
-                                    <span className="text-sm">
-                                        {selectedAddress
-                                        ? Object.keys(selectedAddress).map((key, index) => (
-                                            <div key={index}>
-                                                <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
-                                            </div>
-                                            ))
-                                        : "No address selected"
-                                        }
-                                    </span>
-                                    </div>
-                                    <div className="flex flex-col space-y-4">
-                                    <button
-                                        onClick={() => {
-                                        if (selectedAddress) {
-                                            placeOrder();
-                                        } else {
-                                            checkAndCreateToast("error", 'Please select a delivery address');
-                                        }
-                                        }}
-                                        className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
-                                    >
-                                        Proceed to Payment
-                                    </button>
-                                    <button
-                                        onClick={handleOpenPopup}
-                                        className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
-                                    >
-                                        Add New Address
-                                    </button>
-                                    </div>
-                                </div>
                                 </div>
                             
                                 {/* Add Address Popup */}
@@ -487,17 +487,17 @@ const Bag = () => {
 
                             {/* Navigation */}
                             <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
-                            <div className="flex space-x-8 text-gray-800">
-                                <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
-                                <span className="text-gray-400">|</span>
-                                <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
-                                <span className="text-gray-400">|</span>
-                                <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                                <BsShieldFillCheck className="text-blue-600 text-2xl" />
-                                <span className="text-xs text-gray-600">100% SECURE</span>
-                            </div>
+                                <div className="flex space-x-8 text-gray-800">
+                                    <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+                                    <span className="text-gray-400">|</span>
+                                    <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+                                    <span className="text-gray-400">|</span>
+                                    <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
+                                </div>
+                                <div className="flex items-center space-x-3">
+                                    <BsShieldFillCheck className="text-blue-600 text-2xl" />
+                                    <span className="text-xs text-gray-600">100% SECURE</span>
+                                </div>
                             </div>
                         
                             {/* Main Content */}
@@ -553,38 +553,38 @@ const Bag = () => {
                             <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
                                 <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionBagData.length} items)</h3>
                                 <div className="space-y-5">
-                                <div className="flex justify-between text-sm text-gray-700">
-                                    <span>Total MRP</span>
-                                    <span>₹{bag?.totalMRP || totalSellingPrice}</span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700">
-                                    <span>You Saved</span>
-                                    <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700">
-                                    <span>Coupon</span>
-                                    <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-                                    {bag?.Coupon?.CouponCode || "No Coupon Applied"}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700 mb-5">
-                                    <span>Convenience Fee</span>
-                                    <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                    ₹{convenienceFees}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between font-semibold text-xl text-gray-900">
-                                    <span>Total</span>
-                                    <span>₹{Math.round(totalProductSellingPrice)}</span>
-                                </div>
+                                    <div className="flex justify-between text-sm text-gray-700">
+                                        <span>Total MRP</span>
+                                        <span>₹{bag?.totalMRP || totalSellingPrice}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-gray-700">
+                                        <span>You Saved</span>
+                                        <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-gray-700">
+                                        <span>Coupon</span>
+                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                        {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between text-sm text-gray-700 mb-5">
+                                        <span>Convenience Fee</span>
+                                        <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+                                        ₹{convenienceFees}
+                                        </span>
+                                    </div>
+                                    <div className="flex justify-between font-semibold text-xl text-gray-900">
+                                        <span>Total</span>
+                                        <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                    </div>
                                 </div>
                                 <div className="mt-6">
-                                <button
-                                    onClick={() => navigation("/Login")}
-                                    className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
-                                >
-                                    Log In To Process Payment
-                                </button>
+                                    <button
+                                        onClick={() => navigation("/Login")}
+                                        className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
+                                    >
+                                        Log In To Process Payment
+                                    </button>
                                 </div>
                             </div>
                             </div>
@@ -606,14 +606,26 @@ const Bag = () => {
                 )}
                 <CouponsDisplay user={user} />
                 <div className="w-full flex flex-col items-center">
-                    <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6 px-6 md:px-12">
+                    <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6">
                         Discover More
                     </h1>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8 px-4 sm:px-8 md:px-12 pb-10">
-                        {randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 10).map((pro) => (
-                            <SingleProduct pro={pro} user={user} key={pro._id} />
-                        ))}
-                    </ul>
+                    <div className='w-full flex items-center justify-center px-6 md:px-12'>
+                        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-8 pb-10">
+                            {
+                                RandomProductLoading ? (<Fragment>
+                                    {Array(10).fill(0).map((_, index) => (
+                                        <ProductCardSkeleton key={index} />
+                                    ))}
+                                </Fragment>):(<Fragment>
+                                    {
+                                        randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 10).map((pro) => (
+                                            <SingleProduct pro={pro} user={user} key={pro._id} />
+                                        ))
+                                    }
+                                </Fragment>)
+                            }
+                        </ul>
+                    </div>
                 </div>
 
             <Footer/>

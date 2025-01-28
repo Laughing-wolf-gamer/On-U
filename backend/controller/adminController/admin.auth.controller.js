@@ -3,6 +3,8 @@ import bcrypt from 'bcryptjs';
 import sendtoken from "../../utilis/sendtoken.js";
 import ProductModel from "../../model/productmodel.js";
 import OrderModel from "../../model/ordermodel.js";
+import Bag from "../../model/bag.js";
+import WhishList from "../../model/wishlist.js";
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {name,email,password,phoneNumber,role} = req.body;
@@ -748,6 +750,63 @@ export const getTotalUsers = async (req,res)=>{
     res.status(500).json({Success:false,message: 'Internal Server Error'});
   }
 }
+export const fetchAllCustomerUsers = async (req, res) => {
+  try {
+    // Fetch all users with the 'user' role
+    const users = await User.find({ role: 'user' });
+
+    // Fetch the cart details for each user
+    const allCarForUser = await Promise.all(
+      users.map(async (u) => {
+        let userNew = {
+          _id: u._id,
+          name: u.name,
+          email: u.email,
+          phoneNumber: u.phoneNumber,
+          address: u.addresses,
+          gender:u.gender,
+          DOB:u.DOB,
+          createdAt: u.createdAt,
+          role: u.role,
+          totalPurchases:0,
+          cart: [],
+          orders: [],
+          wishList: [],
+        };
+        try {
+          // Fetch the cart items for each user and populate the product details
+          const cart = await Bag.findOne({ userId: u._id }).populate("orderItems.productId");
+          // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(cart);
+          const orders = await OrderModel.find({userId: u._id});
+          const wishList = await WhishList.findOne({userId: u._id.toString()}).populate("orderItems.productId");
+          console.log("Found wishList:",u.name,u._id,wishList?.orderItems);
+          // You can modify the user object by appending the cart data to it
+          const totalAmount = orders.reduce((accumulator, order) => {
+            return accumulator + order.TotalAmount;
+          }, 0);
+          userNew.totalPurchases = orders.length > 0 ? totalAmount : 0;
+          userNew.cart = cart?.orderItems || []; // Attach cart data to the user object
+          userNew.orders = orders; // Attach order data to the user object
+          userNew.wishList = wishList?.orderItems || []; // Attach wish list data to the
+        } catch (error) {
+          console.error(`Error getting cart for user ${u._id}:`, error);
+        }
+        return userNew; // Return the user object even if there is an error fetching cart
+      })
+    );
+    console.log("All Customer Dat: ",allCarForUser);
+    // Respond with the modified user objects including cart data
+    res.status(200).json({
+      Success: true,
+      message: 'All Customer Users with their Cart Data',
+      result: allCarForUser || [],
+    });
+  } catch (error) {
+    console.error("Error getting all customer users: ", error);
+    res.status(500).json({ Success: false, message: 'Internal Server Error' });
+  }
+};
+
 export const getMaxDeliveredOrders = async (req,res)=>{
   try {
     const orders = await OrderModel.find({status: 'Delivered'});

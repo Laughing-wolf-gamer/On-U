@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import './Single_product.css';
 import { BiRupee } from 'react-icons/bi';
 import { IoIosHeartEmpty } from 'react-icons/io';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
 
@@ -36,6 +36,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
 
     const handleNavigation = () => {
         navigation(`/products/${pro._id}`);
+        window.location.reload();
     };
 
     const renderPrice = () => (
@@ -79,7 +80,10 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     );
 
     return (
-        <div onClick={handleNavigation} className="2xl:w-[220px] md:h-[400px] sm:h-[370px] sm:w-[200px] h-[300px] w-[150px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer">
+        <div 
+            onClick={handleNavigation} 
+            className="2xl:w-[260px] md:h-[400px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-[340px] w-[160px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
+        >
             {/* Product Image Carousel */}
             <div className="w-full bg-blue-300 flex h-fit justify-center items-center">
                 <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />

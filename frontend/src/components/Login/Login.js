@@ -9,8 +9,10 @@ import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../actio
 import { useToast } from '../../Contaxt/ToastProvider'
 import toast from 'react-hot-toast'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 const Login = () => {
     const [logInData, setLogInData] = useState('');
+    const { sessionData,sessionBagData } = useSessionStorage();
     const [otpData, setOtpData] = useState(null);
     const [otp, setOtp] = useState('');
     const Redirect = useNavigate();
@@ -91,7 +93,7 @@ const Login = () => {
         const wishListData = getLocalStorageWishListItem();
         console.log("After Login Wishlist data: ", wishListData);
         if(wishListData){
-            const response =  dispatch(createAndSendProductsArrayWishList(wishListData));
+            const response = dispatch(createAndSendProductsArrayWishList(wishListData));
             if(response){
                 if(response.success){
                     // sessionStorage.setItem("bagItem", JSON.stringify([]));

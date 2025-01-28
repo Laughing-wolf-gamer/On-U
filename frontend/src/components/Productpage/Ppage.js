@@ -83,7 +83,7 @@ const reviews = [
   },
 ];
 
-const maxScrollAmount = 1270.4000244140625,maxScrollWithReviewInput = 1600
+const maxScrollAmount = 1100,maxScrollWithReviewInput = 1500
 const Ppage = () => {
     const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
     const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
@@ -384,26 +384,24 @@ const Ppage = () => {
         <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
-                    <div>
+                    <div className='pt-5'>
                         <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
-                            <div className='w-[50%] min-h-[200px] flex flex-col px-7'>
-                                {
-                                    <div className={`w-[50%] ${scrollPosition < currentMaxScrollAmount ? "fixed z-30 mt-5":" flex absolute bottom-4 left-7"} `}>
-                                        <div className='w-full h-full justify-start items-center flex'>
-                                            <LeftImageContent 
+                            <div className='w-[40%] min-h-[200px] flex flex-col px-7'>
+                                <div className={`w-[40%] ${scrollPosition < currentMaxScrollAmount ? "fixed z-30 mt-5":"flex absolute bottom-5 left-8"} `}>
+                                    <div className='w-full h-full justify-start items-center flex'>
+                                        <LeftImageContent 
                                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
                                             Addclass ={Addclass} 
                                             setSelectedImage = {setSelectedImage} 
                                             selectedImage ={selectedImage} 
                                             isFocused = {isFocused}
                                             setIsFocused = {setIsFocused}
-                                            />
-                                        </div>
+                                        />
                                     </div>
-                                }
+                                </div>
                             </div>
                             {/* Content div for large screen */}
-                            <div className='w-[50%] h-full flex flex-col pl-9'>
+                            <div className='w-[56%] h-full flex flex-col pl-9'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
@@ -648,13 +646,11 @@ const Ppage = () => {
                             </div>
 
                         </div>
-                        <div className='w-full justify-center flex flex-col px-10'>
+                        <div className='w-screen justify-center items-start flex flex-col px-10'>
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 pb-8'>
+                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 pb-8 gap-5'>
                                 {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (
-                                    <div key={pro._id} className='w-full h-full'>
-                                        <Single_product pro={similar[0]} user ={user}/>
-                                    </div>
+                                    <Single_product key={pro._id} pro={pro} user ={user}/>
                                 ))}
                             </ul>
                         </div>
@@ -865,6 +861,7 @@ const ProductReviews = ({ reviews }) => {
     );
 };
 
+
 const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedImage,selectedImage,isFocused,setIsFocused})=>{
     const memoIsVideo = useMemo(() => {
         if (!selectedImage || !selectedImage.url) return false;
@@ -879,8 +876,8 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
     }, [selectedImage]);
     return(
         <div className='w-full min-h-full justify-start items-start flex-row flex'>
-            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4 space-y-7'>
-                <div className='flex flex-col w-[70px] min-h-fit justify-between items-center'> {/* Reduced grid-cols from 8 to 6 */}
+            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4'>
+                <div className='flex flex-col w-[70px] min-h-fit justify-between items-center space-y-6'> {/* Reduced grid-cols from 8 to 6 */}
                 {
                     selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
@@ -965,4 +962,31 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
         return "Unknown Color"; // Fallback if hexCode is invalid
     }
 }; */
+
+
+/* 
+{selectedImage ? (
+    isVideo ? (
+    // Video handling using ReactPlayer
+    <div className="relative h-[40%] p-3 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
+        <ReactPlayer
+        className="w-full h-[70%] object-contain rounded-md border"
+        url={selectedImage.url || selectedImage}
+        loop={true}
+        muted={true}
+        controls={false}
+        width="100%"
+        height="100%"
+        playing={true} // Set to true if you want to auto-play
+        light={false}   // Optional: Display a thumbnail preview before play
+        />
+    </div>
+    ) : (
+    // Image handling (ImageZoom)
+    <ImageZoom imageSrc={selectedImage.url || selectedImage} />
+    )
+) : (
+    // Loading Spinner
+    <Loader />
+)} */
 export default Ppage

@@ -3,11 +3,11 @@ import React from 'react'
 const ProductCardSkeleton = () => {
     return (
         <div
-            className="2xl:w-[220px] w-full h-[400px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300"
+            className="2xl:w-[290px] md:h-[400px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-[340px] w-[160px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300"
         >
             {/* Product Image Carousel Skeleton */}
-            <div className="w-full bg-gray-300 animate-pulse flex h-[250px] justify-center items-center">
-                <div className="w-[80%] h-[80%] bg-gray-400 rounded-lg"></div>
+            <div className="w-full bg-gray-300 animate-pulse flex h-[70%] justify-center items-center">
+                <div className="w-[95%] h-[95%] bg-gray-400 rounded-lg"></div>
             </div>
     
             {/* Product Details Section Skeleton */}

@@ -7,7 +7,7 @@ const coupons = [
     {
         id: 1,
         CouponCode: 'SAVE20',
-        Discount: '20% Off',
+        Discount: '20',
         ValidDate: '2025-02-28',
         Description: 'Get 20% off your next purchase!',
     },
@@ -21,7 +21,7 @@ const coupons = [
     {
         id: 3,
         CouponCode: 'WELCOME10',
-        Discount: '10% Off',
+        Discount: '10',
         ValidDate: '2025-03-15',
         Description: 'New customers get 10% off their first order.',
     },
@@ -38,7 +38,7 @@ const CouponsDisplay = ({user}) => {
     console.log("All Coupons: ",AllCoupons);
     return (
         <div className="container mx-auto px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6 text-center">All Coupons</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">All Coupons [testing Only]</h2>
 
             {/* Coupons grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

@@ -3,7 +3,7 @@ import React, { useState, useRef, Fragment } from 'react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useNavigate } from 'react-router-dom';
 
-const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoading = false}) => {
+const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoading}) => {
     const navigation = useNavigate();
     const sliderRef = useRef(null);
     
@@ -73,6 +73,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
             behavior: 'smooth',  // This makes the scroll smooth
         });
     };
+    console.log("Banner Loading: ",bannerLoading);
 
     return (
         <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-12">
@@ -81,7 +82,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
             </h1>
             <div className="relative w-full flex justify-start items-center">
                 {/* Left and Right Arrow Buttons */}
-                {showArrows && (
+                {showArrows && !bannerLoading && (
                     <Fragment>
                         {/* Left Arrow Button */}
                         <button
@@ -113,12 +114,12 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        {!bannerLoading && images.length === 0 ? (
+                        {bannerLoading ? (
                             // Create 5 skeletons as placeholders for the image slider
                             Array(10).fill(0).map((_, index) => (
                                 <div
                                     key={`skeleton_${index}`}
-                                    className="m-2 min-h-[300px] min-w-[200px] transform transition-transform duration-500 ease-in-out bg-gray-300 rounded-lg animate-pulse"
+                                    className="m-2 2xl:w-[290px] md:h-[400px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-[340px] w-[160px] transform transition-transform duration-500 ease-in-out bg-gray-300 rounded-lg animate-pulse"
                                 >
                                     <div className="w-full h-full bg-gray-400 rounded-md"></div>
                                 </div>

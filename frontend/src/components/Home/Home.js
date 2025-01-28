@@ -274,21 +274,19 @@ const Home = ({user}) => {
                             </div>
                         </div>
                     
-                        <div className='py-8 px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
-                            {product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
-                        </div>
-                        {
-                            <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 px-12">
-                                <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-8'>
-                                    {Wide_Screen_Section_3.header}
-                                </h1>
-                                
+                        {product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
+                        <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3 px-12">
+                            <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
+                                {Wide_Screen_Section_3.header}
+                            </h1>
+                            <div className='w-screen justify-center items-center flex pr-20 pl-20'>
+
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
                                     {
                                         !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
                                             // Skeleton Loader View when no URLs
                                             Array(8).fill(0).map((_, index) => (
-                                                <div key={`skeleton_${index}`} className="w-[300px] h-[500px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+                                                <div key={`skeleton_${index}`} className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
                                                 </div>
                                             ))
                                         ) : (
@@ -296,7 +294,7 @@ const Home = ({user}) => {
                                             Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
                                                 <div
                                                     key={`Index_${index}`}
-                                                    className="h-auto min-w-full relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105"
+                                                    className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105"
                                                 >
                                                     <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
                                                 </div>
@@ -305,9 +303,7 @@ const Home = ({user}) => {
                                     }
                                 </div>
                             </div>
-                        
-                        }
-
+                        </div>
                         
                         <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>

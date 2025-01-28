@@ -466,9 +466,7 @@ export const addItemsArrayToWishList = async(req,res)=>{
         }
         let previousWishList = await WhishList.findOne({userId:userId})
         const allArray = productIdArray.map((p => p.productId._id));
-        console.log("Saved wishList: ",allArray.map(p => ({
-            productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
-        })));
+        console.log("Saved wishList: ",allArray);
         if(previousWishList){
             const emitPromise = allArray.map(async(productId) =>{
                 const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);

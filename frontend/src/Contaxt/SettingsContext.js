@@ -31,7 +31,7 @@ export const SettingsProvider = ({ children }) => {
             showToast(message);
         }
     }
-    useEffect(() => {
+    /* useEffect(() => {
         document.addEventListener('contextmenu', (e) => e.preventDefault());
         return () => {
             document.removeEventListener('contextmenu', (e) => e.preventDefault());
@@ -51,7 +51,7 @@ export const SettingsProvider = ({ children }) => {
         return () => {
             window.removeEventListener('keydown', handleKeyPress);
         };
-    }, []);
+    }, []); */
 
     return (
         <SettingContext.Provider value={{ checkAndCreateToast}}>

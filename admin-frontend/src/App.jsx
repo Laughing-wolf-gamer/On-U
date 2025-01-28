@@ -27,6 +27,7 @@ import WarehouseAdmin from "./pages/admin-view/WarehouseAdmin"
 import AdminPrivacyPolicyPage from "./pages/admin-view/AdminPrivacyPolicyPage"
 import AdminTermsConditionsPage from "./pages/admin-view/AdminTermsConditionsPage"
 import { Toaster } from "react-hot-toast"
+import AdminUsers from "./pages/admin-view/AdminUsers"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -68,6 +69,7 @@ function App() {
                 }>
                     <Route path="profile" element={<AdminProfile user = {user}/>}/>
                     <Route path="dashboard" element={<AdminDashboard user={user}/>}/>
+                    <Route path="users" element={<AdminUsers/>}/>
                     {isAuthenticated && user && <Route path="products" element={<AdminProducts/>}/>}
                     <Route path="contactQuery" element={<AdminContactQueryViewPage/>}/>
                     <Route path="warehouse" element={<WarehouseAdmin/>}/>

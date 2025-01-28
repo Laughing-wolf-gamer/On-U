@@ -169,7 +169,7 @@ const Allproductpage = ({user}) => {
                         </div>
                     </div>
 
-                    <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900">
+                    <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
                             <div className='min-h-[100vw] flex flex-col justify-between items-start'>
                                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
@@ -179,14 +179,15 @@ const Allproductpage = ({user}) => {
                                 </ul>
                             </div>
                         ) : (
-                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-10'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-x-16 gap-x-5 gap-y-10">
-                                    {pro && pro.length > 0 && pro.map((p) => (
-                                        <div key={p._id} className="w-full">
-                                            <Single_product pro={p} user={user} wishlist={wishlist} />
-                                        </div>
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3'>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-10 gap-5">
+                                    {pro && pro.length > 0 && pro.map((p,index) => (
+                                        <li key={`productId_${p._id}_${index}`} className="w-full">
+                                            <Single_product pro={p} user={user} wishlist={wishlist}/>
+                                        </li>
                                     ))}
                                 </ul>
+
 
                                 <div className="paginationBox font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
                                     {/* Pagination Info */}

@@ -8,6 +8,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { getuser, clearErrors } from '../../action/useraction'
 import { useAlert } from 'react-alert'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
+import ProductCardSkeleton from '../Product/ProductCardSkeleton'
 
 const Wishlist = () => {
     const { sessionData,setWishListProductInfo } = useSessionStorage();
@@ -66,23 +67,15 @@ const Wishlist = () => {
     
 
     return (
-        <Fragment>
+        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 loadingWishList ? (
-                    <div className="bg-slate-200 text-gray-700 overflow-y-auto h-screen flex flex-col items-center justify-center">
-                        <h1 className="text-2xl font-semibold text-gray-200 mb-6">Loading your Wishlist...</h1>
-                        <div className="w-full px-4 mt-6 grid grid-cols-2 gap-8 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 px-10 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
                         {/* Skeleton Loader for Product Cards */}
-                        {Array(6).fill().map((_, index) => (
-                            <div key={index} className="bg-gray-300 p-4 rounded-lg shadow-md animate-pulse">
-                            <div className="h-36 bg-gray-500 rounded-lg mb-4"></div>
-                            <div className="h-4 bg-gray-500 mb-2"></div>
-                            <div className="h-4 bg-gray-500 mb-2"></div>
-                            <div className="w-20 h-8 bg-gray-500 rounded-md"></div>
-                            </div>
+                        {Array(20).fill().map((_, index) => (
+                            <ProductCardSkeleton key={index}/>
                         ))}
-                        </div>
-                    </div>
+                    </ul>
                 ) : (
                 <Fragment>
                     {(currentWishListItem && currentWishListItem.length > 0) ? (
@@ -106,11 +99,11 @@ const Wishlist = () => {
                                 {currentWishListItem && currentWishListItem.length > 0 && currentWishListItem.map((pro) => (
                                     <li
                                         key={pro?.productId?._id || pro?.productId}
-                                        className="w-full h-fit max-w-sm m-4 group"  // Reduced height (e.g., 120px for each item)
+                                        className="w-fit h-fit max-w-sm m-4 group"  // Reduced height (e.g., 120px for each item)
                                     >
                                         <div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl relative">
                                             <div
-                                                className="w-full h-full"  // Adjusted height for the inner content
+                                                className="w-fit h-full"  // Adjusted height for the inner content
                                                 onClick={(e) => {
                                                     const productId = pro?.productId?._id || pro?.productId;
                                                     navigation(`/products/${productId}`);
@@ -149,7 +142,7 @@ const Wishlist = () => {
                 </Fragment>
                 )
             }
-            </Fragment>
+        </div>
 
     )
 }

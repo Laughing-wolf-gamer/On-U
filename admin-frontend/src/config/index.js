@@ -133,6 +133,13 @@ export const adminSideBarMenu = [
         
     },
     {
+        id: 'user',
+        label: 'Users',
+        accessRole:['superAdmin'],
+        path: '/admin/users',
+        
+    },
+    {
         id: 'orders',
         label: 'Orders',
         accessRole:['superAdmin'],
