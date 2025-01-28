@@ -64,7 +64,7 @@ const Allproductpage = ({user}) => {
         // Generate the new URL with the updated query parameters
         const newUrl = `${currentUrl.pathname}?${urlParams.toString()}`;
       
-        console.log('New URL:', newUrl);
+        // console.log('New URL:', newUrl);
       
         // Update the URL without refreshing the page
         window.history.pushState({}, '', newUrl);
@@ -142,7 +142,7 @@ const Allproductpage = ({user}) => {
                                 </span>
                             </div>
 
-                            <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newItems"), setSortValue('What`s New'))}>
+                            <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
                                 <span className='font1 text-gray-800'>What`s New</span>
                             </div>
                             <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
@@ -246,8 +246,6 @@ const Allproductpage = ({user}) => {
             </div>
             <Footer />
         </div>
-
-
     );
 };
 

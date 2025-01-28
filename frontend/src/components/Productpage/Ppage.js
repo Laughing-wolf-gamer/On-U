@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalS
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Heart, ShoppingBag, ShoppingCart, X } from 'lucide-react'
+import { Heart, ShoppingBag, ShoppingCart} from 'lucide-react'
 import toast from 'react-hot-toast'
 import { useToast } from '../../Contaxt/ToastProvider'
 import SizeChartModal from './SizeChartModal'
@@ -89,7 +89,7 @@ const maxScrollAmount = 1270.4000244140625,maxScrollWithReviewInput = 1600
 const Ppage = () => {
     const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
     const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
-    const [isWishLoadUpdating,setIsWishListUpdating] = useState(false);
+
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
     const { activeToast, showToast } = useToast();
@@ -136,7 +136,7 @@ const Ppage = () => {
     const[selectedColor, setSelectedColor] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [state, setstate] = useState(false)
-    const [selectedSize_color_Image_Array, setSelectedSize_color_Image_Array] = useState([]);
+    const [selectedSize_color_Image_Array, setSelectedSizeColorImageArray] = useState([]);
     
     const [currentColor,setCurrentColor] = useState(null)
     const[currentSize,setCurrentSize] = useState(null)
@@ -199,12 +199,12 @@ const Ppage = () => {
     };
     const updateButtonStates = () => {
         if (user) {
-        // console.log("Updateing wishList: ",wishlist);
-        setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
-        setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
+            // console.log("Updateing wishList: ",wishlist);
+            setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+            setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
         } else {
-        setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
-        setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
+            setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
+            setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
         }
     };
     const addToWishList = async () => {
@@ -214,7 +214,6 @@ const Ppage = () => {
             checkAndCreateToast("success", "Wishlist Updated Successfully");
             console.log("Wishlist Updated Successfully: ",response);
             if(response){
-                // updateButtonStates();
                 setIsInWishList(response);
             }
         } else {
@@ -303,31 +302,46 @@ const Ppage = () => {
         setSelectedColor(newSize.colors);
     }
     const handelSetColorImages = (color) => {
-        setSelectedSize_color_Image_Array(color.images)
+        setSelectedSizeColorImageArray(color.images)
 
         setSelectedImage(color.images[0]);
     }
     useEffect(()=>{
-        if(product){
+        if (product) {
+            const availableSize = product.size.find(item => item.quantity > 0);
+            setSelectedSize(availableSize);
+            setSelectedColor(availableSize.colors);
+            const color = availableSize.colors[0];
+            setSelectedSizeColorImageArray(color.images);
+            // setSelectedColorId(color._id);
+            setSelectedImage(color.images[0]);
+        }
+        if (selectedSize) {
+            setSelectedColor(selectedSize.colors);
+            const color = selectedSize.colors[0];
+            setSelectedSizeColorImageArray(color.images);
+            // setSelectedColorId(color._id);
+            setSelectedImage(color.images[0]);
+        }
+        /* if(product){
+            const availableSize = product.size.find(item => item.quantity > 0);
+            setSelectedColor(availableSize);
             setSelectedSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
             setCurrentSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
-            setSelectedColor(product.size[0].quantity <= 0 ? product.size[1].colors: product.size[0].colors);
 
             const currentColor = product.size[0].colors[0];
 
             // setSelectedColorId(currentColor._id);
             setSelectedImage(currentColor.images[0]);
-            setSelectedSize_color_Image_Array(currentColor.images);
-        }
+            setSelectedSizeColorImageArray(currentColor.images);
+        } */
         if(product){
             checkFetchedIsPurchased();
         }
         if(user){
             dispatch(getbag({ userId: user.id }));
-            // dispatch(getwishlist());
         }
-        // refreshWishListAndBag();
-        },[product,user,dispatch])
+    },[product,user,dispatch])
     useEffect(() => {
         // Check if the user is logged in
         if(!loadingWishList && !bagLoading){
@@ -338,24 +352,12 @@ const Ppage = () => {
         if(selectedSize){
             setSelectedColor(selectedSize.colors);
             const currentColor = selectedSize.colors[0];
-            setSelectedSize_color_Image_Array(currentColor.images);
+            setSelectedSizeColorImageArray(currentColor.images);
             // setSelectedColorId(currentColor._id);
             setSelectedImage(currentColor.images[0]);
         }
     },[selectedSize])
 
-    /* const memoIsVideo = useMemo(() => {
-        if (!selectedImage || !selectedImage.url) return false;
-
-        const url = selectedImage.url;
-        return (
-            url.includes("video") || 
-            url.endsWith(".mp4") || 
-            url.endsWith(".mov") || 
-            url.endsWith(".avi")
-        );
-    }, [selectedImage]); */
-    
 
     useEffect(() => {
         // Function to handle the scroll event
@@ -421,10 +423,10 @@ const Ppage = () => {
                                         ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                         </span>
                                         {product?.salePrice && product?.salePrice > 0 && (
-                                        <>
-                                            <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
-                                            <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
-                                        </>
+                                            <Fragment>
+                                                <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
+                                                <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
+                                            </Fragment>
                                         )}
                                     </h1>
                                     <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
@@ -437,20 +439,21 @@ const Ppage = () => {
                                             <div key={`size_${index}_${size._id}`}
                                                 className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
                                                 ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
-                                                onClick={() => { handleSetNewImageArray(size); }}>
-                                            <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                                {size.label}
-                                            </button>
-                                            {size?.quantity <= 0 && (
-                                                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-                                                        {/* Diagonal Line 1 */}
-                                                        <div className="absolute w-[5px] h-[60px] bg-red-600 transform rotate-45"></div>
-                                                        {/* Diagonal Line 2 */}
-                                                        <div className="absolute w-[5px] h-[60px] bg-red-600 transform -rotate-45"></div>
+                                                onClick={() => { handleSetNewImageArray(size); }}
+                                            >
+                                                <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
+                                                    {size.label}
+                                                </button>
+                                                {size?.quantity <= 0 && (
+                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                            {/* Diagonal Line 1 */}
+                                                            <div className="absolute w-[5px] h-[60px] bg-red-600 transform rotate-45"></div>
+                                                            {/* Diagonal Line 2 */}
+                                                            <div className="absolute w-[5px] h-[60px] bg-red-600 transform -rotate-45"></div>
+                                                        </div>
                                                     </div>
-                                                </div>
-                                            )}
+                                                )}
                                             </div>
                                         ))}
                                         </div>
@@ -461,8 +464,8 @@ const Ppage = () => {
                                                     <div key={`color_${i}`} 
                                                         className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
                                                         ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
-                                                        onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}>
-
+                                                        onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}
+                                                    >
                                                         <button 
                                                             disabled={color.quantity <= 0} 
                                                             style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
@@ -473,18 +476,15 @@ const Ppage = () => {
                                                             title={color?.quantity || color?.label || "Color"} 
                                                         />
 
-                                                        {/* Diagonal Lines Over Button */}
+                                                        {/* Diagonal Lines Over Button when quantity is 0 */}
                                                         {color?.quantity <= 0 && (
                                                             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                                                                 <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
                                                                     {/* Diagonal Line 1 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-900 transform rotate-45"></div>
+                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 transform rotate-45"></div>
                                                                     {/* Diagonal Line 2 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-900 transform -rotate-45"></div>
+                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 transform -rotate-45"></div>
                                                                 </div>
-                                                                {/* <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
-                                                                <span className='w-full flex justify-center flex-row'>Out of Stock</span>
-                                                                </div> */}
                                                             </div>
                                                         )}
                                                     </div>
@@ -492,8 +492,7 @@ const Ppage = () => {
                                             ) : (
                                                 <p className="text-black">No colors available</p>
                                             )}
-                                            </div>
-
+                                        </div>
 
                                     </div>
                                     {/* Add to Cart & Buy Now Buttons */}
@@ -652,7 +651,7 @@ const Ppage = () => {
                         </div>
                         <div className='w-full justify-center flex flex-col '>
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-10 xl:gap-10 lg:gap-10 pb-8 px-10'>
+                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-4 xl:gap-5 lg:gap-5 pb-8 px-10'>
                                 {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (<Single_product pro={similar[0]} user ={user} key={pro._id}/>))}
                             </ul>
                         </div>

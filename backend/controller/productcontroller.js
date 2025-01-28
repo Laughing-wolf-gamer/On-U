@@ -34,6 +34,9 @@ export const getallproducts = A(async (req, res)=>{
         // Build the query filter based on incoming request parameters
         const filter = {};
         let sort = {};
+        if(req.query.sortBy){
+            sort = handleSort(req.query.sortBy);
+        }
 
         // Color filter (match any of the colors in the list)
         if (req.query.color) {
@@ -120,33 +123,7 @@ export const getallproducts = A(async (req, res)=>{
                 };
             }
         }
-        /* // Sorting logic (price and date)
-        if (req.query.price) {
-            const queryPrice = req.query.price.split(':');
-            // Parse the price range into numbers
-            const minPrice = Number(queryPrice[0]);
-            const maxPrice = Number(queryPrice[1]);
-
-            console.log("Price Sort: ", minPrice, maxPrice);
-            
-            // Ensure that both minPrice and maxPrice are valid numbers before applying the filter
-            if (!isNaN(minPrice) && !isNaN(maxPrice)) {
-                filter.salePrice = {
-                    $gte: parseFloat(minPrice),  // Minimum price filter
-                    $lte: parseFloat(maxPrice)   // Maximum price filter
-                };
-            } else {
-                // Handle invalid price range (optional)
-                console.error("Invalid price range values");
-            }
-        } */
-
-        /* if (req.query.date) {
-            sort.date = req.query.date === '1' ? 1 : -1; // Sort by date if specified
-        } */
-        if(req.query.sortBy){
-            sort = handleSort(req.query.sortBy);
-        }
+        
 
         // Gender filter
         if (req.query.gender) {
@@ -173,12 +150,8 @@ export const getallproducts = A(async (req, res)=>{
             }
         }
         // console.log("Filter: ", filter);
-        // const { page = 1} = req.query; // Default to page 1 and limit 10
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments(filter);
-        // Parse page and limit as integers
-        /* if(Number(req.query.width) >= 1024){
-        } */
         let itemsPerPage = 20;
         const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
 
@@ -203,14 +176,6 @@ export const getallproducts = A(async (req, res)=>{
             pro:productsPagination,
             length: totalProducts
         });
-        /* // Find products using the built query filter  Testing...................$$$$$
-        const products = await ProductModel.find(filter).sort(sort);
-        // console.log("Fetched Products: ", products);
-        return res.status(200).json({
-            products: allProducts,
-            pro:products,
-            length: totalProducts
-        }); */
     } catch (error) {
         console.error("Error Fetching Products: ",error);
         res.status(500).json({success:false,message:'Internal server Error',result:{
@@ -225,7 +190,7 @@ const handleSort = (sortBy) => {
     let sort = {};
   
     switch (sortBy) {
-        case "newItems":
+        case "newest":
             // Sort by creation date (newest first)
             sort.createdAt = -1;
             break;

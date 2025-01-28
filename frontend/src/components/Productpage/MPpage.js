@@ -92,11 +92,20 @@ const reviews = [
 
 const maxScrollAmount = 1024
 const MPpage = () => {
+    const navigation = useNavigate();
+    const param = useParams();
+    const dispatch = useDispatch();
+
+
     const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
-    const [isInWishList, setIsInWishList] = useState(false);
-    const [isInBagList, setIsInBagList] = useState(false);
+    
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const { product, loading, similar } = useSelector((state) => state.Sproduct);
+    const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
+    
+
+
     const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         console.log("check Toast: ",type, message,activeToast);
@@ -121,21 +130,25 @@ const MPpage = () => {
             showToast(message);
         }
     }
-    const navigation = useNavigate();
-    const param = useParams();
-    const dispatch = useDispatch();
+    
+    const [isInWishList, setIsInWishList] = useState(false);
+    const [isInBagList, setIsInBagList] = useState(false);
     const [currentColor, setCurrentColor] = useState(null);
     const [currentSize, setCurrentSize] = useState(null);
     const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState([]);
-    const [selectedImage, setSelectedImage] = useState(null);
     const[hasPurchased, setHasPurchased] = useState(false);
     const [selectedSizeColorImageArray, setSelectedSizeColorImageArray] = useState([]);
-    const [selectedColorId, setSelectedColorId] = useState(null);
+    // const [selectedColorId, setSelectedColorId] = useState(null);
     const[ratingData,setRatingData] = useState(null);
+    const [isInViewport, setIsInViewport] = useState(false);
+    const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
 
-    const { product, loading, similar } = useSelector((state) => state.Sproduct);
-    const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
+
+    const divRef = useRef(null);
+    const scrollContainerRef = useRef(null);
+
+    
 
     // const[isInWishList,setIsInWishList] = useState(false);
     // const[isInBagList,setIsInBagList] = useState(false);
@@ -279,14 +292,13 @@ const MPpage = () => {
         setCurrentSize(size);
         setSelectedSize(size);
         setSelectedColor(size.colors);
-        setSelectedColorId(size.colors[0]._id);
-        refreshWishListAndBag();
+        // setSelectedColorId(size.colors[0]._id);
     };
 
     const handleSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images);
-        setSelectedImage(color.images[0]);
-        setSelectedColorId(color._id);
+        // setSelectedImage(color.images[0]);
+        // setSelectedColorId(color._id);
     };
     const PostRating = (e)=>{
         e.preventDefault();
@@ -312,15 +324,15 @@ const MPpage = () => {
             setSelectedColor(availableSize.colors);
             const color = availableSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
-            setSelectedColorId(color._id);
-            setSelectedImage(color.images[0]);
+            // setSelectedColorId(color._id);
+            // setSelectedImage(color.images[0]);
         }
         if (selectedSize) {
             setSelectedColor(selectedSize.colors);
             const color = selectedSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
-            setSelectedColorId(color._id);
-            setSelectedImage(color.images[0]);
+            // setSelectedColorId(color._id);
+            // setSelectedImage(color.images[0]);
         }
         if(product){
             checkFetchedIsPurchased();
@@ -330,15 +342,11 @@ const MPpage = () => {
         }
         dispatch(getwishlist())
     }, [product, dispatch]);
-    console.log("getLocalStorageWishListItem",getLocalStorageWishListItem());
-    const refreshWishListAndBag = ()=>{
-        // setIsInWishList();
-        // setIsInBagList();
-    }
-    const [isInViewport, setIsInViewport] = useState(false);
-    const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
-    const divRef = useRef(null);
-    const scrollContainerRef = useRef(null);
+    // console.log("getLocalStorageWishListItem",getLocalStorageWishListItem());
+
+
+
+    
 
     // Function to check if the target element is in the viewport
     const checkIfInViewport = () => {
@@ -403,17 +411,6 @@ const MPpage = () => {
             }
         };
     }, []);
-    
-    
-
-    /* if(user){
-        isInWishList = wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && wishlist.orderItems.some( w=> w.productId?._id === product?._id)
-        isInBagList = bag && bag.orderItems && bag.orderItems.length > 0 && bag.orderItems.some( w=> w.productId?._id === product?._id)
-    }else{
-        isInWishList = getLocalStorageWishListItem().find(b => b.productId?._id=== product?._id);
-        isInBagList = getLocalStorageBag().find( b=>  b.productId === product?._id)
-    } */
-    // console.log("Current Scroll Amount:",scrollAmount,"Max Scroll Amount:",maxScrollAmount);
     return (
         <Fragment>
             
