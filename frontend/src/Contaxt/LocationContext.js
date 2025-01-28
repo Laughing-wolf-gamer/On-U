@@ -81,7 +81,6 @@ export const LocationContextProvider = ({ children }) => {
             console.log("Data is Not Set Pincode: ",data);
             if (data && data.address && data.address.postcode) {
                 setPincode(data.address.postcode);  // Set the pincode state
-                checkAndCreateToast("success", "Received Pincode: " + data.address.postcode);
             } else {
                 checkAndCreateToast("success","Pincode could not be retrieved.");
             }
