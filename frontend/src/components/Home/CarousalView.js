@@ -57,35 +57,27 @@ const CarousalView = ({ b_banners, indicator, bannerLoading = false }) => {
                 }
             >
                 {
-                    bannerLoading ? (
-                        <Fragment>
-                            {
-                                Array(5).fill(null).map((_, i) => (
-                                    <div key={`loading_${i}`} className='h-full w-full bg-gray-300' />
-                                ))
-                            }
-                        </Fragment>
-                    ):(
-                        <Fragment>
-                            {
-                                b_banners.map((b, index) => (
-                                    <div key={`b_${index} h-full`}>
-                                        <Link to='/products'>
-                                            <LazyLoadImage
-                                                effect='blur'
-                                                src={b}
-                                                width='100%'
-                                                height="100%"
-                                                className='min-h-[480px] bg-gray-300' // Changed to a gray background
-                                                alt='Banner_Image'
-                                            />
-                                        </Link>
-                                        {/* <div className='h-[80px]' /> */}
-                                    </div>
-                                ))
-                            }
-                        </Fragment>
-                    )
+                    bannerLoading ? Array(5).fill(null).map((_, i) => (
+                        <div key={`loading_${i}`} className='h-[600px] w-full bg-gray-100 p-4 animate-pulse' >
+                            <div className='w-full items-center justify-center flex h-full bg-gray-500 animate-pulse' >
+
+                            </div>
+                        </div>
+                    )):b_banners.map((b, index) => (
+                        <div key={`b_${index} h-full`}>
+                            <Link to='/products'>
+                                <LazyLoadImage
+                                    effect='blur'
+                                    src={b}
+                                    width='100%'
+                                    height="100%"
+                                    className='min-h-[480px] bg-gray-300' // Changed to a gray background
+                                    alt='Banner_Image'
+                                />
+                            </Link>
+                            {/* <div className='h-[80px]' /> */}
+                        </div>
+                    ))
                 }
             </Carousel>
 

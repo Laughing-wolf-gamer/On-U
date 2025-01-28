@@ -86,7 +86,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
         if(wishlist){
             updateButtonStates();
         }
-        }, [user, wishlist, pro,sessionData]); 
+    }, [user, wishlist, pro,sessionData]); 
 
     // Track visibility of video elements using IntersectionObserver
     const observer = useRef(
@@ -216,7 +216,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                                     <img
                                         loading="lazy"
                                         src={mediaItem.url}
-                                        className="w-full h-72 object-cover"
+                                        className="w-full 2xl:h-72 lg:h-72 md:h-64 sm:h-52 h-48 object-cover"
                                         width="100%"
                                         alt="product"
                                         onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

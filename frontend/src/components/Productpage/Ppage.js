@@ -649,10 +649,14 @@ const Ppage = () => {
                             </div>
 
                         </div>
-                        <div className='w-full justify-center flex flex-col '>
+                        <div className='w-full justify-center flex flex-col px-10'>
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:gap-4 xl:gap-5 lg:gap-5 pb-8 px-10'>
-                                {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (<Single_product pro={similar[0]} user ={user} key={pro._id}/>))}
+                            <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 pb-8'>
+                                {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (
+                                    <div key={pro._id} className='w-full h-full'>
+                                        <Single_product pro={similar[0]} user ={user}/>
+                                    </div>
+                                ))}
                             </ul>
                         </div>
                     </div>
@@ -876,43 +880,43 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
     }, [selectedImage]);
     return(
         <div className='w-full min-h-full justify-start items-start flex-row flex'>
-            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4'>
+            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4 space-y-7'>
                 <div className='flex flex-col w-[70px] min-h-fit justify-between items-center'> {/* Reduced grid-cols from 8 to 6 */}
                 {
                     selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
-                        selectedSize_color_Image_Array.map((e, index) => {
+                        selectedSize_color_Image_Array.map((file, index) => {
                         // Check if the media is a video or an image
-                        const isVideo = e?.url?.includes("video") || e?.url?.endsWith(".mp4") || e?.url?.endsWith(".mov") || e?.url?.endsWith(".avi");
-                        console.log("Selected color Images: ", isVideo);
+                        const isVideo = file?.url?.includes("video") || file?.url?.endsWith(".mp4") || file?.url?.endsWith(".mov") || file?.url?.endsWith(".avi");
+                        console.log("Selected color Images is: ", isVideo);
                         return (
                             <div
-                            key={index}
-                            className={`w-full h-[100px] ${selectedImage === e ? "border-2":""}  border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
-                            onMouseEnter={() => { Addclass(); setSelectedImage(e); }}
-                            onClick={() => { Addclass(); setSelectedImage(e); }}
+                                key={index}
+                                className={`w-full h-[100px] ${selectedImage === file ? "border-2":""}  border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
+                                onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
+                                onClick={() => { Addclass(); setSelectedImage(file); }}
                             >
-                            {isVideo ? (
-                                <ReactPlayer
-                                    className="w-full h-full object-cover hover:scale-110"
-                                    url={e.url || e}
-                                    playing={isFocused} // Play only when the element is in focus
-                                    controls={false} // Hide video controls
-                                    muted
-                                    width="100%"
-                                    height="100%"
-                                    light={false} // No thumbnail before video plays
-                                    onFocus={() => setIsFocused(true)} // Start playing when focused
-                                    onBlur={() => setIsFocused(false)} // Stop playing when out of focus
-                                    config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
-                                />
-                            ) : (
-                                <LazyLoadImage
-                                    src={e.url || e}
-                                    className="w-full h-full object-cover hover:scale-110"
-                                    alt="productImage"
-                                    loading="lazy" // Ensure image is lazily loaded
-                                />
-                            )}
+                                {isVideo ? (
+                                    <ReactPlayer
+                                        className="w-full h-full object-cover hover:scale-110"
+                                        url={file.url || file}
+                                        playing={isFocused} // Play only when the element is in focus
+                                        controls={false} // Hide video controls
+                                        muted
+                                        width="100%"
+                                        height="100%"
+                                        light={false} // No thumbnail before video plays
+                                        onFocus={() => setIsFocused(true)} // Start playing when focused
+                                        onBlur={() => setIsFocused(false)} // Stop playing when out of focus
+                                        config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
+                                    />
+                                ) : (
+                                    <img
+                                        src={file.url || file}
+                                        className="w-full h-full object-cover hover:scale-110"
+                                        alt="productImage"
+                                        loading="lazy" // Ensure image is lazily loaded
+                                    />
+                                )}
                             </div>
                         );
                     })
@@ -937,7 +941,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                             />
                         </div>
                     ) : (
-                        <div className="relative h-full w-full justify-start items-start overflow-hidden hover:shadow-md">
+                        <div className="relative h-full min-w-fit justify-start items-start overflow-hidden hover:shadow-md">
                             <ImageZoom imageSrc={selectedImage.url || selectedImage} />
                         </div>
                     )
