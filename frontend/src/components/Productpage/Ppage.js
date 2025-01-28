@@ -441,13 +441,13 @@ const Ppage = () => {
                                             <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
                                                 {size.label}
                                             </button>
-                                            {size?.quantity > 0 && (
+                                            {size?.quantity <= 0 && (
                                                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                                                     <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
                                                         {/* Diagonal Line 1 */}
-                                                        <div className="absolute w-[5px] h-[60px] bg-red-900 transform rotate-45"></div>
+                                                        <div className="absolute w-[5px] h-[60px] bg-red-600 transform rotate-45"></div>
                                                         {/* Diagonal Line 2 */}
-                                                        <div className="absolute w-[5px] h-[60px] bg-red-900 transform -rotate-45"></div>
+                                                        <div className="absolute w-[5px] h-[60px] bg-red-600 transform -rotate-45"></div>
                                                     </div>
                                                 </div>
                                             )}
