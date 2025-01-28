@@ -48,6 +48,7 @@ export const LocationContextProvider = ({ children }) => {
                     setPosition([latitude, longitude]);
                     setIsPermissionGranted(true); // Mark permission as granted
                     fetchPincode(latitude, longitude);  // Fetch pincode after getting position
+                    checkAndCreateToast("success", "Location permission granted");
                 },
                 (err) => {
                     // Handle error (e.g., user denied permission)
@@ -55,7 +56,7 @@ export const LocationContextProvider = ({ children }) => {
                         setIsPermissionGranted(false); // Mark permission as denied
                         checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
                     } else {
-                        checkAndCreateToast("error","An error occurred while fetching the location.");
+                        checkAndCreateToast("warning","Please enable location services.");
                     }
                     console.log("GeoLocation Error: ",err);
                 },
@@ -80,6 +81,7 @@ export const LocationContextProvider = ({ children }) => {
             console.log("Data is Not Set Pincode: ",data);
             if (data && data.address && data.address.postcode) {
                 setPincode(data.address.postcode);  // Set the pincode state
+                checkAndCreateToast("success", "Received Pincode: " + data.address.postcode);
             } else {
                 checkAndCreateToast("success","Pincode could not be retrieved.");
             }

@@ -9,6 +9,7 @@ import AlertTemplate from 'react-alert-template-basic'
 import { ToastProvider } from './Contaxt/ToastProvider';
 import { SessionStorageProvider } from './Contaxt/SessionStorageContext';
 import { LocationContextProvider } from './Contaxt/LocationContext';
+import { SettingsProvider } from './Contaxt/SettingsContext';
 
 const option = {
   timeout: 2000,
@@ -25,7 +26,9 @@ ReactDOM.render(
             <ToastProvider>
               <SessionStorageProvider>
                 <LocationContextProvider>
-                    <App />
+                    <SettingsProvider>
+                        <App />
+                    </SettingsProvider>
                 </LocationContextProvider>
               </SessionStorageProvider>
             </ToastProvider>

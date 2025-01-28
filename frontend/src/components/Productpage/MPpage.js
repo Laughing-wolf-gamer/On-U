@@ -19,11 +19,8 @@ import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
 import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
-
-
-import toast from 'react-hot-toast';
-import { useToast } from '../../Contaxt/ToastProvider';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 
 const reviews = [
@@ -103,10 +100,10 @@ const MPpage = () => {
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
-    
+    const {checkAndCreateToast} = useSettingsContext();
 
 
-    const { activeToast, showToast } = useToast();
+    /* const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         console.log("check Toast: ",type, message,activeToast);
         if(!activeToast){
@@ -129,7 +126,7 @@ const MPpage = () => {
             }
             showToast(message);
         }
-    }
+    } */
     
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);

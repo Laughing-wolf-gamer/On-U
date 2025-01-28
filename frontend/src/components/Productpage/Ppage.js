@@ -15,11 +15,9 @@ import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
 import { Heart, ShoppingBag, ShoppingCart} from 'lucide-react'
-import toast from 'react-hot-toast'
-import { useToast } from '../../Contaxt/ToastProvider'
 import SizeChartModal from './SizeChartModal'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
-import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { useSettingsContext } from '../../Contaxt/SettingsContext'
 
 
 const reviews = [
@@ -92,7 +90,8 @@ const Ppage = () => {
 
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
-    const { activeToast, showToast } = useToast();
+    const {checkAndCreateToast} = useSettingsContext();
+    /* const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         console.log("check Toast: ",type, message,activeToast);
         if(activeToast !== message){
@@ -115,7 +114,7 @@ const Ppage = () => {
             }
             showToast(message);
         }
-    }
+    } */
     const navigation = useNavigate();
     const param = useParams()
     const dispatch = useDispatch()
