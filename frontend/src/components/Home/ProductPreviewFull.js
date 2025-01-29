@@ -58,7 +58,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     return (
         <div className='md:py-8 md:px-12 lg:py-8 lg:px-12 2xl:py-8 2xl:px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
             {/* Preview Headers Section */}
-            <div className="w-full h-auto flex flex-wrap justify-center gap-5 mb-6 font1">
+            <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1">
                 {previewHeader && previewHeader.length > 0 &&
                     previewHeader.map((h, index) => (
                         <button
@@ -71,7 +71,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                 }
                             }}
                             key={index}
-                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-6 py-3 flex items-center justify-center md:w-auto xl:w-[200px] 2xl:w-[200px] w-[300px] h-[50px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
+                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-6 py-3 flex items-center justify-center md:w-auto xl:w-[200px] 2xl:w-[200px] w-auto h-[50px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
                         >
                             <span className="text-center text-sm md:text-[16px]">
                                 {h?.title}
@@ -92,7 +92,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                         // const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
                         return (
-                            <div className="2xl:w-[296px] 2xl:h-[550px] xl:w-[240px] xl:h-[460px] md:w-[220px] md:h-[435px] w-full h-fit m-2 rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                            <div className="2xl:w-[296px] 2xl:h-[550px] xl:w-[240px] xl:h-[460px] md:w-[220px] md:h-[435px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">
