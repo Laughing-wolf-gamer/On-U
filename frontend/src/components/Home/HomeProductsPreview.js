@@ -154,18 +154,18 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                     <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button
                 ) : (
                     <>
-                        <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
+                        <div className="w-full h-8 md:h-10 flex items-center justify-center font-sans">
                             <button onClick={addToWishList} className="w-full h-full flex items-center text-black bg-white text-center justify-center font-sans hover:shadow-md space-x-2">
                                 {
-                                    isInWishList ? <div className='animate-vibrateScale'><Heart size={30} fill='red' strokeWidth={0}/></div>:<Heart size={30} />
+                                    isInWishList ? <div className='animate-vibrateScale'><Heart className='text-[8px] md:text-sm' fill='red' strokeWidth={0}/></div>:<Heart strokeWidth={.8} className='text-[8px] md:text-sm' />
                                 }
-                                <span className="font-sans text-xs md:text-sm">Add to Wishlist</span>
+                                <span className="font-sans text-[10px] md:text-sm">Add to Wishlist</span>
                             </button>
                         </div>
-                        <div className="w-full h-7 md:h-10 flex items-center justify-center font-sans">
+                        <div className="w-full h-8 md:h-10 flex items-center justify-center font-sans">
                             <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-sans hover:shadow-md space-x-2">
-                                <ShoppingCart size={30} />
-                                <span className="font-sans text-xs md:text-sm">Add to Cart</span>
+                                <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm' />
+                                <span className="font-sans text-[10px] md:text-sm">Add to Cart</span>
                             </button>
                         </div>
                     </>
