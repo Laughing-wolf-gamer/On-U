@@ -1,6 +1,8 @@
 import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCoupons } from '../../action/common.action';
+import { useToast } from '../../Contaxt/ToastProvider';
+import toast from 'react-hot-toast';
 
 // Sample coupon data
 const coupons = [
@@ -29,6 +31,30 @@ const coupons = [
 
 const CouponsDisplay = ({user}) => {
     const{AllCoupons} = useSelector(state=>state.AllCoupons);
+    const { activeToast, showToast } = useToast();
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
+                case "error":
+                    toast.error(message)
+                    break;
+                case "warning":
+                    toast.warning(message)
+                    break;
+                case "info":
+                    toast.info(message)
+                    break;
+                case "success":
+                    toast.success(message)
+                    break;
+                default:
+                    toast.info(message)
+                    break;
+            }
+            showToast(message);
+        }
+    }
     const dispatch = useDispatch();
     useEffect(()=>{
         // Fetch all coupons
@@ -75,7 +101,10 @@ const CouponsDisplay = ({user}) => {
                             <div className="flex items-center justify-between">
                                 <span className="text-xl font-bold text-gray-600">{coupon.CouponCode}</span>
                                 <button
-                                    onClick={() => navigator.clipboard.writeText(coupon.CouponCode)}
+                                    onClick={() => {
+                                        navigator.clipboard.writeText(coupon.CouponCode)
+                                        checkAndCreateToast("success", "Coupon Code copied to clipboard!");
+                                    }}
                                     className="bg-gray-500 text-white py-2 px-4 rounded-lg text-sm transition-colors hover:bg-gray-600"
                                 >
                                     Copy Code
