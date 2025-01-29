@@ -35,8 +35,8 @@ const ProductPreviewFull = ({ product ,user}) => {
 
     const handleColorChange = (productId, colorImages) => {
         setSelectedColors(prevState => ({
-        ...prevState,
-        [productId]: colorImages
+            ...prevState,
+            [productId]: colorImages
         }));
     };
     useEffect(()=>{
@@ -47,8 +47,8 @@ const ProductPreviewFull = ({ product ,user}) => {
         
         if (activePreview) queryParams.set('specialCategory', activePreview);
         if(!activePreview) {
-        navigation("/products")
-        return;
+            navigation("/products")
+            return;
         };
         const url = `/products?${queryParams.toString()}`;
         navigation(url);
@@ -56,9 +56,9 @@ const ProductPreviewFull = ({ product ,user}) => {
     }
 
     return (
-        <div className='md:py-8 md:px-12 lg:py-8 lg:px-12 2xl:py-8 2xl:px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
+        <div className='md:py-8 md:px-12 lg:py-8 lg:px-12 2xl:py-8 2xl:px-12 flex flex-col justify-center space-y-5 items-center bg-slate-200'>
             {/* Preview Headers Section */}
-            <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1 px-5">
+            <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1 px-5 my-4">
                 {previewHeader && previewHeader.length > 0 &&
                     previewHeader.map((h, index) => (
                         <button
@@ -71,12 +71,13 @@ const ProductPreviewFull = ({ product ,user}) => {
                                 }
                             }}
                             key={index}
-                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-6 py-3 flex items-center justify-center md:w-auto xl:w-[200px] 2xl:w-[200px] w-full h-[40px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
+                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-3 py-3 flex items-center justify-center md:w-full xl:w-[200px] 2xl:w-[200px] w-[90px] h-[40px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
                         >
-                            <h1 className="text-center text-[10px] md:text-[16px]">
+                            <span className="inline text-center text-[10px] md:text-[16px]">
                                 {h?.title}
-                            </h1>
+                            </span>
                         </button>
+
                     ))
                 }
             </div>
