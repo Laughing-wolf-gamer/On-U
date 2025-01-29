@@ -61,7 +61,7 @@ const MenuItems = ({ setOpen, user }) => {
 const AdminSidebarLayout = ({ sheetOpen, setOpen, user }) => {
     const navigate = useNavigate();
     return (
-        <Fragment>
+        <div >
             {/* Sheet Sidebar */}
             <Sheet open={sheetOpen} onOpenChange={setOpen}>
                 <SheetContent side='left' className="w-64 bg-gray-100 text-gray-900 transition-transform duration-300 ease-in-out overflow-y-auto">
@@ -92,7 +92,7 @@ const AdminSidebarLayout = ({ sheetOpen, setOpen, user }) => {
                 </div>
                 <MenuItems user={user} />
             </aside>
-        </Fragment>
+        </div>
     );
 }
 

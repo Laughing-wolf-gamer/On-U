@@ -58,7 +58,7 @@ const CouponsDisplay = ({user}) => {
     const dispatch = useDispatch();
     useEffect(()=>{
         // Fetch all coupons
-        const queryLink = `Status=Active&Date=${Date.now().toLocaleString()}&CustomerLogin=${user === "true" ? "true" : "false"}`;
+        const queryLink = ``;
         dispatch(fetchAllCoupons(queryLink));
     },[dispatch])
     console.log("All Coupons: ",AllCoupons);

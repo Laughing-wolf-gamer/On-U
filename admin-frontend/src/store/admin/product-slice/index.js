@@ -85,8 +85,8 @@ export const delProducts = createAsyncThunk('/products/del',async (id)=>{
 
 export const createNewCoupon = createAsyncThunk('/admin/product/createCoupon',async({couponData}) =>{
     try {
-        const token = sessionStorage.getItem('token');
-        console.log(token);
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
         const response = await axios.post(`${BASE_URL}/admin/product/coupons/create`,couponData,Header());
         return response?.data;
     } catch (error) {
@@ -95,8 +95,8 @@ export const createNewCoupon = createAsyncThunk('/admin/product/createCoupon',as
 })
 export const editCoupon = createAsyncThunk('/admin/product/coupons/edit',async({couponId,couponData})=>{
     try {
-        const token = sessionStorage.getItem('token');
-        console.log(token);
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
         const response = await axios.put(`${BASE_URL}/admin/product/coupons/edit/${couponId}`,couponData,Header());
         return response?.data;
     } catch (error) {

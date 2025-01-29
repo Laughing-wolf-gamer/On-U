@@ -35,7 +35,6 @@ const StatsCard = ({ title, value, icon, onChange ,isActive}) => {
     <div
       onClick={(e) => {
         if (onChange) {
-          e.preventDefault();
           onChange(title, value);
         }
       }}

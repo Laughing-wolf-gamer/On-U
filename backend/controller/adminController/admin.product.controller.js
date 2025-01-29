@@ -136,10 +136,10 @@ export const editCoupon = async (req,res)=>{
         if (customerLogin && customerLogin.length > 0) updateFields.CustomerLogin = customerLogin;
         if (freeShipping > 0) updateFields.FreeShipping = freeShipping;
         if (productId ) updateFields.ProductId = productId
-        if(category && category.length > 0) updateFields.Category = category
+        if(category && category.length > 0) updateFields.Category = category !== 'none' ? category:null;
         if(status && ["Active", "Inactive"].includes(status)) updateFields.Status = status
         if(validDate) updateFields.ValidDate = validDate
-        console.log("Coupon Updating : ",updateFields);
+        // console.log("Coupon Updating : ",updateFields);
         if (Object.keys(updateFields).length > 0) {
             const updatedCoupons = await Coupon.findByIdAndUpdate(
                 couponId, 

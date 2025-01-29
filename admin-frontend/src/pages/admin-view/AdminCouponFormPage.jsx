@@ -273,12 +273,12 @@ const AdminCouponFormPage = () => {
                     <h2 className="text-xl font-bold mb-4 text-center">{modalCoupon ? "Edit Coupon" : "Create Coupon"}</h2>
                     <form className="space-y-4">
                         <input
-                        type="text"
-                        placeholder="Coupon Name"
-                        value={couponName}
-                        onChange={(e) => setCouponName(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        required
+                            type="text"
+                            placeholder="Coupon Name"
+                            value={couponName}
+                            onChange={(e) => setCouponName(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                            required
                         />
                         <textarea
                         type="text"
@@ -337,14 +337,16 @@ const AdminCouponFormPage = () => {
                         Free Shipping
                         </label>
                         <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
+                            value={category}
+                            onChange={(e) => setCategory(e.target.value)}
+                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
                         >
-                        {allCategories && allCategories.length > 0 && allCategories.map((cat, i) => (
-                            <option key={i} value={cat?.value}>{cat.value}</option>
-                        ))}
+                            <option value={'none'}>Default</option>
+                            {allCategories && allCategories.length > 0 && allCategories.map((cat) => (
+                                <option key={cat.value} value={cat.value}>{cat.value}</option>
+                            ))}
                         </select>
+
                         <input
                         type="date"
                         value={validDate}

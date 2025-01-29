@@ -390,8 +390,11 @@ export const fetchCouponsByQuery = async (req,res)=>{
             if(req.query.Category){
                 filter.Category = req.query.Category;
             }
+			if(filter.ValidDate){
+				filter.ValidDate = {$lt: Date.now()}
+			}
         }
-        filter.ValidDate = {$lt: new Date()}
+        // filter.ValidDate = {$lt: Date.now()}
         const foundCoupons = await Coupon.find(filter).limit(10);
         console.log("Fetched Coupons: ",foundCoupons);
         res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
