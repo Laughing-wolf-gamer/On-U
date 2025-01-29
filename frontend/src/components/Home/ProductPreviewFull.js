@@ -89,11 +89,11 @@ const ProductPreviewFull = ({ product ,user}) => {
             <div className="w-full flex flex-row justify-center items-center bg-slate-200 ">
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
                 {previewProducts && previewProducts.length > 0 &&
-                    [1,2,3,4,5].map((_, index) => {
-                        const p = previewProducts[0];
+                    previewProducts.map((p, index) => {
+                        // const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
                         return (
-                            <div className="2xl:w-[317px] 2xl:h-[580px] xl:w-[254px] xl:h-[480px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                            <div className="2xl:w-[317px] 2xl:h-[580px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">

@@ -83,7 +83,7 @@ const Wishlist = () => {
                 ) : (
                 <Fragment>
                     {(currentWishListItem && currentWishListItem.length > 0) ? (
-                        <div className='w-screen h-screen gap-1 px-10 mb-10'>
+                        <div className='w-screen h-screen gap-1 px-10 mb-10 mt-7'>
                             <h1 className="font1 text-2xl font-semibold gap-3 px-10 text-slate-800 flex flex-row justify-start items-center">
                                 <span>My Wishlist</span>
                                 <span className="font-medium text-sm text-slate-500">
@@ -91,14 +91,6 @@ const Wishlist = () => {
                                 </span>
                             </h1>
 
-                            {/* <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
-                                {currentWishListItem.map((pro) => (
-                                    <div key={pro._id} className="w-full min-h-[10vw] max-w-xs m-1"> 
-                                        <Single_product pro={pro?.productId} user={user} showWishList={false} />
-                                    </div>
-                                ))}
-                            </ul> */}
-                            {/* Wishlist Grid */}
                             <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6 gap-3">
                                 {currentWishListItem && currentWishListItem.length > 0 && currentWishListItem.map((pro) => (
                                     <li

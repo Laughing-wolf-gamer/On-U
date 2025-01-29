@@ -878,7 +878,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
     }, [selectedImage]);
     return(
         <div className='w-full min-h-full justify-start items-start flex-row flex'>
-            <div className='h-full w-28 justify-center items-center flex-col flex col-span-4'>
+            <div className='h-full w-fit mr-5 justify-center items-center flex-col flex'>
                 <div className='flex flex-col w-[70px] min-h-fit justify-between items-center space-y-6'> {/* Reduced grid-cols from 8 to 6 */}
                 {
                     selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
@@ -921,7 +921,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                 }
                 </div>
             </div>
-            <div className='w-full min-h-full flex flex-col justify-center items-center'>
+            <div className='w-fit min-h-full flex flex-col justify-center items-center'>
                 {selectedImage ? (
                     memoIsVideo ? (
                         // Video handling using ReactPlayer
