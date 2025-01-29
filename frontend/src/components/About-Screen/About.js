@@ -52,7 +52,7 @@ const About = () => {
                     </section>
 
                     {/* Values Section */}
-                    <section className="bg-gray-300 py-12 shadow-lg rounded-xl">
+                    <section className="bg-gray-300 py-12 mb-8 shadow-lg rounded-xl">
                         <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
                             {aboutData && aboutData.outMoto.length > 0 ? aboutData.outMoto.map((moto, index) => (
                                 <div key={`moto-${index}`} className="text-center bg-gray-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
