@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useEffect } from 'react';
 import { useToast } from './ToastProvider';
 import toast from 'react-hot-toast';
+import { inProduction } from '../config';
 
 // Create the context
 const SettingContext = createContext();
@@ -31,27 +32,32 @@ export const SettingsProvider = ({ children }) => {
             showToast(message);
         }
     }
-    /* useEffect(() => {
-        document.addEventListener('contextmenu', (e) => e.preventDefault());
-        return () => {
-            document.removeEventListener('contextmenu', (e) => e.preventDefault());
-        };
+    
+    useEffect(() => {
+        if(inProduction){
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+            return () => {
+                document.removeEventListener('contextmenu', (e) => e.preventDefault());
+            };
+        }
     }, []);
     
     useEffect(() => {
-        const handleKeyPress = (event) => {
-            if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
-                event.preventDefault();
-                checkAndCreateToast("info",'Opening Developer Tools is not allowed!');
-            }
-        };
-        
-        window.addEventListener('keydown', handleKeyPress);
-        
-        return () => {
-            window.removeEventListener('keydown', handleKeyPress);
-        };
-    }, []); */
+        if(inProduction){
+            const handleKeyPress = (event) => {
+                if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
+                    event.preventDefault();
+                    checkAndCreateToast("info",'Opening Developer Tools is not allowed!');
+                }
+            };
+            
+            window.addEventListener('keydown', handleKeyPress);
+            
+            return () => {
+                window.removeEventListener('keydown', handleKeyPress);
+            };
+        }
+    }, []);
 
     return (
         <SettingContext.Provider value={{ checkAndCreateToast}}>
