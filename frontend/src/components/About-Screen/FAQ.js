@@ -51,7 +51,7 @@ const FAQ = () => {
   },[])
 
   return (
-    <div >
+    <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       <div className="bg-gray-50 py-12 pb-10 px-6 lg:px-24 my-3 h-full w-full">
         {/* Header Section */}
         <header className="text-center mb-12">

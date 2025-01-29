@@ -764,7 +764,7 @@ export const deletebag = async (req, res) => {
 export const deletewish = async (req, res) => {
     try {
         const { deletingProductId } = req.body;
-
+        console.log("Deleting product: ", deletingProductId);
         // Find the wishlist of the user
         const wishlist = await WhishList.findOne({ userId: req.user.id });
         

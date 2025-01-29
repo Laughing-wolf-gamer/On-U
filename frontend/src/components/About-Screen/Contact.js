@@ -100,7 +100,7 @@ const Contact = () => {
         fetchContactUsPageData();
     },[dispatch])
     return (
-        <Fragment>
+        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (
                 <LoadingOverlay isLoading={sendingMessageLoading} />
             ) : (
@@ -225,7 +225,7 @@ const Contact = () => {
                 </div>
             )}
             <Footer />
-        </Fragment>
+        </div>
     );
   
 };

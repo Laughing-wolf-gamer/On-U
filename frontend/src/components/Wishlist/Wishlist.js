@@ -13,7 +13,6 @@ import ProductCardSkeleton from '../Product/ProductCardSkeleton'
 const Wishlist = () => {
     const { sessionData,setWishListProductInfo } = useSessionStorage();
     const[currentWishListItem,setCurrentWishListItem] = useState([]);
-    const Alert = useAlert()
     const navigation = useNavigate()
     const dispatch = useDispatch()
     const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data)
@@ -24,7 +23,7 @@ const Wishlist = () => {
 
     const handleDelWish = async (e, productId,product) => {
         e.stopPropagation()
-        if (user) {
+        if (isAuthentication && user) {
             await dispatch(deletewish({ deletingProductId: productId }))
             dispatch(getwishlist())
         } else {
@@ -59,12 +58,17 @@ const Wishlist = () => {
     }, [dispatch, error, userloading, isAuthentication, user]);
     useEffect(()=>{
         if (isAuthentication) {
+            /* if(wishlist){
+                if(wishlist?.orderItems){
+                    setCurrentWishListItem(wishlist?.orderItems || [])
+                }
+            } */
             setCurrentWishListItem(wishlist && wishlist?.orderItems || [])
         } else {
             setCurrentWishListItem(sessionData);
         }
-    },[dispatch,sessionData])
-    
+    },[dispatch,sessionData,user,wishlist])
+    console.log("Wishlist: ",wishlist?.orderItems)
 
     return (
         <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
@@ -114,7 +118,7 @@ const Wishlist = () => {
 
                                             {/* The remove button will be visible on hover on larger screens, and visible by default on smaller screens */}
                                             <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer">
-                                                <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId._id || pro?.productId, pro)} />
+                                                <MdClear className="md:text-xl text-sm" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
                                             </div>
                                         </div>
                                     </li>

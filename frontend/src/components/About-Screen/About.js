@@ -28,7 +28,7 @@ const About = () => {
     }, []);
     
     return (
-        <Fragment>
+        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
                 <div className="bg-slate-100 py-12 px-6 lg:px-24">
                     {/* Header Section */}
@@ -127,7 +127,7 @@ const About = () => {
                 <LoadingOverlay isLoading={isLoading} />
             )}
             <Footer />
-        </Fragment>
+        </div>
     );
 };
 

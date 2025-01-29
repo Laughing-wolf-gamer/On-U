@@ -271,8 +271,8 @@ const Home = ({user}) => {
                         <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header} bannerLoading = {bannerLoading}/>
                         
-                        <div className='bg-slate-200 w-screen justify-center items-center flex flex-col px-12'>
-                            <h1 className='text-3xl px-2 font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                        <div className='bg-slate-200 w-screen justify-center items-center flex flex-col pl-[80px] pr-[70px]'>
+                            <h1 className='text-3xl font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
                             <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
                                 {
                                     !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
@@ -283,7 +283,7 @@ const Home = ({user}) => {
                                         )) : (
                                             // Skeleton Loader View when no URLs
                                             Array(8).fill(0).map((_, index) => (
-                                                <div key={`skeleton_${index}`} className="w-[300px] h-[500px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+                                                <div key={`skeleton_${index}`} className="w-[300px] h-[700px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
                                                 </div>
                                             ))
                                         )

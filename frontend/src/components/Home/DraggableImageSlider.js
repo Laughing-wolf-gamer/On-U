@@ -75,7 +75,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
     };
 
     return (
-        <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-12">
+        <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative pl-[80px] pr-[60px]">
             <h1 className="text-3xl font-bold font1 tracking-widest text-slate-800 mb-8">
                 {headers}
             </h1>

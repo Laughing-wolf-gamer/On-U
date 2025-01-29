@@ -56,7 +56,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     }
 
     return (
-        <div className='md:py-8 md:px-12 lg:py-8 lg:px-12 2xl:py-8 2xl:px-12 flex flex-col justify-center space-y-5 items-center bg-slate-200'>
+        <div className='md:py-8 py-7 flex flex-col justify-center space-y-5 items-center bg-slate-200'>
             {/* Preview Headers Section */}
             <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1 px-5 my-4">
                 {previewHeader && previewHeader.length > 0 &&
@@ -86,14 +86,14 @@ const ProductPreviewFull = ({ product ,user}) => {
 
 
             {/* Product Previews Section */}
-            <div className="w-full flex flex-row justify-center items-center bg-slate-200 md:px-10 xl:px-10 2xl:px-10">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center p-3">
+            <div className="w-full flex flex-row justify-center items-center bg-slate-200 ">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
                 {previewProducts && previewProducts.length > 0 &&
-                    previewProducts.map((p, index) => {
-                        // const p = previewProducts[0];
+                    [1,2,3,4,5].map((_, index) => {
+                        const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
                         return (
-                            <div className="2xl:w-[296px] 2xl:h-[550px] xl:w-[240px] xl:h-[460px] md:w-[220px] md:h-[435px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                            <div className="2xl:w-[313px] 2xl:h-[580px] xl:w-[254px] xl:h-[480px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">
