@@ -121,59 +121,59 @@ const Contact = () => {
                     <h2 className="text-3xl font-semibold text-gray-900 text-center mb-6">Contact Us</h2>
                     
                     {formData && formData.formDataForContactUs && formData.formDataForContactUs.length > 0 && (
-                    <form onSubmit={handleSubmit} className="space-y-8">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
-                        {formData.formDataForContactUs.map((field, i) => (
-                            <div key={i}>
+                        <form onSubmit={handleSubmit} className="space-y-8">
+                            <div className="grid grid-cols-1 gap-8">
+                                {formData.formDataForContactUs.map((field, i) => (
+                                    <div key={i}>
+                                    <label
+                                        htmlFor={field?.fieldName}
+                                        className="block text-sm font-medium text-gray-700"
+                                    >
+                                        {field?.fieldName}
+                                    </label>
+                                    {sendingFormData && (
+                                        <input
+                                            required
+                                            type="text"
+                                            id={`${field?.fieldName}_field ${i}`}
+                                            name={field?.fieldName.toLowerCase()}
+                                            value={sendingFormData[field?.fieldName]}
+                                            onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
+                                            className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                                        />
+                                    )}
+                                    </div>
+                                ))}
+                            </div>
+            
+                            <div>
                             <label
-                                htmlFor={field?.fieldName}
+                                htmlFor="message"
                                 className="block text-sm font-medium text-gray-700"
                             >
-                                {field?.fieldName}
+                                Your Message
                             </label>
-                            {sendingFormData && (
-                                <input
+                            <textarea
+                                placeholder="Please write your message here..."
+                                id="message"
+                                name="message"
+                                value={sendingMessage}
+                                onChange={(e) => setSendingMessage(e.target.value)}
+                                rows="6"
                                 required
-                                type="text"
-                                id={`${field?.fieldName}_field ${i}`}
-                                name={field?.fieldName.toLowerCase()}
-                                value={sendingFormData[field?.fieldName]}
-                                onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
-                                className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                                />
-                            )}
+                                className="mt-2 p-4 w-full border border-gray-300 placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                            />
                             </div>
-                        ))}
-                        </div>
-        
-                        <div>
-                        <label
-                            htmlFor="message"
-                            className="block text-sm font-medium text-gray-700"
-                        >
-                            Your Message
-                        </label>
-                        <textarea
-                            placeholder="Please write your message here..."
-                            id="message"
-                            name="message"
-                            value={sendingMessage}
-                            onChange={(e) => setSendingMessage(e.target.value)}
-                            rows="6"
-                            required
-                            className="mt-2 p-4 w-full border border-gray-300 placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                        />
-                        </div>
-        
-                        <div className="flex justify-center">
-                        <button
-                            type="submit"
-                            className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
-                        >
-                            Send Message
-                        </button>
-                        </div>
-                    </form>
+            
+                            <div className="flex justify-center">
+                            <button
+                                type="submit"
+                                className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
+                            >
+                                Send Message
+                            </button>
+                            </div>
+                        </form>
                     )}
                 </section>
         
