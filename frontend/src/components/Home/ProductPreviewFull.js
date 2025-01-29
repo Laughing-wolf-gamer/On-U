@@ -92,7 +92,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                         // const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
                         return (
-                            <div className="2xl:w-[296px] 2xl:h-[550px] xl:w-[240px] xl:h-[460px] md:w-[220px] md:h-[435px] w-[220px] h-[435px] m-2 rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                            <div className="2xl:w-[296px] 2xl:h-[550px] xl:w-[240px] xl:h-[460px] md:w-[220px] md:h-[435px] w-full h-fit px-6 m-2 rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">
