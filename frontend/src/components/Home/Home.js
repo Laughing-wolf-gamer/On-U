@@ -232,47 +232,7 @@ const Home = ({user}) => {
                         <div className='pt-1 w-[100vw] h-fit relative bg-slate-200'>
                             <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} bannerLoading = {bannerLoading}/>
                         </div>
-                        <div className='h-fit w-screen bg-slate-200 py-5'>
-                            <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
-                                <div className='w-fit h-auto flex justify-center gap-10 items-center flex-wrap'>
-                                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                                        <Truck size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                                        <div className='h-full w-1'/>
-                                        <div className='w-full text-left h-auto justify-center items-center'>
-                                            <h3 className='font-medium text-left text-[17px] text-slate-700'>FREE SHIPPING</h3>
-                                            <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
-                                        </div>
-                                    </div>
-                    
-                                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                                        <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                                        <div className='h-full w-1'/>
-                                        <div className='w-full text-left h-auto justify-center items-center'>
-                                            <h3 className='font-medium text-left text-[17px] text-gray-700'>SUPPORT 24/7</h3>
-                                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
-                                        </div>
-                                    </div>
-                    
-                                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                                        <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                                        <div className='h-full w-1'/>
-                                        <div className='w-full text-left h-auto justify-center items-center'>
-                                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Money Return</h3>
-                                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
-                                        </div>
-                                    </div>
-                    
-                                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                                        <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                                        <div className='h-full w-1'/>
-                                        <div className='w-full text-left h-auto justify-center items-center'>
-                                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Order Discount</h3>
-                                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <OurMotoData/>
                     
                         {product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
                         <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3 px-12">
@@ -335,101 +295,101 @@ const Home = ({user}) => {
                         <Footer/>
                     </Fragment >
                 :
-                <Fragment>
-                    <div className='bg-slate-200'>{/* Category */}
-                        <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                            <DraggingScrollView images={Small_Screen_Section_1.urls} />
-                        </ul>
-                    </div>
+                    <Fragment>
+                        <div className='bg-slate-200'>{/* Category */}
+                            <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+                                <DraggingScrollView images={Small_Screen_Section_1.urls} />
+                            </ul>
+                        </div>
 
-                    <div className='pt-4 w-[100vw] bg-slate-200'>
-                        <Carousel className='bg-slate-200' showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                            {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
-                                Small_Screen_Section_2.urls.map((mb, index) => (
-                                    <Link key={`mb_banners_${index}`} to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                        </div>
-                                    </Link>
-                                ))
-                            ) : (
-                                // Skeleton Loader for the Carousel Items
-                                <div className="flex w-full justify-center space-x-4">
-                                    {Array.from({ length: 5 }).map((_, index) => (
-                                        <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
-                                    ))}
-                                </div>
-                            )}
-                        </Carousel>
-                    </div>
-
-
-                    <div className='bg-slate-200'>
-                        <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
-                        <ul className='flex overflow-x-scroll'>
-                            {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
-                                Small_Screen_Section_3.urls.map((d, index) => (
-                                <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
-                                    <li className='w-max mr-2'>
-                                        <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
-                                    </li>
-                                </Link>
-                            )) : (
-                                <li className='w-max mr-2'>
-                                    <div className="w-[50vw] min-h-[200px] bg-gray-300 animate-pulse rounded-lg"></div>
-                                </li>
-                            )}
-                        </ul>
-                    </div>
-
-                    <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-4 items-center '>
-                        {product && product.length && <ProductPreviewFull product={product} user={user}/>}
-                    </div>
-
-                    <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>
-                        <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
-                        <div className='w-screen flex justify-start items-center'>
-                            <ul className='flex flex-row overflow-x-scroll'>
-                                {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
-                                    <Link key={index} to='/products' className='m-2'>
-                                        <li className=''>
-                                            <LazyLoadImage effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
-                                        </li>
-                                    </Link>
-                                )):(
-                                    Array(8).fill(0).map((_, index) => (
-                                        <li key={`skeleton_${index}`} className='m-2'>
-                                            <div className="w-[120px] h-[80px] bg-gray-300 animate-pulse rounded-lg"></div>
-                                        </li>
+                        <div className='pt-4 w-[100vw] bg-slate-200'>
+                            <Carousel className='bg-slate-200' showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                                {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
+                                    Small_Screen_Section_2.urls.map((mb, index) => (
+                                        <Link key={`mb_banners_${index}`} to='/products'>
+                                            <div>
+                                                <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                                            </div>
+                                        </Link>
                                     ))
+                                ) : (
+                                    // Skeleton Loader for the Carousel Items
+                                    <div className="flex w-full justify-center space-x-4">
+                                        {Array.from({ length: 5 }).map((_, index) => (
+                                            <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
+                                        ))}
+                                    </div>
+                                )}
+                            </Carousel>
+                        </div>
+
+
+                        <div className='bg-slate-200'>
+                            <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
+                            <ul className='flex overflow-x-scroll'>
+                                {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
+                                    Small_Screen_Section_3.urls.map((d, index) => (
+                                    <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
+                                        <li className='w-max mr-2'>
+                                            <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
+                                        </li>
+                                    </Link>
+                                )) : (
+                                    <li className='w-max mr-2'>
+                                        <div className="w-[50vw] min-h-[200px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                    </li>
                                 )}
                             </ul>
                         </div>
-                    </div>
+                        {/* <OurMotoData/> */}
+                        {product && product.length && <ProductPreviewFull product={product} user={user}/>}
+                        {/* <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-4 items-center '>
+                        </div> */}
 
-                    <div className='pt-4 w-[100vw] bg-slate-200'>
-                        <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                            {!bannerLoading && Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
-                                Small_Screen_Section_5.urls.map((mc, index) => (
-                                    <Link key={`mc_banners_${index}`} to='/products'>
-                                        <div>
-                                            <LazyLoadImage effect='blur' loading='lazy' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            <div className='h-[30px]'></div>
-                                        </div>
-                                    </Link>
-                            )) : (
-                                // Skeleton Loader for the Carousel Items
-                                <div className="flex w-full justify-center space-x-4">
-                                    {Array.from({ length: 5 }).map((_, index) => (
-                                        <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
-                                    ))}
-                                </div>
-                            )}
-                        </Carousel>
-                    </div>
+                        <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>
+                            <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
+                            <div className='w-screen flex justify-start items-center'>
+                                <ul className='flex flex-row overflow-x-scroll'>
+                                    {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
+                                        <Link key={index} to='/products' className='m-2'>
+                                            <li className=''>
+                                                <LazyLoadImage effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
+                                            </li>
+                                        </Link>
+                                    )):(
+                                        Array(8).fill(0).map((_, index) => (
+                                            <li key={`skeleton_${index}`} className='m-2'>
+                                                <div className="w-[120px] h-[80px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                            </li>
+                                        ))
+                                    )}
+                                </ul>
+                            </div>
+                        </div>
 
-                    <Footer />
-                </Fragment>
+                        <div className='pt-4 w-[100vw] bg-slate-200'>
+                            <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                                {!bannerLoading && Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
+                                    Small_Screen_Section_5.urls.map((mc, index) => (
+                                        <Link key={`mc_banners_${index}`} to='/products'>
+                                            <div>
+                                                <LazyLoadImage effect='blur' loading='lazy' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                                                <div className='h-[30px]'></div>
+                                            </div>
+                                        </Link>
+                                )) : (
+                                    // Skeleton Loader for the Carousel Items
+                                    <div className="flex w-full justify-center space-x-4">
+                                        {Array.from({ length: 5 }).map((_, index) => (
+                                            <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
+                                        ))}
+                                    </div>
+                                )}
+                            </Carousel>
+                        </div>
+
+                        <Footer />
+                    </Fragment>
 
             }
         {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
@@ -438,4 +398,49 @@ const Home = ({user}) => {
     )
 }
 
+const OurMotoData = ()=>{
+    return(
+        <div className='h-fit w-screen bg-slate-200 py-5 pb-4'>
+            <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
+                <div className='w-fit h-auto grid grid-cols-2 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 justify-center gap-10 items-center'>
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <Truck size={10} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
+                        <div className='h-full w-1'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[17px] text-slate-700'>FREE SHIPPING</h3>
+                            <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
+                        <div className='h-full w-1'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[17px] text-gray-700'>SUPPORT 24/7</h3>
+                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
+                        <div className='h-full w-1'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Money Return</h3>
+                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                        </div>
+                    </div>
+
+                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
+                        <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
+                        <div className='h-full w-1'/>
+                        <div className='w-full text-left h-auto justify-center items-center'>
+                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Order Discount</h3>
+                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    )
+}
 export default Home

@@ -58,7 +58,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     return (
         <div className='md:py-8 md:px-12 lg:py-8 lg:px-12 2xl:py-8 2xl:px-12 flex flex-col justify-center space-y-5 my-auto items-center bg-slate-200'>
             {/* Preview Headers Section */}
-            <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1">
+            <div className="min-w-fit grid grid-cols-3 justify-center items-center gap-5 mb-6 font1 px-5">
                 {previewHeader && previewHeader.length > 0 &&
                     previewHeader.map((h, index) => (
                         <button
@@ -71,11 +71,11 @@ const ProductPreviewFull = ({ product ,user}) => {
                                 }
                             }}
                             key={index}
-                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-6 py-3 flex items-center justify-center md:w-auto xl:w-[200px] 2xl:w-[200px] w-auto h-[50px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
+                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-6 py-3 flex items-center justify-center md:w-auto xl:w-[200px] 2xl:w-[200px] w-full h-[40px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
                         >
-                            <span className="text-center text-sm md:text-[16px]">
+                            <h1 className="text-center text-[10px] md:text-[16px]">
                                 {h?.title}
-                            </span>
+                            </h1>
                         </button>
                     ))
                 }
