@@ -13,6 +13,11 @@ const storage = new multer.memoryStorage();
 
 async function handleImageUpload(file){
     try {
+        const maxFileSize = 52428800 || process.env.MAX_FILE_SIZE;
+        const validFiles = file.size <= maxFileSize;
+        if (!validFiles) {
+            throw new Error('Some files exceed the maximum size of 10MB');
+        }
         // Upload image to Cloudinary
         const result = await cloudinary.uploader.upload(file, {
             resource_type: 'auto', // Automatically detect the resource type (image/video)
@@ -26,10 +31,17 @@ async function handleImageUpload(file){
 }
 async function handleMultipleImageUpload(files) {
     try {
+        const maxFileSize = 52428800 || process.env.MAX_FILE_SIZE;
+        console.log("Uploading: ",files.map(file => file.size));
+        /* const validFiles = files.filter(file => file.size <= maxFileSize);
+        if (validFiles.length !== files.length) {
+            throw new Error('Some files exceed the maximum size of 10MB');
+        } */
         const uploadPromises = files.map(file =>
             cloudinary.uploader.upload(file, {
                 resource_type: 'auto',
                 quality: 60, // Reduce image quality to 60%
+                max_file_size: 50 * 1024 * 1024 // 50MB
             })
         );
         const results = await Promise.all(uploadPromises);
