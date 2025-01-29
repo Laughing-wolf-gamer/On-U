@@ -15,7 +15,7 @@ export const LocationContextProvider = ({ children }) => {
     const [position, setPosition] = useState(null);
     const [isPermissionGranted, setIsPermissionGranted] = useState(null);
     const [pincode, setPincode] = useState(null);  // State to store the pincode
-    const { activeToast, showToast } = useToast();
+    /* const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         console.log("check Toast: ",type, message,activeToast);
         if(activeToast !== message){
@@ -38,7 +38,7 @@ export const LocationContextProvider = ({ children }) => {
             }
             showToast(message);
         }
-    }
+    } */
     // Function to request geolocation permission and get position
     const requestGeolocationPermission = () => {
         if ("geolocation" in navigator) {
@@ -48,15 +48,15 @@ export const LocationContextProvider = ({ children }) => {
                     setPosition([latitude, longitude]);
                     setIsPermissionGranted(true); // Mark permission as granted
                     fetchPincode(latitude, longitude);  // Fetch pincode after getting position
-                    checkAndCreateToast("success", "Location permission granted");
+                    // checkAndCreateToast("success", "Location permission granted");
                 },
                 (err) => {
                     // Handle error (e.g., user denied permission)
                     if (err.code === err.PERMISSION_DENIED) {
                         setIsPermissionGranted(false); // Mark permission as denied
-                        checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
+                        // checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
                     } else {
-                        checkAndCreateToast("warning","Please enable location services.");
+                        // checkAndCreateToast("warning","Please enable location services.");
                     }
                     console.log("GeoLocation Error: ",err);
                 },
@@ -67,7 +67,7 @@ export const LocationContextProvider = ({ children }) => {
                 }
             );
         } else {
-            checkAndCreateToast("error","Geolocation is not available in this browser.");
+            // checkAndCreateToast("error","Geolocation is not available in this browser.");
         }
     };
 
@@ -82,11 +82,11 @@ export const LocationContextProvider = ({ children }) => {
             if (data && data.address && data.address.postcode) {
                 setPincode(data.address.postcode);  // Set the pincode state
             } else {
-                checkAndCreateToast("success","Pincode could not be retrieved.");
+                // checkAndCreateToast("success","Pincode could not be retrieved.");
             }
         } catch (error) {
             console.error("Error fetching pincode:", error);
-            checkAndCreateToast("error","An error occurred while retrieving the pincode.");
+            // checkAndCreateToast("error","An error occurred while retrieving the pincode.");
         }
     };
 
@@ -99,7 +99,7 @@ export const LocationContextProvider = ({ children }) => {
                     requestGeolocationPermission();  // If permission granted previously, fetch position
                 } else if (permissionStatus.state === "denied") {
                     setIsPermissionGranted(false);
-                    checkAndCreateToast("error","Geolocation permission denied. Please enable location services.");
+                    // checkAndCreateToast("error","Geolocation permission denied. Please enable location services.");
                 } else {
                     requestGeolocationPermission();  // If permission undetermined, request it
                 }

@@ -22,7 +22,8 @@ const ProductPreviewFull = ({ product ,user}) => {
         if (product) {
             // const randomizes = generateArrayOfRandomItems(product, 6);
             console.log("Products: ",product);
-            const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, 5); // filter by bestSeller and take first 6 items
+            // const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, 5); // filter by bestSeller and take first 6 items
+            const itemsOfCategory = generateArrayOfRandomItems(product, 5); // filter by bestSeller and take first 6 items
             setSelectedPreviewProducts(itemsOfCategory);
             setActivePreviews(previewProductsTitle);
         }
@@ -90,8 +91,8 @@ const ProductPreviewFull = ({ product ,user}) => {
                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
                 {previewProducts && previewProducts.length > 0 &&
                     previewProducts.map((p, index) => {
-                        // const p = previewProducts[0];
-                        const selectedColor = selectedColors[p._id] || p.AllColors[0].images;
+                        // const p = previewProducts[];
+                        const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
                             <div className="2xl:w-[317px] 2xl:h-[580px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
