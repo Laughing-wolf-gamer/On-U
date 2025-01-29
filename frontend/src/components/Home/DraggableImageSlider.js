@@ -73,7 +73,6 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
             behavior: 'smooth',  // This makes the scroll smooth
         });
     };
-    console.log("Banner Loading: ",bannerLoading);
 
     return (
         <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-12">
@@ -87,14 +86,14 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
                         {/* Left Arrow Button */}
                         <button
                             onClick={() => scroll(-1)}
-                            className="absolute h-[40%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-600 opacity-90 hover:opacity-100 z-10"
+                            className="absolute h-[40%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
                         >
                             <ChevronLeft size={40} />
                         </button>
                         {/* Right Arrow Button */}
                         <button
                             onClick={() => scroll(1)}
-                            className="absolute h-[40%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-600 opacity-90 hover:opacity-100 z-10"
+                            className="absolute h-[40%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
                         >
                             <ChevronRight size={40} />
                         </button>

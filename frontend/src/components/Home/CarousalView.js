@@ -111,10 +111,9 @@ const CarousalView = ({ b_banners, indicator, bannerLoading = false }) => {
             {/* Left and Right Buttons */}
             <div className='absolute h-32 top-1/2 left-14 transform -translate-y-1/2 z-10'>
                 <button
-                className='h-full w-full text-white opacity-[90%] transition-color hover:text-neutral-900 hover:scale-110 duration-500'
+                className='h-full w-full text-white opacity-[90%] transition-color hover:text-purple-500 hover:scale-125 duration-300 hover:border'
                 onClick={(e) => {
-                    e.preventDefault();
-                    console.log('Change Index: ', currentIndex);
+                    // e.preventDefault();
                     setCurrentIndex((currentIndex - 1 + b_banners.length) % b_banners.length);
                 }}
                 >
@@ -123,10 +122,9 @@ const CarousalView = ({ b_banners, indicator, bannerLoading = false }) => {
             </div>
             <div className='absolute h-32 top-1/2 right-14 transform -translate-y-1/2 z-10'>
                 <button
-                className='h-full w-full text-white opacity-[90%] transition-color hover:text-neutral-900 hover:scale-110 duration-500'
+                className='h-full w-full text-white opacity-[90%] transition-color hover:text-purple-500 hover:scale-125 duration-300 hover:border'
                 onClick={(e) => {
-                    e.preventDefault();
-                    console.log('Change Index: ', currentIndex);
+                    // e.preventDefault();
                     setCurrentIndex((currentIndex + 1) % b_banners.length);
                 }}
                 >

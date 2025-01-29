@@ -18,14 +18,20 @@ export const SessionStorageProvider = ({ children }) => {
         // Initialize state with session storage data
         return JSON.parse(sessionStorage.getItem('bagItem')) || [];
     });
+    const [sessionRecentlyViewProducts, setRecentlyViewProducts] = useState(() => {
+        // Initialize state with session storage data
+        return JSON.parse(sessionStorage.getItem('recentlyViewProducts')) || [];
+    });
 
     useEffect(() => {
         // Listen for changes in session storage
         const handleStorageChange = () => {
             const updatedData = JSON.parse(sessionStorage.getItem('wishListItem')) || [];
             const updatedBagData = JSON.parse(sessionStorage.getItem('bagItem')) || [];
+            const updatedRecentlyViewProducts = JSON.parse(sessionStorage.getItem('recentlyViewProducts')) || [];
             setSessionData(updatedData);
             setBagSessionData(updatedBagData);
+            setRecentlyViewProducts(updatedRecentlyViewProducts);
         };
 
         // Listen for session storage changes
@@ -102,13 +108,33 @@ export const SessionStorageProvider = ({ children }) => {
         console.log("wishListItem Added or remove: ",wishListItem);
         setSessionData(JSON.parse(sessionStorage.getItem("wishListItem")));
     }
+    const updateRecentlyViewProducts = (product)=>{
+        let recentlyViewProductStorage = JSON.parse(sessionStorage.getItem("recentlyViewProducts"));
+        if (!recentlyViewProductStorage) {
+            recentlyViewProductStorage = [];
+        }
+        // console.log("bag: ",b)
+        let index = recentlyViewProductStorage?.findIndex((item) => item?._id === product._id);
+        if (index !== -1) {
+            recentlyViewProductStorage.splice(index,1);
+            sessionStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
+            setRecentlyViewProducts(recentlyViewProductStorage)
+        }else{
+            recentlyViewProductStorage.unshift(product);
+            if(recentlyViewProductStorage.length > 10){
+                recentlyViewProductStorage.pop();
+            }
+            sessionStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
+            setRecentlyViewProducts(recentlyViewProductStorage)
+        }
+    }
     const updateSessionStorage = (newData) => {
         sessionStorage.setItem('wishListItem', JSON.stringify(newData));
         setSessionData(newData);
     };
 
     return (
-        <SessionStorageContext.Provider value={{ sessionData,sessionBagData, updateSessionStorage,setWishListProductInfo ,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage}}>
+        <SessionStorageContext.Provider value={{ sessionData,sessionBagData,sessionRecentlyViewProducts, updateSessionStorage,setWishListProductInfo ,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage,updateRecentlyViewProducts}}>
             {children}
         </SessionStorageContext.Provider>
     );

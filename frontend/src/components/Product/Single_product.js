@@ -1,12 +1,13 @@
 import React, { useMemo } from 'react';
 import './Single_product.css';
-import { BiRupee } from 'react-icons/bi';
 import { IoIosHeartEmpty } from 'react-icons/io';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
+import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
 const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true }) => {
+    const{sessionRecentlyViewProducts,updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
 
@@ -36,6 +37,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
 
     const handleNavigation = () => {
         navigation(`/products/${pro._id}`);
+        updateRecentlyViewProducts(pro);
         window.location.reload();
     };
 

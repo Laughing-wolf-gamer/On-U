@@ -8,9 +8,28 @@ import elementClass from 'element-class'
 import './MFilter.css'
 import Slider from '@mui/material/Slider';
 import { capitalizeFirstLetterOfEachWord } from '../../config'
+import styled from '@emotion/styled'
 
 
-
+const CustomSlider = styled(Slider)({
+  '& .MuiSlider-thumb': {
+      backgroundColor: '#333333', // Dark gray thumb color
+      border: '2px solid #212121', // Darker gray border for the thumb
+      '&:hover': {
+          backgroundColor: '#555555', // Slightly lighter gray on hover
+      },
+  },
+  '& .MuiSlider-rail': {
+      backgroundColor: '#E0E0E0', // Light gray rail color
+  },
+  '& .MuiSlider-track': {
+      backgroundColor: '#212121', // Dark gray track color
+  },
+  '& .MuiSlider-valueLabel': {
+      backgroundColor: '#212121', // Dark gray background for the value label
+      color: 'white', // White text for the value label
+  },
+});
 
 const MFilter = ({ product ,handleSortChange}) => {
   const dispatch = useDispatch()
@@ -498,11 +517,10 @@ function price2fun(e,f){
                   <div className='mt-10 ml-8 mr-8'>
                     <h1 className='text-xs text-slate-500'>Selected price range</h1>
                     <h1 className='text-base text-slate-900 font1'>&#x20B9; {price[0]} - &#x20B9;{price[1]}</h1>
-                    <Slider
+                    <CustomSlider
                       value={price}
                       onChange={priceHandler}
                       valueLabelDisplay="auto"
-                      color='secondary'
                       aria-labelledby="range-slider"
                       min={Math.floor(Math.min(...sp))}
                       max={Math.floor(Math.max(...sp))}

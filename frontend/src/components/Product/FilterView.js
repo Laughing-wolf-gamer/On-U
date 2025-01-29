@@ -3,6 +3,7 @@ import { capitalizeFirstLetterOfEachWord } from '../../config';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../action/productaction';
 import { Slider } from '@mui/material';
+import styled from '@emotion/styled';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const [category, setCategory] = useState('');
@@ -601,6 +602,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
+                <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Subcategories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
@@ -632,8 +634,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
-
-
+                
                 {/* Color Filter */}
                 <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-hidden relative`}>
                     <h1 className='font1 text-base font-semibold mb-2'>COLOR</h1>
@@ -645,7 +646,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedColors.includes(e.label); // Check if current color is selected
 
                         return (
-                            <li key={i} className='items-center justify-start flex flex-row space-x-7 p-2'>
+                            <li key={i} className='items-center w-full h-fit justify-start flex flex-row space-x-7 p-2'>
                                 <input
                                     type="checkbox"
                                     name="color"
@@ -675,7 +676,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
-                <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
+                
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>
@@ -683,6 +684,26 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         </Fragment>
     );
 };
+
+const CustomSlider = styled(Slider)({
+    '& .MuiSlider-thumb': {
+        backgroundColor: '#333333', // Dark gray thumb color
+        border: '2px solid #212121', // Darker gray border for the thumb
+        '&:hover': {
+            backgroundColor: '#555555', // Slightly lighter gray on hover
+        },
+    },
+    '& .MuiSlider-rail': {
+        backgroundColor: '#E0E0E0', // Light gray rail color
+    },
+    '& .MuiSlider-track': {
+        backgroundColor: '#212121', // Dark gray track color
+    },
+    '& .MuiSlider-valueLabel': {
+        backgroundColor: '#212121', // Dark gray background for the value label
+        color: 'white', // White text for the value label
+    },
+});
 
 const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}) => {
     const[currentMinPrice,setCurrentMinPrice] = useState(0);
@@ -735,15 +756,14 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
             dispatchFetchAllProduct();
         }
     };
-    console.log("Url: ",spARRAY);
     return (
       <div className="pl-8 border-b-[1px] border-slate-200 px-8 py-4 overflow-hidden relative">
         <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
-        <Slider
+        <CustomSlider
             value={price}
             onChange={priceHandler}
             valueLabelDisplay="auto"
-            color='secondary'
+            // color='secondary'
             aria-labelledby="range-slider"
             min={Math.floor(minPrice)}
             max={Math.floor(maxPrice)}

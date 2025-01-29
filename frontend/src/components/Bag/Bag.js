@@ -23,8 +23,8 @@ import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
-    const { sessionBagData,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage } = useSessionStorage();
-    const { loading: userLoading, user, isAuthentication } = useSelector(state => state.user);
+    const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
+    const { user, isAuthentication } = useSelector(state => state.user);
     const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const {allAddresses} = useSelector(state => state.getAllAddress)
@@ -78,7 +78,9 @@ const Bag = () => {
         checkAndCreateToast("success",'Address added successfully');
     };
 
-    
+    useEffect(()=>{
+        console.log("Recently View Products Session Storage: ",sessionRecentlyViewProducts);
+    },[sessionRecentlyViewProducts])
 
 
     useEffect(() => {
@@ -605,29 +607,43 @@ const Bag = () => {
                     </div>
                 )}
                 <CouponsDisplay user={user} />
-                <div className="w-full flex flex-col items-center">
-                    <h1 className="text-center text-3xl font-semibold text-gray-800 mt-8 mb-6">
-                        Discover More
+                {
+                    sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
+                        <div className="w-screen flex flex-col items-center pb-5">
+                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-8 mb-6">
+                                RECENTLY VIEWED
+                            </h1>
+                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-10 gap-8">
+                                {
+                                    sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
+                                        <SingleProduct pro={pro} user={user} key={pro._id} />
+                                    ))
+                                }
+                            </ul>
+                        </div>
+                    )
+                }
+                
+                <div className="w-screen flex flex-col items-center pb-8">
+                    <h1 className="text-center text-3xl font-sans hover:animate-bounce font-semibold text-gray-800 mt-8 mb-6">
+                        DISCOVER MORE
                     </h1>
-                    <div className='w-full flex items-center justify-center px-6 md:px-12'>
-                        <ul className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-8 pb-10">
-                            {
-                                RandomProductLoading ? (<Fragment>
-                                    {Array(10).fill(0).map((_, index) => (
-                                        <ProductCardSkeleton key={index} />
-                                    ))}
-                                </Fragment>):(<Fragment>
-                                    {
-                                        randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 10).map((pro) => (
-                                            <SingleProduct pro={pro} user={user} key={pro._id} />
-                                        ))
-                                    }
-                                </Fragment>)
-                            }
-                        </ul>
-                    </div>
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-10 gap-8">
+                        {
+                            RandomProductLoading ? (<Fragment>
+                                {Array(10).fill(0).map((_, index) => (
+                                    <ProductCardSkeleton key={index} />
+                                ))}
+                            </Fragment>):(<Fragment>
+                                {
+                                    randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 20).map((pro) => (
+                                        <SingleProduct pro={pro} user={user} key={randomProducts._id} />
+                                    ))
+                                }
+                            </Fragment>)
+                        }
+                    </ul>
                 </div>
-
             <Footer/>
             </div>
         </Fragment>

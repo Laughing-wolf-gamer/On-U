@@ -17,7 +17,8 @@ import ProductCardSkeleton from './ProductCardSkeleton';
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
-    const [sortBy, setSortBy] = useState('averageReview');  // Default value
+    const[isNoProductsFound,setIsNoProductsFound] = useState(false);
+    const [sortBy, setSortBy] = useState('newest');  // Default value
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('What`s New');
@@ -111,6 +112,13 @@ const Allproductpage = ({user}) => {
         window.scrollTo(0, 0);
         dispatch(getwishlist())
     }, []);
+    useEffect(()=>{
+        if(pro){
+            if(!productLoading && pro.length <= 0 ){
+                setIsNoProductsFound(!productLoading && pro.length <= 0);
+            }
+        }
+    },[pro])
 
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
@@ -240,7 +248,9 @@ const Allproductpage = ({user}) => {
                     </div>
                 </div>
                 {
-                    pro && <NoProductsFoundOverlay isOpen={!productLoading && pro.length <= 0} onClose={() => { }} />
+                    pro && <NoProductsFoundOverlay isOpen={isNoProductsFound} onClose={() => {
+                        setIsNoProductsFound(false);
+                    }} />
                 }
 
                 {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
@@ -274,7 +284,7 @@ const NoProductsFoundOverlay = ({ isOpen, onClose }) => {
     
                 {/* Close Button */}
                 <button
-                    onClick={onClose}
+                    onClick={() => window.location.href = '/products'}
                     className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition duration-300"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">

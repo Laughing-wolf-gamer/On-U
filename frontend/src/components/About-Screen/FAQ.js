@@ -1,5 +1,5 @@
 import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import Footer from '../Footer/Footer';
 
 const FAQ = () => {
@@ -46,10 +46,13 @@ const FAQ = () => {
       setOpenFAQ(index); // Open the selected FAQ
     }
   };
+  useEffect(()=>{
+    window.scrollTo(0, 0);
+  },[])
 
   return (
-    <Fragment>
-      <div className="bg-gray-50 py-12 px-6 lg:px-24 my-3 h-screen w-full">
+    <div >
+      <div className="bg-gray-50 py-12 pb-10 px-6 lg:px-24 my-3 h-full w-full">
         {/* Header Section */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
@@ -61,7 +64,7 @@ const FAQ = () => {
         </header>
 
         {/* FAQ Section */}
-        <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg">
+        <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg pb-10">
           <div className="space-y-4">
             {faqData.map((faq, index) => (
               <div key={index} className="border-b border-gray-200">
@@ -76,7 +79,7 @@ const FAQ = () => {
                 </button>
                 
                 {openFAQ === index && (
-                  <div className="py-4 text-gray-600">
+                  <div className="py-4 text-gray-600 pb-7">
                     <p>{faq.answer}</p>
                   </div>
                 )}
@@ -86,7 +89,7 @@ const FAQ = () => {
         </section>
       </div>
       <Footer/>
-    </Fragment>
+    </div>
   );
 };
 

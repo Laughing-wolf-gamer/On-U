@@ -35,6 +35,7 @@ const ProductCatView = ({ show, CMenu, parentCallback }) => {
 		// Navigate to the new URL (using React Router)
 		// history.push(url);
 		navigation(url);
+		window.location.reload();
 	};
 	useEffect(() => {
 		if (options && options.length > 0) {
