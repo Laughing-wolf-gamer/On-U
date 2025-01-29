@@ -112,7 +112,7 @@ export const getallproducts = A(async (req, res)=>{
                 subcategoryQueryCheck.push(req.query.subcategory);
             }
             console.log("Category query check: ", subcategoryQueryCheck)
-            filter.subcategory = { $in: subcategoryQueryCheck };
+            filter.subCategory = { $in: subcategoryQueryCheck };
         }
         if (req.query.price) {
             const priceRange = req.query.price.split(',');
