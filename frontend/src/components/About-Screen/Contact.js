@@ -125,53 +125,58 @@ const Contact = () => {
                             <div className="grid grid-cols-1 gap-8">
                                 {formData.formDataForContactUs.map((field, i) => (
                                     <div key={i}>
-                                    <label
-                                        htmlFor={field?.fieldName}
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        {field?.fieldName}
-                                    </label>
-                                    {sendingFormData && (
-                                        <input
-                                            required
-                                            type="text"
-                                            id={`${field?.fieldName}_field ${i}`}
-                                            name={field?.fieldName.toLowerCase()}
-                                            value={sendingFormData[field?.fieldName]}
-                                            onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
-                                            className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                                        />
-                                    )}
+                                        <label
+                                            htmlFor={field?.fieldName}
+                                            className="block text-sm font-medium text-gray-700"
+                                        >
+                                            {field?.fieldName}
+                                            
+                                        </label>
+                                        {sendingFormData && (
+                                            <div className="relative">
+                                                <input
+                                                    required
+                                                    type="text"
+                                                    id={`${field?.fieldName}_field ${i}`}
+                                                    name={field?.fieldName.toLowerCase()}
+                                                    value={sendingFormData[field?.fieldName]}
+                                                    onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
+                                                    className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                                                />
+                                                <span className="absolute top-[-10px] right-0 text-red-600">*</span>
+                                            </div>
+                                        )}
                                     </div>
                                 ))}
                             </div>
             
-                            <div>
-                            <label
-                                htmlFor="message"
-                                className="block text-sm font-medium text-gray-700"
-                            >
-                                Your Message
-                            </label>
-                            <textarea
-                                placeholder="Please write your message here..."
-                                id="message"
-                                name="message"
-                                value={sendingMessage}
-                                onChange={(e) => setSendingMessage(e.target.value)}
-                                rows="6"
-                                required
-                                className="mt-2 p-4 w-full border border-gray-300 placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                            />
-                            </div>
-            
+                            <div className="relative">
+                                <label
+                                    htmlFor="message"
+                                    className="block text-sm font-medium text-gray-700"
+                                >
+                                    Your Message
+                                </label>
+                                <span className="absolute top-[-5px] right-0 text-red-600">*</span>
+                                <textarea
+                                    placeholder="Please write your message here..."
+                                    id="message"
+                                    name="message"
+                                    value={sendingMessage}
+                                    onChange={(e) => setSendingMessage(e.target.value)}
+                                    rows="6"
+                                    required
+                                    className="mt-2 p-4 w-full border border-gray-300 placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+                                />
+                                </div>
+                
                             <div className="flex justify-center">
-                            <button
-                                type="submit"
-                                className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
-                            >
-                                Send Message
-                            </button>
+                                <button
+                                    type="submit"
+                                    className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
+                                >
+                                    Send Message
+                                </button>
                             </div>
                         </form>
                     )}
