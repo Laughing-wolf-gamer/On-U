@@ -104,11 +104,12 @@ const Home = ({user}) => {
     },[dispatch])
     
     useEffect(() => {
-        document.documentElement.scrollTo = 0;
+        // document.documentElement.scrollTo = 0;
+        window.scrollTo(0,0)
     }, []);
 
     // Initialize sections with default values
-    const sectionNames = [
+    /* const sectionNames = [
         'Wide Screen Section- 1', 'Wide Screen Section- 2', 'Wide Screen Section- 3',
         'Wide Screen Section- 4', 'Wide Screen Section- 5', 'Wide Screen Section- 6',
         'Wide Screen Section- 7', 'Wide Screen Section- 8', 'Wide Screen Section- 9',
@@ -131,7 +132,7 @@ const Home = ({user}) => {
     // Populate all sections for both wide and small screens
     sectionNames.forEach((sectionName) => {
         sections[sectionName] = populateSection(sectionName);
-    });
+    }); */
 
     let Wide_Screen_Section_1 = {urls:[], header: ""};
     let Wide_Screen_Section_2 = {urls:[],header:''};
