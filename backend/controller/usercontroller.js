@@ -201,33 +201,25 @@ export const optverify = A(async (req, res, next)=>{
 })
 
 export const resendotp = A(async (req, res, next)=>{
-  console.log(req.params.id)
-  const user = await User.findOne({"phonenumber": req.params.id})
-  let otp = Math.floor((1 + Math.random()) * 90000)
-  console.log(user, otp)
-  let options = { authorization: process.env.YOUR_API_KEY, message: `This website is made my Vikas Verma Thank You to use my Website Your OTP: is ${otp}`, numbers: [req.params.id] }
-
-  sendMessage(options).then(response => {
-    if (response.return === true) {
-      async function fun() {
-        user.otp = otp;
-        await user.save({ validateBeforeSave: false })
-      }
-      fun()
-      setInterval(async function () {
-        user.otp = null;
-        await user.save({ validateBeforeSave: false })
-      }, 60000 * 10);
-     
-    } else {
-      console.log(response)
-   
-    }
-  })
-
-  res.status(200).json({
-    success:true
-  })
+  // console.log(req.params.id)
+  const{email} = req.body;
+  console.log("Resend Otp Email: ",req.body )
+  if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
+  const existingUser = await User.findOne({email:email})
+  if(!existingUser){
+    return res.status(401).json({success:true,message:"OTP Sent Successfully",result:null})
+  }
+  console.log("Existing: ",existingUser)
+  if(existingUser.verify === 'verified'){
+    return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
+  }
+  const otp = Math.floor((1 + Math.random()) * 90000)
+  await sendVerificationEmail(email, otp)
+  existingUser.otp = otp;
+  await existingUser.save();
+  return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
+  
+  
 
 })
 export const logInUser = async (req,res) =>{

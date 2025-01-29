@@ -35,7 +35,8 @@ const Otpverify = () => {
   }
 
   const Resndotp = () =>{
-    dispatch(resendotp())
+    console.log("Resending Otp: ",user?.user);
+    dispatch(resendotp({email:user?.user?.email}))
   }
 
 
@@ -69,11 +70,11 @@ const Otpverify = () => {
               <input type="number" name="phonenumber" className='w-full h-10 border-[1px] 
                 focus:border-[#353535] focus:border-[1px] focus:outline-none border-[#6a696993] p-2 web appearance-none'
                 onChange={(e) => setotp(e.target.value)} placeholder='Enter OTP' />
-              <p id='error' className='text-xs text-red-500 '></p>
+              <p id='error' className='text-xs text-gray-500 '></p>
 
-              <h1 onClick={Resndotp} className='font1 text-sm mt-5 text-[#ee5f73] cursor-pointer'>Resend OTP</h1>
-              <button type='submit' className='bg-[#ee5f73] text-white w-full font-semibold text-lg py-[6px] my-5' > {!loading ? 'VERIFY': 'Loading...'} </button>
-              <h1 className='font1 text-sm my-5'>Have trouble loggging in? <span className='text-[#ee5f73]'>Get help</span></h1>
+              <h1 onClick={Resndotp} className='font1 text-sm mt-5 text-gray-300 cursor-pointer'>Resend OTP</h1>
+              <button type='submit' className='bg-gray-400 text-white w-full font-semibold text-lg py-[6px] my-5' > {!loading ? 'VERIFY': 'Loading...'} </button>
+              <h1 className='font1 text-sm my-5'>Have trouble loggging in? <span className='text-gray-300'>Get help</span></h1>
             </div>
           </div>
         </div>

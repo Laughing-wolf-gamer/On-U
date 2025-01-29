@@ -168,15 +168,15 @@ export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
     }
 }
 
-export const resendotp = () => async (dispatch) => {
+export const resendotp = ({email}) => async (dispatch) => {
 
-    /* try {
+    try {
 
         dispatch({ type: REQUEST_RESEND_OTP })
         // const mobile = JSON.parse(localStorage.getItem('mobileno'))
         // const mobileno = Number(mobile.phonenumber)
 
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp/${mobileno}`)
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp`,{email})
 
         dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
 
@@ -184,7 +184,7 @@ export const resendotp = () => async (dispatch) => {
     
         dispatch({ type: FAIL_RESEND_OTP, payload: Error.response.data.message })
 
-    } */
+    }
 }
 
 export const updateuser = (userdata) => async (dispatch) => {
