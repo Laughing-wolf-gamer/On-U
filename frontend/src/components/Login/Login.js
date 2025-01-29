@@ -10,6 +10,7 @@ import { useToast } from '../../Contaxt/ToastProvider'
 import toast from 'react-hot-toast'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
+import { X } from 'lucide-react';
 const Login = () => {
     const [logInData, setLogInData] = useState('');
     const { sessionData,sessionBagData } = useSessionStorage();
@@ -181,35 +182,34 @@ const Login = () => {
     
             {/* OTP Modal */}
             {otpData && (
-                <div className="fixed inset-0 bg-black bg-opacity-60 flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
-                    <div className="bg-white p-8 shadow-xl w-[90%] sm:w-[80%] md:w-[60%] max-w-lg">
-                        <h2 className="text-3xl font-semibold text-center text-gray-800 mb-6">Enter OTP</h2>
-    
+                <div className="fixed inset-0 bg-black bg-opacity-70 flex justify-center items-center z-50 transition-all duration-300 ease-in-out">
+                    <div className="bg-gradient-to-t from-gray-100 to-gray-300 p-8 rounded-lg shadow-2xl w-[90%] sm:w-[80%] md:w-[50%] max-w-md relative">
+                        <h2 className="text-3xl font-bold text-center text-black mb-6">Enter OTP</h2>
+
                         <input
                             type="number"
                             maxLength={6}
-                            className="w-full p-4 border-2 border-gray-300 focus:outline-none focus:ring-4 focus:ring-gray-400 mb-4 text-lg placeholder-gray-400"
+                            className="w-full p-4 border-2 border-gray-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 mb-6 text-lg text-white placeholder-gray-600 bg-gray-300"
                             onChange={handleOtpChange}
                             value={otp}
                             placeholder="Enter OTP"
                         />
-                        <div className="flex justify-between gap-4">
+                        <div className="flex justify-center items-center gap-4">
                             <button
-                                className="w-[48%] py-3 bg-gray-600 text-white font-semibold shadow-md hover:bg-gray-700 transition duration-200"
+                                className="w-full py-3 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition duration-200"
                                 onClick={handleOtpVerify}
                             >
                                 Verify OTP
                             </button>
-                            <button
-                                className="w-[48%] py-3 bg-gray-500 text-white font-semibold shadow-md hover:bg-gray-600 transition duration-200"
-                                onClick={handleCloseOtpModal}
-                            >
-                                Close
-                            </button>
                         </div>
+                        <X className="w-12 h-12 absolute  top-0 right-2 rounded-full p-3 text-xl font-semibold transition duration-200 cursor-pointer"
+                            onClick={handleCloseOtpModal}
+                        />
                     </div>
                 </div>
             )}
+
+
         </Fragment>
     );
 };
