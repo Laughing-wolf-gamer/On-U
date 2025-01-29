@@ -16,9 +16,9 @@ const EmptyBag = () => {
           alt="Empty Bag"
           className="mx-auto mb-8 w-36 h-36 object-contain"
         />
-        <h2 className="text-4xl font-semibold text-gray-800 mb-4">Oops! Your Bag is Empty</h2>
+        <h2 className="text-4xl font-semibold text-gray-800 mb-4">Oops! Your Bag is Feels Light</h2>
         <p className="text-gray-600 mb-8 text-lg leading-relaxed">It looks like you haven't added anything yet. Browse our collection and start shopping now!</p>
-        <button onClick={handleMoveToShoppingView} className="w-full px-6 py-3 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition duration-300 text-lg shadow-md">
+        <button onClick={handleMoveToShoppingView} className="w-full px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-300 text-lg shadow-md">
           Continue Shopping
         </button>
       </div>

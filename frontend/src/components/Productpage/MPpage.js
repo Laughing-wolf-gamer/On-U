@@ -442,7 +442,7 @@ const MPpage = () => {
                                                     width="100%"
                                                     height="100%"
                                                 />
-                                                <div className="h-[30px] bg-neutral-100"></div>
+                                                <div className="h-[30px] bg-white"></div>
                                             </div>
                                         ) : (
                                             // Render image using LazyLoadImage
@@ -450,7 +450,7 @@ const MPpage = () => {
                                                 <LazyLoadImage
                                                     effect="blur"
                                                     src={im.url}
-                                                    alt={`product ${i}`}
+                                                    alt={`product_${i}`}
                                                     loading="lazy"
                                                     className="w-full h-full object-contain"
                                                 />
@@ -698,12 +698,14 @@ const MPpage = () => {
                                 </div>
                                 {
                                     similar && similar.length > 0 && similar.filter(s => s?._id !== product?._id).length > 0 && <div className="mt-2 pb-6 pt-4 relative bg-white px-4">
-                                        <h1 className="font1 flex items-center mt-4 font-semibold px-1 py-2">SIMILAR PRODUCTS</h1>
+                                        <div className='w-full justify-center items-center flex px-1 py-2'>
+                                            <h1 className="font1 flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
+                                        </div>
                                         <div className="overflow-x-auto">
                                             <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-                                                {similar.map((pro) => (
-                                                    <li key={pro._id} className="flex-shrink-0 w-[160px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-                                                    <Single_product pro={pro} />
+                                            {similar.filter(s => s?._id !== product?._id).map((pro) => (
+                                                    <li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
+                                                        <Single_product pro={pro} />
                                                     </li>
                                                 ))}
                                             </ul>

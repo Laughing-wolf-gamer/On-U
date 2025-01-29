@@ -254,43 +254,37 @@ const NoProductsFoundOverlay = ({ isOpen, onClose }) => {
     if (!isOpen) return null;  // Don't render anything if the overlay is not open.
   
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-8 rounded-lg shadow-lg max-w-md mx-4">
-            <h2 className="text-2xl font-semibold text-gray-800 mb-4 text-center">
-                No Products Matched with Filters
-            </h2>
-            <p className="text-gray-600 mb-6 text-center">
-                We couldn’t find any products matching your filters. Please try adjusting the filters or clear them to see all products.
-            </p>
-            
-            <div className="flex justify-center space-x-4">
-                <button
-                onClick={onClose}
-                className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition duration-300"
-                >
-                Try Different Filters
-                </button>
+        <div className="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center z-50">
+            <div className="bg-white p-8 rounded-lg shadow-xl max-w-lg mx-4 transform transition-all duration-300 scale-95 hover:scale-100">
+                <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
+                    No Products Found
+                </h2>
+                <p className="text-lg text-gray-500 mb-6 text-center">
+                    We couldn't find any products matching your filters. Try adjusting them or clear all filters to see everything.
+                </p>
+                
+                <div className="flex justify-center space-x-6">
+                    <button
+                        onClick={() => window.location.href = '/products'}
+                        className="px-8 py-3 bg-gray-700 text-white rounded-lg hover:bg-gray-800 transition duration-300 text-lg font-medium"
+                    >
+                        View All Products
+                    </button>
+                </div>
     
+                {/* Close Button */}
                 <button
-                onClick={() => window.location.href = '/products'}
-                className="px-6 py-2 bg-gray-800 text-white rounded-md hover:bg-gray-900 transition duration-300"
+                    onClick={onClose}
+                    className="absolute top-4 right-4 text-gray-600 hover:text-gray-800 transition duration-300"
                 >
-                View All Products
+                    <svg xmlns="http://www.w3.org/2000/svg" className="w-8 h-8" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M6 18L18 6M6 6l12 12" />
+                    </svg>
                 </button>
-            </div>
-    
-            {/* Close Button */}
-            <button
-                onClick={onClose}
-                className="absolute top-2 right-2 text-gray-500 hover:text-gray-700"
-            >
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M6 18L18 6M6 6l12 12" />
-                </svg>
-            </button>
             </div>
         </div>
     );
 };
+
 
 export default Allproductpage;
