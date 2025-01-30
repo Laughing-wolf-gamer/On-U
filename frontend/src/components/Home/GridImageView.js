@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomItem } from '../../config';
+import ReactPlayer from 'react-player';
 const clothingItems = [
   "Half Shirt",
   "Casual Shirt",
@@ -47,16 +48,22 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
               onLoad={handleMediaLoad}  // Trigger onLoad when the image is loaded
             />
           ) : isVideo ? (
-            <video
+            <ReactPlayer
+              url={imageToShow}
               className="w-full h-full object-cover rounded-lg"
               controls={false}
-              muted
               autoPlay
-              onLoadedData={handleMediaLoad}  // Trigger onLoad when the video data is loaded
-            >
-              <source src={imageToShow} type={`video/${fileExtension}`} />
-              Your browser does not support the video tag.
-            </video>
+              playing
+              loading="lazy"
+              muted
+              width="100%"
+              height="100%"
+              light={false}
+              onReady={handleMediaLoad}  // Trigger onLoad when the video data is loaded
+            />
+              // <source src={imageToShow} type={`video/${fileExtension}`} />
+              // Your browser does not support the video tag.
+            // </>
           ) : (
             <span>Unsupported file type</span>
           )
