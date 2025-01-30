@@ -510,7 +510,7 @@ export const addItemsToBag = async (req, res) => {
             
             await bag.save();
         }else{
-            const product = FindUserBag.orderItems.find(p => p.productId._id == productId)
+            const product = FindUserBag.orderItems.find(p => p.productId?._id === productId)
             if(product){
                 product.quantity = product.quantity + quantity
             }else{
@@ -544,6 +544,7 @@ const getItemsData = async (bag) => {
 
         // Await the database query
         const productData = await ProductModel.findById(productId?._id || productId);
+        console.log("Deconstruct Product data: ", productData)
         const { salePrice, price } = productData;
 
         // Calculate item totals
