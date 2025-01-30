@@ -1,15 +1,12 @@
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
-import { BASE_URL } from '@/config';
-import { useToast } from '@/hooks/use-toast';
 import { sendAboutData } from '@/store/common-slice';
-import axios from 'axios';
 import React, { useState } from 'react';
+import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 
 const AdminAboutPage = () => {
   const dispatch = useDispatch();
   const [imageLoading, setImageLoading] = useState(false);
-  const{toast} = useToast();
   // Existing state variables
   const [mission, setMission] = useState('');
   const [vision, setVision] = useState('');
@@ -44,8 +41,7 @@ const AdminAboutPage = () => {
       teamMembers,
     });
     await handelSetAboutData();
-
-    alert('About page details saved successfully!');
+    toast.success('About page details saved successfully!');
   };
   const handleAddTeamMember = () => {
     setTeamMembers([...teamMembers, { name: '', image: '', designation: '' }]);

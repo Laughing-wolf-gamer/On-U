@@ -113,8 +113,8 @@ export const setAboutData = async(req,res)=>{
       }
       alreadyFoundWebsiteData.AboutData = req.body;
       await alreadyFoundWebsiteData.save();
+	  console.log("About Data: ",alreadyFoundWebsiteData)
       res.status(200).json({Success:true,message: 'About Data set successfully'});
-      console.log("About Data: ",about)
     } catch (error) {
         console.error(`Error setting about data `,error);
         res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
@@ -261,7 +261,7 @@ export const getAddressField = async(req,res)=>{
 export const getAboutData = async(req,res)=>{
 	try {
 	  const aboutData = await WebSiteModel.findOne({tag:'AboutData'});
-	  console.log("About Data: ",aboutData)
+	  console.log("Client About Data: ",aboutData)
 	  res.status(200).json({Success:true,message: 'About Data Found',aboutData: aboutData?.AboutData || {}});
 	} catch (error) {
 		console.error(`Error setting about data `,error);

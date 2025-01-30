@@ -290,7 +290,7 @@ const Home = ({user}) => {
                             <Carousel
                                 preventMovementUntilSwipeScrollTolerance 
                                 className='bg-slate-200' 
-                                autoPlay={1000}
+                                autoPlay={5000}
                                 swipeable
                                 infiniteLoop={true}
                                 showThumbs={false} 
