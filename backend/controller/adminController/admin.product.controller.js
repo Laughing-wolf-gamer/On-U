@@ -14,6 +14,13 @@ export const uploadImage = async (req, res) =>{
         const result = await handleImageUpload(fileData);
         if(!result) return res.status(500).json({Success:false, Message:"Failed to upload image"});
         console.log("Uploaded Image URL:", result.secure_url);
+        if(result.error){
+            console.error("Error while uploading image:", result.error);
+            return res.status(500).json({
+                Success: false,
+                message: result.error
+            });
+        }
 
         // Return the uploaded image URL
         res.status(200).json({

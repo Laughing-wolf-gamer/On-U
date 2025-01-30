@@ -5,7 +5,6 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import { X } from 'lucide-react';
 import UploadOverlay from './UploadOverlay';
-import { useToast } from '@/Context/ToastProvider';
 import toast from 'react-hot-toast';
 
 const FileUploadComponent = ({

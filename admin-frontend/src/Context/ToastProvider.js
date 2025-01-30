@@ -27,7 +27,6 @@ export const ToastProvider = ({ children }) => {
     );
 };
 
-// Custom hook to use the toast context
 export const useToast = () => {
     return useContext(ToastContext);
 };

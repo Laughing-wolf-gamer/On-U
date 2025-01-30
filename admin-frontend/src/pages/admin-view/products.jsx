@@ -320,7 +320,7 @@ const AdminProducts = () => {
     
     <Fragment>
       {
-        productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<>
+        productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<Fragment>
           <div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
             {/* Category Dropdown */}
             <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
@@ -414,7 +414,7 @@ const AdminProducts = () => {
             </Button>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5">
+          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 pr-4">
             {sortedProducts.length > 0 ? (
               sortedProducts.map((product, i) => (
                 <AdminProductTile key={i} togglePopUp={togglePopUp} setOpenProductPreview={setCurrentPreviewProduct} product={product} />
@@ -423,44 +423,45 @@ const AdminProducts = () => {
               <p>No products found for the selected filter.</p>
             )}
           </div>
+          <Fragment>
+            {/* Add Product Overlay */}
+            {openCreateProduct && (
+              <AddProductOverlay
+                addProductsFromElement={addProductsFromElement}
+                currentEditingId={currentEditingId}
+                formData={formData}
+                setFormData={setFormData}
+                onSubmit={onSubmit}
+                handleOpenCloseWindow={() => setOpenCreateProduct(false)}
+              />
+            )}
 
-          {/* Add Product Overlay */}
-          {openCreateProduct && (
-            <AddProductOverlay
-              addProductsFromElement={addProductsFromElement}
-              currentEditingId={currentEditingId}
-              formData={formData}
-              setFormData={setFormData}
-              onSubmit={onSubmit}
-              handleOpenCloseWindow={() => setOpenCreateProduct(false)}
-            />
-          )}
+            {/* Product Preview */}
+            {currentPreviewProductId && (
+              <ProductPreview
+                categories = {categories}
+                subcategories = {subcategories}
+                setFormData={setFormData}
+                UpdateEditedData={(productId,e)=>{
 
-          {/* Product Preview */}
-          {currentPreviewProductId && (
-            <ProductPreview
-              categories = {categories}
-              subcategories = {subcategories}
-              setFormData={setFormData}
-              UpdateEditedData={(productId,e)=>{
-
-                // console.log("Updating: Product Data: ", e)
-                updateEditedItems(productId,e);
-              }}
-              productDataId={currentPreviewProductId}
-              showPopUp={showPopUp}
-              togglePopUp={togglePopUp}
-              OnEditing={(editingId) => {
-                setOpenCreateProduct(true);
-                setUploadedImageUrls([]);
-                setFormData(initialFormData);
-                setCurrentEditingId(editingId);
-                setCurrentPreviewProduct(null);
-              }}
-              OnDelete={handleDeleteProducts}
-            />
-          )}
-        </>
+                  // console.log("Updating: Product Data: ", e)
+                  updateEditedItems(productId,e);
+                }}
+                productDataId={currentPreviewProductId}
+                showPopUp={showPopUp}
+                togglePopUp={togglePopUp}
+                OnEditing={(editingId) => {
+                  setOpenCreateProduct(true);
+                  setUploadedImageUrls([]);
+                  setFormData(initialFormData);
+                  setCurrentEditingId(editingId);
+                  setCurrentPreviewProduct(null);
+                }}
+                OnDelete={handleDeleteProducts}
+              />
+            )}
+          </Fragment>
+        </Fragment>
       }
     </Fragment>
   );

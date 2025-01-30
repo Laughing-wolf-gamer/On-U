@@ -1,5 +1,5 @@
 import React from "react";
-import emptybag from '../images/empty-bag.webp';
+import shoppingbag from '../images/shopping-bag.png';
 import { useNavigate } from "react-router-dom";
 
 const EmptyBag = () => {
@@ -12,7 +12,7 @@ const EmptyBag = () => {
     <div className="flex flex-col w-full h-screen items-center justify-center bg-gray-50 text-center px-6 py-12">
       <div className="w-full max-w-md bg-white p-10 rounded-xl shadow-lg">
         <img
-          src={emptybag} // Replace with your actual image path
+          src={shoppingbag} // Replace with your actual image path
           alt="Empty Bag"
           className="mx-auto mb-8 w-36 h-36 object-contain"
         />

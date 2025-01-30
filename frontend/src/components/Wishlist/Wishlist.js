@@ -3,10 +3,10 @@ import Single_product from '../Product/Single_product'
 import { useDispatch, useSelector } from 'react-redux'
 import { deletewish, getwishlist } from '../../action/orderaction'
 import { MdClear } from 'react-icons/md'
-import wish from '../images/emptywish.PNG'
+// import wish from '../images/emptywish.PNG'
+import wish from '../images/wishlist-bag.png'
 import { Link, useNavigate } from 'react-router-dom'
 import { getuser, clearErrors } from '../../action/useraction'
-import { useAlert } from 'react-alert'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import ProductCardSkeleton from '../Product/ProductCardSkeleton'
 
@@ -122,16 +122,16 @@ const Wishlist = () => {
                     ) : (
                     <Fragment>
                         <div className="w-full h-screen flex justify-center items-center">
-                        <div className="text-center">
-                            <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
-                            <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
-                            <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
-                            <Link to="/products">
-                            <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
-                                Continue Shopping
-                            </button>
-                            </Link>
-                        </div>
+                            <div className="text-center">
+                                <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
+                                <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
+                                <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
+                                <Link to="/products">
+                                <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
+                                    Continue Shopping
+                                </button>
+                                </Link>
+                            </div>
                         </div>
                     </Fragment>
                     )}

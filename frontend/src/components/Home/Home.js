@@ -277,30 +277,41 @@ const Home = ({user}) => {
                     </Fragment >
                 :
                     <Fragment>
-                        <div className='bg-slate-200'>{/* Category */}
-                            <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                                <DraggingScrollView images={Small_Screen_Section_1.urls} />
-                            </ul>
-                        </div>
+                        {/* {
+                            Small_Screen_Section_1 && Small_Screen_Section_1.urls && <div className='bg-slate-200'>
+                                <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+                                    <DraggingScrollView images={Small_Screen_Section_1.urls} />
+                                </ul>
+                            </div>
+                        } */}
+                        
 
-                        <div className='pt-4 w-[100vw] bg-slate-200'>
-                            <Carousel className='bg-slate-200' showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                                {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
-                                    Small_Screen_Section_2.urls.map((mb, index) => (
-                                        <Link key={`mb_banners_${index}`} to='/products'>
-                                            <div>
+                        <div className='w-[100vw] bg-slate-200'>
+                            <Carousel
+                                preventMovementUntilSwipeScrollTolerance 
+                                className='bg-slate-200' 
+                                autoPlay={1000}
+                                swipeable
+                                infiniteLoop={true}
+                                showThumbs={false} 
+                                showStatus={false} 
+                                showArrows={false} 
+                                showIndicators={true} 
+                                renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                                    {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
+                                        Small_Screen_Section_2.urls.map((mb, index) => (
+                                            <Link key={`mb_banners_${index}`} to='/products'>
                                                 <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            </div>
-                                        </Link>
-                                    ))
-                                ) : (
-                                    // Skeleton Loader for the Carousel Items
-                                    <div className="flex w-full justify-center space-x-4">
-                                        {Array.from({ length: 5 }).map((_, index) => (
-                                            <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
-                                        ))}
-                                    </div>
-                                )}
+                                            </Link>
+                                        ))
+                                    ) : (
+                                        // Skeleton Loader for the Carousel Items
+                                        <div className="flex w-full justify-center space-x-4">
+                                            {Array.from({ length: 5 }).map((_, index) => (
+                                                <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
+                                            ))}
+                                        </div>
+                                    )}
                             </Carousel>
                         </div>
 

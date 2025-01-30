@@ -261,19 +261,19 @@ const GridImageView = ({ item, setIsConfirmDeleteWindow, isConfirmDeleteWindow, 
   
     // Helper function to determine if the file is a video or an image
     const getFileType = (url) => {
-      const fileExtension = url.split('.').pop().toLowerCase();
-      const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
-      const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(fileExtension);
-      return { isImage, isVideo };
+        const fileExtension = url.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg','webp'].includes(fileExtension);
+        return { isImage, isVideo };
     };
   
     // Handle media load and update loading state for the specific media item
     const handleMediaLoad = (index) => {
-      setLoadingStates((prevState) => {
-        const updatedStates = [...prevState];
-        updatedStates[index] = false; // Set loading state to false for the specific item
-        return updatedStates;
-      });
+        setLoadingStates((prevState) => {
+            const updatedStates = [...prevState];
+            updatedStates[index] = false; // Set loading state to false for the specific item
+            return updatedStates;
+        });
     };
   
     // Check if all items are loaded
@@ -303,23 +303,23 @@ const GridImageView = ({ item, setIsConfirmDeleteWindow, isConfirmDeleteWindow, 
   
                 {/* Image */}
                 {isImage ? (
-                  <img
-                    src={url}
-                    alt={`Image ${index + 1}`}
-                    className="w-full h-full object-contain rounded-lg shadow-sm"
-                    onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
-                  />
+                    <img
+                        src={url}
+                        alt={`Image ${index + 1}`}
+                        className="w-full h-full object-contain rounded-lg shadow-sm"
+                        onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
+                    />
                 ) : isVideo ? (
-                  <video
-                    className="w-full h-full object-contain rounded-lg shadow-sm"
-                    controls={false}
-                    muted
-                    autoPlay
-                    onLoadedData={() => handleMediaLoad(index)} // Trigger loading state on video load
-                  >
-                    <source src={url} type={`video/${url.split('.').pop()}`} />
-                    Your browser does not support the video tag.
-                  </video>
+                    <video
+                        className="w-full h-full object-contain rounded-lg shadow-sm"
+                        controls={false}
+                        muted
+                        autoPlay
+                        onLoadedData={() => handleMediaLoad(index)} // Trigger loading state on video load
+                    >
+                        <source src={url} type={`video/${url.split('.').pop()}`} />
+                        Your browser does not support the video tag.
+                    </video>
                 ) : (
                   <p>Unsupported file type</p>
                 )}
