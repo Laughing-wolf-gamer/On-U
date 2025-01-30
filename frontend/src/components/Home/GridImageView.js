@@ -12,7 +12,7 @@ const clothingItems = [
   "T-shirt",
   "Cargo"
 ];
-const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
+const GridImageView = React.memo(({ imageToShow ,categoriesOptions = []}) => {
   const activeClothingItem = getRandomItem(categoriesOptions)
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop();  // Get the file extension
@@ -26,8 +26,8 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
   };
   const handleMoveToQuery = ()=>{
     const queryParams = new URLSearchParams();
-    
 		if (activeClothingItem) queryParams.set('category', activeClothingItem.toLowerCase());
+    
     const url = `/products?${queryParams.toString()}`;
     navigation(url);
   }
@@ -75,6 +75,6 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
       </div>
     </div>
   );
-};
+});
 
 export default GridImageView;
