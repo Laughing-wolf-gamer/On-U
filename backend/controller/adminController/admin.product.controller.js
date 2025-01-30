@@ -12,6 +12,7 @@ export const uploadImage = async (req, res) =>{
 
         // Upload image to Cloudinary
         const result = await handleImageUpload(fileData);
+        if(!result) return res.status(500).json({Success:false, Message:"Failed to upload image"});
         console.log("Uploaded Image URL:", result.secure_url);
 
         // Return the uploaded image URL
@@ -39,7 +40,7 @@ export const uploadMultipleImages = async (req, res) => {
         // Upload multiple images to Cloudinary
         const results = await handleMultipleImageUpload(files);
         console.log("Uploaded Images:", results.map(result => result.secure_url));
-
+        if(!results || results.length <= 0) return res.status(400).json({Success: true,message:"No images were uploaded!"});
         // Return the uploaded image URLs
         res.status(200).json({
             Success: true,

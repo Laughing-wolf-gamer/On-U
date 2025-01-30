@@ -10,6 +10,14 @@ cloudinary.config({
     api_secret: process.env.CLOUDINARY_API_SECRET
 });
 const storage = new multer.memoryStorage();
+/* const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: 'uploads',
+        allowed_formats: ['jpg', 'png', 'jpeg'],
+        transformation: [{ width: 500, height: 500, crop: 'limit' }]
+    },
+}); */
 
 async function handleImageUpload(file){
     try {
@@ -31,8 +39,6 @@ async function handleImageUpload(file){
 }
 async function handleMultipleImageUpload(files) {
     try {
-        const maxFileSize = 52428800 || process.env.MAX_FILE_SIZE;
-        console.log("Uploading: ",files.map(file => file.size));
         /* const validFiles = files.filter(file => file.size <= maxFileSize);
         if (validFiles.length !== files.length) {
             throw new Error('Some files exceed the maximum size of 10MB');
@@ -48,9 +54,10 @@ async function handleMultipleImageUpload(files) {
         return results; // Return an array of results with image URLs, public_ids, etc.
     } catch (error) {
         console.error('Error uploading multiple files to Cloudinary:', error);
-        throw new Error('Cloudinary multiple upload failed');
+        // throw new Error('Cloudinary multiple upload failed');
+        return [];
     }
 }
 
-const upload = multer({storage});
+const upload = multer({storage,limits:{fileSize:process.env.MAX_FILE_SIZE || 52428800}});
 export {handleImageUpload,handleMultipleImageUpload,upload};

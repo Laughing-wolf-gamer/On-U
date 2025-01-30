@@ -110,7 +110,6 @@ const MPpage = () => {
     const [selectedColor, setSelectedColor] = useState([]);
     const[hasPurchased, setHasPurchased] = useState(false);
     const [selectedSizeColorImageArray, setSelectedSizeColorImageArray] = useState([]);
-    // const [selectedColorId, setSelectedColorId] = useState(null);
     const[ratingData,setRatingData] = useState(null);
     const [isInViewport, setIsInViewport] = useState(false);
     const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
