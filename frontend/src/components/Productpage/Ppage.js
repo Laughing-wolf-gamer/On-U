@@ -403,7 +403,7 @@ const Ppage = () => {
                                 </div>
                             </div>
                             {/* Content div for large screen */}
-                            <div className='w-[58%] 2xl:w-[68%] h-full flex flex-col pl-9'>
+                            <div className='w-[53%] 2xl:w-[65%] h-full flex flex-col pl-9'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
