@@ -17,7 +17,7 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop();  // Get the file extension
   const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);  // Check if the file is a video
-  const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg'].includes(fileExtension); // Check if the file is an image
+  const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg','webp'].includes(fileExtension); // Check if the file is an image
   
   const [isLoading, setIsLoading] = useState(true);  // State to handle loading state of the media
   
@@ -53,18 +53,17 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
             <ReactPlayer
               url={imageToShow}
               className="w-full h-full object-cover rounded-lg"
-              controls={false}
-              autoPlay
-              playing
-              loading="lazy"
-              muted
+              controls={true}
+              autoPlay={true}
+              playing={true}
+              muted={true}
               width="100%"
               height="100%"
               light={false}
-              onReady={handleMediaLoad}  // Trigger onLoad when the video data is loaded
+              onReady={handleMediaLoad}
             />
           ) : (
-            <span>Unsupported file type</span>
+            <span className='text-red-600'>Unsupported file type/ or Failed to Load</span>
           )
         }
         <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl'>
