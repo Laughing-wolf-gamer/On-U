@@ -309,110 +309,113 @@ const Bag = () => {
                             
                                 {/* Main Content */}
                                 <div className="flex flex-col lg:flex-row gap-12 mt-12">
-                                {/* Product Listing */}
-                                <div className="flex-1 space-y-6">
-                                    {bag?.orderItems?.length > 0 ? (
-                                    bag?.orderItems?.map((item, i) => (
-                                        <div key={i} className="flex items-center border-b py-6 space-x-6">
-                                        <Link to={`/products/${item.productId?._id}`} className="w-28 h-28">
-                                            <img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-full h-full object-contain rounded-lg" />
-                                        </Link>
-                                        <div className="ml-6 flex-1">
-                                            <h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
-                                                <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
-                                            <div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-                                                {item?.productId?.salePrice ? (
-                                                    <>
-                                                    <span>₹{Math.round(item.productId.salePrice)}</span>
-                                                    <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                    <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
-                                                    </>
-                                                ) : (
-                                                    <span>₹ {item.productId.price}</span>
-                                                )}
+                                    {/* Product Listing */}
+                                    <div className="flex-1 space-y-6">
+                                        {bag?.orderItems?.length > 0 ? (
+                                        bag?.orderItems?.map((item, i) => (
+                                            <div key={i} className="flex items-center border-b py-6 space-x-6">
+                                            <Link to={`/products/${item.productId?._id}`} className="w-28 h-28">
+                                                <img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-full h-full object-contain rounded-lg" />
+                                            </Link>
+                                            <div className="ml-6 flex-1">
+                                                <h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
+                                                    <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+                                                <div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
+                                                    {item?.productId?.salePrice ? (
+                                                        <>
+                                                        <span>₹{Math.round(item.productId.salePrice)}</span>
+                                                        <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
+                                                        <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
+                                                        </>
+                                                    ) : (
+                                                        <span>₹ {item.productId.price}</span>
+                                                    )}
+                                                </div>
+                                                <div className="mt-4 flex items-center space-x-4">
+                                                    <label className="text-sm">Qty:</label>
+                                                    <select
+                                                        value={item?.quantity}
+                                                        onChange={(e) => updateQty(e, item.productId._id)}
+                                                        className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    >
+                                                        {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+                                                        <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                                        ))}
+                                                    </select>
+                                                </div>
                                             </div>
-                                            <div className="mt-4 flex items-center space-x-4">
-                                                <label className="text-sm">Qty:</label>
-                                                <select
-                                                    value={item?.quantity}
-                                                    onChange={(e) => updateQty(e, item.productId._id)}
-                                                    className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                                >
-                                                    {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-                                                    <option key={num + 1} value={num + 1}>{num + 1}</option>
-                                                    ))}
-                                                </select>
+                                            <X
+                                                className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
+                                                onClick={(e) => {
+                                                    handleDeleteBag(item.productId._id, item._id);
+                                                }}
+                                            />
                                             </div>
+                                        ))
+                                        ) : (
+                                            <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
+                                        )}
+                                    </div>
+                                
+                                    {/* Price Details */}
+                                    <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-lg shadow-md">
+                                        <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({bag?.orderItems.length} items)</h3>
+                                        <div className="space-y-5">
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Total MRP</span>
+                                            <span>₹{bag?.totalMRP || totalSellingPrice}</span>
                                         </div>
-                                        <X
-                                            className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
-                                            onClick={(e) => {
-                                                handleDeleteBag(item.productId._id, item._id);
-                                            }}
-                                        />
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>You Saved</span>
+                                            <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
                                         </div>
-                                    ))
-                                    ) : (
-                                        <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
-                                    )}
-                                </div>
-                            
-                                {/* Price Details */}
-                                <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-lg shadow-md">
-                                    <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({bag?.orderItems.length} items)</h3>
-                                    <div className="space-y-5">
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>Total MRP</span>
-                                        <span>₹{bag?.totalMRP || totalSellingPrice}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>You Saved</span>
-                                        <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>Coupon</span>
-                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-                                        {bag?.Coupon?.CouponCode || "No Coupon Applied"}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700 mb-5">
-                                        <span>Convenience Fee</span>
-                                        <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                        ₹{convenienceFees}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-center space-x-4 rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors">
-                                        <span>Total</span>
-                                        <span>₹ {Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
-                                    </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Coupon</span>
+                                            <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                            {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700 mb-5">
+                                            <span>Convenience Fee</span>
+                                            <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+                                            ₹{convenienceFees}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-center space-x-4 rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors">
+                                            <span>Total</span>
+                                            <span>₹ {Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+                                        </div>
+                                        </div>
                                     </div>
                                 </div>
+                                <div className='w-full'>
+
                                 </div>
                             
                                 {/* Address List */}
                                 <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-                                <h3 className="font-semibold mb-4">Your Addresses</h3>
-                                <div className="space-y-4">
-                                    {user && user.user && allAddresses?.length > 0 ? (
-                                    allAddresses.map((addr, index) => (
-                                        <div
-                                            key={index}
-                                            className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
-                                            onClick={() => handleAddressSelection(addr)}
-                                        >
-                                        {Object.entries(addr).map(([key, value]) => (
-                                            <div key={key} className="flex justify-between">
-                                                <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                                                <span>{value}</span>
+                                    <h3 className="font-semibold mb-4">Your Addresses</h3>
+                                    <div className="space-y-4">
+                                        {user && user.user && allAddresses?.length > 0 ? (
+                                        allAddresses.map((addr, index) => (
+                                            <div
+                                                key={index}
+                                                className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
+                                                onClick={() => handleAddressSelection(addr)}
+                                            >
+                                            {Object.entries(addr).map(([key, value]) => (
+                                                <div key={key} className="flex justify-between">
+                                                    <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                                    <span>{value}</span>
+                                                </div>
+                                            ))}
+                                            {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
                                             </div>
-                                        ))}
-                                        {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
-                                        </div>
-                                    ))
-                                    ) : (
-                                    <p>No addresses available. Please add an address.</p>
-                                    )}
-                                </div>
+                                        ))
+                                        ) : (
+                                        <p>No addresses available. Please add an address.</p>
+                                        )}
+                                    </div>
                                 </div>
                             
                                 {/* Payment Checkout Section */}
