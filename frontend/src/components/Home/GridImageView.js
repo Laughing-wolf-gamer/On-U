@@ -43,6 +43,8 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
             <img
               src={imageToShow}
               alt={`media_banner`}
+              width="100%"
+              height="100%"
               loading="lazy"
               className="w-full h-full object-cover rounded-lg"
               onLoad={handleMediaLoad}  // Trigger onLoad when the image is loaded
@@ -61,9 +63,6 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
               light={false}
               onReady={handleMediaLoad}  // Trigger onLoad when the video data is loaded
             />
-              // <source src={imageToShow} type={`video/${fileExtension}`} />
-              // Your browser does not support the video tag.
-            // </>
           ) : (
             <span>Unsupported file type</span>
           )

@@ -281,11 +281,11 @@ const Bag = () => {
             }
         }
     },[allAddresses,dispatch])
-    console.log("Random Products: ",randomProducts);
+    // console.log("Random Products: ",randomProducts);
     
     return (
-        <Fragment>
-            <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
+        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
+            <div className="">
                 {isAuthentication ? (
                     <div>
                         
@@ -606,47 +606,48 @@ const Bag = () => {
                         
                     </div>
                 )}
-                <CouponsDisplay user={user} />
+            </div>
+            <CouponsDisplay user={user} />
+            <div className="flex justify-center items-start flex-col pb-8">
                 {
                     sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
-                        <div className="w-screen flex flex-col items-center pb-5">
-                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-8 mb-6">
+                        <div className='w-screen md:px-9 lg:px-10 2xl:px-12 px-1 justify-center items-center'>
+                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-10 mb-6">
                                 RECENTLY VIEWED
                             </h1>
-                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-10 gap-8">
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6"> {/* Reduced gap here */}
                                 {
                                     sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
                                         <SingleProduct pro={pro} user={user} key={pro._id} />
                                     ))
                                 }
-                            </ul>
+                            </div>
                         </div>
                     )
                 }
-                
-                <div className="w-screen flex flex-col items-center pb-8">
-                    <h1 className="text-center text-3xl font-sans hover:animate-bounce font-semibold text-gray-800 mt-8 mb-6">
-                        DISCOVER MORE
-                    </h1>
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-10 gap-8">
-                        {
-                            RandomProductLoading ? (<Fragment>
-                                {Array(10).fill(0).map((_, index) => (
-                                    <ProductCardSkeleton key={index} />
-                                ))}
-                            </Fragment>):(<Fragment>
-                                {
-                                    randomProducts && randomProducts.length > 0 && randomProducts.slice(0, 20).map((pro) => (
-                                        <SingleProduct pro={pro} user={user} key={randomProducts._id} />
-                                    ))
-                                }
-                            </Fragment>)
-                        }
-                    </ul>
-                </div>
-            <Footer/>
             </div>
-        </Fragment>
+            <div className="flex justify-center items-start flex-col pb-8">
+                {
+                    randomProducts && randomProducts.length > 0 && (
+                        <div className='w-screen md:px-9 lg:px-10 2xl:px-12 px-1 justify-center items-center'>
+                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-10 mb-6">
+                                DISCOVER MORE
+                            </h1>
+                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6">
+                                {RandomProductLoading ? (
+                                    <ProductCardSkeleton /> // Render the skeleton if products are still loading
+                                ) : (
+                                    randomProducts.slice(0, 20).map((pro) => (
+                                        <SingleProduct pro={pro} user={user} key={pro._id} />
+                                    ))
+                                )}
+                            </div>
+                        </div>
+                    )
+                }
+            </div>
+            <Footer/>
+        </div>
     );
 };
 

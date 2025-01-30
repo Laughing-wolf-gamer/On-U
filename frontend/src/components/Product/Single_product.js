@@ -7,7 +7,7 @@ import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
 const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true }) => {
-    const{sessionRecentlyViewProducts,updateRecentlyViewProducts} = useSessionStorage();
+    const{updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
 

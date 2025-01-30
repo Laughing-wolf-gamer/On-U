@@ -40,7 +40,7 @@ export const LocationContextProvider = ({ children }) => {
         }
     } */
     // Function to request geolocation permission and get position
-    const requestGeolocationPermission = () => {
+    /* const requestGeolocationPermission = () => {
         if ("geolocation" in navigator) {
             navigator.geolocation.getCurrentPosition(
                 (success) => {
@@ -107,7 +107,7 @@ export const LocationContextProvider = ({ children }) => {
         } else {
             requestGeolocationPermission();  // If Permissions API is not supported, just request geolocation permission
         }
-    }, []);
+    }, []); */
     return (
         <LocationContext.Provider value={{position,isPermissionGranted,pincode}}>
             {children}
