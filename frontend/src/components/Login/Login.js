@@ -189,7 +189,7 @@ const Login = () => {
                         <input
                             type="number"
                             maxLength={6}
-                            className="w-full p-4 border-2 border-gray-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 mb-6 text-lg text-white placeholder-gray-600 bg-gray-300"
+                            className="w-full p-4 border-2 border-gray-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 mb-6 text-lg text-gray-700 placeholder-gray-600 bg-gray-300"
                             onChange={handleOtpChange}
                             value={otp}
                             placeholder="Enter OTP"

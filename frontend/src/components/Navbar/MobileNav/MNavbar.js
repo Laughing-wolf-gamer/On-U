@@ -324,9 +324,9 @@ const MNavbar = ({ user }) => {
                                 </ul>
                                 <hr />
                                 <div className='px-5 text-[#282c3fd2] text-sm'>
-                                    <Link to={"/"}><h1 className='my-5'>Gift&nbsp;Cards</h1></Link>
-                                    <Link to={"/contact"}><h1 className='my-5'>Contact&nbsp;Us</h1></Link>
-                                    <Link to={"/faq"}><h1 className='my-5'>FAQs</h1></Link>
+                                    {/* <Link to={"/"}><h1 className='my-5'>Gift&nbsp;Cards</h1></Link> */}
+                                    {/* <Link to={"/contact"}><h1 className='my-5'>Contact&nbsp;Us</h1></Link> */}
+                                    {/* <Link to={"/faq"}><h1 className='my-5'>FAQs</h1></Link> */}
                                 </div>
                             </Offcanvas.Body>
                         </Offcanvas>

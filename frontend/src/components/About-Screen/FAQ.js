@@ -52,7 +52,7 @@ const FAQ = () => {
 
   return (
     <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
-      <div className="bg-gray-50 py-12 pb-10 px-6 lg:px-24 my-3 h-full w-full">
+      <div className="bg-gray-50 py-12 pb-10 px-6 lg:px-24 my-3 h-fit w-full">
         {/* Header Section */}
         <header className="text-center mb-12">
           <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
@@ -64,7 +64,7 @@ const FAQ = () => {
         </header>
 
         {/* FAQ Section */}
-        <section className="max-w-4xl mx-auto bg-white p-8 rounded-lg shadow-lg pb-10">
+        <div className="max-w-4xl min-h-full mx-auto bg-white p-8 rounded-lg shadow-lg pb-10">
           <div className="space-y-4">
             {faqData.map((faq, index) => (
               <div key={index} className="border-b border-gray-200">
@@ -86,7 +86,7 @@ const FAQ = () => {
               </div>
             ))}
           </div>
-        </section>
+        </div>
       </div>
       <Footer/>
     </div>

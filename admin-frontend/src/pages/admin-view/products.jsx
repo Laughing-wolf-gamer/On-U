@@ -318,9 +318,9 @@ const AdminProducts = () => {
 
   return (
     
-    <Fragment>
+    <div>
       {
-        productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<Fragment>
+        productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<div>
           <div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
             {/* Category Dropdown */}
             <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
@@ -423,7 +423,7 @@ const AdminProducts = () => {
               <p>No products found for the selected filter.</p>
             )}
           </div>
-          <Fragment>
+          <div>
             {/* Add Product Overlay */}
             {openCreateProduct && (
               <AddProductOverlay
@@ -437,33 +437,34 @@ const AdminProducts = () => {
             )}
 
             {/* Product Preview */}
-            {currentPreviewProductId && (
-              <ProductPreview
-                categories = {categories}
-                subcategories = {subcategories}
-                setFormData={setFormData}
-                UpdateEditedData={(productId,e)=>{
-
-                  // console.log("Updating: Product Data: ", e)
-                  updateEditedItems(productId,e);
-                }}
-                productDataId={currentPreviewProductId}
-                showPopUp={showPopUp}
-                togglePopUp={togglePopUp}
-                OnEditing={(editingId) => {
-                  setOpenCreateProduct(true);
-                  setUploadedImageUrls([]);
-                  setFormData(initialFormData);
-                  setCurrentEditingId(editingId);
-                  setCurrentPreviewProduct(null);
-                }}
-                OnDelete={handleDeleteProducts}
-              />
-            )}
-          </Fragment>
-        </Fragment>
+            
+          </div>
+        </div>
       }
-    </Fragment>
+      <div>
+        {currentPreviewProductId && (
+          <ProductPreview
+            categories = {categories}
+            subcategories = {subcategories}
+            setFormData={setFormData}
+            UpdateEditedData={(productId,e)=>{
+              updateEditedItems(productId,e);
+            }}
+            productDataId={currentPreviewProductId}
+            showPopUp={showPopUp}
+            togglePopUp={togglePopUp}
+            OnEditing={(editingId) => {
+              setOpenCreateProduct(true);
+              setUploadedImageUrls([]);
+              setFormData(initialFormData);
+              setCurrentEditingId(editingId);
+              setCurrentPreviewProduct(null);
+            }}
+            OnDelete={handleDeleteProducts}
+          />
+        )}
+      </div>
+    </div>
   );
 };
 
