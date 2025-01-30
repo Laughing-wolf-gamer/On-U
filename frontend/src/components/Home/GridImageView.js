@@ -61,7 +61,7 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
             <span>Unsupported file type</span>
           )
         }
-        <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold text-xl'>
+        <div className='w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl'>
           {
             activeClothingItem && <span> {activeClothingItem.toUpperCase()} </span>
           }

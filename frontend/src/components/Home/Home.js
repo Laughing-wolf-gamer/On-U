@@ -335,9 +335,35 @@ const Home = ({user}) => {
                         </div>
                         {/* <OurMotoData/> */}
                         {product && product.length && <ProductPreviewFull product={product} user={user}/>}
-                        {/* <div className='bg-slate-200 flex flex-col justify-center space-y-5 py-4 items-center '>
-                        </div> */}
+                            <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3">
+                                <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
+                                    {Wide_Screen_Section_3.header}
+                                </h1>
+                                <div className='w-screen justify-center items-center flex'>
 
+                                    <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
+                                        {
+                                            !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
+                                                // Skeleton Loader View when no URLs
+                                                Array(8).fill(0).map((_, index) => (
+                                                    <div key={`skeleton_${index}`} className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                // Actual content when URLs are available
+                                                Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                                                    <div
+                                                        key={`Index_${index}`}
+                                                        className="h-auto bg-blue-400 min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105"
+                                                    >
+                                                        <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
+                                                    </div>
+                                                ))
+                                            )
+                                        }
+                                    </div>
+                                </div>
+                            </div>
                         <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-screen flex justify-start items-center'>
