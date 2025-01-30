@@ -50,18 +50,18 @@ const GridImageView = ({ imageToShow ,categoriesOptions = []}) => {
               onLoad={handleMediaLoad}  // Trigger onLoad when the image is loaded
             />
           ) : isVideo ? (
-            <ReactPlayer
-              url={imageToShow}
-              className="w-full h-full object-cover rounded-lg"
-              controls={true}
-              autoPlay={true}
-              playing={true}
-              muted={true}
-              width="100%"
-              height="100%"
-              light={false}
-              onReady={handleMediaLoad}
-            />
+              <ReactPlayer
+                url={imageToShow}
+                className="w-full h-full object-cover rounded-lg"
+                controls={true}
+                // autoPlay={true}
+                playing={true}
+                muted={true}
+                width="100%"
+                height="100%"
+                light={false}
+                onReady={handleMediaLoad}
+              />
           ) : (
             <span className='text-red-600'>Unsupported file type/ or Failed to Load</span>
           )

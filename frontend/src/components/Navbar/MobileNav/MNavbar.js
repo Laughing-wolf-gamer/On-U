@@ -271,17 +271,18 @@ const MNavbar = ({ user }) => {
                                         <li className='text-black font1 px-5 py-4 relative w-full flex'onClick={(e)=>{
                                             setShow(false)
                                             setClass("hidden")
+                                            if(user){
+                                                redirect('/dashboard');
+                                            }else{
+                                                redirect('/Login');
+                                            }
                                         }} >
                                             {user ? (
-                                                <Link to="/dashboard">
-                                                    <span className='float-left flex items-center'>
-                                                        <FaUserAlt size={20} className='mr-2' /> Profile
-                                                    </span>
-                                                </Link>
+                                                <span className='float-left flex items-center'>
+                                                    <FaUserAlt size={20} className='mr-2' /> Profile
+                                                </span>
                                             ) : (
-                                                <Link to="/Login">
-                                                    <span className='float-left'>Login</span>
-                                                </Link>
+                                                <span className='float-left'>Login</span>
                                             )}
                                         </li>
                                     </Ripples>
@@ -289,8 +290,9 @@ const MNavbar = ({ user }) => {
                                         <div className='text-black font1 px-5 py-4 relative w-full flex bg-blue-50' onClick={(e)=>{
                                             setShow(false)
                                             setClass("hidden")
+                                            redirect("/")
                                         }} >
-                                            <Link to="/"><span className='float-left'>Home</span></Link>
+                                            <span className='float-left'>Home</span>
                                         </div>
                                     </Ripples>
                                     <Ripples color="#D0DDD0" className='w-full'>
@@ -308,16 +310,18 @@ const MNavbar = ({ user }) => {
                                         <li className='text-black font1 px-5 py-4 relative w-full flex 'onClick={(e)=>{
                                             setShow(false)
                                             setClass("hidden")
+                                            redirect("/about")
                                         }} >
-                                            <Link to='/about'><span className='float-left'>About Us</span></Link>
+                                            <span className='float-left'>About Us</span>
                                         </li>
                                     </Ripples>
                                     <Ripples color="black" className='w-full'>
                                         <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={(e)=>{
                                             setShow(false)
                                             setClass("hidden")
+                                            redirect("/contact")
                                         }} >
-                                            <Link to='/contact'><span className='float-left'>Contact</span></Link>
+                                            <span className='float-left'>Contact</span>
                                         </li>
                                     </Ripples>
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
