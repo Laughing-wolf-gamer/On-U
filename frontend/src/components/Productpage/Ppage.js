@@ -388,8 +388,8 @@ const Ppage = () => {
                         <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
                             <div className='w-[36%] 2xl:w-[36%] min-h-[200px] flex flex-col px-7'>
                                 <div
-                                    style={{ pointerEvents: 'none' }}  
-                                    className={`w-[40%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-30 mt-5":"flex absolute bottom-5 left-8"} `}>
+                                    // style={{ pointerEvents: 'none' }}  
+                                    className={`w-[40%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-[-10] mt-5":"flex absolute bottom-5 left-8"} `}>
                                     <div className='w-full h-full justify-start items-center flex'>
                                         <LeftImageContent 
                                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -403,7 +403,7 @@ const Ppage = () => {
                                 </div>
                             </div>
                             {/* Content div for large screen */}
-                            <div className='w-[56%] 2xl:w-[68%] h-full flex flex-col pl-9'>
+                            <div className='w-[58%] 2xl:w-[68%] h-full flex flex-col pl-9'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
