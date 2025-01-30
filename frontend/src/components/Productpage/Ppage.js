@@ -495,7 +495,7 @@ const Ppage = () => {
                                     {/* Add to Cart & Buy Now Buttons */}
                                     <PincodeChecker productId={product?._id} />
                                     </div>
-                                    <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
+                                    <div className='w-[80%] h-fit pr-10 justify-center items-center flex flex-col'>
                                         <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                                             <button disabled = {bagLoading} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" 
                                                 onClick={addtobag}

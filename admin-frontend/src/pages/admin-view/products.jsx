@@ -414,7 +414,7 @@ const AdminProducts = () => {
             </Button>
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 pr-4">
+          <div className="grid gap-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5 pr-4">
             {sortedProducts.length > 0 ? (
               sortedProducts.map((product, i) => (
                 <AdminProductTile key={i} togglePopUp={togglePopUp} setOpenProductPreview={setCurrentPreviewProduct} product={product} />

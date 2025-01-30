@@ -1,19 +1,19 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { FilePenLine, Minus, Plus, X, XCircle } from 'lucide-react';
+import { ChevronUp, Eye, FilePenLine, Minus, Plus, X, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { addProductsFromElement, BASE_URL, Header } from '@/config';
 import SizeSelector from './SizeSelector';
 import ColorPresetSelector from '@/pages/admin-view/ColorPresetSelector';
 import { useDispatch } from 'react-redux';
 import { fetchOptionsByType } from '@/store/common-slice';
-import { useToast } from '@/hooks/use-toast';
 import { getProductsById } from '@/store/admin/product-slice';
 import BulletPointsForm from './BulletPointsForm';
 import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
 import FileUploadComponent from './FileUploadComponent';
 import CustomSelect from './CustomSelect';
+import toast from 'react-hot-toast';
 
 const ProductPreview = ({
 	categories,
@@ -368,7 +368,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const[isFileUploadPopUpOpen,setIsFileUploadPopUpOpen] = useState(false);
 	const[activeSelectedSize,setActiveSelectedSize] = useState(null);
 	const[activeSelectedColor,setActiveSelectedColor] = useState(null);
-
+	const[activeImageColorSize,setActiveImageColorSize] = useState(null);
 
 	const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
 	const[sizeDeletingData,setSizeDeletingData] = useState(null);
@@ -395,7 +395,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	);
 
 	// Toast for displaying messages
-	const { toast } = useToast();
+	// const { toast } = useToast();
 	const dispatch = useDispatch();
 
 	// Fetch color options on component mount
@@ -453,7 +453,8 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				updatedAmount: change,
 			}, Header());
 			console.log(`${type} Quantity Updated:`, response.data);
-			toast({ title: "Quantity Updated", message: "Quantity Updated Successfully", type: "success" });
+			toast.success("Quantity Updated Successfully");
+			// toast({ title: "Quantity Updated", message: "Quantity Updated Successfully", type: "success" });
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);
 		}finally{
@@ -474,10 +475,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			}, Header());
 			console.log(`Quantity Updated:`, response.data);
 			setUpdatingColors([]);
-			toast({ title: "New Color Added", message: "New Color Added Successfully", type: "success" });
+			toast.success("New Color Added Successfully");
+			// toast({ title: "New Color Added", message: "New Color Added Successfully", type: "success" });
 		} catch (error) {
 			console.log(`Error Updating Quantity:`, error.message);
-			toast({ title: "Error Updating Quantity", message: error.message, type: "error" });
+			toast.error(error.message);
+			// toast({ title: "Error Updating Quantity", message: error.message, type: "error" });
 		}finally{
 			setIsLoading(false);
 			OnRefresh();
@@ -502,8 +505,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setNewSize(null);
 			setToggleEditColorsColor(false);
 			setToggleAddNewSize(false);
+			toast.success("New Size Added Successfully");
 		} catch (error) {
 			console.log(`Error Updating Quantity:`, error);
+			toast.error(error.message);
 		}finally{
 			OnRefresh();
 			setIsLoading(false);
@@ -526,8 +531,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				updatedAmount: change,
 			}, Header());
 			console.log(`${type} Quantity Updated:`, response.data);
+			toast.success("Quantity Updated Successfully");
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);
+			toast.error(error.message);
 		}finally{
 			OnRefresh();
 			setIsLoading(false);
@@ -548,10 +555,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				colorId
 			},Header());
 			console.log(`Color Removed:`, response.data);
-			toast("Color Removed Successfully","success");
+			// toast("Color Removed Successfully","success");
+			toast.success("Color Removed Successfully");
 		} catch (error) {
 			console.log(`Error Removing Color:`, error);
-			toast({title:"Error Removing Color",message:error.message,type:"error"});
+			toast.error("Error Removing Color");
+			// toast({title:"Error Removing Color",message:error.message,type:"error"});
 		}finally{
 			setIsLoading(false);
 			OnRefresh();
@@ -572,10 +581,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				sizeId
 			},Header());
 			console.log(`Size Removed: `, response.data);
-			toast("Size Removed Successfully","success");
+			// toast("Size Removed Successfully","success");
+			toast.success("Size Removed Successfully");
 		} catch (error) {
 			console.log(`Error Removing Size:`, error);
-			toast({title:"Error Removing Size",message:error.message,type:"error"});
+			toast.error("Error Removing Size");
+			// toast({title:"Error Removing Size",message:error.message,type:"error"});
 		}finally{
 			setIsLoading(false);
 			OnRefresh();
@@ -617,16 +628,26 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				colorId,
 				images:imagesArray
 			},Header());
-			console.log(`Image Updated: `, response.data);
+			console.log(`Image Updated: `, response?.data?.result);
+			const updatedImages = response?.data?.result
+			setActiveImageColorSize(sizeId);
+			setSelectedColorImages(updatedImages);
+			toast.success("Image Updated Successfully");
+			// toast("Image Updated Successfully","success");
 		} catch (error) {
+			toast.error("Image Updated Failed");
 			console.error("Error updating: ",error);
+			// toast("Image Updated Failed","error");
 		}finally{
 			setIsLoading(false);
 			setActiveSelectedColor(null);
 			setActiveSelectedSize(null);
-
+			if(OnRefresh){
+				OnRefresh();
+			}
 		}
 	}
+	// console.log("Selected Color Images: ",activeImageColorSize);
 
 	const memoizedColorImages = useMemo(() => {
 		return selectedColorImages.map((item, index) => {
@@ -635,20 +656,20 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				<div key={index} className="w-24 h-24">
 					{isVideo ? (
 						<video
-						className="w-full h-full object-contain rounded-md border"
-						controls
-						src={item?.url}
-						alt={`Color Video ${index + 1}`}
-						loading="lazy" // Lazy load videos
+							className="w-full h-full object-contain rounded-md border"
+							controls
+							src={item?.url}
+							alt={`Color Video ${index + 1}`}
+							loading="lazy" // Lazy load videos
 						>
 						Your browser does not support the video tag.
 						</video>
 					) : (
 						<img
-						src={item?.url}
-						alt={`Color Image ${index + 1}`}
-						className="w-full h-full object-contain rounded-md border"
-						loading="lazy" // Lazy load images
+							src={item?.url}
+							alt={`Color Image ${index + 1}`}
+							className="w-full h-full object-contain rounded-md border"
+							loading="lazy" // Lazy load images
 						/>
 					)}
 				</div>
@@ -773,41 +794,44 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							<div
 								key={index}
 								className="flex relative items-center justify-between gap-2 bg-gray-200 p-3 rounded-md shadow-md cursor-pointer flex-wrap"
-								onClick={() => handleColorClick(color?.images || [])}
+								onClick={() => {
+									setActiveImageColorSize(size._id);
+									handleColorClick(color?.images || [])
+								}}
 							>
 								<div
 									className="w-10 h-10 rounded-full border-2"
 									style={{ backgroundColor: color.label }}
 								>
 								</div>
-								<span className="text-sm text-black font-extrabold">
-									{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${color._id}`])}
-								</span>
+									<span className="text-sm text-black font-extrabold">
+										{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${color._id}`])}
+									</span>
 								<span className="text-sm text-black font-extrabold">{color.label}</span>
 
 								{/* Color Quantity Control */}
 								<div className="flex items-center gap-2 w-fit px-7">
-								<Button
-									disabled={isLoading}
-									onClick={(e) => {
-										e.stopPropagation();
-										handleColorQuantityChange(size._id, color._id, -1)
-									}}
-									className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
-								>
-									<Minus />
-								</Button>
-								<span className="text-gray-800 font-extrabold">{sizeQuantities[`${size._id}-${color._id}`]}</span>
-								<Button
-									disabled={isLoading}
-									onClick={(e) => {
-										e.stopPropagation();
-										handleColorQuantityChange(size._id, color._id, 1)
-									}}
-									className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
-								>
-									<Plus />
-								</Button>
+									<Button
+										disabled={isLoading}
+										onClick={(e) => {
+											e.stopPropagation();
+											handleColorQuantityChange(size._id, color._id, -1)
+										}}
+										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
+									>
+										<Minus />
+									</Button>
+									<span className="text-gray-800 font-extrabold">{sizeQuantities[`${size._id}-${color._id}`]}</span>
+									<Button
+										disabled={isLoading}
+										onClick={(e) => {
+											e.stopPropagation();
+											handleColorQuantityChange(size._id, color._id, 1)
+										}}
+										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
+									>
+										<Plus />
+									</Button>
 								</div>
 
 								{/* Remove Color Button */}
@@ -819,7 +843,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 									}}
 									className="text-white w-6 h-6 px-2 absolute top-0 right-0 bg-black p-2 rounded-full"
 								>
-								<X />
+									<X />
 								</Button>
 
 								{/* File Upload Button with Icon */}
@@ -836,9 +860,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							</div>
 						))}
 					</div>
-					{selectedColorImages && selectedColorImages.length > 0 && (
+					{activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0 && (
 						<div className="mt-4">
-							<h3 className="text-lg font-semibold">Selected Color Images:</h3>
+							<ChevronUp className='cursor-pointer' size={30} onClick={()=> {
+								setActiveImageColorSize(null);
+								setSelectedColorImages([]);
+							}}/>
 							<div className="flex gap-4 mt-2">
 								{memoizedColorImages}
 							</div>

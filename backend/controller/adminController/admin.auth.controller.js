@@ -248,7 +248,7 @@ export const updateImages = async(req,res)=>{
       { $set: { totalStock: totalStock,AllColors:AllColors } }
     );
 
-    res.status(200).json({ Success: true, message: 'Color Stock Updated Successfully' ,result:UpdatedProduct});
+    res.status(200).json({ Success: true, message: 'Images Updated Successfully' ,result:images});
   } catch (error) {
     console.log("Error Updating Color Stock: ", error);
     res.status(500).json({ Success: false, message: 'Internal Server Error' });

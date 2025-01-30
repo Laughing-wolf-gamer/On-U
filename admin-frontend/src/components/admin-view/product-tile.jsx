@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useState, memo } from 'react';
 import { Card, CardContent, CardFooter } from '../ui/card';
 import { Button } from '../ui/button';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
@@ -39,33 +39,41 @@ const AdminProductTile = ({
   const stockAmountLowThreshold = 10; // You can change this to any value based on your requirements
   const isStockLow = product?.totalStock < stockAmountLowThreshold;
 
+  // Memoized Image Component
+  const MemoizedImage = memo(({ imageUrl, altText }) => {
+    return (
+      <img
+        src={imageUrl}
+        alt={altText}
+        className="w-full h-full object-contain rounded-lg transition-transform duration-300 hover:scale-110"
+        loading="lazy" // Lazy loading for the image
+      />
+    );
+  });
+
   return (
-    <Card
-      
-      className="w-full lg:w-auto h-auto justify-start items-center lg:p-8 p-6 flex-col bg-gray-50 shadow-lg rounded-xl transition-transform hover:scale-105 hover:shadow-xl"
-    >
+    <Card className="w-[300px] h-full justify-start items-center p-2 flex-col bg-gray-50 shadow-lg">
       {/* Image Section */}
-      <div className="relative h-40 overflow-hidden rounded-lg mb-4">
-        {
-          selectedSize_color_Image_Array && selectedSize_color_Image_Array.length && selectedSize_color_Image_Array.length > 0 && <img
-          src={selectedSize_color_Image_Array[0].url ? selectedSize_color_Image_Array[0].url : selectedSize_color_Image_Array[0]}
-          alt={product?.title}
-          className="w-full h-full object-contain rounded-lg transition-transform duration-300 hover:scale-110"
-        />
-        }
-        <div className="absolute top-0 left-0 w-full h-full bg-black opacity-40"></div>
+      <div className="relative w-full h-[200px] overflow-hidden rounded-lg mb-4">
+        {selectedSize_color_Image_Array?.[0]?.url ? (
+          <MemoizedImage
+            imageUrl={selectedSize_color_Image_Array[0].url}
+            altText={product?.title}
+          />
+        ) : (
+          <MemoizedImage
+            imageUrl={selectedSize_color_Image_Array?.[0]}
+            altText={product?.title}
+          />
+        )}
       </div>
 
       {/* Title and Price */}
       <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-        {product?.title?.length > 20 ? `${product?.title.slice(0, 20)}` : product?.title}
+        {product?.title?.length > 20 ? `${product?.title.slice(0, 20)}...` : product?.title}
       </h2>
       <div className="flex items-center justify-between mb-4">
-        <span
-          className={`${
-            product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'
-          } text-lg font-semibold`}
-        >
+        <span className={`text-lg font-semibold ${product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'}`}>
           ₹{product?.price}
         </span>
         {product?.salePrice > 0 && (
@@ -79,21 +87,15 @@ const AdminProductTile = ({
       <div className="w-full space-y-2 mb-4">
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600 font-medium">Category:</span>
-          <span className="text-sm text-gray-800">
-            {capitalizeFirstLetterOfEachWord(product?.category)}
-          </span>
+          <span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.category)}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600 font-medium">SubCategory:</span>
-          <span className="text-sm text-gray-800">
-            {capitalizeFirstLetterOfEachWord(product?.subCategory)}
-          </span>
+          <span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.subCategory)}</span>
         </div>
         <div className="flex items-center justify-between">
           <span className="text-sm text-gray-600 font-medium">Materials & Care:</span>
-          <span className="text-sm text-gray-800">
-            {capitalizeFirstLetterOfEachWord(product?.material)}
-          </span>
+          <span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.material)}</span>
         </div>
       </div>
 
@@ -107,7 +109,7 @@ const AdminProductTile = ({
       )}
 
       {isExpanded && (
-        <Fragment>
+        <>
           {/* Description */}
           <div className="w-full space-y-2 mb-4">
             <h3 className="text-lg font-semibold text-gray-700">Description:</h3>
@@ -117,7 +119,7 @@ const AdminProductTile = ({
           </div>
 
           {/* Bullet Points */}
-          {product?.bulletPoints && product?.bulletPoints.length > 0 && (
+          {product?.bulletPoints?.length > 0 && (
             <BulletPointView points={product?.bulletPoints} />
           )}
 
@@ -127,10 +129,7 @@ const AdminProductTile = ({
               <h3 className="text-sm font-semibold text-gray-700 mb-1">Sizes:</h3>
               <div className="flex flex-wrap gap-2">
                 {product?.size?.map((size, index) => (
-                  <span
-                    key={index}
-                    className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-full"
-                  >
+                  <span key={index} className="px-4 py-2 text-sm text-gray-700 bg-gray-200 rounded-full">
                     {size?.label}
                   </span>
                 ))}
@@ -140,7 +139,7 @@ const AdminProductTile = ({
             <div>
               <h3 className="text-sm mt-4 font-semibold text-gray-700 mb-1">Colors:</h3>
               <div className="flex flex-wrap gap-2">
-                {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => (
+                {selectedColor?.map((color, index) => (
                   <div key={index} className="flex items-center gap-2">
                     <span
                       className="w-6 h-6 rounded-full"
@@ -152,9 +151,10 @@ const AdminProductTile = ({
               </div>
             </div>
           </div>
-        </Fragment>
+        </>
       )}
 
+      {/* View More / Less Button */}
       <div className="w-full h-fit justify-center items-center flex">
         <Button
           onClick={(e) => {
