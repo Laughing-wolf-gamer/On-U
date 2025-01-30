@@ -18,7 +18,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [] }) => {
   const activeClothingItem = getRandomItem(categoriesOptions);
   const navigation = useNavigate();
   const fileExtension = imageToShow.split('.').pop(); // Get the file extension
-  const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension); // Check if the file is a video
+  const isVideo = ['mp4', 'webm', 'ogg','video','mov','avi'].includes(fileExtension); // Check if the file is a video
   const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension); // Check if the file is an image
   
   // Lazy loading for videos: Intersection Observer or manual lazy loading could be implemented here

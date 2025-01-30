@@ -437,20 +437,20 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                 />
             ))
             ) : (
-            // Actual content when URLs are available
-            Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
-                <div
-                key={`Index_${index}`}
-                ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
-                >
-                {inView[index] ? (
-                    <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
-                ) : (
-                    <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
-                )}
-                </div>
-            ))
+                // Actual content when URLs are available
+                Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                    <div
+                    key={`Index_${index}`}
+                    ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
+                    className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
+                    >
+                    {inView[index] ? (
+                        <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
+                    ) : (
+                        <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
+                    )}
+                    </div>
+                ))
             )}
         </div>
     );
