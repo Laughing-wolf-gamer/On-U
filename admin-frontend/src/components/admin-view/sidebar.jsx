@@ -20,7 +20,7 @@ const GetAdminSideBarMenuIcon = ({ id }) => {
 
 const MenuItems = ({ setOpen, user }) => {
     const navigate = useNavigate();
-    console.log("handle add Navigation: ",adminSideBarMenu)
+    // console.log("handle add Navigation: ",adminSideBarMenu)
     // Filter accessible menu based on the user's role
     const accessibleMenu = adminSideBarMenu.filter((item) => item?.accessRole?.includes(user.role));
     

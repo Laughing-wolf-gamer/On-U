@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect, useState, memo, useRef } from 'react';
-import { Card, CardContent, CardFooter } from '../ui/card';
+import React, { useEffect, useState, memo, useRef } from 'react';
+import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
-import BulletPointView from './BulletPointView';
 import { Badge } from '../ui/badge'; // Assuming you are using Badge component for indicators
 
 const AdminProductTile = ({
@@ -57,7 +56,7 @@ const AdminProductTile = ({
                 observer.unobserve(imageRef.current);
             }
         };
-    }, []);
+    }, [product]);
 
     // Stock Amount Low Indicator
     const stockAmountLowThreshold = 10;
@@ -66,13 +65,13 @@ const AdminProductTile = ({
     const isStockLowCritical = product?.totalStock < stockAmountLowThresholdCritical;
 
     // Memoized Image Component
-    const MemoizedImage = memo(({ imageUrl, altText }) => {
+    /* const MemoizedImage = memo(({ imageUrl, altText }) => {
         return (
             <img
                 ref={imageRef} // Add the ref for intersection observer
                 data-src={imageUrl} // Use data-src to set the real image URL on intersection
                 alt={altText}
-                className="w-full h-full object-contain rounded-lg transition-transform duration-300 hover:scale-110"
+                className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
                 loading="lazy" // Lazy loading for the image
                 style={{ opacity: 0 }} // Start with opacity 0, and fade in once loaded
                 onLoad={() => {
@@ -80,12 +79,12 @@ const AdminProductTile = ({
                 }}
             />
         );
-    });
+    }); */
 
     return (
         <Card className="md:w-[300px] 2xl:w-[300px] w-full h-full justify-start items-center p-2 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
-            <div className="relative w-full h-[200px] overflow-hidden rounded-lg mb-4">
+            <div className="relative w-full h-[400px] overflow-hidden rounded-lg mb-4 bg-blue-300">
                 {selectedSize_color_Image_Array?.[0]?.url ? (
                     <MemoizedImage
                         imageUrl={selectedSize_color_Image_Array[0].url}
@@ -97,6 +96,7 @@ const AdminProductTile = ({
                         altText={product?.title}
                     />
                 )}
+                
             </div>
 
             {/* Title and Price */}
@@ -155,8 +155,59 @@ const AdminProductTile = ({
             </div>
         </Card>
     );
-};
+}
+const MemoizedImage = memo(({ imageUrl, altText }) => {
+    const imageRef = useRef(null); // Ref for each image
 
+    useEffect(() => {
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting && entry.target) {
+                    const imageElement = entry.target;
+                    const imageUrl = imageElement.dataset.src;
+                    if (imageUrl) {
+                        imageElement.src = imageUrl; // Set the real image URL to trigger load
+                    }
+                    observer.unobserve(entry.target); // Stop observing once the image is loaded
+                }
+            });
+        }, {
+            threshold: 0.1, // Trigger when 10% of the image is in the viewport
+        });
+
+        if (imageRef.current) {
+            observer.observe(imageRef.current);
+        }
+
+        return () => {
+            if (imageRef.current) {
+                observer.unobserve(imageRef.current);
+            }
+        };
+    }, []);
+
+    return (
+        <img
+            ref={imageRef} // Add the ref for intersection observer
+            data-src={imageUrl} // Use data-src to set the real image URL on intersection
+            alt={altText}
+            className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
+            loading="lazy" // Lazy loading for the image
+            style={{ opacity: 0 }} // Start with opacity 0, and fade in once loaded
+            onLoad={() => {
+                imageRef.current.style.opacity = 1; // Fade-in effect after loading
+            }}
+        />
+    );
+});
+/* {
+    selectedSize_color_Image_Array && selectedSize_color_Image_Array.length && selectedSize_color_Image_Array.length > 0 && <img
+    src={selectedSize_color_Image_Array[0].url ? selectedSize_color_Image_Array[0].url : selectedSize_color_Image_Array[0]}
+    alt={`Preview Image:_${selectedSize_color_Image_Array}`}
+    loading='lazy'
+    className="w-full h-full object-contain rounded-lg transition-transform duration-300 hover:scale-110"
+    />
+} */
 // Grid item classes for the images
 const getGridItemClasses = (index) => {
     if (index % 5 === 0) return 'col-span-2 row-span-2'; // Span 2 columns and 2 rows
