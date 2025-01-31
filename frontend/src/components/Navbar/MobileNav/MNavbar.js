@@ -29,6 +29,7 @@ import { getbag, getwishlist } from '../../../action/orderaction'
 import { ShoppingCart } from 'lucide-react'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../../config'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
+import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 
 
 const MNavbar = ({ user }) => {
@@ -327,7 +328,11 @@ const MNavbar = ({ user }) => {
                                     <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
                                 </ul>
                                 <hr />
-                                <div className='px-5 text-[#282c3fd2] text-sm'>
+                                <div className='px-5 flex-row flex space-x-4 mt-7 text-[#282c3fd2] text-sm'>
+                                    <ImFacebook size={20} className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl"/>
+                                    <ImGoogle size={20} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
+                                    <ImTwitter size={20} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
+                                    <ImInstagram size={20} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
                                     {/* <Link to={"/"}><h1 className='my-5'>Gift&nbsp;Cards</h1></Link> */}
                                     {/* <Link to={"/contact"}><h1 className='my-5'>Contact&nbsp;Us</h1></Link> */}
                                     {/* <Link to={"/faq"}><h1 className='my-5'>FAQs</h1></Link> */}
