@@ -166,15 +166,13 @@ const FileUploadComponent = ({
                     onChange={handleFileChange}
                     disabled={files.length >= maxFiles} 
                 />
-                <div className='w-fit h-fit'>
-                    <div className="mb-2">Drag & Drop or Click to Upload</div>
-                    <label
-                        htmlFor={`file-upload-${tag}-${sizeTag}`} 
-                        className="flex flex-col justify-center items-center cursor-pointer"
-                    >
-                    </label>
-                    <button className="btn btn-primary">Upload Files</button>
-                </div>
+                <label
+                    htmlFor={`file-upload-${tag}-${sizeTag}`} 
+                    className="flex flex-col justify-center items-center cursor-pointer"
+                >
+                <div className="mb-2">Drag & Drop or Click to Upload</div>
+                <button className="btn btn-primary">Upload Files</button>
+                </label>
             </div>
 
             {isLoading && <span>Please wait while the files are uploading...</span>}

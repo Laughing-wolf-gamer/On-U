@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomItem } from '../../config';
 import ReactPlayer from 'react-player';
@@ -19,7 +19,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
     const navigation = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
-
+    console.log("Image to show: ", imageToShow);
     const fileExtension = imageToShow.split('.').pop();
     const isVideo = ['mp4', 'webm', 'ogg', 'video', 'mov', 'avi'].includes(fileExtension);
     const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
@@ -60,7 +60,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
                             <ReactPlayer
                                 url={imageToShow}
                                 className="w-full h-full object-cover rounded-lg"
-                                controls
+                                controls = {window.screen.width < 1024}
                                 playing={startPlaying}
                                 muted
                                 width="100%"

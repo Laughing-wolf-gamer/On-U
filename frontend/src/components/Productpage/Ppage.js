@@ -168,6 +168,14 @@ const Ppage = () => {
             checkAndCreateToast("error", "No Size Selected");
             return;
         }
+        if(currentSize.quantity <= 0){
+            checkAndCreateToast("error", "Size Out of Stock");
+            return;
+        }
+        if(currentColor.quantity <= 0){
+            checkAndCreateToast("error", "Color Out of Stock");
+            return;
+        }
         if (user) {
             const orderData = {
                 userId: user.id,
@@ -434,7 +442,7 @@ const Ppage = () => {
                                         {/* Size Selection */}
                                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
                                         {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                            <div key={`size_${index}_${size._id}`}
+                                            <div style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}} key={`size_${index}_${size._id}`}
                                                 className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
                                                 ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
                                                 onClick={() => { handleSetNewImageArray(size); }}
@@ -459,7 +467,8 @@ const Ppage = () => {
                                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
                                             {selectedColor && selectedColor.length > 0 ? (
                                                 selectedColor.map((color, i) => (
-                                                    <div key={`color_${i}`} 
+                                                    <div key={`color_${i}`}
+                                                        style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}}
                                                         className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
                                                         ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
                                                         onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}

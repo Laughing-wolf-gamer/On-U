@@ -362,16 +362,16 @@ export const getAllOptions = async(req,res)=>{
 // Fetch all options of a specific type
 export const getOptions = async (req, res) => {
 	try {
-	  const { type } = req.params; // Get the type of option (e.g., category)
-	  
-	  if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
-		return res.status(400).json({ message: 'Invalid option type' });
-	  }
-  
-	  const options = await Option.find({ type });
-	  res.status(200).json({Success:true,message:"Featch All Options",result:options});
+		const { type } = req.params; // Get the type of option (e.g., category)
+		
+		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
+			return res.status(400).json({ message: 'Invalid option type' });
+		}
+	
+		const options = await Option.find({ type });
+		res.status(200).json({Success:true,message:"Featch All Options",result:options});
 	} catch (error) {
-	  res.status(500).json({ message: 'Server error' });
+	  	res.status(500).json({ message: 'Server error' });
 	}
 };
   

@@ -498,7 +498,8 @@ const MPpage = () => {
                                     {/* Size Selection */}
                                     <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
                                     {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                        <div key={`size_${index}_${size._id}`} 
+                                        <div key={`size_${index}_${size._id}`}
+                                            style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}}
                                             className={`flex relative flex-col items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-transform duration-300 border-[1px] border-gray-400 ease-in-out 
                                             ${currentSize?._id === size?._id ? " bg-gray-600 text-white scale-110" : "bg-slate-100 border-2 text-black"}`}
                                             onClick={() => { handleSetNewImageArray(size); }}
@@ -527,7 +528,8 @@ const MPpage = () => {
                                     <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-5 gap-1">
                                     {selectedColor && selectedColor.length > 0 ? (
                                         selectedColor.map((color, i) => (
-                                        <div key={`color_${i}`} 
+                                        <div style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}} 
+                                            key={`color_${i}`} 
                                             className={`flex relative flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
                                                 ${color.quantity <= 10 ? "h-fit w-14" : "h-fit w-fit"}`}
                                             onClick={(e) => { setCurrentColor(color); handleSetColorImages(color); }}>

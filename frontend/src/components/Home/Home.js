@@ -1,4 +1,4 @@
-import React, { Fragment, CSSProperties, useEffect, useState, useRef } from 'react'
+import React, { Fragment, CSSProperties, useEffect, useState, useRef, useMemo } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
@@ -237,7 +237,10 @@ const Home = ({user}) => {
                                                     key={`Index_${index}`}
                                                     className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105"
                                                 >
-                                                    <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
+                                                    {
+                                                        url && <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
+                                                    }
+                                                    
                                                 </div>
                                             ))
                                         )
@@ -394,7 +397,7 @@ const Home = ({user}) => {
         </div>
     )
 }
-const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categoriesOptions = [] }) => {
+/* const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categoriesOptions = [] }) => {
     const [inView, setInView] = useState(new Array(8).fill(false)); // Initialize as an array of false
     const videoRefs = useRef([]); // This will hold the refs for each video container
 
@@ -407,7 +410,7 @@ const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categ
                 im.url.endsWith(".mov") ||
                 im.url.endsWith(".avi")),
         }));
-    }, [Wide_Screen_Section_3?.urls]); // Depend only on urls
+    }, []); // Depend only on urls
 
     useEffect(() => {
         // Set up the IntersectionObserver for each element dynamically
@@ -438,7 +441,7 @@ const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categ
             });
         };
     }, [Wide_Screen_Section_3?.urls.length]); // Only run when urls length changes
-
+    console.log("mediaItems",mediaItems,"Original: ",Wide_Screen_Section_3);
     return (
         <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
             {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length === 0 ? (
@@ -457,12 +460,77 @@ const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categ
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
                         className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
                     >
+                        {
+                            url  && <Fragment>
+                                {inView[index] ? (
+                                    <GridImageView
+                                        imageToShow={url}
+                                        categoriesOptions={categoriesOptions}
+                                        startPlaying={inView[index]}
+                                    />
+                                ) : (
+                                    <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
+                                )}
+                            </Fragment>
+                        }
+                    </div>
+                ))
+            )}
+        </div>
+    );
+}; */
+const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions }) => {
+    const [inView, setInView] = useState([]);
+    const videoRefs = useRef([]); // This will hold the refs for each video container
+  
+    useEffect(() => {
+        // Set up the IntersectionObserver for each element dynamically
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const index = videoRefs.current.indexOf(entry.target); // Find which video is in view
+                if (entry.isIntersecting) {
+                    setInView((prevInView) => {
+                        const newInView = [...prevInView];
+                        newInView[index] = true; // Set this video to in view
+                        return newInView;
+                    });
+                }
+            });
+        }, { threshold: 0.1 });
+    
+        // Observe all video containers
+        videoRefs.current.forEach((ref) => {
+            if (ref) observer.observe(ref);
+        });
+    
+        // Cleanup observer when the component is unmounted
+        return () => {
+            videoRefs.current.forEach((ref) => {
+                if (ref) observer.unobserve(ref);
+            });
+        };
+    }, [Wide_Screen_Section_3?.urls.length]);
+  
+    return (
+        <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
+            {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
+            // Skeleton Loader View when no URLs
+            Array(8).fill(0).map((_, index) => (
+                <div
+                    key={`skeleton_${index}`}
+                    className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse"
+                />
+            ))
+            ) : (
+                // Actual content when URLs are available
+                Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                    <div
+                        key={`Index_${index}`}
+                        ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
+                        className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
+                    >
                         {inView[index] ? (
-                            <GridImageView
-                                imageToShow={url.url}
-                                categoriesOptions={categoriesOptions}
-                                startPlaying={inView[index]}
-                            />
+                            <GridImageView imageToShow={url} startPlaying = {false} categoriesOptions={categoriesOptions} />
                         ) : (
                             <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
                         )}
