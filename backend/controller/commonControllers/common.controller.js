@@ -121,7 +121,8 @@ export const removeHomeCarousal = async (req, res) => {
         res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
     }
 };
-/// Filters...
+
+// Filters...
 
 export const FetchAllFilters  = async (req, res) => {
     try {
