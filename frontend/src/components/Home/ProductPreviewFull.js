@@ -75,7 +75,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                 key={index}
                                 className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-7 py-3 flex items-center justify-center md:w-[150px] xl:w-[200px] 2xl:w-[200px] sm:w-[170px] sm:h-[40px] min-w-fit h-[45px] space-x-3 transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
                             >
-                            <span className="inline-block text-center text-[10px] sm:text-[15px] md:text-[11px] whitespace-nowrap overflow-hidden text-ellipsis">
+                            <span className="inline-block text-center text-[10px] sm:text-[15px] md:text-[18px] whitespace-nowrap overflow-hidden text-ellipsis">
                                 {h?.title}
                             </span>
                             </button>
@@ -95,7 +95,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                         // const p = previewProducts[];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
-                            <div className="2xl:w-[317px] 2xl:h-[580px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
+                            <div className="2xl:w-[344px] 2xl:h-[611px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105" key={p._id}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">
