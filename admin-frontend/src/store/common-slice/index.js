@@ -132,6 +132,7 @@ export const delFeatureImage = createAsyncThunk('/common/delFeatureImage',async(
         return response.data;
     } catch (error) {
         console.error(`Error Review product: `,error);
+        return null;
     }
 })
 export const sendAddressFormData = createAsyncThunk('/common/sendAddressFormData',async(data)=>{

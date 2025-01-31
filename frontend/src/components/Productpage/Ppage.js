@@ -388,7 +388,6 @@ const Ppage = () => {
                         <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
                             <div className='w-[36%] 2xl:w-[36%] min-h-[200px] flex flex-col px-7'>
                                 <div
-                                    // style={{ pointerEvents: 'none' }}  
                                     className={`w-[40%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-[-10] mt-5":"flex absolute bottom-5 left-8"} `}>
                                     <div className='w-full h-full justify-start items-center flex'>
                                         <LeftImageContent 

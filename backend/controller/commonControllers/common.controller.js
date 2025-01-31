@@ -71,21 +71,53 @@ export const addHomeCarousal = async (req, res) => {
 	}
 }
 export const removeHomeCarousal = async (req, res) => {
-	try {
-		const{id,imageIndex} = req.params;
-		if(!id || !imageIndex) return res.status(400).json({Success: false, message: "Id is required"});
-		const banner = await BannerModel.findById(id);
-		if(!banner) return res.status(404).json({Success: false, message: "Banner not found"});
-		banner.Url.splice(imageIndex,1);
-		await banner.save();
-		const banners = await BannerModel.find({});
-		console.log("Banners: ",banners)
-		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
-	} catch (error) {
-		console.error(`Error adding Banners: `,error);
-		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
-	}
-}
+    try {
+        const { id, imageIndex } = req.params;
+    
+        // Validate the input
+        if (!id || !imageIndex) {
+            return res.status(200).json({ Success: false, message: "Id and image index are required" });
+        }
+    
+        // Find the banner by ID
+        const banner = await BannerModel.findById(id);
+        if (!banner) {
+            return res.status(202).json({ Success: false, message: "Banner not found" });
+        }
+    
+        console.log("Deleting Banner: ", id, imageIndex);
+        console.log("Total Banner Length: ", banner.Url.length);
+    
+        // Validate the image index
+        if (banner.Url.length <= imageIndex || imageIndex < 0) {
+            return res.status(202).json({ Success: false, message: "Invalid image index" });
+        }
+    
+        // Identify the URL to remove
+        const urlToRemove = banner.Url[imageIndex];
+        console.log("Url to remove: ", urlToRemove);
+    
+        // Update the banner by removing the URL at the specified index
+        const updatedBanners = await BannerModel.findByIdAndUpdate(
+            id,  // The ID of the document to update
+            { $pull: { Url: urlToRemove } },  // Remove the URL from the "Url" array
+            { new: true }  // Ensure the updated document is returned
+        );
+    
+        // Handle case when the URL couldn't be removed for any reason
+        if (!updatedBanners) {
+            return res.status(404).json({ Success: false, message: "Banner update failed, URL not found" });
+        }
+    
+        console.log("Updated Banners: ", updatedBanners.Url);
+    
+        // Respond with the updated banner
+        res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanners });
+    } catch (error) {
+        console.error(`Error removing banner: `, error);
+        res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
+    }
+};
 /// Filters...
 
 export const FetchAllFilters  = async (req, res) => {

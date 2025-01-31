@@ -72,15 +72,15 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     };
 
     // Effect hook to initialize carousel and cleanup on unmount
-    useEffect(() => {
+    /* useEffect(() => {
         // startAutoSliding(); // Start auto sliding when the component mounts
 
-        /* return () => {
+        return () => {
             if (timerRef.current) {
                 clearInterval(timerRef.current); // Cleanup interval on unmount
             }
-        }; */
-    }, []); // Empty dependency array means this runs only once when the component mounts
+        };
+    }, []); // Empty dependency array means this runs only once when the component mounts */
     useEffect(() => {
         // Check if the user is logged in
         if(wishlist){

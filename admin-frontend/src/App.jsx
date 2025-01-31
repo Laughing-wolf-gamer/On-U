@@ -28,6 +28,7 @@ import AdminPrivacyPolicyPage from "./pages/admin-view/AdminPrivacyPolicyPage"
 import AdminTermsConditionsPage from "./pages/admin-view/AdminTermsConditionsPage"
 import { Toaster } from "react-hot-toast"
 import AdminUsers from "./pages/admin-view/AdminUsers"
+import { ToastContainer } from "react-toastify"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -88,6 +89,7 @@ function App() {
                 <Route path="*" element = {<NotFound user={user} isAuthenticated={isAuthenticated}/>}/>
             </Routes>
             <Toaster />
+            <ToastContainer />
         </div>
     )
 }

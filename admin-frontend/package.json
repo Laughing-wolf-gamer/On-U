@@ -44,6 +44,7 @@
     "react-responsive-carousel": "^3.2.23",
     "react-router-dom": "^7.0.2",
     "react-swipeable": "^7.0.2",
+    "react-toastify": "^11.0.3",
     "react-use-draggable-scroll": "^0.4.7",
     "tailwind-merge": "^2.5.5",
     "tailwindcss-animate": "^1.0.7",

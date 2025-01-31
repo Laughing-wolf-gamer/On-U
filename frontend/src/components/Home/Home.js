@@ -335,14 +335,14 @@ const Home = ({user}) => {
                         </div>
                         {/* <OurMotoData/> */}
                         {product && product.length && <ProductPreviewFull product={product} user={user}/>}
-                        {/* <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3">
+                        <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3">
                             <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
                                 <GridVideoBox bannerLoading={bannerLoading} Wide_Screen_Section_3 ={Wide_Screen_Section_3} categoriesOptions = {categoriesOptions} />
                             </div>
-                        </div> */}
+                        </div>
                         <div className='pt-4 grid grid-cols-1 min-h-[200px] bg-slate-200'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-screen flex justify-start items-center'>
@@ -389,66 +389,83 @@ const Home = ({user}) => {
                     </Fragment>
 
             }
-        {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
-        {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
+            {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
+            {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
         </div>
     )
 }
-const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions }) => {
-    const [inView, setInView] = useState([]);
+const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categoriesOptions = [] }) => {
+    const [inView, setInView] = useState(new Array(8).fill(false)); // Initialize as an array of false
     const videoRefs = useRef([]); // This will hold the refs for each video container
-  
+
+    const mediaItems = useMemo(() => {
+        return Wide_Screen_Section_3.urls.slice(0, 8).map((im) => ({
+            url: im.url,
+            isVideo: im.url &&
+                (im.url.includes("video") ||
+                im.url.endsWith(".mp4") ||
+                im.url.endsWith(".mov") ||
+                im.url.endsWith(".avi")),
+        }));
+    }, [Wide_Screen_Section_3?.urls]); // Depend only on urls
+
     useEffect(() => {
-      // Set up the IntersectionObserver for each element dynamically
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          const index = videoRefs.current.indexOf(entry.target); // Find which video is in view
-          if (entry.isIntersecting) {
-            setInView((prevInView) => {
-              const newInView = [...prevInView];
-              newInView[index] = true; // Set this video to in view
-              return newInView;
+        // Set up the IntersectionObserver for each element dynamically
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                const index = videoRefs.current.indexOf(entry.target); // Find which video is in view
+                if (entry.isIntersecting) {
+                    setInView((prevInView) => {
+                        const newInView = [...prevInView];
+                        if (!newInView[index]) {
+                            newInView[index] = true; // Set this video to in view
+                        }
+                        return newInView;
+                    });
+                }
             });
-          }
-        });
-      }, { threshold: 0.1 });
-  
-      // Observe all video containers
-      videoRefs.current.forEach((ref) => {
-        if (ref) observer.observe(ref);
-      });
-  
-      // Cleanup observer when the component is unmounted
-      return () => {
+        }, { threshold: 0.1 });
+
+        // Observe all video containers
         videoRefs.current.forEach((ref) => {
-          if (ref) observer.unobserve(ref);
+            if (ref) observer.observe(ref);
         });
-      };
-    }, [Wide_Screen_Section_3?.urls.length]);
-  
+
+        // Cleanup observer when the component is unmounted
+        return () => {
+            videoRefs.current.forEach((ref) => {
+                if (ref) observer.unobserve(ref);
+            });
+        };
+    }, [Wide_Screen_Section_3?.urls.length]); // Only run when urls length changes
+
     return (
         <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
-            {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
-            // Skeleton Loader View when no URLs
-            Array(8).fill(0).map((_, index) => (
-                <div
-                key={`skeleton_${index}`}
-                className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse"
-                />
-            ))
+            {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length === 0 ? (
+                // Skeleton Loader View when no URLs
+                Array(8).fill(0).map((_, index) => (
+                    <div
+                        key={`skeleton_${index}`}
+                        className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse"
+                    />
+                ))
             ) : (
                 // Actual content when URLs are available
-                Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                mediaItems.map((url, index) => (
                     <div
-                    key={`Index_${index}`}
-                    ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                    className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
+                        key={`Index_${index}`}
+                        ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
+                        className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
                     >
-                    {inView[index] ? (
-                        <GridImageView imageToShow={url} categoriesOptions={categoriesOptions} />
-                    ) : (
-                        <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
-                    )}
+                        {inView[index] ? (
+                            <GridImageView
+                                imageToShow={url.url}
+                                categoriesOptions={categoriesOptions}
+                                startPlaying={inView[index]}
+                            />
+                        ) : (
+                            <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
+                        )}
                     </div>
                 ))
             )}
