@@ -291,9 +291,9 @@ const Home = ({user}) => {
 
                         <div className='w-[100vw] bg-slate-200'>
                             <Carousel
-                                preventMovementUntilSwipeScrollTolerance 
+                                preventMovementUntilSwipeScrollTolerance
                                 className='bg-slate-200' 
-                                autoPlay={5000}
+                                autoPlay={50000}
                                 swipeable
                                 infiniteLoop={true}
                                 showThumbs={false} 
@@ -368,7 +368,16 @@ const Home = ({user}) => {
                         </div>
 
                         <div className='pt-4 w-[100vw] bg-slate-200'>
-                            <Carousel showThumbs={false} showStatus={false} showArrows={false} showIndicators={true} renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                            <Carousel 
+                            preventMovementUntilSwipeScrollTolerance
+                            autoPlay={50000}
+                            swipeable
+                            infiniteLoop={true}
+                            showThumbs={false} 
+                            showStatus={false} 
+                            showArrows={false} 
+                            showIndicators={true} 
+                            renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                                 {!bannerLoading && Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
                                     Small_Screen_Section_5.urls.map((mc, index) => (
                                         <Link key={`mc_banners_${index}`} to='/products'>
@@ -530,7 +539,7 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                         className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
                     >
                         {inView[index] ? (
-                            <GridImageView imageToShow={url} startPlaying = {false} categoriesOptions={categoriesOptions} />
+                            <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
                         ) : (
                             <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
                         )}

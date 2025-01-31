@@ -61,7 +61,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
                                 url={imageToShow}
                                 className="w-full h-full object-cover rounded-lg"
                                 loop = {true}
-                                controls = {window.screen.width < 1024}
+                                controls = {/* window.screen.width < 1024 */false}
                                 playing={startPlaying}
                                 muted
                                 width="100%"

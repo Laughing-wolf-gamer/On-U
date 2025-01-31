@@ -47,7 +47,7 @@ const CarousalView = ({ b_banners, indicator, bannerLoading = false }) => {
                 showStatus={false}
                 showArrows={false}
                 showIndicators={true}
-                autoPlay={1000}
+                autoPlay={50000}
                 swipeable
                 infiniteLoop={true}
                 selectedItem={currentIndex}
