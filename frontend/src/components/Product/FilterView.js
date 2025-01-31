@@ -763,7 +763,6 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
             value={price}
             onChange={priceHandler}
             valueLabelDisplay="auto"
-            // color='secondary'
             aria-labelledby="range-slider"
             min={Math.floor(minPrice)}
             max={Math.floor(maxPrice)}

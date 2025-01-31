@@ -3,7 +3,7 @@ import React from 'react'
 const ProductCardSkeleton = () => {
     return (
         <div
-            className="2xl:w-[290px] md:h-[400px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-[340px] w-[160px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300"
+            className="2xl:w-[260px] md:h-[430px] md:w-[210px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-fit w-full border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300"
         >
             {/* Product Image Carousel Skeleton */}
             <div className="w-full bg-gray-300 animate-pulse flex h-[70%] justify-center items-center">

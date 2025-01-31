@@ -221,13 +221,13 @@ const MFilter = ({ product ,handleSortChange}) => {
   let sizenewArray = [...new Set(size)]
   let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
 
-  const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
+  // const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
+  const [price, setPrice] = useState(GetPrice())
   const [MMainlink, setMMainlink] = useState(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
   const priceHandler = (event, newPrice)=>{
     setPrice(newPrice)
     setMMainlink(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
 }
-
 function price2fun(e,f){
   if (MMainlink.includes('?')) {
     if (MMainlink.includes(`${e}`)) {
@@ -583,6 +583,18 @@ function price2fun(e,f){
 
     </Fragment>
   )
+}
+
+const GetPrice = ()=>{
+  const url = new URL(window.location.href);
+    const urlMinPrice = url.searchParams.get('sellingPrice[$gte]');
+    const urlMaxPrice = url.searchParams.get('sellingPrice[$lte]');
+    
+    if (urlMinPrice && urlMaxPrice) {
+      // setPrice([Number(urlMinPrice), Number(urlMaxPrice)]);
+      return [Number(urlMinPrice), Number(urlMaxPrice)]
+    }
+    return [];
 }
 
 export default MFilter
