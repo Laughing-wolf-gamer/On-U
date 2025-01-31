@@ -237,7 +237,7 @@ const AdminProducts = () => {
                     toast("Product Added Success")
                 }
             } catch (error) {
-                console.error(`Failed to Add New Product: ${error.message}`);
+                console.error(`Failed to Add New Product: ${error.message}`,error);
                 toast(`Failed to Add New Product: ${error.message}`)
             }
         }

@@ -1,6 +1,4 @@
-import ImageUpload from '@/components/admin-view/image-upload';
-import { Button } from '@/components/ui/button';
-import React, { useState } from 'react';
+import React from 'react';
 import FeatureImageSingleItem from './FeatureImageSingleItem';
 
 const ImageUploadingRow = ({allImageUrls,handleDeleteFeatureImage}) => {

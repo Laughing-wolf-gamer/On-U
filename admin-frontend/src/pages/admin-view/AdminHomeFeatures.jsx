@@ -223,11 +223,11 @@ const AdminHomeFeatures = () => {
                     className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Categories</option>
-                    {categories.map((category, index) => (
-                        <option key={index} value={category}>
-                            {capitalizeFirstLetterOfEachWord(category)}
-                        </option>
-                    ))}
+                        {categories.map((category, index) => (
+                            <option key={index} value={category}>
+                                {capitalizeFirstLetterOfEachWord(category)}
+                            </option>
+                        ))}
                 </select>
             </div>
     

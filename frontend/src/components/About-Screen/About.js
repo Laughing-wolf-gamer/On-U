@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Footer from '../Footer/Footer';
 import { BASE_API_URL, extractSpecificWord } from '../../config';
 import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import LoadingSpinner from '../Product/LoadingSpinner';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 
 const About = () => {
@@ -26,7 +25,7 @@ const About = () => {
         window.scrollTo(0, 0);
         fetchPageAboutData();
     }, []);
-    console.log("About Data:,",aboutData);
+    // console.log("About Data:,",aboutData);
     
     return (
         <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">

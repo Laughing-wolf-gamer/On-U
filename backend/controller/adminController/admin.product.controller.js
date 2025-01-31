@@ -1,5 +1,6 @@
 import Coupon from "../../model/Coupon.model.js";
 import OrderModel from "../../model/ordermodel.js";
+import logger from "../../utilis/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
@@ -12,8 +13,11 @@ export const uploadImage = async (req, res) =>{
 
         // Upload image to Cloudinary
         const result = await handleImageUpload(fileData);
-        if(!result) return res.status(500).json({Success:false, Message:"Failed to upload image"});
-        console.log("Uploaded Image URL:", result.secure_url);
+        if(!result) {
+            logger.warn("Image upload failed");
+            return res.status(401).json({Success:false, Message:"Failed to upload image"});
+        }
+        // console.log("Uploaded Image URL:", result.secure_url);
         if(result.error){
             console.error("Error while uploading image:", result.error);
             return res.status(500).json({
@@ -29,7 +33,8 @@ export const uploadImage = async (req, res) =>{
             result: result.secure_url
         });
     } catch (error) {
-        console.error('Error while uploading image:', error);
+        console.error('Error while uploading Single image:', error);
+        logger.error('Error while Uploading Single image: ' + error.message);
         res.status(500).json({
             Success: false,
             message: 'Internal Server Error'
@@ -42,12 +47,13 @@ export const uploadMultipleImages = async (req, res) => {
             const b64 = Buffer.from(file.buffer).toString('base64');
             return `data:${file.mimetype};base64,${b64}`;
         });
-        // console.log("Files: ",files);
-
         // Upload multiple images to Cloudinary
         const results = await handleMultipleImageUpload(files);
-        console.log("Uploaded Images:", results.map(result => result.secure_url));
-        if(!results || results.length <= 0) return res.status(400).json({Success: true,message:"No images were uploaded!"});
+        // console.log("Uploaded Images:", results.map(result => result.secure_url));
+        if(!results || results.length <= 0) {
+            logger.warn("No images were uploaded");
+            return res.status(400).json({Success: true,message:"No images were uploaded!"});
+        }
         // Return the uploaded image URLs
         res.status(200).json({
             Success: true,
@@ -56,6 +62,7 @@ export const uploadMultipleImages = async (req, res) => {
         });
     } catch (error) {
         console.error('Error while uploading images:', error);
+        logger.error('Error while uploading images: ' + error.message);
         res.status(500).json({
             Success: false,
             message: 'Internal Server Error'
@@ -79,7 +86,7 @@ export const createNewCoupon = async(req,res)=>{
             status,
             validDate,
         } = req.body;
-        console.log("Creating new coupon: ",req.body);
+        // console.log("Creating new coupon: ",req.body);
         const newCoupon = new Coupon({
             CouponName:couponName,
             CouponCode:couponCode,
@@ -98,6 +105,7 @@ export const createNewCoupon = async(req,res)=>{
         res.status(201).json({message: "Coupon created successfully", newCoupon});
     } catch (error) {
         console.error("Error creating new coupon: ",error);
+        logger.error("Error creating new coupon: " + error.message);
         res.status(500).json({message: "Internal Server Error"});
     }
 }
@@ -112,11 +120,12 @@ export const removeCoupon = async(req,res)=>{
         res.status(200).json({ message: "Coupon removed successfully", removed });
     } catch (error) {
         console.error("Error removing coupon: ",error);
+        logger.error("Error removing coupon: " + error.message);
         res.status(500).json({message: "Internal Server Error"});
     }
 }
 
-export const editCoupon = async (req,res)=>{
+/* export const editCoupon = async (req,res)=>{
     try {
         const{couponId} = req.params;
         const {
@@ -159,9 +168,90 @@ export const editCoupon = async (req,res)=>{
         }
     } catch (error) {
         console.log("Error Editing coupon: ",error);
+        logger.error("Error Editing coupon: " + error.message);
         res.status(500).json({message: "Internal Server Error"});
     }
 }
+ */
+export const editCoupon = async (req, res) => {
+    try {
+        const { couponId } = req.params;
+        const {
+            couponName,
+            couponDescription,
+            couponCode,
+            couponType,
+            discount,
+            minOrderAmount,
+            customerLogin,
+            freeShipping,
+            productId,
+            category,
+            status,
+            validDate,
+        } = req.body;
+
+        // Initialize updateFields object
+        const updateFields = {};
+
+        // Function to conditionally add fields to the updateFields object
+        const addFieldIfValid = (field, value, isString = true) => {
+            if (value && (isString ? value.length > 0 : value > 0)) {
+                updateFields[field] = value;
+            }
+        };
+
+        // Log the request body for debugging purposes
+        console.log("Editing coupon: ", req.body);
+
+        // Add fields to updateFields
+        addFieldIfValid('CouponName', couponName);
+        addFieldIfValid('Description', couponDescription);
+        addFieldIfValid('CouponCode', couponCode);
+        addFieldIfValid('CouponType', couponType);
+        addFieldIfValid('Discount', discount);
+        addFieldIfValid('MinOrderAmount', minOrderAmount);
+        addFieldIfValid('CustomerLogin', customerLogin);
+        if (freeShipping > 0) updateFields.FreeShipping = freeShipping; // Special case for freeShipping (numeric)
+        if (productId) updateFields.ProductId = productId; // ProductId is required, no need for length check
+        if (category && category !== 'none') updateFields.Category = category; // Ensure 'none' is handled
+        if (status && ["Active", "Inactive"].includes(status)) updateFields.Status = status;
+        if (validDate) updateFields.ValidDate = validDate;
+
+        // Log the fields being updated
+        console.log("Updating Coupon Fields: ", updateFields);
+
+        // Check if any fields were provided for update
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({
+                Success: false,
+                message: "No fields provided for update",
+            });
+        }
+
+        // Find the coupon and update it
+        const updatedCoupon = await Coupon.findByIdAndUpdate(couponId, updateFields, { new: true });
+
+        // If coupon is not found, return 404
+        if (!updatedCoupon) {
+            return res.status(404).json({
+                Success: false,
+                message: "Coupon Update Failed: Coupon not found",
+            });
+        }
+
+        // Return the updated coupon
+        return res.status(200).json({
+            Success: true,
+            message: 'Coupon updated successfully!',
+            result: updatedCoupon,
+        });
+    } catch (error) {
+        console.log("Error Editing coupon: ", error);
+        logger.error("Error Editing coupon: " + error.message);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
 
 
 export const fetchAllCoupons = async(req, res) => {
@@ -174,6 +264,72 @@ export const fetchAllCoupons = async(req, res) => {
     }
 }
 export const addNewProduct = async (req, res) => {
+    const isFormValid =(formData) => {
+        const reasons = [];
+        if(!formData.productId){
+            reasons.push("Product ID is required.");
+            return;
+        }
+        // Title check
+        if (!formData.title) {
+            reasons.push("Title is required.");
+        }
+        // Title check
+        if (!formData.shortTitle) {
+            reasons.push("Short Title is required.");
+        }
+    
+        // Description check
+        if (!formData.description) {
+            reasons.push("Description is required.");
+        }
+    
+        // Price check
+        if (!formData.price) {
+            reasons.push("Price is required.");
+        } else if (isNaN(formData.price) || formData.price <= 0) {
+            reasons.push("Price must be a positive number.");
+        }
+        // Size check
+        if (!formData.size || formData.size.length === 0) {
+            reasons.push("At least one size is required.");
+        }
+    
+        // Material check
+        if (!formData.material) {
+            reasons.push("Material is required.");
+        }
+    
+        // Gender check
+        if (!formData.gender) {
+            reasons.push("Gender is required.");
+        }
+    
+        // Subcategory check
+        if (!formData.subCategory) {
+            reasons.push("Subcategory is required.");
+        }
+    
+        // Category check
+        if (!formData.category) {
+            reasons.push("Category is required.");
+        }
+    
+        // Quantity check
+    
+        // Bullet points check
+        if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
+            reasons.push("At least one bullet point is required.");
+        }
+    
+        // If there are no reasons, the form is valid
+        const isValid = reasons.length === 0;
+    
+        return {
+            isValid,
+            reasons
+        };
+    }
     try {
         const {
             productId,
@@ -196,7 +352,7 @@ export const addNewProduct = async (req, res) => {
             weight,
             breadth,
         } = req.body;
-        console.log("All fields ",req.body);
+        console.log("Adding Products fields ",req.body);
         
         if(!isFormValid(req.body).isValid){
             return res.status(400).json({Success:false,message:"All fields are required ",reasons:isFormValid(req.body).reasons});
@@ -253,76 +409,12 @@ export const addNewProduct = async (req, res) => {
         
     } catch (error) {
         console.error('Error while adding new product:', error);
+        logger.error("Error while creating new Product: " + error.message);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
 
-function isFormValid(formData) {
-    const reasons = [];
-    if(!formData.productId){
-        reasons.push("Product ID is required.");
-        return;
-    }
-    // Title check
-    if (!formData.title) {
-        reasons.push("Title is required.");
-    }
-    // Title check
-    if (!formData.shortTitle) {
-        reasons.push("Short Title is required.");
-    }
 
-    // Description check
-    if (!formData.description) {
-        reasons.push("Description is required.");
-    }
-
-    // Price check
-    if (!formData.price) {
-        reasons.push("Price is required.");
-    } else if (isNaN(formData.price) || formData.price <= 0) {
-        reasons.push("Price must be a positive number.");
-    }
-    // Size check
-    if (!formData.size || formData.size.length === 0) {
-        reasons.push("At least one size is required.");
-    }
-
-    // Material check
-    if (!formData.material) {
-        reasons.push("Material is required.");
-    }
-
-    // Gender check
-    if (!formData.gender) {
-        reasons.push("Gender is required.");
-    }
-
-    // Subcategory check
-    if (!formData.subCategory) {
-        reasons.push("Subcategory is required.");
-    }
-
-    // Category check
-    if (!formData.category) {
-        reasons.push("Category is required.");
-    }
-
-    // Quantity check
-
-    // Bullet points check
-    if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
-        reasons.push("At least one bullet point is required.");
-    }
-
-    // If there are no reasons, the form is valid
-    const isValid = reasons.length === 0;
-
-    return {
-        isValid,
-        reasons
-    };
-}
 export const fetchAllProducts = async (req, res) => {
     try {
         const allProducts = await ProductModel.find({});
@@ -330,6 +422,7 @@ export const fetchAllProducts = async (req, res) => {
         res.status(200).json({Success: true, message: 'All products fetched successfully!', result: allProducts});
     } catch (error) {
         console.error('Error while Fetching all product:', error);
+        logger.error("Error while Fetching all products: " + error.message);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
@@ -342,10 +435,11 @@ export const getProductById = async (req, res) => {
         res.status(200).json({Success: true, message: 'Product fetched successfully!', result: product});
     } catch (error) {
         console.error('Error while Fetching a product:', error);
+        logger.error("Error while Fetching a product: " + error.message);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
-export const editProduct = async (req, res) => {
+/* export const editProduct = async (req, res) => {
     try {
         const {id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
@@ -421,7 +515,107 @@ export const editProduct = async (req, res) => {
         console.error('Error while Editing a product:', error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
-}
+} */
+
+export const editProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        if (!id) {
+            return res.status(400).json({ Success: false, message: "Product ID is required" });
+        }
+
+        const {
+            productId,
+            title,
+            size,
+            description,
+            material,
+            bulletPoints,
+            gender,
+            category,
+            subCategory,
+            specialCategory,
+            price,
+            salePrice,
+            width,
+            height,
+            length,
+            weight,
+            breadth,
+        } = req.body;
+
+        console.log("Editing: ", req.body);
+
+        // Initialize updateFields object
+        const updateFields = {};
+
+        // Helper function to conditionally add fields to updateFields
+        const addToUpdate = (field, value) => {
+            if (value && (typeof value === 'string' ? value.length > 0 : value > 0)) {
+                updateFields[field] = value;
+            }
+        };
+
+        // Add basic fields to updateFields
+        addToUpdate('productId', productId);
+        addToUpdate('title', title);
+        addToUpdate('description', description);
+        addToUpdate('material', material);
+        addToUpdate('bulletPoints', bulletPoints);
+        addToUpdate('gender', gender);
+        addToUpdate('category', category);
+        addToUpdate('subCategory', subCategory);
+        addToUpdate('specialCategory', specialCategory);
+        addToUpdate('price', price);
+        addToUpdate('salePrice', salePrice && salePrice > 0 ? salePrice : null);
+        addToUpdate('width', width);
+        addToUpdate('height', height);
+        addToUpdate('length', length);
+        addToUpdate('weight', weight);
+        addToUpdate('breadth', breadth);
+
+        // Handle 'size' field separately (calculate totalStock)
+        if (size && size.length > 0) {
+            let totalStock = 0;
+            size.forEach(s => {
+                if (s.colors) {
+                    s.colors.forEach(c => {
+                        totalStock += c.quantity || 0;
+                    });
+                }
+            });
+            if (totalStock > 0) updateFields.size = size;
+            updateFields.totalStock = totalStock;
+        }
+
+        console.log("Updating Product Fields: ", updateFields);
+
+        // If no fields to update, return early
+        if (Object.keys(updateFields).length === 0) {
+            return res.status(400).json({ Success: false, message: "No fields provided for update" });
+        }
+
+        // Update product in the database
+        const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateFields, { new: true });
+
+        // Check if update was successful
+        if (!updatedProduct) {
+            return res.status(404).json({ Success: false, message: "Product Update Failed" });
+        }
+
+        return res.status(200).json({
+            Success: true,
+            message: 'Product updated successfully!',
+            result: updatedProduct,
+        });
+    } catch (error) {
+        console.error('Error while editing a product:', error);
+        logger.error('Product Update Failed: '+ error.message);
+        return res.status(500).json({ Success: false, message: 'Internal Server Error' });
+    }
+};
+    
+
 export const deleteProduct = async (req, res) => {
     try {
         const{id} = req.params;
@@ -431,6 +625,7 @@ export const deleteProduct = async (req, res) => {
         res.status(200).json({Success: true, message: 'Product deleted successfully!', result: deletedProduct});
     } catch (error) {
         console.error('Error deleting the Product', error);
+        logger.error('Error deleting the Product'+ error.message);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
@@ -445,6 +640,7 @@ export const getOrderById = async(req,res)=>{
         res.status(200).json({Success:true,message:'Fetched All Orders',result:order})
     } catch (error) {
         console.error("Error getting orders by Id: ",error);
+        logger.error("Error getting orders: " + error.message);
         res.status(500).json({Success:false,message:"Internal Server Error",result:null});
     }
 }
@@ -468,6 +664,7 @@ export const updateOrderStatus = async(req,res)=>{
         res.status(200).json({Success:false,message:"Failed to update order status"});
     } catch (error) {
         console.error("Error updating order status: ",error);
+        logger.error("Error updating order status: " + error.message);
         res.status(500).json({Success:false,message:"Internal Server Error",result:null});
     }
 }
@@ -482,6 +679,7 @@ export const getallOrders = async(req,res)=>{
         res.status(200).json({Success:true,message:"All Orders",result:allOrders || []});
     } catch (error) {
         console.error("Error Getting All Orders ",error);
+        logger.error("Error Getting All Orders: " + error.message);
         res.status(500).json({Success:false,message:"Internal Server Error"});
     }
 }

@@ -1,8 +1,8 @@
 import winston from 'winston';
 import dotenv from 'dotenv';
 import DailyRotateFile from 'winston-daily-rotate-file';
-import path from 'path';
 
+// Load environment variables from.env file
 dotenv.config();
 
 const logLevel = process.env.NODE_ENV === 'production' ? 'warn' : 'info';

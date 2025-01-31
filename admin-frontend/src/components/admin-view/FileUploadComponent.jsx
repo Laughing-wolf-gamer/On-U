@@ -166,13 +166,15 @@ const FileUploadComponent = ({
                     onChange={handleFileChange}
                     disabled={files.length >= maxFiles} 
                 />
-                <label
-                    htmlFor={`file-upload-${tag}-${sizeTag}`} 
-                    className="flex flex-col justify-center items-center cursor-pointer"
-                >
-                <div className="mb-2">Drag & Drop or Click to Upload</div>
-                <button className="btn btn-primary">Upload Files</button>
-                </label>
+                <div className='w-fit h-fit'>
+                    <div className="mb-2">Drag & Drop or Click to Upload</div>
+                    <label
+                        htmlFor={`file-upload-${tag}-${sizeTag}`} 
+                        className="flex flex-col justify-center items-center cursor-pointer"
+                    >
+                    </label>
+                    <button className="btn btn-primary">Upload Files</button>
+                </div>
             </div>
 
             {isLoading && <span>Please wait while the files are uploading...</span>}
@@ -182,11 +184,11 @@ const FileUploadComponent = ({
                     <div key={index} className="flex justify-between gap-7 items-center p-2 border-b">
                         <div className="flex items-center">
                             <p className="text-sm font-medium">File: {index + 1}</p>
-                            {file?.type?.startsWith("video/") && (
-                                <video width="100" controls>
-                                <source src={file.url} type={file.type} />
-                                </video>
-                            )}
+                                {file?.type?.startsWith("video/") && (
+                                    <video width="100" controls>
+                                        <source src={file.url} type={file.type} />
+                                    </video>
+                                )}
                         </div>
                         {loadingStates[index] ? (
                             <Label className="text-gray-500">Uploading...</Label>
