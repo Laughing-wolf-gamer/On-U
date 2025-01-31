@@ -29,45 +29,41 @@ const coupons = [
     },
 ];
 
-const CouponsDisplay = ({ user }) => {
-    const { AllCoupons } = useSelector(state => state.AllCoupons);
+const CouponsDisplay = ({user}) => {
+    const{AllCoupons} = useSelector(state=>state.AllCoupons);
     const { activeToast, showToast } = useToast();
-
-    const checkAndCreateToast = (type, message) => {
-        console.log("check Toast: ", type, message, activeToast);
-        if (!activeToast) {
-            switch (type) {
+    const checkAndCreateToast = (type,message) => {
+        console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
+            switch(type){
                 case "error":
-                    toast.error(message);
+                    toast.error(message)
                     break;
                 case "warning":
-                    toast.warning(message);
+                    toast.warning(message)
                     break;
                 case "info":
-                    toast.info(message);
+                    toast.info(message)
                     break;
                 case "success":
-                    toast.success(message);
+                    toast.success(message)
                     break;
                 default:
-                    toast.info(message);
+                    toast.info(message)
                     break;
             }
             showToast(message);
         }
-    };
-
+    }
     const dispatch = useDispatch();
-    useEffect(() => {
+    useEffect(()=>{
         // Fetch all coupons
         const queryLink = ``;
         dispatch(fetchAllCoupons(queryLink));
-    }, [dispatch]);
-
-    console.log("All Coupons: ", AllCoupons);
-
+    },[dispatch])
+    console.log("All Coupons: ",AllCoupons);
     return (
-        <div className="w-full max-w-screen-xl mx-auto px-4 py-8">
+        <div className="w-screen justify-center items-center flex flex-col px-4 py-8">
             <h2 className="text-2xl font-bold mb-6 text-center">All Coupons [testing Only]</h2>
 
             {/* Coupons grid */}
@@ -85,11 +81,12 @@ const CouponsDisplay = ({ user }) => {
                                         coupon.FreeShipping ? "Free shipping" : <Fragment>
                                             {
                                                 coupon.CouponType === 'Percentage'
-                                                    ? `${coupon.Discount} % OFF`
-                                                    : `₹${coupon.Discount} OFF`
+                                                ? `${coupon.Discount} % OFF`
+                                                    : `��${coupon.Discount} OFF`
                                             }
                                         </Fragment>
                                     }
+                                    
                                 </h3>
                                 <span className="text-sm text-gray-500">
                                     {new Date(coupon.ValidDate).toLocaleDateString()}
@@ -99,12 +96,13 @@ const CouponsDisplay = ({ user }) => {
                             {/* Coupon Description */}
                             <p className="text-gray-600 mb-4 break-words whitespace-normal">{coupon.Description}</p>
 
+
                             {/* Coupon Code */}
                             <div className="flex items-center justify-between">
                                 <span className="text-xl font-bold text-gray-600">{coupon.CouponCode}</span>
                                 <button
                                     onClick={() => {
-                                        navigator.clipboard.writeText(coupon.CouponCode);
+                                        navigator.clipboard.writeText(coupon.CouponCode)
                                         checkAndCreateToast("success", "Coupon Code copied to clipboard!");
                                     }}
                                     className="bg-gray-500 text-white py-2 px-4 rounded-lg text-sm transition-colors hover:bg-gray-600"
