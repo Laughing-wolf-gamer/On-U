@@ -235,7 +235,7 @@ const Home = ({user}) => {
                                             Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
                                                 <div
                                                     key={`Index_${index}`}
-                                                    className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105"
+                                                    className={`h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105`}
                                                 >
                                                     {
                                                         url && <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
