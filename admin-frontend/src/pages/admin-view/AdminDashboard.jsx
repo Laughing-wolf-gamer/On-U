@@ -210,37 +210,32 @@ const AdminDashboard = ({ user }) => {
         const { startDate, endDate } = getDateRange(preset);
         setStartDate(new Date(startDate).toISOString().split("T")[0]);
         setEndDate(new Date(endDate).toISOString().split("T")[0]);
-
+    
+        // Adjust the filter logic to ensure proper date comparison
         const newData = graph.filter(item => {
-        const dataDate = new Date(item.date);
-        return dataDate >= startDate && dataDate <= endDate;
+            const dataDate = new Date(item.date);
+            return dataDate >= new Date(startDate) && dataDate <= new Date(endDate);
         }) || [];
-
+    
         setDateLabel(preset);
         setFilterRange(newData);
     };
 
     const handleSetCustomStartDate = (graph) => {
-        console.log("Setting Graph: ", graph, newStartDate, newEndDate);
-    
-        // Convert startDate and endDate to Date objects and set time to midnight for proper comparison
+        // Ensure both dates are in Date format and have the correct time set
         const start = new Date(newStartDate);
-        start.setHours(0, 0, 0, 0); // Set to midnight
-    
+        start.setHours(0, 0, 0, 0); // Midnight start time
+        
         const end = new Date(newEndDate);
-        end.setHours(23, 59, 59, 999); // Set to just before midnight of the next day
-    
-        // Filter the graph data based on the start and end date range
+        end.setHours(23, 59, 59, 999); // Just before midnight of the next day
+        
         const newData = graph.filter(item => {
-        const dataDate = new Date(item.date);
-        dataDate.setHours(0, 0, 0, 0); // Set item date to midnight for comparison
-    
-        // Check if the dataDate is within the selected range
-        return dataDate >= start && dataDate <= end;
+            const dataDate = new Date(item.date);
+            dataDate.setHours(0, 0, 0, 0); // Set item date to midnight for proper comparison
+            
+            return dataDate >= start && dataDate <= end;
         });
     
-        console.log("Filtered Graph Data: ", newData);
-        
         setDateLabel("CUSTOM");
         setFilterRange(newData);
     };
@@ -272,7 +267,7 @@ const AdminDashboard = ({ user }) => {
         dispatch(getOrderDeliveredGraphData({ startDate, endDate, period: 'monthly' }));
         dispatch(getOrderGraphData({ startDate, endDate, period: 'monthly' }));
         if(!startingGraphData){
-        startingGraphData = CustomerGraphData;
+            startingGraphData = CustomerGraphData;
         }
     }, [dispatch, startDate, endDate]);
     useEffect(()=>{
@@ -390,7 +385,8 @@ const AdminDashboard = ({ user }) => {
                     </div>
                     </div>
                     <div className="h-fit mx-auto">
-                    <CustomerBarChart data={!filterDateRange || filterDateRange.length < 0 ? OrdersGraphData :filterDateRange} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
+                    <CustomerBarChart data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
+
                     </div>
                 </div>
                 </div>

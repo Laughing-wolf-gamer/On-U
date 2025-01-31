@@ -84,7 +84,7 @@ const AdminProductTile = ({
     return (
         <Card className="md:w-[300px] 2xl:w-[300px] w-full h-full justify-start items-center p-2 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
-            <div className="relative w-full h-[400px] overflow-hidden rounded-lg mb-4 bg-blue-300">
+            <div className="relative w-full h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
                 {selectedSize_color_Image_Array?.[0]?.url ? (
                     <MemoizedImage
                         imageUrl={selectedSize_color_Image_Array[0].url}
