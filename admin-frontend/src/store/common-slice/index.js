@@ -100,6 +100,7 @@ export const addFeaturesImage = createAsyncThunk('/common/addFeaturesImage',asyn
         return response.data;
     } catch (error) {
         console.error(`Error Review product: `,error);
+        return null;
     }
 })
 export const addMultipleImages = createAsyncThunk('/common/addMultipleImage',async(data)=>{
@@ -108,6 +109,7 @@ export const addMultipleImages = createAsyncThunk('/common/addMultipleImage',asy
         return response.data;
     } catch (error) {
         console.error(`Error Review product: `,error);
+        return null;
     }
 })
 export const getFeatureImage = createAsyncThunk('/common/getFeatureImage',async()=>{
@@ -116,6 +118,7 @@ export const getFeatureImage = createAsyncThunk('/common/getFeatureImage',async(
         return response.data;
     } catch (error) {
         console.error(`Error Review product: `,error);
+        return null;
     }
 })
 export const delFeatureImage = createAsyncThunk('/common/delFeatureImage',async({id,imageIndex})=>{

@@ -29,26 +29,28 @@ const AdminHomeFeatures = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     // Array State..............................................................
-    const[filteredItems,setFilteredItems] = useState([]);
+    // const[filteredItems,setFilteredItems] = useState([]);
     const[multipleImages,setMultipleImages] = useState([]);
     const[deletingImageCategory, setDeletingImageCategory] = useState(null)
-    const[categories,setCategories] = useState([]);
+    // const[categories,setCategories] = useState([]);
 
 
 
     useEffect(() => {
         dispatch(getFeatureImage());
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
-    useEffect(()=>{
+    /* useEffect(()=>{
         if(featuresList){
             if(featuresList.length > 0){
                 console.log("featuresList: ",featuresList);
                 setCategories([...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))]);
             }
         }
-    },[featuresList])
-
-    // const categories = [...new Set(featuresList?.map(item => item?.CategoryType).filter(Boolean))];
+    },[featuresList]) */
+    let categories = [];
+    if(featuresList && featuresList.length > 0){
+        categories = [...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))];
+    }
 
     const handleImageUpload = async (url) => {
         try {
@@ -134,15 +136,19 @@ const AdminHomeFeatures = () => {
         setSelectedCategory(e.target.value);
         setImageUrlsCategory(e.target.value);
     };
-    useEffect(()=>{
-        if(featuresList){
-            if(featuresList.length > 0){
-                setFilteredItems(featuresList.filter(
-                    item => selectedCategory === '' || item.CategoryType === selectedCategory
-                ));
-            }
+    /* useEffect(()=>{
+    },[featuresList]) */
+    /* if(featuresList){
+        if(featuresList.length > 0){
+            // setFilteredItems();
         }
-    },[featuresList])
+    } */
+    let filteredItems = [];
+    if(featuresList && featuresList.length > 0) {
+        filteredItems = featuresList.filter(
+            item => selectedCategory === '' || item.CategoryType === selectedCategory
+        );
+    }
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
             {/* Image Upload Section */}

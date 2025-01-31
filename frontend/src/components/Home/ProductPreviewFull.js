@@ -72,13 +72,13 @@ const ProductPreviewFull = ({ product ,user}) => {
                                     e.preventDefault();
                                 }
                             }}
-                            key={index}
-                            className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-3 py-3 flex items-center justify-center md:w-full xl:w-[200px] 2xl:w-[200px] sm:w-[170px] sm:h-[40px] w-[90px] h-[40px] transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
-                        >
-                            <span className="inline text-center text-[10px] sm:text-[15px] md:text-[16px]">
+                                key={index}
+                                className={`border-2 border-gray-600 border-opacity-70 p-3 sm:p-4 md:p-6 lg:p-6 2xl:p-6 px-7 py-3 flex items-center justify-center md:w-[150px] xl:w-[200px] 2xl:w-[200px] sm:w-[170px] sm:h-[40px] min-w-fit h-[45px] space-x-3 transform font-sans transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
+                            >
+                            <span className="inline-block text-center text-[10px] sm:text-[15px] md:text-[11px] whitespace-nowrap overflow-hidden text-ellipsis">
                                 {h?.title}
                             </span>
-                        </button>
+                            </button>
 
                     ))
                 }
@@ -159,7 +159,7 @@ const ProductPreviewFull = ({ product ,user}) => {
 
             <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all pt-10'>
                 <div onClick={handleMoveToQuery} className='px-8 w-fit flex text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
-                    <span className='hover:animate-vibrateScale text-[10px] sm:text-[15px] md:text-[16px]'>View More</span>
+                    <span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>View More</span>
                 </div>
             </div>
         </div>
