@@ -388,59 +388,56 @@ const Bag = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className='w-full'>
-
-                                </div>
-                            
-                                {/* Address List */}
-                                <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-                                    <h3 className="font-semibold mb-4">Your Addresses</h3>
-                                    <div className="space-y-4">
+                                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-6">
+                                    {/* Address List */}
+                                    <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+                                        <h3 className="font-semibold mb-4">Your Addresses</h3>
+                                        <div className="space-y-4">
                                         {user && user.user && allAddresses?.length > 0 ? (
-                                        allAddresses.map((addr, index) => (
+                                            allAddresses.map((addr, index) => (
                                             <div
                                                 key={index}
                                                 className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
                                                 onClick={() => handleAddressSelection(addr)}
                                             >
-                                            {Object.entries(addr).map(([key, value]) => (
+                                                {Object.entries(addr).map(([key, value]) => (
                                                 <div key={key} className="flex justify-between">
                                                     <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
                                                     <span>{value}</span>
                                                 </div>
-                                            ))}
-                                            {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
+                                                ))}
+                                                {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
                                             </div>
-                                        ))
+                                            ))
                                         ) : (
-                                        <p>No addresses available. Please add an address.</p>
+                                            <p>No addresses available. Please add an address.</p>
                                         )}
+                                        </div>
                                     </div>
-                                </div>
-                            
-                                {/* Payment Checkout Section */}
-                                <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
-                                    <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
-                                    <div className="space-y-6">
+
+                                    {/* Payment Checkout Section */}
+                                    <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+                                        <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
+                                        <div className="space-y-6">
                                         <div className="flex justify-between items-center">
                                             <span>Order Total:</span>
                                             <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
                                         </div>
                                         <div className="flex justify-between items-center">
-                                        <span>Selected Address:</span>
-                                        <span className="text-sm">
-                                            {selectedAddress
-                                            ? Object.keys(selectedAddress).map((key, index) => (
-                                                <div key={index}>
-                                                    <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
-                                                </div>
-                                                ))
-                                            : "No address selected"
-                                            }
-                                        </span>
+                                            <span>Selected Address:</span>
+                                            <span className="text-sm">
+                                                {selectedAddress
+                                                    ? Object.keys(selectedAddress).slice(0,4).map((key, index) => (
+                                                        <div key={index}>
+                                                            <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
+                                                        </div>
+                                                    ))
+                                                    : "No address selected"
+                                                }
+                                            </span>
                                         </div>
                                         <div className="flex flex-col space-y-4">
-                                        <button
+                                            <button
                                             onClick={() => {
                                                 if (selectedAddress) {
                                                     placeOrder();
@@ -449,24 +446,24 @@ const Bag = () => {
                                                 }
                                             }}
                                             className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
-                                        >
+                                            >
                                             Proceed to Payment
-                                        </button>
-                                        <button
+                                            </button>
+                                            <button
                                             onClick={handleOpenPopup}
                                             className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
-                                        >
+                                            >
                                             Add New Address
-                                        </button>
+                                            </button>
+                                        </div>
                                         </div>
                                     </div>
-                                </div>
-                            
+                                    </div>
                                 {/* Add Address Popup */}
                                 <AddAddressPopup
-                                isOpen={isAddressPopupOpen}
-                                onClose={handleClosePopup}
-                                onSave={handleSaveAddress}
+                                    isOpen={isAddressPopupOpen}
+                                    onClose={handleClosePopup}
+                                    onSave={handleSaveAddress}
                                 />
                             </div>
                         
