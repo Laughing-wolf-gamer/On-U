@@ -43,7 +43,7 @@ const Home = ({user}) => {
         if (isSelected) {
         return (
             <li
-            style={{ ...indicatorStyles, background: '#7E99A3' }}
+            style={{ ...indicatorStyles, background: '#253529' }}
             aria-label={`Selected: ${label} ${index + 1}`}
             title={`Selected: ${label} ${index + 1}`}
             />
