@@ -34,7 +34,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
     }, [activeClothingItem, navigation]);
 
     return (
-        <div onClick={handleMoveToQuery} className="relative w-full h-full rounded-lg overflow-hidden">
+        <div onClick={handleMoveToQuery} className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
             <div className="min-w-xs h-full relative">
                 {isLoading && !isError && (
                     <div className="w-full max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow animate-pulse">
