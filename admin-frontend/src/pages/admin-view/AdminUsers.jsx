@@ -32,23 +32,28 @@ const UserTable = () => {
     return (
         <div className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="overflow-x-auto">
-                {/* Flex Layout for Users */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
-                        <div key={customer._id} className="border rounded-lg p-4 hover:bg-gray-100">
-                            <div className="font-semibold text-lg mb-2">{index + 1}. {customer?.name}</div>
-                            <div className="text-sm text-gray-600 mb-2">
-                                <strong>Email:</strong> {customer?.email}
-                            </div>
-                            <div className="text-sm text-gray-600 mb-2">
-                                <strong>Phone:</strong> {customer?.phoneNumber}
-                            </div>
-                            <div className="text-sm text-gray-600 mb-2">
-                                <strong>Total Purchases:</strong> {customer?.totalPurchases}
-                            </div>
-                            <div className="text-sm text-gray-600 mb-4">
-                                <strong>Wishlist Count:</strong> {customer?.wishList?.length}
-                            </div>
+                {/* Table-like Structure */}
+                <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 mb-4 font-semibold text-gray-700">
+                    {/* Table Headers */}
+                    <div className="text-sm">Sr.</div>
+                    <div className="text-sm">Customer Name</div>
+                    <div className="text-sm">Email ID</div>
+                    <div className="text-sm">Phone Number</div>
+                    <div className="text-sm">Total Purchases</div>
+                    <div className="text-sm">Wishlist Count</div>
+                    <div className="text-sm">Actions</div>
+                </div>
+
+                {/* Table Data */}
+                {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
+                    <div key={customer._id} className="grid grid-cols-1 sm:grid-cols-6 gap-4 mb-4 hover:bg-gray-100 p-4 border rounded-lg">
+                        <div className="text-sm">{index + 1}</div>
+                        <div className="text-sm">{customer?.name}</div>
+                        <div className="text-sm">{customer?.email}</div>
+                        <div className="text-sm">{customer?.phoneNumber}</div>
+                        <div className="text-sm">{customer?.totalPurchases}</div>
+                        <div className="text-sm">{customer?.wishList?.length}</div>
+                        <div className="text-sm">
                             <Button
                                 onClick={() => openModal(customer)}
                                 className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
@@ -56,8 +61,8 @@ const UserTable = () => {
                                 View Details
                             </Button>
                         </div>
-                    ))}
-                </div>
+                    </div>
+                ))}
 
                 {/* Modal - User Details */}
                 {isModalOpen && selectedCustomer && (
