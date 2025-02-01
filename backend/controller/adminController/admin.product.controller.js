@@ -125,54 +125,6 @@ export const removeCoupon = async(req,res)=>{
     }
 }
 
-/* export const editCoupon = async (req,res)=>{
-    try {
-        const{couponId} = req.params;
-        const {
-            couponName,
-            couponDescription,
-            couponCode,
-            couponType,
-            discount,
-            minOrderAmount,
-            customerLogin,
-            freeShipping,
-            productId,
-            category,
-            status,
-            validDate,
-        } = req.body;
-        const updateFields = {};
-        console.log("editing coupon: ",req.body);
-        if (couponName && couponName.length > 0) updateFields.CouponName = couponName;
-        if (couponDescription && couponDescription.length > 0) updateFields.Description = couponDescription;
-        if (couponCode && couponCode.length > 0) updateFields.CouponCode = couponCode;
-        if (couponType && couponType.length > 0) updateFields.CouponType = couponType;
-        if (discount && discount.length > 0) updateFields.Discount = discount;
-        if (minOrderAmount && minOrderAmount.length > 0) updateFields.MinOrderAmount = minOrderAmount;
-        if (customerLogin && customerLogin.length > 0) updateFields.CustomerLogin = customerLogin;
-        if (freeShipping > 0) updateFields.FreeShipping = freeShipping;
-        if (productId ) updateFields.ProductId = productId
-        if(category && category.length > 0) updateFields.Category = category !== 'none' ? category:null;
-        if(status && ["Active", "Inactive"].includes(status)) updateFields.Status = status
-        if(validDate) updateFields.ValidDate = validDate
-        // console.log("Coupon Updating : ",updateFields);
-        if (Object.keys(updateFields).length > 0) {
-            const updatedCoupons = await Coupon.findByIdAndUpdate(
-                couponId, 
-                updateFields, 
-                { new: true }
-            );
-            if(!updatedCoupons) res.status(404).json({Success:false,message:"Product Update Failed"});
-            return res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedCoupons});
-        }
-    } catch (error) {
-        console.log("Error Editing coupon: ",error);
-        logger.error("Error Editing coupon: " + error.message);
-        res.status(500).json({message: "Internal Server Error"});
-    }
-}
- */
 export const editCoupon = async (req, res) => {
     try {
         const { couponId } = req.params;
@@ -439,83 +391,6 @@ export const getProductById = async (req, res) => {
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
-/* export const editProduct = async (req, res) => {
-    try {
-        const {id} = req.params;
-        if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
-        const {
-            productId,
-            title,
-            size,
-            description,
-            material,
-            bulletPoints,
-            gender,
-            category,
-            subCategory,
-            specialCategory,
-            price,
-            salePrice,
-            width,
-            height,
-            length,
-            weight,
-            breadth,
-        } = req.body;
-        console.log("Editing: ",req.body);
-        // Define an object to store fields that need updating
-        const updateFields = {};
-
-        // Check each property and add it to the updateFields object if it exists in req.body
-        if(productId && productId.length > 0) updateFields.productId = productId;
-        if (title && title.length > 0) updateFields.title = title;
-        if (size && size.length > 0) {
-            let totalStock = -1;
-            updateFields.size = size
-            size.forEach(s => {
-                let sizeStock = 0;
-                if(s.colors){
-                    s.colors.forEach(c => {
-                        sizeStock += c.quantity;
-                    });
-                }
-                totalStock += sizeStock;
-            })
-            if(totalStock > 0) updateFields.totalStock = totalStock;
-        };
-        if (description && description.length > 0) updateFields.description = description;
-        if (material && material.length > 0) updateFields.material = material;
-        if (bulletPoints && bulletPoints.length > 0) updateFields.bulletPoints = bulletPoints;
-        if (gender && gender.length > 0) updateFields.gender = gender;
-        if (category && category.length > 0) updateFields.category = category;
-        if (subCategory && subCategory.length > 0) updateFields.subCategory = subCategory;
-        if (specialCategory &&  specialCategory.length > 0) updateFields.specialCategory = specialCategory;
-        if (price > 0) updateFields.price = price;
-        if (salePrice) updateFields.salePrice = salePrice && salePrice > 0 ? salePrice: null;
-        if(width && width > 0) updateFields.width = Number(width);
-        if(height && height > 0) updateFields.height = Number(height);
-        if(length && length > 0) updateFields.length = Number(length);
-        if(weight && weight > 0) updateFields.weight = Number(weight);
-        if(breadth && breadth > 0) updateFields.breadth = Number(breadth);
-        console.log("Updating Product Fields: ",updateFields);
-        if (Object.keys(updateFields).length > 0) {
-            const updatedProduct = await ProductModel.findByIdAndUpdate(
-                id, 
-                updateFields, 
-                { new: true }
-            );
-            if(!updatedProduct) res.status(404).json({Success:false,message:"Product Update Failed"});
-            return res.status(200).json({Success: true, message: 'Product updated successfully!', result: updatedProduct});
-        }
-        return res.status(400).json({
-            success: false,
-            message: "No fields provided for update"
-        });
-    } catch (error) {
-        console.error('Error while Editing a product:', error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
-    }
-} */
 
 export const editProduct = async (req, res) => {
     try {

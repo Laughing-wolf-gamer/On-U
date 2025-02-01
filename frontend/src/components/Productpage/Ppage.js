@@ -10,7 +10,7 @@ import Single_product from '../Product/Single_product'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag} from '../../config'
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
@@ -18,69 +18,70 @@ import { Heart, ShoppingBag, ShoppingCart} from 'lucide-react'
 import SizeChartModal from './SizeChartModal'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
-
+import toast from 'react-hot-toast'
+import StarRatingInput from './StarRatingInput'
 
 const reviews = [
-  {
-    rating: 5,
-    comment: "Excellent product! Exceeded my expectations.",
-  },
-  {
-    rating: 4,
-    comment: "Great quality, but a bit expensive.",
-  },
-  {
-    rating: 3,
-    comment: "Average product. It works, but I was expecting more.",
-  },
-  {
-    rating: 2,
-    comment: "Not as described. Poor quality.",
-  },
-  {
-    rating: 1,
-    comment: "Terrible! It broke after one use.",
-  },
-  {
-    rating: 4,
-    comment: "Really good overall. The performance is great, just wish it had more features.",
-  },
-  {
-    rating: 5,
-    comment: "I love it! Exactly what I needed, and the price was reasonable for the quality.",
-  },
-  {
-    rating: 3,
-    comment: "It's okay, but I expected better durability. It's decent for the price.",
-  },
-  {
-    rating: 2,
-    comment: "Disappointing. It didn’t perform as expected, and the build quality feels cheap.",
-  },
-  {
-    rating: 1,
-    comment: "I regret purchasing this. It stopped working after a couple of days.",
-  },
-  {
-    rating: 4,
-    comment: "Very happy with this! It does what it promises, but the packaging could’ve been better.",
-  },
-  {
-    rating: 5,
-    comment: "Fantastic! I’ll definitely be buying again. This has become my go-to product.",
-  },
-  {
-    rating: 3,
-    comment: "It’s fine, but it doesn’t stand out from other similar products in the market.",
-  },
-  {
-    rating: 2,
-    comment: "Not worth the money. The product was underwhelming and didn’t meet my needs.",
-  },
-  {
-    rating: 1,
-    comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
-  },
+    {
+        rating: 5,
+        comment: "Excellent product! Exceeded my expectations.",
+    },
+    {
+        rating: 4,
+        comment: "Great quality, but a bit expensive.",
+    },
+    {
+        rating: 3,
+        comment: "Average product. It works, but I was expecting more.",
+    },
+    {
+        rating: 2,
+        comment: "Not as described. Poor quality.",
+    },
+    {
+        rating: 1,
+        comment: "Terrible! It broke after one use.",
+    },
+    {
+        rating: 4,
+        comment: "Really good overall. The performance is great, just wish it had more features.",
+    },
+    {
+        rating: 5,
+        comment: "I love it! Exactly what I needed, and the price was reasonable for the quality.",
+    },
+    {
+        rating: 3,
+        comment: "It's okay, but I expected better durability. It's decent for the price.",
+    },
+    {
+        rating: 2,
+        comment: "Disappointing. It didn’t perform as expected, and the build quality feels cheap.",
+    },
+    {
+        rating: 1,
+        comment: "I regret purchasing this. It stopped working after a couple of days.",
+    },
+    {
+        rating: 4,
+        comment: "Very happy with this! It does what it promises, but the packaging could’ve been better.",
+    },
+    {
+        rating: 5,
+        comment: "Fantastic! I’ll definitely be buying again. This has become my go-to product.",
+    },
+    {
+        rating: 3,
+        comment: "It’s fine, but it doesn’t stand out from other similar products in the market.",
+    },
+    {
+        rating: 2,
+        comment: "Not worth the money. The product was underwhelming and didn’t meet my needs.",
+    },
+    {
+        rating: 1,
+        comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
+    },
 ];
 
 const maxScrollAmount = 1100,maxScrollWithReviewInput = 1500
@@ -118,20 +119,19 @@ const Ppage = () => {
     const navigation = useNavigate();
     const param = useParams()
     const dispatch = useDispatch()
-
-
+    
     const [isFocused, setIsFocused] = useState(false);
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading:productLoading, similar } = useSelector(state => state.Sproduct)
     const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
     const {error:warning} = useSelector(state => state.wishlist)
+    
+    
 
-
-
-
+    
+    const[isPostingReview,setIsPostingReview] = useState(false);
     const[selectedSize, setSelectedSize] = useState(null);
-    const[showSizeChart,setShowSizeChart] = useState(false);
     const[selectedColor, setSelectedColor] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [state, setstate] = useState(false)
@@ -155,7 +155,7 @@ const Ppage = () => {
         elementClass(foo1).remove('visible')
     }
 
-    const addtobag = async () => {
+    const addToBag = async () => {
         if (isInBagList) {
             navigation("/bag");
             return;
@@ -276,10 +276,19 @@ const Ppage = () => {
     
 
     const PostRating = async (e)=>{
-        console.log("Rating Data: ", ratingData);
+        // console.log("Rating Data: ", ratingData);
         if(ratingData && user && product){
-            await dispatch(postRating({productId:product?._id, ratingData}))
-            dispatch(singleProduct(param.id))
+            setIsPostingReview(true);
+            try {
+                e.preventDefault();
+                await dispatch(postRating({productId:product?._id, ratingData}))
+                dispatch(singleProduct(param.id))
+                toast.success("Your Rating Has been Added");
+            } catch (error) {
+                checkAndCreateToast("error","Error Posting Rating");
+            }finally{
+                setIsPostingReview(false);
+            }
         }
     }
 
@@ -320,33 +329,20 @@ const Ppage = () => {
             setSelectedColor(availableSize.colors);
             const color = availableSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
-            // setSelectedColorId(color._id);
             setSelectedImage(color.images[0]);
         }
         if (selectedSize) {
             setSelectedColor(selectedSize.colors);
             const color = selectedSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
-            // setSelectedColorId(color._id);
             setSelectedImage(color.images[0]);
         }
-        /* if(product){
-            const availableSize = product.size.find(item => item.quantity > 0);
-            setSelectedColor(availableSize);
-            setSelectedSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
-            setCurrentSize(product.size[0].quantity <= 0 ? product.size[1]: product.size[0]);
-
-            const currentColor = product.size[0].colors[0];
-
-            // setSelectedColorId(currentColor._id);
-            setSelectedImage(currentColor.images[0]);
-            setSelectedSizeColorImageArray(currentColor.images);
-        } */
         if(product){
             checkFetchedIsPurchased();
         }
         if(user){
             dispatch(getbag({ userId: user.id }));
+            dispatch(getwishlist());
         }
     },[product,user,dispatch])
     useEffect(() => {
@@ -441,27 +437,27 @@ const Ppage = () => {
                                     <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
                                         {/* Size Selection */}
                                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
-                                        {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                            <div style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}} key={`size_${index}_${size._id}`}
-                                                className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
-                                                ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
-                                                onClick={() => { handleSetNewImageArray(size); }}
-                                            >
-                                                <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                                    {size.label}
-                                                </button>
-                                                {size?.quantity <= 0 && (
-                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
-                                                            {/* Diagonal Line 1 */}
-                                                            <div className="absolute w-[5px] h-[60px] bg-red-600 transform rotate-45"></div>
-                                                            {/* Diagonal Line 2 */}
-                                                            <div className="absolute w-[5px] h-[60px] bg-red-600 transform -rotate-45"></div>
+                                            {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
+                                                <div style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}} key={`size_${index}_${size._id}`}
+                                                    className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                                    ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
+                                                    onClick={() => { handleSetNewImageArray(size); }}
+                                                >
+                                                    <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
+                                                        {size.label}
+                                                    </button>
+                                                    {size?.quantity <= 0 && (
+                                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                            <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
+                                                                {/* Diagonal Line 1 */}
+                                                                <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform rotate-45"></div>
+                                                                {/* Diagonal Line 2 */}
+                                                                <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform -rotate-45"></div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                    )}
+                                                </div>
+                                            ))}
                                         </div>
                                         {/* Color Selection */}
                                         <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
@@ -484,13 +480,13 @@ const Ppage = () => {
                                                         />
 
                                                         {/* Diagonal Lines Over Button when quantity is 0 */}
-                                                        {color?.quantity <= 0 && (
+                                                        {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
                                                             <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                                <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                                <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
                                                                     {/* Diagonal Line 1 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 transform rotate-45"></div>
+                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform rotate-45"></div>
                                                                     {/* Diagonal Line 2 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 transform -rotate-45"></div>
+                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform -rotate-45"></div>
                                                                 </div>
                                                             </div>
                                                         )}
@@ -507,20 +503,26 @@ const Ppage = () => {
                                     </div>
                                     <div className='w-[80%] h-fit pr-10 justify-center items-center flex flex-col'>
                                         <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
-                                            <button disabled = {bagLoading} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white border-slate-900 mt-4 rounded-md hover:border-[1px] hover:border-gray-300" 
-                                                onClick={addtobag}
+                                            <button disabled = {bagLoading} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900" 
+                                                onClick={addToBag}
                                             >
-                                                <ShoppingCart size={30} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
+                                                {
+                                                    bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:(
+                                                        <Fragment>
+                                                            {
+                                                                isInBagList ? <ShoppingCart size={30} className='m-4' />: <ShoppingCart size={30} className='m-4' />
+                                                            }
+                                                            <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
+                                                        </Fragment>
+                                                    )
+                                                }
+                                                {/* <FaShoppingCart size={30} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span> */}
                                             </button>
                                             <button disabled = {loadingWishList} className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" 
                                                 onClick={addToWishList}
                                             >
                                             {
-                                                loadingWishList ? <Fragment>
-                                                    <div className="absolute inset-0 flex justify-center items-center">
-                                                        <div className="w-6 h-6 border-4 border-t-4 border-transparent border-t-white rounded-full animate-spin"></div>
-                                                    </div>
-                                                </Fragment>:(
+                                                loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:(
                                                     <Fragment>
                                                         {
                                                             isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
@@ -534,7 +536,11 @@ const Ppage = () => {
                                         <button disabled = {bagLoading || loadingWishList} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" 
                                             onClick={handleBuyNow}
                                         >
-                                            <ShoppingBag size={30} className='m-4' /><span>BUY NOW</span>
+                                            {
+                                                bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+                                                    <ShoppingBag size={30} className='m-4' /><span>BUY NOW</span>
+                                                </Fragment>
+                                            }
                                         </button>
                                     </div>
                                 </div>
@@ -584,7 +590,7 @@ const Ppage = () => {
                                             <li key={index} className='list-none mt-2'>{e?.point}</li>
                                         ))}
                                     </div>
-                                    <SizeChartModal/>
+                                    <SizeChartModal sizeChartData={clothingSizeChartData}/>
                                     {/* Additional Info */}
                                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
                                         <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
@@ -598,7 +604,7 @@ const Ppage = () => {
                                                 {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
                                             </div>
                                             {hasPurchased ? (
-                                                <div className='w-screen justify-center items-center flex-row flex'>
+                                                <div className='w-full justify-center items-center flex-row flex'>
                                                     <div className='w-full flex flex-col justify-start items-center'>
                                                         {/* Review Input Section */}
                                                         <div className='mt-6 w-full'>
@@ -620,7 +626,7 @@ const Ppage = () => {
                                                                 {/* Star Rating Input */}
                                                                 <div className='mb-4'>
                                                                     <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                                                    <input
+                                                                    {/* <input
                                                                         onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
                                                                         id='starRating'
                                                                         name='starRating'
@@ -629,16 +635,30 @@ const Ppage = () => {
                                                                         max='5'
                                                                         className='mt-2 p-2 w-full border border-gray-300 rounded-md'
                                                                         placeholder='Rate from 1 to 5'
-                                                                    />
+                                                                    /> */}
+                                                                    {/* <CustomSlider
+                                                                        value = {ratingData.rating}
+                                                                        onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
+                                                                        valueLabelDisplay='auto'
+                                                                        aria-labelledby='range-slider'
+                                                                        min={1}
+                                                                        max={5}
+                                                                    /> */}
+                                                                    <StarRatingInput onChangeValue={(value) =>{
+                                                                        setRatingData({...ratingData,rating:value})
+                                                                    }}/>
                                                                 </div>
 
                                                                 {/* Submit Button */}
                                                                 <div className='flex justify-start'>
                                                                     <button
+                                                                        disabled = {isPostingReview}
                                                                         onClick={PostRating}
                                                                         className='bg-gray-500 text-white px-4 py-2 rounded-md'
                                                                     >
-                                                                    Submit Review
+                                                                        {
+                                                                            isPostingReview? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div> : 'Submit Review'
+                                                                        }
                                                                     </button>
                                                                 </div>
                                                             </form>
@@ -668,7 +688,7 @@ const Ppage = () => {
                         </div>
                     </div>
                 :
-                <ProductSkeletonLoader />
+                <Loader />
             }
             <Footer/>
         </div>
@@ -725,19 +745,38 @@ const AverageRatingView = ({ ratings }) => {
                     <div className='stars'>
                         {/* Render filled stars */}
                         {[...Array(fullStars)].map((_, i) => (
-                            <span key={i} className='star text-[30px] text-black'>★</span>
+                            <span key={i} className='star text-[30px] text-black hover:-translate-y-2 cursor-pointer duration-300 ease-in-out transition-transform'>★</span>
                         ))}
                         {/* Render empty stars */}
                         {[...Array(emptyStars)].map((_, i) => (
-                            <span key={i} className='star text-[30px] text-gray-300'>★</span>
+                            <span key={i} className='star text-[30px] text-gray-300 hover:-translate-y-2 cursor-pointer duration-300 ease-in-out transition-transform'>★</span>
                         ))}
                     </div>
-                    <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+                    <span className='ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 cursor-pointer ease-in-out transition-transform'>{roundedAvg} Stars</span>
                 </div>
             </div>
         </Fragment>
     );
 };
+/* const CustomSlider = styled(Slider)({
+    '& .MuiSlider-thumb': {
+        backgroundColor: '#333333', // Dark gray thumb color
+        border: '2px solid #212121', // Darker gray border for the thumb
+        '&:hover': {
+            backgroundColor: '#555555', // Slightly lighter gray on hover
+        },
+    },
+    '& .MuiSlider-rail': {
+        backgroundColor: '#E0E0E0', // Light gray rail color
+    },
+    '& .MuiSlider-track': {
+        backgroundColor: '#212121', // Dark gray track color
+    },
+    '& .MuiSlider-valueLabel': {
+        backgroundColor: '#212121', // Dark gray background for the value label
+        color: 'white', // White text for the value label
+    },
+}); */
 
 const ProductReviews = ({ reviews }) => {
     const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
@@ -865,9 +904,9 @@ const ProductReviews = ({ reviews }) => {
             {/* "View More" / "Show Less" Toggle Button */}
             <button
                 onClick={handleToggleReviews}
-                className="mt-4 text-blue-500 hover:underline"
+                className="mt-4 text-gray-500 hover:underline"
             >
-                {showMore ? 'Show Less' : 'View More'}
+                {showMore ? 'Less' : 'More'}
             </button>
         </div>
     );
@@ -962,43 +1001,4 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
         </div>
     )
 }
-/* const getColorNameFromHex = (hexCode) => {
-    try {
-        // Use the color-namer library to get color names
-        const names = namer(hexCode);
-
-        // Get the closest name (e.g., Pantone, HTML, or Crayola categories)
-        return names.html[0].name; // `html` gives common names like CSS color names
-    } catch (error) {
-        console.error("Invalid color hex code:", error);
-        return "Unknown Color"; // Fallback if hexCode is invalid
-    }
-}; */
-
-
-/* 
-{selectedImage ? (
-    isVideo ? (
-    // Video handling using ReactPlayer
-    <div className="relative h-[40%] p-3 w-full border-[0.5px] justify-center items-center overflow-hidden hover:shadow-md">
-        <ReactPlayer
-        className="w-full h-[70%] object-contain rounded-md border"
-        url={selectedImage.url || selectedImage}
-        loop={true}
-        muted={true}
-        controls={false}
-        width="100%"
-        height="100%"
-        playing={true} // Set to true if you want to auto-play
-        light={false}   // Optional: Display a thumbnail preview before play
-        />
-    </div>
-    ) : (
-    // Image handling (ImageZoom)
-    <ImageZoom imageSrc={selectedImage.url || selectedImage} />
-    )
-) : (
-    // Loading Spinner
-    <Loader />
-)} */
 export default Ppage

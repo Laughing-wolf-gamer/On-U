@@ -6,8 +6,8 @@ import { useDispatch } from 'react-redux'
 import { Allproduct as getproduct } from '../../action/productaction'
 import elementClass from 'element-class'
 import './MFilter.css'
-import Slider from '@mui/material/Slider';
 import { capitalizeFirstLetterOfEachWord } from '../../config'
+import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
 
 

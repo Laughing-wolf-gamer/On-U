@@ -43,8 +43,6 @@ export const getProductsById = createAsyncThunk('/products/getProductsById',asyn
 })
 export const addNewProduct = createAsyncThunk('/products/addNewProduct',async (formData)=>{
     try {
-        const token = sessionStorage.getItem('token');
-        console.log(token);
         const response = await axios.post(`${BASE_URL}/admin/product/add`,formData,Header());
         return response.data;
     } catch (error) {
@@ -53,8 +51,6 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',async (f
 })
 export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',async ()=>{
     try {
-        const token = sessionStorage.getItem('token');
-        console.log(token);
         const response = await axios.get(`${BASE_URL}/admin/product/all`,Header());
         return response.data;
     } catch (error) {

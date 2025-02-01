@@ -13,7 +13,7 @@ import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
@@ -21,7 +21,10 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
-
+import Slider from '@mui/material/Slider';
+import styled from '@emotion/styled'
+import StarRatingInput from './StarRatingInput';
+import SizeChartModal from './SizeChartModal';
 
 const reviews = [
     {
@@ -102,6 +105,8 @@ const MPpage = () => {
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
     const {checkAndCreateToast} = useSettingsContext();
 
+
+    const[isPostingReview,setIsPostingReview] = useState(false);
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
     const [currentColor, setCurrentColor] = useState(null);
@@ -157,7 +162,7 @@ const MPpage = () => {
         );
     }
 
-    const addtobag = async () => {
+    const addToBag = async () => {
         if (isInBagList) {
             navigation("/bag");
             return;
@@ -168,6 +173,14 @@ const MPpage = () => {
         }
         if (!currentSize) {
             checkAndCreateToast("error", "No Size Selected");
+            return;
+        }
+        if(currentSize.quantity <= 0){
+            checkAndCreateToast("error", "Size Out of Stock");
+            return;
+        }
+        if(currentColor.quantity <= 0){
+            checkAndCreateToast("error", "Color Out of Stock");
             return;
         }
         if (user) {
@@ -265,10 +278,20 @@ const MPpage = () => {
         // setSelectedImage(color.images[0]);
         // setSelectedColorId(color._id);
     };
-    const PostRating = (e)=>{
+    const PostRating = async (e)=>{
         e.preventDefault();
-        if(ratingData && user && product){
-            dispatch(postRating({productId:product?._id, ratingData}))
+        try {
+            if(ratingData && user && product){
+                setIsPostingReview(true);
+                await dispatch(postRating({productId:product?._id, ratingData}))
+                await dispatch(singleProduct(param.id))
+                checkAndCreateToast("success","Rating Posted Successfully");
+            }
+        } catch (error) {
+            console.error("An error occurred while setting the Rating",error);
+            checkAndCreateToast("error","An error occurred while setting the Rating");
+        }finally{
+            setIsPostingReview(false);
         }
     }
     const checkFetchedIsPurchased = async ()=>{
@@ -388,21 +411,31 @@ const MPpage = () => {
                                 <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                            {isInWishList ? 
-                                                (
-                                                    <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                        <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
-                                                    </div>
-                                                ) : (
-                                                    <Heart size={30}/>
-                                                )
+                                            {
+                                                loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+                                                    {isInWishList ? 
+                                                        (
+                                                            <div className="text-red-500 animate-shine p-1 rounded-full">
+                                                                <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
+                                                            </div>
+                                                        ) : (
+                                                            <Heart size={30}/>
+                                                        )
+                                                    }
+                                                </Fragment>
                                             }
+                                            
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addtobag}>
-                                            <ShoppingCart className='mr-4' />
-                                            <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-white bg-black text-white" onClick={addToBag}>
+                                            {
+                                                bagLoading? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-500 rounded-full animate-spin "></div>:<Fragment>
+                                                    <ShoppingCart className='mr-4' />
+                                                    <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                                </Fragment>
+                                            }
+                                            
                                         </button>
                                     </div>
                                 </div>
@@ -509,15 +542,12 @@ const MPpage = () => {
                                             </button>
                                             {size?.quantity <= 0 && (
                                                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
                                                         {/* Diagonal Line 1 */}
-                                                        <div className="absolute w-[5px] h-[50px] bg-red-900 transform rotate-45"></div>
+                                                        <div className="absolute w-[5px] h-[50px] bg-red-600 rounded-md opacity-80 transform rotate-45"></div>
                                                         {/* Diagonal Line 2 */}
-                                                        <div className="absolute w-[5px] h-[50px] bg-red-900 transform -rotate-45"></div>
+                                                        <div className="absolute w-[5px] h-[50px] bg-red-600 rounded-md opacity-80 transform -rotate-45"></div>
                                                     </div>
-                                                {/* <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
-                                                <span className='w-full flex justify-center flex-row'>Out of Stock</span>
-                                                </div> */}
                                             </div>
                                             )}
                                         </div>
@@ -541,17 +571,14 @@ const MPpage = () => {
                                                     ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-[3px] border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
                                                 title={color?.quantity || color?.label || "Color"} 
                                                 />
-                                                {color?.quantity <= 0 && (
+                                                {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
                                                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center">
+                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
                                                             {/* Diagonal Line 1 */}
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-900 transform rotate-45"></div>
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 rounded-md opacity-80 transform rotate-45"></div>
                                                             {/* Diagonal Line 2 */}
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-900 transform -rotate-45"></div>
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 rounded-md opacity-80 transform -rotate-45"></div>
                                                         </div>
-                                                    {/* <div className="absolute bottom-7 w-22 h-fit flex-row rounded-full px-3 flex items-center justify-center bg-red-500 text-white font-semibold text-[10px] text-center">
-                                                    <span className='w-full flex justify-center flex-row'>Out of Stock</span>
-                                                    </div> */}
                                                 </div>
                                                 )}
                                         </div>
@@ -562,6 +589,7 @@ const MPpage = () => {
                                     </div>
                                 </div>
                             </div>
+                            <SizeChartModal sizeChartData={clothingSizeChartData}/>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
@@ -617,7 +645,7 @@ const MPpage = () => {
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
                                             {
                                                 loadingWishList ? <Fragment>
-                                                    <p>U</p>
+                                                    <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
                                                 </Fragment>:(
                                                     <Fragment>
                                                     {
@@ -631,9 +659,13 @@ const MPpage = () => {
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addtobag}>
-                                            <ShoppingCart className='mr-4' size={30}/>
-                                            <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                            {
+                                                bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+                                                    <ShoppingCart className='mr-4' size={30}/>
+                                                    <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+                                                </Fragment>
+                                            }
                                         </button>
                                     </div>
                                 </div>
@@ -670,7 +702,7 @@ const MPpage = () => {
                                                     {/* Star Rating Input */}
                                                     <div className='mb-4'>
                                                         <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                                        <input
+                                                        {/* <input
                                                             onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
                                                             id='starRating'
                                                             name='starRating'
@@ -679,16 +711,30 @@ const MPpage = () => {
                                                             max='5'
                                                             className='mt-2 p-3 w-full border border-gray-300 rounded-md'
                                                             placeholder='Rate from 1 to 5'
-                                                        />
+                                                        /> */}
+                                                        {/* <CustomSlider
+                                                            value = {ratingData?.rating}
+                                                            onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
+                                                            valueLabelDisplay='auto'
+                                                            aria-labelledby='range-slider'
+                                                            min={1}
+                                                            max={5}
+                                                        /> */}
+                                                        <StarRatingInput onChangeValue={(value) =>{
+                                                            setRatingData({...ratingData,rating:value})
+                                                        }}/>
                                                     </div>
 
                                                     {/* Submit Button */}
                                                     <div className='flex justify-start'>
                                                         <button
+                                                            disabled = {isPostingReview}
                                                             onClick={PostRating}
                                                             className='bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors'
                                                         >
-                                                            Submit Review
+                                                            {
+                                                                isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>Submit Review</span>
+                                                            }
                                                         </button>
                                                     </div>
                                                 </form>
@@ -713,7 +759,6 @@ const MPpage = () => {
                                         </div>
                                     </div>
                                 }
-                                
                         </div>
                         <Footer />
                     </div>
@@ -724,6 +769,35 @@ const MPpage = () => {
         </Fragment>
     );
 };
+/* const CustomSlider = styled(Slider)({
+    '& .MuiSlider-thumb': {
+        backgroundColor: '#4CAF50', // Green thumb color
+        border: '3px solid #388E3C', // Darker green border for the thumb
+        '&:hover': {
+            backgroundColor: '#81C784', // Lighter green on hover
+            border: '3px solid #66BB6A', // Lighter green border on hover
+        },
+        '&:focus': {
+            boxShadow: '0 0 0 0.3rem rgba(0, 128, 0, 0.25)', // Green shadow on focus
+        },
+    },
+    '& .MuiSlider-rail': {
+        backgroundColor: '#D1C4E9', // Light purple rail color
+    },
+    '& .MuiSlider-track': {
+        backgroundColor: '#3F51B5', // Blue track color
+    },
+    '& .MuiSlider-valueLabel': {
+        backgroundColor: '#3F51B5', // Blue background for the value label
+        color: '#FFF', // White text for the value label
+        fontWeight: 'bold', // Make the value label text bold
+    },
+    // Optional: Add a gradient effect to the slider's track and rail
+    '& .MuiSlider-rail, & .MuiSlider-track': {
+        background: 'linear-gradient(90deg, #2196F3 0%, #4CAF50 100%)', // Gradient from blue to green
+    },
+}); */
+
 const ProductReviews = ({ reviews }) => {
   const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
 
@@ -740,23 +814,23 @@ const ProductReviews = ({ reviews }) => {
       >
         {/* Display only the first 3 reviews or more based on showMore */}
         {reviews.slice(0, 3).map((review, index) => {
-          const randomStars = review.rating; // Random stars between 1 and 5
-          return (
-            <div key={index} className="review-item mb-4">
-              <div className="flex items-center">
-                <div className="stars">
-                  {[...Array(randomStars)].map((_, i) => (
-                    <span key={i} className="star text-black">★</span>
-                  ))}
-                  {[...Array(5 - randomStars)].map((_, i) => (
-                    <span key={i} className="star text-gray-300">★</span>
-                  ))}
+            const randomStars = review.rating; // Random stars between 1 and 5
+            return (
+                <div key={index} className="review-item mb-4">
+                    <div className="flex items-center">
+                        <div className="stars">
+                        {[...Array(randomStars)].map((_, i) => (
+                            <span key={i} className="star text-black hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+                        ))}
+                        {[...Array(5 - randomStars)].map((_, i) => (
+                            <span key={i} className="star text-gray-300 hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+                        ))}
+                        </div>
+                        <span className="ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 ease-in-out transition-all">{randomStars} Stars</span>
+                    </div>
+                    <p className="text-gray-700 mt-2">{review.comment}</p>
                 </div>
-                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
-              </div>
-              <p className="text-gray-700 mt-2">{review.comment}</p>
-            </div>
-          );
+            );
         })}
 
         {/* If showMore is true, display all reviews */}

@@ -178,23 +178,17 @@ const AdminProducts = () => {
         try {
         const data = await dispatch(delProducts(productId));
         if (data?.payload?.Success) {
-            /* toast({
-                title: "Product Deleted Successfully",
-                description: data?.payload?.message,
-            }); */
             toast("Product Deleted Success")
             dispatch(fetchAllProducts());
         }
         } catch (error) {
             console.error(`Failed to delete ${productId} `, error);
-            // toast({ title:"Failed to Delete Product", type:"error"});
             toast(`Failed to Delete Product id: ${productId}, Internal Error`)
         }
     };
     const updateEditedItems = async (productId,editedData) => {
         try {
         if(!productId){
-            // toast({title:"No Product Id",type:"error"});
             toast("No Product Id")
             return;
         }
@@ -207,10 +201,6 @@ const AdminProducts = () => {
             setFormData(initialFormData);
             setCurrentEditingId(null);
             dispatch(fetchAllProducts());
-            /* toast({
-                title: "Product Updated Successfully",
-                description: data?.payload?.message,
-            }); */
             toast("Product Updated Success")
         }
         } catch (error) {

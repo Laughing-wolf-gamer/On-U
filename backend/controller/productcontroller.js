@@ -83,6 +83,7 @@ export const getallproducts = A(async (req, res)=>{
                     { description: regx },
                     { category: regx },
                     { subCategory: regx },
+                    { specialCategory: regx },
                     { material: regx },
                     { specification: regx },
                     { gender: regx },

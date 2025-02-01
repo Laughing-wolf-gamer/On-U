@@ -200,3 +200,22 @@ export const BASE_API_URL = process.env.REACT_APP_API_URL;
 // new Updated...
 export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
 export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
+
+export const footWearSizeChartData = [
+  { size: '6', footLength: '9.25"', ukSize: '5', eurSize: '38' },
+  { size: '7', footLength: '9.625"', ukSize: '6', eurSize: '39' },
+  { size: '8', footLength: '9.9375"', ukSize: '7', eurSize: '40' },
+  { size: '9', footLength: '10.25"', ukSize: '8', eurSize: '41' },
+  { size: '10', footLength: '10.5"', ukSize: '9', eurSize: '42' },
+  { size: '11', footLength: '10.9375"', ukSize: '10', eurSize: '43' },
+  { size: '12', footLength: '11.25"', ukSize: '11', eurSize: '44' },
+  { size: '13', footLength: '11.5625"', ukSize: '12', eurSize: '45' },
+  { size: '14', footLength: '11.875"', ukSize: '13', eurSize: '46' },
+];
+export const clothingSizeChartData = [
+  { size: 'S', chest: '34-36"', waist: '28-30"' },
+  { size: 'M', chest: '38-40"', waist: '32-34"' },
+  { size: 'L', chest: '42-44"', waist: '36-38"' },
+  { size: 'XL', chest: '46-48"', waist: '40-42"' },
+  { size: 'XXL', chest: '50-52"', waist: '44-46"' },
+];
