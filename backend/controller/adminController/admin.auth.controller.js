@@ -382,9 +382,9 @@ export const addNewColorToSize = async (req, res) => {
         product.size.forEach(s => {
             if (s.colors) {
                 s.colors.forEach(c => {
-                const colorsImageArray = c.images.filter(image => image !== "");
-                c.images = colorsImageArray; // Remove empty image entries
-                AllColors.push(c);
+                    const colorsImageArray = c.images.filter(image => image !== "");
+                    c.images = colorsImageArray; // Remove empty image entries
+                    AllColors.push(c);
                 });
             }
         });

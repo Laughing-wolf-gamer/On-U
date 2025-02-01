@@ -21,7 +21,7 @@ import GridImageView from './GridImageView'
 
 
 const Home = ({user}) => {
-    const { product} = useSelector(state => state.Allproducts)
+    const { product,loading:productLoading} = useSelector(state => state.Allproducts)
     // const { AllOptions} = useSelector(state => state.allOptions)
     const [categoriesOptions,setCategoryOptions] = useState([]);
     const { banners,loading:bannerLoading} = useSelector(state => state.banners)
@@ -213,8 +213,22 @@ const Home = ({user}) => {
                             <CarousalView b_banners={Wide_Screen_Section_1.urls} indicator={indicator} bannerLoading = {bannerLoading}/>
                         </div>
                         <OurMotoData/>
-                    
-                        {product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
+                        {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
+                            <div className='w-screen justify-center items-center flex pr-20 pl-20 bg-slate-200'>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
+                                    {
+                                        Array(5).fill(0).map((_, index) => (
+                                            <div key={`skeleton_${index}`} className="bg-gray-400 2xl:w-[344px] 2xl:h-[611px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
+                                                <div className='w-full absolute bottom-0 h-32 bg-gray-700 animate-pulse'>
+
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        }
+                        
                         <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3 px-12">
                             <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
@@ -223,10 +237,13 @@ const Home = ({user}) => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
                                     {
-                                        !bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
-                                            // Skeleton Loader View when no URLs
+                                        bannerLoading || !Wide_Screen_Section_3 || Wide_Screen_Section_3.urls.length <= 0 ? (
                                             Array(8).fill(0).map((_, index) => (
-                                                <div key={`skeleton_${index}`} className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+                                                <div key={`skeleton_${index}`} className="w-[320px] h-[520px] flex flex-col justify-start items-center bg-gray-300 rounded-lg animate-pulse">
+                                                    <div className="w-full h-full relative">
+                                                        <div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             ))
                                         ) : (
@@ -279,13 +296,22 @@ const Home = ({user}) => {
                     </Fragment >
                 :
                     <Fragment>
-                        {/* {
-                            Small_Screen_Section_1 && Small_Screen_Section_1.urls && <div className='bg-slate-200'>
+                        {
+                            <div className='bg-slate-200'>
                                 <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                                    <DraggingScrollView images={Small_Screen_Section_1.urls} />
+                                    {
+                                        !bannerLoading && Small_Screen_Section_1 && Small_Screen_Section_1.urls.length > 0 ? <DraggingScrollView images={Small_Screen_Section_1.urls} />:(
+                                            // Skeleton Loader for the Carousel Items
+                                            Array(8).fill(0).map((_, index) => (
+                                                <div className='h-[100px] min-h-[100px] bg-gray-100 p-3 animate-pulse'>
+                                                    <div key={index} className="w-[98px] h-[80px] bg-gray-300 animate-pulse" />
+                                                </div>
+                                            ))
+                                        )
+                                    }
                                 </ul>
                             </div>
-                        } */}
+                        }
                         
 
                         <div className='w-[100vw] bg-slate-200'>
@@ -300,7 +326,7 @@ const Home = ({user}) => {
                                 showArrows={false} 
                                 showIndicators={true} 
                                 renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                                    {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
+                                    {!bannerLoading &&  Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
                                         Small_Screen_Section_2.urls.map((mb, index) => (
                                             <Link key={`mb_banners_${index}`} to='/products'>
                                                 <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
@@ -308,11 +334,11 @@ const Home = ({user}) => {
                                         ))
                                     ) : (
                                         // Skeleton Loader for the Carousel Items
-                                        <div className="flex w-full justify-center space-x-4">
-                                            {Array.from({ length: 5 }).map((_, index) => (
-                                                <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
-                                            ))}
-                                        </div>
+                                        Array(8).fill(0).map((_, index) => (
+                                            <div className='h-[200px] w-full bg-gray-100 p-1 animate-pulse' >
+                                                <div key={index} className="w-[98%] h-[90%] bg-gray-300 animate-pulse rounded-lg" />
+                                            </div>
+                                        ))
                                     )}
                             </Carousel>
                         </div>
@@ -321,22 +347,38 @@ const Home = ({user}) => {
                         <div className='bg-slate-200'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
-                                {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3?.urls.length > 0 ? 
+                                {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
                                     Small_Screen_Section_3.urls.map((d, index) => (
-                                    <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
-                                        <li className='w-max mr-2'>
-                                            <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
-                                        </li>
-                                    </Link>
+                                        <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
+                                            <li className='w-max mr-2'>
+                                                <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
+                                            </li>
+                                        </Link>
                                 )) : (
-                                    <li className='w-max mr-2'>
-                                        <div className="w-[50vw] min-h-[200px] bg-gray-300 animate-pulse rounded-lg"></div>
-                                    </li>
+                                    Array(6).fill(0).map((_, index) =>(
+                                        <div key={index} className='w-[300px] m-1 h-[200px] bg-gray-200 p-1 animate-pulse' >
+                                            <div className="w-[280px] h-[90%] bg-gray-400 animate-pulse rounded-lg" />
+                                        </div>
+                                    ))
                                 )}
                             </ul>
                         </div>
                         {/* <OurMotoData/> */}
-                        {product && product.length && <ProductPreviewFull product={product} user={user}/>}
+                        {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
+                            <div className='w-screen justify-center items-center flex pr-3 pl-3 bg-slate-200'>
+                                <div className="grid grid-cols-2 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
+                                    {
+                                        Array(6).fill(0).map((_, index) => (
+                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[170px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
+                                                <div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
+
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        }
                         <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3">
                             <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
@@ -349,7 +391,7 @@ const Home = ({user}) => {
                             <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-screen flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
-                                    {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4?.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
+                                    {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
                                         <Link key={index} to='/products' className='m-2'>
                                             <li className=''>
                                                 <LazyLoadImage effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
@@ -358,7 +400,7 @@ const Home = ({user}) => {
                                     )):(
                                         Array(8).fill(0).map((_, index) => (
                                             <li key={`skeleton_${index}`} className='m-2'>
-                                                <div className="w-[120px] h-[80px] bg-gray-300 animate-pulse rounded-lg"></div>
+                                                <div className="w-[120px] h-[170px] bg-gray-300 animate-pulse rounded-lg"></div>
                                             </li>
                                         ))
                                     )}
@@ -368,15 +410,15 @@ const Home = ({user}) => {
 
                         <div className='pt-4 w-[100vw] bg-slate-200'>
                             <Carousel 
-                            preventMovementUntilSwipeScrollTolerance
-                            autoPlay={50000}
-                            swipeable
-                            infiniteLoop={true}
-                            showThumbs={false} 
-                            showStatus={false} 
-                            showArrows={false} 
-                            showIndicators={true} 
-                            renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+                                preventMovementUntilSwipeScrollTolerance
+                                autoPlay={50000}
+                                swipeable
+                                infiniteLoop={true}
+                                showThumbs={false} 
+                                showStatus={false} 
+                                showArrows={false} 
+                                showIndicators={true} 
+                                renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
                                 {!bannerLoading && Small_Screen_Section_5 && Small_Screen_Section_5.urls.length > 0 ?
                                     Small_Screen_Section_5.urls.map((mc, index) => (
                                         <Link key={`mc_banners_${index}`} to='/products'>
@@ -386,12 +428,11 @@ const Home = ({user}) => {
                                             </div>
                                         </Link>
                                 )) : (
-                                    // Skeleton Loader for the Carousel Items
-                                    <div className="flex w-full justify-center space-x-4">
-                                        {Array.from({ length: 5 }).map((_, index) => (
-                                            <div key={index} className="w-[80%] min-h-[200px] bg-gray-300 animate-pulse rounded-lg" />
-                                        ))}
-                                    </div>
+                                    Array(8).fill(0).map((_, index) => (
+                                        <div key={index} className='h-[200px] w-full bg-gray-100 p-1 animate-pulse' >
+                                            <div className="w-[98%] h-[90%] bg-gray-300 animate-pulse rounded-lg" />
+                                        </div>
+                                    ))
                                 )}
                             </Carousel>
                         </div>
@@ -405,88 +446,8 @@ const Home = ({user}) => {
         </div>
     )
 }
-/* const GridVideoBox = ({ bannerLoading = false, Wide_Screen_Section_3 = [], categoriesOptions = [] }) => {
-    const [inView, setInView] = useState(new Array(8).fill(false)); // Initialize as an array of false
-    const videoRefs = useRef([]); // This will hold the refs for each video container
 
-    const mediaItems = useMemo(() => {
-        return Wide_Screen_Section_3.urls.slice(0, 8).map((im) => ({
-            url: im.url,
-            isVideo: im.url &&
-                (im.url.includes("video") ||
-                im.url.endsWith(".mp4") ||
-                im.url.endsWith(".mov") ||
-                im.url.endsWith(".avi")),
-        }));
-    }, []); // Depend only on urls
 
-    useEffect(() => {
-        // Set up the IntersectionObserver for each element dynamically
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                const index = videoRefs.current.indexOf(entry.target); // Find which video is in view
-                if (entry.isIntersecting) {
-                    setInView((prevInView) => {
-                        const newInView = [...prevInView];
-                        if (!newInView[index]) {
-                            newInView[index] = true; // Set this video to in view
-                        }
-                        return newInView;
-                    });
-                }
-            });
-        }, { threshold: 0.1 });
-
-        // Observe all video containers
-        videoRefs.current.forEach((ref) => {
-            if (ref) observer.observe(ref);
-        });
-
-        // Cleanup observer when the component is unmounted
-        return () => {
-            videoRefs.current.forEach((ref) => {
-                if (ref) observer.unobserve(ref);
-            });
-        };
-    }, [Wide_Screen_Section_3?.urls.length]); // Only run when urls length changes
-    console.log("mediaItems",mediaItems,"Original: ",Wide_Screen_Section_3);
-    return (
-        <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
-            {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length === 0 ? (
-                // Skeleton Loader View when no URLs
-                Array(8).fill(0).map((_, index) => (
-                    <div
-                        key={`skeleton_${index}`}
-                        className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse"
-                    />
-                ))
-            ) : (
-                // Actual content when URLs are available
-                mediaItems.map((url, index) => (
-                    <div
-                        key={`Index_${index}`}
-                        ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                        className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
-                    >
-                        {
-                            url  && <Fragment>
-                                {inView[index] ? (
-                                    <GridImageView
-                                        imageToShow={url}
-                                        categoriesOptions={categoriesOptions}
-                                        startPlaying={inView[index]}
-                                    />
-                                ) : (
-                                    <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
-                                )}
-                            </Fragment>
-                        }
-                    </div>
-                ))
-            )}
-        </div>
-    );
-}; */
 const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions }) => {
     const [inView, setInView] = useState([]);
     const videoRefs = useRef([]); // This will hold the refs for each video container
@@ -521,17 +482,22 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
   
     return (
         <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
-            {!bannerLoading && Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length <= 0 ? (
-            // Skeleton Loader View when no URLs
-            Array(8).fill(0).map((_, index) => (
-                <div
-                    key={`skeleton_${index}`}
-                    className="w-[500px] h-[800px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse"
-                />
-            ))
+            {bannerLoading? (
+                // Skeleton Loader View when no URLs
+                Array(8).fill(0).map((_, index) => (
+                    <div
+                        key={`skeleton_${index}`}
+                        className="w-[170px] h-[400px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-1 animate-pulse"
+                    >
+                        <div className="w-full h-full relative">
+                            <div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+                            </div>
+                        </div>
+                    </div>
+                ))
             ) : (
                 // Actual content when URLs are available
-                Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
@@ -540,7 +506,12 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                         {inView[index] ? (
                             <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
                         ) : (
-                            <div className="w-full h-full bg-gray-200 rounded-lg" /> // Placeholder while video is offscreen
+                            <div className="w-[170px] h-[400px] bg-gray-200 animate-pulse rounded-lg" >
+                                <div className="w-full h-full relative">
+                                    <div className="min-w-full bg-gray-300 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+                                    </div>
+                                </div>
+                            </div> 
                         )}
                     </div>
                 ))

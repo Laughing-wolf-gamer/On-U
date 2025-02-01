@@ -221,8 +221,8 @@ const MFilter = ({ product ,handleSortChange}) => {
   let sizenewArray = [...new Set(size)]
   let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
 
-  const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
-  // const [price, setPrice] = useState(GetPrice())
+  // const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
+  const [price, setPrice] = useState(GetPrice())
   const [MMainlink, setMMainlink] = useState(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
   const priceHandler = (event, newPrice)=>{
     setPrice(newPrice)
