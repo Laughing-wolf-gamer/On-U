@@ -113,7 +113,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
                         onTouchMove={handleTouchMove}
                         onTouchEnd={handleTouchEnd}
                     >
-                        {!bannerLoading ? (
+                        {bannerLoading ? (
                             // Create 5 skeletons as placeholders for the image slider
                             Array(10).fill(0).map((_, index) => (
                                 <div

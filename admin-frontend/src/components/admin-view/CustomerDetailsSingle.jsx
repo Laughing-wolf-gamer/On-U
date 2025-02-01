@@ -83,22 +83,22 @@ const CustomerDetailsSingle = ({ user }) => {
             </div>
 
             {/* Tabs */}
-            <div className="flex justify-center mb-6">
+            <div className="flex flex-wrap justify-center mb-6">
                 <button
                     onClick={() => handleTabChange("cart")}
-                    className={`px-6 py-2 font-semibold ${activeTab === "cart" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} rounded-tl-lg`}
+                    className={`px-6 py-2 font-semibold ${activeTab === "cart" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} rounded-tl-lg md:rounded-none md:rounded-tl-lg`}
                 >
                     Cart
                 </button>
                 <button
                     onClick={() => handleTabChange("orders")}
-                    className={`px-6 py-2 font-semibold ${activeTab === "orders" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"}`}
+                    className={`px-6 py-2 font-semibold ${activeTab === "orders" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} md:rounded-none`}
                 >
                     Orders
                 </button>
                 <button
                     onClick={() => handleTabChange("wishList")}
-                    className={`px-6 py-2 font-semibold ${activeTab === "wishList" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} rounded-tr-lg`}
+                    className={`px-6 py-2 font-semibold ${activeTab === "wishList" ? "bg-blue-500 text-white" : "bg-gray-200 text-black"} rounded-tr-lg md:rounded-none`}
                 >
                     Wish List
                 </button>
