@@ -3,7 +3,7 @@ import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
 import { IoIosArrowDown } from 'react-icons/io';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -180,9 +180,11 @@ const Allproductpage = ({user}) => {
                     <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
                             <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 px-2 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {Array(10).fill(0).map((_, index) => (
-                                        <ProductCardSkeleton key={index} />
+                                        <li key={`productId_Skeleton_${index}`} className="w-full">
+                                            <ProductCardSkeleton/>
+                                        </li>
                                     ))}
                                 </ul>
                             </div>
@@ -248,19 +250,17 @@ const Allproductpage = ({user}) => {
                     </div>
                 </div>
                 {
-                    pro && <NoProductsFoundOverlay isOpen={isNoProductsFound} onClose={() => {
-                        setIsNoProductsFound(false);
-                    }} />
+                    pro && <NoProductsFoundOverlay isOpen={isNoProductsFound}/>
                 }
 
-                {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
             </div>
+            {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
             <Footer />
         </div>
     );
 };
 
-const NoProductsFoundOverlay = ({ isOpen, onClose }) => {
+const NoProductsFoundOverlay = ({ isOpen }) => {
     if (!isOpen) return null;  // Don't render anything if the overlay is not open.
   
     return (

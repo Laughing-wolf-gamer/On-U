@@ -41,28 +41,27 @@ const Home = ({user}) => {
     // #CFCECD
     function indicator(onClickHandler, isSelected, index, label) {
         if (isSelected) {
-        return (
-            <li
-            style={{ ...indicatorStyles, background: '#253529' }}
-            aria-label={`Selected: ${label} ${index + 1}`}
-            title={`Selected: ${label} ${index + 1}`}
-            />
-        );
+            return (
+                <li
+                style={{ ...indicatorStyles, background: '#253529' }}
+                aria-label={`Selected: ${label} ${index + 1}`}
+                title={`Selected: ${label} ${index + 1}`}
+                />
+            );
         }
 
         return (
-
-        <li
-            style={{ ...indicatorStyles }}
-            onClick={onClickHandler}
-            onKeyDown={onClickHandler}
-            value={index}
-            key={index}
-            role="button"
-            tabIndex={0}
-            title={`${label} ${index + 1}`}
-            aria-label={`${label} ${index + 1}`}
-        />
+            <li
+                style={{ ...indicatorStyles }}
+                onClick={onClickHandler}
+                onKeyDown={onClickHandler}
+                value={index}
+                key={index}
+                role="button"
+                tabIndex={0}
+                title={`${label} ${index + 1}`}
+                aria-label={`${label} ${index + 1}`}
+            />
         );
     }
     const getSingleOptions = async ()=>{

@@ -13,7 +13,6 @@ import Overview from "./components/Login/Dashboard/overview";
 import Allproductpage from "./components/Product/Allproduct";
 import Ppage from "./components/Productpage/Ppage";
 import MPpage from "./components/Productpage/MPpage";
-import Coupon from "./components/Coupon/Coupon";
 import Wishlist from "./components/Wishlist/Wishlist";
 import Bag from './components/Bag/Bag'
 import Address from "./components/Bag/Address";
@@ -26,7 +25,7 @@ import FAQ from "./components/About-Screen/FAQ.js";
 import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js";
 import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
 import { FunctionProvider } from "./Contaxt/FunctionContext.js";
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 
 
