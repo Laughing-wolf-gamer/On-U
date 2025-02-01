@@ -213,7 +213,7 @@ const MFilter = ({ product ,handleSortChange}) => {
   sparray()
   specialCategoriesarray();
   subCategoriesarray();
-  
+
   let Categorynewarray = [...new Set(category)];
   let specialCategoryNewArray = [...new Set(specialCategory)];
   let subCategoryNewArray = [...new Set(subcategory)];
@@ -405,8 +405,9 @@ function price2fun(e,f){
   function clearall() {
     setMMainlink('')
     setfilter(filter === 'hidden' ? 'block' : 'hidden')
-    navigation(MMainlink)
+    navigation('/products')
     reloadproducts()
+    // window.location.reload();
   }
   return (
     <Fragment>
