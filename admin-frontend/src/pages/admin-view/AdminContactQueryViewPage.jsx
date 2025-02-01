@@ -3,9 +3,22 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { Dialog } from '@/components/ui/dialog';
-import { capitalizeFirstLetterOfEachWord } from '@/config';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { capitalizeFirstLetterOfEachWord, GetBadgeColor } from '@/config';
 import { fetchAllQuery } from '@/store/admin/query-slice';
+import { Label } from '@/components/ui/label';
+import { Separator } from '@/components/ui/separator';
+import CommonForm from '@/components/common/form';
+import { saveAs } from 'file-saver';
+import { jsPDF } from 'jspdf';
+import * as XLSX from 'xlsx';
+
+
+import xl_icon from '../../assets/xl_icon.png';
+import pdf_icon from '../../assets/pdf_icon.png';
+import csv_icon from '../../assets/csv_icon.png';
+
+
 const mockQueries = [
     {
         _id: "6782673643fbfc9467bfd9da",
@@ -42,11 +55,14 @@ const mockQueries = [
     }
 ];
 const AdminContactQueryViewPage = () => {
+
+    
     const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
     const [sortOrder, setSortOrder] = useState('latest'); // 'latest' or 'oldest'
     const [statusFilter, setStatusFilter] = useState(''); // To filter by status (if needed)
     const [minQueries, setMinQueries] = useState(0); // Min number of queries to show
     const [maxQueries, setMaxQueries] = useState(10); // Max number of queries to show
+    const[selectedQueryDetails, setSelectedQueryDetails] = useState(null);
 
     const { user } = useSelector(state => state.auth);
     const dispatch = useDispatch();
@@ -56,15 +72,90 @@ const AdminContactQueryViewPage = () => {
         dispatch(fetchAllQuery());
     }, [dispatch]);
 
-    const handleFetchContactQueryDetails = async (queryId) => {
+    const handleFetchContactQueryDetails = async (querySelected) => {
         // await dispatch(adminGetContactQueryById(queryId));
+        setSelectedQueryDetails(querySelected);
+        setOpenDetailsDialogue(true);
+    };
+    const convertToCSV = () => {
+        const header = ['Email Id', 'Full Name', 'Phone Number', 'QueryMessage', 'Status', 'Created At', 'Updated At'];
+        const rows = ContactQuery.map(item => [
+            item.QueryDetails['Email Id'], // Accessing Email Id from QueryDetails
+            item.QueryDetails.FullName, // Accessing Full Name from QueryDetails
+            item.QueryDetails['Phone Number'], // Accessing Phone Number from QueryDetails
+            item.QueryMessage,
+            item.Status,
+            item.createdAt,
+            item.updatedAt
+        ]);
+    
+        return [header, ...rows].map(row => row.join(',')).join('\n');
+    };
+    
+    const downloadCSV = () => {
+        const csvContent = convertToCSV();
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
+        saveAs(blob, `Query_Data.csv`);
+    };
+    
+    const downloadPDF = () => {
+        const doc = new jsPDF();
+        
+        // Set title
+        doc.setFontSize(18);
+        doc.text('Query Data', 20, 20);
+        
+        // Set font size for other text
+        doc.setFontSize(12);
+        
+        // Add headers for each field
+        doc.text('Email Id', 20, 30);
+        doc.text('Full Name', 60, 30);
+        doc.text('Phone Number', 120, 30);
+        doc.text('Query Message', 160, 30);
+        doc.text('Status', 220, 30);
+        doc.text('Created At', 270, 30);
+        doc.text('Updated At', 330, 30);
+    
+        // Add data rows
+        ContactQuery.forEach((item, index) => {
+            const yPos = 40 + (index * 10);
+            doc.text(item.QueryDetails['Email Id'], 20, yPos);
+            doc.text(item.QueryDetails.FullName, 60, yPos);
+            doc.text(item.QueryDetails['Phone Number'], 120, yPos);
+            doc.text(item.QueryMessage, 160, yPos);
+            doc.text(item.Status, 220, yPos);
+            doc.text(item.createdAt, 270, yPos);
+            doc.text(item.updatedAt, 330, yPos);
+        });
+    
+        // Save the PDF with a simplified file name
+        doc.save('Query_Data.pdf');
+    };
+    
+    const downloadExcel = () => {
+        // Mapping the ContactQuery data into an appropriate format for Excel
+        const rows = ContactQuery.map(item => ({
+            'Email Id': item.QueryDetails['Email Id'],
+            'Full Name': item.QueryDetails.FullName,
+            'Phone Number': item.QueryDetails['Phone Number'],
+            'Query Message': item.QueryMessage,
+            'Status': item.Status,
+            'Created At': item.createdAt,
+            'Updated At': item.updatedAt
+        }));
+        
+        const ws = XLSX.utils.json_to_sheet(rows); // Pass the rows array to create the Excel sheet
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Query Data');
+        XLSX.writeFile(wb, 'Query_Data.xlsx');
     };
 
-    useEffect(() => {
+    /* useEffect(() => {
         if (ContactQuery) {
             setOpenDetailsDialogue(true);
         }
-    }, [ContactQuery]);
+    }, [ContactQuery]); */
     console.log("ContactQuery: ",ContactQuery);
     // Sort queries based on the selected sortOrder
     const sortedQueryList = [...ContactQuery].sort((a, b) => {
@@ -84,7 +175,7 @@ const AdminContactQueryViewPage = () => {
 
     // Check if there are no queries available
     const isNoQueries = !displayedQueries || displayedQueries.length === 0;
-
+    // console.log("Available Query: ",ContactQuery);
     return (
         <Card className="w-full sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-full mx-auto">
             <CardHeader>
@@ -92,7 +183,7 @@ const AdminContactQueryViewPage = () => {
             </CardHeader>
             <CardContent>
                 {/* Sorting and Filter Controls */}
-                <div className="mb-4 text-center space-x-4">
+                <div className="mb-4 text-center space-x-4 justify-between flex flex-col md:flex-row lg:flex-row 2xl:flex-row">
                     {/* Sort By Dropdown */}
                     <Button
                         variant="outline"
@@ -112,6 +203,33 @@ const AdminContactQueryViewPage = () => {
                         <option value="Responded">Responded</option>
                         <option value="Closed">Closed</option>
                     </select>
+                    <div className="flex flex-col sm:flex-row justify-end gap-3 sm:gap-5 items-center mb-4">
+                        <button onClick={downloadCSV} className="w-full sm:w-fit h-12 sm:h-10 shadow-md flex items-center justify-center gap-2">
+                            <img
+                                src={csv_icon}
+                                alt="csv icon"
+                                className="w-6 h-6 sm:w-full sm:h-full object-contain"
+                            />
+                            <span className="text-[10px] sm:text-[12px] font-bold">Download for (CSV)</span>
+                        </button>
+                        <button onClick={downloadPDF} className="w-full sm:w-fit h-12 sm:h-10 shadow-md flex items-center justify-center gap-2">
+                            <img
+                                src={pdf_icon}
+                                alt="pdf icon"
+                                className="w-6 h-6 sm:w-full sm:h-full object-contain"
+                            />
+                            <span className="text-[10px] sm:text-[12px] font-bold">Download for (PDF)</span>
+                        </button>
+                        <button onClick={downloadExcel} className="w-full sm:w-fit h-12 sm:h-10 shadow-md flex items-center justify-center gap-2">
+                            <img
+                                src={xl_icon}
+                                alt="xl icon"
+                                className="w-6 h-6 sm:w-full sm:h-full object-contain"
+                            />
+                            <span className="text-[10px] sm:text-[12px] font-bold">Download for (Excel)</span>
+                        </button>
+                    </div>
+
                 </div>
 
                 {/* Slider for showing queries range */}
@@ -165,7 +283,7 @@ const AdminContactQueryViewPage = () => {
                                         <Badge className={`justify-center items-center py-1 px-3 hover:bg-transparent hover:shadow-md bg-black hover:bg-gray-700`}>{query?.Status}</Badge>
                                     </div>
                                     <div className="text-sm sm:text-base text-center">
-                                        <Button onClick={() => handleFetchContactQueryDetails(query?._id)} className="btn btn-primary text-xs sm:text-sm">
+                                        <Button onClick={() => handleFetchContactQueryDetails(query)} className="btn btn-primary text-xs sm:text-sm">
                                             View Details
                                         </Button>
                                     </div>
@@ -195,7 +313,7 @@ const AdminContactQueryViewPage = () => {
                                     </div>
                                     
                                     <Button
-                                        onClick={() => handleFetchContactQueryDetails(query?._id)}
+                                        onClick={() => handleFetchContactQueryDetails(query)}
                                         className="btn btn-primary mt-2 w-full text-sm"
                                     >
                                         View Details
@@ -211,13 +329,131 @@ const AdminContactQueryViewPage = () => {
             {/* Dialog for contact query details */}
             <Dialog open={openDetailsDialogue} onOpenChange={() => {
                 setOpenDetailsDialogue(false);
-                dispatch(resetContactQueryDetails());
+                // dispatch(resetContactQueryDetails());
             }}>
-                <div>{/* Replace with your Contact Query Detail View component */}</div>
+                <AdminQueryDetailsView query={selectedQueryDetails}/>
             </Dialog>
         </Card>
     );
 };
+const initialFormData = {
+	Status:'',
+}
+const AdminQueryDetailsView = ({query}) => {
+    if(query === null) return null;
+
+    // Helper function to get badge color based on status
+    console.log("Order Details: ",GetBadgeColor(query?.Status))
+    const [formData,setFormData] = useState(initialFormData);
+    console.log("Query Details: ",query)
+	const dispatch = useDispatch();
+	const handleSubmitStatus = async (e)=>{
+		e.preventDefault();
+        /* console.log(formData)
+		const {status} = formData;
+		const data = await dispatch(adminUpdateUsersOrdersById({orderId:order?._id,status}))
+		console.log("Data Updated: " + data)
+		if(data?.payload?.Success){
+			toast({
+                title: "Order Status Updated Successfully",
+                description: data?.payload?.message,
+            })
+            setFormData(initialFormData);
+			dispatch(adminGetAllOrders())
+		} */
+	}
+	return (
+		<DialogContent className = "sm:max-w-[600px] h-[500px] overflow-y-auto">
+			<DialogTitle>Query Data</DialogTitle>
+			<div className='grid gap-6'>
+				<div className='grid gap-6'>
+					<div className='flex mt-6 items-center justify-between'>
+						<p className='font-medium'>Query Id</p>
+						<Label>{query?._id}</Label>
+					</div>
+					<div className='flex mt-2 items-center justify-between'>
+						<p className='font-medium'>Query Date & Time</p>
+						<Label>{new Date(query?.createdAt).toLocaleString()}</Label>
+					</div>
+					<div className='flex mt-2 items-center justify-between'>
+						<p className='font-medium'>Query Status</p>
+						<Label>
+							<Badge className={`justify-center items-center py-1 px-3 text-white`}>{query?.Status}</Badge>
+						</Label>
+					</div>
+				</div>
+				<Separator/>
+				<div className='grid gap-4'>
+					<div className='grid gap-2'>
+						<div className='font-medium'>Query Details</div>
+                        {
+                            query?.QueryDetails && Object.keys(query?.QueryDetails).length === 0? (
+                                <p className='text-gray-500'>No Query Details Available</p>
+                            ) : (
+                                <ul className='grid gap-3'>
+                                    {
+                                        Object.entries(query?.QueryDetails).map(([key, value]) => (
+                                            <li key={key} className='flex items-center justify-between'>
+                                                <span>{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                                <span>{formatValue(key, value)}</span>
+                                            </li>
+                                        ))
+                                    }
+                                </ul>
+                            )
+                        }
+						{/* <ul className='grid gap-3'>
+							{
+								Object.entries(query.QueryDetails).map(([key, value]) => (
+									<li key={key} className='flex items-center justify-between'>
+										<span>{capitalizeFirstLetterOfEachWord(key)}:</span>
+										<span>{formatValue(key, value)}</span>
+									</li>
+								))
+							}
+						</ul> */}
+					</div>
+				</div>
+				<Separator/>
+				<div className='grid gap-4'>
+					<div className='grid gap-2'>
+						<ul className='grid gap-0.5'>
+                            {
+                                query?.QueryMessage && <li className='flex items-center justify-between'>
+                                    <div className='font-medium'>Query Message</div>
+                                    <span>{query?.QueryMessage}</span>
+                                </li>
+                            }
+							
+						</ul>
+					</div>
+				</div>
+				<Separator/>
+
+				<div>
+					<CommonForm formControls={[
+						{
+							label:"Status",
+							name:'status',
+							componentType:'select',
+							options:[
+								{id:'Pending', label:'Pending'},
+								{id:'Responded', label:'Responded'},
+								{id:'Closed',label:"Closed"},
+							]
+						},
+					]}
+						formData={formData}
+						setFormData={setFormData}
+						buttonText={"Update Query Status"}
+						handleSubmit={handleSubmitStatus}
+						isBtnValid={true}
+					/>
+				</div>
+			</div>
+		</DialogContent>
+	)
+}
 
 // Custom formatting for certain values (like dates)
 const formatValue = (key, value) => {

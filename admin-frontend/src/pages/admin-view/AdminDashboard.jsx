@@ -112,9 +112,9 @@ const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
     
         // Add data rows with right alignment for count
         data.forEach((item, index) => {
-        const yPos = 40 + (index * 10);
-        doc.text(item.date, 20, yPos); // Left-align date
-        doc.text(item.count.toString(), 100, yPos, { align: 'right' }); // Right-align count
+            const yPos = 40 + (index * 10);
+            doc.text(item.date, 20, yPos); // Left-align date
+            doc.text(item.count.toString(), 100, yPos, { align: 'right' }); // Right-align count
         });
     
         // Save the PDF with a dynamic filename

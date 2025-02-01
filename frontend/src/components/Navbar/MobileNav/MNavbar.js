@@ -3,31 +3,19 @@ import './MNavbar.css'
 import { AiOutlineMenu } from 'react-icons/ai'
 import { FiSearch } from 'react-icons/fi'
 import { BsHeart } from 'react-icons/bs'
-import { BsHandbag } from 'react-icons/bs'
-import { GoDiffAdded } from 'react-icons/go'
-import Offcanvas from 'react-bootstrap/Offcanvas'
-import { useTransition, animated } from 'react-spring'
 import Mbanner from '../../images/Nbanner.webp'
 import Ripples from 'react-ripples'
 import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io'
-import MMen from './Msubmenu/Men'
-import MWoMen from './Msubmenu/Women'
-import MKids from './Msubmenu/Kids'
 import Mhome from './Msubmenu/Home'
-import Mbeauty from './Msubmenu/Beauty'
 import { Link, useNavigate } from 'react-router-dom'
-import {logout, getuser, otpverifie, loginmobile} from '../../../action/useraction'
+import {logout} from '../../../action/useraction'
 import { useDispatch, useSelector} from 'react-redux'
-import { useAlert } from 'react-alert'
-import {registermobile} from '../../../action/useraction'
 import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
-import { Alert } from '@mui/material'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
 import { ShoppingCart } from 'lucide-react'
-import { getLocalStorageBag, getLocalStorageWishListItem } from '../../../config'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 
@@ -61,85 +49,10 @@ const MNavbar = ({ user }) => {
     const loginunchange = () => setClass("hidden");
     const loginClose = () => setShow(false);
     const [isSwiping, setIsSwiping] = useState(false);
-
-    const transitions = useTransition(show, {
-        from: { transform: "translateX(100%)" },  // Start offcanvas hidden on the right
-        enter: { transform: "translateX(0%)" },   // Transition into view
-        leave: { transform: "translateX(100%)" },  // Transition out of view
-        config: { tension: 300, friction: 20 },    // Smooth transition settings
-        delay: 100,
-      });
-      
-      const touchstart = (e) => {
-        let startX = e.changedTouches[0].clientX;
-        let startY = e.changedTouches[0].clientY;
-        setstartX(startX);
-        setstartY(startY);
-        setIsSwiping(true);
-      };
-      
-      const touchmove = (e) => {
-        if (!isSwiping) return;
-      
-        const xm = e.changedTouches[0].clientX;
-        const ym = e.changedTouches[0].clientY;
-        const el = document.getElementById('offcanvas');
-        const total = el.clientWidth;
-        const position = xm - total;
-      
-        let x = startX - xm;
-        let y = startY - ym;
-      
-        if (x >= 0 && y >= 0) {  // Swiping left and down (opening)
-          if (x > 20) {
-            if (position < 0) {
-              el.style.transform = `translateX(${position}px)`;
-            } else {
-              el.style.transform = `translateX(0px)`;
-            }
-          }
-        }
-      
-        if (x < 0 && y < 0) {  // Swiping up-left
-          return;
-        }
-      
-        if (x >= 0 && y < 0) {  // Swiping right-up
-          return;
-        }
-      };
-      
-      const touchend = (e) => {
-        if (!isSwiping) return;
-      
-        const xm = e.changedTouches[0].clientX;
-        const ym = e.changedTouches[0].clientY;
-        const el = document.getElementById('offcanvas');
-        const total = el.clientWidth;
-        const position = xm - total;
-        let x = startX - xm;
-        let y = startY - ym;
-      
-        if (x >= 0 && y >= 0) {  // Swiping right-down
-          if (x > 20 && x > y) {
-            if (-position >= 60) {
-              el.style.display = 'none';
-              setShow(false);
-            } else {
-              el.style.transform = `translateX(0)`;
-            }
-          }
-        }
-      
-        setIsSwiping(false);
-      };
+    
 
     const logoutBTN = () =>{
         dispatch(logout())
-        // Alert.show('Logout Successfully')
-        /* dispatch(getuser())
-        dispatch(loginmobile())
-        dispatch(otpverifie()) */
     }
 
     const [serdiv, setserdiv] = useState('hidden')
@@ -183,7 +96,65 @@ const MNavbar = ({ user }) => {
         setWishListCount(sessionData.length);
         setBagCount(sessionBagData.length);
     }, [sessionData,sessionBagData]);
-    // console.log("Nav Bar bag: ",bag?.orderItems?.length)
+    
+    // Set up transition to animate translateX and opacity
+    /* const transitions = useTransition(show, {
+
+        from: { transform: "translateX(0)" },
+        enter: { transform: "translateX(75vw)" },
+        leave: { transform: "translateX(0vw)" },
+        delay: 5000,
+
+    })
+
+    const touchstart = (e) => {
+        let startX = e.changedTouches[0].clientX;
+        let startY = e.changedTouches[0].clientY;
+        setstartX(startX);
+        setstartY(startY);
+        setIsSwiping(true);
+    };
+
+    const touchmove = (e) => {
+        if (!isSwiping) return;
+
+        const xm = e.changedTouches[0].clientX;
+        const ym = e.changedTouches[0].clientY;
+        const el = document.getElementById('offcanvas');
+        const total = el.clientWidth;
+        const position = xm - total;
+
+        let x = startX - xm;
+        let y = startY - ym;
+
+        if (x >= 0 && y >= 0) {  // Swiping left and down (opening)
+            if (x > 20) {
+                if (position < 0) {
+                    el.style.transform = `translateX(${position}px)`;  // Smooth swipe translation
+                } else {
+                    el.style.transform = `translateX(0px)`;
+                }
+            }
+        }
+    };
+
+    const touchend = (e) => {
+        if (isSwiping) {
+            const el = document.getElementById('offcanvas');
+            const threshold = 100; // If swipe distance exceeds this, open the offcanvas
+
+            const finalPosition = parseInt(el.style.transform.replace('translateX(', '').replace('px)', ''), 10);
+
+            if (Math.abs(finalPosition) > threshold) {
+                // If swiped enough to trigger, set show to true or false based on swipe direction
+                setShow(true);
+            } else {
+                // Otherwise, close the offcanvas
+                setShow(false);
+            }
+            setIsSwiping(false); // Reset swipe state
+        }
+    }; */
     return (
         <Fragment>
             <div className='MNavbar hidden sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10' >
@@ -241,114 +212,148 @@ const MNavbar = ({ user }) => {
             </div>
 
 
-            <div className={`w-[100vw] ${Class} absolute top-0 z-10 overflow-y-scroll`}>
-                <div className='overflow-y-scroll canvas'>
-                    {transitions((styles, item) => item && <animated.div style={styles}>
-                        <Offcanvas show={show} onHide={() => (loginClose(), loginunchange())} id="offcanvas"
-                            className='absolute canvas  h-[100vh] top-0 z-20 translate-x-0 bg-white focus:outline-0 overflow-y-scroll'
-                            onTouchEnd={touchend} onTouchMove={touchmove} onTouchStart={touchstart}
-                        >
-                            <Offcanvas.Body className='border-none'>
-                                <img src={Mbanner} alt="Banner" className='min-h-[150px]'/>
-                                    {
-                                        user ?
+            <div>
 
-                                            <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 ' onClick={()=>(loginClose(), loginunchange(),logoutBTN())}>
-                                                <span>LOGOUT</span>
-                                            </div>
-                                        :
-                                            <div className='text-slate-400 font1 text-xs font-bold absolute right-14 top-24 'onClick={()=>(loginClose(), loginunchange())}>
-                                                <Link to='/registeruser'>
-                                                    <span>SIGN UP.</span>
-                                                </Link>
-                                                <Link to='/Login'> 
-                                                    <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
-                                                </Link>
-                                            </div>
-                                    }
-                                <ul>
-                                    {/* Profile */}
-                                    <Ripples color="#D0DDD0" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex'onClick={(e)=>{
-                                            setShow(false)
-                                            setClass("hidden")
-                                            if(user){
-                                                redirect('/dashboard');
-                                            }else{
-                                                redirect('/Login');
-                                            }
-                                        }} >
-                                            {user ? (
-                                                <span className='float-left flex items-center'>
-                                                    <FaUserAlt size={20} className='mr-2' /> Profile
-                                                </span>
-                                            ) : (
-                                                <span className='float-left'>Login</span>
-                                            )}
-                                        </li>
-                                    </Ripples>
-                                    <Ripples color="#D0DDD0" className='w-full'>
-                                        <div className='text-black font1 px-5 py-4 relative w-full flex bg-blue-50' onClick={(e)=>{
-                                            setShow(false)
-                                            setClass("hidden")
-                                            redirect("/")
-                                        }} >
-                                            <span className='float-left'>Home</span>
-                                        </div>
-                                    </Ripples>
-                                    <Ripples color="#D0DDD0" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={() => (setWomen(Women ? (false) : (true)), setMenu2(Menu2 === "hidden" ? "block" : "hidden"))}>
-                                            <span className='float-left'>Products</span>
-                                            <span className='absolute mx-5 right-0'>{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
-                                        </li>
-                                    </Ripples>
-                                    <MProductsBar showProducts={Menu2} onClose = {()=>{
-                                        setShow(false)
-                                        setClass("hidden")
-                                        setMenu2("hidden")
-                                    }}/>
-                                    <Ripples color="re" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex 'onClick={(e)=>{
-                                            setShow(false)
-                                            setClass("hidden")
-                                            redirect("/about")
-                                        }} >
-                                            <span className='float-left'>About Us</span>
-                                        </li>
-                                    </Ripples>
-                                    <Ripples color="black" className='w-full'>
-                                        <li className='text-black font1 px-5 py-4 relative w-full flex ' onClick={(e)=>{
-                                            setShow(false)
-                                            setClass("hidden")
-                                            redirect("/contact")
-                                        }} >
-                                            <span className='float-left'>Contact</span>
-                                        </li>
-                                    </Ripples>
-                                    <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange}/>
-                                </ul>
-                                <hr />
-                                <div className='px-5 flex-row flex space-x-4 mt-7 text-[#282c3fd2] text-sm'>
-                                    <ImFacebook size={20} className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl"/>
-                                    <ImGoogle size={20} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
-                                    <ImTwitter size={20} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
-                                    <ImInstagram size={20} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
-                                    {/* <Link to={"/"}><h1 className='my-5'>Gift&nbsp;Cards</h1></Link> */}
-                                    {/* <Link to={"/contact"}><h1 className='my-5'>Contact&nbsp;Us</h1></Link> */}
-                                    {/* <Link to={"/faq"}><h1 className='my-5'>FAQs</h1></Link> */}
+                {/* Overlay */}
+                {show && (
+                    <div
+                        className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
+                        onClick={handleClose}
+                    ></div>
+                )}
+
+                {/* Offcanvas */}
+                <div
+                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${show ? 'translate-x-0' : 'translate-x-full'}`}
+                >
+                    <div className="p-4">
+                        <img src={Mbanner} alt="Banner" className="min-h-[150px]" />
+                    
+                        {/* Conditional rendering for user login state */}
+                        {user ? (
+                            <div
+                                className="text-slate-400 font1 text-xs font-bold absolute right-14 top-32"
+                                onClick={(e) => {
+                                    e.stopPropagation();
+                                    loginClose();
+                                    loginunchange();
+                                    logoutBTN();
+                                }}
+                            >
+                                <span>LOGOUT</span>
+                            </div>
+                        ) : (
+                            <div className="text-slate-400 font1 text-xs font-bold absolute right-14 top-32" onClick={() => loginClose()}>
+                                <Link to="/registeruser">
+                                    <span>SIGN UP.</span>
+                                </Link>
+                                <Link to="/Login">
+                                    <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
+                                </Link>
+                            </div>
+                        )}
+                    
+                        <ul>
+                            <Ripples color="#D0DDD0" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        if (user) {
+                                            redirect('/dashboard');
+                                        } else {
+                                            redirect('/Login');
+                                        }
+                                    }}
+                                >
+                                    {user ? (
+                                        <span className="float-left flex items-center">
+                                            <FaUserAlt size={20} className="mr-2" /> Profile
+                                        </span>
+                                    ) : (
+                                        <span className="float-left">Login</span>
+                                    )}
+                                </li>
+                            </Ripples>
+
+                            <Ripples color="#D0DDD0" className="w-full">
+                                <div
+                                    className="text-black font1 px-5 py-4 relative w-full flex bg-blue-50"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        redirect("/");
+                                    }}
+                                >
+                                    <span className="float-left">Home</span>
                                 </div>
-                            </Offcanvas.Body>
-                        </Offcanvas>
-                    </animated.div>
-                    )}
+                            </Ripples>
+
+                            <Ripples color="#D0DDD0" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={() => {
+                                        setWomen(!Women);
+                                        setMenu2(Menu2 === "hidden" ? "block" : "hidden");
+                                    }}
+                                >
+                                    <span className="float-left">Products</span>
+                                    <span className="absolute mx-5 right-0">{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
+                                </li>
+                            </Ripples>
+
+                            <MProductsBar
+                                showProducts={Menu2}
+                                onClose={() => {
+                                    setShow(false);
+                                    setClass("hidden");
+                                    setMenu2("hidden");
+                                }}
+                            />
+
+                            <Ripples color="re" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        redirect("/about");
+                                    }}
+                                >
+                                    <span className="float-left">About Us</span>
+                                </li>
+                            </Ripples>
+
+                            <Ripples color="black" className="w-full">
+                            <li
+                                className="text-black font1 px-5 py-4 relative w-full flex"
+                                onClick={(e) => {
+                                setShow(false);
+                                setClass("hidden");
+                                redirect("/contact");
+                                }}
+                            >
+                                <span className="float-left">Contact</span>
+                            </li>
+                            </Ripples>
+
+                            <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange} />
+                        </ul>
+                        <hr />
+                        <div className="px-5 flex-row flex space-x-4 mt-7 text-[#282c3fd2] text-sm">
+                            <ImFacebook size={20} className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl" />
+                            <ImGoogle size={20} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
+                            <ImTwitter size={20} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
+                            <ImInstagram size={20} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
+                        </div>
+                    </div>
                 </div>
-
-                <div className='h-[100vh] bg-[#64646435] w-auto ' onClick={() => (loginClose(), loginunchange())}></div>
             </div>
-
 
         </Fragment >
     )
 }
+
 
 export default MNavbar

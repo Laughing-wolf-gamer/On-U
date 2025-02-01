@@ -89,7 +89,7 @@ const ProductPreviewFull = ({ product ,user}) => {
 
             {/* Product Previews Section */}
             <div className="w-full flex flex-row justify-center items-center bg-slate-200 ">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
                 {previewProducts && previewProducts.length > 0 &&
                     previewProducts.map((p, index) => {
                         // const p = previewProducts[];
