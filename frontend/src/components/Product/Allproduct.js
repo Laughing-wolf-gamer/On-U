@@ -189,7 +189,7 @@ const Allproductpage = ({user}) => {
                                 </ul>
                             </div>
                         ) : (
-                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3'>
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
                                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-5 gap-2 px-2 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {pro && pro.length > 0 && pro.map((p,index) => (
                                         <li key={`productId_${p._id}_${index}`} className="w-full">

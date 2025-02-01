@@ -84,10 +84,10 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     return (
         <div 
             onClick={handleNavigation} 
-            className="2xl:w-[260px] md:h-[430px] md:w-[210px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-fit w-full border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
+            className="2xl:w-[260px] md:h-[430px] md:w-[210px] lg:w-[205px] lg:h-[410px] 2xl:h-[510px] sm:h-[410px] sm:w-[205px] h-[464px] w-[240px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
         >
             {/* Product Image Carousel */}
-            <div className="w-full bg-gray-300 flex h-fit justify-center items-center">
+            <div className="w-full bg-gray-300 flex min-h-[70%] justify-center items-center">
                 <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />
             </div>
 
