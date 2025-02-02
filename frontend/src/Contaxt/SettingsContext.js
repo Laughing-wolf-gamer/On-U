@@ -14,19 +14,144 @@ export const SettingsProvider = ({ children }) => {
         if(!activeToast){
             switch(type){
                 case "error":
-                    toast.error(message)
+                    toast.error(message,{
+                        duration: 4000,
+                        position: 'top-center',
+                      
+                        // Styling
+                        style: {},
+                        className: '',
+                      
+                        // Custom Icon
+                        icon: '👏',
+                      
+                        // Change colors of success/error/loading icon
+                        iconTheme: {
+                          primary: '#000',
+                          secondary: '#fff',
+                        },
+                      
+                        // Aria
+                        ariaProps: {
+                          role: 'status',
+                          'aria-live': 'polite',
+                        },
+                      
+                        // Additional Configuration
+                        removeDelay: 1000,
+                    })
                     break;
                 case "warning":
-                    toast.warning(message)
+                    toast.warning(message,{
+                        duration: 4000,
+                        position: 'top-center',
+                      
+                        // Styling
+                        style: {},
+                        className: '',
+                      
+                        // Custom Icon
+                        icon: '👏',
+                      
+                        // Change colors of success/error/loading icon
+                        iconTheme: {
+                          primary: '#000',
+                          secondary: '#fff',
+                        },
+                      
+                        // Aria
+                        ariaProps: {
+                          role: 'status',
+                          'aria-live': 'polite',
+                        },
+                      
+                        // Additional Configuration
+                        removeDelay: 1000,
+                    })
                     break;
                 case "info":
-                    toast.info(message)
+                    toast.info(message,{
+                        duration: 4000,
+                        position: 'top-center',
+                      
+                        // Styling
+                        style: {},
+                        className: '',
+                      
+                        // Custom Icon
+                        icon: '👏',
+                      
+                        // Change colors of success/error/loading icon
+                        iconTheme: {
+                          primary: '#000',
+                          secondary: '#fff',
+                        },
+                      
+                        // Aria
+                        ariaProps: {
+                          role: 'status',
+                          'aria-live': 'polite',
+                        },
+                      
+                        // Additional Configuration
+                        removeDelay: 1000,
+                    })
                     break;
                 case "success":
-                    toast.success(message)
+                    toast.success(message,{
+                        duration: 4000,
+                        position: 'top-center',
+                      
+                        // Styling
+                        style: {},
+                        className: '',
+                      
+                        // Custom Icon
+                        icon: '👏',
+                      
+                        // Change colors of success/error/loading icon
+                        iconTheme: {
+                          primary: '#000',
+                          secondary: '#fff',
+                        },
+                      
+                        // Aria
+                        ariaProps: {
+                          role: 'status',
+                          'aria-live': 'polite',
+                        },
+                      
+                        // Additional Configuration
+                        removeDelay: 1000,
+                    })
                     break;
                 default:
-                    toast.info(message)
+                    toast.info(message,{
+                        duration: 4000,
+                        position: 'top-center',
+                      
+                        // Styling
+                        style: {},
+                        className: '',
+                      
+                        // Custom Icon
+                        icon: '👏',
+                      
+                        // Change colors of success/error/loading icon
+                        iconTheme: {
+                          primary: '#000',
+                          secondary: '#fff',
+                        },
+                      
+                        // Aria
+                        ariaProps: {
+                          role: 'status',
+                          'aria-live': 'polite',
+                        },
+                      
+                        // Additional Configuration
+                        removeDelay: 1000,
+                    })
                     break;
             }
             showToast(message);
