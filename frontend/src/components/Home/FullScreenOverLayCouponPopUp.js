@@ -1,32 +1,38 @@
 import { X } from 'lucide-react';
 import React, { Fragment, useEffect, useState } from 'react';
-import { useAlert } from 'react-alert';
 import { sendGetCoupon } from '../../action/common.action';
 import { useDispatch } from 'react-redux';
 import popUp from '../images/popUp-image.jpg';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const FullScreenOverLayCouponPopUp = () => {
-    console.log("Pop Up images: ", popUp);
+    const dispatch = useDispatch();
+    const {checkAndCreateToast} = useSettingsContext();
     const [isOpen, setIsOpen] = useState(true);
     const [name, setName] = useState('');
-    const alert = useAlert();
     const [email, setEmail] = useState('');
-    const dispatch = useDispatch();
     const [loadingSent, setLoadingSent] = useState(false);
 
     const handleGetCouponClick = async () => {
-        setLoadingSent(true);
-        const sentSuccessful = await dispatch(sendGetCoupon({ fullName: name, email: email }));
-        console.log("email Sent: ", sentSuccessful);
-        if (sentSuccessful?.success) {
-            alert.success(sentSuccessful?.message || "Email sent successfully");
-            setName('');
-            setEmail('');
-            setIsOpen(false);
-        } else {
-            alert.error(sentSuccessful?.message || 'Invalid email or name');
+        try {
+            setLoadingSent(true);
+            const sentSuccessful = await dispatch(sendGetCoupon({ fullName: name, email: email }));
+            // Close the dialog if successful or display an error message if failed or invalid email/name
+            if (sentSuccessful?.success) {
+                checkAndCreateToast("success",sentSuccessful?.message || "Email sent successfully");
+                setName('');
+                setEmail('');
+                setIsOpen(false);
+            } else {
+                checkAndCreateToast("error",sentSuccessful?.message || 'Invalid email or name');
+            }
+            
+        } catch (error) {
+            console.error("Error sending coupon: ", error);
+            checkAndCreateToast("error","Failed to send coupon email. Please try again later.");
+        }finally{
+            setLoadingSent(false);
         }
-        setLoadingSent(false);
     };
 
     const handleHateCouponClick = () => {

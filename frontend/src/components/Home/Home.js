@@ -364,10 +364,10 @@ const Home = ({user}) => {
                         {/* <OurMotoData/> */}
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-screen justify-center items-center flex pr-3 pl-3 bg-slate-200'>
-                                <div className="grid grid-cols-2 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center">
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
                                     {
                                         Array(6).fill(0).map((_, index) => (
-                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[170px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
+                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[140px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
                                                 <div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
 
                                                 </div>
@@ -427,7 +427,7 @@ const Home = ({user}) => {
                                         </Link>
                                 )) : (
                                     Array(8).fill(0).map((_, index) => (
-                                        <div key={index} className='h-[200px] w-full bg-gray-100 p-1 animate-pulse' >
+                                        <div key={index} className='h-[200px] w-full bg-gray-100 p-1 animate-pulse'>
                                             <div className="w-[98%] h-[90%] bg-gray-300 animate-pulse rounded-lg" />
                                         </div>
                                     ))
@@ -504,12 +504,13 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                         {inView[index] ? (
                             <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
                         ) : (
-                            <div className="w-[170px] h-[400px] bg-gray-200 animate-pulse rounded-lg" >
+                            <div className="w-[140px] sm:w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] 2xl:w-[400px] h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[500px] 2xl:h-[550px] bg-gray-200 animate-pulse rounded-lg">
                                 <div className="w-full h-full relative">
-                                    <div className="min-w-full bg-gray-300 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+                                    <div className="min-w-full bg-gray-300 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 2xl:h-20 bottom-5 left-0 justify-start absolute animate-pulse items-start px-2 flex flex-row">
                                     </div>
                                 </div>
-                            </div> 
+                            </div>
+
                         )}
                     </div>
                 ))
