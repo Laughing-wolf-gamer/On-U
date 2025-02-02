@@ -878,7 +878,7 @@ async function TopSellingProducts(limit = 10) {
         throw new Error('Failed to retrieve top-selling products');
     }
 }
-async function findSellingProducts() {
+export const getTopSellingProducts = async (req,res)=>{
     try {
         // Step 1: Find all orders with status 'Delivered'
         const orders = await OrderModel.find({ status: 'Delivered' }).select('orderItems');
@@ -913,18 +913,8 @@ async function findSellingProducts() {
             _id: { $in: topSellingProductIds }
         });
 
-        return topSellingProducts;
-    } catch (err) {
-        console.error('Error finding selling products:', err);
-        logger.error('Error finding selling products: '+ err.message);
-        return [];
-    }
-}
-export const getTopSellingProducts = async (req,res)=>{
-    try {
-        const topSelling = await findSellingProducts();
         // console.log("Got top-selling products: ",topSelling);
-        res.status(200).json({Success:true,message: 'All Top Selling Orders',result:topSelling || []});
+        res.status(200).json({Success:true,message: 'All Top Selling Orders',result:topSellingProducts || []});
     } catch (error) {
         console.error("Error getting all delivered orders: ",error);
         logger.error("Error getting Top Selling Products orders: "+ error.message)
