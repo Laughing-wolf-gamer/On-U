@@ -48,21 +48,21 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
             );
         case 'bulletPoints':
             return (
-            <BulletPointsForm
-                onChange={(e) => {
-                setFormData({ ...formData, [controlItems.name]: e });
-                }}
-            />
+                <BulletPointsForm
+                    onChange={(e) => {
+                        setFormData({ ...formData, [controlItems.name]: e });
+                    }}
+                />
             );
         case 'sizeSelect':
             return (
-            <SizeSelector
-                sizeType={controlItems?.name}
-                sizeOptions={controlItems.options}
-                OnChange={(e) => {
-                setFormData({ ...formData, ['size']: e });
-                }}
-            />
+                <SizeSelector
+                    sizeType={controlItems?.name}
+                    sizeOptions={controlItems.options}
+                    OnChange={(e) => {
+                        setFormData({ ...formData, ['size']: e });
+                    }}
+                />
             );
         default:
             return (

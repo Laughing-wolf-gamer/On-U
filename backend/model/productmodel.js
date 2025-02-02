@@ -90,8 +90,19 @@ const productModelSchema = new mongoose.Schema({
     length:{type:Number},
     weight:{type:Number},
     breadth:{type:Number},
-    
 },{timestamps:true})
+productModelSchema.pre('save', function (next) {
+    if (this.isModified('Rating')) {
+        // Calculate the average rating
+        if (this.Rating.length === 0) {
+            this.averageRating = 0;
+        } else {
+            const total = this.Rating.reduce((acc, review) => acc + review.rating, 0);
+            this.averageRating = total / this.Rating.length;
+        }
+    }
+    next();
+});
 productModelSchema.virtual('averageRating').get(function () {
     if (this.Rating.length === 0) return 0;
     const total = this.Rating.reduce((acc, review) => acc + review.rating, 0);

@@ -1,4 +1,4 @@
-import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData } from "@/store/admin/status-slice";
+import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData } from "@/store/admin/status-slice";
 import { BoxIcon, DollarSign, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -14,6 +14,7 @@ import * as XLSX from 'xlsx';
 import xl_icon from '../../assets/xl_icon.png';
 import pdf_icon from '../../assets/pdf_icon.png';
 import csv_icon from '../../assets/csv_icon.png';
+import { Label } from "@/components/ui/label";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -197,7 +198,7 @@ const getDateRange = (preset) => {
 };
 const AdminDashboard = ({ user }) => {
     const{startDate:defaulStart, endDate:defaultEnd} = getDateRange("THIS MONTH");
-    const { isLoading, TotalCustomers, TotalProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
+    const { isLoading, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
     const dispatch = useDispatch();
     const [stats, setStats] = useState({ title: "Total Customers", value: TotalCustomers });
     const [currentGraphData, setGraphData] = useState({ title: "Total Orders", value: [] });
@@ -262,6 +263,8 @@ const AdminDashboard = ({ user }) => {
         dispatch(fetchAllProductsCount());
         dispatch(fetchAllOrdersCount());
         dispatch(fetchMaxDeliveredOrders());
+        dispatch(fetchRecentOrders());
+        dispatch(fetchTopSellingProducts());
         // console.log("Fetching all customers: ",startDate,endDate);
         dispatch(getCustomerGraphData({ startDate, endDate, period: 'monthly' }));
         dispatch(getOrderDeliveredGraphData({ startDate, endDate, period: 'monthly' }));
@@ -272,127 +275,130 @@ const AdminDashboard = ({ user }) => {
     }, [dispatch, startDate, endDate]);
     useEffect(()=>{
         if(CustomerGraphData && CustomerGraphData.length > 0){
-        if(!startingGraphData){
-            startingGraphData = true;
-            handleFilterChange("THIS MONTH",CustomerGraphData)
-        }
+            if(!startingGraphData){
+                startingGraphData = true;
+                handleFilterChange("THIS MONTH",CustomerGraphData)
+            }
         }
     },[CustomerGraphData,startingGraphData])
-    console.log("CustomerGraphData Data: ", CustomerGraphData);
+    console.log("Top Selling Products Data: ", TopSellingProducts);
     return (
-        <>
+        <Fragment>
         {isLoading ? <LoadingSpinner/>:<Fragment>
-            <div className="flex flex-col h-full w-full">
-                <div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
-                <Header />
-                <div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg">
-                    <StatsCard
-                    isActive={currentGraphData.title === "Total Orders"}
-                    onChange={(title, value) => {
-                        setStats({ title, value });
-                        setGraphData({ title, value: OrdersGraphData });
-                        handleFilterChange("THIS MONTH",OrdersGraphData)
-                    }}
-                    title="Total Orders"
-                    value={TotalOrders}
-                    
-                    icon={<ShoppingBasket className="text-3xl text-blue-600" />}
-                    />
-                    <StatsCard
-                    isActive={currentGraphData.title === "Total Customers"}
-                    onChange={(title, value) => {
-                        setStats({ title, value });
-                        setGraphData({ title, value: CustomerGraphData });
-                        handleFilterChange("THIS MONTH",CustomerGraphData)
-                    }}
-                    title="Total Customers"
-                    value={TotalCustomers}
-                    icon={<User className="text-3xl text-yellow-600" />}
-                    />
-                    <StatsCard
-                    isActive={currentGraphData.title === "Max Delivered Orders"}
-                    onChange={(title, value) => {
-                        setStats({ title, value });
-                        setGraphData({ title, value: OrderDeliverData });
-                        handleFilterChange("THIS MONTH",OrderDeliverData)
-                    }}
-                    title="Max Delivered Orders"
-                    value={MaxDeliveredOrders}
-                    icon={<PackageCheck className="text-3xl text-pink-500" />}
-                    />
-                    <StatsCard
-                    isActive={currentGraphData.title === "Total Products"}
-                    onChange={(title, value) => {
-                        setStats({ title, value });
-                    }}
-                    title="Total Products"
-                    value={TotalProducts}
-                    icon={<BoxIcon className="text-3xl text-orange-600" />}
-                    />
-                    <StatsCard
-                    title="Total Revenue"
-                    value={`₹${convertAmount(randomRevenue)}`}
-                    icon={<IndianRupee className="text-3xl text-green-600" />}
-                    />
-                    
-                </div>
-                </div>
-
-                <div className="flex-1 p-10">
-                <h2 className="text-xl font-semibold text-gray-700 mb-4">{currentGraphData?.title} Growth Over Time</h2>
-                <div className="bg-white p-5 rounded-lg shadow-md">
-                    <div className="flex justify-between items-center mb-4">
-                    <span className="text-lg font-medium">Select Date Range</span>
-                    <select
-                        value={dateLabel}
-                        onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
-                        className="px-4 py-2 border rounded-md"
-                    >
-                        <option value="TODAY">Today</option>
-                        <option value="YESTERDAY">Yesterday</option>
-                        <option value="LAST 7 DAYS">Last 7 Days</option>
-                        <option value="THIS MONTH">This Month</option>
-                        <option value="CUSTOM">Custom</option>
-                    </select>
-                    </div>
-                    <div className="text-sm text-gray-600">
-                    <p>Start Date: {startDate}</p>
-                    <p>End Date: {endDate}</p>
-                    </div>
-                    <div className="mb-4">
-                    <div className="flex gap-3">
-                        <input
-                        type="date"
-                        value={startDate}
-                        onChange={(e) => {
-                            setStartDate(e.target.value)
-                            newStartDate = e.target.value;
-                            handleSetCustomStartDate(currentGraphData?.value || [])
+                <div className="flex flex-col h-full w-full">
+                    <div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
+                    <Header />
+                    <div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg">
+                        <StatsCard
+                        isActive={currentGraphData.title === "Total Orders"}
+                        onChange={(title, value) => {
+                            setStats({ title, value });
+                            setGraphData({ title, value: OrdersGraphData });
+                            handleFilterChange("THIS MONTH",OrdersGraphData)
                         }}
-                        className="px-4 py-2 border rounded-md"
+                        title="Total Orders"
+                        value={TotalOrders}
+                        
+                        icon={<ShoppingBasket className="text-3xl text-blue-600" />}
                         />
-                        <input
-                        type="date"
-                        value={endDate}
-                        onChange={(e) => {
-                            setEndDate(e.target.value)
-                            newEndDate = e.target.value;
-                            handleSetCustomStartDate(currentGraphData?.value || [])
+                        <StatsCard
+                        isActive={currentGraphData.title === "Total Customers"}
+                        onChange={(title, value) => {
+                            setStats({ title, value });
+                            setGraphData({ title, value: CustomerGraphData });
+                            handleFilterChange("THIS MONTH",CustomerGraphData)
                         }}
-                        min={startDate}
-                        className="px-4 py-2 border rounded-md"
+                        title="Total Customers"
+                        value={TotalCustomers}
+                        icon={<User className="text-3xl text-yellow-600" />}
                         />
+                        <StatsCard
+                        isActive={currentGraphData.title === "Max Delivered Orders"}
+                        onChange={(title, value) => {
+                            setStats({ title, value });
+                            setGraphData({ title, value: OrderDeliverData });
+                            handleFilterChange("THIS MONTH",OrderDeliverData)
+                        }}
+                        title="Max Delivered Orders"
+                        value={MaxDeliveredOrders}
+                        icon={<PackageCheck className="text-3xl text-pink-500" />}
+                        />
+                        <StatsCard
+                        isActive={currentGraphData.title === "Total Products"}
+                        onChange={(title, value) => {
+                            setStats({ title, value });
+                        }}
+                        title="Total Products"
+                        value={TotalProducts}
+                        icon={<BoxIcon className="text-3xl text-orange-600" />}
+                        />
+                        <StatsCard
+                        title="Total Revenue"
+                        value={`₹${convertAmount(randomRevenue)}`}
+                        icon={<IndianRupee className="text-3xl text-green-600" />}
+                        />
+                        
                     </div>
                     </div>
-                    <div className="h-fit mx-auto">
-                    <CustomerBarChart data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
 
+                    <div className="flex-1 p-10">
+                    <h2 className="text-xl font-semibold text-gray-700 mb-4">{currentGraphData?.title} Growth Over Time</h2>
+                    <div className="bg-white p-5 rounded-lg shadow-md">
+                        <div className="flex justify-between items-center mb-4">
+                        <span className="text-lg font-medium">Select Date Range</span>
+                        <select
+                            value={dateLabel}
+                            onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
+                            className="px-4 py-2 border rounded-md"
+                        >
+                            <option value="TODAY">Today</option>
+                            <option value="YESTERDAY">Yesterday</option>
+                            <option value="LAST 7 DAYS">Last 7 Days</option>
+                            <option value="THIS MONTH">This Month</option>
+                            <option value="CUSTOM">Custom</option>
+                        </select>
+                        </div>
+                        <div className="text-sm text-gray-600">
+                        <p>Start Date: {startDate}</p>
+                        <p>End Date: {endDate}</p>
+                        </div>
+                        <div className="mb-4">
+                        <div className="flex gap-3">
+                            <input
+                            type="date"
+                            value={startDate}
+                            onChange={(e) => {
+                                setStartDate(e.target.value)
+                                newStartDate = e.target.value;
+                                handleSetCustomStartDate(currentGraphData?.value || [])
+                            }}
+                            className="px-4 py-2 border rounded-md"
+                            />
+                            <input
+                            type="date"
+                            value={endDate}
+                            onChange={(e) => {
+                                setEndDate(e.target.value)
+                                newEndDate = e.target.value;
+                                handleSetCustomStartDate(currentGraphData?.value || [])
+                            }}
+                            min={startDate}
+                            className="px-4 py-2 border rounded-md"
+                            />
+                        </div>
+                        </div>
+                        <div className="h-fit mx-auto">
+                        <CustomerBarChart data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
+
+                        </div>
+                    </div>
                     </div>
                 </div>
-                </div>
-            </div>
-            </Fragment>}
-        </>
+                <TopSellingProductsTable products={TopSellingProducts} />
+                <AllRecentOrders allOrders={RecentOrders}/>
+            </Fragment>
+            }
+        </Fragment>
     );
 };
 
@@ -407,6 +413,182 @@ const LoadingSpinner = () => {
         </div>
     )
 }
+const TopSellingProductsTable = ({products}) => {
+    // Sample data for top-selling products
+    /* const products = [
+        {
+            _id: "67753aed239eb0866aa05893",
+            productId: "12345",
+            title: "Effortlessly stylish linen-blend shirt features a mandarin collar",
+            price: 1299,
+            salePrice: 1199,
+            totalSold: 100,  // Total units sold
+            stock: 39,  // Current stock available
+            rating: 4.2,  // Average rating
+        },
+        {
+            _id: "67753aed239eb0866aa05894",
+            productId: "12346",
+            title: "Smartphone with excellent battery life and performance",
+            price: 4999,
+            salePrice: 4599,
+            totalSold: 150,
+            stock: 25,
+            rating: 4.5,
+        },
+        {
+            _id: "67753aed239eb0866aa05895",
+            productId: "12347",
+            title: "Wireless Bluetooth Headphones with Noise Cancellation",
+            price: 1999,
+            salePrice: 1799,
+            totalSold: 250,
+            stock: 100,
+            rating: 4.8,
+        },
+        {
+            _id: "67753aed239eb0866aa05896",
+            productId: "12348",
+            title: "4K Ultra HD Smart TV with Bluetooth Connectivity",
+            price: 7999,
+            salePrice: 6999,
+            totalSold: 50,
+            stock: 10,
+            rating: 4.6,
+        },
+    ]; */
+
+    return (
+        <div className="py-12 bg-gray-100">
+            <div className="max-w-7xl mx-auto px-6">
+                <h2 className="text-3xl font-bold text-center mb-8">Top Selling Products</h2>
+                <div className="overflow-x-auto bg-white shadow-lg rounded-lg">
+                    <table className="min-w-full table-auto">
+                        <thead>
+                            <tr className="bg-gray-800 text-white">
+                                <th className="px-6 py-3 text-left">Product ID</th>
+                                <th className="px-6 py-3 text-left">Product Title</th>
+                                <th className="px-6 py-3 text-left">Price</th>
+                                <th className="px-6 py-3 text-left">Sale Price</th>
+                                {/* <th className="px-6 py-3 text-left">Total Sold</th> */}
+                                <th className="px-6 py-3 text-left">Stock</th>
+                                <th className="px-6 py-3 text-left">Rating</th>
+                                <th className="px-6 py-3 text-left">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {products.map((product) => (
+                                <tr key={product._id} className="border-b hover:bg-gray-50">
+                                    <td className="px-6 py-4">{product?._id}</td>
+                                    <td className="px-6 py-4">{product?.title}</td>
+                                    <td className="px-6 py-4">₹{product?.price}</td>
+                                    <td className="px-6 py-4">₹{product?.salePrice}</td>
+                                    {/* <td className="px-6 py-4">{product.totalSold}</td> */}
+                                    <td className="px-6 py-4">{product.totalStock}</td>
+                                    <td className="px-6 py-4">
+                                        <div className="flex items-center">
+                                            <span className="text-yellow-500">
+                                                {"★".repeat(Math.floor(product?.averageRating))}
+                                                {"☆".repeat(5 - Math.floor(product?.averageRating))}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td className="px-6 py-4">
+                                        {/* <button className="text-blue-500 hover:text-blue-700 mr-4">
+                                            Edit
+                                        </button> */}
+                                        <button className="text-red-500 hover:text-red-700">
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    );
+};
+
+const AllRecentOrders = ({allOrders}) => {
+    // Sample data for recent orders
+    /* const orders = [
+        {
+            id: 1,
+            customer: 'John Doe',
+            date: '2025-02-01',
+            total: '$120.99',
+            status: 'Shipped',
+        },
+        {
+            id: 2,
+            customer: 'Jane Smith',
+            date: '2025-02-01',
+            total: '$56.49',
+            status: 'Processing',
+        },
+        {
+            id: 3,
+            customer: 'Mike Johnson',
+            date: '2025-01-30',
+            total: '$89.75',
+            status: 'Delivered',
+        },
+        {
+            id: 4,
+            customer: 'Emily Davis',
+            date: '2025-01-29',
+            total: '$215.00',
+            status: 'Shipped',
+        },
+    ]; */
+  
+    return (
+        <div className="py-12 bg-gray-50">
+            <div className="max-w-7xl mx-auto px-6">
+            <h2 className="text-3xl font-bold text-center mb-8">Recent Orders</h2>
+            <div className="overflow-x-auto">
+                <table className="min-w-full bg-white shadow-md rounded-lg">
+                <thead>
+                    <tr className="border-b">
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Order ID</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Customer</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Date</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Total</th>
+                    <th className="py-3 px-4 text-left text-sm font-semibold text-gray-700">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {allOrders && allOrders.length > 0 && allOrders.map((order) => (
+                        <tr key={order.id} className="border-b hover:bg-gray-100">
+                            <td className="py-3 px-4 text-sm font-medium text-gray-700">{order._id}</td>
+                            <td className="py-3 px-4 text-sm text-gray-700">{order?.userId?.name}</td>
+                            <td className="py-3 px-4 text-sm text-gray-600">{new Date(order?.createdAt).toLocaleDateString()}</td>
+                            <td className="py-3 px-4 text-sm font-semibold text-gray-800">₹{order?.TotalAmount}</td>
+                            <td className="py-3 px-4 text-sm">
+                            <Label
+                                className={`px-3 py-1 rounded-full text-xs ${
+                                order.status === 'Order Shipped'
+                                    ? 'bg-green-100 text-green-700'
+                                    : order.status === 'Processing'
+                                    ? 'bg-yellow-100 text-yellow-700'
+                                    : 'bg-blue-100 text-blue-700'
+                                }`}
+                            >
+                                {order.status}
+                            </Label>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+                </table>
+            </div>
+            </div>
+        </div>
+    );
+};
+
 
 
 export default AdminDashboard;

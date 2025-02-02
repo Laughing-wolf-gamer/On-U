@@ -14,7 +14,9 @@ const adminStatusSlice = createSlice({
         MaxDeliveredOrders:0,
         CustomerGraphData:[],
         OrdersGraphData:[],
-        OrderDeliverData:[]
+        OrderDeliverData:[],
+        TopSellingProducts:[],
+        RecentOrders:[],
     },
     reducers:{},
     extraReducers:(builder)=>{
@@ -77,10 +79,26 @@ const adminStatusSlice = createSlice({
         }).addCase(fetchMaxDeliveredOrders.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.MaxDeliveredOrders = action?.payload?.result;
-            console.log("Max Delivered Orders ",action?.payload?.result);
+            // console.log("Max Delivered Orders ",action?.payload?.result);
         }).addCase(fetchMaxDeliveredOrders.rejected,(state)=>{
             state.isLoading = false;
             state.MaxDeliveredOrders = 0
+        }).addCase(fetchTopSellingProducts.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchTopSellingProducts.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.TopSellingProducts = action?.payload?.result;
+        }).addCase(fetchTopSellingProducts.rejected,(state)=>{
+            state.isLoading = false;
+            state.TopSellingProducts = [];
+        }).addCase(fetchRecentOrders.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchRecentOrders.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.RecentOrders = action?.payload?.result;
+        }).addCase(fetchRecentOrders.rejected,(state)=>{
+            state.isLoading = false;
+            state.RecentOrders = [];
         })
     }
 })
@@ -114,6 +132,28 @@ export const fetchAllCustomers = createAsyncThunk('/admin/stats/totalUserCount',
         // const token = sessionStorage.getItem('token');
         // console.log(token);
         const response = await axios.get(`${BASE_URL}/admin/stats/getTotalAllUsersCount`,Header());
+        // console.log("Result",response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+})
+export const fetchTopSellingProducts = createAsyncThunk('/admin/stats/topsellingproducts',async ()=>{
+    try {
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
+        const response = await axios.get(`${BASE_URL}/admin/stats/getTopSellingProducts`,Header());
+        // console.log("Result",response.data);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+})
+export const fetchRecentOrders = createAsyncThunk('/admin/stats/recentOrders',async ()=>{
+    try {
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
+        const response = await axios.get(`${BASE_URL}/admin/stats/getRecentOrders`,Header());
         console.log("Result",response.data);
         return response.data;
     } catch (error) {

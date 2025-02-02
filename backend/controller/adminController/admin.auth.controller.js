@@ -829,6 +829,108 @@ export const getMaxDeliveredOrders = async (req,res)=>{
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
+export const getRecentOrders = async (req,res)=>{
+    try {
+        const recentOrders = await OrderModel.find().populate('userId')
+        .sort({ createdAt: -1 })  // Sort by createdAt in descending order (latest first)
+        .limit(10);  // Limit the results to 10 most recent orders
+        res.status(200).json({Success:true,message: 'All Recent Orders',result:recentOrders || []});
+    } catch (error) {
+        console.error("Error getting all delivered orders: ",error);
+        logger.error("Error getting Recent orders: "+ error.message)
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
+async function TopSellingProducts(limit = 10) {
+    try {
+         // Aggregate to find top-selling products
+        const topSelling = await OrderModel.aggregate([
+            { $unwind: "$orderItems" },  // Flatten the 'orderItems' array to access individual products
+            { $group: {
+                _id: "$orderItems.productId._id",  // Group by productId (referencing the Product collection)
+                totalQuantitySold: { $sum: "$orderItems.productId.quantity" },  // Sum the quantities sold for each product
+            }
+            },
+            { $sort: { totalQuantitySold: -1 } },  // Sort by quantity sold (descending)
+            { $limit: limit },  // Limit to the top N products (default is 10)
+            { $lookup: {
+                from: "product",  // Look up product details from the 'products' collection
+                localField: "_id",  // Field from the aggregation result (productId)
+                foreignField: "_id",  // Field in the 'products' collection to match
+                as: "productDetails",  // Field to hold the matched product details
+            }
+            },
+            { $unwind: "$productDetails" },  // Unwind the productDetails array to get a single product object
+            { $project: {
+                _id: 0,  // Exclude the _id field from the final result
+                productId: "$_id",  // The productId
+                name: "$productDetails.title",  // Product name from the Product collection
+                price: "$productDetails.price",  // Product price from the Product collection
+                totalQuantitySold: 1,  // Include total quantity sold
+            }
+            }
+        ]);
+    
+        return topSelling;
+    } catch (error) {
+        console.error('Error fetching top-selling products: ', error);
+        logger.error('Error fetching top-selling products: ' + error.message);
+        throw new Error('Failed to retrieve top-selling products');
+    }
+}
+async function findSellingProducts() {
+    try {
+        // Step 1: Find all orders with status 'Delivered'
+        const orders = await OrderModel.find({ status: 'Delivered' }).select('orderItems');
+
+        // Step 2: Create a map to store frequency of productIds
+        const productCountMap = {};
+
+        // Loop through all orders and their orderItems to count productId frequency
+        orders.forEach(order => {
+            order.orderItems.forEach(item => {
+                const productId = item.productId._id; // Assuming productId is an object with _id
+                if (productId) {
+                    productCountMap[productId] = (productCountMap[productId] || 0) + 1;
+                }
+            });
+        });
+
+        // Step 3: Convert productCountMap into an array of { productId, count }
+        const productCountArray = Object.entries(productCountMap).map(([productId, count]) => ({
+            productId,
+            count,
+        }));
+
+        // Step 4: Sort by count in descending order to get the most sold products first
+        productCountArray.sort((a, b) => b.count - a.count);
+
+        // Step 5: Get top-selling productIds (for example, top 5 products)
+        const topSellingProductIds = productCountArray.slice(0, 5).map(item => item.productId);
+
+        // Step 6: Query the Products collection to get the details of the top-selling products
+        const topSellingProducts = await ProductModel.find({
+            _id: { $in: topSellingProductIds }
+        });
+
+        return topSellingProducts;
+    } catch (err) {
+        console.error('Error finding selling products:', err);
+        logger.error('Error finding selling products: '+ err.message);
+        return [];
+    }
+}
+export const getTopSellingProducts = async (req,res)=>{
+    try {
+        const topSelling = await findSellingProducts();
+        // console.log("Got top-selling products: ",topSelling);
+        res.status(200).json({Success:true,message: 'All Top Selling Orders',result:topSelling || []});
+    } catch (error) {
+        console.error("Error getting all delivered orders: ",error);
+        logger.error("Error getting Top Selling Products orders: "+ error.message)
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
 export const getAllProducts = async (req,res)=>{
     try {
         const products = await ProductModel.find({});
