@@ -61,23 +61,26 @@ const FullScreenOverLayCouponPopUp = () => {
         <Fragment>
             {isOpen && (
                 <div
-                    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center"
+                    className="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-center transition-colors duration-500 ease-in-out"
                     onClick={handleOverlayClick} // Close on click outside
                 >
                     <div
                         className="bg-white w-11/12 md:w-1/2 h-[500px] md:h-3/4 2xl:w-[700px] 2xl:h-[600px] grid grid-cols-1 md:grid-cols-2 gap-3 relative overflow-hidden my-auto"
                         onClick={(e) => e.stopPropagation()} // Prevent click from propagating to the overlay
                     >
-                        <button className='absolute w-10 h-10 text-black md:top-3 top-2 left-6 cursor-pointer' onClick={handleHateCouponClick}>
+                        <button className='absolute w-10 h-10 text-black md:top-3 top-2 md:left-6 right-2 cursor-pointer' onClick={handleHateCouponClick}>
                             <X />
                         </button>
 
                         {/* Left Column - Form */}
                         <div className="flex flex-col justify-between p-8 md:p-10 max-h-full">
-                            <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
-                            <p className="text-gray-800 flex-wrap">
-                                Join us to receive 20% off on your first purchase. Sign up today and get the coupon!
-                            </p>
+                            <div className='w-full grid grid-cols-1 gap-3'>
+                                <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
+                                <p className="text-gray-800 flex-wrap text-inherit">
+                                    Join us to receive 20% off on your first purchase. Sign up today and get the coupon!
+                                </p>
+
+                            </div>
 
                             {/* Input Fields */}
                             <div className="space-y-3 h-fit">
@@ -121,7 +124,7 @@ const FullScreenOverLayCouponPopUp = () => {
                                 </button>
                                 <button
                                     onClick={handleHateCouponClick}
-                                    className="w-full p-2 bg-white text-gray-500 border-2 hover:bg-gray-50 hover:text-gray-900"
+                                    className="w-full p-2 bg-white text-gray-700 border-2 hover:bg-gray-50 hover:text-gray-900"
                                 >
                                     NO THANKS
                                 </button>
