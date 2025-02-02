@@ -180,7 +180,7 @@ const Allproductpage = ({user}) => {
                     <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
                             <div className='min-h-[100vw] flex flex-col justify-between items-start'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-3 px-2 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {Array(10).fill(0).map((_, index) => (
                                         <li key={`productId_Skeleton_${index}`} className="w-full">
                                             <ProductCardSkeleton/>
@@ -190,13 +190,14 @@ const Allproductpage = ({user}) => {
                             </div>
                         ) : (
                             <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 2xl:gap-4 lg:gap-10 md:gap-10 sm:gap-5 gap-2 px-2 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
-                                    {pro && pro.length > 0 && pro.map((p,index) => (
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                    {pro && pro.length > 0 && pro.map((p, index) => (
                                         <li key={`productId_${p._id}_${index}`} className="w-full">
-                                            <Single_product pro={p} user={user} wishlist={wishlist}/>
+                                            <Single_product pro={p} user={user} wishlist={wishlist} />
                                         </li>
                                     ))}
                                 </ul>
+
 
 
                                 <div className="paginationBox font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">

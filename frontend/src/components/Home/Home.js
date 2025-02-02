@@ -296,22 +296,20 @@ const Home = ({user}) => {
                     </Fragment >
                 :
                     <Fragment>
-                        {
-                            <div className='bg-slate-200'>
-                                <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-                                    {
-                                        !bannerLoading && Small_Screen_Section_1 && Small_Screen_Section_1.urls.length > 0 ? <DraggingScrollView images={Small_Screen_Section_1.urls} />:(
-                                            // Skeleton Loader for the Carousel Items
-                                            Array(8).fill(0).map((_, index) => (
-                                                <div className='h-[100px] min-h-[100px] bg-gray-100 p-3 animate-pulse'>
-                                                    <div key={index} className="w-[98px] h-[80px] bg-gray-300 animate-pulse" />
-                                                </div>
-                                            ))
-                                        )
-                                    }
-                                </ul>
-                            </div>
-                        }
+                        {/* <div className='bg-slate-200'>
+                            <ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+                                {
+                                    !bannerLoading && Small_Screen_Section_1 && Small_Screen_Section_1.urls.length > 0 ? <DraggingScrollView images={Small_Screen_Section_1.urls} />:(
+                                        // Skeleton Loader for the Carousel Items
+                                        Array(8).fill(0).map((_, index) => (
+                                            <div className='h-[100px] min-h-[100px] bg-gray-100 p-3 animate-pulse'>
+                                                <div key={index} className="w-[98px] h-[80px] bg-gray-300 animate-pulse" />
+                                            </div>
+                                        ))
+                                    )
+                                }
+                            </ul>
+                        </div> */}
                         
 
                         <div className='w-[100vw] bg-slate-200'>
