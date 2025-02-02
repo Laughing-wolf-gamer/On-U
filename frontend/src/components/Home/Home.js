@@ -378,7 +378,7 @@ const Home = ({user}) => {
                             </div>
                         }
                         <div className="w-screen h-fit flex flex-col bg-slate-200 justify-center items-center pb-7 space-y-3">
-                            <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
+                            <h1 className='text-xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
