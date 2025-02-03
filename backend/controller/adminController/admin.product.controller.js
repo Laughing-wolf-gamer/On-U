@@ -370,7 +370,6 @@ export const addNewProduct = async (req, res) => {
 export const fetchAllProducts = async (req, res) => {
     try {
         const{page} = req.query;
-        // console.log("Admin Products Page: ",req.query);
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments();
         const itemsPerPage = 10;

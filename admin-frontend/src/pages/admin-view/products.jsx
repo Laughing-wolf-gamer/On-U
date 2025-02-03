@@ -414,7 +414,7 @@ const AdminProducts = () => {
                         </Button>
                     </div>
                     <PaginatedProductList 
-                        sortedProducts={allProducts} 
+                        sortedProducts={sortedProducts} 
                         totalProducts={totalProducts} 
                         maxAmountPerPage={maxAmountPerPage} 
                         currentPage={currentPage}
