@@ -7,14 +7,14 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { addProductsFromElement } from '@/config';
 import { addNewProduct, delProducts, editProducts, fetchAllProducts } from '@/store/admin/product-slice';
 import { fetchAllOptions } from '@/store/common-slice';
-import {  X } from 'lucide-react';
+import {  ChevronLeft, ChevronRight, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
 
-
+const maxAmountPerPage = 10;
 
 const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData, setFormData, onSubmit, handleOpenCloseWindow }) => {
     const [categories, setCategories] = useState([]);
@@ -67,21 +67,21 @@ const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData,
 
     const setAllOptions = () => {
         if (AllOptions && AllOptions.length > 0) {
-        AllOptions.map(item => {
-            switch (item.type) {
-            case 'category':
-                setCategories(AllOptions.filter(item => item.type === 'category'));
-                break;
-            case 'subcategory':
-                setSubcategories(AllOptions.filter(item => item.type === "subcategory"));
-                break;
-            case 'gender':
-                setGenders(AllOptions.filter(item => item.type === "gender"));
-                break;
-            default:
-                break;
-            }
-        });
+            AllOptions.map(item => {
+                switch (item.type) {
+                case 'category':
+                    setCategories(AllOptions.filter(item => item.type === 'category'));
+                    break;
+                case 'subcategory':
+                    setSubcategories(AllOptions.filter(item => item.type === "subcategory"));
+                    break;
+                case 'gender':
+                    setGenders(AllOptions.filter(item => item.type === "gender"));
+                    break;
+                default:
+                    break;
+                }
+            });
         }
     };
 
@@ -91,25 +91,25 @@ const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData,
 
     return (
         <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-        <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-lg m-10 relative max-h-screen overflow-y-auto">
-            <h2 className="text-xl font-bold text-gray-700 mb-4">Add New Product</h2>
-            <div className="flex justify-end mt-4">
-            <Button onClick={handleOpenCloseWindow} className="text-white p-2 top-1 absolute right-2 rounded-full mr-2">
-                <X className="w-6 h-6" />
-            </Button>
+            <div className="bg-white w-full max-w-lg p-6 rounded-2xl shadow-lg m-10 relative max-h-screen overflow-y-auto">
+                <h2 className="text-xl font-bold text-gray-700 mb-4">Add New Product</h2>
+                <div className="flex justify-end mt-4">
+                    <Button onClick={handleOpenCloseWindow} className="text-white p-2 top-1 absolute right-2 rounded-full mr-2">
+                        <X className="w-6 h-6" />
+                    </Button>
+                </div>
+                {
+                !isLoading && updatedProductElements &&
+                    <CommonForm
+                        formControls={updatedProductElements}
+                        buttonText={!currentEditingId ? "Add" : "Edit"}
+                        formData={formData}
+                        setFormData={setFormData}
+                        handleSubmit={onSubmit}
+                        isBtnValid={true}
+                    />
+                }
             </div>
-            {
-            !isLoading && updatedProductElements &&
-            <CommonForm
-                formControls={updatedProductElements}
-                buttonText={!currentEditingId ? "Add" : "Edit"}
-                formData={formData}
-                setFormData={setFormData}
-                handleSubmit={onSubmit}
-                isBtnValid={true}
-            />
-            }
-        </div>
         </div>
     );
 };
@@ -137,6 +137,7 @@ const AdminProducts = () => {
     const [sizes, setSizes] = useState([]);
     const [genders, setGenders] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
     const specialCategory = addProductsFromElement.find(e => e.name === "specialCategory").options.filter(s => s.id !== 'none');
     const [filters, setFilters] = useState({
         category: "",
@@ -147,6 +148,11 @@ const AdminProducts = () => {
         size: "",
         sort: "" // Add sort filter here
     });
+    const setCurrentPageNo = (e) => {
+        setCurrentPage(e);
+        console.log("change Page Number.");
+        dispatch(fetchAllProducts({pageNo:currentPage}));
+    };
 
     const [currentPreviewProductId, setCurrentPreviewProduct] = useState(null);
     const [showPopUp, setShowPopUp] = useState(false);
@@ -179,7 +185,7 @@ const AdminProducts = () => {
         const data = await dispatch(delProducts(productId));
         if (data?.payload?.Success) {
             toast("Product Deleted Success")
-            dispatch(fetchAllProducts());
+            dispatch(fetchAllProducts({pageNo:currentPage}));
         }
         } catch (error) {
             console.error(`Failed to delete ${productId} `, error);
@@ -200,7 +206,7 @@ const AdminProducts = () => {
                 setUploadedImageUrls([]);
                 setFormData(initialFormData);
                 setCurrentEditingId(null);
-                dispatch(fetchAllProducts());
+                dispatch(fetchAllProducts({pageNo:currentPage}));
                 toast("Product Updated Success")
             }
         } catch (error) {
@@ -219,7 +225,7 @@ const AdminProducts = () => {
                     setOpenCreateProduct(false);
                     setUploadedImageUrls([]);
                     setFormData(initialFormData);
-                    dispatch(fetchAllProducts());
+                    dispatch(fetchAllProducts({pageNo:currentPage}));
                     toast("Product Added Success")
                 }
             } catch (error) {
@@ -263,7 +269,7 @@ const AdminProducts = () => {
     },[AllOptions]);
 
     useEffect(() => {
-        dispatch(fetchAllProducts());
+        dispatch(fetchAllProducts({pageNo:currentPage}));
     }, [dispatch]);
 
     const handleFilterChange = (name,value) => {
@@ -407,16 +413,17 @@ const AdminProducts = () => {
                             Add New Product
                         </Button>
                     </div>
-
-                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
-                        {sortedProducts.length > 0 ? (
-                            sortedProducts.map((product, i) => (
-                                <AdminProductTile key={`products_${i}`} togglePopUp={togglePopUp} setOpenProductPreview={setCurrentPreviewProduct} product={product} />
-                            ))
-                        ) : (
-                            <p>No Products found for the selected filter.</p>
-                        )}
-                    </ul>
+                    <PaginatedProductList 
+                        sortedProducts={allProducts} 
+                        totalProducts={totalProducts} 
+                        maxAmountPerPage={maxAmountPerPage} 
+                        currentPage={currentPage}
+                        setCurrentPage={setCurrentPage}
+                        setCurrentPageNo={setCurrentPageNo}
+                        togglePopUp={togglePopUp}
+                        setCurrentPreviewProduct={setCurrentPreviewProduct}
+                    
+                    />
                     <div>
                         {/* Add Product Overlay */}
                         {openCreateProduct && (
@@ -453,6 +460,67 @@ const AdminProducts = () => {
                         }}
                         OnDelete={handleDeleteProducts}
                     />
+                )}
+            </div>
+        </div>
+    );
+};
+const PaginatedProductList = ({ sortedProducts, totalProducts, maxAmountPerPage, currentPage, setCurrentPage, setCurrentPageNo, togglePopUp, setCurrentPreviewProduct }) => {
+    // Calculate the total number of pages
+    const totalPages = Math.ceil(totalProducts / maxAmountPerPage);
+
+    // Slice the products for the current page
+    const startIndex = (currentPage - 1) * maxAmountPerPage;
+    const endIndex = startIndex + maxAmountPerPage;
+    const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
+
+    return (
+        <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
+            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                {currentPageProducts.length > 0 ? (
+                    currentPageProducts.map((product, i) => (
+                        <AdminProductTile 
+                            key={`products_${i}`} 
+                            togglePopUp={togglePopUp} 
+                            setOpenProductPreview={setCurrentPreviewProduct} 
+                            product={product} 
+                        />
+                    ))
+                ) : (
+                    <p>No Products found for the selected filter.</p>
+                )}
+            </ul>
+
+            <div className="font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-row sm:flex-row items-center w-full justify-center space-x-3">
+                {/* Pagination Info */}
+                <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
+                    Page {currentPage} of {totalPages}
+                </span>
+
+                {/* Previous Button */}
+                {currentPage === 1 ? "" : (
+                    <button
+                        className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                        onClick={() => {
+                            setCurrentPage(currentPage - 1);
+                            setCurrentPageNo(currentPage - 1);
+                        }}
+                    >
+                        <ChevronLeft /> <h1>Previous</h1>
+                    </button>
+                )}
+
+                {/* Next Button */}
+                {currentPage === totalPages ? '' : (
+                    <button
+                        className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-1 px-5 rounded-[4px] hover:border-black"
+                        onClick={() => {
+                            setCurrentPage(currentPage + 1);
+                            setCurrentPageNo(currentPage + 1);
+                        }}
+                    >
+                        <h1>Next</h1> <ChevronRight />
+                    </button>
                 )}
             </div>
         </div>

@@ -370,9 +370,10 @@ export const addNewProduct = async (req, res) => {
 export const fetchAllProducts = async (req, res) => {
     try {
         const{page} = req.query;
+        // console.log("Admin Products Page: ",req.query);
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments();
-        const itemsPerPage = 20;
+        const itemsPerPage = 10;
         const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided
 
         // Calculate the number of items to skip
@@ -386,7 +387,7 @@ export const fetchAllProducts = async (req, res) => {
         console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
 
         // Fetch paginated products
-        const productsPagination = await ProductModel.find({}).sort(sort).limit(itemsPerPage).skip(skip);
+        const productsPagination = await ProductModel.find({}).limit(itemsPerPage).skip(skip);
         // if(!allProducts) res.status(404).json({Success:false,message:"No products found"});
         res.status(200).json({Success: true, message: 'All products fetched successfully!', result: {
             productsPagination:productsPagination,
@@ -567,11 +568,7 @@ export const updateOrderStatus = async(req,res)=>{
 
 export const getallOrders = async(req,res)=>{
     try {
-
         const allOrders = await OrderModel.find({});
-        // console.log("Order: ",allOrders);
-        // const shipRocketOrdersAll = await getAllShipRocketOrder();
-        // console.log("Shiprocket orders: ",shipRocketOrdersAll)
         res.status(200).json({Success:true,message:"All Orders",result:allOrders || []});
     } catch (error) {
         console.error("Error Getting All Orders ",error);

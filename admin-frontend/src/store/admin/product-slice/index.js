@@ -58,6 +58,7 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',async (f
 export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',async ({pageNo})=>{
     try {
         const response = await axios.get(`${BASE_URL}/admin/product/all?page=${pageNo}`,Header());
+        console.log("Products Fetch: ",response.data);
         return response.data;
     } catch (error) {
         console.error("Error Fetching all Products",error);

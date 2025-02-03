@@ -26,9 +26,9 @@ const AdminProductTile = ({
     }, [selectedSize]);
 
     return (
-        <Card className="md:w-[300px] 2xl:w-[300px] w-full h-full justify-start items-center p-2 flex-col bg-gray-50 shadow-lg">
+        <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
-            <div className="relative w-full h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
+            <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
                 <MemoizedImage
                     imageUrl={selectedSizeColorImageArray[0]?.url}
                     altText={product?.title}
@@ -36,8 +36,8 @@ const AdminProductTile = ({
             </div>
 
             {/* Title and Price */}
-            <h2 className="text-2xl font-semibold text-gray-900 mb-2">
-                {product?.title?.length > 20 ? `${product?.title.slice(0, 20)}.` : product?.title}
+            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 truncate">
+                {product?.title?.length > 20 ? `${product?.title.slice(0, 20)}...` : product?.title}
             </h2>
             <div className="flex items-center justify-between mb-4">
                 <span className={`text-lg font-semibold ${product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'}`}>
@@ -81,14 +81,14 @@ const AdminProductTile = ({
             {/* View More / Less Button */}
             <div className="w-full h-fit justify-center items-center flex">
                 <Button
-                    title = {"View More"}
+                    title={"View More"}
                     onClick={() => {
                         setOpenProductPreview(product._id);
                         togglePopUp();
                     }}
                     className="text-sm text-white bg-gray-700 hover:bg-gray-800 transition-colors"
                 >
-                    
+                    View More
                 </Button>
             </div>
         </Card>
