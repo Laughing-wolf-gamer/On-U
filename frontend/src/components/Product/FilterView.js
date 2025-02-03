@@ -537,38 +537,103 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
+                {/* Categories Filter */}
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-normal mb-2'>On Sale</h1>
-                    {onSale && onSale.length > 0 && [1].map((_, i) => {
-                        // Get the URL search parameters
+                    <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
+                    {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
-                        const selectedOnSale = params.getAll('onSale'); // Get all 'onSale' values from URL
-                        
-                        // Check if the URL contains 'onSale=true'
-                        const isChecked = selectedOnSale.includes('true');
+                        const selectedCategories = params.getAll('category'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
 
                         return (
                             <div key={i} onClick={(event) => {
                                 event.preventDefault();
-                                onSaleFun(); // This will update the URL with the selected sale status
+                                categoryfun(e); // This will update the URL with the selected category
                             }}>
                                 <input
                                     type="checkbox"
-                                    name="OnSale"
-                                    value={'true'}
-                                    id={`On_sale`}
+                                    name="categories"
+                                    value={e}
+                                    id={`cat_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked based on URL parameter
-                                    onChange={() => {}} // No need to handle change here; onClick will update URL
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    On Sale
-                                    <span className='text-xs font-sans font-normal text-slate-400'>
-                                        ({onSale.length})
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-serif font-normal text-slate-400'> 
+                                        ({AllProductsCategory.filter((f) => f === e).length})
                                     </span>
                                 </label>
                             </div>
-                        )
+                        );
+                    })}
+                </ul>
+                {/* Subcategories Filter */}
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
+                    {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
+                        // Check if the current subcategory 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedSubcategories = params.getAll('subcategory'); // Get all subcategories from URL
+
+                        const isChecked = selectedSubcategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <li key={i} onClick={(event) => {
+                                event.preventDefault();
+                                subcategoryfun(e); // This will update the URL with the selected subcategory
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="subcategories"
+                                    value={e}
+                                    id={`id_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
+                                </label>
+                            </li>
+                        );
+                    })}
+                </ul>
+                {/* Size Filter */}
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
+                    {size && size.length > 0 && size.map((e, i) => {
+                        // Check if the current category 'e' exists in the URL parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedCategories = params.getAll('size'); // Get all categories from URL
+
+                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                sizefun(e); // This will update the URL with the selected category
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="categories"
+                                    value={e}
+                                    id={`cat_${e}`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    <span className='text-xs font-serif font-normal text-slate-400'> 
+                                        ({size.filter((f) => f === e).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
                     })}
                 </ul>
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
@@ -604,108 +669,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
-
-                {/* Categories Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
-                    {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
-                        // Check if the current category 'e' exists in the URL parameters
-                        const params = new URLSearchParams(window.location.search);
-                        const selectedCategories = params.getAll('category'); // Get all categories from URL
-
-                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
-
-                        return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                categoryfun(e); // This will update the URL with the selected category
-                            }}>
-                                <input
-                                    type="checkbox"
-                                    name="categories"
-                                    value={e}
-                                    id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
-                                />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
-                                    <span className='text-xs font-serif font-normal text-slate-400'> 
-                                        ({AllProductsCategory.filter((f) => f === e).length})
-                                    </span>
-                                </label>
-                            </div>
-                        );
-                    })}
-                </ul>
-                {/* Categories Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
-                    {size && size.length > 0 && size.map((e, i) => {
-                        // Check if the current category 'e' exists in the URL parameters
-                        const params = new URLSearchParams(window.location.search);
-                        const selectedCategories = params.getAll('size'); // Get all categories from URL
-
-                        const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
-
-                        return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                sizefun(e); // This will update the URL with the selected category
-                            }}>
-                                <input
-                                    type="checkbox"
-                                    name="categories"
-                                    value={e}
-                                    id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
-                                />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
-                                    <span className='text-xs font-serif font-normal text-slate-400'> 
-                                        ({size.filter((f) => f === e).length})
-                                    </span>
-                                </label>
-                            </div>
-                        );
-                    })}
-                </ul>
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
-                {/* Subcategories Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
-                    {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
-                        // Check if the current subcategory 'e' exists in the URL parameters
-                        const params = new URLSearchParams(window.location.search);
-                        const selectedSubcategories = params.getAll('subcategory'); // Get all subcategories from URL
-
-                        const isChecked = selectedSubcategories.includes(e); // Check if current 'e' is selected in the URL
-
-                        return (
-                            <li key={i} onClick={(event) => {
-                                event.preventDefault();
-                                subcategoryfun(e); // This will update the URL with the selected subcategory
-                            }}>
-                                <input
-                                    type="checkbox"
-                                    name="subcategories"
-                                    value={e}
-                                    id={`id_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
-                                />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
-                                </label>
-                            </li>
-                        );
-                    })}
-                </ul>
-                
                 {/* Color Filter */}
                 <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-hidden relative`}>
                     <h1 className='font1 text-base font-semibold mb-2'>COLOR</h1>
@@ -747,7 +711,41 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         </button>
                     )}
                 </ul>
-                
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-normal mb-2'>On Sale</h1>
+                    {onSale && onSale.length > 0 && [1].map((_, i) => {
+                        // Get the URL search parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedOnSale = params.getAll('onSale'); // Get all 'onSale' values from URL
+                        
+                        // Check if the URL contains 'onSale=true'
+                        const isChecked = selectedOnSale.includes('true');
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                onSaleFun(); // This will update the URL with the selected sale status
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="OnSale"
+                                    value={'true'}
+                                    id={`On_sale`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked based on URL parameter
+                                    onChange={() => {}} // No need to handle change here; onClick will update URL
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    On Sale
+                                    <span className='text-xs font-sans font-normal text-slate-400'>
+                                        ({onSale.length})
+                                    </span>
+                                </label>
+                            </div>
+                        )
+                    })}
+                </ul>
+                                
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>

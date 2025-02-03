@@ -546,8 +546,8 @@ export const SendSingleProduct = async (req, res) => {
         // Fetch similar products, excluding the current product
         const similarProduct = await ProductModel.find({
             category: product.category,
-            subCategory: product.subCategory,
             gender: product.gender,
+            // subCategory: product.subCategory,
             _id: { $ne: id }  // Exclude the current product by its _id
         }).limit(20);  // Limit to 20 similar products
 

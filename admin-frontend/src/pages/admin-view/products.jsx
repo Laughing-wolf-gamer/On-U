@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
 
-const maxAmountPerPage = 10;
+const maxAmountPerPage = 5;
 
 const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData, setFormData, onSubmit, handleOpenCloseWindow }) => {
     const [categories, setCategories] = useState([]);
@@ -322,11 +322,11 @@ const AdminProducts = () => {
             {
                 productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<div>
                     <div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
-                        <div className='w-full justify-center items-end flex flex-row'>
+                        <div className='w-full justify-center space-x-2 py-3 items-end flex flex-row'>
 
                             {/* Category Dropdown */}
                             <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
-                                <Label className="text-sm font-semibold">Filter by Category:</Label>
+                                <Label className="text-sm font-semibold">Category</Label>
                                 <Select 
                                     id="categoryFilter"
                                     name="category"
@@ -346,7 +346,7 @@ const AdminProducts = () => {
                                 </Select>
                             </div>
                             <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
-                                <Label className="text-sm font-semibold">Special Category :</Label>
+                                <Label className="text-sm font-semibold">Special Category</Label>
                                 <Select 
                                     id="specialCategory"
                                     name="specialCategory"
@@ -368,7 +368,7 @@ const AdminProducts = () => {
 
                             {/* Sub-Category Dropdown */}
                             <div className="flex items-center px-4 space-x-3 mb-3 sm:w-full md:w-auto">
-                                <label className="text-sm font-semibold">Filter by Sub-Category:</label>
+                                <Label className="text-sm font-semibold">Sub-Category</Label>
                                 <Select 
                                     id="subCategoryFilter"
                                     name="subCategory"
@@ -390,7 +390,7 @@ const AdminProducts = () => {
                             
                             {/* Sorting Dropdown */}
                             <div className="flex items-center  px-9 space-x-9 mb-3 sm:w-full md:w-auto">
-                                <label className="text-sm font-semibold text-left ">Sort </label>
+                                <Label className="text-sm font-semibold text-left ">Sort</Label>
                                 <Select 
                                     id="sortFilter"
                                     name="sort" 
@@ -409,12 +409,11 @@ const AdminProducts = () => {
                                     </SelectContent>
                                 </Select>
                             </div>
+                            {/* Add New Product Button */}
+                            <Button onClick={() => setOpenCreateProduct(true)} className="sm:w-full md:w-auto">
+                                Add Product
+                            </Button>
                         </div>
-
-                        {/* Add New Product Button */}
-                        <Button onClick={() => setOpenCreateProduct(true)} className="mt-3 sm:w-full md:w-auto">
-                            Add Product
-                        </Button>
                     </div>
                     <PaginatedProductList 
                         sortedProducts={sortedProducts} 

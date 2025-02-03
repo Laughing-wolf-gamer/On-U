@@ -45,25 +45,25 @@ const AdminOptions = () => {
         await dispatch(addNewOption({ type, value }));
         dispatch(fetchAllOptions());
         switch (type) {
-        case 'category':
-            setCategory('');
-            break;
-        case'subcategory':
-            setSubcategory('');
-            break;
-        case 'color':
-            setColor('');
-            break;
-        case 'footWearSize':
-            setFootWearSize('');
-            break;
-        case 'clothingSize':
-            setClothingWearSize('');
-            break;
-        case 'gender':
-            setGender('');
-            break;
-        default:
+            case 'category':
+                setCategory('');
+                break;
+            case'subcategory':
+                setSubcategory('');
+                break;
+            case 'color':
+                setColor('');
+                break;
+            case 'footWearSize':
+                setFootWearSize('');
+                break;
+            case 'clothingSize':
+                setClothingWearSize('');
+                break;
+            case 'gender':
+                setGender('');
+                break;
+            default:
             break;
         }
         toast({title:"Updated New Options"});
@@ -85,40 +85,40 @@ const AdminOptions = () => {
 
     const setAllOptions = () => {
         if (AllOptions && AllOptions.length > 0) {
-        AllOptions.map(item => {
-            switch (item.type) {
-            case 'category':
-                setCategories(AllOptions.filter(item => item.type === 'category'));
-                break;
-            case 'subcategory':
-                setSubcategories(AllOptions.filter(item => item.type === 'subcategory'));
-                break;
-            case 'color':
-                setColors(AllOptions.filter(item => item.type === 'color') || []);
-                break;
-            case 'footWearSize':
-                setFootWearSizes(AllOptions.filter(item => item.type === 'footWearSize'));
-                break;
-            case 'clothingSize':
-                setClothingWearSizes(AllOptions.filter(item => item.type === 'clothingSize'));
-                break;
-            case 'gender':
-                setGenders(AllOptions.filter(item => item.type === 'gender'));
-                break;
-            }
-        });
+            AllOptions.map(item => {
+                switch (item.type) {
+                case 'category':
+                    setCategories(AllOptions.filter(item => item.type === 'category'));
+                    break;
+                case 'subcategory':
+                    setSubcategories(AllOptions.filter(item => item.type === 'subcategory'));
+                    break;
+                case 'color':
+                    setColors(AllOptions.filter(item => item.type === 'color') || []);
+                    break;
+                case 'footWearSize':
+                    setFootWearSizes(AllOptions.filter(item => item.type === 'footWearSize'));
+                    break;
+                case 'clothingSize':
+                    setClothingWearSizes(AllOptions.filter(item => item.type === 'clothingSize'));
+                    break;
+                case 'gender':
+                    setGenders(AllOptions.filter(item => item.type === 'gender'));
+                    break;
+                }
+            });
         }
     };
     const updateConvenienceFees = async()=>{
         try {
-        if(convenienceFeesAmount <= 0){
-            toast({title:'Please enter a Number greater than zero'})
-            return;
-        }
-        dispatch(setConvenienceFees({convenienceFees:convenienceFeesAmount}));
-        setConvenienceFeesAmount(0);
+            if(convenienceFeesAmount <= 0){
+                toast({title:'Please enter a Number greater than zero'})
+                return;
+            }
+            dispatch(setConvenienceFees({convenienceFees:convenienceFeesAmount}));
+            setConvenienceFeesAmount(0);
         } catch (error) {
-        console.error("Failed to set convenience: " + amount, error);
+            console.error("Failed to set convenience: " + amount, error);
         }
     }
     console.log("All Options: ",AllOptions);

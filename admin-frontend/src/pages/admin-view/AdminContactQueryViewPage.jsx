@@ -103,35 +103,34 @@ const AdminContactQueryViewPage = () => {
         
         // Set title
         doc.setFontSize(18);
-        doc.text('Query Data', 20, 20);
+        doc.text('Query Data', 10, 20);
         
         // Set font size for other text
-        doc.setFontSize(12);
+        doc.setFontSize(9);
         
         // Add headers for each field
-        doc.text('Email Id', 20, 30);
-        doc.text('Full Name', 60, 30);
-        doc.text('Phone Number', 120, 30);
-        doc.text('Query Message', 160, 30);
-        doc.text('Status', 220, 30);
-        doc.text('Created At', 270, 30);
-        doc.text('Updated At', 330, 30);
+        doc.text('Email Id', 10, 30);
+        doc.text('Full Name', 60, 30); // Adjusted x-position
+        doc.text('Phone Number', 90, 30); // Adjusted x-position (added space)
+        doc.text('Query Message', 120, 30); // Adjusted x-position
+        doc.text('Status', 170, 30); // Adjusted x-position
+        doc.text('Created At', 190, 30); // Adjusted x-position
     
         // Add data rows
         ContactQuery.forEach((item, index) => {
             const yPos = 40 + (index * 10);
-            doc.text(item.QueryDetails['Email Id'], 20, yPos);
+            doc.text(item.QueryDetails['Email Id'], 10, yPos);
             doc.text(item.QueryDetails.FullName, 60, yPos);
-            doc.text(item.QueryDetails['Phone Number'], 120, yPos);
-            doc.text(item.QueryMessage, 160, yPos);
-            doc.text(item.Status, 220, yPos);
-            doc.text(item.createdAt, 270, yPos);
-            doc.text(item.updatedAt, 330, yPos);
+            doc.text(item.QueryDetails['Phone Number'], 90, yPos); // Adjusted x-position
+            doc.text(item.QueryMessage, 120, yPos); // Adjusted x-position
+            doc.text(item.Status, 170, yPos); // Adjusted x-position
+            doc.text(new Date(item.createdAt).toLocaleDateString(), 190, yPos); // Adjusted x-position
         });
-    
+        
         // Save the PDF with a simplified file name
         doc.save('Query_Data.pdf');
     };
+    
     
     const downloadExcel = () => {
         // Mapping the ContactQuery data into an appropriate format for Excel

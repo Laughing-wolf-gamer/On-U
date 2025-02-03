@@ -60,7 +60,7 @@ export const SettingsProvider = ({ children }) => {
                         },
                       
                         // Additional Configuration
-                        removeDelay: 1000,
+                        removeDelay: 5000,
                     })
                     break;
                 case "info":

@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 const UserTable = () => {
     const dispatch = useDispatch();
+    const[deletingCustomer,setDeletingCustomer] = useState([])
     const { AllUser } = useSelector(state => state.Customer);
 
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -15,7 +16,15 @@ const UserTable = () => {
     const handleFetchAllUser = () => {
         dispatch(getAllCustomerWithDetails());
     };
-
+    const handleChangeCustomer = (id) =>{
+        if(deletingCustomer.includes(id)){
+            setDeletingCustomer(deletingCustomer.filter(current => current !== id))
+        }else{
+            setDeletingCustomer([...deletingCustomer,id])
+        }
+        setIsModalOpen(false);
+        setSelectedCustomer(null);
+    }
     useEffect(() => {
         handleFetchAllUser();
     }, [dispatch]);
@@ -29,42 +38,52 @@ const UserTable = () => {
         setIsModalOpen(false);
         setSelectedCustomer(null);
     };
-
+    console.log("Check Deleting Customer: ",deletingCustomer);
     return (
         <div className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="overflow-x-auto">
-                {/* Table Component from ShadCN */}
-                <Table className="min-w-full">
+                <Table className="min-w-full table-auto">
                     <thead>
-                        <tr className="text-sm font-semibold text-gray-700">
-                            <th>Sr.</th>
-                            <th>Customer Name</th>
-                            <th>Email ID</th>
-                            <th>Phone Number</th>
-                            <th>Total Purchases</th>
-                            <th>Wishlist Count</th>
-                            <th>Actions</th>
-                        </tr>
+                    <tr className="text-sm font-semibold text-gray-700">
+                        <th className="px-4 py-2 text-left">Select</th>
+                        <th className="px-4 py-2 text-left">Sr.</th>
+                        <th className="px-4 py-2 text-left">Customer Name</th>
+                        <th className="px-4 py-2 text-left">Email ID</th>
+                        <th className="px-4 py-2 text-left">Phone Number</th>
+                        <th className="px-4 py-2 text-left">Total Purchases</th>
+                        <th className="px-4 py-2 text-left">Wishlist Count</th>
+                        <th className="px-4 py-2 text-left">Actions</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
-                            <tr key={customer._id} className="text-sm hover:bg-gray-100">
-                                <td>{index + 1}</td>
-                                <td>{customer?.name}</td>
-                                <td>{customer?.email}</td>
-                                <td>{customer?.phoneNumber}</td>
-                                <td>{customer?.totalPurchases}</td>
-                                <td>{customer?.wishList?.length}</td>
-                                <td>
-                                    <Button
-                                        onClick={() => openModal(customer)}
-                                        className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                                    >
-                                        View Details
-                                    </Button>
-                                </td>
-                            </tr>
-                        ))}
+                    {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
+                        <tr key={customer._id} className="text-sm hover:bg-gray-100">
+                            <td className="px-4 py-2 text-center">
+                                <input
+                                    type="checkbox"
+                                    id='delCheck'
+                                    onChange={()=>{
+                                        // console.log("Check: ",customer._id);
+                                        handleChangeCustomer(customer._id);
+                                    }}                                
+                                />
+                            </td>
+                            <td className="px-4 py-2 text-center">{index + 1}</td>
+                            <td className="px-4 py-2 text-center">{customer?.name}</td>
+                            <td className="px-4 py-2 text-center">{customer?.email}</td>
+                            <td className="px-4 py-2 text-center">{customer?.phoneNumber}</td>
+                            <td className="px-4 py-2 text-center">{customer?.totalPurchases}</td>
+                            <td className="px-4 py-2 text-center">{customer?.wishList?.length}</td>
+                            <td className="px-4 py-2 text-center">
+                                <Button
+                                    onClick={() => openModal(customer)}
+                                    className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                >
+                                View Details
+                                </Button>
+                            </td>
+                        </tr>
+                    ))}
                     </tbody>
                 </Table>
 

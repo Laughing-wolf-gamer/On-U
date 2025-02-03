@@ -36,7 +36,7 @@ const ImageZoom = ({ imageSrc }) => {
     };
 
     return (
-        <div className="relative w-full h-full 2xl:w-[540px] 2xl:h-[800px] py-1 justify-start flex-row flex items-start hover:rounded-md">
+        <div className="relative w-full h-full 2xl:w-[570px] 2xl:h-[800px] py-1 justify-start flex-row flex items-start hover:rounded-md">
             <img
                 loading="lazy"
                 src={imageSrc}
