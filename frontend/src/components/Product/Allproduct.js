@@ -124,8 +124,6 @@ const Allproductpage = ({user}) => {
                         <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
                     </div>
                 </div>
-
-                {/* Filter__title div */}
                 {/* <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-2 items-center 2xl:px-10">
                     <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
                     <div className="col-span-3 relative cursor-pointer pb-4">
