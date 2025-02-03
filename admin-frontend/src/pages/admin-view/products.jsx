@@ -322,90 +322,93 @@ const AdminProducts = () => {
             {
                 productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<div>
                     <div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
-                        {/* Category Dropdown */}
-                        <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
-                            <Label className="text-lg font-semibold">Filter by Category:</Label>
-                            <Select 
-                                id="categoryFilter"
-                                name="category"
-                                value={filters.category}
-                                onValueChange={(e)=>handleFilterChange("category",e)} 
-                                className = "border border-gray-300 p-2 rounded w-full md:w-auto"
-                            >
-                                <SelectTrigger className="w-full border border-gray-300 rounded-md">
-                                    <SelectValue placeholder={filters.category || "All Category"} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="default">Default</SelectItem>
-                                    {categories.map((category, i) => (
-                                        <SelectItem key={i} value={category.value}>{category.value}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
-                            <Label className="text-lg font-semibold">Special Category :</Label>
-                            <Select 
-                                id="specialCategory"
-                                name="specialCategory"
-                                value={filters.specialCategory}
-                                onValueChange={(e)=>handleFilterChange("specialCategory",e)} 
-                                className = "border border-gray-300 p-2 rounded w-full md:w-auto"
-                            >
-                                <SelectTrigger className="w-full border border-gray-300 rounded-md">
-                                    <SelectValue placeholder={filters.specialCategory || "All Special Category"} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="default">Default</SelectItem>
-                                    {specialCategory.map((special, i) => (
-                                        <SelectItem key={i} value={special.id}>{special.label}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
+                        <div className='w-full justify-center items-end flex flex-row'>
 
-                        {/* Sub-Category Dropdown */}
-                        <div className="flex items-center px-4 space-x-3 mb-3 sm:w-full md:w-auto">
-                            <label className="text-lg font-semibold">Filter by Sub-Category:</label>
-                            <Select 
-                                id="subCategoryFilter"
-                                name="subCategory"
-                                value={filters.subCategory}
-                                onValueChange={(e)=> handleFilterChange("subCategory",e)} 
-                                className="border border-gray-300 p-2 rounded w-full md:w-auto"
-                            >
-                                <SelectTrigger className="w-full border border-gray-300 rounded-md">
-                                    <SelectValue placeholder={filters.subCategory || "All Sub-Category"} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="default">Default</SelectItem>
-                                    {subcategories.map((subCategory, i) => (
-                                        <SelectItem key={i} value={subCategory.value}>{subCategory.value}</SelectItem>
-                                    ))}
-                                </SelectContent>
-                            </Select>
-                        </div>
-                        
-                        {/* Sorting Dropdown */}
-                        <div className="flex items-center  px-9 space-x-9 mb-3 sm:w-full md:w-auto">
-                            <label className="text-lg font-semibold text-left ">Sort </label>
-                            <Select 
-                                id="sortFilter"
-                                name="sort" 
-                                value={filters.sort}
-                                onValueChange={(e)=>handleFilterChange("sort",e)} 
-                            >
-                                <SelectTrigger className="w-full border border-gray-300 rounded-md">
-                                    <SelectValue placeholder={filters.sort || "Default"} />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectItem value="default">Default</SelectItem>
-                                    <SelectItem value="newest">Newest First</SelectItem>
-                                    <SelectItem value="oldest">Oldest First</SelectItem>
-                                    <SelectItem value="priceLowToHigh">Price Low to High</SelectItem>
-                                    <SelectItem value="priceHighToLow">Price High to Low</SelectItem>
-                                </SelectContent>
-                            </Select>
+                            {/* Category Dropdown */}
+                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
+                                <Label className="text-sm font-semibold">Filter by Category:</Label>
+                                <Select 
+                                    id="categoryFilter"
+                                    name="category"
+                                    value={filters.category}
+                                    onValueChange={(e)=>handleFilterChange("category",e)} 
+                                    className = "border border-gray-300 p-2 rounded w-full md:w-auto"
+                                >
+                                    <SelectTrigger className="w-full border border-gray-300 rounded-md">
+                                        <SelectValue placeholder={filters.category || "All Category"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="default">Default</SelectItem>
+                                        {categories.map((category, i) => (
+                                            <SelectItem key={i} value={category.value}>{category.value}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto">
+                                <Label className="text-sm font-semibold">Special Category :</Label>
+                                <Select 
+                                    id="specialCategory"
+                                    name="specialCategory"
+                                    value={filters.specialCategory}
+                                    onValueChange={(e)=>handleFilterChange("specialCategory",e)} 
+                                    className = "border border-gray-300 p-2 rounded w-full md:w-auto"
+                                >
+                                    <SelectTrigger className="w-full border border-gray-300 rounded-md">
+                                        <SelectValue placeholder={filters.specialCategory || "All Special Category"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="default">Default</SelectItem>
+                                        {specialCategory.map((special, i) => (
+                                            <SelectItem key={i} value={special.id}>{special.label}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+
+                            {/* Sub-Category Dropdown */}
+                            <div className="flex items-center px-4 space-x-3 mb-3 sm:w-full md:w-auto">
+                                <label className="text-sm font-semibold">Filter by Sub-Category:</label>
+                                <Select 
+                                    id="subCategoryFilter"
+                                    name="subCategory"
+                                    value={filters.subCategory}
+                                    onValueChange={(e)=> handleFilterChange("subCategory",e)} 
+                                    className="border border-gray-300 p-2 rounded w-full md:w-auto"
+                                >
+                                    <SelectTrigger className="w-full border border-gray-300 rounded-md">
+                                        <SelectValue placeholder={filters.subCategory || "All Sub-Category"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="default">Default</SelectItem>
+                                        {subcategories.map((subCategory, i) => (
+                                            <SelectItem key={i} value={subCategory.value}>{subCategory.value}</SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            
+                            {/* Sorting Dropdown */}
+                            <div className="flex items-center  px-9 space-x-9 mb-3 sm:w-full md:w-auto">
+                                <label className="text-sm font-semibold text-left ">Sort </label>
+                                <Select 
+                                    id="sortFilter"
+                                    name="sort" 
+                                    value={filters.sort}
+                                    onValueChange={(e)=>handleFilterChange("sort",e)} 
+                                >
+                                    <SelectTrigger className="w-full border border-gray-300 rounded-md">
+                                        <SelectValue placeholder={filters.sort || "Default"} />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="default">Default</SelectItem>
+                                        <SelectItem value="newest">Newest First</SelectItem>
+                                        <SelectItem value="oldest">Oldest First</SelectItem>
+                                        <SelectItem value="priceLowToHigh">Price Low to High</SelectItem>
+                                        <SelectItem value="priceHighToLow">Price High to Low</SelectItem>
+                                    </SelectContent>
+                                </Select>
+                            </div>
                         </div>
 
                         {/* Add New Product Button */}
