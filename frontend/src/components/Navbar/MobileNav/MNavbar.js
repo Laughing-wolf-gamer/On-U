@@ -269,7 +269,7 @@ const MNavbar = ({ user }) => {
                                     }}
                                 >
                                 </li> */}
-                                <div className="font1 px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex bg-gray-100">
+                                <div className="font1 px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex">
                                     <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={(e)=>{
                                         if(user){
                                             navigation("/dashboard");
@@ -290,7 +290,7 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <div
-                                    className="text-black font1 px-5 py-4 relative w-full flex bg-gray-50"
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setShow(false);
@@ -311,7 +311,7 @@ const MNavbar = ({ user }) => {
                                     }}
                                 >
                                     <span className="">Shop</span>
-                                    <div className='mx-5 flex h-full w-10 justify-center'>
+                                    <div className='mx-5 flex h-full w-14 justify-center'>
                                         <span className="border-l-[0.5px] w-full border-gray-700">{Women ? <IoIosArrowDown strokeWidth={0.6} size={30} /> : <IoIosArrowForward strokeWidth={0.6} size={30} />}</span>
                                     </div>
                                 </li>

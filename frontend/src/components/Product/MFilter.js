@@ -602,7 +602,7 @@ const MFilter = ({ product ,handleSortChange}) => {
                             )
                         }
                     </ul>
-                    <ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul8`}>
+                    <ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
                         <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
                             onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>
                         <span className={`text-sm`}>On Sale</span> <span className={`absolute right-6 text-xl`}>{onSale.length}</span></li>
