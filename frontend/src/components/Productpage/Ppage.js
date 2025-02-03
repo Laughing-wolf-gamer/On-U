@@ -939,7 +939,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                             <div
                                 key={index}
                                 className={`w-full h-[100px] ${selectedImage === file ? "border-2":""}border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
-                                // onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
+                                onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
                                 onClick={() => { Addclass(); setSelectedImage(file); }}
                             >
                                 {isVideo ? (

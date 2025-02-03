@@ -203,7 +203,7 @@ const MNavbar = ({ user }) => {
                         <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=> setserdiv('hidden')}><MdArrowBack color='black'/></div>
                         <div className="col-span-10">
                         <input type="text" placeholder='Search for brands & products' 
-                            className=' msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
+                            className='msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
                         </div>
                         <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='black' strokeWidth={.9} className='text-2xl text-black' /></div>
                     </div>
@@ -270,17 +270,20 @@ const MNavbar = ({ user }) => {
                                 >
                                 </li> */}
                                 <div className="font1 px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex bg-gray-100">
-                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={()=>{
+                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={(e)=>{
                                         if(user){
                                             navigation("/dashboard");
                                         }else{
                                             navigation('/Login');
                                         }
+                                        e.stopPropagation();
+                                        setShow(false);
+                                        setClass("hidden");
                                     }}>
                                         <UserRound size={15}/>
                                     </div>
                                     <span className="float-left text-black font-light flex items-center">
-                                        {user ? "Profile":"Login"}
+                                        {user ? user?.user?.name || user?.name:"Login"}
                                     </span>
                                 </div>
                             </Ripples>
@@ -301,14 +304,16 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black font1 pl-5 py-4 w-full flex flex-row justify-between items-center"
                                     onClick={() => {
                                         setWomen(!Women);
                                         setMenu2(Menu2 === "hidden" ? "block" : "hidden");
                                     }}
                                 >
-                                    <span className="float-left">Shops</span>
-                                    <span className="absolute mx-5 right-0">{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
+                                    <span className="">Shop</span>
+                                    <div className='mx-5 flex h-full w-10 justify-center'>
+                                        <span className="border-l-[0.5px] w-full border-gray-700">{Women ? <IoIosArrowDown strokeWidth={0.6} size={30} /> : <IoIosArrowForward strokeWidth={0.6} size={30} />}</span>
+                                    </div>
                                 </li>
                             </Ripples>
 
@@ -320,7 +325,72 @@ const MNavbar = ({ user }) => {
                                     setMenu2("hidden");
                                 }}
                             />
-
+                            <Ripples color="re" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        // Create the URL with query parameters
+                                        const queryParams = new URLSearchParams();
+                                    
+                                        queryParams.set('sortBy', 'newest');
+                                    
+                                        // Construct the URL for the /products page
+                                        const url = `/products?${queryParams.toString()}`;
+                                    
+                                        // Navigate to the new URL (using React Router)
+                                        navigation(url);
+                                        // navigation("/about");
+                                    }}
+                                >
+                                    <span className="float-left">New Arrivals</span>
+                                </li>
+                            </Ripples>
+                            <Ripples color="re" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        /* // Create the URL with query parameters
+                                        const queryParams = new URLSearchParams();
+                                    
+                                        queryParams.set('onSale', 'true');
+                                    
+                                        // Construct the URL for the /products page
+                                        const url = `/products?${queryParams.toString()}`; */
+                                    
+                                        // Navigate to the new URL (using React Router)
+                                        navigation('/products');
+                                        // navigation("/about");
+                                    }}
+                                >
+                                    <span className="float-left">Best Sellers</span>
+                                </li>
+                            </Ripples>
+                            <Ripples color="re" className="w-full">
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        // Create the URL with query parameters
+                                        const queryParams = new URLSearchParams();
+                                    
+                                        queryParams.set('onSale', 'true');
+                                    
+                                        // Construct the URL for the /products page
+                                        const url = `/products?${queryParams.toString()}`;
+                                    
+                                        // Navigate to the new URL (using React Router)
+                                        navigation(url);
+                                        // navigation("/about");
+                                    }}
+                                >
+                                    <span className="float-left">On Sale</span>
+                                </li>
+                            </Ripples>
                             <Ripples color="re" className="w-full">
                                 <li
                                     className="text-black font1 px-5 py-4 relative w-full flex"
@@ -335,16 +405,16 @@ const MNavbar = ({ user }) => {
                             </Ripples>
 
                             <Ripples color="black" className="w-full">
-                            <li
-                                className="text-black font1 px-5 py-4 relative w-full flex"
-                                onClick={(e) => {
-                                    setShow(false);
-                                    setClass("hidden");
-                                    navigation("/contact");
-                                }}
-                            >
-                                <span className="float-left">Contact</span>
-                            </li>
+                                <li
+                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        setShow(false);
+                                        setClass("hidden");
+                                        navigation("/contact");
+                                    }}
+                                >
+                                    <span className="float-left">Contact</span>
+                                </li>
                             </Ripples>
 
                             <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange} />
