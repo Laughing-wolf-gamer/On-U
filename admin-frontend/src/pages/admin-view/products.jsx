@@ -150,18 +150,18 @@ const AdminProducts = () => {
 
     const [currentPreviewProductId, setCurrentPreviewProduct] = useState(null);
     const [showPopUp, setShowPopUp] = useState(false);
+    const [openCreateProduct, setOpenCreateProduct] = useState(false);
+    const [currentEditingId, setCurrentEditingId] = useState(null);
+    
     const togglePopUp = () => {
         setShowPopUp(!showPopUp);
     };
 
-    const [openCreateProduct, setOpenCreateProduct] = useState(false);
     const [formData, setFormData] = useState(initialFormData);
     const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
-    const { products, isLoading: productLoading } = useSelector(state => state.adminProducts);
-    const [currentEditingId, setCurrentEditingId] = useState(null);
-    // const { toast } = useToast();
-    const dispatch = useDispatch();
+    const { allProducts,productsPagination,totalProducts, isLoading: productLoading } = useSelector(state => state.adminProducts);
     const { AllOptions } = useSelector(state => state.common);
+    const dispatch = useDispatch();
 
     const fetchAllFiltersCategory = async () => {
         setIsLoading(true);
@@ -188,21 +188,21 @@ const AdminProducts = () => {
     };
     const updateEditedItems = async (productId,editedData) => {
         try {
-        if(!productId){
-            toast("No Product Id")
-            return;
-        }
-        console.log(`Updated ${productId}`, editedData)
-        // return;
-        const data = await dispatch(editProducts({ id: productId, formData: { ...editedData} }));
-        if (data?.payload?.Success) {
-            setOpenCreateProduct(false);
-            setUploadedImageUrls([]);
-            setFormData(initialFormData);
-            setCurrentEditingId(null);
-            dispatch(fetchAllProducts());
-            toast("Product Updated Success")
-        }
+            if(!productId){
+                toast("No Product Id")
+                return;
+            }
+            console.log(`Updated ${productId}`, editedData)
+            // return;
+            const data = await dispatch(editProducts({ id: productId, formData: { ...editedData} }));
+            if (data?.payload?.Success) {
+                setOpenCreateProduct(false);
+                setUploadedImageUrls([]);
+                setFormData(initialFormData);
+                setCurrentEditingId(null);
+                dispatch(fetchAllProducts());
+                toast("Product Updated Success")
+            }
         } catch (error) {
             console.error(`Failed to Update Product: ${error.message}`);
             toast(`Failed to Update Product: ${error.message}`)
@@ -275,7 +275,7 @@ const AdminProducts = () => {
         }));
     };
 
-    const filteredProducts = products.filter((product) => {
+    const filteredProducts = productsPagination.filter((product) => {
         if (!filters.category && !filters.subCategory && !filters.gender && !filters.color && !filters.size && !filters.specialCategory) return true;
 
         const categoryMatch = filters.category ? product.category.toLowerCase() === filters.category.toLowerCase() : true;
@@ -408,15 +408,15 @@ const AdminProducts = () => {
                         </Button>
                     </div>
 
-                    <div className="grid gap-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-5">
+                    <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                         {sortedProducts.length > 0 ? (
                             sortedProducts.map((product, i) => (
-                                <AdminProductTile key={i} togglePopUp={togglePopUp} setOpenProductPreview={setCurrentPreviewProduct} product={product} />
+                                <AdminProductTile key={`products_${i}`} togglePopUp={togglePopUp} setOpenProductPreview={setCurrentPreviewProduct} product={product} />
                             ))
                         ) : (
-                            <p>No products found for the selected filter.</p>
+                            <p>No Products found for the selected filter.</p>
                         )}
-                    </div>
+                    </ul>
                     <div>
                         {/* Add Product Overlay */}
                         {openCreateProduct && (
@@ -428,10 +428,7 @@ const AdminProducts = () => {
                                 onSubmit={onSubmit}
                                 handleOpenCloseWindow={() => setOpenCreateProduct(false)}
                             />
-                        )}
-
-                        {/* Product Preview */}
-                        
+                        )}                        
                     </div>
                 </div>
             }

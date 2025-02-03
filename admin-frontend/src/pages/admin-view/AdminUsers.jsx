@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import CustomerDetailsSingle from "@/components/admin-view/CustomerDetailsSingle";
 import { getAllCustomerWithDetails } from "@/store/admin/users-slice";
+import CustomerDetailsSingle from "@/components/admin-view/CustomerDetailsSingle";
+import { useDispatch, useSelector } from "react-redux";
 
 const UserTable = () => {
     const dispatch = useDispatch();
@@ -32,37 +33,40 @@ const UserTable = () => {
     return (
         <div className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="overflow-x-auto">
-                {/* Table-like Structure */}
-                <div className="grid grid-cols-1 sm:grid-cols-6 gap-4 mb-4 font-semibold text-gray-700">
-                    {/* Table Headers */}
-                    <div className="text-sm">Sr.</div>
-                    <div className="text-sm">Customer Name</div>
-                    <div className="text-sm">Email ID</div>
-                    <div className="text-sm">Phone Number</div>
-                    <div className="text-sm">Total Purchases</div>
-                    <div className="text-sm">Wishlist Count</div>
-                    <div className="text-sm">Actions</div>
-                </div>
-
-                {/* Table Data */}
-                {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
-                    <div key={customer._id} className="grid grid-cols-1 sm:grid-cols-6 gap-4 mb-4 hover:bg-gray-100 p-4 border rounded-lg">
-                        <div className="text-sm">{index + 1}</div>
-                        <div className="text-sm">{customer?.name}</div>
-                        <div className="text-sm">{customer?.email}</div>
-                        <div className="text-sm">{customer?.phoneNumber}</div>
-                        <div className="text-sm">{customer?.totalPurchases}</div>
-                        <div className="text-sm">{customer?.wishList?.length}</div>
-                        <div className="text-sm">
-                            <Button
-                                onClick={() => openModal(customer)}
-                                className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-                            >
-                                View Details
-                            </Button>
-                        </div>
-                    </div>
-                ))}
+                {/* Table Component from ShadCN */}
+                <Table className="min-w-full">
+                    <thead>
+                        <tr className="text-sm font-semibold text-gray-700">
+                            <th>Sr.</th>
+                            <th>Customer Name</th>
+                            <th>Email ID</th>
+                            <th>Phone Number</th>
+                            <th>Total Purchases</th>
+                            <th>Wishlist Count</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {AllUser && AllUser.length > 0 && AllUser.map((customer, index) => (
+                            <tr key={customer._id} className="text-sm hover:bg-gray-100">
+                                <td>{index + 1}</td>
+                                <td>{customer?.name}</td>
+                                <td>{customer?.email}</td>
+                                <td>{customer?.phoneNumber}</td>
+                                <td>{customer?.totalPurchases}</td>
+                                <td>{customer?.wishList?.length}</td>
+                                <td>
+                                    <Button
+                                        onClick={() => openModal(customer)}
+                                        className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
+                                    >
+                                        View Details
+                                    </Button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </Table>
 
                 {/* Modal - User Details */}
                 {isModalOpen && selectedCustomer && (

@@ -18,7 +18,7 @@ const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
-    const [sortBy, setSortBy] = useState('newest');  // Default value
+    // const [sortBy, setSortBy] = useState('newest');  // Default value
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('What`s New');
@@ -51,7 +51,7 @@ const Allproductpage = ({user}) => {
     }; */
     const handleSortChange = (newSortBy) => {
         // Set the new sortBy value in your component state
-        setSortBy(newSortBy);
+        // setSortBy(newSortBy);
       
         // Get the current URL
         const currentUrl = new URL(window.location.href);
@@ -73,18 +73,6 @@ const Allproductpage = ({user}) => {
     };
 
 
-    /* const datefun = (e) => {
-        let url = window.location.search;
-        if (url.includes('?')) {
-            if (url.includes('date')) {
-                let newurl = url.includes(`&date=1`) ? url.replace(`&date=1`, `&date=${e}`) : null;
-                let newurl2 = url.includes(`&date=-1`) ? url.replace(`&date=-1`, `&date=${e}`) : null;
-                let newurlsuccess = (newurl === null ? newurl2 : newurl);
-                Redirect(newurlsuccess);
-                dispatch(getproduct());
-            }
-        }
-    }; */
 
     const [state, setstate] = useState(false);
     const [state1, setstate1] = useState(false);
@@ -179,7 +167,7 @@ const Allproductpage = ({user}) => {
 
                     <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
-                            <div className='min-h-[100vw] flex flex-col justify-between items-start'>
+                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
                                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {Array(10).fill(0).map((_, index) => (
                                         <li key={`productId_Skeleton_${index}`} className="w-full">

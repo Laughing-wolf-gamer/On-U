@@ -680,7 +680,7 @@ const Ppage = () => {
                             <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                             <div className='w-full flex justify-start items-start px-10'>
                                 <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 pb-8 gap-5'>
-                                    {similar && similar.length > 0 && similar.slice(0,20).map((pro) => (
+                                    {similar && similar.length > 0 && similar.map((pro) => (
                                         <Single_product key={pro._id} pro={pro} user ={user}/>
                                     ))}
                                 </ul>

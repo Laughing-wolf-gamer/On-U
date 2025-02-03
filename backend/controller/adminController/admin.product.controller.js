@@ -369,9 +369,30 @@ export const addNewProduct = async (req, res) => {
 
 export const fetchAllProducts = async (req, res) => {
     try {
+        const{page} = req.query;
         const allProducts = await ProductModel.find({});
-        if(!allProducts) res.status(404).json({Success:false,message:"No products found"});
-        res.status(200).json({Success: true, message: 'All products fetched successfully!', result: allProducts});
+        const totalProducts = await ProductModel.countDocuments();
+        const itemsPerPage = 20;
+        const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided
+
+        // Calculate the number of items to skip
+        const skip = (currentPage - 1) * itemsPerPage;
+        
+        // Get total count of products matching the filter
+        
+
+        // Calculate total pages
+        const totalPages = Math.ceil(totalProducts / itemsPerPage);
+        console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
+
+        // Fetch paginated products
+        const productsPagination = await ProductModel.find({}).sort(sort).limit(itemsPerPage).skip(skip);
+        // if(!allProducts) res.status(404).json({Success:false,message:"No products found"});
+        res.status(200).json({Success: true, message: 'All products fetched successfully!', result: {
+            productsPagination:productsPagination,
+            allProducts:allProducts,
+            totalProducts:totalProducts
+        }});
     } catch (error) {
         console.error('Error while Fetching all product:', error);
         logger.error("Error while Fetching all products: " + error.message);

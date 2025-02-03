@@ -19,29 +19,29 @@ app.use(bodyparser.urlencoded({ extended: true }));
 
 // Allowed origins (ensure these are correct)
 const allowedOrigins = [
-  process.env.API_URL,        // e.g. https://api.theonu.in
-  process.env.CLIENT_URL,     // e.g. https://theonu.in
-  process.env.CLIENT_URL_ADMIN, // e.g. https://admin.theonu.in
+    process.env.API_URL,        // e.g. https://api.theonu.in
+    process.env.CLIENT_URL,     // e.g. https://theonu.in
+    process.env.CLIENT_URL_ADMIN, // e.g. https://admin.theonu.in
 ];
 
 app.use(
-  cors({
-    origin: (origin, callback) => {
-      // console.log('Origin: ' + origin, ', Allowed: ', allowedOrigins.includes(origin));
+    cors({
+        origin: (origin, callback) => {
+            // console.log('Origin: ' + origin, ', Allowed: ', allowedOrigins.includes(origin));
 
-      // Allow requests with no origin (like mobile apps or Postman)
-      if (!origin) return callback(null, true);
+            // Allow requests with no origin (like mobile apps or Postman)
+            if (!origin) return callback(null, true);
 
-      if (allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error('Not allowed by CORS'));
-      }
-    },
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
-    credentials: true, // Allow credentials like cookies
-  })
+            if (allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
+        credentials: true, // Allow credentials like cookies
+    })
 );
 
 // You can explicitly handle OPTIONS requests if needed:
@@ -49,7 +49,7 @@ app.options('*', cors());
 
 // Define the / route to send a JSON response
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to the On-U API. The server is running!' });
+    res.json({ message: 'Welcome to the On-U API. The server is running!' });
 });
 
 // Define the other routes

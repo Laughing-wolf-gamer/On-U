@@ -206,7 +206,7 @@ export const optverify = A(async (req, res, next)=>{
 export const resendotp = async (req, res)=>{
     // console.log(req.params.id)
     const{email} = req.query;
-    console.log("Resend Otp Email: ",req.query)
+    // console.log("Resend Otp Email: ",req.query)
     if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
     const existingUser = await User.findOne({email:email})
     if(!existingUser){

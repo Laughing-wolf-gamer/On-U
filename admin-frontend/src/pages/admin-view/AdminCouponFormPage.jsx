@@ -7,7 +7,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const AdminCouponFormPage = () => {
-    const { products, Coupons } = useSelector(state => state.adminProducts);
+    const { Coupons } = useSelector(state => state.adminProducts);
     const { AllOptions } = useSelector(state => state.common);
     const dispatch = useDispatch();
 

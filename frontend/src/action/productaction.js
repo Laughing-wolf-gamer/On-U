@@ -54,7 +54,7 @@ export const singleProduct = (id) => async (dispatch) => {
         const res = await axios.get(`${BASE_API_URL}/api/shop/products/get/${id}`)
         const data = res?.data;
         console.log("Single Product: ", res);
-        dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data?.product, similar: data?.similar_product})
+        dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data?.product || [], similar: data?.similar_product || []})
 
     } catch (error) {
 

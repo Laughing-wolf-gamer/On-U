@@ -21,8 +21,6 @@ import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
-import Slider from '@mui/material/Slider';
-import styled from '@emotion/styled'
 import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
 
@@ -744,13 +742,13 @@ const MPpage = () => {
                                 </div>
                                 </div>
                                 {
-                                    similar && similar.length > 0 && similar.filter(s => s?._id !== product?._id).length > 0 && <div className="mt-2 pb-6 pt-4 relative bg-white px-4">
+                                    similar && similar.length > 0 && <div className="mt-2 pb-6 pt-4 relative bg-white px-4">
                                         <div className='w-full justify-center items-center flex px-1 py-2'>
                                             <h1 className="font1 flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
                                         </div>
                                         <div className="overflow-x-auto">
                                             <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-                                            {similar.filter(s => s?._id !== product?._id).map((pro) => (
+                                            {similar.map((pro) => (
                                                     <li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
                                                         <Single_product pro={pro} />
                                                     </li>

@@ -1,5 +1,5 @@
 import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData } from "@/store/admin/status-slice";
-import { BoxIcon, DollarSign, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
+import { BoxIcon, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -34,12 +34,12 @@ const Header = () => {
 const StatsCard = ({ title, value, icon, onChange ,isActive}) => {
     return (
         <div
-        onClick={(e) => {
-            if (onChange) {
-            onChange(title, value);
-            }
-        }}
-        className={`${isActive ? "bg-gray-200":"bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-full sm:w-96 md:w-80 mb-4`}
+            onClick={(e) => {
+                if (onChange) {
+                    onChange(title, value);
+                }
+            }}
+            className={`${isActive ? "bg-gray-200":"bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-full sm:w-96 md:w-80 mb-4`}
         >
         <div className="hover:scale-110 transition-transform duration-300">
             <h3 className="text-gray-500 text-base">{title}</h3>
@@ -414,49 +414,6 @@ const LoadingSpinner = () => {
     )
 }
 const TopSellingProductsTable = ({products}) => {
-    // Sample data for top-selling products
-    /* const products = [
-        {
-            _id: "67753aed239eb0866aa05893",
-            productId: "12345",
-            title: "Effortlessly stylish linen-blend shirt features a mandarin collar",
-            price: 1299,
-            salePrice: 1199,
-            totalSold: 100,  // Total units sold
-            stock: 39,  // Current stock available
-            rating: 4.2,  // Average rating
-        },
-        {
-            _id: "67753aed239eb0866aa05894",
-            productId: "12346",
-            title: "Smartphone with excellent battery life and performance",
-            price: 4999,
-            salePrice: 4599,
-            totalSold: 150,
-            stock: 25,
-            rating: 4.5,
-        },
-        {
-            _id: "67753aed239eb0866aa05895",
-            productId: "12347",
-            title: "Wireless Bluetooth Headphones with Noise Cancellation",
-            price: 1999,
-            salePrice: 1799,
-            totalSold: 250,
-            stock: 100,
-            rating: 4.8,
-        },
-        {
-            _id: "67753aed239eb0866aa05896",
-            productId: "12348",
-            title: "4K Ultra HD Smart TV with Bluetooth Connectivity",
-            price: 7999,
-            salePrice: 6999,
-            totalSold: 50,
-            stock: 10,
-            rating: 4.6,
-        },
-    ]; */
 
     return (
         <div className="py-12 bg-gray-100">

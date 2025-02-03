@@ -7,8 +7,10 @@ import axios from "axios"
 const adminProductSlice = createSlice({
     name:"adminProducts",
     initialState:{
-        isLoading:false,
-        products:[],
+        isLoading:true,
+        allProducts:[],
+        productsPagination:[],
+        totalProducts:0,
         Coupons:[],
     },
     reducers:{},
@@ -17,11 +19,15 @@ const adminProductSlice = createSlice({
             state.isLoading = true;
         }).addCase(fetchAllProducts.fulfilled,(state,action)=>{
             state.isLoading = false;
-            state.products = action?.payload.result;
+            state.allProducts = action?.payload.result?.allProducts;
+            state.productsPagination = action?.payload.result?.productsPagination;
+            state.totalProducts = action?.payload.result?.totalProducts;
             console.log(action?.payload?.data);
-        }).addCase(fetchAllProducts.rejected,(state,action)=>{
+        }).addCase(fetchAllProducts.rejected,(state)=>{
             state.isLoading = false;
-            state.products = [];
+            state.allProducts = [];
+            state.productsPagination = [];
+            state.totalProducts = 0;
         }).addCase(fetchAllCoupons.pending,(state,action)=>{
             state.isLoading = true;
         }).addCase(fetchAllCoupons.fulfilled,(state,action)=>{
@@ -49,12 +55,13 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',async (f
         console.error(error);
     }
 })
-export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',async ()=>{
+export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',async ({pageNo})=>{
     try {
-        const response = await axios.get(`${BASE_URL}/admin/product/all`,Header());
+        const response = await axios.get(`${BASE_URL}/admin/product/all?page=${pageNo}`,Header());
         return response.data;
     } catch (error) {
         console.error("Error Fetching all Products",error);
+        return [];
     }
 })
 export const editProducts = createAsyncThunk('/products/edit',async ({id,formData})=>{

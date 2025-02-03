@@ -64,7 +64,7 @@ const Login = () => {
         }
     };
     const checkSavedWishListData = async()=>{
-        const wishListData = getLocalStorageWishListItem();
+        const wishListData = /* getLocalStorageWishListItem() */sessionData;
         console.log("After Login Wishlist data: ", wishListData);
         if(wishListData){
             const response = dispatch(createAndSendProductsArrayWishList(wishListData));
@@ -77,7 +77,7 @@ const Login = () => {
         }
     }
     const checkSavedBagData = async()=>{
-        const savedBagData = getLocalStorageBag();
+        const savedBagData = sessionBagData;
         
         const response = await dispatch(addItemArrayBag(savedBagData));
         

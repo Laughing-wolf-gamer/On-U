@@ -5,6 +5,7 @@ import ImageKit from "imagekit";
 import Apifeature from '../utilis/Apifeatures.js';
 import ProductModel from '../model/productmodel.js';
 import OrderModel from '../model/ordermodel.js';
+import logger from '../utilis/loggerUtils.js';
 
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
@@ -27,7 +28,7 @@ export const imagekits = A(async (req, res, next)=>{
     });
 })
 
-export const getallproducts = A(async (req, res)=>{
+/* export const getallproducts = A(async (req, res)=>{
     try {
         console.log("Product Query ", req.query);
 
@@ -55,7 +56,7 @@ export const getallproducts = A(async (req, res)=>{
             }else{
                 sizeQueryCheck.push(req.query.size);
             }
-            console.log("Size query check: ", sizeQueryCheck)
+            // console.log("Size query check: ", sizeQueryCheck)
             // Filter based on matching any size.label in the req.query.size array
             filter.size = {
                 $elemMatch: {
@@ -70,13 +71,18 @@ export const getallproducts = A(async (req, res)=>{
             }else{
                 specialCategoryCheck.push(req.query.specialCategory);
             }
-            console.log("specialCategoryCheck query check: ", specialCategoryCheck)
+            // console.log("specialCategoryCheck query check: ", specialCategoryCheck)
             // Filter based on matching any size.label in the req.query.size array
             filter.specialCategory = { $in: specialCategoryCheck };
         }
-        if(req.query.keyword){
-            
-            const regx = new RegExp(req.query.keyword, 'i');
+        if (req.query.keyword) {
+            // Escape special regex characters to prevent injection
+            const escapeRegex = (string) => {
+                return string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            };
+            const keyword = escapeRegex(req.query.keyword); // Escape any special characters
+            const regx = new RegExp(keyword, 'i'); // Create a case-insensitive regular expression
+
             const createSearchQuery = {
                 $or: [
                     { title: regx },
@@ -89,8 +95,21 @@ export const getallproducts = A(async (req, res)=>{
                     { gender: regx },
                 ]
             };
-            Object.assign(filter, createSearchQuery);  // Merge search query with the filter
+
+            // Handle price and salePrice as numeric fields
+            if (!isNaN(req.query.keyword)) {
+                createSearchQuery.$or.push(
+                    { price: parseFloat(req.query.keyword) },
+                    { salePrice: parseFloat(req.query.keyword) }
+                );
+            }
+
+            // Merge search query with the filter
+            // let keyWordFilter = { ...filter, ...createSearchQuery };
+            Object.assign(filter, createSearchQuery);  // Merge search 
         }
+
+
         // Category filter
         if (req.query.category) {
             // filter.category = req.query.category;
@@ -100,7 +119,7 @@ export const getallproducts = A(async (req, res)=>{
             }else{
                 categoryQueryCheck.push(req.query.category);
             }
-            console.log("Category query check: ", categoryQueryCheck)
+            // console.log("Category query check: ", categoryQueryCheck)
             // Filter based on matching any size.label in the req.query.size array
             filter.category = { $in: categoryQueryCheck };
         }
@@ -112,7 +131,7 @@ export const getallproducts = A(async (req, res)=>{
             }else{
                 subcategoryQueryCheck.push(req.query.subcategory);
             }
-            console.log("Category query check: ", subcategoryQueryCheck)
+            // console.log("Category query check: ", subcategoryQueryCheck)
             filter.subCategory = { $in: subcategoryQueryCheck };
         }
         if (req.query.price) {
@@ -135,7 +154,7 @@ export const getallproducts = A(async (req, res)=>{
 
         // Selling price range filter
         if (req.query.sellingPrice) {
-            console.log("Price Range: ", req.query.sellingPrice);
+            // console.log("Price Range: ", req.query.sellingPrice);
             filter.price = req.query.sellingPrice;
         }
         
@@ -153,7 +172,7 @@ export const getallproducts = A(async (req, res)=>{
         // console.log("Filter: ", filter);
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments(filter);
-        let itemsPerPage = 20;
+        const itemsPerPage = 20;
         const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
 
         // Calculate the number of items to skip
@@ -167,10 +186,7 @@ export const getallproducts = A(async (req, res)=>{
         console.log("Total Products: ", totalProducts,", Pages: ", totalPages);
 
         // Fetch paginated products
-        const productsPagination = await ProductModel.find(filter)
-            .sort(sort)
-            .limit(itemsPerPage)
-            .skip(skip);
+        const productsPagination = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
         // console.log("Fetched Products: ", products);
         return res.status(200).json({
             products: allProducts,
@@ -185,48 +201,195 @@ export const getallproducts = A(async (req, res)=>{
             length:-1,
         }})
     }
-})
-const handleSort = (sortBy) => {
-    // Create a default sort object
-    let sort = {};
-  
-    switch (sortBy) {
-        case "newest":
-            // Sort by creation date (newest first)
-            sort.createdAt = -1;
-            break;
-        
-        case "popularity":
-            // Assuming you want to sort by a custom popularity field
-            sort.averageRating = -1;  // Descending order for most popular
-            break;
-    
-        case "discount":
-            // Assuming you have a discount field, you can sort based on that
-            sort.salePrice = -1; // Descending order for higher discounts
-            break;  
-        case "high-to-low":
-            // Sort by price in descending order
-            sort.price = -1;  // Highest price first
-            break;
-    
-        case "low-to-high":
-            // Sort by price in ascending order
-            sort.price = 1;   // Lowest price first
-            break;
-        default:
-            // Default sorting (e.g., by price if no valid `sortBy` provided)
-            if (sortBy === "low-to-high") {
-                sort.price = 1;  // Default to ascending price sorting
-            } else {
-                // If no sortBy parameter is given or an unknown value, default to creation date
-                sort.createdAt = -1; // Newest first
+}) */
+
+
+export const getallproducts = async (req, res) => {
+    try {
+        // console.log("Product Query", req.query);
+        const handleSort = (sortBy) => {
+            // Create a default sort object
+            let sort = {};
+          
+            switch (sortBy) {
+                case "newest":
+                    // Sort by creation date (newest first)
+                    sort.createdAt = -1;
+                    break;
+                
+                case "popularity":
+                    // Assuming you want to sort by a custom popularity field
+                    sort.averageRating = -1;  // Descending order for most popular
+                    break;
+            
+                case "discount":
+                    // Assuming you have a discount field, you can sort based on that
+                    sort.salePrice = -1; // Descending order for higher discounts
+                    break;  
+                case "high-to-low":
+                    // Sort by price in descending order
+                    sort.price = -1;  // Highest price first
+                    break;
+            
+                case "low-to-high":
+                    // Sort by price in ascending order
+                    sort.price = 1;   // Lowest price first
+                    break;
+                default:
+                    // Default sorting (e.g., by price if no valid `sortBy` provided)
+                    if (sortBy === "low-to-high") {
+                        sort.price = 1;  // Default to ascending price sorting
+                    } else {
+                        // If no sortBy parameter is given or an unknown value, default to creation date
+                        sort.createdAt = -1; // Newest first
+                    }
+                break;
             }
-        break;
+          
+            return sort;
+        };
+
+        // Helper function to ensure filters are arrays
+        const ensureArray = (value) => Array.isArray(value) ? value : [value];
+
+        // Build the query filter based on incoming request parameters
+        const filter = {};
+        let sort = {};
+
+        // Handle sorting
+        if (req.query.sortBy) {
+            sort = handleSort(req.query.sortBy);
+        }
+
+        // Color filter
+        if (req.query.color) {
+            const colorNames = req.query.color.split(',');
+            filter.AllColors = {
+                $elemMatch: {
+                    label: { $in: colorNames }
+                }
+            };
+        }
+
+        // Size filter
+        if (req.query.size) {
+            filter.size = {
+                $elemMatch: {
+                    label: { $in: ensureArray(req.query.size) }
+                }
+            };
+        }
+
+        // Special Category filter
+        if (req.query.specialCategory) {
+            filter.specialCategory = { $in: ensureArray(req.query.specialCategory) };
+        }
+
+        // Keyword search filter
+        if (req.query.keyword) {
+            const escapeRegex = (string) => string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            const regx = new RegExp(escapeRegex(req.query.keyword), 'i');
+            const keywordFilter = {
+                $or: [
+                    { title: regx },
+                    { description: regx },
+                    { category: regx },
+                    { subCategory: regx },
+                    { specialCategory: regx },
+                    { material: regx },
+                    { specification: regx },
+                    { gender: regx },
+                ]
+            };
+
+            // Include price and salePrice if keyword is numeric
+            if (!isNaN(req.query.keyword)) {
+                keywordFilter.$or.push(
+                    { price: parseFloat(req.query.keyword) },
+                    { salePrice: parseFloat(req.query.keyword) }
+                );
+            }
+
+            Object.assign(filter, keywordFilter);
+        }
+
+        // Category filter
+        if (req.query.category) {
+            filter.category = { $in: ensureArray(req.query.category) };
+        }
+
+        // Subcategory filter
+        if (req.query.subcategory) {
+            filter.subCategory = { $in: ensureArray(req.query.subcategory) };
+        }
+
+        // Price filter
+        if (req.query.price) {
+            const priceRange = req.query.price.split(',');
+            if (priceRange.length === 2) {
+                filter.price = {
+                    $gte: parseFloat(priceRange[0]),
+                    $lte: parseFloat(priceRange[1])
+                };
+            }
+        }
+
+        // Gender filter
+        if (req.query.gender) {
+            filter.gender = req.query.gender;
+        }
+
+        // Selling price filter
+        if (req.query.sellingPrice) {
+            filter.price = req.query.sellingPrice;
+        }
+
+        // Date range filter
+        if (req.query.dateRange) {
+            const dateRange = req.query.dateRange.split('-');
+            if (dateRange.length === 2) {
+                filter.date = {
+                    $gte: new Date(dateRange[0]),
+                    $lte: new Date(dateRange[1])
+                };
+            }
+        }
+        const allProducts = await ProductModel.find({});
+        // Paginate products
+        const itemsPerPage = 20;
+        const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
+        const skip = (currentPage - 1) * itemsPerPage;
+
+        const totalProducts = await ProductModel.countDocuments(filter);
+        const totalPages = Math.ceil(totalProducts / itemsPerPage);
+        console.log("Total Products:", totalProducts, ", Pages:", totalPages);
+
+        // Fetch products with pagination
+        const productsPagination = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
+
+        return res.status(200).json({
+            products: allProducts,
+            pro: productsPagination,  // Return only paginated products
+            length: totalProducts,
+            totalPages
+        });
+    } catch (error) {
+        console.error("Error Fetching Products:", error);
+        logger.error("Error Fetching Products: "+ error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error',
+            result: {
+                products:[],
+                pro:[],
+                length:0,
+                totalPages:1,
+            }
+        });
     }
-  
-    return sort;
-};
+}
+
+
 export const getRandomProducts = async (req, res)=>{
     const { category } = req.body;  // Get category from request body
     try {
@@ -248,6 +411,7 @@ export const getRandomProducts = async (req, res)=>{
     } catch (error) {
         // Handle errors and send appropriate response
         console.error("Error fetching random products:", error);
+        logger.error("Error fetching random products: "+ error.message);
         res.status(500).json({
             success: false,
             message: "Failed to fetch random products",
@@ -311,6 +475,7 @@ export const checkUserPurchasedProduct = async (req, res) => {
         });
     } catch (error) {
         console.error("Error Checking User Purchased ", error);
+        logger.error("Error Checking User Purchased: "+ error.message);
         res.status(500).json({ 
             success: false, 
             message: 'Internal server error' 
@@ -362,25 +527,44 @@ export const setRating = async (req, res) => {
         res.status(200).json({ success: true, message: 'Rating set successfully', result: product });
     } catch (error) {
         console.log("Error Posting Rating", error);
+        logger.error("Error Posting Rating: "+ error.message);
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
 
 
-export const SendSingleProduct = A(async (req, res, next)=>{
-    const product = await ProductModel.findById(req.params.id)
-    if (!product) {
-        return next(new Errorhandler("product not found", 404));
+export const SendSingleProduct = async (req, res) => {
+    try {
+        const { id } = req.params;
+        
+        // Fetch the product by ID
+        const product = await ProductModel.findById(id);
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        // Fetch similar products, excluding the current product
+        const similarProduct = await ProductModel.find({
+            category: product.category,
+            subCategory: product.subCategory,
+            gender: product.gender,
+            _id: { $ne: id }  // Exclude the current product by its _id
+        }).limit(20);  // Limit to 20 similar products
+
+        console.log("Product Single: ", product, "Similar Product: ", similarProduct);
+
+        res.status(200).json({
+            success: true,
+            message:"Product successfully Found!",
+            product,
+            similar_product: similarProduct || []
+        });
+
+    } catch (error) {
+        console.error("Error Getting Products: ", error);
+        logger.error("Error Getting Products: " + error.message);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-    
-    const similar_product = await ProductModel.find({category: product.category, brand: product.brand}).limit(15)
-    console.log("Product Single: ",product, "Similar Product: ",similar_product);
-    
-    res.status(200).json({
-        success:true,
-        product,
-        similar_product
-    })
-})
+};
 
  
