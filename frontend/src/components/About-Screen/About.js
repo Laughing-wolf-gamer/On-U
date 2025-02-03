@@ -91,7 +91,7 @@ const About = () => {
                                 <div key={`team-${index}`} className="relative text-center flex flex-col bg-slate-300 p-10 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
                                     <LazyLoadImage
                                         src={member.image || "https://www.insightstate.com/wp-content/uploads/2024/02/positive-traits-of-a-person.jpg.webp"}
-                                        alt={`Team Member ${index+1}`}
+                                        alt={`Team_Member_${index+1}`}
                                         className="w-64 h-64 mx-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-125"
                                     />
                                     <div className="absolute inset-0 top-1/2 h-14 bg-slate-300 bg-opacity-50 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300 z-20">

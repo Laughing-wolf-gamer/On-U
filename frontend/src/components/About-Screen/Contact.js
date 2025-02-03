@@ -1,7 +1,6 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Footer from "../Footer/Footer";
 import { useDispatch } from "react-redux";
-import { useAlert } from "react-alert";
 import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import LoadingOverlay from "../../utils/LoadingOverLay";
@@ -90,7 +89,6 @@ const Contact = () => {
         e.preventDefault();
         console.log("Submit Form: ",sendingFormData);
         // Handle form submission (e.g., send to a server or display a success message)
-        // alert.info("Message sent! We will get back to you shortly.");
         sendContactQuery();
     };
     useEffect(()=>{

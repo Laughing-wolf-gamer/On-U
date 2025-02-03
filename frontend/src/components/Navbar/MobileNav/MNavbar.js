@@ -15,7 +15,7 @@ import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCart, UserRound } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 
@@ -27,7 +27,7 @@ const MNavbar = ({ user }) => {
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const dispatch = useDispatch()
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
-    const redirect = useNavigate()
+    const navigation = useNavigate()
     const [show, setShow] = useState(false);
     const [Class, setClass] = useState("hidden");
     const [Menul, setMenul] = useState("hidden");
@@ -44,7 +44,7 @@ const MNavbar = ({ user }) => {
     const [Beauty, setBeauty] = useState(false)
     const classchange = () => setClass("block");
     const classunchange = () => setClass("hidden");
-    const handleClose = () => (setShow(false), redirect('/products'));
+    const handleClose = () => (setShow(false), navigation('/products'));
     const handleShow = () => setShow(true);
     const loginunchange = () => setClass("hidden");
     const loginClose = () => setShow(false);
@@ -62,11 +62,11 @@ const MNavbar = ({ user }) => {
        
         if (e.keyCode == 13) {
             if (state.trim()) {
-                redirect(`/products?keyword=${state}`)
+                navigation(`/products?keyword=${state}`)
                 dispatch(Allproduct())
                 setserdiv('hidden')
             } else {
-                redirect('/products')
+                navigation('/products')
                 setserdiv('hidden')
             }
             
@@ -76,11 +76,11 @@ const MNavbar = ({ user }) => {
 
     function searchenters() {
         if (state.trim()) {
-            redirect(`/products?keyword=${state}`)
+            navigation(`/products?keyword=${state}`)
             dispatch(Allproduct())
             setserdiv('hidden')
         } else {
-            redirect('/products')
+            navigation('/products')
             setserdiv('hidden')
         }
     }
@@ -227,10 +227,10 @@ const MNavbar = ({ user }) => {
                     className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${show ? 'translate-x-0' : 'translate-x-full'}`}
                 >
                     <div className="p-4">
-                        <img src={Mbanner} alt="Banner" className="min-h-[150px]" />
+                        {/* <img src={Mbanner} alt="Banner" className="min-h-[150px]" /> */}
                     
                         {/* Conditional rendering for user login state */}
-                        {user ? (
+                        {/* {user ? (
                             <div
                                 className="text-slate-400 font1 text-xs font-bold absolute right-14 top-32"
                                 onClick={(e) => {
@@ -251,39 +251,48 @@ const MNavbar = ({ user }) => {
                                     <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
                                 </Link>
                             </div>
-                        )}
+                        )} */}
                     
                         <ul>
                             <Ripples color="#D0DDD0" className="w-full">
-                                <li
+                                {/* <li
                                     className="text-black font1 px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
+                                        e.stopPropagation();
                                         setShow(false);
                                         setClass("hidden");
                                         if (user) {
-                                            redirect('/dashboard');
+                                            navigation('/dashboard');
                                         } else {
-                                            redirect('/Login');
+                                            navigation('/Login');
                                         }
                                     }}
                                 >
-                                    {user ? (
-                                        <span className="float-left flex items-center">
-                                            <FaUserAlt size={20} className="mr-2" /> Profile
-                                        </span>
-                                    ) : (
-                                        <span className="float-left">Login</span>
-                                    )}
-                                </li>
+                                </li> */}
+                                <div className="font1 px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex bg-gray-100">
+                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={()=>{
+                                        if(user){
+                                            navigation("/dashboard");
+                                        }else{
+                                            navigation('/Login');
+                                        }
+                                    }}>
+                                        <UserRound size={15}/>
+                                    </div>
+                                    <span className="float-left text-black font-light flex items-center">
+                                        {user ? "Profile":"Login"}
+                                    </span>
+                                </div>
                             </Ripples>
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <div
-                                    className="text-black font1 px-5 py-4 relative w-full flex bg-blue-50"
+                                    className="text-black font1 px-5 py-4 relative w-full flex bg-gray-50"
                                     onClick={(e) => {
+                                        e.stopPropagation();
                                         setShow(false);
                                         setClass("hidden");
-                                        redirect("/");
+                                        navigation("/");
                                     }}
                                 >
                                     <span className="float-left">Home</span>
@@ -298,7 +307,7 @@ const MNavbar = ({ user }) => {
                                         setMenu2(Menu2 === "hidden" ? "block" : "hidden");
                                     }}
                                 >
-                                    <span className="float-left">Products</span>
+                                    <span className="float-left">Shops</span>
                                     <span className="absolute mx-5 right-0">{Women ? <IoIosArrowDown /> : <IoIosArrowForward />}</span>
                                 </li>
                             </Ripples>
@@ -318,7 +327,7 @@ const MNavbar = ({ user }) => {
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
-                                        redirect("/about");
+                                        navigation("/about");
                                     }}
                                 >
                                     <span className="float-left">About Us</span>
@@ -329,9 +338,9 @@ const MNavbar = ({ user }) => {
                             <li
                                 className="text-black font1 px-5 py-4 relative w-full flex"
                                 onClick={(e) => {
-                                setShow(false);
-                                setClass("hidden");
-                                redirect("/contact");
+                                    setShow(false);
+                                    setClass("hidden");
+                                    navigation("/contact");
                                 }}
                             >
                                 <span className="float-left">Contact</span>

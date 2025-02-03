@@ -26,6 +26,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     let AllProductsColor = [];
     let specialCategory = [];
     let spARRAY = [];
+    let onSale = []
     const n = 3
     const result = [[], [], []] //we create it, then we'll fill it    
     // Generate category, gender, color, and price arrays
@@ -34,6 +35,17 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             product.forEach(p => AllProductsCategory.push(p.category));
         }
     };
+    function SetOnSale (){
+        if (product && product.length > 0) {
+            product.forEach(p => {
+                if(p.salePrice && p.salePrice > 0){
+                    if(!onSale.includes(p.salePrice)){
+                        onSale.push(p.salePrice)
+                    }
+                }
+            });
+        }
+    }
     const specialCategoryArray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
@@ -100,12 +112,14 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         
         specialCategoryArray();
         sparray();
+        SetOnSale();
     },[product])
     categoriesarray();
     subcategoryarray();
     genderarray();
     colorarray();
     sizearray();
+    SetOnSale();
     
     specialCategoryArray();
     sparray();
@@ -192,6 +206,29 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             dispatchFetchAllProduct();
         }
     };
+    const onSaleFun = ()=>{
+        let url = new URL(window.location.href);
+        let onSaleData = url.searchParams.get('onSale');
+        // Check if 'onSale' parameter is present in the URL
+        if (onSaleData === null) {
+            // If 'onSale' doesn't exist, set it to 'true'
+            url.searchParams.append("onSale", 'true');
+        } else if (onSaleData === 'true') {
+            // If 'onSale' exists and is 'true', set it to 'false'
+            url.searchParams.set("onSale", 'false');
+        } else {
+            // If 'onSale' exists and is not 'true', set it to 'true'
+            url.searchParams.set("onSale", 'true');
+        }
+
+        // Update the URL without reloading the page
+        window.history.replaceState(null, "", url.toString());
+
+        // If dispatchFetchAllProduct is a function, call it
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    }
     const sizefun = (e) => {
         let url = new URL(window.location.href);
 
@@ -498,6 +535,40 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 </label>
                             </div>
                         );
+                    })}
+                </ul>
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-normal mb-2'>On Sale</h1>
+                    {onSale && onSale.length > 0 && [1].map((_, i) => {
+                        // Get the URL search parameters
+                        const params = new URLSearchParams(window.location.search);
+                        const selectedOnSale = params.getAll('onSale'); // Get all 'onSale' values from URL
+                        
+                        // Check if the URL contains 'onSale=true'
+                        const isChecked = selectedOnSale.includes('true');
+
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                onSaleFun(); // This will update the URL with the selected sale status
+                            }}>
+                                <input
+                                    type="checkbox"
+                                    name="OnSale"
+                                    value={'true'}
+                                    id={`On_sale`}
+                                    className='mb-2 accent-gray-500'
+                                    checked={isChecked} // Set checkbox checked based on URL parameter
+                                    onChange={() => {}} // No need to handle change here; onClick will update URL
+                                />
+                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                    On Sale
+                                    <span className='text-xs font-sans font-normal text-slate-400'>
+                                        ({onSale.length})
+                                    </span>
+                                </label>
+                            </div>
+                        )
                     })}
                 </ul>
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>

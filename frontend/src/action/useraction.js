@@ -168,33 +168,22 @@ export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
     }
 }
 
-export const resendotp = ({email}) => async (dispatch) => {
-
+export const resendotp = ({email}) => async () => {
     try {
-
-        dispatch({ type: REQUEST_RESEND_OTP })
-        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        // const mobileno = Number(mobile.phonenumber)
-
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp`,{email})
-
-        dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
-
+        console.log("Received: ", email)
+        // dispatch({ type: REQUEST_RESEND_OTP })
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp?email=${email}`)
+        return data.success
+        // dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
     } catch (Error) {
-    
-        dispatch({ type: FAIL_RESEND_OTP, payload: Error.response.data.message })
-
+        // dispatch({ type: FAIL_RESEND_OTP, payload: Error.response.data.message })
+        return false;
     }
 }
 
 export const updateuser = (userdata) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_UPDATE_USER })
-        // console.log("Update User Data: ", userdata)
-        // const mobile = JSON.parse(localStorage.getItem('mobileno'))
-        // const mobileno = Number(mobile.phonenumber)
-        // const config = { headers: { "Content-Type": "application/json" } }
-
         const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateuser`, userdata,headerConfig())
         console.log("Update User Data: ", data.result)
         if(data.token){

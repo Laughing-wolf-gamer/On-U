@@ -12,13 +12,12 @@ import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../
 import { X } from 'lucide-react';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
-import toast from 'react-hot-toast';
-import { useToast } from '../../Contaxt/ToastProvider';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import CouponsDisplay from './CouponDisplay';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 
 const Bag = () => {
@@ -28,8 +27,8 @@ const Bag = () => {
     const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const {allAddresses} = useSelector(state => state.getAllAddress)
-
-    const { activeToast, showToast } = useToast();
+    const {checkAndCreateToast} = useSettingsContext();
+    /* const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         console.log("check Toast: ",type, message,activeToast);
         if(!activeToast){
@@ -52,7 +51,7 @@ const Bag = () => {
             }
             showToast(message);
         }
-    }
+    } */
     const navigation = useNavigate()
     const dispatch = useDispatch();
 

@@ -203,10 +203,10 @@ export const optverify = A(async (req, res, next)=>{
 
 })
 
-export const resendotp = A(async (req, res, next)=>{
+export const resendotp = async (req, res)=>{
     // console.log(req.params.id)
-    const{email} = req.body;
-    console.log("Resend Otp Email: ",req.body )
+    const{email} = req.query;
+    console.log("Resend Otp Email: ",req.query)
     if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
     const existingUser = await User.findOne({email:email})
     if(!existingUser){
@@ -221,7 +221,7 @@ export const resendotp = A(async (req, res, next)=>{
     existingUser.otp = otp;
     await existingUser.save();
     return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
-})
+}
 export const logInUser = async (req,res) =>{
     try {
         const {phonenumber} = req.body;

@@ -1,22 +1,20 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { applyCouponToBag, create_order, createPaymentOrder, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
-import { useAlert } from "react-alert";
-import { BASE_API_URL, BASE_CLIENT_URL, DevMode, headerConfig } from "../../config";
-import { cashfree } from "../../utils/pgUtils";
+import { useDispatch } from "react-redux";
+import { applyCouponToBag, create_order, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
+import { BASE_API_URL, BASE_CLIENT_URL, headerConfig } from "../../config";
 import axios from "axios";
-import { useRazorpay, RazorpayOrderOptions } from "react-razorpay";
+import { useRazorpay } from "react-razorpay";
 import { X } from "lucide-react";
+import { useSettingsContext } from "../../Contaxt/SettingsContext";
 
 const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
     const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
-    const [discount, setDiscount] = useState(0);
+    // const [discount, setDiscount] = useState(0);
     const [isPaymentStart, setIsPaymentStart] = useState(false);
-    const alert = useAlert();
-    // const originalPrice = 1000;
+    const {checkAndCreateToast} = useSettingsContext();
 
     // Apply coupon discount
     const applyCoupon = async (e) => {
@@ -25,7 +23,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             await dispatch(applyCouponToBag({ bagId: bag._id, couponCode: coupon }));
             closePopup();
         } else {
-            alert.info("Please select a coupon and apply it before proceeding with payment");
+            checkAndCreateToast("info","Please select a coupon and apply it before proceeding with payment");
         }
     };
 
@@ -42,14 +40,14 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
         setPaymentMethod(paymentMode);
     };
 
-    const handleCashFreePayment = async () => {
+    /* const handleCashFreePayment = async () => {
         if (!bag.orderItems || !bag.orderItems.length || bag.orderItems.length <= 0) {
-            alert("Your cart is empty, please add items to proceed");
+            checkAndCreateToast("info","Your cart is empty, please add items to proceed");
             return;
         }
         if (selectedAddress === null) {
-            alert("Please select an address to proceed");
-            return;
+            checkAndCreateToast("info","Please select an address to proceed"); 
+            return
         }
 
         const data = {
@@ -79,7 +77,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
             sessionStorage.setItem("checkoutData", JSON.stringify({ paymentData: responseResult?.result, bagId: bag?._id, SelectedAddress: selectedAddress, totalAmount, orderDetails }));
             if (responseResult?.success) {
-                alert.success(`Order Placed Successfully ${responseResult?.message}`);
+                checkAndCreateToast("error",`Order Placed Successfully ${responseResult?.message}`);
                 const ReturnUrlBase = DevMode ? "http://localhost:3000" : "https://on-u-frontend-website.onrender.com";
                 let checkoutOptions = {
                     paymentSessionId: responseResult?.result?.payment_session_id,
@@ -89,11 +87,11 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
 
                 cashfree?.checkout(checkoutOptions).then(function (result) {
                     if (result.error) {
-                        alert.error(result.error.message);
+                        checkAndCreateToast("error",result.error.message);
                         setIsPaymentStart(false);
                     }
                     if (result.redirect) {
-                        alert.info("Redirecting to Payment Gateway");
+                        checkAndCreateToast("info","Redirecting to Payment Gateway");
                     }
                 });
             }
@@ -102,9 +100,10 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
         } finally {
             setIsPaymentStart(false);
         }
-    }
+    } */
 
     const handleRazerPayPayment = async () => {
+        setIsPaymentStart(true);
         try {
             const { data } = await axios.post(`${BASE_API_URL}/api/payment/razerypay/order`, {
                 amount: totalAmount,
@@ -114,8 +113,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 callback_url: `${BASE_CLIENT_URL}/bag`
             }, headerConfig());
             if (!data.success) {
-                alert.error("Failed to create order, please try again To Process Payment!");
-                return;
+                throw new Error("Failed to create order, please try again To Process Payment!");
             }
             const options = {
                 key: data.keyId,
@@ -134,7 +132,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                         totalAmount,
                         orderDetails: bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity })),
                     }));
-                    alert.success("RazerPay Payment Success");
+                    checkAndCreateToast("success","RazerPay Payment Success");
                     window.open(`${BASE_CLIENT_URL}/bag`, "_self");
                 },
                 prefill: {
@@ -151,11 +149,15 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
             };
             const razor = new Razorpay(options);
             razor.on("payment.failed", function (response) {
-                alert.error("Payment Failed, Please try again");
+                // checkAndCreateToast("error","Payment Failed, Please try again");
+                throw new Error("Payment Failed, Please try again");
             });
             razor.open();
         } catch (error) {
             console.error("Payment Failed", error);
+            checkAndCreateToast("error",error.message);
+        }finally{
+            setIsPaymentStart(false);
         }
     }
 
@@ -178,10 +180,14 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 handleRazerPayPayment();
             }
         } else {
-            alert("Please select a payment method.");
+            checkAndCreateToast("info","Please select a payment method.");
         }
     };
-
+    useEffect(()=>{
+        if(error){
+            checkAndCreateToast("error",error);
+        }
+    },[error])
     useEffect(() => {
         dispatch(fetchAllOrders());
     }, [dispatch]);
@@ -262,7 +268,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Discount:</span>
-                        <span>{discount}</span>
+                        {/* <span>{discount}</span> */}
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>

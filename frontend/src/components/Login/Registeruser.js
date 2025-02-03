@@ -3,17 +3,13 @@ import './Login.css';
 import { clearErrors, registerUser } from '../../action/useraction';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { FcGoogle } from 'react-icons/fc';
-import GoogleLogin from 'react-google-login';
-import { useAlert } from 'react-alert';
 import { fetchAddressForm } from '../../action/common.action';
-import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
-import { removeSpaces } from '../../config';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const Registeruser = () => {
-    const Alert = useAlert();
-    const redirect = useNavigate();
+    const {checkAndCreateToast} = useSettingsContext();
+    const navigation = useNavigate();
     const { formData } = useSelector(state => state.fetchFormBanners);
     const { user, error, loading } = useSelector(state => state.Registeruser);
     const [name, setname] = useState('');
@@ -22,15 +18,10 @@ const Registeruser = () => {
     const [email, setemail] = useState('');
     // const [newAddress, setNewAddress] = useState({});
     const dispatch = useDispatch();
-
-    const signin_google = (response) => {
-        // Handle Google Sign-In (optional)
-    };
-
     const onsubmit = async (e) => {
         e.preventDefault();
         if (!name ||!phoneNumber ||!gender ||!email) {
-            Alert.error('All Fields are required!');
+            checkAndCreateToast('error', 'All Fields are required!');
             return;
         }
         const myForm = {
@@ -41,25 +32,17 @@ const Registeruser = () => {
         };
         await dispatch(registerUser(myForm));
     };
-    const handleChangeAddressData = (e) => {
-        /* const { name, value } = e.target;
-        setNewAddress((prev) => ({
-            ...prev,
-            [name]: value,
-        })); */
-    };
 
     useEffect(() => {
         if (error) {
             dispatch(clearErrors());
         }
         if (user) {
-            Alert.success('Otp Sent To Your EmailID');
-            redirect('/verifying');
+            checkAndCreateToast('success', 'Otp Sent To Your EmailID');
+            navigation('/verifying');
         }
         dispatch(fetchAddressForm());
     }, [error, user, dispatch]);
-    // console.log("address form. ", formData);
     return (
         <Fragment>
             <form onSubmit={(e) => onsubmit(e)}>

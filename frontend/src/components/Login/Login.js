@@ -3,50 +3,23 @@ import './Login.css';
 import { useDispatch } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
-import { useAlert } from 'react-alert';
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../action/orderaction';
-import { useToast } from '../../Contaxt/ToastProvider'
-import toast from 'react-hot-toast'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { X } from 'lucide-react';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 const Login = () => {
     const [logInData, setLogInData] = useState('');
     const { sessionData,sessionBagData } = useSessionStorage();
     const [otpData, setOtpData] = useState(null);
     const [otp, setOtp] = useState('');
-    const Redirect = useNavigate();
+    const navigation = useNavigate();
     const dispatch = useDispatch();
-    const Alert = useAlert();
-    // let par = document.getElementById('error');
-    const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(!activeToast){
-            switch(type){
-                case "error":
-                    toast.error(message)
-                    break;
-                case "warning":
-                    toast.warning(message)
-                    break;
-                case "info":
-                    toast.info(message)
-                    break;
-                case "success":
-                    toast.success(message)
-                    break;
-                default:
-                    toast.info(message)
-                    break;
-            }
-            showToast(message);
-        }
-    }
+    const {checkAndCreateToast} = useSettingsContext();
     const continues = async () => {
         if (!logInData) {
-            Alert.error('Please enter a Valid LogIn Details');
+            checkAndCreateToast("error",'Please enter a Valid LogIn Details');
             return;
         }
         try {
@@ -54,13 +27,13 @@ const Login = () => {
             const{success,message,result} = reponse;
             if(success){
                 setOtpData(result); // Assuming result means OTP is sent
-                Alert.info("Otp sent successfully To Your Mail Id ")
+                checkAndCreateToast("info","Otp sent successfully To Your Mail Id ")
             }else{
-                Alert.error(message);
+                checkAndCreateToast("error",message);
             }
         } catch (error) {
-            Alert.error('Failed to login');
-            console.error(error);
+            checkAndCreateToast("error",'Failed to login');
+            console.error("Failed to login ,",error);
         }
     };
 
@@ -81,12 +54,12 @@ const Login = () => {
                 } catch (error) {
                     console.error("Failed to check saved wish list data")
                 }
-                Alert.success('Login Successful');
+                checkAndCreateToast("success",'Login Successful');
                 setOtpData(null); // Clear OTP data after successful verification
                 setOtp('');
-                Redirect('/');
+                navigation('/');
             }else{
-                Alert.error(message || "Verification Failed");
+                checkAndCreateToast("error",message || "Verification Failed");
             }
         }
     };

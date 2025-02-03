@@ -220,10 +220,6 @@ const AdminProducts = () => {
                     setUploadedImageUrls([]);
                     setFormData(initialFormData);
                     dispatch(fetchAllProducts());
-                    /* toast({
-                        title: "Product Added Successfully",
-                        description: data?.payload?.message,
-                    }); */
                     toast("Product Added Success")
                 }
             } catch (error) {
