@@ -84,12 +84,12 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const colorarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
-                p.AllColors.forEach(c => {
-                    const alreadyExists = AllProductsColor.find((col) => col.label === c.label);
-                    if(!alreadyExists){
+                p.AllColors.forEach(c =>{
+                    const alreadyExists = AllProductsColor.some(item => item.label === c.label);
+                    if (!alreadyExists){
                         AllProductsColor.push(c);
                     }
-                });
+                })
             });
         }
     };
@@ -497,7 +497,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
     }
-    // console.log("All options: ",AllProductsCategory,AllProductsSubcategory);
+    console.log("All Colors: ",AllProductsColor);
     
 
     return (
@@ -671,46 +671,68 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
-                <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-hidden relative`}>
-                    <h1 className='font1 text-base font-semibold mb-2'>COLOR</h1>
-                    {AllProductsColor && AllProductsColor.length > 0 && AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
-                        // Check if the current color 'e.label' exists in the URL parameters
-                        const params = new URLSearchParams(window.location.search);
-                        const selectedColors = params.getAll('color'); // Get all color values from URL
+                <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative`}>
+                    <h1 className="font1 text-base font-semibold mb-2">COLOR</h1>
+                    {AllProductsColor && AllProductsColor.length > 0 && 
+                        AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
+                            // Check if the current color 'e.label' exists in the URL parameters
+                            const params = new URLSearchParams(window.location.search);
+                            const selectedColors = params.getAll('color'); // Get all color values from URL
 
-                        const isChecked = selectedColors.includes(e.label); // Check if current color is selected
+                            const isChecked = selectedColors.includes(e.label); // Check if current color is selected
 
-                        return (
-                            <li key={i} className='items-center w-full h-fit justify-start flex flex-row space-x-7 p-2'>
-                                <input
-                                    type="checkbox"
-                                    name="color"
-                                    value={e.label}
-                                    id={`id_${i}`}
-                                    className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if color is selected in the URL
-                                    onClick={(event) => {
-                                        event.preventDefault();
-                                        colorfun(e.label); // This will update the URL with the selected color
-                                    }}
-                                />
-                                <div style={{ backgroundColor: e.label }} className='w-20 h-7 border border-slate-400'></div>
-                            </li>
-                        );
-                    })}
-                
+                            return (
+                                <li key={i} className="flex items-center w-full space-x-4 p-2">
+                                    <input
+                                        type="checkbox"
+                                        name="color"
+                                        value={e.label}
+                                        id={`id_${i}`}
+                                        className="accent-gray-500"
+                                        checked={isChecked} // Set checkbox checked if color is selected in the URL
+                                        onClick={(event) => {
+                                            event.preventDefault();
+                                            colorfun(e.label); // This will update the URL with the selected color
+                                        }}
+                                    />
+                                    <div
+                                        style={{ backgroundColor: e.label }}
+                                        className="w-10 h-7 border border-slate-400 rounded"
+                                    ></div>
+                                    <label className="flex flex-col text-left text-sm">
+                                        <span className="font-semibold">
+                                            {e.name && (
+                                                <span>
+                                                    {e?.name.length > 20
+                                                    ? `${capitalizeFirstLetterOfEachWord(e?.name.slice(0, 20))}`
+                                                    : capitalizeFirstLetterOfEachWord(e?.name)}
+                                                </span>
+                                            )}
+                                        </span>
+                                        <span className="text-xs font-normal text-slate-400">
+                                            ({AllProductsColor.filter((f) => f.label === e.label).length})
+                                        </span>
+                                    </label>
+                                </li>
+                            );
+                        })
+                    }
+
                     {/* Show "+ More" button if the number of colors exceeds 5 */}
                     {AllProductsColor.length > 5 && colorul !== 'max-h-max' && (
-                        <button 
-                            className={`absolute bottom-1 right-2 font1 text-gray-600 ${colorulbtn}`} 
-                            onClick={() => {
-                                setcolorul('max-h-max');
-                                setcolorulbtn('hidden');
-                            }}>
-                            + More
-                        </button>
+                        <div className="flex justify-center mt-5">
+                            <button 
+                                className={`font1 text-gray-600 ${colorulbtn}`} 
+                                onClick={() => {
+                                    setcolorul('max-h-max');
+                                    setcolorulbtn('hidden');
+                                }}>
+                                + More
+                            </button>
+                        </div>
                     )}
                 </ul>
+
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-normal mb-2'>On Sale</h1>
                     {onSale && onSale.length > 0 && [1].map((_, i) => {
@@ -745,7 +767,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         )
                     })}
                 </ul>
-                                
+
                 <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
                     <span className='w-full h-full text-center font-bold'>Clear</span>
                 </button>

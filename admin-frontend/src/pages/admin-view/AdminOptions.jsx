@@ -1,12 +1,13 @@
+import { Button } from '@/components/ui/button';
 import { useToast } from '@/hooks/use-toast';
-import { addNewOption, deleteOption, fetchAllOptions, setConvenienceFees } from '@/store/common-slice';
+import { addNewOption, deleteOption, fetchAllOptions, setConvenienceFees, updateColorName, updateOptionActive } from '@/store/common-slice';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const AdminOptions = () => {
     const { AllOptions,convenienceFees } = useSelector(state => state.common);
-
+    const[currentUpdatingColorNameData,setUpdatingColorNameData] = useState(null);
     const{toast} = useToast();
     const [dropdowns, setDropdowns] = useState({
         categories: false,
@@ -74,6 +75,19 @@ const AdminOptions = () => {
         dispatch(fetchAllOptions());
         toast({title:`Removed New ${type}`,type:"error"});
     };
+    const handleToggleShowOptionInProducts = async (type, value,checked) => {
+        console.log("Toggle show option in products: ",type,value,checked);
+        await dispatch(updateOptionActive({type: type, value: value.value, isActive: checked}))
+        toast({title:`Toggle show option in products`,type:"success"});
+        dispatch(fetchAllOptions());
+    }
+    const handleUpdateColorName = async () => {
+        if (currentUpdatingColorNameData) {
+            console.log("Update color name: ",{type: currentUpdatingColorNameData.type, value: currentUpdatingColorNameData.value.value, name: currentUpdatingColorNameData?.name})
+            await dispatch(updateColorName({type: currentUpdatingColorNameData.type, value: currentUpdatingColorNameData.value.value, name: currentUpdatingColorNameData?.name}));
+            dispatch(fetchAllOptions());
+        }
+    }
 
     useEffect(() => {
         dispatch(fetchAllOptions());
@@ -168,14 +182,14 @@ const AdminOptions = () => {
                 <div>
                     <label className="block font-medium text-gray-700">Product Subcategory</label>
                     <input
-                    type="text"
-                    value={subcategory}
-                    onChange={(e) => setSubcategory(e.target.value)}
-                    className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
+                        type="text"
+                        value={subcategory}
+                        onChange={(e) => setSubcategory(e.target.value)}
+                        className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-indigo-500 focus:border-indigo-500"
                     />
                     <button
-                    onClick={() => handleAddOption('subcategory', subcategory)}
-                    className="mt-4 w-full p-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-300"
+                        onClick={() => handleAddOption('subcategory', subcategory)}
+                        className="mt-4 w-full p-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-300"
                     >
                     Add Subcategory
                     </button>
@@ -185,14 +199,14 @@ const AdminOptions = () => {
                 <div>
                     <label className="block font-medium text-gray-700">Product Color</label>
                     <input
-                    type="color"
-                    value={color}
-                    onChange={(e) => setColor(e.target.value)}
-                    className="mt-2 w-full h-16 p-2 border border-gray-300 rounded-md"
+                        type="color"
+                        value={color}
+                        onChange={(e) => setColor(e.target.value)}
+                        className="mt-2 w-full h-16 p-2 border border-gray-300 rounded-md"
                     />
                     <button
-                    onClick={() => handleAddOption('color', color)}
-                    className="mt-4 w-full p-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-300"
+                        onClick={() => handleAddOption('color', color)}
+                        className="mt-4 w-full p-2 bg-indigo-500 text-white rounded-md hover:bg-indigo-600 transition duration-300"
                     >
                     Add Color
                     </button>
@@ -268,13 +282,19 @@ const AdminOptions = () => {
                     <ul className="mt-2 space-y-2">
                     {categories.map((item, index) => (
                         <li key={index} className="flex justify-between items-center transition-transform hover:scale-105 hover:bg-indigo-50 transform duration-300">
-                        <span className='font-sans'>{item?.value}</span>
-                        <button
-                            onClick={() => handleRemoveOption('category', item)}
-                            className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                            Remove
-                        </button>
+                            <input
+                                type="checkbox"
+                                id='category-select'
+                                checked={item?.isActive || false}
+                                onChange={(e) => handleToggleShowOptionInProducts('category',item, e.target.value)}
+                            />
+                            <span className='font-sans'>{item?.value}</span>
+                            <button
+                                onClick={() => handleRemoveOption('category', item)}
+                                className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                            >
+                                Remove
+                            </button>
                         </li>
                     ))}
                     </ul>
@@ -284,130 +304,167 @@ const AdminOptions = () => {
             {/* Subcategories List */}
             <div>
                 <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Subcategories
-                <button onClick={() => toggleDropdown('subcategories')} className="text-indigo-600">
-                    {dropdowns.subcategories ? 'Hide' : 'Show'}
-                </button>
+                    Product Subcategories
+                    <button onClick={() => toggleDropdown('subcategories')} className="text-indigo-600">
+                        {dropdowns.subcategories ? 'Hide' : 'Show'}
+                    </button>
                 </h3>
                 {dropdowns.subcategories && (
-                <ul className="mt-2 space-y-2">
-                    {subcategories.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center">
-                        <span className='font-sans'>{item?.value}</span>
-                        <button
-                        onClick={() => handleRemoveOption('subcategory', item)}
-                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                        Remove
-                        </button>
-                    </li>
-                    ))}
-                </ul>
+                    <ul className="mt-2 space-y-2">
+                        {subcategories.map((item, index) => (
+                            <li key={index} className="flex justify-between items-center">
+                                <input
+                                    type="checkbox"
+                                    id='Subcategories-select'
+                                    checked={item?.isActive || false}
+                                    onChange={(e) => handleToggleShowOptionInProducts('subcategory',item, e.target.value)}
+                                />
+                                <span className='font-sans'>{item?.value}</span>
+                                <button
+                                    onClick={() => handleRemoveOption('subcategory', item)}
+                                    className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                                >
+                                Remove
+                                </button>
+                            </li>
+                        ))}
+                    </ul>
                 )}
             </div>
 
-            {/* Genders List */}
-            <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Genders
-                <button onClick={() => toggleDropdown('genders')} className="text-indigo-600">
-                    {dropdowns.genders ? 'Hide' : 'Show'}
-                </button>
-                </h3>
-                {dropdowns.genders && (
-                <ul className="mt-2 space-y-2">
-                    {genders.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center">
-                        <span className='font-sans'>{item?.value}</span>
-                        <button
-                        onClick={() => handleRemoveOption('gender', item)}
-                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                        Remove
-                        </button>
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </div>
+                {/* Genders List */}
+                <div>
+                    <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
+                    Product Genders
+                    <button onClick={() => toggleDropdown('genders')} className="text-indigo-600">
+                        {dropdowns.genders ? 'Hide' : 'Show'}
+                    </button>
+                    </h3>
+                    {dropdowns.genders && (
+                    <ul className="mt-2 space-y-2">
+                        {genders.map((item, index) => (
+                        <li key={index} className="flex justify-between items-center">
+                            <input
+                                type="checkbox"
+                                id='Genders-select'
+                                checked={item?.isActive || false}
+                                onChange={(e) => handleToggleShowOptionInProducts('gender',item, e.target.value)}
+                            />
+                            <span className='font-sans'>{item?.value}</span>
+                            <button
+                                onClick={() => handleRemoveOption('gender', item)}
+                                className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                            >
+                            Remove
+                            </button>
+                        </li>
+                        ))}
+                    </ul>
+                    )}
+                </div>
 
-            {/* Clothing Size List */}
-            <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Clothing Size
-                <button onClick={() => toggleDropdown('clothingWearSizes')} className="text-indigo-600">
-                    {dropdowns.clothingWearSizes ? 'Hide' : 'Show'}
-                </button>
-                </h3>
-                {dropdowns.clothingWearSizes && (
-                <ul className="mt-2 space-y-2">
-                    {clothingWearSizes.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center">
-                        <span className='font-sans'>{item?.value}</span>
-                        <button
-                        onClick={() => handleRemoveOption('clothingSize', item)}
-                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                        Remove
+                {/* Clothing Size List */}
+                <div>
+                    <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
+                        Product Clothing Size
+                        <button onClick={() => toggleDropdown('clothingWearSizes')} className="text-indigo-600">
+                            {dropdowns.clothingWearSizes ? 'Hide' : 'Show'}
                         </button>
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </div>
+                    </h3>
+                    {dropdowns.clothingWearSizes && (
+                        <ul className="mt-2 space-y-2">
+                            {clothingWearSizes.map((item, index) => (
+                            <li key={index} className="flex justify-between items-center">
+                                <input
+                                    type="checkbox"
+                                    id='Clothing-Size-select'
+                                    checked={item?.isActive || false}
+                                    onChange={(e) => handleToggleShowOptionInProducts('clothingSize',item, e.target.value)}
+                                />
+                                <span className='font-sans'>{item?.value}</span>
+                                <button
+                                onClick={() => handleRemoveOption('clothingSize', item)}
+                                className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                                >
+                                Remove
+                                </button>
+                            </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
 
-            {/* Footwear Size List */}
-            <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Footwear Size
-                <button onClick={() => toggleDropdown('footWearSizes')} className="text-indigo-600">
-                    {dropdowns.footWearSizes ? 'Hide' : 'Show'}
-                </button>
-                </h3>
-                {dropdowns.footWearSizes && (
-                <ul className="mt-2 space-y-2">
-                    {footWearSizes.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center">
-                        <span className='font-sans'>{item?.value}</span>
-                        <button
-                        onClick={() => handleRemoveOption('footWearSize', item)}
-                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                        Remove
+                {/* Footwear Size List */}
+                <div>
+                    <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
+                        Product Footwear Size
+                        <button onClick={() => toggleDropdown('footWearSizes')} className="text-indigo-600">
+                            {dropdowns.footWearSizes ? 'Hide' : 'Show'}
                         </button>
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </div>
+                    </h3>
+                        {dropdowns.footWearSizes && (
+                        <ul className="mt-2 space-y-2">
+                            {footWearSizes.map((item, index) => (
+                            <li key={index} className="flex justify-between items-center">
+                                <input
+                                    type="checkbox"
+                                    id='footWear-Size-select'
+                                    checked={item?.isActive || false}
+                                    onChange={(e) => handleToggleShowOptionInProducts('footWearSize',item, e.target.value)}
+                                />
+                                <span className='font-sans'>{item?.value}</span>
+                                <button
+                                    onClick={() => handleRemoveOption('footWearSize', item)}
+                                    className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                                >
+                                Remove
+                                </button>
+                            </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
 
-            {/* Colors List */}
-            <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Colors
-                <button onClick={() => toggleDropdown('colors')} className="text-indigo-600">
-                    {dropdowns.colors ? 'Hide' : 'Show'}
-                </button>
-                </h3>
-                {dropdowns.colors && (
-                <ul className="mt-2 space-y-2">
-                    {colors.map((item, index) => (
-                    <li key={index} className="flex justify-between items-center space-x-4">
-                        <div
-                        className='w-full h-10 border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3'
-                        style={{ backgroundColor: item?.value }}
-                        ></div>
-                        <button
-                        onClick={() => handleRemoveOption('color', item)}
-                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
-                        >
-                        Remove
+                {/* Colors List */}
+                <div>
+                    <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
+                        Product Colors
+                        <button onClick={() => toggleDropdown('colors')} className="text-indigo-600">
+                            {dropdowns.colors ? 'Hide' : 'Show'}
                         </button>
-                    </li>
-                    ))}
-                </ul>
-                )}
-            </div>
+                    </h3>
+                        {dropdowns.colors && (
+                        <ul className="mt-2 space-y-2">
+                            {colors.map((item, index) => (
+                                <li key={index} className="flex justify-between items-center space-x-4">
+                                    <div className='w-fit flex flex-row justify-start items-start space-x-3'>
+                                        <input
+                                            type="text"
+                                            id='color-select'
+                                            value={currentUpdatingColorNameData && currentUpdatingColorNameData.value && currentUpdatingColorNameData.value._id === item._id ? currentUpdatingColorNameData?.name:item?.name}
+                                            placeholder='Enter Color Name'
+                                            onChange={(e)=> setUpdatingColorNameData({type:'color',value:item,name:e.target.value})}
+                                            // onChange={(e) => handleToggleShowOptionInProducts('color',item, e.target.value)}
+                                        />
+                                        <Button className = {"w-fit"} onClick = {handleUpdateColorName}>
+                                            Update
+                                        </Button>
+                                    </div>
+                                    <div
+                                        className='w-full h-10 border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3'
+                                        style={{ backgroundColor: item?.value }}
+                                    ></div>
+                                    <button
+                                        onClick={() => handleRemoveOption('color', item)}
+                                        className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+                                    >
+                                    Remove
+                                    </button>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
+                </div>
             </div>
             </div>
         </div>

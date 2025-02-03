@@ -409,7 +409,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 		try {
 			const data = await dispatch(fetchOptionsByType("color"));
 			const colorData = data.payload?.result;
-			setColorOptions(colorData?.map((s) => ({ _id: s._id, label: s.value })) || []);
+			setColorOptions(colorData?.map((s) => ({ _id: s._id, label: s.value,name:s.name })) || []);
 		} catch (error) {
 			console.error("Error Fetching Size Options: ", error);
 		}finally{

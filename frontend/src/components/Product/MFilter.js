@@ -111,9 +111,9 @@ const MFilter = ({ product ,handleSortChange}) => {
             //  window.location = url
         }
         } else {
-        //   url += `?low=${e}`
-        navigation(`?low=${e}`)
-        dispatch(getproduct())
+            //   url += `?low=${e}`
+            navigation(`?low=${e}`)
+            dispatch(getproduct())
         }
     }
 
@@ -195,7 +195,7 @@ const MFilter = ({ product ,handleSortChange}) => {
                 p.AllColors.forEach(c => {
                     const alreadyExists = color.some(item => item.label === c.label);
                     if (!alreadyExists){
-                    color.push(c);
+                        color.push(c);
                     }
                 });
             });
@@ -546,7 +546,7 @@ const MFilter = ({ product ,handleSortChange}) => {
                                     <div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
 
                                     </div>
-                                <span className={`text-sm`}>{e.label}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
+                                <span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
 
                             )
                         }

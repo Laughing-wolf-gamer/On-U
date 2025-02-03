@@ -7,119 +7,106 @@ import { fetchAllOptions } from '../../../action/productaction.js';
 const ProductCatView = ({ show, CMenu, parentCallback }) => {
 	const navigation = useNavigate();
 	const transitions = useTransition(show, {
-		from: { opacity: 0 },
-		enter: { opacity: 1 },
-		leave: { opacity: 0 },
-		delay: 200,
+	  from: { opacity: 0 },
+	  enter: { opacity: 1 },
+	  leave: { opacity: 0 },
+	  delay: 200,
 	});
-
+  
 	const { options } = useSelector((state) => state.AllOptions);
 	const dispatch = useDispatch();
-
+  
 	const [productsOptions, setProductsOptions] = useState([]);
-
-	// Fetch options from the store
+  
 	useEffect(() => {
-		dispatch(fetchAllOptions());
+	  dispatch(fetchAllOptions());
 	}, [dispatch]);
-
-	// Memoized productsOptions calculation
+  
 	const memoizedProductsOptions = useMemo(() => {
-		if (options && options.length > 0) {
+	  if (options && options.length > 0) {
 		const categories = options.filter((item) => item.type === 'category');
 		const subcategories = options.filter((item) => item.type === 'subcategory');
-		const genders = options.filter((item) => item.type === 'gender');
-
+		const genders = options.filter((item) => item.isActive && item.type === 'gender');
+  
 		return genders.map((g) => ({
-			Gender: g.value,
-			category: categories.map((c) => ({
+		  Gender: g.value,
+		  category: categories.map((c) => ({
 			title: c.value,
 			subcategories: subcategories.filter((s) => s.categoryId === c.id).map((s) => s.value),
-			})),
+		  })),
 		}));
-		}
-		return [];
+	  }
+	  return [];
 	}, [options]);
-
+  
 	useEffect(() => {
-		setProductsOptions(memoizedProductsOptions);
+	  setProductsOptions(memoizedProductsOptions);
 	}, [memoizedProductsOptions]);
-
-	// Navigate to products page with query params
+  
 	const handelSetQuery = (gender, category) => {
-		console.log("Gender: ", gender, "Category: ", category);
-		const queryParams = new URLSearchParams();
-		if (category) queryParams.set('category', category.toLowerCase());
-		if (gender) queryParams.set('gender', gender.toLowerCase());
-
-		const url = `/products?${queryParams.toString()}`;
-		navigation(url);
-		window.location.reload();
+	  const queryParams = new URLSearchParams();
+	  if (category) queryParams.set('category', category.toLowerCase());
+	  if (gender) queryParams.set('gender', gender.toLowerCase());
+  
+	  const url = `/products?${queryParams.toString()}`;
+	  navigation(url);
+	  window.location.reload();
 	};
-
+  
 	const getGenderCategories = (gender) => productsOptions.find((p) => p.Gender === gender)?.category || [];
-
+  
 	return (
-		<Fragment>
+	  <Fragment>
 		<div className={`w-[100%] h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
-			{transitions(
-			(styles, item) =>
-				item && (
-				<animated.div style={styles}>
-					<div
-					className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-gray-50`}
-					onMouseEnter={() => parentCallback('block', true)}
-					onMouseLeave={() => parentCallback('hidden', false)}
-					>
-					<div className="grid grid-cols-5 px-8 py-4 cursor-pointer">
-						<div className="h-[418px] gap-5">
-						<CategorySection
-							title="Men"
-							categories={getGenderCategories('Men')}
-							parentCallback={parentCallback}
-							handelSetQuery={handelSetQuery}
-						/>
-						<hr className="py-1" />
-						<CategorySection
-							title="Women"
-							categories={getGenderCategories('Women')}
-							parentCallback={parentCallback}
-							handelSetQuery={handelSetQuery}
-						/>
-						</div>
-						<div className="h-[418px]">
-						<CategorySection
-							title="Kids"
-							categories={getGenderCategories('Kids')}
-							parentCallback={parentCallback}
-							handelSetQuery={handelSetQuery}
-						/>
-						</div>
-					</div>
-					</div>
-				</animated.div>
-				)
-			)}
+		  {transitions((styles, item) =>
+			item && (
+			  <animated.div style={styles}>
+				<div
+				  className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-gray-50`}
+				  onMouseEnter={() => parentCallback('block', true)}
+				  onMouseLeave={() => parentCallback('hidden', false)}
+				>
+				  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
+					{['Men', 'Women', 'Kids'].map((gender) => {
+					  const categories = getGenderCategories(gender);
+					  return (
+						categories.length > 0 && (
+						  <div key={gender} className="h-fit">
+							<CategorySection
+							  title={gender}
+							  categories={categories}
+							  parentCallback={parentCallback}
+							  handelSetQuery={handelSetQuery}
+							/>
+						  </div>
+						)
+					  );
+					})}
+				  </div>
+				</div>
+			  </animated.div>
+			)
+		  )}
 		</div>
-		</Fragment>
+	  </Fragment>
 	);
-};
+  };
+  
 
 // Reusable Category Section Component
 const CategorySection = ({ title, categories, parentCallback, handelSetQuery }) => (
 	<div>
 		<h1 className="text-red-600 text-sm font-semibold py-1 mx-2">{title}</h1>
-		{categories &&
-		categories.slice(0, 5).map((category, i) => (
-			<div onClick={(e) => handelSetQuery(title, category.title)} key={i}>
-			<li
-				className="litext list-none py-0.5 m-2 hover:font-semibold"
-				onClick={() => parentCallback('hidden', false)}
-			>
-				{category.title}
-			</li>
-			</div>
-		))}
+		{categories && categories.slice(0, 4).map((category, i) => (
+				<div onClick={(e) => handelSetQuery(title, category.title)} key={i}>
+				<li
+					className="litext list-none py-0.5 m-2 hover:font-semibold"
+					onClick={() => parentCallback('hidden', false)}
+				>
+					{category.title}
+				</li>
+				</div>
+			))}
 	</div>
 );
 

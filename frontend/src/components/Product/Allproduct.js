@@ -126,7 +126,7 @@ const Allproductpage = ({user}) => {
                 </div>
 
                 {/* Filter__title div */}
-                <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-2 items-center 2xl:px-10">
+                {/* <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-2 items-center 2xl:px-10">
                     <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
                     <div className="col-span-3 relative cursor-pointer pb-4">
                         <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
@@ -154,7 +154,8 @@ const Allproductpage = ({user}) => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> */}
+                <FilterTitle sortvalue={sortvalue} handleSortChange={handleSortChange} setSortValue = {setSortValue} />
 
                 <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 bg-white 2xl:px-10">
                     {/* Filter */}
@@ -244,6 +245,41 @@ const Allproductpage = ({user}) => {
             </div>
             {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
             <Footer />
+        </div>
+    );
+};
+const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
+    return (
+        <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-4 items-center 2xl:px-10">
+            {/* Filters Title */}
+            <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
+
+            {/* Sort Dropdown */}
+            <div className="col-span-3 relative group cursor-pointer">
+                <div className="h-12 w-[260px] border-[1px] border-gray-600 rounded-md bg-white flex items-center px-4 justify-between hover:shadow-md transition-all duration-300">
+                    <span className="text-sm font-semibold text-gray-800">Sort by: <span className="text-gray-600">{sortvalue}</span></span>
+                    <IoIosArrowDown className="text-gray-600 text-xl transition-transform group-hover:rotate-180" />
+                </div>
+
+                {/* Dropdown Content */}
+                <div className="absolute left-0 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-y-2 transition-all duration-300 z-10">
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
+                        <span className="font1 text-gray-800">What`s New</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
+                        <span className="font1 text-gray-800">Popularity</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
+                        <span className="font1 text-gray-800">Better Discount</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
+                        <span className="font1 text-gray-800">Price: High To Low</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
+                        <span className="font1 text-gray-800">Price: Low To High</span>
+                    </div>
+                </div>
+            </div>
         </div>
     );
 };

@@ -244,19 +244,44 @@ export const addNewOption = createAsyncThunk(
   
 // Delete an option (e.g., category, subcategory)
 export const deleteOption = createAsyncThunk('/common/deleteOption', async (data) => {
-        try {
-            // const token = sessionStorage.getItem('token');
-            // console.log(token);
-            console.log("Delete Data: ",data);
-            const response = await axios.post(`${BASE_URL}/api/common/options/removeByType`,{removingData:JSON.stringify(data)},Header());
-            console.log("Response: ",response.data);
-            return response.data; // Return the type and value of the deleted option
-        } catch (error) {
-            console.error('Error deleting option:', error);
-            throw error;
-        }
+    try {
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
+        console.log("Delete Data: ",data);
+        const response = await axios.post(`${BASE_URL}/api/common/options/removeByType`,{removingData:JSON.stringify(data)},Header());
+        console.log("Response: ",response.data);
+        return response.data; // Return the type and value of the deleted option
+    } catch (error) {
+        console.error('Error deleting option:', error);
+        throw error;
     }
-);
+});
+export const updateOptionActive = createAsyncThunk('/common/updateOptionActive', async (data) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
+        console.log("Updating Data: ",data);
+        const response = await axios.post(`${BASE_URL}/api/common/options/updateActiveState`,{updatingData:JSON.stringify(data)},Header());
+        console.log("Response: ",response.data);
+        return response.data; // Return the type and value of the deleted option
+    } catch (error) {
+        console.error('Error deleting option:', error);
+        throw error;
+    }
+});
+export const updateColorName = createAsyncThunk('/common/updateColorName', async (data) => {
+    try {
+        // const token = sessionStorage.getItem('token');
+        // console.log(token);
+        console.log("updateColorName Data: ",data);
+        const response = await axios.post(`${BASE_URL}/api/common/options/updateColorName`,{updatingData:JSON.stringify(data)},Header());
+        console.log("Response: ",response.data);
+        return response.data; // Return the type and value of the deleted option
+    } catch (error) {
+        console.error('Error deleting option:', error);
+        throw error;
+    }
+});
 
 
 

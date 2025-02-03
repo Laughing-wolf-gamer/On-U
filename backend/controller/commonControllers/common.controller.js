@@ -397,8 +397,56 @@ export const addOption = async (req, res) => {
 	  	res.status(500).json({ message: 'Server error' ,result:null});
 	}
 };
-  
-  // Delete an option by its value
+
+export const updateColorName = async(req,res)=>{
+	try {
+        const { updatingData} = req.body;
+        const { type, value, name } = JSON.parse(updatingData);
+		console.log("Updating colors...",updatingData);
+        if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
+            return res.status(400).json({ message: 'Invalid option type' });
+        }
+		const updatedOption = await Option.findOneAndUpdate(
+			{ type, value },
+			{ name: name }, // Toggle the value
+			{ new: true } // Return the updated document
+		);
+		if(!updatedOption){
+			return res.status(404).json({ message: 'Option not found' });
+		}
+		res.status(200).json({ Success:true,message: 'Color Option updated successfully', result: updatedOption });
+    } catch (error) {
+        console.error(`Error updating color name`, error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+
+export const updateIsActive = async (req, res) => {
+	try {
+		const { updatingData} = req.body;
+        const { type, value } = JSON.parse(updatingData);
+    
+        if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
+            return res.status(400).json({ message: 'Invalid option type' });
+        }
+		
+        const option = await Option.findOne({ type, value }); // Find the option by type and value
+		if (!option) {
+			return res.status(404).json({ message: 'Option not found' });
+		}
+
+		// Toggle the isActive value
+		const updatedOption = await Option.findOneAndUpdate(
+			{ type, value },
+			{ isActive: !option.isActive }, // Toggle the value
+			{ new: true } // Return the updated document
+		);
+        res.status(200).json({ Success:true,message: 'Option updated successfully', result: updatedOption });
+    } catch (error) {
+		res.status(500).json({ message: 'Server error' });
+    }
+}
+// Delete an option by its value
 export const removeOptionsByType = async (req, res) => {
 	try {
 		// const parseData = JSON.parse(req.body);

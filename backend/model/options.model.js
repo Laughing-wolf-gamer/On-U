@@ -2,6 +2,13 @@ import mongoose from "mongoose";
 
 // Schema for the options (category, subcategory, color, size, gender)
 const optionSchema = new mongoose.Schema({
+    name:{
+      type:String,
+      default:null,
+      trim: true,
+      match: /^[a-zA-Z\s]+$/,
+      minlength: 3,
+    },
     type: {
       type: String,
       required: true,
@@ -12,6 +19,10 @@ const optionSchema = new mongoose.Schema({
       required: true,
       unique: true,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    }
 }, { timestamps: true });
 
 const Option = mongoose.model('Option', optionSchema);

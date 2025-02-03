@@ -349,7 +349,10 @@ export const addNewColorToSize = async (req, res) => {
         }
 
         // Push new colors to the size
-        size.colors.push(...colors); // Using spread to push multiple colors at once
+        colors.map((c)=>{
+            console.log("Colors: ",c);
+            size.colors.push(c); // Using spread to push multiple colors at once
+        })
         console.log("Size Colors: ",size.colors);
         // Update the product document with new colors
         const product = await ProductModel.findByIdAndUpdate(

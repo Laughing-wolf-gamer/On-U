@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -35,6 +35,8 @@ route.post('/options/add',isAuthenticateuser,ProtectAdminRoute, addOption);
 
 // Route to delete an option
 route.post('/options/removeByType',isAuthenticateuser,ProtectAdminRoute,removeOptionsByType);
+route.post('/options/updateActiveState',isAuthenticateuser,ProtectAdminRoute,updateIsActive);
+route.post('/options/updateColorName',isAuthenticateuser,ProtectAdminRoute,updateColorName);
 
 route.post('/coupons/sendCoupon',sendMailToGetCoupon)
 

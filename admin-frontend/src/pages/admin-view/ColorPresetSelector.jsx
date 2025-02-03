@@ -1,10 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import UploadMultipleImagesArray from "@/components/admin-view/UploadMultipleImages";
-import { ChevronDown, ChevronRight, ChevronUp, Minus, Plus, X } from "lucide-react";
+import { ChevronDown, ChevronUp, Minus, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import FileUploadComponent from "@/components/admin-view/FileUploadComponent";
-import ColorToggleViewComponent from "@/components/admin-view/ColorToggleViewComponent";
 const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 	const[isLoading, setIsLoading] = useState(false);
 	const[optionsArray, setOptionsArray] = useState([]);
@@ -73,10 +70,10 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 			console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	};
-	const changeColorLabel = (id,label) =>{
+	const changeColorLabel = (id,label,name) =>{
 		// console.log("Color Label: ",label,id);
-		setOptionsArray(optionsArray.map((s) => s.id === id ? {...s, label:label } : s));
-		setSelectedColorArray(selectedColorArray.map((s) => s.id === id ? {...s, label:label } : s));
+		setOptionsArray(optionsArray.map((s) => s.id === id ? {...s, label:label,name: name} : s));
+		setSelectedColorArray(selectedColorArray.map((s) => s.id === id ? {...s, label:label ,name:name} : s));
 		if (OnChange) {
 			OnChange(selectedColorArray);
 			console.log("Color Images Image Urls:  ",selectedColorArray);
@@ -103,7 +100,6 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 		
 	},[selectedColorArray,setSelectedColorArray,optionsArray]);
 	
-
 	// Toggle function to toggle the view more state for specific color
 	const [showMore, setShowMore] = useState([]);
 	
@@ -115,6 +111,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 			)
 		);
 	};
+	console.log("colorOptions: ",colorOptions)
 
 	return (
 		<div className="p-6 bg-white rounded-lg shadow-md">
@@ -170,33 +167,37 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 										: `bg-[${color.label}] text-gray-700 hover:scale-105`
 									}`}
 									aria-label={`Select color ${color.id}`}
-								>
+									>
 									<select
 										disabled={isLoading}
 										value={color.label}
 										onChange={(e) => {
-											e.preventDefault();
-											changeColorLabel(color.id, e.target.value);
+										e.preventDefault();
+											const selectedOption = colorOptions.find(option => option.label === e.target.value);
+											if (selectedOption) {
+												console.log("Color Selected: ", selectedOption);
+												changeColorLabel(color.id, selectedOption.label, selectedOption.name);
+											}
 										}}
 										className="w-full h-full text-black m-2"
 									>
 										<option value="">Select Color</option>
 										{colorOptions.map((option) => (
-											<option
-												key={option.id}
-												value={option.label}
-												style={{
-													backgroundColor: option.label, // Set background color to the hex value
-													color: option.label === '#ffffff' ? 'black' : 'white', // Adjust text color for readability
-												}}
-											>
-												<div className="w-full h-full p-1 flex items-center justify-center rounded-full">
-													{option.label}
-												</div>
-											</option>
+										<option
+											key={option.id}
+											value={option.label}
+											style={{
+											backgroundColor: option.label, // Set background color to the hex value
+											color: option.label === '#ffffff' ? 'black' : 'white', // Adjust text color for readability
+											}}
+										>
+											<div className="w-full h-full p-1 flex items-center justify-center rounded-full">
+											{option?.name || option?.label}
+											</div>
+										</option>
 										))}
-										</select>
-								</div>
+									</select>
+									</div>
 
 
 								{/* Remove Color Button */}

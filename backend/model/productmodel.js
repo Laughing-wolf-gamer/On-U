@@ -34,6 +34,7 @@ const productModelSchema = new mongoose.Schema({
                     id:Number,
                     label:String,
                     quantity:Number,
+                    name:String,
                     images:[],
                 }
             ]

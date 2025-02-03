@@ -519,49 +519,61 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
     );
 };
   
-const OurMotoData = ()=>{
-    return(
-        <div className='h-fit w-screen bg-slate-200 py-5 pb-4'>
-            <div className='w-full flex justify-center items-center px-4 md:px-8 h-full'>
-                <div className='w-fit h-auto grid grid-cols-2 md:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 2xl:grid-cols-4 justify-center gap-10 items-center'>
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <Truck size={10} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                        <div className='h-full w-1'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[17px] text-slate-700'>FREE SHIPPING</h3>
-                            <span className='font-light text-left text-[15px] text-slate-800'>On all orders over ₹75.00</span>
+const OurMotoData = () => {
+    return (
+        <div className="h-fit w-screen bg-slate-200 py-10">
+            <div className="w-full flex justify-center items-center px-4 md:px-8 h-full">
+                <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                    {/* First Grid Item - Free Shipping */}
+                    <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <Truck size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                        <h3 className="font-semibold text-xl text-gray-800">FREE SHIPPING</h3>
+                        <p className="font-light text-sm text-gray-600 text-center">On all orders over ₹75.00</p>
+                        
+                        {/* Hover Text */}
+                        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                            <p className="text-center text-sm">Enjoy free shipping on all your orders over ₹75.00.</p>
                         </div>
                     </div>
 
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <Clock size={5} className="w-16 h-16 text-gray-700 transition-transform duration-150 hover:scale-110"/>
-                        <div className='h-full w-1'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[17px] text-gray-700'>SUPPORT 24/7</h3>
-                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                    {/* Second Grid Item - Support 24/7 */}
+                    <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <Clock size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                        <h3 className="font-semibold text-xl text-gray-800">SUPPORT 24/7</h3>
+                        <p className="font-light text-sm text-gray-600 text-center">Available to assist you anytime</p>
+                        
+                        {/* Hover Text */}
+                        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                            <p className="text-center text-sm">Our support team is available 24/7 to assist you with any questions or issues.</p>
                         </div>
                     </div>
 
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <CircleDollarSign size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                        <div className='h-full w-1'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Money Return</h3>
-                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                    {/* Third Grid Item - Money Return */}
+                    <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <CircleDollarSign size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                        <h3 className="font-semibold text-xl text-gray-800">MONEY RETURN</h3>
+                        <p className="font-light text-sm text-gray-600 text-center">Hassle-free returns within 30 days</p>
+
+                        {/* Hover Text */}
+                        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                            <p className="text-center text-sm">Enjoy hassle-free returns on all your purchases within 30 days.</p>
                         </div>
                     </div>
 
-                    <div className='px-4 flex w-72 flex-row gap-x-1 justify-center items-center'>
-                        <BadgeIndianRupee size={5} className="w-16 h-16 transition-transform duration-150 hover:scale-110 text-gray-700"/>
-                        <div className='h-full w-1'/>
-                        <div className='w-full text-left h-auto justify-center items-center'>
-                            <h3 className='font-medium text-left text-[17px] text-gray-700'>Order Discount</h3>
-                            <span className='font-light text-left text-[15px] text-gray-800'>Free shipping on all orders</span>
+                    {/* Fourth Grid Item - Order Discount */}
+                    <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                        <BadgeIndianRupee size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                        <h3 className="font-semibold text-xl text-gray-800">ORDER DISCOUNT</h3>
+                        <p className="font-light text-sm text-gray-600 text-center">Exclusive discounts on your orders</p>
+
+                        {/* Hover Text */}
+                        <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                            <p className="text-center text-sm">Get exclusive discounts on your orders during special promotions.</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    )
-}
-export default Home
+    );
+};  
+export default Home;
