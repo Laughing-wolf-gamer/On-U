@@ -392,7 +392,7 @@ const Ppage = () => {
                         <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
                             <div className='w-[36%] 2xl:w-[36%] min-h-[200px] flex flex-col px-7'>
                                 <div
-                                    className={`w-[40%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-[-10] mt-5":"flex absolute bottom-5 left-8"} `}>
+                                    className={`w-[40%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-[2] mt-5":"flex absolute bottom-5 left-8"} `}>
                                     <div className='w-full h-full justify-start items-center flex'>
                                         <LeftImageContent 
                                             selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
@@ -406,7 +406,7 @@ const Ppage = () => {
                                 </div>
                             </div>
                             {/* Content div for large screen */}
-                            <div className='w-[53%] 2xl:w-[65%] h-full flex flex-col pl-9'>
+                            <div className='w-[53%] 2xl:w-[65%] h-full flex flex-col pl-9 z-10'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
@@ -928,7 +928,7 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
     return(
         <div className='w-full min-h-full justify-start items-start flex-row flex'>
             <div className='h-full w-fit mr-5 justify-center items-center flex-col flex'>
-                <div className='flex flex-col w-[70px] min-h-fit justify-between items-center space-y-6'> {/* Reduced grid-cols from 8 to 6 */}
+                <div className='flex flex-col w-[70px] min-h-fit justify-between items-center space-y-6 z-30'> {/* Reduced grid-cols from 8 to 6 */}
                 {
                     selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
@@ -938,8 +938,8 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                         return (
                             <div
                                 key={index}
-                                className={`w-full h-[100px] ${selectedImage === file ? "border-2":""}  border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
-                                onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
+                                className={`w-full h-[100px] ${selectedImage === file ? "border-2":""}border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out`}
+                                // onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
                                 onClick={() => { Addclass(); setSelectedImage(file); }}
                             >
                                 {isVideo ? (
