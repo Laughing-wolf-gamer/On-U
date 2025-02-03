@@ -413,7 +413,7 @@ const AdminProducts = () => {
 
                         {/* Add New Product Button */}
                         <Button onClick={() => setOpenCreateProduct(true)} className="mt-3 sm:w-full md:w-auto">
-                            Add New Product
+                            Add Product
                         </Button>
                     </div>
                     <PaginatedProductList 
