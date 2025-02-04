@@ -94,7 +94,7 @@ export const getallproducts = async (req, res) => {
             };
         }
         if(req.query.discountedAmount){
-            filter.discountedAmount = { $gte: parseFloat(req.query.discountedAmount) };
+            filter.DiscountedPercentage = { $gte: parseFloat(req.query.discountedAmount) };
         }
         // Size filter
         if (req.query.size) {

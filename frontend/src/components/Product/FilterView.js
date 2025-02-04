@@ -51,9 +51,17 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 if(p.salePrice && p.salePrice > 0){
-                    let discount = ((p.price - p.salePrice)/p.price) * 100
-                    if(!discountedPercentageAmount.includes(discount)){
-                        discountedPercentageAmount.push(Math.floor(discount))
+                    // let discount = ((p.price - p.salePrice)/p.price) * 100
+                    /* const priceOriginal = p.price;
+                    const salePriceProduct = p.salePrice;
+                    const discountAmount = priceOriginal - salePriceProduct;
+                    const discountPercentage = Math.floor(((discountAmount / priceOriginal) * 100).toFixed(0));
+                    if(!discountedPercentageAmount.includes(discountPercentage)){
+                        discountedPercentageAmount.push(discountPercentage)
+                    } */
+                    const amount = Math.floor(p.DiscountedPercentage);
+                    if(!discountedPercentageAmount.includes(amount)){
+                        discountedPercentageAmount.push(amount)
                     }
                 }
             });

@@ -484,6 +484,21 @@ export const editProduct = async (req, res) => {
             updateFields.totalStock = totalStock;
         }
 
+        // Calculate and set the DiscountedPercentage field if salePrice exists
+        if (price && salePrice && salePrice > 0) {
+            const discountAmount = price - salePrice;
+            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
+            updateFields.DiscountedPercentage = discountPercentage;
+        } else {
+            const currentProduct = await ProductModel.findById(id);
+            const p = currentProduct.price;
+            const sp = currentProduct.salePrice;
+            const discountAmount = p - sp;
+            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
+            // If no salePrice, set DiscountedPercentage to 0
+            updateFields.DiscountedPercentage = discountPercentage;
+        }
+
         console.log("Updating Product Fields: ", updateFields);
 
         // If no fields to update, return early
@@ -506,10 +521,11 @@ export const editProduct = async (req, res) => {
         });
     } catch (error) {
         console.error('Error while editing a product:', error);
-        logger.error('Product Update Failed: '+ error.message);
+        logger.error('Product Update Failed: ' + error.message);
         return res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };
+
     
 
 export const deleteProduct = async (req, res) => {

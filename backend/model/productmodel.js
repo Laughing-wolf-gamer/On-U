@@ -93,8 +93,8 @@ const productModelSchema = new mongoose.Schema({
     breadth:{type:Number},
 },{timestamps:true})
 productModelSchema.pre('save', function (next) {
+    // Calculate averageRating when Rating is modified
     if (this.isModified('Rating')) {
-        // Calculate the average rating
         if (this.Rating.length === 0) {
             this.averageRating = 0;
         } else {
@@ -102,19 +102,19 @@ productModelSchema.pre('save', function (next) {
             this.averageRating = total / this.Rating.length;
         }
     }
+
+    // Calculate DiscountedPercentage when price or salePrice is modified
     if (this.isModified('price') || this.isModified('salePrice')) {
         if (this.salePrice && this.salePrice > 0) {
-            // Calculate the discount amount
             const discountAmount = this.price - this.salePrice;
-        
-            // Calculate the discount percentage
             const discountPercentage = ((discountAmount / this.price) * 100).toFixed(0);
             this.DiscountedPercentage = discountPercentage;
         } else {
-            this.DiscountedPercentage = 0;  // If there's no salePrice, no discount
+            this.DiscountedPercentage = 0;  // If no salePrice, no discount
         }
     }
-    next();
+
+    next();  // Proceed to save
 });
 productModelSchema.virtual('averageRating').get(function () {
     if (this.Rating.length === 0) return 0;
