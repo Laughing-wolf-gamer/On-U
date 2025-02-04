@@ -1,15 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from 'react';
 
-const ImageZoom = ({ imageSrc }) => {
-    const zoomSize = 120; // Size of the zoomed square
+const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
 
-    const handleMouseEnter = () => {
+    const handleMouseEnter = useCallback(() => {
         setShowZoom(true);
-    };
+    }, []);
 
-    const handleMouseMove = (e) => {
+    const handleMouseMove = useCallback((e) => {
         const rect = e.target.getBoundingClientRect(); // Get the position of the image
         const x = e.clientX - rect.left; // Mouse position relative to the image
         const y = e.clientY - rect.top;
@@ -17,7 +16,6 @@ const ImageZoom = ({ imageSrc }) => {
         const width = rect.width;
         const height = rect.height;
 
-        
         const bgX = (x / width) * 100; // Calculate background position as percentage
         const bgY = (y / height) * 100;
 
@@ -29,14 +27,14 @@ const ImageZoom = ({ imageSrc }) => {
             backgroundImage: `url(${imageSrc})`,  // Apply the original image as background
             backgroundSize: `${width * 2}px ${height * 2}px`, // Adjust zoom level (double the image size)
         });
-    };
+    }, [zoomSize, imageSrc]);
 
-    const handleMouseLeave = () => {
+    const handleMouseLeave = useCallback(() => {
         setShowZoom(false);
-    };
+    }, []);
 
     return (
-        <div className="relative w-full h-full 2xl:w-[570px] 2xl:h-[800px] py-1 justify-start flex-row flex items-start hover:rounded-md">
+        <div className="relative w-full h-full flex-1 2xl:w-[610px] 2xl:h-[700px] justify-self-center flex-row flex items-center">
             <img
                 loading="lazy"
                 src={imageSrc}
@@ -61,27 +59,5 @@ const ImageZoom = ({ imageSrc }) => {
         </div>
     );
 };
-/* 
-<div className="relative h-full w-full border-[0.5px] overflow-hidden">
-      <LazyLoadImage
-        src={imageSrc}
-        alt="Zoomable"
-        className="w-full h-full object-cover"
-        onMouseEnter={handleMouseEnter}
-        onMouseMove={handleMouseMove}
-        onMouseLeave={handleMouseLeave}
-      />
-
-      {showZoom && (
-        <div
-          className="absolute pointer-events-none border-2 border-gray-300 rounded"
-          style={{
-            ...zoomStyle,
-            width: "200px", // Size of zoomed square
-            height: "200px",
-          }}
-        ></div>
-      )}
-    </div> */
 
 export default ImageZoom;

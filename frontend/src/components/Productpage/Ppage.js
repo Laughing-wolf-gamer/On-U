@@ -388,23 +388,28 @@ const Ppage = () => {
         <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
-                    <div className='pt-5'>
+                    <div className='mt-5'>
                         <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
-                            <div className='w-[36%] 2xl:w-[50%] min-h-[200px] flex flex-col px-7'>
+                            <div className='w-[36%] 2xl:w-[50%] min-h-full flex flex-col px-7 bg-blue-500'>
                                 <div
-                                    className={`w-[40%] 2xl:ml-16 2xl:w-[50%] bg-transparent ${scrollPosition < currentMaxScrollAmount ? "fixed z-[2] mt-3":"flex absolute bottom-5 left-8"} `}>
-                                    <div className='w-full h-full justify-start items-center flex'>
+                                    className={`
+                                        w-[40%] 2xl:ml-16 2xl:w-[50%] bg-transparent
+                                        ${scrollPosition < currentMaxScrollAmount ? "fixed z-[2] mt-3" : "absolute bottom-5 left-8 flex"}
+                                    `}
+                                >
+                                    <div className='w-full h-full flex justify-start items-center'>
                                         <LeftImageContent 
-                                            selectedSize_color_Image_Array = {selectedSize_color_Image_Array} 
-                                            Addclass ={Addclass} 
-                                            setSelectedImage = {setSelectedImage} 
-                                            selectedImage ={selectedImage} 
-                                            isFocused = {isFocused}
-                                            setIsFocused = {setIsFocused}
+                                            selectedSize_color_Image_Array={selectedSize_color_Image_Array} 
+                                            Addclass={Addclass} 
+                                            setSelectedImage={setSelectedImage} 
+                                            selectedImage={selectedImage} 
+                                            isFocused={isFocused}
+                                            setIsFocused={setIsFocused}
                                         />
                                     </div>
                                 </div>
                             </div>
+
                             {/* Content div for large screen */}
                             <div className='w-[53%] 2xl:w-[50%] h-full flex flex-col pl-9 2xl:pl-2 z-10'>
                                 {/* Left Column (Add to Cart Section) */}
@@ -894,68 +899,86 @@ const ProductReviews = ({ reviews }) => {
 };
 
 
-const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedImage,selectedImage,isFocused,setIsFocused})=>{
+const LeftImageContent = ({
+    selectedSize_color_Image_Array,
+    Addclass,
+    setSelectedImage,
+    selectedImage,
+    isFocused,
+    setIsFocused
+}) => {
+    // Memoize the video check logic
+    const isVideoFile = (file) => {
+        return (
+            file?.url?.includes("video") ||
+            file?.url?.endsWith(".mp4") ||
+            file?.url?.endsWith(".mov") ||
+            file?.url?.endsWith(".avi")
+        );
+    };
+
+    // Memoizing the video detection for the selected image
     const memoIsVideo = useMemo(() => {
         if (!selectedImage || !selectedImage.url) return false;
-
-        const url = selectedImage.url;
-        return (
-            url.includes("video") || 
-            url.endsWith(".mp4") || 
-            url.endsWith(".mov") || 
-            url.endsWith(".avi")
-        );
+        return isVideoFile(selectedImage);
     }, [selectedImage]);
-    return(
-        <div className='w-full min-h-full justify-start items-start flex-row flex'>
-            <div className='h-full w-fit justify-center items-center flex-col flex'>
-                <div className='flex w-[120px] flex-col min-h-fit justify-between items-center space-y-4 z-30'> {/* Reduced grid-cols from 8 to 6 */}
-                {
-                    selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
+
+    return (
+        <div className="w-full min-h-full max-w-fit bg-blue-500 flex flex-row justify-start items-start">
+            <div className="flex flex-col pr-3 justify-center items-center h-full min-w-fit">
+                <div className="flex flex-col w-[90px] gap-5 z-30">
+                    {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
-                        // Check if the media is a video or an image
-                        const isVideo = file?.url?.includes("video") || file?.url?.endsWith(".mp4") || file?.url?.endsWith(".mov") || file?.url?.endsWith(".avi");
-                        console.log("Selected color Images is: ", isVideo);
-                        return (
-                            <div
-                                key={index}
-                                className={`w-full h-[150px] p-2 ${selectedImage === file ? "border-2":""}border-purple-600 rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out hover:scale-110`}
-                                onMouseEnter={() => { Addclass(); setSelectedImage(file); }}
-                                onClick={() => { Addclass(); setSelectedImage(file); }}
-                            >
-                                {isVideo ? (
-                                    <ReactPlayer
-                                        className="w-full h-full object-cover"
-                                        url={file.url || file}
-                                        playing={isFocused} // Play only when the element is in focus
-                                        controls={false} // Hide video controls
-                                        muted
-                                        width="100%"
-                                        height="100%"
-                                        light={false} // No thumbnail before video plays
-                                        onFocus={() => setIsFocused(true)} // Start playing when focused
-                                        onBlur={() => setIsFocused(false)} // Stop playing when out of focus
-                                        config={{ file: { attributes: { loading: 'lazy' } } }} // Optimize lazy loading
-                                    />
-                                ) : (
-                                    <img
-                                        src={file.url || file}
-                                        className="w-full h-full object-cover"
-                                        alt="productImage"
-                                        loading="lazy" // Ensure image is lazily loaded
-                                    />
-                                )}
-                            </div>
-                        );
-                    })
-                }
+                            const isVideo = isVideoFile(file); // Use the extracted function
+
+                            return (
+                                <div
+                                    key={index}
+                                    className={`w-full h-full ${
+                                        selectedImage === file ? "border-2 border-gray-800" : ""
+                                    } rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out hover:scale-110`}
+                                    onMouseEnter={() => {
+                                        Addclass();
+                                        setSelectedImage(file);
+                                    }}
+                                    onClick={() => {
+                                        Addclass();
+                                        setSelectedImage(file);
+                                    }}
+                                >
+                                    {isVideo ? (
+                                        <ReactPlayer
+                                            className="w-full h-full object-cover"
+                                            url={file.url || file}
+                                            playing={isFocused}
+                                            controls={false}
+                                            muted
+                                            width="100%"
+                                            height="100%"
+                                            light={false}
+                                            onFocus={() => setIsFocused(true)}
+                                            onBlur={() => setIsFocused(false)}
+                                            config={{ file: { attributes: { loading: 'lazy' } } }}
+                                        />
+                                    ) : (
+                                        <img
+                                            src={file.url || file}
+                                            className="w-full h-full object-cover"
+                                            alt="productImage"
+                                            loading="lazy"
+                                        />
+                                    )}
+                                </div>
+                            );
+                        })
+                    }
                 </div>
             </div>
-            <div className='w-fit min-h-full flex flex-col justify-center items-center'>
+
+            <div className="flex flex-col justify-center items-center w-full h-full">
                 {selectedImage ? (
                     memoIsVideo ? (
-                        // Video handling using ReactPlayer
-                        <div className="relative h-full w-full justify-center items-center overflow-hidden hover:shadow-md">
+                        <div className="relative w-full h-full overflow-hidden hover:shadow-md">
                             <ReactPlayer
                                 className="w-full h-full object-contain rounded-md"
                                 url={selectedImage.url || selectedImage}
@@ -964,22 +987,21 @@ const LeftImageContent = ({selectedSize_color_Image_Array,Addclass,setSelectedIm
                                 controls={false}
                                 width="100%"
                                 height="100%"
-                                playing={true} // Set to true if you want to auto-play
-                                light={false}   // Optional: Display a thumbnail preview before play
+                                playing={true}
+                                light={false}
                             />
                         </div>
                     ) : (
-                        <div className="relative h-full min-w-fit justify-start items-start overflow-hidden hover:shadow-md">
+                        <div className="relative w-full h-full overflow-hidden hover:shadow-md">
                             <ImageZoom imageSrc={selectedImage.url || selectedImage} />
                         </div>
                     )
-                    ) : (
-                        // Loading Spinner
-                        <Loader />
-                    )}
-
+                ) : (
+                    <Loader />
+                )}
             </div>
         </div>
-    )
-}
+    );
+};
+
 export default Ppage

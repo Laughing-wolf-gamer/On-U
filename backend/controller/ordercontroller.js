@@ -402,8 +402,8 @@ export const removeCouponToBag = async(req,res)=>{
             coupon.save(),
             bag.save()
         ])
-        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
-        res.status(200).json({success:true,message: "Coupon Removed Successfully",result:{totalProductSellingPrice,totalSP,totalDiscount,totalMRP}})
+        // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+        res.status(200).json({success:true,message: "Coupon Removed Successfully"})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
         res.status(500).json({success:false,message:"Internal server error"});
