@@ -386,7 +386,7 @@ export const fetchAllProducts = async (req, res) => {
         const{page} = req.query;
         const allProducts = await ProductModel.find({});
         const totalProducts = await ProductModel.countDocuments();
-        const itemsPerPage = 5;
+        const itemsPerPage = 10;
         const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided
 
         // Calculate the number of items to skip

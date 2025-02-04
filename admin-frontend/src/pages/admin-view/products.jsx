@@ -14,7 +14,7 @@ import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
 
-const maxAmountPerPage = 5;
+const maxAmountPerPage = 10;
 
 const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData, setFormData, onSubmit, handleOpenCloseWindow }) => {
     const [categories, setCategories] = useState([]);
