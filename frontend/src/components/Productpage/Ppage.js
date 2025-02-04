@@ -84,7 +84,7 @@ const reviews = [
     },
 ];
 
-const maxScrollAmount = 1100,maxScrollWithReviewInput = 1500, LargeScreenSize = 916.7999877929688
+const maxScrollAmount = 1272,maxScrollWithReviewInput = 1500, LargeScreenSize = 916.7999877929688
 const Ppage = () => {
     const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
     const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
@@ -389,15 +389,15 @@ const Ppage = () => {
             {
                 !productLoading ?
                     <div className='mt-5'>
-                        <div className='flex-row h-fit flex justify-between items-start relative gap-4 overflow-hidden mb-6'>
-                            <div className='w-[36%] 2xl:w-[50%] min-h-full flex flex-col px-7 bg-blue-500'>
+                        <div className='flex-row h-fit flex justify-between items-center relative overflow-hidden mb-6'>
+                            <div className='flex'>
                                 <div
-                                    className={`
-                                        w-[40%] 2xl:ml-16 2xl:w-[50%] bg-transparent
-                                        ${scrollPosition < currentMaxScrollAmount ? "fixed z-[2] mt-3" : "absolute bottom-5 left-8 flex"}
+                                    className={`pl-5
+                                        w-[58%] 2xl:pl-0 2xl:w-[55%] 2xl:min-h-fit bg-transparent
+                                        ${scrollPosition < currentMaxScrollAmount ? "fixed top-24 z-[2]" : "absolute bottom-0 flex"}
                                     `}
                                 >
-                                    <div className='w-full h-full flex justify-start items-center'>
+                                    <div className='w-full h-full flex flex-row justify-start 2xl:justify-end items-end'>
                                         <LeftImageContent 
                                             selectedSize_color_Image_Array={selectedSize_color_Image_Array} 
                                             Addclass={Addclass} 
@@ -411,7 +411,7 @@ const Ppage = () => {
                             </div>
 
                             {/* Content div for large screen */}
-                            <div className='w-[53%] 2xl:w-[50%] h-full flex flex-col pl-9 2xl:pl-2 z-10'>
+                            <div className='w-[42%] 2xl:w-[45%] pl-4 pr-5 h-full flex flex-col z-10'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
@@ -503,10 +503,13 @@ const Ppage = () => {
                                         </div>
 
                                     </div>
+                                    <div className='w-fit ml-43'>
+                                        <SizeChartModal sizeChartData={clothingSizeChartData}/>
+                                    </div>
                                     {/* Add to Cart & Buy Now Buttons */}
                                     <PincodeChecker productId={product?._id} />
                                     </div>
-                                    <div className='w-[80%] h-fit pr-10 justify-center items-center flex flex-col'>
+                                    <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
                                         <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                                             <button disabled = {bagLoading} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900" 
                                                 onClick={addToBag}
@@ -595,7 +598,7 @@ const Ppage = () => {
                                             <li key={index} className='list-none mt-2'>{e?.point}</li>
                                         ))}
                                     </div>
-                                    <SizeChartModal sizeChartData={clothingSizeChartData}/>
+                                    
                                     {/* Additional Info */}
                                     <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
                                         <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
@@ -679,18 +682,20 @@ const Ppage = () => {
                                     
                                 </div>
                             </div>
-
                         </div>
-                        <div className='w-screen justify-center items-center flex flex-col'>
-                            <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                            <div className='w-full flex justify-start items-start px-10'>
-                                <ul className='grid grid-cols-2 2xl:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 pb-8 gap-5'>
-                                    {similar && similar.length > 0 && similar.map((pro) => (
-                                        <Single_product key={pro._id} pro={pro} user ={user}/>
-                                    ))}
-                                </ul>
+                        {similar && similar.length > 0 && (
+                            <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                                <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
+                                <div className='w-full flex justify-start items-start 2xl:px-10'>
+                                    <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
+                                        {[1, 2, 3, 4, 5, 6, 67, 7, 78].map((pro, index) => (
+                                            <Single_product key={index} pro={similar[0]} user={user} />
+                                        ))}
+                                    </ul>
+                                </div>
                             </div>
-                        </div>
+                        )}
+
                     </div>
                 :
                 <Loader />
@@ -920,21 +925,21 @@ const LeftImageContent = ({
     // Memoizing the video detection for the selected image
     const memoIsVideo = useMemo(() => {
         if (!selectedImage || !selectedImage.url) return false;
-        return isVideoFile(selectedImage);
+            return isVideoFile(selectedImage);
     }, [selectedImage]);
 
     return (
-        <div className="w-full min-h-full max-w-fit bg-blue-500 flex flex-row justify-start items-start">
+        <div className="w-full min-h-full max-w-fit px-2 flex flex-row justify-start items-start">
             <div className="flex flex-col pr-3 justify-center items-center h-full min-w-fit">
-                <div className="flex flex-col w-[90px] gap-5 z-30">
+                <div className="flex flex-col mr-3 w-[80px] gap-8"> {/* Reduced the width of the container */}
                     {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
                             const isVideo = isVideoFile(file); // Use the extracted function
-
+    
                             return (
                                 <div
                                     key={index}
-                                    className={`w-full h-full ${
+                                    className={`w-full h-[170px] 2xl:h-[120px] ${ // Reduced height of image container
                                         selectedImage === file ? "border-2 border-gray-800" : ""
                                     } rounded-md overflow-hidden shadow-sm cursor-pointer flex justify-center items-center transform transition-transform duration-300 ease-in-out hover:scale-110`}
                                     onMouseEnter={() => {
@@ -974,7 +979,7 @@ const LeftImageContent = ({
                     }
                 </div>
             </div>
-
+    
             <div className="flex flex-col justify-center items-center w-full h-full">
                 {selectedImage ? (
                     memoIsVideo ? (
@@ -992,7 +997,7 @@ const LeftImageContent = ({
                             />
                         </div>
                     ) : (
-                        <div className="relative w-full h-full overflow-hidden hover:shadow-md">
+                        <div className="relative w-full h-full hover:shadow-md">
                             <ImageZoom imageSrc={selectedImage.url || selectedImage} />
                         </div>
                     )
@@ -1002,6 +1007,7 @@ const LeftImageContent = ({
             </div>
         </div>
     );
+    
 };
 
 export default Ppage

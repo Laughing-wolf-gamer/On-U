@@ -485,114 +485,109 @@ const Bag = () => {
                     <div>
                         {sessionBagData && sessionBagData.length > 0 ? (
                             <div className="relative w-full px-10 mx-auto">
-
-                            {/* Navigation */}
-                            <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
-                                <div className="flex space-x-8 text-gray-800">
-                                    <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
-                                    <span className="text-gray-400">|</span>
-                                    <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
-                                    <span className="text-gray-400">|</span>
-                                    <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
-                                </div>
-                                <div className="flex items-center space-x-3">
-                                    <BsShieldFillCheck className="text-blue-600 text-2xl" />
-                                    <span className="text-xs text-gray-600">100% SECURE</span>
-                                </div>
-                            </div>
-                        
-                            {/* Main Content */}
-                            <div className="flex flex-col lg:flex-row gap-12 mt-12">
-                            {/* Product Listing */}
-                            <div className="flex-1 space-y-6">
-                                {sessionBagData && sessionBagData.length > 0 ? sessionBagData.map((item, i) => (
-                                <div key={i} className="flex items-center border-b py-6 space-x-8">
-                                    <Link to={`/products/${item.ProductData?._id}`} className="w-28 h-28">
-                                    <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
-                                    </Link>
-                                    <div className="flex-1">
-                                    <h3 className="font-semibold text-lg text-gray-800">{item?.ProductData?.title}</h3>
-                                    <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
-                                    <div className="flex items-center space-x-4 text-sm text-blue-500 mt-2">
-                                        {item?.ProductData?.salePrice ? (
-                                        <>
-                                            <span>₹{Math.round(item.ProductData.salePrice)}</span>
-                                            <span className="line-through text-gray-400">₹{item.ProductData.price}</span>
-                                            <span className="text-orange-600">({Math.round(100 - (item.ProductData?.salePrice / item.ProductData?.price) * 100)}% OFF)</span>
-                                        </>
-                                        ) : (
-                                        <span>₹ {item.ProductData.price}</span>
-                                        )}
+                                <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
+                                    <div className="flex space-x-8 text-gray-800">
+                                        <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+                                        <span className="text-gray-400">|</span>
+                                        <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+                                        <span className="text-gray-400">|</span>
+                                        <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
                                     </div>
-                                    <div className="mt-4 flex items-center space-x-4">
-                                        <label className="text-sm">Qty:</label>
-                                        <select
-                                        value={item?.quantity}
-                                        onChange={(e) => updateQty(e, item.ProductData._id)}
-                                        className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    <div className="flex items-center space-x-3">
+                                        <BsShieldFillCheck className="text-blue-600 text-2xl" />
+                                        <span className="text-xs text-gray-600">100% SECURE</span>
+                                    </div>
+                                </div>
+                            
+                                {/* Main Content */}
+                                <div className="flex flex-col lg:flex-row gap-12 mt-12">
+                                {/* Product Listing */}
+                                <div className="flex-1 space-y-6">
+                                    {sessionBagData && sessionBagData.length > 0 ? sessionBagData.map((item, i) => (
+                                        <div key={i} className="flex items-center border-b py-6 space-x-8">
+                                            <Link to={`/products/${item.ProductData?._id}`} className="w-28 h-28">
+                                                <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
+                                            </Link>
+                                            <div className="flex-1">
+                                                <h3 className="font-semibold text-lg text-gray-800">{item?.ProductData?.title}</h3>
+                                                <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+                                                <div className="flex items-center space-x-4 text-sm text-blue-500 mt-2">
+                                                    {item?.ProductData?.salePrice ? (
+                                                    <>
+                                                        <span>₹{Math.round(item.ProductData.salePrice)}</span>
+                                                        <span className="line-through text-gray-400">₹{item.ProductData.price}</span>
+                                                        <span className="text-orange-600">({Math.round(100 - (item.ProductData?.salePrice / item.ProductData?.price) * 100)}% OFF)</span>
+                                                    </>
+                                                    ) : (
+                                                    <span>₹ {item.ProductData.price}</span>
+                                                    )}
+                                                </div>
+                                                <div className="mt-4 flex items-center space-x-4">
+                                                    <label className="text-sm">Qty:</label>
+                                                    <select
+                                                    value={item?.quantity}
+                                                    onChange={(e) => updateQty(e, item.ProductData._id)}
+                                                    className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                                    >
+                                                    {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+                                                        <option key={num + 1} value={num + 1}>{num + 1}</option>
+                                                    ))}
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <X
+                                                className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    handleDeleteBag(item.ProductData._id, item._id);
+                                                }}
+                                            />
+                                        </div>
+                                    )) : (
+                                        <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
+                                    )}
+                                </div>
+                            
+                                {/* Price Details */}
+                                <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
+                                    <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionBagData.length} items)</h3>
+                                    <div className="space-y-5">
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Total MRP</span>
+                                            <span>₹{bag?.totalMRP || totalSellingPrice}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>You Saved</span>
+                                            <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700">
+                                            <span>Coupon</span>
+                                            <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                            {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between text-sm text-gray-700 mb-5">
+                                            <span>Convenience Fee</span>
+                                            <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+                                            ₹{convenienceFees}
+                                            </span>
+                                        </div>
+                                        <div className="flex justify-between font-semibold text-xl text-gray-900">
+                                            <span>Total</span>
+                                            <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                        </div>
+                                    </div>
+                                    <div className="mt-6">
+                                        <button
+                                            onClick={() => navigation("/Login")}
+                                            className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
                                         >
-                                        {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-                                            <option key={num + 1} value={num + 1}>{num + 1}</option>
-                                        ))}
-                                        </select>
-                                    </div>
-                                    </div>
-                                    <X
-                                    className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        handleDeleteBag(item.ProductData._id, item._id);
-                                    }}
-                                    />
-                                </div>
-                                )) : (
-                                <div className="text-center text-gray-500 text-lg">Your bag is empty.</div>
-                                )}
-                            </div>
-                        
-                            {/* Price Details */}
-                            <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
-                                <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionBagData.length} items)</h3>
-                                <div className="space-y-5">
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>Total MRP</span>
-                                        <span>₹{bag?.totalMRP || totalSellingPrice}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>You Saved</span>
-                                        <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700">
-                                        <span>Coupon</span>
-                                        <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-                                        {bag?.Coupon?.CouponCode || "No Coupon Applied"}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between text-sm text-gray-700 mb-5">
-                                        <span>Convenience Fee</span>
-                                        <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                        ₹{convenienceFees}
-                                        </span>
-                                    </div>
-                                    <div className="flex justify-between font-semibold text-xl text-gray-900">
-                                        <span>Total</span>
-                                        <span>₹{Math.round(totalProductSellingPrice)}</span>
+                                            Log In To Process Payment
+                                        </button>
                                     </div>
                                 </div>
-                                <div className="mt-6">
-                                    <button
-                                        onClick={() => navigation("/Login")}
-                                        className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
-                                    >
-                                        Log In To Process Payment
-                                    </button>
-                                </div>
                             </div>
-                            </div>
-                        
-                        </div>
-                                                
-                        
+                        </div>           
                         ) : (
                             <Fragment>
                                 {bagLoading ?  <SkeletonLoader />:
@@ -607,44 +602,38 @@ const Bag = () => {
                 )}
             </div>
             <CouponsDisplay user={user} />
-            <div className="flex justify-center items-start flex-col pb-8">
-                {
-                    sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
-                        <div className='w-screen md:px-9 lg:px-10 2xl:px-12 px-1 justify-center items-center'>
-                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-10 mb-6">
-                                RECENTLY VIEWED
-                            </h1>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6"> {/* Reduced gap here */}
-                                {
-                                    sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
-                                        <SingleProduct pro={pro} user={user} key={pro._id} />
-                                    ))
-                                }
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
-            <div className="flex justify-center items-start flex-col pb-8">
-                {
-                    randomProducts && randomProducts.length > 0 && (
-                        <div className='w-screen md:px-9 lg:px-10 2xl:px-12 px-1 justify-center items-center'>
-                            <h1 className="text-center text-3xl font-sans font-semibold text-gray-800 mt-10 mb-6">
-                                DISCOVER MORE
-                            </h1>
-                            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6">
-                                {RandomProductLoading ? (
-                                    <ProductCardSkeleton /> // Render the skeleton if products are still loading
-                                ) : (
-                                    randomProducts.slice(0, 20).map((pro) => (
-                                        <SingleProduct pro={pro} user={user} key={pro._id} />
-                                    ))
-                                )}
-                            </div>
-                        </div>
-                    )
-                }
-            </div>
+            {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
+                <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
+                    <div className='w-full flex justify-start items-start 2xl:px-10'>
+                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
+                            {
+                                sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
+                                    <SingleProduct pro={pro} user={user} key={pro._id} />
+                                ))
+                            }
+                        </ul>
+                    </div>
+                </div>
+            )}
+            {randomProducts && randomProducts.length > 0 && (
+                <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
+                    <div className='w-full flex justify-start items-start 2xl:px-10'>
+                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
+                            {
+                                RandomProductLoading ? <ProductCardSkeleton/>:<Fragment>
+                                    {
+                                        randomProducts.map((pro) => (
+                                            <SingleProduct pro={pro} user={user} key={pro._id} />
+                                        ))
+                                    }
+                                </Fragment>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            )}
             <Footer/>
         </div>
     );

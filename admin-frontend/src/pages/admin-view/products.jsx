@@ -221,13 +221,16 @@ const AdminProducts = () => {
         } else {
             try {
                 const data = await dispatch(addNewProduct({ ...formData }));
-                if (data?.payload?.Success) {
-                    setOpenCreateProduct(false);
-                    setUploadedImageUrls([]);
-                    setFormData(initialFormData);
-                    dispatch(fetchAllProducts({pageNo:currentPage}));
-                    toast("Product Added Success")
+                console.log("Product Updated Success: ",data);
+                if (!data?.payload?.Success) {
+                    toast(`Error: ${data?.payload?.message}`);
+                    return;
                 }
+                setOpenCreateProduct(false);
+                setUploadedImageUrls([]);
+                setFormData(initialFormData);
+                dispatch(fetchAllProducts({pageNo:currentPage}));
+                toast("Product Added Success")
             } catch (error) {
                 console.error(`Failed to Add New Product: ${error.message}`,error);
                 toast(`Failed to Add New Product: ${error.message}`)

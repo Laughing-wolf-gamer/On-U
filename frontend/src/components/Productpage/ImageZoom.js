@@ -34,7 +34,7 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     }, []);
 
     return (
-        <div className="relative w-full h-full flex-1 2xl:w-[610px] 2xl:h-[700px] justify-self-center flex-row flex items-center">
+        <div className="relative w-full h-full flex-1 2xl:w-[610px] 2xl:h-full justify-self-center flex-row flex items-center">
             <img
                 loading="lazy"
                 src={imageSrc}

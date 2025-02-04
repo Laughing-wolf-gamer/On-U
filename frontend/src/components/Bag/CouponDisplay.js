@@ -1,9 +1,7 @@
 import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCoupons } from '../../action/common.action';
-import { useToast } from '../../Contaxt/ToastProvider';
-import toast from 'react-hot-toast';
-
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 // Sample coupon data
 const coupons = [
     {
@@ -31,30 +29,7 @@ const coupons = [
 
 const CouponsDisplay = ({user}) => {
     const{AllCoupons} = useSelector(state=>state.AllCoupons);
-    const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(!activeToast){
-            switch(type){
-                case "error":
-                    toast.error(message)
-                    break;
-                case "warning":
-                    toast.warning(message)
-                    break;
-                case "info":
-                    toast.info(message)
-                    break;
-                case "success":
-                    toast.success(message)
-                    break;
-                default:
-                    toast.info(message)
-                    break;
-            }
-            showToast(message);
-        }
-    }
+    const {checkAndCreateToast} = useSettingsContext();
     const dispatch = useDispatch();
     useEffect(()=>{
         // Fetch all coupons
@@ -64,12 +39,12 @@ const CouponsDisplay = ({user}) => {
     console.log("All Coupons: ",AllCoupons);
     return (
         <div className="w-screen justify-center items-center flex flex-col px-4 py-8">
-            <h2 className="text-2xl font-bold mb-6 text-center">All Coupons [testing Only]</h2>
+            <h2 className="text-2xl font-bold mb-6 text-center">All Coupons</h2>
 
             {/* Coupons grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                 {AllCoupons && AllCoupons.length > 0 ? (
-                    coupons.map((coupon) => (
+                    AllCoupons.map((coupon) => (
                         <div
                             key={coupon._id}
                             className="bg-white 2xl:min-w-[500px] xl:min-w-[300px] lg:min-w-[260px] md:min-w-[200px] min-w-[190px] p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"

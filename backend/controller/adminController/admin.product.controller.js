@@ -215,73 +215,72 @@ export const fetchAllCoupons = async(req, res) => {
         res.status(500).json({message: "Internal Server Error",result:[]});
     }
 }
-export const addNewProduct = async (req, res) => {
-    const isFormValid =(formData) => {
-        const reasons = [];
-        if(!formData.productId){
-            reasons.push("Product ID is required.");
-            return;
-        }
-        // Title check
-        if (!formData.title) {
-            reasons.push("Title is required.");
-        }
-        // Title check
-        if (!formData.shortTitle) {
-            reasons.push("Short Title is required.");
-        }
-    
-        // Description check
-        if (!formData.description) {
-            reasons.push("Description is required.");
-        }
-    
-        // Price check
-        if (!formData.price) {
-            reasons.push("Price is required.");
-        } else if (isNaN(formData.price) || formData.price <= 0) {
-            reasons.push("Price must be a positive number.");
-        }
-        // Size check
-        if (!formData.size || formData.size.length === 0) {
-            reasons.push("At least one size is required.");
-        }
-    
-        // Material check
-        if (!formData.material) {
-            reasons.push("Material is required.");
-        }
-    
-        // Gender check
-        if (!formData.gender) {
-            reasons.push("Gender is required.");
-        }
-    
-        // Subcategory check
-        if (!formData.subCategory) {
-            reasons.push("Subcategory is required.");
-        }
-    
-        // Category check
-        if (!formData.category) {
-            reasons.push("Category is required.");
-        }
-    
-        // Quantity check
-    
-        // Bullet points check
-        if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
-            reasons.push("At least one bullet point is required.");
-        }
-    
-        // If there are no reasons, the form is valid
-        const isValid = reasons.length === 0;
-    
-        return {
-            isValid,
-            reasons
-        };
+const isFormValid =(formData) => {
+    const reasons = [];
+    if(!formData.productId){
+        reasons.push("Product ID is required.");
+        return;
     }
+    // Title check
+    if (!formData.title) {
+        reasons.push("Title is required.");
+    }
+    // Title check
+    if (!formData.shortTitle) {
+        reasons.push("Short Title is required.");
+    }
+
+    // Description check
+    if (!formData.description) {
+        reasons.push("Description is required.");
+    }
+
+    // Price check
+    if (!formData.price) {
+        reasons.push("Price is required.");
+    } else if (isNaN(formData.price) || formData.price <= 0) {
+        reasons.push("Price must be a positive number.");
+    }
+    // Size check
+    if (!formData.size || formData.size.length === 0) {
+        reasons.push("At least one size is required.");
+    }
+
+    // Material check
+    if (!formData.material) {
+        reasons.push("Material is required.");
+    }
+
+    // Gender check
+    if (!formData.gender) {
+        reasons.push("Gender is required.");
+    }
+
+    // Subcategory check
+    if (!formData.subCategory) {
+        reasons.push("Subcategory is required.");
+    }
+
+    // Category check
+    if (!formData.category) {
+        reasons.push("Category is required.");
+    }
+
+    // Quantity check
+
+    // Bullet points check
+    if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
+        reasons.push("At least one bullet point is required.");
+    }
+
+    // If there are no reasons, the form is valid
+
+    return {
+        isValid:reasons.length === 0,
+        reasons
+    }
+}
+export const addNewProduct = async (req, res) => {
     try {
         const {
             productId,
@@ -304,10 +303,10 @@ export const addNewProduct = async (req, res) => {
             weight,
             breadth,
         } = req.body;
-        console.log("Adding Products fields ",req.body);
-        
-        if(!isFormValid(req.body).isValid){
-            return res.status(400).json({Success:false,message:"All fields are required ",reasons:isFormValid(req.body).reasons});
+        console.log("Adding Products fields ",isFormValid(req.body));
+        const isValid = isFormValid(req.body);
+        if(!isValid){
+            return res.status(200).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
         }
         const AllColors = []
         size.forEach(s => {
@@ -330,6 +329,20 @@ export const addNewProduct = async (req, res) => {
             totalStock += sizeStock;
         })
         console.log("Total Stock: ",totalStock);
+        let DiscountedPercentage = 0;
+        if (price && salePrice && salePrice > 0) {
+            const discountAmount = price - salePrice;
+            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
+            DiscountedPercentage = discountPercentage;
+        } else {
+            const currentProduct = await ProductModel.findById(id);
+            const p = currentProduct.price;
+            const sp = currentProduct.salePrice;
+            const discountAmount = p - sp;
+            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
+            // If no salePrice, set DiscountedPercentage to 0
+            DiscountedPercentage = discountPercentage;
+        }
         const newProduct = new ProductModel({
             productId,
             title,
@@ -344,6 +357,7 @@ export const addNewProduct = async (req, res) => {
             specialCategory:specialCategory,
             price,
             salePrice: salePrice && salePrice > 0 ? salePrice : null,
+            DiscountedPercentage:DiscountedPercentage,
             totalStock,
             AllColors:AllColors,
             Rating:Rating && Rating.length > 0 ? [Rating]:[],

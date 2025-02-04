@@ -716,38 +716,38 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-normal mb-2'>DISCOUNT AMOUNT</h1>
-                        {discountedPercentageAmount.map((amount, i) => {
-                            // Get the 'discountedAmount' value from the URL
-                            const params = new URLSearchParams(window.location.search);
-                            const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL
-                            // console.log("Current amount: " + currentAmount);
-                            // Determine if the current radio button should be checked based on the URL parameter
-                            const isChecked = Number(currentAmount) === amount;
+                    <h1 className='font1 text-base font-normal mb-2'>DISCOUNT</h1>
+                    {discountedPercentageAmount.map((amount, i) => {
+                        // Get the 'discountedAmount' value from the URL
+                        const params = new URLSearchParams(window.location.search);
+                        const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL
+                        // console.log("Current amount: " + currentAmount);
+                        // Determine if the current radio button should be checked based on the URL parameter
+                        const isChecked = Number(currentAmount) === amount;
 
-                            return (
-                                <div key={i} onClick={(event) => {
-                                    event.preventDefault();
-                                    discountedAmountFun(amount); // This will update the URL with the selected amount
-                                }}>
-                                    <input
-                                        type="radio" // Ensure it's a radio input
-                                        name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
-                                        value={amount}
-                                        id={`cat_${amount}`}
-                                        className="mb-2 accent-gray-500"
-                                        checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
-                                        // No need for onChange handler since radio buttons will handle state automatically
-                                    />
-                                    <label className="font1 text-sm ml-2 mr-4 mb-2">
-                                        UpTo {amount} %
-                                        <span className="text-xs font-sans font-normal text-slate-400"> 
-                                            ({discountedPercentageAmount.filter((f) => f === amount).length})
-                                        </span>
-                                    </label>
-                                </div>
-                            );
-                        })}
+                        return (
+                            <div key={i} onClick={(event) => {
+                                event.preventDefault();
+                                discountedAmountFun(amount); // This will update the URL with the selected amount
+                            }}>
+                                <input
+                                    type="radio" // Ensure it's a radio input
+                                    name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
+                                    value={amount}
+                                    id={`cat_${amount}`}
+                                    className="mb-2 accent-gray-500"
+                                    checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
+                                    // No need for onChange handler since radio buttons will handle state automatically
+                                />
+                                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                                    UpTo {amount} %
+                                    <span className="text-xs font-sans font-normal text-slate-400"> 
+                                        ({discountedPercentageAmount.filter((f) => f === amount).length})
+                                    </span>
+                                </label>
+                            </div>
+                        );
+                    })}
 
                 </ul>
 

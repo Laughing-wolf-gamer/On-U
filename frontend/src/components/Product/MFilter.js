@@ -85,31 +85,31 @@ const MFilter = ({ product ,handleSortChange}) => {
     function pricefun(e) {
         let url = window.location.search
         if (url.includes('?')) {
-        if (url.includes('low')) {
-            if (url.includes('&low')) {
-            let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null
-            let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null
-            let newurlsuccess = (newurl === null ? newurl2 : newurl)
-            navigation(newurlsuccess)
-            dispatch(getproduct())
-            //  window.location = newurlsuccess 
+            if (url.includes('low')) {
+                if (url.includes('&low')) {
+                    let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null
+                    let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null
+                    let newurlsuccess = (newurl === null ? newurl2 : newurl)
+                    navigation(newurlsuccess)
+                    dispatch(getproduct())
+                    //  window.location = newurlsuccess 
+                }
+                if (url.includes('?low')) {
+                    let newurl = url.includes(`?low=1`) ? url.replace(`?low=1`, `?low=${e}`) : null
+                    let newurl2 = url.includes(`?low=-1`) ? url.replace(`?low=-1`, `?low=${e}`) : null
+                    let newurlsuccess = (newurl === null ? newurl2 : newurl)
+                    navigation(newurlsuccess)
+                    dispatch(getproduct())
+                    //  window.location = newurlsuccess
+                }
+            } else {
+                let newurl = window.location.search += `&low=${e}`
+                navigation(newurl)
+                dispatch(getproduct())
+                //  url += `&low=${e}`
+                //  Redirect(url)
+                //  window.location = url
             }
-            if (url.includes('?low')) {
-            let newurl = url.includes(`?low=1`) ? url.replace(`?low=1`, `?low=${e}`) : null
-            let newurl2 = url.includes(`?low=-1`) ? url.replace(`?low=-1`, `?low=${e}`) : null
-            let newurlsuccess = (newurl === null ? newurl2 : newurl)
-            navigation(newurlsuccess)
-            dispatch(getproduct())
-            //  window.location = newurlsuccess
-            }
-        } else {
-            let newurl = window.location.search += `&low=${e}`
-            navigation(newurl)
-            dispatch(getproduct())
-            //  url += `&low=${e}`
-            //  Redirect(url)
-            //  window.location = url
-        }
         } else {
             //   url += `?low=${e}`
             navigation(`?low=${e}`)
@@ -122,6 +122,7 @@ const MFilter = ({ product ,handleSortChange}) => {
     let category = []
     let subcategory = []
     let specialCategory = []
+    let discountedPercentageAmount = [];
     let size = []
     let gender = []
     let color = []
@@ -133,6 +134,26 @@ const MFilter = ({ product ,handleSortChange}) => {
             product.forEach(p => {
                 if(!category.includes(p.category)){
                     category.push(p.category)
+                }
+            });
+        }
+    }
+    function setDiscountedPercentage (){
+        if (product && product.length > 0) {
+            product.forEach(p => {
+                if(p.salePrice && p.salePrice > 0){
+                    // let discount = ((p.price - p.salePrice)/p.price) * 100
+                    /* const priceOriginal = p.price;
+                    const salePriceProduct = p.salePrice;
+                    const discountAmount = priceOriginal - salePriceProduct;
+                    const discountPercentage = Math.floor(((discountAmount / priceOriginal) * 100).toFixed(0));
+                    if(!discountedPercentageAmount.includes(discountPercentage)){
+                        discountedPercentageAmount.push(discountPercentage)
+                    } */
+                    const amount = Math.floor(p.DiscountedPercentage);
+                    if(!discountedPercentageAmount.includes(amount)){
+                        discountedPercentageAmount.push(amount)
+                    }
                 }
             });
         }
@@ -160,11 +181,11 @@ const MFilter = ({ product ,handleSortChange}) => {
     }
     function specialCategoriesarray() {
         if (product && product.length > 0) {
-        product.forEach(p => {
-            if(!specialCategory.includes(p.specialCategory) && p.specialCategory !== "none" && p.specialCategory !== undefined){
-            specialCategory.push(p.specialCategory)
-            }
-        });
+            product.forEach(p => {
+                if(!specialCategory.includes(p.specialCategory) && p.specialCategory !== "none" && p.specialCategory !== undefined){
+                specialCategory.push(p.specialCategory)
+                }
+            });
         }
     }
     function sizearray() {
@@ -216,6 +237,7 @@ const MFilter = ({ product ,handleSortChange}) => {
         sparray()
         specialCategoriesarray();
         subCategoriesarray();
+        setDiscountedPercentage();
         SetOnSale()
     },[product])
     
@@ -226,6 +248,7 @@ const MFilter = ({ product ,handleSortChange}) => {
     sparray()
     specialCategoriesarray();
     subCategoriesarray();
+    setDiscountedPercentage();
     SetOnSale();
 
     let Categorynewarray = [...new Set(category)];
@@ -297,6 +320,25 @@ const MFilter = ({ product ,handleSortChange}) => {
             setMMainlink(`${MMainlink}?gender=${e}`)
         }
     }
+    function discountedAmountfun(e) {
+        console.log("E-Amount:", e);
+        // Check if the main URL contains a '?'
+        if (MMainlink.includes('?')) {
+            // Check if the URL already contains 'discountedAmount'
+            if (MMainlink.includes(`discountedAmount=`)) {
+                // If 'discountedAmount' already exists, replace it with the new value
+                let newurl = MMainlink.replace(/([&?])discountedAmount=[^&]*/, `$1discountedAmount=${e}`);
+                setMMainlink(newurl);
+            } else {
+                // If 'discountedAmount' does not exist, append it
+                setMMainlink(`${MMainlink}&discountedAmount=${e}`);
+            }
+        } else {
+            // If no '?' exists, simply add 'discountedAmount' as the first query parameter
+            setMMainlink(`${MMainlink}?discountedAmount=${e}`);
+        }
+    }
+    
     function sizefun(e) {
         if (MMainlink.includes('?')) {
             let newtext = e.replace(' ', '%20')
@@ -392,6 +434,16 @@ const MFilter = ({ product ,handleSortChange}) => {
 
 
     }
+    function addclass1Discounted(e) {
+        console.log("Add Class 1: ",e);
+        let f = e;
+
+        var font = document.querySelector(`.font${f}`)
+
+        elementClass(font).toggle('fontbold')
+
+
+    }
     function addclassColor1(e) {
         let f = e.replace(/ /g, ""); // Remove any spaces from the string
         // Escape '#' for use in querySelector
@@ -404,6 +456,11 @@ const MFilter = ({ product ,handleSortChange}) => {
     }
     function addclass2(e) {
         let f = e.replace(/ /g, "")
+        var tick = document.querySelector(`.tick${f}`)
+        elementClass(tick).toggle('tickcolor')
+    }
+    function addclass2Discounted(e) {
+        let f = e;
         var tick = document.querySelector(`.tick${f}`)
         elementClass(tick).toggle('tickcolor')
     }
@@ -501,12 +558,13 @@ const MFilter = ({ product ,handleSortChange}) => {
                 <div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
                     <h1 className={`filter1 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
                     <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
-                    <h1 className={`filter3 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Color</h1>
-                    <h1 className={`filter4 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Price</h1>
-                    <h1 className={`filter4 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Size</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Sub Categories</h1>
+                    <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Sub Categories</h1>
+                    <h1 className={`filter4 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
+                    <h1 className={`filter4 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
+                    <h1 className={`filter3 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
                     <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>On Sale</h1>
+                    <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
+                    <h1 className={`filter2 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
                 </div>
 
                 <div className='col-span-8 '>
@@ -536,23 +594,27 @@ const MFilter = ({ product ,handleSortChange}) => {
                     </ul>
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul3`}>
                         {
-                            colornewarray && colornewarray.map((e,i) =>
+                            subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
 
-                                <li key={`color_key_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 font1 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
-                                onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
-                                    <span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
-                                    
-                                    </span>
-                                    <div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
-
-                                    </div>
-                                <span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
+                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
+                                onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
 
                             )
                         }
                     </ul>
-
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul4`}>
+                        {
+                            size && size.map((e,i) =>
+
+                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
+                                onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{size.filter((f) => f === e).length}</span></li>
+
+                            )
+                        }
+                    </ul>
+                    <ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
                         {
                             sp &&
                             <div className='mt-10 ml-8 mr-8'>
@@ -569,28 +631,24 @@ const MFilter = ({ product ,handleSortChange}) => {
                             </div>
                         }
                     </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
-                        {
-                            size && size.map((e,i) =>
-
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{size.filter((f) => f === e).length}</span></li>
-
-                            )
-                        }
-                    </ul>
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul6`}>
                         {
-                            subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
+                            colornewarray && colornewarray.map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
+                                <li key={`color_key_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 font1 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
+                                onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
+                                    <span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
+                                    
+                                    </span>
+                                    <div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
+
+                                    </div>
+                                <span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
 
                             )
                         }
                     </ul>
+                    
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul7`}>
                         {
                             specialCategoryNewArray && specialCategoryNewArray.length > 0 && specialCategoryNewArray.map((e,i) =>
@@ -603,6 +661,17 @@ const MFilter = ({ product ,handleSortChange}) => {
                         }
                     </ul>
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
+                        {
+                            discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.map((e,i) =>
+
+                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] font1 text-slate-700 font${e.toString()} relative`}
+                                onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
+                                <span className={`text-sm`}>Up to {e}% OFF</span> <span className={`absolute right-6 text-xs`}>{discountedPercentageAmount.filter((f) => f === e).length}</span></li>
+
+                            )
+                        }
+                    </ul>
+                    <ul className={`hidden overflow-scroll h-[86%] ulco ul9`}>
                         <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
                             onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>
                         <span className={`text-sm`}>On Sale</span> <span className={`absolute right-6 text-xl`}>{onSale.length}</span></li>

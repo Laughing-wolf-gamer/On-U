@@ -52,7 +52,8 @@ export const addNewProduct = createAsyncThunk('/products/addNewProduct',async (f
         const response = await axios.post(`${BASE_URL}/admin/product/add`,formData,Header());
         return response.data;
     } catch (error) {
-        console.error(error);
+        console.error(`Error creating product: `,error);
+        return null;
     }
 })
 export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',async ({pageNo})=>{
