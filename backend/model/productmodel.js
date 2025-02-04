@@ -11,19 +11,19 @@ const productModelSchema = new mongoose.Schema({
         required:[true,'Please enter product title'],
     },
     shortTitle:String,
-    salePrice:{
-        type:Number,
-        default:-1
-    },
     brand:{
         type:String,
         default:'On-U'
     },
-
+    salePrice:{
+        type:Number,
+        default:-1
+    },
     price:{
         type:Number,
         default:0
     },
+    DiscountedPercentage:{type:Number,default:0},
     size:[
         {
             id:Number,
@@ -100,6 +100,18 @@ productModelSchema.pre('save', function (next) {
         } else {
             const total = this.Rating.reduce((acc, review) => acc + review.rating, 0);
             this.averageRating = total / this.Rating.length;
+        }
+    }
+    if (this.isModified('price') || this.isModified('salePrice')) {
+        if (this.salePrice && this.salePrice > 0) {
+            // Calculate the discount amount
+            const discountAmount = this.price - this.salePrice;
+        
+            // Calculate the discount percentage
+            const discountPercentage = ((discountAmount / this.price) * 100).toFixed(0);
+            this.discountedAmount = discountPercentage;
+        } else {
+            this.discountedAmount = 0;  // If there's no salePrice, no discount
         }
     }
     next();

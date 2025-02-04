@@ -87,20 +87,20 @@ export const UpdateSizeStock = async (req, res) => {
         
         // Update the size quantity directly in the database
         const result = await ProductModel.updateOne(
-        { _id: productId, "size._id": sizeId }, // Find the product by productId and sizeId
-        {
-            $set: { "size.$.quantity": updatedAmount }, // Update the quantity of the specific size
-        }
+            { _id: productId, "size._id": sizeId }, // Find the product by productId and sizeId
+            {
+                $set: { "size.$.quantity": updatedAmount }, // Update the quantity of the specific size
+            }
         );
 
         if (result.nModified === 0) {
-        return res.status(404).json({ Success: false, message: 'Product or Size not found' });
+            return res.status(404).json({ Success: false, message: 'Product or Size not found' });
         }
 
         // Now calculate the total stock for the product, based on all sizes and colors
         const product = await ProductModel.findById(productId);
         if (!product) {
-        return res.status(404).json({ Success: false, message: 'Product not found' });
+            return res.status(404).json({ Success: false, message: 'Product not found' });
         }
 
         // Calculate the new total stock
@@ -110,31 +110,32 @@ export const UpdateSizeStock = async (req, res) => {
         if (s.colors) {
             let sizeStock = s.quantity; // Start with the size's own quantity
             s.colors.forEach(color => {
-            sizeStock += color.quantity; // Add color quantities to size stock
+                sizeStock += color.quantity; // Add color quantities to size stock
             });
             totalStock += sizeStock;
         }
         });
         product.size.forEach(s => {
-        if(s.colors){
-            s.colors.forEach(c => {
-                const colorsImageArray = c.images.filter(c => c !== "");
-                c.images = colorsImageArray;
-                AllColors.push(c);
-            });
-        }
+            if(s.colors){
+                s.colors.forEach(c => {
+                    const colorsImageArray = c.images.filter(c => c !== "");
+                    c.images = colorsImageArray;
+                    AllColors.push(c);
+                });
+            }
         });
 
         // Update the total stock of the product directly
         const UpdateProduct = await ProductModel.updateOne(
-        { _id: productId },
-        { $set: { totalStock: totalStock ,AllColors:AllColors} },
-        { new: true }
+            { _id: productId },
+            { $set: { totalStock: totalStock ,AllColors:AllColors} },
+            { new: true }
         );
 
         res.status(200).json({ Success: true, message: 'Size Stock Updated Successfully' ,result:UpdateProduct});
     } catch (error) {
         console.log("Error Updating Size Stock: ", error);
+        logger.error("Error Updating Size: " + error.message);
         res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };

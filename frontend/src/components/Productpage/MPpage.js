@@ -26,24 +26,24 @@ import SizeChartModal from './SizeChartModal';
 
 const reviews = [
     {
-      rating: 5,
-      comment: "Excellent product! Exceeded my expectations.",
+        rating: 5,
+        comment: "Excellent product! Exceeded my expectations.",
     },
     {
-      rating: 4,
-      comment: "Great quality, but a bit expensive.",
+        rating: 4,
+        comment: "Great quality, but a bit expensive.",
     },
     {
-      rating: 3,
-      comment: "Average product. It works, but I was expecting more.",
+        rating: 3,
+        comment: "Average product. It works, but I was expecting more.",
     },
     {
-      rating: 2,
-      comment: "Not as described. Poor quality.",
+        rating: 2,
+        comment: "Not as described. Poor quality.",
     },
     {
-      rating: 1,
-      comment: "Terrible! It broke after one use.",
+        rating: 1,
+        comment: "Terrible! It broke after one use.",
     },
     {
       rating: 4,

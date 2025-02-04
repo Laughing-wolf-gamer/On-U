@@ -23,7 +23,7 @@ route.post('/bag/addItemArrayBag',isAuthenticateuser,addItemsArrayToBag)
 route.put('/bag/applyCoupon/:bagId',isAuthenticateuser,applyCouponToBag);
 
 
-route.patch('/bag/applyCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
+route.patch('/bag/removeCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
 route.get('/bag/:userId',isAuthenticateuser, getbag)
 route.put('/update_bag',isAuthenticateuser, updateqtybag)
 route.put('/removeBagItem',isAuthenticateuser, deletebag)

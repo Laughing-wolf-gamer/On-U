@@ -758,25 +758,6 @@ const AverageRatingView = ({ ratings }) => {
         </Fragment>
     );
 };
-/* const CustomSlider = styled(Slider)({
-    '& .MuiSlider-thumb': {
-        backgroundColor: '#333333', // Dark gray thumb color
-        border: '2px solid #212121', // Darker gray border for the thumb
-        '&:hover': {
-            backgroundColor: '#555555', // Slightly lighter gray on hover
-        },
-    },
-    '& .MuiSlider-rail': {
-        backgroundColor: '#E0E0E0', // Light gray rail color
-    },
-    '& .MuiSlider-track': {
-        backgroundColor: '#212121', // Dark gray track color
-    },
-    '& .MuiSlider-valueLabel': {
-        backgroundColor: '#212121', // Dark gray background for the value label
-        color: 'white', // White text for the value label
-    },
-}); */
 
 const ProductReviews = ({ reviews }) => {
     const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews

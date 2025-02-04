@@ -349,7 +349,6 @@ export const applyCouponToBag = async(req,res)=>{
             return res.status(400).json({ message: "Coupon is expired" });
         }
         const bag = await  Bag.findById(bagId);
-        console.error("Coupon bag",bag);
         if(!bag){
             return res.status(404).json({message: "Bag Not Found"})
         }
@@ -366,7 +365,8 @@ export const applyCouponToBag = async(req,res)=>{
             coupon.save(),
             bag.save()
         ])
-        res.status(200).json({success:true,message: "Coupon Applied Successfully"})
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);  
+        res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP}})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
         res.status(500).json({success:false,message:"Internal server error"});
@@ -402,7 +402,8 @@ export const removeCouponToBag = async(req,res)=>{
             coupon.save(),
             bag.save()
         ])
-        res.status(200).json({success:true,message: "Coupon Removed Successfully"})
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+        res.status(200).json({success:true,message: "Coupon Removed Successfully",result:{totalProductSellingPrice,totalSP,totalDiscount,totalMRP}})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
         res.status(500).json({success:false,message:"Internal server error"});
