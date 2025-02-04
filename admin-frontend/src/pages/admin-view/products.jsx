@@ -211,32 +211,97 @@ const AdminProducts = () => {
             }
         } catch (error) {
             console.error(`Failed to Update Product: ${error.message}`);
-            toast(`Failed to Update Product: ${error.message}`)
+            toast.error(`Failed to Update Product: ${error.message}`)
         }
     }
     const onSubmit = async (e) => {
         e.preventDefault();
-        if (currentEditingId) {
-        
-        } else {
+        if (!currentEditingId) {
             try {
+                console.log("Form Validation: ",isFormValid());
                 const data = await dispatch(addNewProduct({ ...formData }));
-                console.log("Product Updated Success: ",data);
                 if (!data?.payload?.Success) {
-                    toast(`Error: ${data?.payload?.message}`);
-                    return;
+                    // toast.error(`Error: ${data?.payload?.message}`);
+                    throw new Error(`Error: ${data?.payload?.message}`);
                 }
                 setOpenCreateProduct(false);
                 setUploadedImageUrls([]);
                 setFormData(initialFormData);
                 dispatch(fetchAllProducts({pageNo:currentPage}));
-                toast("Product Added Success")
+                toast.success("Product Added Success")
             } catch (error) {
                 console.error(`Failed to Add New Product: ${error.message}`,error);
-                toast(`Failed to Add New Product: ${error.message}`)
+                toast.error(`${error.message}`)
             }
-        }
+        
+        } 
     };
+    function isFormValid() {
+        console.log("Form Data",formData);
+        const reasons = [];
+        if(!formData.productId){
+            reasons.push("Product ID is required.");
+            return;
+        }
+        // Title check
+        if (!formData.title) {
+            reasons.push("Title is required.");
+        }
+        // Title check
+        if (!formData.shortTitle) {
+            reasons.push("Short Title is required.");
+        }
+    
+        // Description check
+        if (!formData.description) {
+            reasons.push("Description is required.");
+        }
+    
+        // Price check
+        if (!formData.price) {
+            reasons.push("Price is required.");
+        } else if (isNaN(formData.price) || formData.price <= 0) {
+            reasons.push("Price must be a positive number.");
+        }
+        // Size check
+        if (!formData.size || formData.size.length === 0) {
+            reasons.push("At least one size is required.");
+        }
+    
+        // Material check
+        if (!formData.material) {
+            reasons.push("Material is required.");
+        }
+    
+        // Gender check
+        if (!formData.gender) {
+            reasons.push("Gender is required.");
+        }
+    
+        // Subcategory check
+        if (!formData.subCategory) {
+            reasons.push("Subcategory is required.");
+        }
+    
+        // Category check
+        if (!formData.category) {
+            reasons.push("Category is required.");
+        }
+    
+        // Quantity check
+    
+        // Bullet points check
+        if (!formData.bulletPoints || formData.bulletPoints.length === 0) {
+            reasons.push("At least one bullet point is required.");
+        }
+    
+        // If there are no reasons, the form is valid
+    
+        return {
+            isValid:reasons.length === 0,
+            reasons
+        }
+    }
 
     useEffect(() => {
         fetchAllFiltersCategory();

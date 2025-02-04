@@ -28,12 +28,12 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
             );
         case 'select':
             return (
-            <CustomSelect
-                controlItems={controlItems}
-                setChangeData={(e) => {
-                setFormData({ ...formData, [controlItems.name]: e });
-                }}
-            />
+                <CustomSelect
+                    controlItems={controlItems}
+                    setChangeData={(e) => {
+                    setFormData({ ...formData, [controlItems.name]: e });
+                    }}
+                />
             );
         case 'textarea':
             return (
@@ -79,6 +79,7 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
         }
     }
     const validated = formControls.map(v => v.required && !formData[v.name])
+    console.log("Bullet Points Data:  ",formData["bulletPoints"])
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
         <div className="flex flex-col gap-6">
@@ -88,6 +89,9 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
                         {controlItem.label}
                         {
                             controlItem.required && !formData[controlItem.name] && <span className='text-red-500 text-[12px] font-light'>*</span>
+                        }
+                        {
+                            controlItem.name === 'bulletPoints' && Array.isArray(formData[controlItem.name]) && formData["bulletPoints"].length <= 0 && <span className='text-red-500 text-[12px] font-light'>*</span>
                         }
                     </Label>
                     
