@@ -109,9 +109,9 @@ productModelSchema.pre('save', function (next) {
         
             // Calculate the discount percentage
             const discountPercentage = ((discountAmount / this.price) * 100).toFixed(0);
-            this.discountedAmount = discountPercentage;
+            this.DiscountedPercentage = discountPercentage;
         } else {
-            this.discountedAmount = 0;  // If there's no salePrice, no discount
+            this.DiscountedPercentage = 0;  // If there's no salePrice, no discount
         }
     }
     next();

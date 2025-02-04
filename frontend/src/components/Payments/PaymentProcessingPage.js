@@ -12,7 +12,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
-    // const [discount, setDiscount] = useState(0);
+    const [discount, setDiscount] = useState(0);
     const [isPaymentStart, setIsPaymentStart] = useState(false);
     const {checkAndCreateToast} = useSettingsContext();
 
@@ -268,7 +268,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Discount:</span>
-                        {/* <span>{discount}</span> */}
+                        <span>{discount}</span>
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>

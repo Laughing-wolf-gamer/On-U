@@ -26,6 +26,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     let AllProductsColor = [];
     let specialCategory = [];
     let spARRAY = [];
+    let discountedPercentageAmount = [];
     let onSale = []
     const n = 3
     const result = [[], [], []] //we create it, then we'll fill it    
@@ -41,6 +42,18 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 if(p.salePrice && p.salePrice > 0){
                     if(!onSale.includes(p.salePrice)){
                         onSale.push(p.salePrice)
+                    }
+                }
+            });
+        }
+    }
+    function setDiscountedPercentage (){
+        if (product && product.length > 0) {
+            product.forEach(p => {
+                if(p.salePrice && p.salePrice > 0){
+                    let discount = ((p.price - p.salePrice)/p.price) * 100
+                    if(!discountedPercentageAmount.includes(discount)){
+                        discountedPercentageAmount.push(Math.floor(discount))
                     }
                 }
             });
@@ -109,10 +122,10 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         genderarray();
         colorarray();
         sizearray();
-        
         specialCategoryArray();
         sparray();
         SetOnSale();
+        setDiscountedPercentage();
     },[product])
     categoriesarray();
     subcategoryarray();
@@ -122,6 +135,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     SetOnSale();
     
     specialCategoryArray();
+    setDiscountedPercentage();
     sparray();
     
     // Remove duplicates and sort price array
@@ -206,6 +220,30 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             dispatchFetchAllProduct();
         }
     };
+    const discountedAmountFun = (e) => {
+        let url = new URL(window.location.href);
+    
+        // Get the current 'discountedAmount' value from the URL (if any)
+        let selectedDiscountedAmount = url.searchParams.get('discountedAmount'); // This will return a single string, not an array
+        
+        // Set the new value for 'discountedAmount' query parameter
+        if (selectedDiscountedAmount === e) {
+            // If the selected value is already in the URL, remove it (deselect it)
+            url.searchParams.delete('discountedAmount');
+        } else {
+            // Otherwise, set the selected value
+            url.searchParams.set('discountedAmount', e);
+        }
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
+    
+        // Fetch products based on the updated URL parameters
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+    
     const onSaleFun = ()=>{
         let url = new URL(window.location.href);
         let onSaleData = url.searchParams.get('onSale');
@@ -669,6 +707,42 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
+                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                    <h1 className='font1 text-base font-normal mb-2'>DISCOUNT AMOUNT</h1>
+                        {discountedPercentageAmount.map((amount, i) => {
+                            // Get the 'discountedAmount' value from the URL
+                            const params = new URLSearchParams(window.location.search);
+                            const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL
+                            // console.log("Current amount: " + currentAmount);
+                            // Determine if the current radio button should be checked based on the URL parameter
+                            const isChecked = Number(currentAmount) === amount;
+
+                            return (
+                                <div key={i} onClick={(event) => {
+                                    event.preventDefault();
+                                    discountedAmountFun(amount); // This will update the URL with the selected amount
+                                }}>
+                                    <input
+                                        type="radio" // Ensure it's a radio input
+                                        name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
+                                        value={amount}
+                                        id={`cat_${amount}`}
+                                        className="mb-2 accent-gray-500"
+                                        checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
+                                        // No need for onChange handler since radio buttons will handle state automatically
+                                    />
+                                    <label className="font1 text-sm ml-2 mr-4 mb-2">
+                                        UpTo {amount} %
+                                        <span className="text-xs font-sans font-normal text-slate-400"> 
+                                            ({discountedPercentageAmount.filter((f) => f === amount).length})
+                                        </span>
+                                    </label>
+                                </div>
+                            );
+                        })}
+
+                </ul>
+
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
                 <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative`}>
@@ -870,6 +944,116 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
       </div>
     );
 };
+
+/* const saleAmountFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) => {
+    const [selectedPriceRange, setSelectedPriceRange] = useState({
+        price1: false,
+        price2: false,
+        price3: false,
+    });
+  
+    useEffect(() => {
+        // Get the price parameters from the URL
+        const url = new URL(window.location.href);
+        const maxPrice = url.searchParams.get('discountAmount[$lte]');
+        
+        // Check which price range matches the URL's 'discountAmount[$lte]'
+        setSelectedPriceRange({
+            price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
+            price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
+            price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
+        });
+    }, [result]); // Run this whenever the 'result' changes (which is likely to happen when data is fetched or updated)
+  
+    const price1fun = (maxPrice) => {
+        // Set the URL search parameter
+        const url = new URL(window.location.href);
+        url.searchParams.set('discountAmount[$lte]', maxPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+  
+    const price2fun = (minPrice, maxPrice) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('discountAmount[$lte]', maxPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+  
+    const price3fun = (minPrice) => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('discountAmount[$lte]', minPrice);
+        window.history.replaceState(null, "", url.toString());
+    
+        if (dispatchFetchAllProduct) {
+            dispatchFetchAllProduct();
+        }
+    };
+  
+    return (
+        <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 overflow-hidden relative`}>
+            <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+    
+            <li className="items-center">
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price1`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price1fun(Math.max(...result[0]))}
+                    checked={selectedPriceRange.price1}
+                    id={`id${Math.max(...result[0]) + 1}`}
+                />
+                    <label className="font1 text-sm ml-2 mr-4 mb-2">
+                        Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
+                        <span className="text-xs font-serif font-normal text-slate-400">
+                            ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
+                        </span>
+                    </label>
+                </li>
+        
+                <li className="items-center">
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price2`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
+                    checked={selectedPriceRange.price2}
+                    id={`id${Math.max(...result[1]) + 1}`}
+                />
+                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
+                    <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
+                </label>
+                </li>
+        
+                <li className="items-center">
+                <input
+                    type="checkbox"
+                    name="color"
+                    value={`price3`}
+                    className="mb-2 accent-pink-500"
+                    onClick={() => price3fun(Math.min(...result[2]))}
+                    checked={selectedPriceRange.price3}
+                    id={`id${Math.min(...result[2]) + 1}`}
+                />
+                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
+                    <span className="text-xs font-serif font-normal text-slate-400">
+                    ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
+                    </span>
+                </label>
+            </li>
+        </ul>
+    );
+}; */
   
 
 export default FilterView;

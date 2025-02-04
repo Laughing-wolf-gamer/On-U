@@ -1,8 +1,6 @@
 import A from '../Middelwares/resolveandcatch.js'; 
 import Product from '../model/productmodel.js';
-import Errorhandler from '../utilis/errorhandel.js';
 import ImageKit from "imagekit";
-import Apifeature from '../utilis/Apifeatures.js';
 import ProductModel from '../model/productmodel.js';
 import OrderModel from '../model/ordermodel.js';
 import logger from '../utilis/loggerUtils.js';
@@ -31,7 +29,7 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = async (req, res) => {
     try {
-        // console.log("Product Query", req.query);
+        console.log("Product Query", req.query);
         const handleSort = (sortBy) => {
             // Create a default sort object
             let sort = {};
@@ -95,7 +93,9 @@ export const getallproducts = async (req, res) => {
                 }
             };
         }
-
+        if(req.query.discountedAmount){
+            filter.discountedAmount = { $gte: parseFloat(req.query.discountedAmount) };
+        }
         // Size filter
         if (req.query.size) {
             filter.size = {

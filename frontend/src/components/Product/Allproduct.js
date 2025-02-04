@@ -107,7 +107,7 @@ const Allproductpage = ({user}) => {
             }
         }
     },[pro])
-
+    console.log("All product: ",product);
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
             <div className='w-full 2xl:w-[2000px] 2xl:justify-start 2xl:items-center'>
