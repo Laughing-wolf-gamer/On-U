@@ -68,7 +68,7 @@ const Wishlist = () => {
     }, [dispatch, sessionData, user, wishlist]);
 
     return (
-        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div className="w-screen h-screen overflow-y-auto flex flex-col justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {loadingWishList ? (
                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6 md:px-5 lg:px-6 2xl:px-6">
                     {Array(20).fill().map((_, index) => (
@@ -76,9 +76,9 @@ const Wishlist = () => {
                     ))}
                 </ul>
             ) : (
-                <div className='w-full max-w-screen-2xl justify-self-center'>
+                <div className="w-full max-w-screen-2xl mx-auto px-4">
                     {currentWishListItem && currentWishListItem.length > 0 ? (
-                        <div className="w-full sm:px-6 lg:px-10 mt-5">
+                        <div className="w-full px-10 flex-col mt-5">
                             <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 flex justify-start items-center space-x-4">
                                 <span>My Wishlist</span>
                                 <span className="text-sm sm:text-base font-medium text-slate-500">
@@ -86,11 +86,11 @@ const Wishlist = () => {
                                 </span>
                             </h1>
                         
-                            <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6">
+                            <ul className="grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6">
                                 {currentWishListItem.map((pro) => (
                                     <li
                                         key={pro?.productId?._id || pro?.productId}
-                                        className="w-full h-fit max-w-sm group relative"
+                                        className="w-full h-full max-w-sm group relative"
                                     >
                                         <div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
                                             <div
@@ -115,59 +115,60 @@ const Wishlist = () => {
                                 ))}
                             </ul>
                       </div>
-                      
+                    
                     ) : (
-                        <div>
-                            <div className="w-full h-screen flex justify-center items-center">
-                                <div className="text-center">
-                                    <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
-                                    <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
-                                    <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
-                                    <Link to="/products">
-                                        <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
-                                            Continue Shopping
-                                        </button>
-                                    </Link>
-                                </div>
+                        <div className="w-full h-full flex justify-center items-center">
+                            <div className="text-center">
+                                <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
+                                <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
+                                <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
+                                <Link to="/products">
+                                    <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
+                                        Continue Shopping
+                                    </button>
+                                </Link>
                             </div>
                         </div>
                     )}
                 </div>
             )}
-            {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
-                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
-                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
-                    <div className='w-full flex justify-start items-start 2xl:px-10'>
-                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
-                            {
-                                sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
+            
+            {/* Recently viewed section */}
+            <div className="w-full max-w-screen-2xl mx-auto px-4 mt-10">
+                {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
+                    <div className="w-full px-10 flex flex-col items-center">
+                        <h1 className="font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8">RECENTLY VIEWED</h1>
+                        <div className="w-full flex justify-start items-start">
+                            <ul className="grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6">
+                                {sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
                                     <Single_product pro={pro} user={user} key={pro._id} />
-                                ))
-                            }
-                        </ul>
+                                ))}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            )}
-            {randomProducts && randomProducts.length > 0 && (
-                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
-                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
-                    <div className='w-full flex justify-start items-start 2xl:px-10'>
-                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
-                            {
-                                RandomProductLoading ? <ProductCardSkeleton/>:<Fragment>
-                                    {
-                                        randomProducts.map((pro) => (
-                                            <Single_product pro={pro} user={user} key={pro._id} />
-                                        ))
-                                    }
-                                </Fragment>
-                            }
-                        </ul>
+                )}
+                
+                {/* Discover More section */}
+                {randomProducts && randomProducts.length > 0 && (
+                    <div className="w-full px-10 flex flex-col items-center mt-10">
+                        <h1 className="font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8">DISCOVER MORE</h1>
+                        <div className="w-full flex justify-start items-start">
+                            <ul className="grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6">
+                                {RandomProductLoading ? (
+                                    <ProductCardSkeleton />
+                                ) : (
+                                    randomProducts.map((pro) => (
+                                        <Single_product pro={pro} user={user} key={pro._id} />
+                                    ))
+                                )}
+                            </ul>
+                        </div>
                     </div>
-                </div>
-            )}
+                )}
+            </div>
         </div>
     );
+    
 };
 
 export default Wishlist;
