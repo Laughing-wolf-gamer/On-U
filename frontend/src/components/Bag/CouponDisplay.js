@@ -47,7 +47,7 @@ const CouponsDisplay = ({user}) => {
                     AllCoupons.map((coupon) => (
                         <div
                             key={coupon._id}
-                            className="bg-white min-w-[600px] p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
+                            className="bg-white min-w-full p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
                         >
                             {/* Coupon Info */}
                             <div className="flex items-center justify-between mb-4">

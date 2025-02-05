@@ -8,14 +8,18 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getuser, clearErrors } from '../../action/useraction';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
+import { getRandomArrayOfProducts } from '../../action/productaction';
 
 const Wishlist = () => {
-    const { sessionData, setWishListProductInfo } = useSessionStorage();
+    // const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
+    const { sessionData,sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
     const [currentWishListItem, setCurrentWishListItem] = useState([]);
-    const navigation = useNavigate();
-    const dispatch = useDispatch();
     const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
     const { isAuthentication, loading: userloading, error, user } = useSelector(state => state.user);
+    const { randomProducts,loading:RandomProductLoading, error:errorRandomProductLoading } = useSelector(state => state.RandomProducts);
+
+    const navigation = useNavigate();
+    const dispatch = useDispatch();
     const [state, setState] = useState(false);
     const [state1, setState1] = useState(false);
 
@@ -52,6 +56,7 @@ const Wishlist = () => {
         }
 
         dispatch(getwishlist());
+        dispatch(getRandomArrayOfProducts());
     }, [dispatch, error, userloading, isAuthentication, user]);
 
     useEffect(() => {
@@ -71,7 +76,7 @@ const Wishlist = () => {
                     ))}
                 </ul>
             ) : (
-                <Fragment>
+                <div className='w-full max-w-screen-2xl justify-self-center'>
                     {currentWishListItem && currentWishListItem.length > 0 ? (
                         <div className="w-full sm:px-6 lg:px-10 mt-5">
                             <h1 className="text-2xl sm:text-3xl font-semibold text-slate-800 flex justify-start items-center space-x-4">
@@ -127,7 +132,39 @@ const Wishlist = () => {
                             </div>
                         </div>
                     )}
-                </Fragment>
+                </div>
+            )}
+            {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
+                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
+                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
+                    <div className='w-full flex justify-start items-start 2xl:px-10'>
+                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
+                            {
+                                sessionRecentlyViewProducts.slice(0, 20).map((pro) => (
+                                    <Single_product pro={pro} user={user} key={pro._id} />
+                                ))
+                            }
+                        </ul>
+                    </div>
+                </div>
+            )}
+            {randomProducts && randomProducts.length > 0 && (
+                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
+                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
+                    <div className='w-full flex justify-start items-start 2xl:px-10'>
+                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
+                            {
+                                RandomProductLoading ? <ProductCardSkeleton/>:<Fragment>
+                                    {
+                                        randomProducts.map((pro) => (
+                                            <Single_product pro={pro} user={user} key={pro._id} />
+                                        ))
+                                    }
+                                </Fragment>
+                            }
+                        </ul>
+                    </div>
+                </div>
             )}
         </div>
     );

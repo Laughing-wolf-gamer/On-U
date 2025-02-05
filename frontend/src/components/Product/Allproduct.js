@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
-import { IoIosArrowDown } from 'react-icons/io';
+import { IoIosArrowDown, IoIosArrowDropright } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
@@ -12,6 +12,7 @@ import Footer from '../Footer/Footer';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
 import ProductCardSkeleton from './ProductCardSkeleton';
+import { ChevronRight } from 'lucide-react';
 
 
 const maxAmountPerPage = 20;
@@ -218,20 +219,22 @@ const Allproductpage = ({user}) => {
     );
 };
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
+    const [openView,setOpenView] = useState(false);
     return (
         <div className="hidden font-sans 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
             {/* Filters Title */}
             <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
-
+    
             {/* Sort Dropdown */}
-            <div className="col-span-3 relative group cursor-pointer">
-                <div className="h-12 w-[260px] border-[1px] border-gray-600 rounded-md bg-white flex items-center px-4 justify-between hover:shadow-md transition-all duration-300">
+            <div className="col-span-3 relative group cursor-pointer" onMouseLeave={()=> setOpenView(false)}>
+                <div onMouseEnter={()=> setOpenView(true)}  className="h-12 w-[260px] border-[1px] border-gray-600 rounded-md bg-white flex items-center px-4 justify-between hover:shadow-md transition-all duration-300">
                     <span className="text-sm font-semibold text-gray-800">Sort by: <span className="text-gray-600">{sortvalue}</span></span>
-                    <IoIosArrowDown className="text-gray-600 text-xl transition-transform group-hover:rotate-180" />
+                    <ChevronRight
+                        className={`text-gray-600 text-xl transition-all opacity-50 ${openView ? "rotate-90 opacity-100":""}`} />
                 </div>
-
+    
                 {/* Dropdown Content */}
-                <div className="absolute left-0 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 opacity-0 group-hover:opacity-100 transform group-hover:translate-y-2 transition-all duration-300 z-10">
+                <div onMouseLeave={()=> setOpenView(false)}  className={`absolute left-0 top-8 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
                         <span className="font1 text-gray-800">What`s New</span>
                     </div>
@@ -251,6 +254,7 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
             </div>
         </div>
     );
+    
 };
 
 const NoProductsFoundOverlay = ({ isOpen }) => {
