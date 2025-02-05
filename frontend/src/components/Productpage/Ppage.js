@@ -10,7 +10,7 @@ import Single_product from '../Product/Single_product'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag, getRandomItem} from '../../config'
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
@@ -388,9 +388,9 @@ const Ppage = () => {
         <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
-                    <div className='mt-5'>
-                        <div className='flex-row h-fit flex justify-between items-center relative overflow-hidden mb-6'>
-                            <div className='flex'>
+                    <div>
+                        <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
+                            {/* <div className='flex'>
                                 <div
                                     className={`pl-5
                                         w-[58%] 2xl:pl-0 2xl:w-[55%] 2xl:min-h-fit bg-transparent
@@ -408,10 +408,22 @@ const Ppage = () => {
                                         />
                                     </div>
                                 </div>
-                            </div>
+                            </div> */}
+                            {
+                                selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && <NewLeftSideImageContent
+                                    selectedSize_color_Image_Array={selectedSize_color_Image_Array} 
+                                    Addclass ={Addclass} 
+                                    setSelectedImage ={setSelectedImage} 
+                                    selectedImage ={selectedImage} 
+                                    isFocused ={isFocused}
+                                    setIsFocused ={setIsFocused}
+                                
+                                />
+                            }
+                            
 
                             {/* Content div for large screen */}
-                            <div className='w-[42%] 2xl:w-[45%] pl-4 pr-5 h-full flex flex-col z-10'>
+                            <div className='col-span-5'>
                                 {/* Left Column (Add to Cart Section) */}
                                 <div className='w-full flex flex-col justify-start items-start p-2'>
                                     <div className='pt-1'>
@@ -769,6 +781,48 @@ const AverageRatingView = ({ ratings }) => {
     );
 };
 
+
+const NewLeftSideImageContent = ({
+    selectedSize_color_Image_Array,
+    Addclass,
+    setSelectedImage,
+    selectedImage,
+    isFocused,
+    setIsFocused
+})=>{
+    console.log("All Selected Sizes: ",selectedSize_color_Image_Array);
+    console.log("Selected Image: ",selectedImage);
+    return(
+        <div className='h-max col-span-7'>
+            <div className='w-full h-full justify-end items-center flex flex-row'>
+            <div className='h-full justify-start items-center flex-col flex'>
+                    <div className='grid grid-cols-1 h-full gap-2 px-3'>
+                        {
+                        selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((e, index) =>
+                            <div
+                            key={index} // Ensure each element has a unique key
+                            className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
+                            onMouseEnter={() => (Addclass(), setSelectedImage(e))}
+                            onClick={() => (Addclass(), setSelectedImage(e))}
+                            >
+                            <img
+                                src={e?.url}
+                                className='w-full h-full object-contain hover:scale-110'
+                                alt="productImage"
+                            />
+                            </div>
+                        )
+                        }
+                    </div>
+                </div>
+                <div className='h-full w-full justify-center items-center overflow-hidden'>
+                    <ImageZoom imageSrc={selectedImage?.url || getRandomItem(selectedSize_color_Image_Array)?.url}/>
+                </div>
+            </div>
+
+        </div>
+    )
+}
 const ProductReviews = ({ reviews }) => {
     const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
     const containerRef = useRef(null);
