@@ -249,7 +249,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 									<Fragment>
 										<span className="font-normal text-gray-500">Add Images For Color</span>
 										<FileUploadComponent
-											maxFiles={5}
+											maxFiles={7}
 											tag={color.id}
 											sizeTag={sizeTag}
 											onSetImageUrls={(e) => {

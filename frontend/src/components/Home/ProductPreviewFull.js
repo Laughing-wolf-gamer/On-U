@@ -58,7 +58,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     }
 
     return (
-        <div className='md:py-8 py-7 flex flex-col justify-center space-y-5 items-center bg-slate-200'>
+        <div className='max-w-screen-2xl w-full flex flex-col justify-self-center justify-center space-y-5 items-center bg-slate-200'>
             {/* Preview Headers Section */}
             <div className="min-w-fit font-sans flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 my-4 max-w-full">
                 {previewHeader && previewHeader.length > 0 &&
@@ -82,26 +82,17 @@ const ProductPreviewFull = ({ product ,user}) => {
                     ))
                 }
             </div>
-
-
-
-
-
-
-
-
             {/* Product Previews Section */}
-            <div className="w-full flex flex-row justify-center items-center bg-slate-200 ">
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:grid-cols-5 justify-center md:px-12 lg:px-12 2xl:px-12 xl:px-12 px-2 md:gap-4 xl:gap-4 2xl:gap-5 gap-4 items-center">
                 {previewProducts && previewProducts.length > 0 &&
-                    previewProducts.map((p, index) => {
-                        // const p = previewProducts[];
+                    Array(window.screen.width > 1024 ? 5 : 6).fill(0).map((_, index) => {
+                        const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
-                            <div key={p._id} className={`2xl:w-[344px] 2xl:h-[611px] xl:w-[255px] xl:h-[482px] md:w-[194px] md:h-[395px] w-full h-fit rounded-md bg-gray-200 relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>
+                            <div key={p._id} className={`w-full h-full rounded-md bg-yellow-200 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
-                                    <h2 className="font1 text-[12px] md:text-base font-semibold font-sans text-gray-800 text-left truncate">
+                                    <h2 className="font1 text-[12px] md:text-base md:font-semibold sm:font-semibold font-normal 2xl:font-semibold xl:font-semibold font-sans text-gray-800 text-left truncate">
                                         {p?.shortTitle?.length > 26 ? `${p?.shortTitle.slice(0, 10)}` : p?.shortTitle}
                                     </h2>
                                     
@@ -157,10 +148,8 @@ const ProductPreviewFull = ({ product ,user}) => {
                         );
                     })
                 }
-                </div>
             </div>
-
-            <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all pt-10'>
+            <div className='w-full text-center flex flex-row justify-center items-center text-white font-sans text-xl relative transform transition-all py-10'>
                 <div onClick={handleMoveToQuery} className='px-8 w-fit flex text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
                     <span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>View More</span>
                 </div>

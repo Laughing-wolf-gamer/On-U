@@ -55,12 +55,7 @@ const productModelSchema = new mongoose.Schema({
     material:{
         type:String
     },
-    specification:[
-        {
-            header:String,
-            point:String
-        }
-    ],
+    specification:String,
     gender:{
         type:String
     },
@@ -86,11 +81,11 @@ const productModelSchema = new mongoose.Schema({
         }
     ],
     AppliedCoupon:{type:mongoose.Schema.Types.ObjectId,ref:'coupon'},
-    width:{type:Number},
-    height:{type:Number},
-    length:{type:Number},
-    weight:{type:Number},
-    breadth:{type:Number},
+    width:Number,
+    height:Number,
+    length:Number,
+    weight:Number,
+    breadth:Number,
 },{timestamps:true})
 productModelSchema.pre('save', function (next) {
     // Calculate averageRating when Rating is modified

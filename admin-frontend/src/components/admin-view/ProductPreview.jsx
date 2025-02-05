@@ -57,37 +57,37 @@ const ProductPreview = ({
 		const specialCategory = {options:addProductsFromElement.find(e => e.name === "specialCategory").options};
 		const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
 		const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
-		// console.log("Preview Options Data: ", specialCategory);
+		console.log("Preview Options Data: ", productData);
 		const renderPopUpContent = () => (
 			<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
 				<div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto">
 					<div className="flex justify-between items-center mb-4">
 						<div className="flex flex-col gap-2">
-						<span>ProductId: {productData?.productId}</span>
-						<h2 className="text-2xl font-bold">
-							{isEditing ? (
-								<input
-									type="text"
-									value={productData?.title}
-									onChange={(e) => handleInputChange(e, 'title')}
-									className="text-2xl font-bold"
-								/>
-							) : (
-								`Title: ${productData?.title}`
-							)}
-						</h2>
-						<h3 className="text-xl font-normal">
-							{isEditing ? (
-							<input
-								type="text"
-								value={productData?.shortTitle}
-								onChange={(e) => handleInputChange(e, 'shortTitle')}
-								className="text-xl font-normal"
-							/>
-							) : (
-							`Short Title: ${productData?.shortTitle}`
-							)}
-						</h3>
+							<span>ProductId: {productData?.productId}</span>
+							<h2 className="text-2xl font-bold">
+								{isEditing ? (
+									<input
+										type="text"
+										value={productData?.title}
+										onChange={(e) => handleInputChange(e, 'title')}
+										className="text-2xl font-bold"
+									/>
+								) : (
+									`Title: ${productData?.title}`
+								)}
+							</h2>
+							<h3 className="text-xl font-normal">
+								{isEditing ? (
+									<input
+										type="text"
+										value={productData?.shortTitle}
+										onChange={(e) => handleInputChange(e, 'shortTitle')}
+										className="text-xl font-normal"
+									/>
+								) : (
+									`Short Title: ${productData?.shortTitle}`
+								)}
+							</h3>
 						</div>
 						<XCircle
 							onClick={(e) => {
@@ -108,63 +108,104 @@ const ProductPreview = ({
 									productId={productData?._id}
 									SizesArray={productData?.size}
 									OnRefresh={() => {
-									fetchProductData();
+										fetchProductData();
 									}}
 								/>
 							)}
 							{/* Product details */}
 						<div className="col-span-10 p-6 bg-white rounded-lg shadow-lg">
 							<div className="mb-6 space-y-4">
-								{/* Price and Sale Price */}
 								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Price:</h3>
-								{isEditing ? (
-									<input
-									type="number"
-									value={productData?.price}
-									onChange={(e) => handleInputChange(e, 'price')}
-									className="text-lg font-medium text-green-600 border-2"
-									/>
-								) : (
-									<p className="text-lg font-medium text-green-600">
-									₹{productData?.price}
-									</p>
-								)}
+									<h3 className="font-semibold text-gray-700 text-lg">Descriptions:</h3>
+									{isEditing ? (
+										<textarea
+											type="text"
+											rows={4}
+											value={productData?.description}
+											placeholder='Enter product description'
+											onChange={(e) => handleInputChange(e, 'descriptions')}
+											className="text-lg w-2/3 font-medium text-gray-600 border-2"
+										/>
+									) : (
+										<p className="text-lg font-medium text-gray-600">
+											{productData?.description}
+										</p>
+									)}
 								</div>
 								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Sale Price:</h3>
-								{isEditing ? (
-									<input
-									type="number"
-									value={productData?.salePrice}
-									onChange={(e) => handleInputChange(e, 'salePrice')}
-									className="text-lg font-medium text-red-600 border-2"
-									/>
-								) : (
-									<p className="text-lg font-medium text-red-600">
-									₹{productData?.salePrice}
-									</p>
-								)}
+									<h3 className="font-semibold text-gray-700 text-lg">Specification:</h3>
+									{isEditing ? (
+										<textarea
+											type="text"
+											rows={4}
+											value={productData?.specification}
+											placeholder='Enter product specification'
+											onChange={(e) => handleInputChange(e, 'specification')}
+											className="text-lg w-2/3 font-medium text-gray-600 border-2"
+										/>
+									) : (
+										<p className="text-lg font-medium text-gray-600">
+											{productData?.specification}
+										</p>
+									)}
+								</div>
+								{/* Price and Sale Price */}
+								<div className="flex justify-between items-center border-b pb-4">
+									<h3 className="font-semibold text-gray-700 text-lg">Price:</h3>
+									{isEditing ? (
+										<input
+											type="number"
+											value={productData?.price}
+											onChange={(e) => handleInputChange(e, 'price')}
+											className="text-lg w-2/3 font-medium text-green-600 border-2"
+										/>
+									) : (
+										<p className="text-lg font-medium text-green-600">
+											₹{productData?.price}
+										</p>
+									)}
+								</div>
+
+								<div className="flex justify-between items-center border-b pb-4">
+									<h3 className="font-semibold text-gray-700 text-lg">Sale Price:</h3>
+									{isEditing ? (
+										<input
+											type="number"
+											value={productData?.salePrice}
+											onChange={(e) => handleInputChange(e, 'salePrice')}
+											className="text-lg w-2/3 font-medium text-red-600 border-2"
+										/>
+									) : (
+										<p className="text-lg font-medium text-red-600">
+											₹{productData?.salePrice}
+										</p>
+									)}
 								</div>
 								{/* Category and Subcategory */}
 								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
+									<h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
+									
 									{isEditing ? (
-										<CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
-											console.log("Changed category",e);
-											handleInputChange({target:{value:e}},"category")
-										}}/>
+										<div className='w-2/3'>
+											<CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
+												console.log("Changed category",e);
+												handleInputChange({target:{value:e}},"category")
+											}}/>
+										</div>
 									) : (
 										<p className="text-lg text-gray-600">{productData?.category}</p>
 									)}
 								</div>
+								
 								<div className="flex justify-between items-center border-b pb-4">
 								<h3 className="font-semibold text-gray-700 text-lg">Subcategory:</h3>
 									{isEditing ? (
-										<CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
-											console.log("Changed category",e);
-											handleInputChange({target:{value:e}},"subCategory")
-										}}/>
+										<div className='w-2/3'>
+											<CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
+												console.log("Changed category",e);
+												handleInputChange({target:{value:e}},"subCategory")
+											}}/>
+										</div>
 									) : (
 										<p className="text-lg text-gray-600">{productData?.subCategory}</p>
 									)}
@@ -172,10 +213,12 @@ const ProductPreview = ({
 								<div className="flex justify-between items-center border-b pb-4">
 								<h3 className="font-semibold text-gray-700 text-lg">Special Category:</h3>
 									{isEditing ? (
-										<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
-											console.log("Changed category",e);
-											handleInputChange({target:{value:e}},"specialCategory")
-										}}/>
+										<div className='w-2/3'>
+											<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
+												console.log("Changed category",e);
+												handleInputChange({target:{value:e}},"specialCategory")
+											}}/>
+										</div>
 									) : (
 										<p className="text-lg text-gray-600">{productData?.specialCategory}</p>
 									)}
@@ -188,7 +231,7 @@ const ProductPreview = ({
 										type="number"
 										value={productData?.width}
 										onChange={(e) => handleInputChange(e, 'width')}
-										className="text-lg text-gray-600 border-2"
+										className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
 									<p className="text-lg text-gray-600">{productData?.width}</p>
@@ -198,10 +241,10 @@ const ProductPreview = ({
 								<h3 className="font-semibold text-gray-700 text-lg">Height:</h3>
 								{isEditing ? (
 									<input
-									type="number"
-									value={productData?.height}
-									onChange={(e) => handleInputChange(e, 'height')}
-									className="text-lg text-gray-600 border-2"
+										type="number"
+										value={productData?.height}
+										onChange={(e) => handleInputChange(e, 'height')}
+										className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
 									<p className="text-lg text-gray-600">{productData?.height}</p>
@@ -214,20 +257,20 @@ const ProductPreview = ({
 									type="number"
 									value={productData?.breadth}
 									onChange={(e) => handleInputChange(e, 'breadth')}
-									className="text-lg text-gray-600 border-2"
+									className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
-									<p className="text-lg text-gray-600">{productData?.breadth}</p>
+									<p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
 								)}
 								</div>
 								<div className="flex justify-between items-center border-b pb-4">
 								<h3 className="font-semibold text-gray-700 text-lg">Length:</h3>
 								{isEditing ? (
 									<input
-									type="number"
-									value={productData?.length}
-									onChange={(e) => handleInputChange(e, 'length')}
-									className="text-lg text-gray-600 border-2"
+										type="number"
+										value={productData?.length}
+										onChange={(e) => handleInputChange(e, 'length')}
+										className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
 									<p className="text-lg text-gray-600">{productData?.length}</p>
@@ -240,28 +283,82 @@ const ProductPreview = ({
 									type="number"
 									value={productData?.weight}
 									onChange={(e) => handleInputChange(e, 'weight')}
-									className="text-lg text-gray-600 border-2"
+									className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
 									<p className="text-lg text-gray-600">{productData?.weight}</p>
 								)}
 								</div>
 							</div>
-			
-							{/* Description and Bullet Points */}
+							{/* Material and Additional Info */}
 							<div className="mb-6 space-y-4">
-								<div className="flex justify-between items-start border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Description:</h3>
+								<div className="flex justify-between items-center border-b pb-4">
+								<h3 className="font-semibold text-gray-700 text-lg">Material:</h3>
 								{isEditing ? (
-									<textarea
-									value={productData?.description}
-									onChange={(e) => handleInputChange(e, 'description')}
-									className="text-lg text-gray-600 w-full"
+									<input
+									type="text"
+									value={productData?.material}
+									onChange={(e) => handleInputChange(e, 'material')}
+									className="text-lg w-2/3 text-gray-600"
 									/>
 								) : (
-									<p className="text-lg text-gray-600">{productData?.description}</p>
+									<p className="text-lg text-gray-600">{productData?.material}</p>
 								)}
 								</div>
+								<div className="flex justify-between items-center border-b pb-4">
+									<h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
+									{isEditing ? (
+										<input
+											type="text"
+											value={productData?.gender}
+											onChange={(e) => handleInputChange(e, 'gender')}
+											className="text-lg w-2/3 text-gray-600"
+										/>
+									) : (
+										<p className="text-lg text-gray-600">{productData?.gender}</p>
+									)}
+								</div>
+							</div>
+				
+							{/* Edit and Delete Buttons */}
+							<div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
+								<Button
+									className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
+									onClick={() => {
+											if (isEditing) {
+												UpdateEditedData(productData._id,productData)
+											}
+											setIsEditing(!isEditing); // Toggle editing state
+											if(setCurrentPreviewProduct){
+												setCurrentPreviewProduct(null);
+
+											}
+									}}
+								>
+								{isEditing ? 'Save Product' : 'Edit Product'}
+									</Button>
+									{
+										isEditing && <Button
+											className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+											onClick={() => {
+												setIsEditing(!isEditing); // Toggle editing state
+											}}
+										>
+											Cancel Edit
+									</Button>
+								}
+								
+								<Button
+									className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
+									onClick={() => {
+										setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+									}}
+								>
+								Remove Product
+								</Button>
+							</div>
+							{/* Description and Bullet Points */}
+							<div className="mb-6 space-y-4">
 								{
 									isEditing ? <BulletPointsForm onChange={(e)=>{
 										// console.log("Editing Bullet Points: ",e);
@@ -279,73 +376,7 @@ const ProductPreview = ({
 								}
 							</div>
 			
-							{/* Material and Additional Info */}
-							<div className="mb-6 space-y-4">
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Material:</h3>
-								{isEditing ? (
-									<input
-									type="text"
-									value={productData?.material}
-									onChange={(e) => handleInputChange(e, 'material')}
-									className="text-lg text-gray-600"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.material}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
-									{isEditing ? (
-										<input
-											type="text"
-											value={productData?.gender}
-											onChange={(e) => handleInputChange(e, 'gender')}
-											className="text-lg text-gray-600"
-										/>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.gender}</p>
-									)}
-								</div>
-							</div>
-				
-							{/* Edit and Delete Buttons */}
-							<div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
-								<Button
-								className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
-								onClick={() => {
-										if (isEditing) {
-											UpdateEditedData(productData._id,productData)
-										}
-										setIsEditing(!isEditing); // Toggle editing state
-										if(setCurrentPreviewProduct){
-											setCurrentPreviewProduct(null);
-
-										}
-								}}
-								>
-								{isEditing ? 'Save Product' : 'Edit Product'}
-								</Button>
-								{
-									isEditing && <Button
-										className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-										onClick={() => {
-											setIsEditing(!isEditing); // Toggle editing state
-										}}
-									>
-										Cancel Edit
-								</Button>
-								}
-								
-								<Button
-								className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
-								onClick={() => {
-									setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-								}}
-								>
-								Remove Product
-								</Button>
-							</div>
+							
 						</div>
 					</div>
 				</div>
@@ -357,6 +388,7 @@ const ProductPreview = ({
 					if(setCurrentPreviewProduct){
 						setCurrentPreviewProduct(null);
 					}
+					setIsConfirmDeleteWindow(false);
 				}}/>
 			</div>
 		);
@@ -884,7 +916,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				if(sizeDeletingData){
 					handelRemoveSize(sizeDeletingData.sizeId);
 				}
-				setIsConfirmDeleteWindow(!isConfirmDeleteWindow);	
+				setIsConfirmDeleteWindow(false);
 			}}/>
 			<FileUploadPopUpWindow sizeId={activeSelectedSize} colorId={activeSelectedColor} isOpen={isFileUploadPopUpOpen} onCancel={()=> {
 				setActiveSelectedColor(null);
@@ -909,7 +941,7 @@ const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onCancel, onConfirm }) =
 			<div className="bg-white p-6 rounded-lg shadow-lg w-96">
 				<div className="justify-end space-y-4 flex flex-col">
 					<FileUploadComponent
-						maxFiles={5}
+						maxFiles={7}
 						tag={colorId}
 						sizeTag={sizeId}
 						onSetImageUrls={(e) => {

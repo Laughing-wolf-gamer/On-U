@@ -274,6 +274,13 @@ export const addProductsFromElement = [
         required:true,
     },
     {
+        label:'Specification',
+        name:'specification',
+        componentType:'textarea',
+        placeHolder:'Enter Specification',
+        required:true,
+    },
+    {
         label:'Price',
         name:'price',
         componentType:'input',

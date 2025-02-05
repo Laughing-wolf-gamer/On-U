@@ -34,12 +34,12 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     }, []);
 
     return (
-        <div className="relative h-full w-full border-[0.5px] overflow-hidden">
+        <div className="relative h-full w-full bg-blue-200 overflow-hidden">
             <img
                 loading="lazy"
                 src={imageSrc}
                 alt="Zoomable"
-                className="w-full h-full object-contain 2xl:object-contain"
+                className="w-full h-full object-cover"
                 onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}

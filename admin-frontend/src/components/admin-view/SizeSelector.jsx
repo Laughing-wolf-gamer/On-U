@@ -140,7 +140,8 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 		);
 	};
 
-	const handleAddSize = () => {
+	const handleAddSize = (e) => {
+		e.preventDefault();
 		setShowMore((prev) => [...prev, { id: optionsArray.length, value: false }]);
 		setOptionsArray([
 			...optionsArray,

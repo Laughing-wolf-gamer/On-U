@@ -110,7 +110,7 @@ const Allproductpage = ({user}) => {
     console.log("All product: ",product);
     return (
         <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
-            <div className='w-full 2xl:w-[2000px] 2xl:justify-start 2xl:items-center'>
+            <div className='w-full max-w-screen-2xl justify-self-center'>
                 <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
                         <span className=''>Home</span>
@@ -124,40 +124,11 @@ const Allproductpage = ({user}) => {
                         <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
                     </div>
                 </div>
-                {/* <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-2 items-center 2xl:px-10">
-                    <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
-                    <div className="col-span-3 relative cursor-pointer pb-4">
-                        <div className='h-10 overflow-hidden hover:overscroll-none hover:h-max z-[5] border-[1px] border-gray-600 w-[260px] absolute top-[-22px] bg-white'>
-                            <div className='text-sm w-max pl-4 pr-24 py-2 float-right relative items-center'>
-                                Sort by: <span className='font1 font-semibold text-gray-800'>{sortvalue}</span>
-                                <span className='absolute right-4 font-serif text-lg text-gray-600'>
-                                    <IoIosArrowDown />
-                                </span>
-                            </div>
-
-                            <div className='text-sm w-full pl-5 py-2 mt-12 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
-                                <span className='font1 text-gray-800'>What`s New</span>
-                            </div>
-                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
-                                <span className='font1 text-gray-800'>Popularity</span>
-                            </div>
-                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
-                                <span className='font1 text-gray-800'>Better Discount</span>
-                            </div>
-                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
-                                <span className='font1 text-gray-800'>Price: High To Low</span>
-                            </div>
-                            <div className='text-sm w-full pl-5 py-2 hover:bg-gray-200' onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
-                                <span className='font1 text-gray-800'>Price: Low To High</span>
-                            </div>
-                        </div>
-                    </div>
-                </div> */}
                 <FilterTitle sortvalue={sortvalue} handleSortChange={handleSortChange} setSortValue = {setSortValue} />
 
                 <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 bg-white 2xl:px-10">
                     {/* Filter */}
-                    <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 h-max sticky top-0 bg-gray-50">
+                    <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 border-opacity-25 h-max sticky top-0 bg-gray-50">
                         <div className='2xl:px-10 pb-4'>
                             {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                         </div>
@@ -186,7 +157,7 @@ const Allproductpage = ({user}) => {
 
 
 
-                                <div className="paginationBox font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                                <div className="paginationBox font1 border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
                                     {/* Pagination Info */}
                                     <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
                                         Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
@@ -248,7 +219,7 @@ const Allproductpage = ({user}) => {
 };
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     return (
-        <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 py-4 items-center 2xl:px-10">
+        <div className="hidden 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
             {/* Filters Title */}
             <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
 

@@ -288,6 +288,7 @@ export const addNewProduct = async (req, res) => {
             shortTitle,
             size,
             description,
+            specification,
             material,
             bulletPoints,
             gender,
@@ -306,7 +307,10 @@ export const addNewProduct = async (req, res) => {
         console.log("Adding Products fields ",isFormValid(req.body));
         const isValid = isFormValid(req.body);
         if(!isValid){
-            return res.status(200).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
+            return res.status(401).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
+        }
+        if(!isValid.isValid){
+            return res.status(401).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
         }
         const AllColors = []
         size.forEach(s => {
@@ -353,6 +357,7 @@ export const addNewProduct = async (req, res) => {
             material,
             gender,
             category,
+            specification,
             subCategory,
             specialCategory:specialCategory,
             price,
@@ -385,6 +390,7 @@ export const fetchAllProducts = async (req, res) => {
     try {
         const{page} = req.query;
         const allProducts = await ProductModel.find({});
+        console.log("allProducts: ",allProducts);
         const totalProducts = await ProductModel.countDocuments();
         const itemsPerPage = 10;
         const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided
@@ -445,6 +451,7 @@ export const editProduct = async (req, res) => {
             category,
             subCategory,
             specialCategory,
+            specification,
             price,
             salePrice,
             width,
@@ -470,6 +477,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('productId', productId);
         addToUpdate('title', title);
         addToUpdate('description', description);
+        addToUpdate('specification', specification);
         addToUpdate('material', material);
         addToUpdate('bulletPoints', bulletPoints);
         addToUpdate('gender', gender);

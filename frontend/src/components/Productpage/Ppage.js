@@ -385,61 +385,43 @@ const Ppage = () => {
     console.log("current Scroll Amount: ",scrollPosition);
     
     return (
-        <div ref={scrollableDivRef} className="w-screen h-screen justify-start items-center overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
-                    <div>
-                        <div className='grid grid-cols-12 px-6 gap-8 mt-8'>
-                            {/* <div className='flex'>
-                                <div
-                                    className={`pl-5
-                                        w-[58%] 2xl:pl-0 2xl:w-[55%] 2xl:min-h-fit bg-transparent
-                                        ${scrollPosition < currentMaxScrollAmount ? "fixed top-24 z-[2]" : "absolute bottom-0 flex"}
-                                    `}
-                                >
-                                    <div className='w-full h-full flex flex-row justify-start 2xl:justify-end items-end'>
-                                        <LeftImageContent 
-                                            selectedSize_color_Image_Array={selectedSize_color_Image_Array} 
-                                            Addclass={Addclass} 
-                                            setSelectedImage={setSelectedImage} 
-                                            selectedImage={selectedImage} 
-                                            isFocused={isFocused}
-                                            setIsFocused={setIsFocused}
-                                        />
-                                    </div>
-                                </div>
-                            </div> */}
-                            {
-                                selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && <NewLeftSideImageContent
-                                    selectedSize_color_Image_Array={selectedSize_color_Image_Array} 
-                                    Addclass ={Addclass} 
-                                    setSelectedImage ={setSelectedImage} 
-                                    selectedImage ={selectedImage} 
-                                    isFocused ={isFocused}
-                                    setIsFocused ={setIsFocused}
-                                
-                                />
-                            }
-                            
+                    <div className='max-w-screen-2xl w-full justify-self-center flex flex-col '>
+                        <div className='grid grid-cols-2 gap-1 mt-2 py-4'>
+                            <div>
+                                {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && (
+                                    <NewLeftSideImageContent
+                                        selectedSize_color_Image_Array={selectedSize_color_Image_Array}
+                                        Addclass={Addclass}
+                                        setSelectedImage={setSelectedImage}
+                                        selectedImage={selectedImage}
+                                        isFocused={isFocused}
+                                        setIsFocused={setIsFocused}
+                                    />
+                                )}
 
-                            {/* Content div for large screen */}
-                            <div className='col-span-5'>
-                                {/* Left Column (Add to Cart Section) */}
-                                <div className='w-full flex flex-col justify-start items-start p-2'>
-                                    <div className='pt-1'>
+                            </div>
+
+                            {/* Right Column: Product Details */}
+                            <div className='flex flex-col justify-start h-[900px] px-8'>
+                                {/* Product Title and Gender */}
+                                <div className='pt-1'>
                                     <h1 className='font1 text-2xl font-semibold text-slate-800'>
                                         {capitalizeFirstLetterOfEachWord(product?.title)}
                                     </h1>
                                     <h1 className='text-xl text-[#808080e8] font-light'>
                                         {capitalizeFirstLetterOfEachWord(product?.gender)}
                                     </h1>
-                                    <AverageRatingView ratings={/* product.Rating || */ reviews}/>
-                                    </div>
-                                    
-                                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4 w-full'>
+                                    <AverageRatingView ratings={reviews} />
+                                </div>
+
+                                {/* Price and Discount */}
+                                <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
                                     <h1 className='font1 text-xl font-semibold text-slate-800'>
                                         <span className="mr-4 font-bold">
-                                        ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
+                                            ₹ {Math.round(product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                         </span>
                                         {product?.salePrice && product?.salePrice > 0 && (
                                             <Fragment>
@@ -451,262 +433,135 @@ const Ppage = () => {
                                     <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
                                         inclusive of all taxes
                                     </h1>
-                                    <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
-                                        {/* Size Selection */}
-                                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
-                                            {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                                <div style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}} key={`size_${index}_${size._id}`}
-                                                    className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
-                                                    ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200  text-gray-900"}`}
-                                                    onClick={() => { handleSetNewImageArray(size); }}
-                                                >
-                                                    <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                                        {size.label}
-                                                    </button>
-                                                    {size?.quantity <= 0 && (
-                                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                            <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
-                                                                {/* Diagonal Line 1 */}
-                                                                <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform rotate-45"></div>
-                                                                {/* Diagonal Line 2 */}
-                                                                <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform -rotate-45"></div>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        {/* Color Selection */}
-                                        <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-2 gap-1">
-                                            {selectedColor && selectedColor.length > 0 ? (
-                                                selectedColor.map((color, i) => (
-                                                    <div key={`color_${i}`}
-                                                        style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
+                                </div>
+
+                                {/* Size and Color Selection */}
+                                <div className="w-full flex flex-col mt-3 py-5 mx-auto">
+                                    {/* Size Selection */}
+                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
+                                        {product?.size?.map((size, index) => (
+                                            <div
+                                                style={{ pointerEvents: size.quantity <= 0 ? 'none' : 'all' }}
+                                                key={`size_${index}_${size._id}`}
+                                                className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                                    ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200 text-gray-900"}`}
+                                                onClick={() => { handleSetNewImageArray(size); }}
+                                            >
+                                                <button className="w-8 h-8 rounded-full flex items-center justify-center">
+                                                    {size.label}
+                                                </button>
+                                                {size?.quantity <= 0 && (
+                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                        <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform rotate-45"></div>
+                                                        <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform -rotate-45"></div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
+                                    </div>
+
+                                    {/* Color Selection */}
+                                    <div className="w-full flex flex-wrap justify-start items-center mt-2 gap-1">
+                                        {selectedColor && selectedColor.length > 0 ? (
+                                            selectedColor.map((color, i) => (
+                                                <div
+                                                    key={`color_${i}`}
+                                                    style={{ pointerEvents: color.quantity <= 0 ? 'none' : 'all' }}
+                                                    className={`flex flex-col p-1 items-center justify-center transition-transform relative duration-300 ease-in-out 
                                                         ${color.quantity <= 10 ? "h-32 w-14" : "h-fit w-fit"}`}
-                                                        onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}
-                                                    >
-                                                        <button 
-                                                            disabled={color.quantity <= 0} 
-                                                            style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
-                                                            className={`${color.quantity <= 0 ? 
+                                                    onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}
+                                                >
+                                                    <button
+                                                        disabled={color.quantity <= 0}
+                                                        style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }}
+                                                        className={`${color.quantity <= 0 ?
                                                             `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
                                                             `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
                                                             ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
-                                                            title={color?.quantity || color?.label || "Color"} 
-                                                        />
-
-                                                        {/* Diagonal Lines Over Button when quantity is 0 */}
-                                                        {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
-                                                            <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                                <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
-                                                                    {/* Diagonal Line 1 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform rotate-45"></div>
-                                                                    {/* Diagonal Line 2 */}
-                                                                    <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform -rotate-45"></div>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))
-                                            ) : (
-                                                <p className="text-black">No colors available</p>
-                                            )}
-                                        </div>
-
-                                    </div>
-                                    <div className='w-fit ml-43'>
-                                        <SizeChartModal sizeChartData={clothingSizeChartData}/>
-                                    </div>
-                                    {/* Add to Cart & Buy Now Buttons */}
-                                    <PincodeChecker productId={product?._id} />
-                                    </div>
-                                    <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
-                                        <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
-                                            <button disabled = {bagLoading} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900" 
-                                                onClick={addToBag}
-                                            >
-                                                {
-                                                    bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:(
-                                                        <Fragment>
-                                                            {
-                                                                isInBagList ? <ShoppingCart size={30} className='m-4' />: <ShoppingCart size={30} className='m-4' />
-                                                            }
-                                                            <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span>
-                                                        </Fragment>
-                                                    )
-                                                }
-                                                {/* <FaShoppingCart size={30} className='m-4' /> <span>{isInBagList ? "GO TO CART":"ADD TO CART"}</span> */}
-                                            </button>
-                                            <button disabled = {loadingWishList} className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900" 
-                                                onClick={addToWishList}
-                                            >
-                                            {
-                                                loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:(
-                                                    <Fragment>
-                                                        {
-                                                            isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />: <Heart size={30} className='m-4' />
-                                                        }
-                                                        <span>{isInWishList ? "GO TO WISHLIST":"ADD TO WISHLIST"}</span>
-                                                    </Fragment>
-                                                )
-                                            }
-                                            </button>
-                                        </div>
-                                        <button disabled = {bagLoading || loadingWishList} className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900" 
-                                            onClick={handleBuyNow}
-                                        >
-                                            {
-                                                bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
-                                                    <ShoppingBag size={30} className='m-4' /><span>BUY NOW</span>
-                                                </Fragment>
-                                            }
-                                        </button>
+                                                        title={color?.quantity || color?.label || "Color"}
+                                                    />
+                                                    {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
+                                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform rotate-45"></div>
+                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform -rotate-45"></div>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            ))
+                                        ) : (
+                                            <p className="text-black">No colors available</p>
+                                        )}
                                     </div>
                                 </div>
 
-                                {/* Right Column (Product Details Section) */}
-                                <div className='w-full flex flex-col justify-start items-start p-4'>
-                                    
-                                    {/* Price and Discount Section */}
-                                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                                        <h1 className='font1'>Seller: <span className='text-gray-800 font-semibold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></h1>
-                                    </div>
+                                {/* Size Chart Button */}
+                                <div className='w-fit'>
+                                    <SizeChartModal sizeChartData={clothingSizeChartData} />
+                                </div>
 
-                                    {/* Bullet Points */}
-                                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                                        {product?.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e, index) => (
-                                            <ul key={index}>
-                                                <h1 className='font1 flex items-center mt-2 font-semibold'>{e?.header}</h1>
-                                                <span className='mt-4'>
-                                                    <li className='list-disc mt-2'>{e?.body}</li>
-                                                </span>
-                                            </ul>
-                                        ))}
-                                    </div>
-
-                                    {/* Product Details */}
-                                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                                    <h1 className='font1 flex items-center mt-2 font-semibold'>PRODUCT DETAILS <BiSpreadsheet className='ml-2 text-xl' /></h1>
-                                    <h1 className='mt-4'>
-                                        <li className='list-none mt-2'>{product?.description}</li>
-                                        <li className='list-none '>Warranty: 1 month</li>
-                                        <li className='list-none '>Warranty provided by Brand Owner / Manufacturer</li>
-                                    </h1>
-                                    <h1 className='font1 flex items-center mt-4 font-semibold'>Size & Fit</h1>
-                                    <div className='w-full max-h-fit flex flex-wrap flex-row justify-start items-center space-x-1'>
-                                        {product?.size && product.size.length > 0 && product.size.map((e, i) => (
-                                            <div key={`size_${e?.id || i}`} className='m-2 '>
-                                                <span className='list-none font-normal mt-2'>{e?.label}: </span>
-                                                <span className='list-none mt-2'>{e?.quantity}</span>
-                                            </div>
-                                        ))}
-                                    </div>
-                                    <h1 className='font1 flex items-center mt-4 font-semibold'>Material & Care</h1>
-                                    <p>{product?.material}</p>
-                                    <h1 className='font1 flex items-center mt-4 font-semibold'>Care Instructions:</h1>
-                                    <h1 className='font1 flex items-center mt-4 font-semibold'>Specifications</h1>
-                                        {product?.specification && product.specification.length > 0 && product.specification.map((e, index) => (
-                                            <li key={index} className='list-none mt-2'>{e?.point}</li>
-                                        ))}
-                                    </div>
-                                    
-                                    {/* Additional Info */}
-                                    <div className='border-b-[1px] border-slate-200 pb-6 pt-4 '>
-                                        <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId?.toUpperCase()}</li>
-                                        <li className='list-none mt-2'>Seller:&nbsp;<span className='text-gray-700 font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span></li>
-                                    </div>
-                                    <div className='w-[90%] px-2'> {/* Adjust the width of the reviews section */}
-                                        {/* Reviews Section */}
-                                        <div className='reviews-section'>
-                                            <h3 className='text-lg font-semibold mt-4'>All Reviews</h3>
-                                            <div className='reviews-list mt-4 overflow-y-auto'>
-                                                {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
-                                            </div>
-                                            {hasPurchased ? (
-                                                <div className='w-full justify-center items-center flex-row flex'>
-                                                    <div className='w-full flex flex-col justify-start items-center'>
-                                                        {/* Review Input Section */}
-                                                        <div className='mt-6 w-full'>
-                                                            <h4 className='text-lg font-semibold'>Write a Review</h4>
-                                                            <form className='mt-4'>
-                                                                {/* Review Text Input */}
-                                                                <div className='mb-4'>
-                                                                    <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                                                                    <textarea
-                                                                        onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
-                                                                        id='reviewText'
-                                                                        name='reviewText'
-                                                                        rows='4'
-                                                                        placeholder='Write your review here...'
-                                                                        className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                                                    />
-                                                                </div>
-
-                                                                {/* Star Rating Input */}
-                                                                <div className='mb-4'>
-                                                                    <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                                                    {/* <input
-                                                                        onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
-                                                                        id='starRating'
-                                                                        name='starRating'
-                                                                        type='number'
-                                                                        min='1'
-                                                                        max='5'
-                                                                        className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                                                        placeholder='Rate from 1 to 5'
-                                                                    /> */}
-                                                                    {/* <CustomSlider
-                                                                        value = {ratingData.rating}
-                                                                        onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
-                                                                        valueLabelDisplay='auto'
-                                                                        aria-labelledby='range-slider'
-                                                                        min={1}
-                                                                        max={5}
-                                                                    /> */}
-                                                                    <StarRatingInput onChangeValue={(value) =>{
-                                                                        setRatingData({...ratingData,rating:value})
-                                                                    }}/>
-                                                                </div>
-
-                                                                {/* Submit Button */}
-                                                                <div className='flex justify-start'>
-                                                                    <button
-                                                                        disabled = {isPostingReview}
-                                                                        onClick={PostRating}
-                                                                        className='bg-gray-500 text-white px-4 py-2 rounded-md'
-                                                                    >
-                                                                        {
-                                                                            isPostingReview? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div> : 'Submit Review'
-                                                                        }
-                                                                    </button>
-                                                                </div>
-                                                            </form>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ) :(
-                                                null
+                                {/* Add to Cart & Wishlist Buttons */}
+                                <PincodeChecker productId={product?._id} />
+                                <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
+                                    <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
+                                        <button
+                                            disabled={bagLoading}
+                                            className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900"
+                                            onClick={addToBag}
+                                        >
+                                            {bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
+                                                <Fragment>
+                                                    <ShoppingCart size={30} className='m-4' />
+                                                    <span>{isInBagList ? "GO TO CART" : "ADD TO CART"}</span>
+                                                </Fragment>
                                             )}
-                                        </div>
+                                        </button>
+                                        <button
+                                            disabled={loadingWishList}
+                                            className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900"
+                                            onClick={addToWishList}
+                                        >
+                                            {loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
+                                                <Fragment>
+                                                    {isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />:<Heart strokeWidth={0} size={30} className='m-4' />}
+                                                    <span>{isInWishList ? "GO TO WISHLIST" : "ADD TO WISHLIST"}</span>
+                                                </Fragment>
+                                            )}
+                                        </button>
                                     </div>
-                                    
-                                    
+                                    <button
+                                        disabled={bagLoading || loadingWishList}
+                                        className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"
+                                        onClick={handleBuyNow}
+                                    >
+                                        {bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
+                                            <Fragment>
+                                                <ShoppingBag size={30} className='m-4' />
+                                                <span>BUY NOW</span>
+                                            </Fragment>
+                                        )}
+                                    </button>
                                 </div>
                             </div>
                         </div>
-                        {similar && similar.length > 0 && (
-                            <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                        {
+                            product && <ProductDetails product={product} setRatingData={setRatingData} ratingData={ratingData} isPostingReview={isPostingReview} PostRating={PostRating} />
+                        }
+                        
+                        {/* {similar && similar.length > 0 && (
+                        )} */}
+                        {
+                            product && <div className='w-full justify-center items-center flex flex-col'>
                                 <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                                <div className='w-full flex justify-start items-start 2xl:px-10'>
-                                    <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
-                                        {[1, 2, 3, 4, 5, 6, 67, 7, 78].map((pro, index) => (
-                                            <Single_product key={index} pro={similar[0]} user={user} />
+                                <div className='w-full flex justify-start items-start'>
+                                    <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-6 mx-auto'>
+                                        {Array(10).fill(0).map((pro, index) => (
+                                            <Single_product key={index} pro={product} user={user} />
                                         ))}
                                     </ul>
                                 </div>
                             </div>
-                        )}
+                        }
+                        
 
                     </div>
                 :
@@ -781,6 +636,133 @@ const AverageRatingView = ({ ratings }) => {
     );
 };
 
+const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,PostRating}) => {
+    // State to manage selected tab
+    const [selectedTab, setSelectedTab] = useState('details');
+
+    // Tab change handler
+    const handleTabChange = (tab) => {
+        setSelectedTab(tab);
+    };
+
+    return (
+        <div className="w-full flex flex-col px-4 py-6 justify-center items-center">
+            {/* Tabs */}
+            <div className="w-full flex justify-start items-center mb-6 border-b-2 border-gray-300">
+                <button
+                    onClick={() => handleTabChange('details')}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'details' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                >
+                    Product Details
+                </button>
+                <button
+                    onClick={() => handleTabChange('reviews')}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'reviews' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                >
+                    Reviews
+                </button>
+                <button
+                    onClick={() => handleTabChange('material')}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'material' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                >
+                    Material & Care
+                </button>
+                <button
+                    onClick={() => handleTabChange('specifications')}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'specifications' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                >
+                    Specifications
+                </button>
+            </div>
+
+            {/* Tab Content */}
+            <div className="w-full flex flex-col justify-center items-center ">
+                {/* Product Details Tab */}
+                {selectedTab === 'details' && (
+                    <div className="w-full space-y-6">
+                        <div className="border-b-[1px] border-slate-200 pb-6 pt-4">
+                            <h1 className="font-semibold text-xl text-gray-800">
+                                Seller: <span className="text-gray-600 font-normal">{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span>
+                            </h1>
+                        </div>
+
+                        <div className="border-b-[1px] border-slate-200 pb-6 pt-4">
+                            {product?.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e, index) => (
+                                <ul key={index} className="space-y-4">
+                                    <h1 className="font-semibold text-lg text-gray-800">{e?.header}</h1>
+                                    <span className="text-gray-600">
+                                        <li className="list-disc ml-6">{e?.body}</li>
+                                    </span>
+                                </ul>
+                            ))}
+                        </div>
+
+                        <div className="border-b-[1px] border-slate-200 pb-6 pt-4">
+                            <h1 className="font-semibold text-lg text-gray-800 flex items-center">
+                                PRODUCT DETAILS <BiSpreadsheet className="ml-2 text-xl" />
+                            </h1>
+                            <div className="mt-4 space-y-2">
+                                <li className="list-none text-gray-600">{product?.description}</li>
+                                <li className="list-none text-gray-600">Warranty: 1 month</li>
+                                <li className="list-none text-gray-600">Warranty provided by Brand Owner / Manufacturer</li>
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+                {/* Reviews Tab */}
+                {selectedTab === 'reviews' && (
+                    <div className="reviews-section space-y-6 justify-center items-center flex flex-col">
+                        <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
+                        {/* 2x2 Grid Layout */}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                            {/* Left: Reviews List */}
+                            <div className="reviews-list flex space-y-4 overflow-y-auto">
+                                {product && product.Rating && product.Rating.length > 0 ? (
+                                    <ProductReviews reviews={/* product.Rating */ reviews} />
+                                ) : (
+                                    <ProductReviews reviews={reviews} />
+                                )}
+                            </div>
+
+                            {/* Right: Review Input Form */}
+                            <div className="review-input-section space-y-6">
+                                <ReviewInputView
+                                    setRatingData={setRatingData}
+                                    ratingData={ratingData}
+                                    isPostingReview={isPostingReview}
+                                    PostRating={PostRating}
+                                />
+                            </div>
+                        </div>
+                    </div>
+                )}
+
+
+                {/* Material & Care Tab */}
+                {selectedTab === 'material' && (
+                    <div className="w-full space-y-6">
+                        <h1 className="font-semibold text-lg text-gray-800">Material & Care</h1>
+                        <p className="text-gray-600">{product?.material}</p>
+
+                        <h1 className="font-semibold text-lg text-gray-800">Care Instructions:</h1>
+                        <p className="text-gray-600">{product?.careInstructions}</p>
+                    </div>
+                )}
+
+                {/* Specifications Tab */}
+                {selectedTab === 'specifications' && (
+                    <div className="w-full space-y-6">
+                        <h1 className="font-semibold text-lg text-gray-800">Specifications</h1>
+                        {product?.specification && <p className="list-none text-gray-600">{capitalizeFirstLetterOfEachWord(product.specification)}</p>}
+                    </div>
+                )}
+            </div>
+        </div>
+    );
+};
+
+
 
 const NewLeftSideImageContent = ({
     selectedSize_color_Image_Array,
@@ -789,40 +771,159 @@ const NewLeftSideImageContent = ({
     selectedImage,
     isFocused,
     setIsFocused
-})=>{
-    console.log("All Selected Sizes: ",selectedSize_color_Image_Array);
-    console.log("Selected Image: ",selectedImage);
-    return(
-        <div className='h-max col-span-7'>
-            <div className='w-full h-full justify-end items-center flex flex-row'>
-            <div className='h-full justify-start items-center flex-col flex'>
-                    <div className='grid grid-cols-1 h-full gap-2 px-3'>
-                        {
-                        selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && selectedSize_color_Image_Array.map((e, index) =>
-                            <div
-                            key={index} // Ensure each element has a unique key
-                            className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
-                            onMouseEnter={() => (Addclass(), setSelectedImage(e))}
-                            onClick={() => (Addclass(), setSelectedImage(e))}
-                            >
-                            <img
-                                src={e?.url}
-                                className='w-full h-full object-contain hover:scale-110'
-                                alt="productImage"
-                            />
-                            </div>
-                        )
-                        }
-                    </div>
-                </div>
-                <div className='h-full w-full justify-center items-center overflow-hidden'>
-                    <ImageZoom imageSrc={selectedImage?.url || getRandomItem(selectedSize_color_Image_Array)?.url}/>
+}) => {
+    // Memoize the video check logic
+    const isVideoFile = (file) => {
+        return (
+            file?.url?.includes("video") ||
+            file?.url?.endsWith(".mp4") ||
+            file?.url?.endsWith(".mov") ||
+            file?.url?.endsWith(".avi")
+        );
+    };
+
+    // Memoizing the video detection for the selected image
+    const memoIsVideo = useMemo(() => {
+        if (!selectedImage || !selectedImage.url) return false;
+        return isVideoFile(selectedImage);
+    }, [selectedImage]);
+
+    console.log("All Selected Sizes: ", selectedSize_color_Image_Array);
+    console.log("Selected Image: ", selectedImage);
+
+    return (
+        <div className='flex bg-gray-200 h-[900px] justify-start items-start'>
+            {/* Left side: Image Array */}
+            <div className='w-[100px] h-full p-2 overflow-y-auto'>
+                <div className='grid grid-cols-1 gap-2'>
+                    {
+                        selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
+                        selectedSize_color_Image_Array.map((file, index) => {
+                            const isVideo = isVideoFile(file); // Use the extracted function
+                            return (
+                                <div
+                                    key={index} // Ensure each element has a unique key
+                                    className='w-full h-full overflow-hidden p-0.5 shadow-sm cursor-pointer flex justify-center items-center bg-slate-400 transform transition-transform duration-300 ease-in-out'
+                                    onMouseEnter={() => (Addclass(), setSelectedImage(file))}
+                                    onClick={() => (Addclass(), setSelectedImage(file))}
+                                >
+                                    {
+                                        isVideo ? (
+                                            <ReactPlayer
+                                                className="w-full h-full object-cover"
+                                                url={file.url || file}
+                                                playing={isFocused}
+                                                controls={false}
+                                                muted
+                                                width="100%"
+                                                height="100%"
+                                                light={false}
+                                                onFocus={() => setIsFocused(true)}
+                                                onBlur={() => setIsFocused(false)}
+                                                config={{ file: { attributes: { loading: 'lazy' } } }}
+                                            />
+                                        ) : (
+                                            <img
+                                                src={file?.url}
+                                                className='w-full h-full object-cover hover:scale-110'
+                                                alt="productImage"
+                                            />
+                                        )
+                                    }
+                                </div>
+                            )
+                        })
+                    }
                 </div>
             </div>
 
+            {/* Right side: Image Zoom or Video */}
+            {
+                selectedImage && memoIsVideo ? (
+                    <ReactPlayer
+                        className="w-full h-full object-cover"
+                        url={selectedImage.url || selectedImage}
+                        loop={true}
+                        muted={true}
+                        controls={false}
+                        width="100%"
+                        height="100%"
+                        playing={true}
+                        light={false}
+                    />
+                ) : (
+                    <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={200}/>
+                )
+            }
+        </div>
+    );
+};
+const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=>{
+    return (
+        <div className='w-full justify-center items-center flex-row flex'>
+            <div className='w-full flex flex-col justify-start items-center'>
+                {/* Review Input Section */}
+                <div className='mt-6 w-full'>
+                    <h4 className='text-lg font-semibold'>Write a Review</h4>
+                    <form className='mt-4'>
+                        {/* Review Text Input */}
+                        <div className='mb-4'>
+                            <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+                            <textarea
+                                onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
+                                id='reviewText'
+                                name='reviewText'
+                                rows='4'
+                                placeholder='Write your review here...'
+                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                            />
+                        </div>
+
+                        {/* Star Rating Input */}
+                        <div className='mb-4'>
+                            <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                            {/* <input
+                                onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
+                                id='starRating'
+                                name='starRating'
+                                type='number'
+                                min='1'
+                                max='5'
+                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                placeholder='Rate from 1 to 5'
+                            /> */}
+                            {/* <CustomSlider
+                                value = {ratingData.rating}
+                                onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
+                                valueLabelDisplay='auto'
+                                aria-labelledby='range-slider'
+                                min={1}
+                                max={5}
+                            /> */}
+                            <StarRatingInput onChangeValue={(value) =>{
+                                setRatingData({...ratingData,rating:value})
+                            }}/>
+                        </div>
+
+                        {/* Submit Button */}
+                        <div className='flex justify-start'>
+                            <button
+                                disabled = {isPostingReview}
+                                onClick={PostRating}
+                                className='bg-gray-500 text-white px-4 py-2 rounded-md'
+                            >
+                                {
+                                    isPostingReview? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div> : 'Submit Review'
+                                }
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
     )
 }
+
 const ProductReviews = ({ reviews }) => {
     const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
     const containerRef = useRef(null);
@@ -888,7 +989,7 @@ const ProductReviews = ({ reviews }) => {
 
     return (
         <div>
-            <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
+            <h2 className="text-xl w-full flex justify-between items-center bg-blue-300 font-bold mb-4">Product Reviews</h2>
             <div
                 ref={containerRef}
                 className="overflow-y-auto max-h-[300px] relative px-1 cursor-grab"
@@ -983,7 +1084,7 @@ const LeftImageContent = ({
     }, [selectedImage]);
 
     return (
-        <div className="w-full min-h-full max-w-fit px-2 flex flex-row justify-start items-start">
+        <div className="w-full min-h-fit max-w-fit px-2 flex flex-row justify-start items-start">
             <div className="flex flex-col pr-3 justify-center items-center h-full min-w-fit">
                 <div className="flex flex-col mr-3 w-[80px] gap-8"> {/* Reduced the width of the container */}
                     {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
@@ -1034,7 +1135,7 @@ const LeftImageContent = ({
                 </div>
             </div>
     
-            <div className="flex flex-col justify-center items-center w-full h-full">
+            <div className="flex flex-col justify-center items-center w-full h-fit">
                 {selectedImage ? (
                     memoIsVideo ? (
                         <div className="relative w-full h-full overflow-hidden hover:shadow-md">
@@ -1051,9 +1152,7 @@ const LeftImageContent = ({
                             />
                         </div>
                     ) : (
-                        <div className="relative w-full h-full hover:shadow-md">
-                            <ImageZoom imageSrc={selectedImage.url || selectedImage} />
-                        </div>
+                        <ImageZoom imageSrc={selectedImage.url || selectedImage} />
                     )
                 ) : (
                     <Loader />
