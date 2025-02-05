@@ -52,6 +52,9 @@ const productModelSchema = new mongoose.Schema({
     description:{
         type:String
     },
+    careInstructions:{
+        type:String
+    },
     material:{
         type:String
     },

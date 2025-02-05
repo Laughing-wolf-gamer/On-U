@@ -149,6 +149,23 @@ const ProductPreview = ({
 										</p>
 									)}
 								</div>
+								<div className="flex justify-between items-center border-b pb-4">
+									<h3 className="font-semibold text-gray-700 text-lg">Care Instructions:</h3>
+									{isEditing ? (
+										<textarea
+											type="text"
+											rows={4}
+											value={productData?.careInstructions}
+											placeholder='Enter product CareInstructions'
+											onChange={(e) => handleInputChange(e, 'careInstructions')}
+											className="text-lg w-2/3 font-medium text-gray-600 border-2"
+										/>
+									) : (
+										<p className="text-lg font-medium text-gray-600">
+											{productData?.careInstructions}
+										</p>
+									)}
+								</div>
 								{/* Price and Sale Price */}
 								<div className="flex justify-between items-center border-b pb-4">
 									<h3 className="font-semibold text-gray-700 text-lg">Price:</h3>

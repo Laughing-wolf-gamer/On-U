@@ -400,7 +400,7 @@ const MPpage = () => {
     return (
         <Fragment>
             
-            <div ref={scrollContainerRef} className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+            <div ref={scrollContainerRef} className="w-screen font-sans h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
 
                 {loading === false ? (
                     <div>
@@ -561,14 +561,17 @@ const MPpage = () => {
                                             className={`flex relative flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
                                                 ${color.quantity <= 10 ? "h-fit w-14" : "h-fit w-fit"}`}
                                             onClick={(e) => { setCurrentColor(color); handleSetColorImages(color); }}>
-                                            <button disabled={color.quantity <= 0} 
-                                                style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }} 
-                                                className={`${color.quantity <= 0 ? 
-                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-slate-500` :
-                                                    `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
-                                                    ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-[3px] border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
-                                                title={color?.quantity || color?.label || "Color"} 
-                                                />
+                                                <button
+                                                    disabled={color.quantity <= 0}
+                                                    
+                                                    className={`${color.quantity <= 0 ?
+                                                        `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
+                                                        `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                                                        ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
+                                                    title={color?.quantity || color?.label || "Color"}
+                                                >
+                                                    <div style={{ backgroundColor: color?.label || color._id}} className='w-full h-full rounded-full'></div>
+                                                </button>
                                                 {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
                                                     <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                                                         <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">

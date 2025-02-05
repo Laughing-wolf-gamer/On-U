@@ -276,15 +276,26 @@ const Bag = () => {
     useEffect(()=>{
         if(allAddresses){
             if(allAddresses.length > 0){
-                setSelectedAddress(allAddresses[0]);
+                // setSelectedAddress(allAddresses[0]);
             }
         }
     },[allAddresses,dispatch])
-    // console.log("Random Products: ",randomProducts);
-    
+    const [buttonPressed, setButtonPressed] = useState(false);  // Track the button press state
+
+    const handleProceedToPayment = () => {
+        if (selectedAddress) {
+            placeOrder();  // Place the order if an address is selected
+        } else {
+            checkAndCreateToast("error", 'Please select a delivery address');
+            setButtonPressed(true);  // Highlight the address section if no address is selected
+            setTimeout(()=>{
+                setButtonPressed(false);
+            },400)
+        }
+    };
     return (
-        <div className="w-screen h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
-            <div className="">
+        <div className="w-screen font-sans h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3 font-sans">
+            <div className="w-full max-w-screen-2xl justify-self-center">
                 {isAuthentication ? (
                     <div>
                         
@@ -380,37 +391,56 @@ const Bag = () => {
                                             ₹{convenienceFees}
                                             </span>
                                         </div>
-                                        <div className="flex justify-center space-x-4 rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors">
+                                        <div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-2xl font-semibold transition-colors">
                                             <span>Total</span>
                                             <span>₹ {Math.round(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
                                         </div>
                                         </div>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-6">
+                                <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 lg:grid-cols-2 xl:grid-cols-1 2xl:grid-cols-1 gap-6">
                                     {/* Address List */}
-                                    <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
+                                    <div className={`mt-6 bg-gray-100 p-6 rounded-lg shadow-md transition-all duration-300 ease-in-out border-2 ${buttonPressed && !selectedAddress ? 'border-opacity-100 border-gray-900 scale-105' : 'border-opacity-0 scale-100'}`}>
+
                                         <h3 className="font-semibold mb-4">Your Addresses</h3>
-                                        <div className="space-y-4">
-                                        {user && user.user && allAddresses?.length > 0 ? (
-                                            allAddresses.map((addr, index) => (
-                                            <div
-                                                key={index}
-                                                className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
-                                                onClick={() => handleAddressSelection(addr)}
-                                            >
-                                                {Object.entries(addr).map(([key, value]) => (
-                                                <div key={key} className="flex justify-between">
-                                                    <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                                                    <span>{value}</span>
+                                        <div className={`space-y-4 `}>
+                                            {user && user.user && allAddresses?.length > 0 ? (
+                                                allAddresses.map((addr, index) => (
+                                                    <div
+                                                        key={index}
+                                                        className={`p-4 border rounded-lg ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white'}`}
+                                                        onClick={() => handleAddressSelection(addr)}
+                                                    >
+                                                        {Object.entries(addr).map(([key, value]) => (
+                                                            <div key={key} className="flex justify-between">
+                                                                <span className="font-semibold">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                                                                <span>{value}</span>
+                                                            </div>
+                                                        ))}
+                                                        {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
+                                                    </div>
+                                                ))
+                                            ) : (
+                                                <div className="bg-gray-100 p-4 rounded-lg text-center">
+                                                    <p className="text-gray-700 mb-4">No addresses available.</p>
+                                                    <button
+                                                        onClick={handleOpenPopup}
+                                                        className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out"
+                                                    >
+                                                        Add New Address
+                                                    </button>
                                                 </div>
-                                                ))}
-                                                {selectedAddress === addr && <span className="text-xs text-white">Default Address</span>}
-                                            </div>
-                                            ))
-                                        ) : (
-                                            <p>No addresses available. Please add an address.</p>
-                                        )}
+                                            )}
+                                            {user && user.user && allAddresses?.length < 2 && (
+                                                <div className="mt-4 text-center">
+                                                    <button
+                                                        onClick={handleOpenPopup}
+                                                        className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out"
+                                                    >
+                                                        Add New Address
+                                                    </button>
+                                                </div>
+                                            )}
                                         </div>
                                     </div>
 
@@ -418,46 +448,40 @@ const Bag = () => {
                                     <div className="mt-6 bg-gray-100 p-6 rounded-lg shadow-md">
                                         <h3 className="font-semibold mb-6 text-center">Payment Checkout</h3>
                                         <div className="space-y-6">
-                                        <div className="flex justify-between items-center">
-                                            <span>Order Total:</span>
-                                            <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
-                                        </div>
-                                        <div className="flex justify-between items-center">
-                                            <span>Selected Address:</span>
-                                            <span className="text-sm">
-                                                {selectedAddress
-                                                    ? Object.keys(selectedAddress).slice(0,4).map((key, index) => (
-                                                        <div key={index}>
-                                                            <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
-                                                        </div>
-                                                    ))
-                                                    : "No address selected"
-                                                }
-                                            </span>
-                                        </div>
-                                        <div className="flex flex-col space-y-4">
-                                            <button
-                                            onClick={() => {
-                                                if (selectedAddress) {
-                                                    placeOrder();
-                                                } else {
-                                                    checkAndCreateToast("error", 'Please select a delivery address');
-                                                }
-                                            }}
-                                            className="w-full bg-gray-700 hover:bg-gray-400 text-white py-2 rounded-lg"
-                                            >
-                                            Proceed to Payment
-                                            </button>
-                                            <button
-                                            onClick={handleOpenPopup}
-                                            className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
-                                            >
-                                            Add New Address
-                                            </button>
-                                        </div>
+                                            <div className="flex justify-between items-center">
+                                                <span>Order Total:</span>
+                                                <span className="font-semibold text-xl">₹ {bag?.totalProductSellingPrice || totalProductSellingPrice}</span>
+                                            </div>
+                                            <div className="flex justify-between items-center">
+                                                <span>Selected Address:</span>
+                                                <span className="text-sm">
+                                                    {selectedAddress
+                                                        ? Object.keys(selectedAddress).slice(0, 4).map((key, index) => (
+                                                            <div key={index}>
+                                                                <strong>{capitalizeFirstLetterOfEachWord(key)}:</strong> {selectedAddress[key]}
+                                                            </div>
+                                                        ))
+                                                        : "No address selected"
+                                                    }
+                                                </span>
+                                            </div>
+                                            <div className="flex flex-col space-y-4">
+                                                <button
+                                                    onClick={handleProceedToPayment}
+                                                    className="w-full bg-gray-700 hover:bg-gray-800 duration-300 ease-in-out transition-all text-white py-2 rounded-lg"
+                                                >
+                                                    Proceed to Payment
+                                                </button>
+                                                <button
+                                                    onClick={handleOpenPopup}
+                                                    className="w-full bg-gray-300 text-gray-700 py-2 rounded-lg"
+                                                >
+                                                    Add New Address
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    </div>
+                                </div>
                                 {/* Add Address Popup */}
                                 <AddAddressPopup
                                     isOpen={isAddressPopupOpen}
@@ -479,6 +503,7 @@ const Bag = () => {
                             dispatch(getbag({ userId: user.id }));
                             dispatch(getAddress())
                             setShowPayment(false)
+                            setSelectedAddress(null);
                         }} />}
                     </div>
                 ) : (
@@ -603,7 +628,7 @@ const Bag = () => {
             </div>
             <CouponsDisplay user={user} />
             {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
-                <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
                     <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
                     <div className='w-full flex justify-start items-start 2xl:px-10'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
@@ -617,7 +642,7 @@ const Bag = () => {
                 </div>
             )}
             {randomProducts && randomProducts.length > 0 && (
-                <div className='w-full 2xl:px-14 justify-center items-center flex flex-col'>
+                <div className='w-full 2xl:px-12 justify-center items-center flex flex-col'>
                     <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>DISCOVER MORE</h1>
                     <div className='w-full flex justify-start items-start 2xl:px-10'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>

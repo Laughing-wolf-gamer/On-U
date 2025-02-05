@@ -503,6 +503,7 @@ export const addItemsToBag = async (req, res) => {
         if(!FindUserBag){
             const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
             const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
+            console.log("Creating Bag: ",bag);
             const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
             if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
             if(totalSP && totalSP !== 0) bag.totalSP = totalSP;

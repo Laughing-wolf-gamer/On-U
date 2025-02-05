@@ -12,6 +12,7 @@ import { SearchIcon } from 'lucide-react'
 import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
+import { fetchAllOptions } from '../../action/common.action.js'
 
 
 const Navbar = ({user}) => {
@@ -23,7 +24,8 @@ const Navbar = ({user}) => {
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
-    console.log("Navbar User: ", user)
+    const { options } = useSelector((state) => state.AllOptions);
+    
     const [Menu1, setMenu1] = useState('hidden')
     const [Menu2, setMenu2] = useState('hidden')
     const [Menu3, setMenu3] = useState('hidden')
@@ -101,11 +103,14 @@ const Navbar = ({user}) => {
             dispatch(getbag({ userId: user.id }));
         }
     }, [state]);
+	useEffect(() => {
+	  dispatch(fetchAllOptions());
+	}, [dispatch]);
     useEffect(() => {
         setWishListCount(sessionData.length);
         setBagCount(sessionBagData.length);
     }, [sessionData,sessionBagData]);
-    console.log("Nav Bar sessionBagData: ",sessionBagData);
+    console.log("Navbar Options: ", options)
     return (
         <Fragment>
             <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
@@ -200,7 +205,10 @@ const Navbar = ({user}) => {
                         </ul>
                     </div>
                 </div>
-                <ProductCatView show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} />
+                {
+                    options && options.length > 0 && <ProductCatView show={show2} CMenu={Menu2} parentCallback={Callbackmenu2} options={options} />
+                }
+                
                 <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
         </div>
         </Fragment>

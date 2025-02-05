@@ -289,6 +289,7 @@ export const addNewProduct = async (req, res) => {
             size,
             description,
             specification,
+            careInstructions,
             material,
             bulletPoints,
             gender,
@@ -353,6 +354,7 @@ export const addNewProduct = async (req, res) => {
             shortTitle,
             size,
             description,
+            careInstructions:careInstructions ? careInstructions:'',
             bulletPoints,
             material,
             gender,
@@ -445,13 +447,14 @@ export const editProduct = async (req, res) => {
             title,
             size,
             description,
+            specification,
+            careInstructions,
             material,
             bulletPoints,
             gender,
             category,
             subCategory,
             specialCategory,
-            specification,
             price,
             salePrice,
             width,
@@ -478,6 +481,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('title', title);
         addToUpdate('description', description);
         addToUpdate('specification', specification);
+        addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);
         addToUpdate('bulletPoints', bulletPoints);
         addToUpdate('gender', gender);

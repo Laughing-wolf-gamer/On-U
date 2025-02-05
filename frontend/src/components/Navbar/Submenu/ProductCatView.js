@@ -2,25 +2,22 @@ import React, { Fragment, useEffect, useState, useMemo } from 'react';
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { useTransition, animated } from 'react-spring';
-import { fetchAllOptions } from '../../../action/productaction.js';
+// import { fetchAllOptions } from '../../../action/productaction.js';
 
-const ProductCatView = ({ show, CMenu, parentCallback }) => {
+const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 	const navigation = useNavigate();
 	const transitions = useTransition(show, {
 		from: { opacity: 0 },
 		enter: { opacity: 1 },
 		leave: { opacity: 0 },
-		delay: 200,
+		delay: 100,
 	});
   
-	const { options } = useSelector((state) => state.AllOptions);
 	const dispatch = useDispatch();
-  
+	
 	const [productsOptions, setProductsOptions] = useState([]);
-  
-	useEffect(() => {
-	  dispatch(fetchAllOptions());
-	}, [dispatch]);
+	
+	
   
 	const memoizedProductsOptions = useMemo(() => {
 		if (options && options.length > 0) {
@@ -57,12 +54,12 @@ const ProductCatView = ({ show, CMenu, parentCallback }) => {
   
 	return (
 		<Fragment>
-			<div className={`w-fit h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
+			<div className={`w-[100%] h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
 			{transitions((styles, item) =>
 				item && (
 				<animated.div style={styles}>
 					<div
-					className={`container absolute right-10 top-[-30px] w-fit mx-auto h-fit ${CMenu} Mmenu bg-gray-200`}
+					className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-neutral-100`}
 					onMouseEnter={() => parentCallback('block', true)}
 					onMouseLeave={() => parentCallback('hidden', false)}
 					>

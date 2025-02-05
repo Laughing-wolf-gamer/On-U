@@ -274,10 +274,25 @@ export const addProductsFromElement = [
         required:true,
     },
     {
+        label:'Care Instructions',
+        name:'careInstructions',
+        componentType:'textarea',
+        placeHolder:'Enter Care Instructions',
+        required:true,
+    },
+    {
         label:'Specification',
         name:'specification',
         componentType:'textarea',
         placeHolder:'Enter Specification',
+        required:true,
+    },
+    {
+        label:'GST',
+        name:'gst',
+        componentType:'input',
+        type:'number',
+        placeHolder:'Enter Product Price',
         required:true,
     },
     {

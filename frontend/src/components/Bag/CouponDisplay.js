@@ -38,7 +38,7 @@ const CouponsDisplay = ({user}) => {
     },[dispatch])
     console.log("All Coupons: ",AllCoupons);
     return (
-        <div className="w-screen justify-center items-center flex flex-col px-4 py-8">
+        <div className="font-sans justify-center items-center flex flex-col px-4 py-8">
             <h2 className="text-2xl font-bold mb-6 text-center">All Coupons</h2>
 
             {/* Coupons grid */}
@@ -47,7 +47,7 @@ const CouponsDisplay = ({user}) => {
                     AllCoupons.map((coupon) => (
                         <div
                             key={coupon._id}
-                            className="bg-white 2xl:min-w-[500px] xl:min-w-[300px] lg:min-w-[260px] md:min-w-[200px] min-w-[190px] p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
+                            className="bg-white min-w-[600px] p-6 rounded-lg shadow-lg transform transition-all hover:scale-105 hover:shadow-2xl"
                         >
                             {/* Coupon Info */}
                             <div className="flex items-center justify-between mb-4">

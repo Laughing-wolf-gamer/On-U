@@ -188,6 +188,9 @@ const Ppage = () => {
             if(response){
                 // await dispatch(getwishlist());
                 dispatch(getbag({ userId: user.id }));
+                checkAndCreateToast("success", "Product successfully in Bag");
+            }else{
+                checkAndCreateToast("error", "Product Failed to add in bag");
             }
             setIsInBagList(response);
         } else {
@@ -200,8 +203,8 @@ const Ppage = () => {
                 ProductData: product,
             };
             setSessionStorageBagListItem(orderData, param.id);
+            checkAndCreateToast("success", "Product successfully in Bag");
         }
-        checkAndCreateToast("success", "Product successfully in Bag");
         updateButtonStates();
     };
     const updateButtonStates = () => {
@@ -264,8 +267,8 @@ const Ppage = () => {
                 };
                 setSessionStorageBagListItem(orderData, param.id);
                 navigation("/bag");
+                checkAndCreateToast("success", "Product successfully in Bag");
             }
-            checkAndCreateToast("success", "Product successfully in Bag");
             updateButtonStates();
         } catch (error) {
             console.error("Error Adding to Bag: ",error);
@@ -385,7 +388,7 @@ const Ppage = () => {
     console.log("current Scroll Amount: ",scrollPosition);
     
     return (
-        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-sans h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
                     <div className='max-w-screen-2xl w-full justify-self-center flex flex-col '>
@@ -473,13 +476,15 @@ const Ppage = () => {
                                                 >
                                                     <button
                                                         disabled={color.quantity <= 0}
-                                                        style={{ backgroundColor: color?.label || color._id, width: "40px", height: "40px" }}
+                                                        
                                                         className={`${color.quantity <= 0 ?
-                                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
-                                                            `w-8 h-8 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out p-1
-                                                            ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-4 border-slate-900 shadow-md scale-110" : "scale-100 border-separate border-2 border-solid border-slate-300"}`}`}
+                                                            `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
+                                                            `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                                                            ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
                                                         title={color?.quantity || color?.label || "Color"}
-                                                    />
+                                                    >
+                                                        <div style={{ backgroundColor: color?.label || color._id}} className='w-full h-full rounded-full'></div>
+                                                    </button>
                                                     {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
                                                         <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
                                                             <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform rotate-45"></div>
@@ -522,7 +527,7 @@ const Ppage = () => {
                                         >
                                             {loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
                                                 <Fragment>
-                                                    {isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />:<Heart strokeWidth={0} size={30} className='m-4' />}
+                                                    {isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />:<Heart strokeWidth={2} size={30} className='m-4' />}
                                                     <span>{isInWishList ? "GO TO WISHLIST" : "ADD TO WISHLIST"}</span>
                                                 </Fragment>
                                             )}
@@ -648,35 +653,35 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
     return (
         <div className="w-full flex flex-col px-4 py-6 justify-center items-center">
             {/* Tabs */}
-            <div className="w-full flex justify-start items-center mb-6 border-b-2 border-gray-300">
+            <div className="w-full flex justify-center items-center mb-6 border-b-2 border-gray-300 space-x-4">
                 <button
                     onClick={() => handleTabChange('details')}
-                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'details' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-gray-500 ${selectedTab === 'details' ? 'border-b-4 border-gray-500 text-gray-600' : 'text-gray-600'}`}
                 >
                     Product Details
                 </button>
                 <button
                     onClick={() => handleTabChange('reviews')}
-                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'reviews' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-gray-500 ${selectedTab === 'reviews' ? 'border-b-4 border-gray-500 text-gray-600' : 'text-gray-600'}`}
                 >
                     Reviews
                 </button>
                 <button
                     onClick={() => handleTabChange('material')}
-                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'material' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-gray-500 ${selectedTab === 'material' ? 'border-b-4 border-gray-500 text-gray-600' : 'text-gray-600'}`}
                 >
                     Material & Care
                 </button>
                 <button
                     onClick={() => handleTabChange('specifications')}
-                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-blue-500 ${selectedTab === 'specifications' ? 'border-b-4 border-blue-500 text-blue-600' : 'text-gray-600'}`}
+                    className={`px-6 py-2 font-semibold text-lg transition-all duration-300 hover:text-gray-500 ${selectedTab === 'specifications' ? 'border-b-4 border-gray-500 text-gray-600' : 'text-gray-600'}`}
                 >
                     Specifications
                 </button>
             </div>
 
             {/* Tab Content */}
-            <div className="w-full flex flex-col justify-center items-center ">
+            <div className="min-w-full flex px-4">
                 {/* Product Details Tab */}
                 {selectedTab === 'details' && (
                     <div className="w-full space-y-6">
@@ -712,21 +717,24 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
 
                 {/* Reviews Tab */}
                 {selectedTab === 'reviews' && (
-                    <div className="reviews-section space-y-6 justify-center items-center flex flex-col">
-                        <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
+                    <div className="space-y-6 w-full justify-between justify-self-center items-center flex flex-col px-5">
+                        
                         {/* 2x2 Grid Layout */}
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <div className="flex flex-row justify-between w-full items-center">
                             {/* Left: Reviews List */}
-                            <div className="reviews-list flex space-y-4 overflow-y-auto">
-                                {product && product.Rating && product.Rating.length > 0 ? (
-                                    <ProductReviews reviews={/* product.Rating */ reviews} />
-                                ) : (
-                                    <ProductReviews reviews={reviews} />
-                                )}
+                            <div className='w-full flex flex-col justify-start items-start'>
+                                <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
+                                <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
+                                    {product && product.Rating && product.Rating.length > 0 ? (
+                                        <ProductReviews reviews={/* product.Rating */ reviews} />
+                                    ) : (
+                                        <ProductReviews reviews={reviews} />
+                                    )}
+                                </div>
                             </div>
 
                             {/* Right: Review Input Form */}
-                            <div className="review-input-section space-y-6">
+                            <div className="w-full">
                                 <ReviewInputView
                                     setRatingData={setRatingData}
                                     ratingData={ratingData}
@@ -737,7 +745,6 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                         </div>
                     </div>
                 )}
-
 
                 {/* Material & Care Tab */}
                 {selectedTab === 'material' && (
@@ -759,6 +766,7 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                 )}
             </div>
         </div>
+
     );
 };
 
@@ -792,10 +800,10 @@ const NewLeftSideImageContent = ({
     console.log("Selected Image: ", selectedImage);
 
     return (
-        <div className='flex bg-gray-200 h-[900px] justify-start items-start'>
+        <div className='flex bg-white h-[900px] justify-start items-start'>
             {/* Left side: Image Array */}
-            <div className='w-[100px] h-full p-2 overflow-y-auto'>
-                <div className='grid grid-cols-1 gap-2'>
+            <div className='w-[100px] max-h-fit p-2 mr-3 overflow-y-auto'>
+                <div className='grid grid-cols-1 gap-5'>
                     {
                         selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
@@ -868,6 +876,31 @@ const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=
                     <form className='mt-4'>
                         {/* Review Text Input */}
                         <div className='mb-4'>
+                            {/* Star Rating Input */}
+                            <div className='mb-4'>
+                                <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
+                                {/* <input
+                                    onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
+                                    id='starRating'
+                                    name='starRating'
+                                    type='number'
+                                    min='1'
+                                    max='5'
+                                    className='mt-2 p-2 w-full border border-gray-300 rounded-md'
+                                    placeholder='Rate from 1 to 5'
+                                /> */}
+                                {/* <CustomSlider
+                                    value = {ratingData.rating}
+                                    onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
+                                    valueLabelDisplay='auto'
+                                    aria-labelledby='range-slider'
+                                    min={1}
+                                    max={5}
+                                /> */}
+                                <StarRatingInput onChangeValue={(value) =>{
+                                    setRatingData({...ratingData,rating:value})
+                                }}/>
+                            </div>
                             <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
                             <textarea
                                 onChange={(e) => setRatingData({ ...ratingData, comment: e.target.value })}
@@ -879,31 +912,7 @@ const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=
                             />
                         </div>
 
-                        {/* Star Rating Input */}
-                        <div className='mb-4'>
-                            <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                            {/* <input
-                                onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
-                                id='starRating'
-                                name='starRating'
-                                type='number'
-                                min='1'
-                                max='5'
-                                className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                placeholder='Rate from 1 to 5'
-                            /> */}
-                            {/* <CustomSlider
-                                value = {ratingData.rating}
-                                onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
-                                valueLabelDisplay='auto'
-                                aria-labelledby='range-slider'
-                                min={1}
-                                max={5}
-                            /> */}
-                            <StarRatingInput onChangeValue={(value) =>{
-                                setRatingData({...ratingData,rating:value})
-                            }}/>
-                        </div>
+                        
 
                         {/* Submit Button */}
                         <div className='flex justify-start'>
@@ -988,23 +997,43 @@ const ProductReviews = ({ reviews }) => {
     };
 
     return (
-        <div>
-            <h2 className="text-xl w-full flex justify-between items-center bg-blue-300 font-bold mb-4">Product Reviews</h2>
-            <div
-                ref={containerRef}
-                className="overflow-y-auto max-h-[300px] relative px-1 cursor-grab"
-                style={{ userSelect: 'none' }} // Disable text selection during drag
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
-                onMouseLeave={handleMouseLeave}
-            >
-                {/* Display only the first 3 reviews or more based on showMore */}
-                {reviews.slice(0, 4).map((review, index) => {
-                    const randomStars = review.rating; // Random stars between 1 and 5
+        <div
+            ref={containerRef}
+            className="overflow-y-auto w-[800px] max-h-[300px] relative px-1 cursor-grab"
+            style={{ userSelect: 'none' }} // Disable text selection during drag
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={handleTouchEnd}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+            onMouseLeave={handleMouseLeave}
+        >
+            {/* Display only the first 3 reviews or more based on showMore */}
+            {reviews.slice(0, 4).map((review, index) => {
+                const randomStars = review.rating;
+                return (
+                    <div key={index} className="review-item mb-4">
+                        <div className="flex items-center">
+                            <div className="stars">
+                                {[...Array(randomStars)].map((_, i) => (
+                                    <span key={i} className="star text-black">★</span>
+                                ))}
+                                {[...Array(5 - randomStars)].map((_, i) => (
+                                    <span key={i} className="star text-gray-300">★</span>
+                                ))}
+                            </div>
+                            <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                        </div>
+                        <p className="text-gray-700 mt-2">{review.comment}</p>
+                    </div>
+                );
+            })}
+
+            {/* If showMore is true, display all reviews */}
+            {showMore &&
+                reviews.slice(4).map((review, index) => {
+                    const randomStars = review.rating;
                     return (
                         <div key={index} className="review-item mb-4">
                             <div className="flex items-center">
@@ -1021,41 +1050,21 @@ const ProductReviews = ({ reviews }) => {
                             <p className="text-gray-700 mt-2">{review.comment}</p>
                         </div>
                     );
-                })}
+                })
+            }
 
-                {/* If showMore is true, display all reviews */}
-                {showMore &&
-                    reviews.slice(3).map((review, index) => {
-                        const randomStars = review.rating;
-                        return (
-                            <div key={index} className="review-item mb-4">
-                                <div className="flex items-center">
-                                    <div className="stars">
-                                        {[...Array(randomStars)].map((_, i) => (
-                                            <span key={i} className="star text-black">★</span>
-                                        ))}
-                                        {[...Array(5 - randomStars)].map((_, i) => (
-                                            <span key={i} className="star text-gray-300">★</span>
-                                        ))}
-                                    </div>
-                                    <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
-                                </div>
-                                <p className="text-gray-700 mt-2">{review.comment}</p>
-                            </div>
-                        );
-                    })
-                }
+            {/* View More / View Less Button */}
+            <div className="mt-4">
+                <button 
+                    onClick={handleToggleReviews} 
+                    className="text-blue-500 font-semibold"
+                >
+                    {showMore ? 'View Less' : 'View More'}
+                </button>
             </div>
-
-            {/* "View More" / "Show Less" Toggle Button */}
-            <button
-                onClick={handleToggleReviews}
-                className="mt-4 text-gray-500 hover:underline"
-            >
-                {showMore ? 'Less' : 'More'}
-            </button>
         </div>
     );
+
 };
 
 
@@ -1085,8 +1094,8 @@ const LeftImageContent = ({
 
     return (
         <div className="w-full min-h-fit max-w-fit px-2 flex flex-row justify-start items-start">
-            <div className="flex flex-col pr-3 justify-center items-center h-full min-w-fit">
-                <div className="flex flex-col mr-3 w-[80px] gap-8"> {/* Reduced the width of the container */}
+            <div className="flex flex-col pr-6 justify-center items-center h-full min-w-fit">
+                <div className="flex flex-col mr-3 w-[70px] gap-8"> {/* Reduced the width of the container */}
                     {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
                             const isVideo = isVideoFile(file); // Use the extracted function
