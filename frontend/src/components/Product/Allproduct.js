@@ -221,7 +221,7 @@ const Allproductpage = ({user}) => {
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     const [openView,setOpenView] = useState(false);
     return (
-        <div className="hidden font-sans 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
+        <div className="hidden font-kumbsan 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
             {/* Filters Title */}
             <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
     
@@ -261,7 +261,7 @@ const NoProductsFoundOverlay = ({ isOpen }) => {
     if (!isOpen) return null;  // Don't render anything if the overlay is not open.
   
     return (
-        <div className="fixed inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center z-50">
+        <div className="fixed font-kumbsan inset-0 bg-gray-800 bg-opacity-60 flex justify-center items-center z-50">
             <div className="bg-white p-8 rounded-lg shadow-xl max-w-lg mx-4 transform transition-all duration-300 scale-95 hover:scale-100">
                 <h2 className="text-3xl font-bold text-gray-800 mb-6 text-center">
                     No Products Found

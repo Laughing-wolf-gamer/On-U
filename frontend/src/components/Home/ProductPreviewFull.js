@@ -58,7 +58,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     }
 
     return (
-        <div className='max-w-screen-2xl w-full flex flex-col justify-self-center justify-center space-y-5 items-center bg-slate-200'>
+        <div className='max-w-screen-2xl font-kumbsan w-full flex flex-col justify-self-center justify-center space-y-5 items-center bg-slate-200'>
             {/* Preview Headers Section */}
             <div className="min-w-fit font-sans flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 my-4 max-w-full">
                 {previewHeader && previewHeader.length > 0 &&

@@ -23,6 +23,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
+import ShareView from './ShareView';
 
 const reviews = [
     {
@@ -461,6 +462,7 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
+                                                {/* <ShareView/> */}
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -477,6 +479,7 @@ const MPpage = () => {
                                         ) : (
                                             // Render image using LazyLoadImage
                                             <div className="relative">
+                                                {/* <ShareView/> */}
                                                 <LazyLoadImage
                                                     effect="blur"
                                                     src={im.url}

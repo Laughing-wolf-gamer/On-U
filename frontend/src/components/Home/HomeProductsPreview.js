@@ -6,6 +6,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { createwishlist, getwishlist } from '../../action/orderaction';
 import { useToast } from '../../Contaxt/ToastProvider';
 import toast from 'react-hot-toast';
+import ShareView from '../Productpage/ShareView';
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
@@ -121,7 +122,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 
     return (
         <div
-            className={`w-full h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
+            className={`w-full h-full font-kumbsan overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
             onMouseEnter={() => {
                 setIsHovered(true);
                 handleMouseEnter(0);
@@ -130,6 +131,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
         >
             {/* Skeleton for Product Image/Video */}
             <div className="w-full h-full relative">
+                
                 {!isMediaLoaded && (
                     <div className="w-full min-h-full animate-pulse bg-gray-100"></div> // Skeleton loader
                 )}
@@ -147,25 +149,25 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
             {/* Skeleton for Buttons */}
             <div className={`absolute bottom-0 left-1/2 transform z-20 -translate-x-1/2
                 w-full h-auto flex flex-col gap-1 items-center justify-center
-                font-sans transition-all duration-300 ease-in-out md:text-sm text-xs
+                font-kumbsan transition-all duration-300 ease-in-out md:text-sm text-xs
                 ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 {!product ? (
                     <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button
                 ) : (
                     <>
-                        <div className="w-full h-8 md:h-10 flex items-center justify-center font-sans">
-                            <button onClick={addToWishList} className="w-full h-full flex items-center text-black bg-white text-center justify-center font-sans hover:shadow-md space-x-2">
+                        <div className="w-full h-8 md:h-10 flex items-center justify-center">
+                            <button onClick={addToWishList} className="w-full h-full flex items-center text-black bg-white text-center justify-center font-kumbsan hover:shadow-md space-x-2">
                                 {
                                     isInWishList ? <div className='animate-vibrateScale'><Heart className='text-[8px] md:text-sm' fill='red' strokeWidth={0}/></div>:<Heart strokeWidth={.8} className='text-[8px] md:text-sm' />
                                 }
-                                <span className="font-sans text-[10px] md:text-sm">Add to Wishlist</span>
+                                <span className="font-kumbsan text-[10px] md:text-sm">Add to Wishlist</span>
                             </button>
                         </div>
-                        <div className="w-full h-8 md:h-10 flex items-center justify-center font-sans">
-                            <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-sans hover:shadow-md space-x-2">
+                        <div className="w-full h-8 md:h-10 flex items-center justify-center">
+                            <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
                                 <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm' />
-                                <span className="font-sans text-[10px] md:text-sm">Add to Cart</span>
+                                <span className="font-kumbsan text-[10px] md:text-sm">Add to Cart</span>
                             </button>
                         </div>
                     </>
@@ -178,7 +180,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                     <div className="absolute right-0 top-4 transform z-20 w-fit h-8 p-3 justify-center items-center flex bg-gray-300 animate-pulse rounded-tl-lg rounded-bl-lg"></div> // Skeleton discount badge
                 ) : (
                     <div
-                        className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-sans font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
+                        className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-kumbsan font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
                     >
                         <span className="font-semibold text-center text-[10px] md:text-xs">{amount}% OFF</span>
                     </div>

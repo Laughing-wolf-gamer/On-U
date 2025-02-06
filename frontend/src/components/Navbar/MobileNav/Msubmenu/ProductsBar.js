@@ -97,7 +97,7 @@ const MProductsBar = ({showProducts,onClose}) => {
 	},[dispatch])
 	
 	return (
-		<div className={`ml-2 w-full ${showProducts}`}>
+		<div className={`ml-2 font-kumbsan w-full ${showProducts}`}>
 			{productsOptions && productsOptions.length > 0 && productsOptions.map((product) => (
 				<div key={product.Gender} className="space-y-2">
 					<Ripples

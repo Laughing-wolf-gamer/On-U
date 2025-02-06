@@ -54,7 +54,7 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
   
 	return (
 		<Fragment>
-			<div className={`w-[100%] h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
+			<div className={`w-[100%] font-kumbsan h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
 			{transitions((styles, item) =>
 				item && (
 				<animated.div style={styles}>

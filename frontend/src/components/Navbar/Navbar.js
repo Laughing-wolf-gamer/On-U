@@ -113,7 +113,7 @@ const Navbar = ({user}) => {
     console.log("Navbar Options: ", options)
     return (
         <Fragment>
-            <div className="container sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
+            <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
                 <div className='flex-row flex justify-between items-center w-screen h-full'>
                     <ul className=' h-full flex font1 font-semibold text-base md:text-[14px] text-[#282c3f] tracking-[.3px] uppercase'>
                         <Link className='w-max px-3 flex items-stretch hover:animate-vibrateScale' to="/">
