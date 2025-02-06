@@ -411,9 +411,12 @@ export const removeCouponToBag = async(req,res)=>{
 
 }
 
-export const addItemsArrayToBag = async(req,res)=>{
+/* export const addItemsArrayToBag = async(req,res)=>{
     try {
         console.log("Bag Array: ",req.body);
+        if(!req.user){
+            return res.status(400).json({message: "User Not Logged In"})
+        }
         const userId = req.user.id;
         if(!userId){
             return res.status(400).json({message: "User Not Logged In"})
@@ -428,7 +431,7 @@ export const addItemsArrayToBag = async(req,res)=>{
             if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
             if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
             await bag.save();
-            // console.log("User Bag: ",bag);
+
         }else{
             const emittingResponse = req.body.map(async (p)=>{
                 const product = FindUserBag.orderItems.find(p => p.productId._id.toString() == p.productId)
@@ -456,7 +459,88 @@ export const addItemsArrayToBag = async(req,res)=>{
         console.error("Failed to add items array: ",error);
         res.status(500).json({success:false,message:"Internal server error",});
     }
-}
+} */
+export const addItemsArrayToBag = async (req, res) => {
+    try {
+        console.log("Bag Array: ", req.body);
+
+        // Check if the user is logged in
+        if (!req.user || !req.user.id) {
+            return res.status(400).json({ message: "User Not Logged In" });
+        }
+
+        const userId = req.user.id;
+
+        // Fetch ConvenienceFees from the database
+        const convenienceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+
+        // Check if the user already has a bag
+        const userBag = await Bag.findOne({ userId }).populate('orderItems.productId');
+
+        // If no existing bag, create a new one
+        if (!userBag) {
+            const newBag = new Bag({
+                userId,
+                ConvenienceFees: convenienceFees?.ConvenienceFees || 0,
+                orderItems: req.body.map(p => ({
+                    productId: p.productId,
+                    quantity: p.quantity,
+                    color: p.color,
+                    size: p.size,
+                })),
+            });
+
+            // Calculate totals for the new bag
+            const totals = await getItemsData(newBag);
+            updateBagTotals(newBag, totals);
+
+            // Save the new bag
+            await newBag.save();
+        } else {
+            // Update the existing bag
+            const updatePromises = req.body.map(async (p) => {
+                const existingItem = userBag.orderItems.find(item => item.productId._id.toString() === p.productId);
+
+                if (existingItem) {
+                    // Update quantity if the product is already in the bag
+                    existingItem.quantity += p.quantity;
+                } else {
+                    // Add new item to the bag if not found
+                    userBag.orderItems.push({ productId: p.productId, quantity: p.quantity, color: p.color, size: p.size });
+                }
+            });
+
+            // Wait for all the items to be processed before calculating totals
+            await Promise.all(updatePromises);
+
+            // Recalculate and update bag totals
+            const totals = await getItemsData(userBag);
+            updateBagTotals(userBag, totals);
+
+            // Save the updated bag
+            await userBag.save();
+        }
+
+        console.log("User Bag: ", userBag);
+        res.status(200).json({ success: true, message: "Items added to bag" });
+    } catch (error) {
+        console.error("Failed to add items array: ", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+
+// Helper function to update bag totals
+const updateBagTotals = (bag, totals) => {
+    const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = totals;
+    if (totalProductSellingPrice) bag.totalProductSellingPrice = totalProductSellingPrice;
+    if (totalSP) bag.totalSP = totalSP;
+    if (totalDiscount) bag.totalDiscount = totalDiscount;
+    if (totalMRP) bag.totalMRP = totalMRP;
+};
+    
+
+
+
 export const addItemsArrayToWishList = async(req,res)=>{
     try {
         const userId = req.user.id;

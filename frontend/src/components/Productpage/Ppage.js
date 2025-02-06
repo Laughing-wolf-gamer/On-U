@@ -877,24 +877,6 @@ const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=
                             {/* Star Rating Input */}
                             <div className='mb-4'>
                                 <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                {/* <input
-                                    onChange={(e) => setRatingData({ ...ratingData, rating: e.target.value })}
-                                    id='starRating'
-                                    name='starRating'
-                                    type='number'
-                                    min='1'
-                                    max='5'
-                                    className='mt-2 p-2 w-full border border-gray-300 rounded-md'
-                                    placeholder='Rate from 1 to 5'
-                                /> */}
-                                {/* <CustomSlider
-                                    value = {ratingData.rating}
-                                    onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
-                                    valueLabelDisplay='auto'
-                                    aria-labelledby='range-slider'
-                                    min={1}
-                                    max={5}
-                                /> */}
                                 <StarRatingInput onChangeValue={(value) =>{
                                     setRatingData({...ratingData,rating:value})
                                 }}/>

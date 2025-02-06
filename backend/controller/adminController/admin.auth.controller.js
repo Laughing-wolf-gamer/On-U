@@ -9,7 +9,7 @@ import logger from "../../utilis/loggerUtils.js";
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {name,email,password,phoneNumber,role} = req.body;
-        console.log("Authenticating with: ",name,email,password,phoneNumber)
+        // console.log("Authenticating with: ",name,email,password,phoneNumber)
         if(role){
             if(role !== 'admin' && role !== 'superAdmin'){
                 return res.status(401).json({Success:false,message: 'Invalid Role'});
@@ -107,13 +107,13 @@ export const UpdateSizeStock = async (req, res) => {
         const AllColors = []
         let totalStock = 0;
         product.size.forEach(s => {
-        if (s.colors) {
-            let sizeStock = s.quantity; // Start with the size's own quantity
-            s.colors.forEach(color => {
-                sizeStock += color.quantity; // Add color quantities to size stock
-            });
-            totalStock += sizeStock;
-        }
+            if (s.colors) {
+                let sizeStock = s.quantity; // Start with the size's own quantity
+                s.colors.forEach(color => {
+                    sizeStock += color.quantity; // Add color quantities to size stock
+                });
+                totalStock += sizeStock;
+            }
         });
         product.size.forEach(s => {
             if(s.colors){
@@ -144,7 +144,7 @@ export const UpdateSizeStock = async (req, res) => {
 export const addNewSizeToProduct = async (req, res) => {
     try {
         const { productId, size } = req.body;
-        console.log("Adding Size: ", productId, size);
+        // console.log("Adding Size: ", productId, size);
         // Check if the size already exists in the product
         const alreadyPresetProduct = await ProductModel.findById(productId);
         if (alreadyPresetProduct) {
@@ -155,10 +155,7 @@ export const addNewSizeToProduct = async (req, res) => {
                 }
             }
         }
-        /* const alreadyPresetSize = alreadyPresetProduct.size.find(s => s.label === size.label);
-        if(alreadyPresetSize){
-        return res.status(400).json({Success:false,message: 'Size already exists'});
-        } */
+
         // Add the new size to the product's sizes array
         const product = await ProductModel.findOneAndUpdate(
             { _id: productId }, // Find the product by productId
@@ -190,6 +187,7 @@ export const addNewSizeToProduct = async (req, res) => {
         res.status(200).json({ Success: true, message: 'Size Added Successfully' ,result:UpdatedProduct});
     } catch (error) {
         console.log("Error Adding Size: ", error);
+        logger.error("Error Adding Size: " + error.message);
         res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };
@@ -793,7 +791,7 @@ export const fetchAllCustomerUsers = async (req, res) => {
                     // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(cart);
                     const orders = await OrderModel.find({userId: u._id});
                     const wishList = await WhishList.findOne({userId: u._id.toString()}).populate("orderItems.productId");
-                    console.log("Found wishList:",u.name,u._id,wishList?.orderItems);
+                    // console.log("Found wishList:",u.name,u._id,wishList?.orderItems);
                     // Calculate the total amount spent by the user
                     // You can modify the user object by appending the cart data to it
                     const totalAmount = orders.reduce((accumulator, order) => {
@@ -805,11 +803,12 @@ export const fetchAllCustomerUsers = async (req, res) => {
                     userNew.wishList = wishList?.orderItems || []; // Attach wish list data to the
                 } catch (error) {
                     console.error(`Error getting cart for user ${u._id}:`, error);
+                    logger.error(`Error getting cart for user ${u._id}: ` + error.message);
                 }
                 return userNew; // Return the user object even if there is an error fetching cart
             })
         );
-        console.log("All Customer Dat: ",allCarForUser);
+        // console.log("All Customer Dat: ",allCarForUser);
         // Respond with the modified user objects including cart data
         res.status(200).json({
             Success: true,

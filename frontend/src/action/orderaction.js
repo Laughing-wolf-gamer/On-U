@@ -95,7 +95,7 @@ export const createbag = (option) => async (dispatch) => {
         // console.log(token);
         // console.log(option)
         // dispatch({ type: REQUEST_CREATE_BAG })
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/create_bag`,option, {
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/bag/create_bag`,option, {
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -159,7 +159,7 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
         const token = sessionStorage.getItem('token');
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/update_bag`,qtydata, {
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/bag/update_bag`,qtydata, {
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -177,7 +177,7 @@ export const deleteBag = (deletingProductData) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
-        const res = await axios.put(`${BASE_API_URL}/api/shop/removeBagItem`,deletingProductData,headerConfig());
+        const res = await axios.put(`${BASE_API_URL}/api/shop/bag/removeBagItem`,deletingProductData,headerConfig());
         console.log("Delete Bag: ",res)
         dispatch({ type: REQUEST_DELETE_BAG, payload: res?.data?.success || false})
     } catch (error) {

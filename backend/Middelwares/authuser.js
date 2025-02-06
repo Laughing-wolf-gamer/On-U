@@ -1,6 +1,4 @@
 import jwt from 'jsonwebtoken'
-import ErrorHandler from '../utilis/errorhandel.js';
-import A from './resolveandcatch.js'
 import logger from '../utilis/loggerUtils.js';
 
 export const isAuthenticateuser = async(req, res, next)=>{

@@ -14,6 +14,7 @@ import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
 import FileUploadComponent from './FileUploadComponent';
 import CustomSelect from './CustomSelect';
 import toast from 'react-hot-toast';
+import RatingDataView from './RatingDataView';
 
 const ProductPreview = ({
 	categories,
@@ -25,392 +26,458 @@ const ProductPreview = ({
 	UpdateEditedData,
 	setCurrentPreviewProduct,
   }) => {
-		const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
-		const [productData, setProductData] = useState(null);
-		const [isEditing, setIsEditing] = useState(false);  // New state for editing mode
-		const dispatch = useDispatch();
-	
-		const fetchProductData = async () => {
-			try {
-				if (!productDataId) return;
-				const response = await dispatch(getProductsById(productDataId));
-				// console.log("Product Data: ", response?.payload?.result);
-				setProductData(response?.payload?.result || null);
-			} catch (error) {
-				console.error("Error Fetching Product Data: ", error);
-			}
-		};
-	
-		useEffect(() => {
-			if (productDataId) {
-				fetchProductData();
-			}
-		}, [dispatch, productDataId]);
-	
-		// Handle input changes
-		const handleInputChange = (e, field) => {
-			setProductData({
-				...productData,
-				[field]: e.target.value,
-			});
-		};
-		const specialCategory = {options:addProductsFromElement.find(e => e.name === "specialCategory").options};
-		const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
-		const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
-		console.log("Preview Options Data: ", productData);
-		const renderPopUpContent = () => (
-			<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-				<div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto">
-					<div className="flex justify-between items-center mb-4">
-						<div className="flex flex-col gap-2">
-							<span>ProductId: {productData?.productId}</span>
-							<h2 className="text-2xl font-bold">
-								{isEditing ? (
-									<input
-										type="text"
-										value={productData?.title}
-										onChange={(e) => handleInputChange(e, 'title')}
-										className="text-2xl font-bold"
-									/>
-								) : (
-									`Title: ${productData?.title}`
-								)}
-							</h2>
-							<h3 className="text-xl font-normal">
-								{isEditing ? (
-									<input
-										type="text"
-										value={productData?.shortTitle}
-										onChange={(e) => handleInputChange(e, 'shortTitle')}
-										className="text-xl font-normal"
-									/>
-								) : (
-									`Short Title: ${productData?.shortTitle}`
-								)}
-							</h3>
-						</div>
-						<XCircle
-							onClick={(e) => {
-								e.preventDefault();
-								togglePopUp();
-								if(setCurrentPreviewProduct){
-									setCurrentPreviewProduct(null);
+    const [isRatingModalOpen, setRatingIsModalOpen] = useState(false);
+    const [productRatings, setProductsRatings] = useState([]);
 
-								}
-							}}
-						className="w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
-						/>
-					</div>
-					<div className="flex flex-col w-full space-x-4">
-						<h3 className="font-semibold">All Sizes</h3>
-							{productData && (
-								<SizeDisplay
-									productId={productData?._id}
-									SizesArray={productData?.size}
-									OnRefresh={() => {
-										fetchProductData();
-									}}
-								/>
-							)}
-							{/* Product details */}
-						<div className="col-span-10 p-6 bg-white rounded-lg shadow-lg">
-							<div className="mb-6 space-y-4">
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Descriptions:</h3>
-									{isEditing ? (
-										<textarea
-											type="text"
-											rows={4}
-											value={productData?.description}
-											placeholder='Enter product description'
-											onChange={(e) => handleInputChange(e, 'descriptions')}
-											className="text-lg w-2/3 font-medium text-gray-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-gray-600">
-											{productData?.description}
-										</p>
-									)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Specification:</h3>
-									{isEditing ? (
-										<textarea
-											type="text"
-											rows={4}
-											value={productData?.specification}
-											placeholder='Enter product specification'
-											onChange={(e) => handleInputChange(e, 'specification')}
-											className="text-lg w-2/3 font-medium text-gray-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-gray-600">
-											{productData?.specification}
-										</p>
-									)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Care Instructions:</h3>
-									{isEditing ? (
-										<textarea
-											type="text"
-											rows={4}
-											value={productData?.careInstructions}
-											placeholder='Enter product CareInstructions'
-											onChange={(e) => handleInputChange(e, 'careInstructions')}
-											className="text-lg w-2/3 font-medium text-gray-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-gray-600">
-											{productData?.careInstructions}
-										</p>
-									)}
-								</div>
-								{/* Price and Sale Price */}
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Price:</h3>
-									{isEditing ? (
-										<input
-											type="number"
-											value={productData?.price}
-											onChange={(e) => handleInputChange(e, 'price')}
-											className="text-lg w-2/3 font-medium text-green-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-green-600">
-											₹{productData?.price}
-										</p>
-									)}
-								</div>
+    const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
+    const [productData, setProductData] = useState(null);
+    const [isEditing, setIsEditing] = useState(false);  // New state for editing mode
+    const dispatch = useDispatch();
 
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Sale Price:</h3>
-									{isEditing ? (
-										<input
-											type="number"
-											value={productData?.salePrice}
-											onChange={(e) => handleInputChange(e, 'salePrice')}
-											className="text-lg w-2/3 font-medium text-red-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-red-600">
-											₹{productData?.salePrice}
-										</p>
-									)}
-								</div>
-								{/* Category and Subcategory */}
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
-									
-									{isEditing ? (
-										<div className='w-2/3'>
-											<CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
-												console.log("Changed category",e);
-												handleInputChange({target:{value:e}},"category")
-											}}/>
-										</div>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.category}</p>
-									)}
-								</div>
-								
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Subcategory:</h3>
-									{isEditing ? (
-										<div className='w-2/3'>
-											<CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
-												console.log("Changed category",e);
-												handleInputChange({target:{value:e}},"subCategory")
-											}}/>
-										</div>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.subCategory}</p>
-									)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Special Category:</h3>
-									{isEditing ? (
-										<div className='w-2/3'>
-											<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
-												console.log("Changed category",e);
-												handleInputChange({target:{value:e}},"specialCategory")
-											}}/>
-										</div>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.specialCategory}</p>
-									)}
-								</div>
-								<h1 className='text-ellipsis font-serif font-bold'>Product Dimension</h1>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Width:</h3>
-								{isEditing ? (
-									<input
-										type="number"
-										value={productData?.width}
-										onChange={(e) => handleInputChange(e, 'width')}
-										className="text-lg w-2/3 text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.width}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Height:</h3>
-								{isEditing ? (
-									<input
-										type="number"
-										value={productData?.height}
-										onChange={(e) => handleInputChange(e, 'height')}
-										className="text-lg w-2/3 text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.height}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Breadth:</h3>
-								{isEditing ? (
-									<input
-									type="number"
-									value={productData?.breadth}
-									onChange={(e) => handleInputChange(e, 'breadth')}
-									className="text-lg w-2/3 text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Length:</h3>
-								{isEditing ? (
-									<input
-										type="number"
-										value={productData?.length}
-										onChange={(e) => handleInputChange(e, 'length')}
-										className="text-lg w-2/3 text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.length}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Weight:</h3>
-								{isEditing ? (
-									<input
-									type="number"
-									value={productData?.weight}
-									onChange={(e) => handleInputChange(e, 'weight')}
-									className="text-lg w-2/3 text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.weight}</p>
-								)}
-								</div>
-							</div>
-							{/* Material and Additional Info */}
-							<div className="mb-6 space-y-4">
-								<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-semibold text-gray-700 text-lg">Material:</h3>
-								{isEditing ? (
-									<input
-									type="text"
-									value={productData?.material}
-									onChange={(e) => handleInputChange(e, 'material')}
-									className="text-lg w-2/3 text-gray-600"
-									/>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.material}</p>
-								)}
-								</div>
-								<div className="flex justify-between items-center border-b pb-4">
-									<h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
-									{isEditing ? (
-										<input
-											type="text"
-											value={productData?.gender}
-											onChange={(e) => handleInputChange(e, 'gender')}
-											className="text-lg w-2/3 text-gray-600"
-										/>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.gender}</p>
-									)}
-								</div>
-							</div>
-				
-							{/* Edit and Delete Buttons */}
-							<div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
-								<Button
-									className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
-									onClick={() => {
-											if (isEditing) {
-												UpdateEditedData(productData._id,productData)
-											}
-											setIsEditing(!isEditing); // Toggle editing state
-											if(setCurrentPreviewProduct){
-												setCurrentPreviewProduct(null);
+    const fetchProductData = async () => {
+        try {
+            if (!productDataId) return;
+            const response = await dispatch(getProductsById(productDataId));
+            // console.log("Product Data: ", response?.payload?.result);
+            setProductData(response?.payload?.result || null);
+        } catch (error) {
+            console.error("Error Fetching Product Data: ", error);
+        }
+    };
+    const addRatingForProduct = async(ratingData)=>{
+        try {
+            if (!productDataId) return;
+            if(!ratingData) return;
+            const response = await axios.post(`${BASE_URL}/api/product/add-rating`, {productId: productDataId, ratingData});
+            console.log("Rating Added: ", response.data);
+            toast.success("Rating added successfully!");
+            setRatingIsModalOpen(false);
+            fetchProductData();
+        } catch (error) {
+            console.error("Error Adding Rating: ", error);
+            toast.error("Failed to add rating!");
+        }
+    }
+    const removeRatingForProduct = async(ratingDataId)=>{
+        try {
+            if (!productDataId) return;
+            if(!ratingDataId) return;
+            const response = await axios.post(`${BASE_URL}/api/product/remove-rating`, {productId: productDataId, ratingDataId});
+            console.log("Rating Added: ", response.data);
+            toast.success("Rating added successfully!");
+            setRatingIsModalOpen(false);
+            fetchProductData();
+        } catch (error) {
+            console.error("Error Adding Rating: ", error);
+            toast.error("Failed to add rating!");
+        }
+    }
 
-											}
-									}}
-								>
-								{isEditing ? 'Save Product' : 'Edit Product'}
-									</Button>
-									{
-										isEditing && <Button
-											className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-											onClick={() => {
-												setIsEditing(!isEditing); // Toggle editing state
-											}}
-										>
-											Cancel Edit
-									</Button>
-								}
-								
-								<Button
-									className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
-									onClick={() => {
-										setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-									}}
-								>
-								Remove Product
-								</Button>
-							</div>
-							{/* Description and Bullet Points */}
-							<div className="mb-6 space-y-4">
-								{
-									isEditing ? <BulletPointsForm onChange={(e)=>{
-										// console.log("Editing Bullet Points: ",e);
-										setProductData({
-											...productData,
-											["bulletPoints"]: e,
-										});
-									}}/>:(
-										<>
-											{productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
-												<BulletPointView points={productData?.bulletPoints} />
-											)}
-										</>
-									)
-								}
-							</div>
-			
-							
-						</div>
-					</div>
-				</div>
-				<ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={()=>{
-					setIsConfirmDeleteWindow(false);	
-				}} onConfirm={()=>{
-					OnDelete(productData._id);
-					togglePopUp();
-					if(setCurrentPreviewProduct){
-						setCurrentPreviewProduct(null);
-					}
-					setIsConfirmDeleteWindow(false);
-				}}/>
-			</div>
-		);
+    useEffect(() => {
+        if (productDataId) {
+            fetchProductData();
+        }
+    }, [dispatch, productDataId]);
+
+    // Handle input changes
+    const handleInputChange = (e, field) => {
+        setProductData({
+            ...productData,
+            [field]: e.target.value,
+        });
+    };
+    const specialCategory = {options:addProductsFromElement.find(e => e.name === "specialCategory").options};
+    const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
+    const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
+    
+    const renderPopUpContent = () => (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto">
+                <div className="flex justify-between items-center mb-4">
+                    <div className="flex flex-col gap-2">
+                        <span>ProductId: {productData?.productId}</span>
+                        <h2 className="text-2xl font-bold">
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={productData?.title}
+                                    onChange={(e) => handleInputChange(e, 'title')}
+                                    className="text-2xl font-bold"
+                                />
+                            ) : (
+                                `Title: ${productData?.title}`
+                            )}
+                        </h2>
+                        <h3 className="text-xl font-normal">
+                            {isEditing ? (
+                                <input
+                                    type="text"
+                                    value={productData?.shortTitle}
+                                    onChange={(e) => handleInputChange(e, 'shortTitle')}
+                                    className="text-xl font-normal"
+                                />
+                            ) : (
+                                `Short Title: ${productData?.shortTitle}`
+                            )}
+                        </h3>
+                    </div>
+                    <XCircle
+                        onClick={(e) => {
+                            e.preventDefault();
+                            togglePopUp();
+                            if(setCurrentPreviewProduct){
+                                setCurrentPreviewProduct(null);
+
+                            }
+                        }}
+                    className="w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
+                    />
+                </div>
+                <div className="flex flex-col w-full space-x-4">
+                    <button onClick={(e)=>{
+                        e.preventDefault();
+                        setRatingIsModalOpen(true);
+                    }}>
+                        Ratings
+                    </button>
+                    <h3 className="font-semibold">All Sizes</h3>
+                    {productData && (
+                        <SizeDisplay
+                            productId={productData?._id}
+                            SizesArray={productData?.size}
+                            OnRefresh={() => {
+                                fetchProductData();
+                            }}
+                        />
+                    )}
+                    {/* Product details */}
+                    <div className="col-span-10 p-6 bg-white rounded-lg shadow-lg">
+                        <div className="mb-6 space-y-4">
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Descriptions:</h3>
+                                {isEditing ? (
+                                    <textarea
+                                        type="text"
+                                        rows={4}
+                                        value={productData?.description}
+                                        placeholder='Enter product description'
+                                        onChange={(e) => handleInputChange(e, 'descriptions')}
+                                        className="text-lg w-2/3 font-medium text-gray-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-gray-600">
+                                        {productData?.description}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Specification:</h3>
+                                {isEditing ? (
+                                    <textarea
+                                        type="text"
+                                        rows={4}
+                                        value={productData?.specification}
+                                        placeholder='Enter product specification'
+                                        onChange={(e) => handleInputChange(e, 'specification')}
+                                        className="text-lg w-2/3 font-medium text-gray-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-gray-600">
+                                        {productData?.specification}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Care Instructions:</h3>
+                                {isEditing ? (
+                                    <textarea
+                                        type="text"
+                                        rows={4}
+                                        value={productData?.careInstructions}
+                                        placeholder='Enter product CareInstructions'
+                                        onChange={(e) => handleInputChange(e, 'careInstructions')}
+                                        className="text-lg w-2/3 font-medium text-gray-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-gray-600">
+                                        {productData?.careInstructions}
+                                    </p>
+                                )}
+                            </div>
+                            {/* GST */}
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">GST:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={productData?.gst}
+                                        onChange={(e) => handleInputChange(e, 'gst')}
+                                        className="text-lg w-2/3 font-medium text-yellow-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-yellow-600">
+                                        {productData?.gst}%
+                                    </p>
+                                )}
+                            </div>
+                            {/* Price and Sale Price */}
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Price:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={productData?.price}
+                                        onChange={(e) => handleInputChange(e, 'price')}
+                                        className="text-lg w-2/3 font-medium text-green-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-green-600">
+                                        ₹{productData?.price}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Sale Price:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+                                        value={productData?.salePrice}
+                                        onChange={(e) => handleInputChange(e, 'salePrice')}
+                                        className="text-lg w-2/3 font-medium text-red-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-red-600">
+                                        ₹{productData?.salePrice}
+                                    </p>
+                                )}
+                            </div>
+                            {/* Category and Subcategory */}
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
+                                
+                                {isEditing ? (
+                                    <div className='w-2/3'>
+                                        <CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
+                                            console.log("Changed category",e);
+                                            handleInputChange({target:{value:e}},"category")
+                                        }}/>
+                                    </div>
+                                ) : (
+                                    <p className="text-lg text-gray-600">{productData?.category}</p>
+                                )}
+                            </div>
+                            
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Subcategory:</h3>
+                                {isEditing ? (
+                                    <div className='w-2/3'>
+                                        <CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
+                                            console.log("Changed category",e);
+                                            handleInputChange({target:{value:e}},"subCategory")
+                                        }}/>
+                                    </div>
+                                ) : (
+                                    <p className="text-lg text-gray-600">{productData?.subCategory}</p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Special Category:</h3>
+                                {isEditing ? (
+                                    <div className='w-2/3'>
+                                        <CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
+                                            console.log("Changed category",e);
+                                            handleInputChange({target:{value:e}},"specialCategory")
+                                        }}/>
+                                    </div>
+                                ) : (
+                                    <p className="text-lg text-gray-600">{productData?.specialCategory}</p>
+                                )}
+                            </div>
+                            <h1 className='text-ellipsis font-serif font-bold'>Product Dimension</h1>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Width:</h3>
+                            {isEditing ? (
+                                <input
+                                    type="number"
+                                    value={productData?.width}
+                                    onChange={(e) => handleInputChange(e, 'width')}
+                                    className="text-lg w-2/3 text-gray-600 border-2"
+                                />
+                            ) : (
+                                <p className="text-lg text-gray-600">{productData?.width}</p>
+                            )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Height:</h3>
+                            {isEditing ? (
+                                <input
+                                    type="number"
+                                    value={productData?.height}
+                                    onChange={(e) => handleInputChange(e, 'height')}
+                                    className="text-lg w-2/3 text-gray-600 border-2"
+                                />
+                            ) : (
+                                <p className="text-lg text-gray-600">{productData?.height}</p>
+                            )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Breadth:</h3>
+                            {isEditing ? (
+                                <input
+                                type="number"
+                                value={productData?.breadth}
+                                onChange={(e) => handleInputChange(e, 'breadth')}
+                                className="text-lg w-2/3 text-gray-600 border-2"
+                                />
+                            ) : (
+                                <p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
+                            )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Length:</h3>
+                            {isEditing ? (
+                                <input
+                                    type="number"
+                                    value={productData?.length}
+                                    onChange={(e) => handleInputChange(e, 'length')}
+                                    className="text-lg w-2/3 text-gray-600 border-2"
+                                />
+                            ) : (
+                                <p className="text-lg text-gray-600">{productData?.length}</p>
+                            )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Weight:</h3>
+                            {isEditing ? (
+                                <input
+                                type="number"
+                                value={productData?.weight}
+                                onChange={(e) => handleInputChange(e, 'weight')}
+                                className="text-lg w-2/3 text-gray-600 border-2"
+                                />
+                            ) : (
+                                <p className="text-lg text-gray-600">{productData?.weight}</p>
+                            )}
+                            </div>
+                        </div>
+                        {/* Material and Additional Info */}
+                        <div className="mb-6 space-y-4">
+                            <div className="flex justify-between items-center border-b pb-4">
+                            <h3 className="font-semibold text-gray-700 text-lg">Material:</h3>
+                            {isEditing ? (
+                                <input
+                                type="text"
+                                value={productData?.material}
+                                onChange={(e) => handleInputChange(e, 'material')}
+                                className="text-lg w-2/3 text-gray-600"
+                                />
+                            ) : (
+                                <p className="text-lg text-gray-600">{productData?.material}</p>
+                            )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+                                        value={productData?.gender}
+                                        onChange={(e) => handleInputChange(e, 'gender')}
+                                        className="text-lg w-2/3 text-gray-600"
+                                    />
+                                ) : (
+                                    <p className="text-lg text-gray-600">{productData?.gender}</p>
+                                )}
+                            </div>
+                        </div>
+            
+                        {/* Edit and Delete Buttons */}
+                        <div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
+                            <Button
+                                className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
+                                onClick={() => {
+                                        if (isEditing) {
+                                            UpdateEditedData(productData._id,productData)
+                                        }
+                                        setIsEditing(!isEditing); // Toggle editing state
+                                        if(setCurrentPreviewProduct){
+                                            setCurrentPreviewProduct(null);
+
+                                        }
+                                }}
+                            >
+                            {isEditing ? 'Save Product' : 'Edit Product'}
+                                </Button>
+                                {
+                                    isEditing && <Button
+                                        className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+                                        onClick={() => {
+                                            setIsEditing(!isEditing); // Toggle editing state
+                                        }}
+                                    >
+                                        Cancel Edit
+                                </Button>
+                            }
+                            
+                            <Button
+                                className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
+                                onClick={() => {
+                                    setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+                                }}
+                            >
+                            Remove Product
+                            </Button>
+                        </div>
+                        {/* Description and Bullet Points */}
+                        <div className="mb-6 space-y-4">
+                            {
+                                isEditing ? <BulletPointsForm onChange={(e)=>{
+                                    // console.log("Editing Bullet Points: ",e);
+                                    setProductData({
+                                        ...productData,
+                                        ["bulletPoints"]: e,
+                                    });
+                                }}/>:(
+                                    <>
+                                        {productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
+                                            <BulletPointView points={productData?.bulletPoints} />
+                                        )}
+                                    </>
+                                )
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={()=>{
+                setIsConfirmDeleteWindow(false);	
+            }} onConfirm={()=>{
+                OnDelete(productData._id);
+                togglePopUp();
+                if(setCurrentPreviewProduct){
+                    setCurrentPreviewProduct(null);
+                }
+                setIsConfirmDeleteWindow(false);
+            }}/>
+            <RatingDataView 
+                isOpen={isRatingModalOpen} 
+                onClose={()=>{
+                    setRatingIsModalOpen(false);
+                }} 
+                ratings={productData?.Rating || []} 
+                onDeleteRating={(ratingDataId)=>{
+                    removeRatingForProduct(ratingDataId)
+                }}
+                addNewRating={(data)=>{
+                    // console.log("New Rating: ", data);
+                    // OnRating(productId, data);
+                    addRatingForProduct(data);
+                }}
+            
+            />
+        </div>
+    );
 	
-		return <div className="container mx-auto w-screen p-6">{showPopUp && renderPopUpContent()}</div>;
+    return <div className="container mx-auto w-screen p-6">{showPopUp && renderPopUpContent()}</div>;
 };
   
 const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {

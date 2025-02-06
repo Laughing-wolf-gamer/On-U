@@ -1,6 +1,25 @@
 import express from 'express';
-import { createorder, createwishlist, getwishlist, addItemsToBag, getbag, updateqtybag, deletebag, deletewish, getOrderById, getallOrders, createPaymentOrder, verifyPayment, applyCouponToBag, removeCouponToBag, addItemsArrayToBag, addItemsArrayToWishList } from "../controller/ordercontroller.js";
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
+import { 
+    createorder, 
+    createwishlist, 
+    getwishlist, 
+    addItemsToBag, 
+    getbag, 
+    updateqtybag, 
+    deletebag, 
+    deletewish, 
+    getOrderById, 
+    getallOrders, 
+    createPaymentOrder, 
+    verifyPayment, 
+    applyCouponToBag, 
+    removeCouponToBag, 
+    addItemsArrayToBag, 
+    addItemsArrayToWishList 
+} from "../controller/ordercontroller.js";
+
+
 const route = express.Router();
 
 route.post('/orders/create_order',isAuthenticateuser, createorder)
@@ -17,16 +36,20 @@ route.put('/delete_wishlist',isAuthenticateuser,deletewish)
 
 
 
-route.post('/create_bag',isAuthenticateuser, addItemsToBag)
-route.post('/bag/addItemArrayBag',isAuthenticateuser,addItemsArrayToBag)
+
+
+/// bag routes...
+route.post('/bag/create_bag',isAuthenticateuser, addItemsToBag)// creating a bag
+
+route.post('/bag/addItemArrayBag',isAuthenticateuser,addItemsArrayToBag) // get set Local saved Items in bag 
 
 route.put('/bag/applyCoupon/:bagId',isAuthenticateuser,applyCouponToBag);
 
-
 route.patch('/bag/removeCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
+
 route.get('/bag/:userId',isAuthenticateuser, getbag)
-route.put('/update_bag',isAuthenticateuser, updateqtybag)
-route.put('/removeBagItem',isAuthenticateuser, deletebag)
+route.put('/bag/update_bag',isAuthenticateuser, updateqtybag)
+route.put('/bag/removeBagItem',isAuthenticateuser, deletebag)
 
 
 
