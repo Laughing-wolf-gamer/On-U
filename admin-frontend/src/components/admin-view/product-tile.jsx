@@ -1,7 +1,7 @@
 import React, { useState, memo, useEffect, useRef, useMemo } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
-import { capitalizeFirstLetterOfEachWord } from '@/config';
+import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '@/config';
 import { Badge } from '../ui/badge';
 
 const AdminProductTile = ({
@@ -41,11 +41,11 @@ const AdminProductTile = ({
             </h2>
             <div className="flex items-center justify-between mb-4">
                 <span className={`text-lg font-semibold ${product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'}`}>
-                    ₹{product?.price}
+                    ₹{formattedSalePrice(product?.price)}
                 </span>
                 {product?.salePrice > 0 && (
                     <span className="text-red-600 text-xl font-bold">
-                        ₹{product?.salePrice}
+                        ₹{formattedSalePrice(product?.salePrice)}
                     </span>
                 )}
             </div>

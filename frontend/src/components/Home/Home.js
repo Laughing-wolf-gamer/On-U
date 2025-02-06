@@ -462,7 +462,7 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
     }, [Wide_Screen_Section_3?.urls.length]);
   
     return (
-        <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
+        <div className="grid font-kumbsan grid-cols-2 justify-center items-center gap-3 p-2">
             {bannerLoading? (
                 // Skeleton Loader View when no URLs
                 Array(8).fill(0).map((_, index) => (

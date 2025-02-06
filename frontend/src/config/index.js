@@ -184,7 +184,9 @@ export const setWishListProductInfo = (product,productId)=>{
   console.log("wishListItem Addded or remove: ",wishListItem);
 }
 
-
+export const formattedSalePrice = (price)=>{
+  return price ? price.toFixed(0) : "0";
+}
 export const calculateDiscountPercentage = (originalPrice, salePrice) => {
     if (originalPrice > 0 && salePrice > 0) {
       return Math.round(((originalPrice - salePrice) / originalPrice) * 100);
@@ -213,9 +215,15 @@ export const footWearSizeChartData = [
   { size: '14', footLength: '11.875"', ukSize: '13', eurSize: '46' },
 ];
 export const clothingSizeChartData = [
-  { size: 'S', chest: '34-36"', waist: '28-30"' },
-  { size: 'M', chest: '38-40"', waist: '32-34"' },
-  { size: 'L', chest: '42-44"', waist: '36-38"' },
-  { size: 'XL', chest: '46-48"', waist: '40-42"' },
-  { size: 'XXL', chest: '50-52"', waist: '44-46"' },
+  { size: 'XS', chest: '32-34"', waist: '26-28"', hips: '34-36"' },
+  { size: 'S', chest: '34-36"', waist: '28-30"', hips: '36-38"' },
+  { size: 'M', chest: '38-40"', waist: '32-34"', hips: '38-40"' },
+  { size: 'L', chest: '42-44"', waist: '36-38"', hips: '40-42"' },
+  { size: 'XL', chest: '46-48"', waist: '40-42"', hips: '42-44"' },
+  { size: 'XXL', chest: '50-52"', waist: '44-46"', hips: '44-46"' },
+  { size: '3XL', chest: '54-56"', waist: '48-50"', hips: '46-48"' },
+  { size: '4XL', chest: '58-60"', waist: '52-54"', hips: '48-50"' },
+  { size: '5XL', chest: '62-64"', waist: '56-58"', hips: '50-52"' },
+  { size: '6XL', chest: '66-68"', waist: '60-62"', hips: '52-54"' },
 ];
+

@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import HomeProductsPreview from './HomeProductsPreview';
-import { calculateDiscountPercentage, generateArrayOfRandomItems } from '../../config';
+import { calculateDiscountPercentage, formattedSalePrice, generateArrayOfRandomItems } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { getwishlist } from '../../action/orderaction';
@@ -101,7 +101,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                         <div className="text-xs md:text-sm font-light md:font-medium font-sans text-slate-700">
                                             {p.salePrice && p.salePrice > 0 && (
                                                 <span className="text-sm md:text-base font-bold text-gray-900">
-                                                    ₹{p.salePrice}
+                                                    ₹{formattedSalePrice(p.salePrice)}
                                                 </span>
                                             )}
                                         </div>
@@ -109,11 +109,11 @@ const ProductPreviewFull = ({ product ,user}) => {
                                         <div className="text-xs md:text-sm font-light md:font-medium font-sans text-slate-700 hover:animate-bounce">
                                             {p.salePrice && p.salePrice > 0 ? (
                                                 <span className="line-through text-gray-500">
-                                                    ₹{p.price}
+                                                    ₹{formattedSalePrice(p.price)}
                                                 </span>
                                             ) : (
                                                 <span className="text-xs md:text-sm font-normal md:font-medium font-sans">
-                                                    ₹{p.price}
+                                                    ₹{formattedSalePrice(p.price)}
                                                 </span>
                                             )}
                                         </div>

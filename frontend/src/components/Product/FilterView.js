@@ -550,7 +550,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         <Fragment>
             <div className='space-y-4 ml-4'>
                 {/* Gender Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-1'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
                     <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
                     {gendernewarray && gendernewarray.length > 0 && gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -584,7 +584,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 {/* Categories Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
                     {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -618,7 +618,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 {/* Subcategories Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
                     {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
                         // Check if the current subcategory 'e' exists in the URL parameters
@@ -649,7 +649,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 {/* Size Filter */}
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
                     {size && size.length > 0 && size.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -682,7 +682,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-normal mb-2'>SPECIAL CATEGORY</h1>
                     {specialCategorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -715,7 +715,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         );
                     })}
                 </ul>
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className='font1 text-base font-normal mb-2'>DISCOUNT</h1>
                     {discountedPercentageAmount.map((amount, i) => {
                         // Get the 'discountedAmount' value from the URL
@@ -753,7 +753,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
-                <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative`}>
+                <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative`}>
                     <h1 className="font1 text-base font-semibold mb-2">COLOR</h1>
                     {AllProductsColor && AllProductsColor.length > 0 && 
                         AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
@@ -930,7 +930,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
         }
     };
     return (
-      <div className="pl-8 border-b-[1px] border-slate-200 px-8 py-4 overflow-hidden relative">
+      <div className="border-b-[1px] border-slate-900 px-7 py-4 overflow-hidden relative">
         <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
         <CustomSlider
             value={price}

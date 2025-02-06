@@ -8,7 +8,7 @@ import './bag.css';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import Emptybag from './Emptybag';
-import { BASE_API_URL, capitalizeFirstLetterOfEachWord, headerConfig } from '../../config';
+import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig } from '../../config';
 import { X } from 'lucide-react';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
@@ -333,12 +333,12 @@ const Bag = () => {
                                                 <div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
                                                     {item?.productId?.salePrice ? (
                                                         <>
-                                                        <span>₹{Math.round(item.productId.salePrice)}</span>
+                                                        <span>₹{Math.round(formattedSalePrice(item?.productId?.salePrice))}</span>
                                                         <span className="line-through text-[#94969f]">₹{item.productId.price}</span>
-                                                        <span className="text-[#f26a10] font-normal">(₹{-Math.round(item.productId?.salePrice / item.productId?.price * 100 - 100)}% OFF)</span>
+                                                        <span className="text-[#f26a10] font-normal">(₹{calculateDiscountPercentage(item.productId?.price,item.productId?.salePrice)}% OFF)</span>
                                                         </>
                                                     ) : (
-                                                        <span>₹ {item.productId.price}</span>
+                                                        <span>₹ {Math.round(formattedSalePrice(item.productId.price))}</span>
                                                     )}
                                                 </div>
                                                 <div className="mt-4 flex items-center space-x-4">
@@ -388,7 +388,7 @@ const Bag = () => {
                                         <div className="flex justify-between text-sm text-gray-700 mb-5">
                                             <span>Convenience Fee</span>
                                             <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                            ₹{convenienceFees}
+                                                ₹{convenienceFees}
                                             </span>
                                         </div>
                                         <div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-2xl font-semibold transition-colors">
@@ -539,12 +539,12 @@ const Bag = () => {
                                                 <div className="flex items-center space-x-4 text-sm text-blue-500 mt-2">
                                                     {item?.ProductData?.salePrice ? (
                                                     <>
-                                                        <span>₹{Math.round(item.ProductData.salePrice)}</span>
-                                                        <span className="line-through text-gray-400">₹{item.ProductData.price}</span>
-                                                        <span className="text-orange-600">({Math.round(100 - (item.ProductData?.salePrice / item.ProductData?.price) * 100)}% OFF)</span>
+                                                        <span>₹{Math.round(formattedSalePrice(item?.ProductData?.salePrice))}</span>
+                                                        <span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(item.ProductData.price))}</span>
+                                                        <span className="text-orange-600">({calculateDiscountPercentage(item.ProductData?.price,item.ProductData?.salePrice)}% OFF)</span>
                                                     </>
                                                     ) : (
-                                                    <span>₹ {item.ProductData.price}</span>
+                                                    <span>₹ {Math.round(formattedSalePrice(item.ProductData.price))}</span>
                                                     )}
                                                 </div>
                                                 <div className="mt-4 flex items-center space-x-4">
@@ -579,7 +579,7 @@ const Bag = () => {
                                     <div className="space-y-5">
                                         <div className="flex justify-between text-sm text-gray-700">
                                             <span>Total MRP</span>
-                                            <span>₹{bag?.totalMRP || totalSellingPrice}</span>
+                                            <span>₹{Math.round(formattedSalePrice(bag?.totalMRP || totalSellingPrice))}</span>
                                         </div>
                                         <div className="flex justify-between text-sm text-gray-700">
                                             <span>You Saved</span>
@@ -587,8 +587,8 @@ const Bag = () => {
                                         </div>
                                         <div className="flex justify-between text-sm text-gray-700">
                                             <span>Coupon</span>
-                                            <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-                                            {bag?.Coupon?.CouponCode || "No Coupon Applied"}
+                                                <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+                                                {bag?.Coupon?.CouponCode || "No Coupon Applied"}
                                             </span>
                                         </div>
                                         <div className="flex justify-between text-sm text-gray-700 mb-5">

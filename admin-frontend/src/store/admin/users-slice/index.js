@@ -33,5 +33,14 @@ export const getAllCustomerWithDetails = createAsyncThunk('/users/getAllUsersWit
         return null;
     }
 })
+export const removeCustomer = createAsyncThunk('/users/removeCustomer',async ({removingCustomerArray})=>{
+    try {
+        const response = await axios.patch(`${BASE_URL}/admin/customer/del`,{removingCustomerArray},Header());
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+})
 
 export default adminCustomerSlice.reducer;

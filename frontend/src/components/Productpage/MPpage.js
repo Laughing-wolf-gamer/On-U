@@ -13,11 +13,11 @@ import Footer from '../Footer/Footer';
 import img1 from '../images/1.webp'
 import img2 from '../images/2.webp'
 import img3 from '../images/3.webp'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Bus, Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -400,7 +400,7 @@ const MPpage = () => {
     return (
         <Fragment>
             
-            <div ref={scrollContainerRef} className="w-screen font-sans h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+            <div ref={scrollContainerRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
 
                 {loading === false ? (
                     <div>
@@ -472,7 +472,7 @@ const MPpage = () => {
                                                     width="100%"
                                                     height="100%"
                                                 />
-                                                <div className="h-[30px] bg-white"></div>
+                                                {/* <div className="h-[30px] bg-white"></div> */}
                                             </div>
                                         ) : (
                                             // Render image using LazyLoadImage
@@ -484,7 +484,7 @@ const MPpage = () => {
                                                     loading="lazy"
                                                     className="w-full h-full object-contain"
                                                 />
-                                                <div className="h-[30px] bg-white"></div>
+                                                {/* <div className="h-[30px] bg-white"></div> */}
                                             </div>
                                         )
                                         ) : (
@@ -507,12 +507,12 @@ const MPpage = () => {
                             <div className="border-b border-gray-600 pb-2 pt-2 bg-white">
                                 <h1 className="font1 text-lg font-semibold text-slate-800">
                                     <span className="mr-4 font-bold">
-                                        ₹ {Math.round(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
+                                        ₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                     </span>
                                     {product?.salePrice && product?.salePrice > 0 && (
                                         <Fragment>
                                             <span className="line-through mr-4 text-slate-500 font-light">
-                                                ₹ {product?.price}
+                                                ₹ {formattedSalePrice(product?.price)}
                                             </span>
                                             <span className="text-gray-700">
                                                 {calculateDiscountPercentage(product.price,product.salePrice)} % OFF
@@ -521,72 +521,59 @@ const MPpage = () => {
                                         </Fragment>
                                     )}
                                 </h1>
-                                <h1 className="text-[#0db7af] font-semibold text-sm mt-1">
+                                {/* <h1 className="text-[#0db7af] font-semibold text-sm mt-1">
                                     inclusive of all taxes
-                                </h1>
-                                <h1 className="font1 text-base font-semibold mt-2 mb-2">SELECT SIZE</h1>
-                                <div className='w-full flex flex-col justify-start items-center mt-3 py-5 mx-auto'>
-                                    {/* Size Selection */}
-                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 sm:space-x-5">
-                                    {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                        <div key={`size_${index}_${size._id}`}
-                                            style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}}
-                                            className={`flex relative flex-col items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-transform duration-300 border-[1px] border-gray-400 ease-in-out 
-                                            ${currentSize?._id === size?._id ? " bg-gray-600 text-white scale-110" : "bg-slate-100 border-2 text-black"}`}
-                                            onClick={() => { handleSetNewImageArray(size); }}
-                                        >
-                                            <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                                {size.label}
-                                            </button>
-                                            {size?.quantity <= 0 && (
-                                                <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                    <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
-                                                        {/* Diagonal Line 1 */}
-                                                        <div className="absolute w-[5px] h-[50px] bg-red-600 rounded-md opacity-80 transform rotate-45"></div>
-                                                        {/* Diagonal Line 2 */}
-                                                        <div className="absolute w-[5px] h-[50px] bg-red-600 rounded-md opacity-80 transform -rotate-45"></div>
-                                                    </div>
-                                            </div>
-                                            )}
-                                        </div>
-                                    ))}
-                                    </div>
-
-                                    {/* Color Selection */}
-                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit mt-5 gap-1">
-                                    {selectedColor && selectedColor.length > 0 ? (
-                                        selectedColor.map((color, i) => (
-                                        <div style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}} 
-                                            key={`color_${i}`} 
-                                            className={`flex relative flex-col p-1 items-center justify-center transition-transform duration-300 ease-in-out 
-                                                ${color.quantity <= 10 ? "h-fit w-14" : "h-fit w-fit"}`}
-                                            onClick={(e) => { setCurrentColor(color); handleSetColorImages(color); }}>
-                                                <button
-                                                    disabled={color.quantity <= 0}
-                                                    
-                                                    className={`${color.quantity <= 0 ?
-                                                        `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
-                                                        `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                                                        ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
-                                                    title={color?.quantity || color?.label || "Color"}
-                                                >
+                                </h1> */}
+                                <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
+                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>SELECTED COLOR: <span className='font-normal'>{currentColor?.name}</span></h3></div>
+                                    <div className="w-full grid grid-cols-4 justify-start items-center gap-3">
+                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => (
+                                            <div key={`color_${index}_${color._id}`}
+                                                style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}}
+                                                className={`flex relative flex-col w-14 h-14 items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                ${currentColor?._id === color?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
+                                                onClick={() => { setCurrentColor(color); handleSetColorImages(color); }}
+                                            >
+                                                <button className={`w-full h-full rounded-full flex ${currentColor?._id === color?._id ? "p-1":""} items-center justify-center`}>
                                                     <div style={{ backgroundColor: color?.label || color._id}} className='w-full h-full rounded-full'></div>
                                                 </button>
-                                                {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
-                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                        <div className="absolute top-0 left-0 w-full h-full flex justify-center items-center overflow-hidden">
-                                                            {/* Diagonal Line 1 */}
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 rounded-md opacity-80 transform rotate-45"></div>
-                                                            {/* Diagonal Line 2 */}
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 rounded-md opacity-80 transform -rotate-45"></div>
+                                                {color?.quantity <= 0 && (
+                                                    <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                        <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                            <span>Out of Stock</span>
                                                         </div>
-                                                </div>
+                                                    </div>
                                                 )}
-                                        </div>
-                                        ))
-                                    ) : (
-                                        <p className="text-black">No colors available</p>
-                                    )}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                                <div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
+                                    <div className='w-full flex justify-between items-center'>
+                                        <h3 className='text-sm text-left'>SELECTED SIZE: <span className='font-normal'>{currentSize?.label}</span>
+                                        </h3>
+                                        <SizeChartModal sizeChartData={clothingSizeChartData} />
+                                    </div>
+                                    <div className="w-full grid grid-cols-4 justify-start items-center gap-3">
+                                        {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
+                                            <div key={`size_${index}_${size._id}`}
+                                                style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}}
+                                                className={`flex relative flex-col w-14 h-14 items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                ${currentSize?._id === size?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
+                                                onClick={() => { handleSetNewImageArray(size); }}
+                                            >
+                                                <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
+                                                    {size.label}
+                                                </button>
+                                                {size?.quantity <= 0 && (
+                                                    <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                        <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                            <span>Out of Stock</span>
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        ))}
                                     </div>
                                 </div>
                             </div>
@@ -608,42 +595,46 @@ const MPpage = () => {
                                 }
                             </div>
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
-                                <div className='col-span-3'>
-                                    <div className='absolute bg-[#0db7af] font1 px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
-                                    <svg viewBox="0 0 24 25" className='w-[75px] p-2 absolute bottom-0'><g fill="none" fill-rule="evenodd"><path d="M0 1h24v24H0z"></path><path d="M21.872 12.843l-.68 3.849a1.949 1.949 0 00-.398-.819c-.377-.447-.925-.693-1.549-.693-1.024 0-1.98.669-2.395 1.601l1.159-6.571h1.703c.7 0 1.31.265 1.713.746.415.494.573 1.164.447 1.887m-3.238 5.812c-.297 0-.55-.108-.715-.306-.172-.204-.236-.486-.183-.795.123-.698.816-1.288 1.51-1.288.296 0 .55.108.716.306.17.204.235.486.18.794-.123.699-.814 1.289-1.508 1.289m-11.308 0c-.295 0-.55-.108-.715-.306-.171-.204-.236-.486-.18-.794.122-.699.814-1.289 1.508-1.289.296 0 .55.108.714.306.172.204.237.486.182.794-.123.699-.815 1.289-1.509 1.289m14.932-8.397c-.616-.731-1.518-1.134-2.546-1.134H18.2l.262-1.487A.546.546 0 0017.927 7H6.417a.543.543 0 100 1.086H17.28l-1.557 8.832h-5.8a1.965 1.965 0 00-.438-1.045c-.376-.447-.926-.693-1.548-.693-1.074 0-2.074.734-2.454 1.738h-.356l.143-.811a.543.543 0 10-1.069-.188l-.256 1.447a.546.546 0 00.535.637h.86c.045.389.194.753.438 1.045.375.446.925.693 1.548.693 1.075 0 2.075-.734 2.454-1.738h6.867c.044.389.194.752.439 1.045.375.446.925.693 1.547.693 1.075 0 2.075-.734 2.454-1.738h.52c.264 0 .49-.189.534-.449l.799-4.523c.184-1.043-.058-2.028-.683-2.773" fill="#535766"></path><path d="M9.812 9.667c0-.3-.243-.543-.543-.543H1.543a.544.544 0 000 1.086h7.726c.3 0 .543-.243.543-.543M9.387 12.074c0-.3-.243-.543-.543-.543h-5.82a.543.543 0 100 1.086h5.82c.3 0 .543-.243.543-.543M8.42 13.938H4.502a.543.543 0 100 1.086H8.42a.543.543 0 100-1.086" fill="#535766"></path></g></svg>
-                                </div>
-                                <div className='col-span-9'>
-                                    <h1 className='text-sm font1 font-semibold'>Flat 300 Off + Free Shipping on first order</h1>
-                                    <h1 className='text-sm font1 text-slate-500 mt-2'>Applicable on your first order. <br />  Use code: ONU300</h1>
-                                </div>
+                            <div className='col-span-12 md:col-span-3'>
+                                <div className='absolute bg-[#0db7af] font1 px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
+                                <Bus/>
+                            </div>
+                            <div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
+                                <h1 className='text-sm font1 font-semibold'>RETURN WITH IN 45 DAYS</h1>
+                            </div>
+                            </div>
 
+                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
+                            <div className="col-span-1 text-center text-xs text-slate-500">
+                                <img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
+                                Genuine Products
                             </div>
-                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3'>
-                                <div className="col-span-1 text-center text-xs text-slate-500 ">
-                                    <img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
-                                    Genuine Products
-                                </div>
-                                <div className="col-span-1 text-center text-xs text-slate-500 ">
-                                    <img src={img2} alt="Product_images" className='w-[75px] mx-auto' />
-                                    7 step Quality Check
-                                </div>
-                                <div className="col-span-1 text-center text-xs text-slate-500 ">
-                                    <img src={img3} alt="Product_images" className='w-[75px] mx-auto' />
-                                    Secure Payments
-                                </div>
+                            <div className="col-span-1 text-center text-xs text-slate-500">
+                                <img src={img2} alt="Product_images" className='w-[75px] mx-auto' />
+                                7 step Quality Check
                             </div>
+                            <div className="col-span-1 text-center text-xs text-slate-500">
+                                <img src={img3} alt="Product_images" className='w-[75px] mx-auto' />
+                                Secure Payments
+                            </div>
+                            </div>
+
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                                <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
-                                <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
-                                <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
+                            <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
+                            <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
+                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                             </div>
-                            <div className='h-fit w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}><ShoppingBag className='mr-4' /><span>BUY NOW</span></button>
+
+                            <div className='h-full w-full justify-center items-center flex flex-col space-y-5'>
+                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}>
+                                    <ShoppingBag className='mr-4' /><span>BUY NOW</span>
+                                </button>
                             </div>
+
                             <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
                                 <div className={`grid grid-cols-12 w-full font1 relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
                                     <div className="col-span-2 flex justify-center items-center p-1">
-                                        <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+                                        <button className="bg-gray-50 text-center w-12 h-12 border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
                                             {
                                                 loadingWishList ? <Fragment>
                                                     <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
@@ -680,7 +671,7 @@ const MPpage = () => {
                                             {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
                                         </div>
                                     </div>
-                                    {hasPurchased && <Fragment>
+                                    {!hasPurchased && <Fragment>
                                         {/* Review Input Section */}
                                         <div className='w-full flex flex-col justify-start items-center'>
                                             <div className='mt-6 w-full max-w-3xl'>
@@ -702,25 +693,6 @@ const MPpage = () => {
 
                                                     {/* Star Rating Input */}
                                                     <div className='mb-4'>
-                                                        <label htmlFor='starRating' className='block text-sm font-semibold text-gray-700'>Rating:</label>
-                                                        {/* <input
-                                                            onChange={(e)=> setRatingData({...ratingData,rating:e.target.value})}
-                                                            id='starRating'
-                                                            name='starRating'
-                                                            type='number'
-                                                            min='1'
-                                                            max='5'
-                                                            className='mt-2 p-3 w-full border border-gray-300 rounded-md'
-                                                            placeholder='Rate from 1 to 5'
-                                                        /> */}
-                                                        {/* <CustomSlider
-                                                            value = {ratingData?.rating}
-                                                            onChange = {(event,newValue)=> setRatingData({...ratingData,rating:newValue}) }
-                                                            valueLabelDisplay='auto'
-                                                            aria-labelledby='range-slider'
-                                                            min={1}
-                                                            max={5}
-                                                        /> */}
                                                         <StarRatingInput onChangeValue={(value) =>{
                                                             setRatingData({...ratingData,rating:value})
                                                         }}/>

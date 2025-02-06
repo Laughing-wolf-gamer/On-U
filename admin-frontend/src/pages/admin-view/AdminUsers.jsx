@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { Table } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { getAllCustomerWithDetails } from "@/store/admin/users-slice";
+import { getAllCustomerWithDetails, removeCustomer } from "@/store/admin/users-slice";
 import CustomerDetailsSingle from "@/components/admin-view/CustomerDetailsSingle";
 import { useDispatch, useSelector } from "react-redux";
 
@@ -17,6 +17,7 @@ const UserTable = () => {
         dispatch(getAllCustomerWithDetails());
     };
     const handleChangeCustomer = (id) =>{
+
         if(deletingCustomer.includes(id)){
             setDeletingCustomer(deletingCustomer.filter(current => current !== id))
         }else{
@@ -33,7 +34,12 @@ const UserTable = () => {
         setSelectedCustomer(customer);
         setIsModalOpen(true);
     };
-
+    const HandleDeleteCustomer = async (e)=>{
+        e.preventDefault();
+        const response = await dispatch(removeCustomer({removingCustomerArray:deletingCustomer}));
+        console.log("Response: ", response);
+        // setDeletingCustomer([]);
+    }
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedCustomer(null);
@@ -42,6 +48,14 @@ const UserTable = () => {
     return (
         <div className="py-6 px-4 sm:px-6 lg:px-8">
             <div className="overflow-x-auto">
+                {
+                    deletingCustomer.length > 0 && <div className="flex justify-between items-center mb-4">
+                        <Button onClick ={HandleDeleteCustomer} variant = {"destructive"}>
+                            Delete Users
+                        </Button>
+                    </div>
+                }
+                
                 <Table className="min-w-full table-auto">
                     <thead>
                     <tr className="text-sm font-semibold text-gray-700">
@@ -79,7 +93,7 @@ const UserTable = () => {
                                     onClick={() => openModal(customer)}
                                     className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
                                 >
-                                View Details
+                                    View Details
                                 </Button>
                             </td>
                         </tr>

@@ -10,7 +10,7 @@ import Single_product from '../Product/Single_product'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, getLocalStorageBag, getRandomItem} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getRandomItem} from '../../config'
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
@@ -20,6 +20,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
 import toast from 'react-hot-toast'
 import StarRatingInput from './StarRatingInput'
+import ShareView from './ShareView'
 
 const reviews = [
     {
@@ -388,7 +389,7 @@ const Ppage = () => {
     console.log("current Scroll Amount: ",scrollPosition);
     
     return (
-        <div ref={scrollableDivRef} className="w-screen font-sans h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
                     <div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2'>
@@ -424,47 +425,23 @@ const Ppage = () => {
                                 <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
                                     <h1 className='font1 text-xl font-semibold text-slate-800'>
                                         <span className="mr-4 font-bold">
-                                            ₹ {Math.round(product?.salePrice > 0 ? product?.salePrice : product?.price)}
+                                            ₹ {formattedSalePrice(product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                         </span>
                                         {product?.salePrice && product?.salePrice > 0 && (
                                             <Fragment>
-                                                <span className="line-through mr-4 font-extralight text-slate-500">₹ {product?.price}</span>
+                                                <span className="line-through mr-4 font-extralight text-slate-500">₹ {formattedSalePrice(product?.price)}</span>
                                                 <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
                                             </Fragment>
                                         )}
                                     </h1>
-                                    <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
+                                    {/* <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
                                         inclusive of all taxes
-                                    </h1>
+                                    </h1> */}
                                 </div>
-
-                                {/* Size and Color Selection */}
-                                <div className="w-full flex flex-col mt-3 py-5 mx-auto">
-                                    {/* Size Selection */}
-                                    <div className="w-full flex flex-wrap justify-start items-center max-h-fit space-x-4 text-xl sm:space-x-5 font-sans font-extrabold">
-                                        {product?.size?.map((size, index) => (
-                                            <div
-                                                style={{ pointerEvents: size.quantity <= 0 ? 'none' : 'all' }}
-                                                key={`size_${index}_${size._id}`}
-                                                className={`flex flex-col items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
-                                                    ${currentSize?._id === size?._id ? "border-2 bg-gray-600 text-white scale-110" : "bg-gray-200 text-gray-900"}`}
-                                                onClick={() => { handleSetNewImageArray(size); }}
-                                            >
-                                                <button className="w-8 h-8 rounded-full flex items-center justify-center">
-                                                    {size.label}
-                                                </button>
-                                                {size?.quantity <= 0 && (
-                                                    <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                        <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform rotate-45"></div>
-                                                        <div className="absolute w-[5px] h-[56px] bg-red-700 opacity-80 transform -rotate-45"></div>
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-
-                                    {/* Color Selection */}
-                                    <div className="w-full flex flex-wrap justify-start items-center mt-2 gap-1">
+                                {/* Color Selection */}
+                                <div className="w-full flex flex-col mt-2 py-2 space-y-2 mx-auto">
+                                    <h3 className='text-xl'>Selected Color: <span className='font-semibold'>{currentColor?.name}</span></h3>
+                                    <div className="w-full grid grid-cols-6 justify-start items-start gap-3 font-extrabold">
                                         {selectedColor && selectedColor.length > 0 ? (
                                             selectedColor.map((color, i) => (
                                                 <div
@@ -475,20 +452,21 @@ const Ppage = () => {
                                                     onClick={(e) => { setCurrentColor(color); handelSetColorImages(color); }}
                                                 >
                                                     <button
-                                                        disabled={color.quantity <= 0}
-                                                        
-                                                        className={`${color.quantity <= 0 ?
-                                                            `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
-                                                            `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                                                            ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
-                                                        title={color?.quantity || color?.label || "Color"}
+                                                    disabled={color.quantity <= 0}
+                                                    className={`${color.quantity <= 0 ?
+                                                        `w-14 h-14 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
+                                                        `w-14 h-14 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                                                        ${currentColor?._id === color?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
+                                                    title={color?.quantity || color?.label || "Color"}
                                                     >
-                                                        <div style={{ backgroundColor: color?.label || color._id}} className='w-full h-full rounded-full'></div>
+                                                    <div style={{ backgroundColor: color?.label || color._id }} className="w-full h-full rounded-full"></div>
                                                     </button>
-                                                    {color?.quantity <= 0 || currentSize?.quantity <= 0 && (
-                                                        <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center">
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform rotate-45"></div>
-                                                            <div className="absolute w-[5px] h-[40px] bg-red-600 opacity-80 transform -rotate-45"></div>
+                                                    {/* Out of Stock Label */}
+                                                    {color?.quantity <= 0 && (
+                                                        <div className="absolute bottom-0 w-full flex justify-center items-center pb-1">
+                                                            <div className="text-white justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-5 py-1 whitespace-nowrap">
+                                                                <span>Out of Stock</span>
+                                                            </div>
                                                         </div>
                                                     )}
                                                 </div>
@@ -497,12 +475,45 @@ const Ppage = () => {
                                             <p className="text-black">No colors available</p>
                                         )}
                                     </div>
+
                                 </div>
 
-                                {/* Size Chart Button */}
-                                <div className='w-fit'>
-                                    <SizeChartModal sizeChartData={clothingSizeChartData} />
+                                {/* Size and Color Selection */}
+                                <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
+                                    {/* Size Selection */}
+                                    <div className='w-full flex justify-between items-center'>
+                                        <h3 className='text-xl'>Selected size: <span className='font-semibold'>{currentSize?.label}</span></h3>
+                                        <SizeChartModal sizeChartData={clothingSizeChartData} />
+                                    </div>
+                                    <div className="w-full grid grid-cols-6 justify-start items-start gap-3 font-extrabold">
+                                        {product && product?.size && product?.size.length > 0 && product?.size.map((size, index) => (
+                                            <div
+                                            style={{ pointerEvents: size.quantity <= 0 ? 'none' : 'all' }}
+                                            key={`size_${index}_${size._id}`}
+                                            className={`flex flex-col w-16 h-16 items-center relative justify-center rounded-full p-3 shadow-md gap-2 transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                            ${currentSize?._id === size?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
+                                            onClick={() => { handleSetNewImageArray(size); }}
+                                            >
+                                            <button className="w-full h-full rounded-full flex items-center justify-center">
+                                                {size.label}
+                                            </button>
+                                            {/* Out of Stock Label */}
+                                            {size?.quantity <= 0 && (
+                                                <div className="absolute bottom-[-10px] w-full flex justify-center items-center pb-1">
+                                                    <div className="text-white justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-5 py-1 whitespace-nowrap">
+                                                        <span>Out of Stock</span>
+                                                    </div>
+                                                </div>
+                                            )}
+                                            </div>
+                                        ))}
+                                    </div>
+
                                 </div>
+
+
+                                {/* Size Chart Button */}
+                                
 
                                 {/* Add to Cart & Wishlist Buttons */}
                                 <PincodeChecker productId={product?._id} />
@@ -554,21 +565,21 @@ const Ppage = () => {
                         
                         {/* {similar && similar.length > 0 && (
                         )} */}
-                        {
-                            product && <div className='w-full justify-center items-center flex flex-col mb-4'>
-                                <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
-                                <div className='w-full flex justify-start items-start'>
-                                    <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-6 mx-auto'>
-                                        {Array(20).fill(0).map((pro, index) => (
-                                            <Single_product key={index} pro={product} user={user} />
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                        }
                     </div>
                 :
                 <Loader />
+            }
+            {
+                product && <div className='w-full justify-center items-center flex flex-col mb-4 2xl:px-0 px-6'>
+                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
+                    <div className='w-full flex justify-center items-center'>
+                        <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
+                            {Array(18).fill(0).map((pro, index) => (
+                                <Single_product key={index} pro={product} user={user} />
+                            ))}
+                        </ul>
+                    </div>
+                </div>
             }
             <Footer/>
         </div>
@@ -639,7 +650,7 @@ const AverageRatingView = ({ ratings }) => {
     );
 };
 
-const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,PostRating}) => {
+const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,PostRating,hasPurchased}) => {
     // State to manage selected tab
     const [selectedTab, setSelectedTab] = useState('details');
 
@@ -716,31 +727,46 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                 {/* Reviews Tab */}
                 {selectedTab === 'reviews' && (
                     <div className="space-y-6 w-full justify-between justify-self-center items-center flex flex-col px-5">
-                        
                         {/* 2x2 Grid Layout */}
-                        <div className="flex flex-row justify-between w-full items-center">
-                            {/* Left: Reviews List */}
-                            <div className='w-full flex flex-col justify-start items-start'>
-                                <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
-                                <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
-                                    {product && product.Rating && product.Rating.length > 0 ? (
-                                        <ProductReviews reviews={/* product.Rating */ reviews} />
-                                    ) : (
-                                        <ProductReviews reviews={reviews} />
-                                    )}
+                        {
+                            hasPurchased ? <div className="flex flex-row justify-between w-full items-center">
+                                {/* Left: Reviews List */}
+                                <div className='w-full flex flex-col justify-start items-start'>
+                                    <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
+                                    <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
+                                        {product && product.Rating && product.Rating.length > 0 ? (
+                                            <ProductReviews reviews={/* product.Rating */ reviews} />
+                                        ) : (
+                                            <ProductReviews reviews={reviews} />
+                                        )}
+                                    </div>
                                 </div>
-                            </div>
+                                {/* Right: Review Input Form */}
+                                <div className="w-full">
+                                    <ReviewInputView
+                                        setRatingData={setRatingData}
+                                        ratingData={ratingData}
+                                        isPostingReview={isPostingReview}
+                                        PostRating={PostRating}
+                                    />
+                                </div>
+                            </div>:(<div className="flex flex-row justify-between w-full items-center">
+                                    {/* Left: Reviews List */}
+                                    <div className='w-full flex flex-col justify-start items-start'>
+                                        <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
+                                        <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
+                                            {product && product.Rating && product.Rating.length > 0 ? (
+                                                <ProductReviews reviews={/* product.Rating */ reviews} />
+                                            ) : (
+                                                <ProductReviews reviews={reviews} />
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
 
-                            {/* Right: Review Input Form */}
-                            <div className="w-full">
-                                <ReviewInputView
-                                    setRatingData={setRatingData}
-                                    ratingData={ratingData}
-                                    isPostingReview={isPostingReview}
-                                    PostRating={PostRating}
-                                />
-                            </div>
-                        </div>
+                            )
+                        }
+                        
                     </div>
                 )}
 
@@ -798,10 +824,10 @@ const NewLeftSideImageContent = ({
     console.log("Selected Image: ", selectedImage);
 
     return (
-        <div className='flex bg-white h-[900px] justify-start items-start'>
+        <div className='flex bg-white h-[900px] justify-start items-start p-3'>
             {/* Left side: Image Array */}
-            <div className='w-[100px] max-h-fit p-2 mr-3 overflow-y-auto'>
-                <div className='grid grid-cols-1 gap-5'>
+            <div className='w-[100px] max-h-fit px-2 mr-3 overflow-y-auto'>
+                <div className='grid grid-cols-1 gap-4'>
                     {
                         selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
@@ -846,17 +872,21 @@ const NewLeftSideImageContent = ({
             {/* Right side: Image Zoom or Video */}
             {
                 selectedImage && memoIsVideo ? (
-                    <ReactPlayer
-                        className="w-full h-full object-cover"
-                        url={selectedImage.url || selectedImage}
-                        loop={true}
-                        muted={true}
-                        controls={false}
-                        width="100%"
-                        height="100%"
-                        playing={true}
-                        light={false}
-                    />
+                    <div className="relative h-full w-full bg-gray-200 overflow-hidden">
+
+                        <ReactPlayer
+                            className="w-full h-full object-cover"
+                            url={selectedImage.url || selectedImage}
+                            loop={true}
+                            muted={true}
+                            controls={false}
+                            width="100%"
+                            height="100%"
+                            playing={true}
+                            light={false}
+                        />
+                        <ShareView/>
+                    </div>
                 ) : (
                     <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={200}/>
                 )
@@ -891,9 +921,6 @@ const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=
                                 className='mt-2 p-2 w-full border border-gray-300 rounded-md'
                             />
                         </div>
-
-                        
-
                         {/* Submit Button */}
                         <div className='flex justify-start'>
                             <button

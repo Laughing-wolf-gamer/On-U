@@ -821,6 +821,33 @@ export const fetchAllCustomerUsers = async (req, res) => {
         res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };
+export const removingCustomer = async(req,res)=>{
+    try {
+        const {removingCustomerArray} = req.body;
+        console.log("Remvoing user: ",removingCustomerArray);
+        if (removingCustomerArray && removingCustomerArray.length > 0) {
+            const removeUser = await User.deleteMany({
+                _id: { $in: removingCustomerArray }
+            });
+        
+            if (removeUser.deletedCount > 0) {
+                // Successfully removed users
+                console.log(`Removed ${removeUser.deletedCount} users`);
+            } else {
+                // No users were found to remove
+                console.log("No users found to remove");
+            }
+        } else {
+            console.log("No user IDs provided for removal");
+            res.status(404).json({Success: false,message: 'No users were found to remove'});
+        }
+        res.status(200).json({ Success: true, message: 'Users deleted successfully' });
+    } catch (error) {
+        console.error("Error deleting user: ", error);
+        logger.error("Error deleting user: " + error.message);
+        res.status(500).json({ Success: false, message: 'Internal Server Error' });
+    }
+}
 
 export const getMaxDeliveredOrders = async (req,res)=>{
     try {

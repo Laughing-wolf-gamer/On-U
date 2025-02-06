@@ -28,7 +28,7 @@ const About = () => {
     // console.log("About Data:,",aboutData);
     
     return (
-        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
                 <div className="bg-white py-12 px-6 lg:px-24">
                     {/* Header Section */}

@@ -655,4 +655,7 @@ export function hexToRgba(hex, alpha = 1) {
     // Return the RGBA value with the provided alpha
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+export const formattedSalePrice = (price)=>{
+    return price ? price.toFixed(2) : "0.00";
+}
 export const BASE_URL = import.meta.env.VITE_BASE_LOCAL_API

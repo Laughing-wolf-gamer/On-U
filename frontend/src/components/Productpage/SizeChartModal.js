@@ -17,14 +17,13 @@ const SizeChartModal = ({sizeChartData}) => {
   const toggleModal = () => setIsOpen(!isOpen);
 
   return (
-    <div className='pl-4 md:pl-3 lg:pl-0 2xl:pl-0'>
+    <div className='pl-4 font-sans md:pl-3 lg:pl-0 2xl:pl-0'>
       {/* Button to open the modal */}
       <button
         onClick={toggleModal}
         className="font1 ml-2 mt-2 font1 lg:font-semibold 2xl:font-semibold md:font-semibold text-[14px] md:text-xl font-thin w-full justify-start items-start flex flex-row space-x-2"
       >
-        <h1 className='text-[10px] md:text-xl font-medium'>SIZE CHART: </h1>
-        <Ruler strokeWidth={1} size={30}/>
+        <h1 className='text-[12px] md:text-xl font-medium hover:underline sm:underline'>SIZE CHART</h1>
       </button>
 
       {/* Modal */}

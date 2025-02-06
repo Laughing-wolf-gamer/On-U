@@ -1,5 +1,7 @@
 import React, { useState, useCallback } from 'react';
-
+import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
+import { FaShare } from "react-icons/fa";
+import ShareView from './ShareView';
 const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
@@ -32,7 +34,8 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     const handleMouseLeave = useCallback(() => {
         setShowZoom(false);
     }, []);
-
+    
+    
     return (
         <div className="relative h-full w-full bg-blue-200 overflow-hidden">
             <img
@@ -56,8 +59,11 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
                     }}
                 ></div>
             )}
+            {/* Dropdown Button */}
+            <ShareView/>
         </div>
     );
 };
+
 
 export default ImageZoom;

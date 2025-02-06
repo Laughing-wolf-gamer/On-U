@@ -3,7 +3,7 @@ import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
 import { ChevronUp, Eye, FilePenLine, Minus, Plus, X, XCircle } from 'lucide-react';
 import axios from 'axios';
-import { addProductsFromElement, BASE_URL, Header } from '@/config';
+import { addProductsFromElement, BASE_URL, formattedSalePrice, Header } from '@/config';
 import SizeSelector from './SizeSelector';
 import ColorPresetSelector from '@/pages/admin-view/ColorPresetSelector';
 import { useDispatch } from 'react-redux';
@@ -209,7 +209,7 @@ const ProductPreview = ({
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-yellow-600">
-                                        {productData?.gst}%
+                                        {formattedSalePrice(productData?.gst)}%
                                     </p>
                                 )}
                             </div>
@@ -225,7 +225,7 @@ const ProductPreview = ({
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-green-600">
-                                        ₹{productData?.price}
+                                        ₹{formattedSalePrice(productData?.price)}
                                     </p>
                                 )}
                             </div>
@@ -240,7 +240,7 @@ const ProductPreview = ({
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-red-600">
-                                        ₹{productData?.salePrice}
+                                        ₹{formattedSalePrice(productData?.salePrice)}
                                     </p>
                                 )}
                             </div>
@@ -325,13 +325,13 @@ const ProductPreview = ({
 								<h3 className="font-semibold text-gray-700 text-lg">Breadth:</h3>
 								{isEditing ? (
 									<input
-									type="number"
-									value={productData?.breadth}
-									onChange={(e) => handleInputChange(e, 'breadth')}
-									className="text-lg w-2/3 text-gray-600 border-2"
+										type="number"
+										value={productData?.breadth}
+										onChange={(e) => handleInputChange(e, 'breadth')}
+										className="text-lg w-2/3 text-gray-600 border-2"
 									/>
 								) : (
-									<p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
+									<p className="text-lg text-gray-600">{productData?.breadth}</p>
 								)}
                             </div>
                             <div className="flex justify-between items-center border-b pb-4">

@@ -6,6 +6,7 @@ module.exports = {
         extend: {
             fontFamily: {
                 sans: ['Poppins', 'sans-serif'],
+                kumbsan: ['Kumbsan', 'sans-serif'],
             },
             keyframes: {
                 vibrateScale: {

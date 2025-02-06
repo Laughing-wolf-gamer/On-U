@@ -130,7 +130,7 @@ const Allproductpage = ({user}) => {
                 <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 bg-white 2xl:px-10">
                     {/* Filter */}
                     <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 border-opacity-25 h-max sticky top-0 bg-gray-50">
-                        <div className='2xl:px-10 pb-4'>
+                        <div className='2xl:px-1 pb-4'>
                             {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
                         </div>
                     </div>

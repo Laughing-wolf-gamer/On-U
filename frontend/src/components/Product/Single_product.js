@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 import './Single_product.css';
 import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, getImagesArrayFromProducts } from '../../config';
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
@@ -44,12 +44,12 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     const renderPrice = () => (
         <p className="flex items-center px-0.5 pb-2 space-x-2 whitespace-nowrap">
             <span className="text-[12px] md:text-[14px] sm:text-base font-medium text-black">
-                ₹{salePrice || price}
+                ₹{formattedSalePrice(salePrice || price)}
             </span>
             {salePrice && (
                 <div className="w-full justify-start space-x-3 flex flex-row items-center">
                     <span className="text-[10px] sm:text-base font-medium text-slate-400 line-through">
-                        ₹{Math.round(price)}
+                        ₹{Math.round(formattedSalePrice(price))}
                     </span>
                     <span className="text-[12px] inline-flex sm:text-sm font-medium md:text-[13px] text-red-500 hover:animate-vibrateScale">
                         ({calculateDiscountPercentage(price, salePrice)}% OFF)

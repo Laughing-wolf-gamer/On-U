@@ -10,7 +10,7 @@ const StarRatingInput = ({onChangeValue}) => {
     };
 
     return (
-        <div className='mb-4'>
+        <div className='mb-4 font-kumbsan'>
             
             {/* Rating Stars */}
             <div className="flex mt-2">

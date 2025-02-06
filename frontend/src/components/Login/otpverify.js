@@ -1,5 +1,5 @@
 import React, { Fragment, useState, useEffect } from 'react'
-import img from '../images/mobile-verification.jpg'
+import img from '../images/mobile-otp.png'
 import './Login.css'
 import { otpverifie, resendotp } from '../../action/useraction'
 import { useSelector, useDispatch } from 'react-redux'

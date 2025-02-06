@@ -34,7 +34,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
     }, [activeClothingItem, navigation]);
 
     return (
-        <div onClick={handleMoveToQuery} className="relative w-full h-full rounded-lg overflow-hidden cursor-pointer">
+        <div onClick={handleMoveToQuery} className="relative font-kumbsan w-full h-full rounded-lg overflow-hidden cursor-pointer">
             <div className="min-w-xs h-full relative">
                 {isLoading && !isError && (
                     <div className="w-full max-h-full overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow animate-pulse">
@@ -75,7 +75,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
                         )}
                     </>
                 )}
-                <div className="w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-sans font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl">
+                <div className="w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl">
                     {activeClothingItem && <span>{activeClothingItem.toUpperCase()}</span>}
                 </div>
             </div>
