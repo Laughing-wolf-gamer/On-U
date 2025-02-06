@@ -4,6 +4,7 @@ import logger from "../../utilis/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
+import { calculateDiscountPercentage, calculateGst } from "../../utilis/basicUtils.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -451,21 +452,25 @@ export const addNewProduct = async (req, res) => {
         // Calculate discounted percentage
         let DiscountedPercentage = 0;
         if (price && salePrice && salePrice > 0) {
-            const discountAmount = price - salePrice;
-            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
-            DiscountedPercentage = discountPercentage;
+            // const discountAmount = price - salePrice;
+            // const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
+            DiscountedPercentage = calculateDiscountPercentage(price,salePrice);
         } else {
             const currentProduct = await ProductModel.findById(productId);
             const p = currentProduct.price;
             const sp = currentProduct.salePrice;
-            const discountAmount = p - sp;
-            const discountPercentage = ((discountAmount / p) * 100).toFixed(0);
-            DiscountedPercentage = discountPercentage;
+            /* const discountAmount = p - sp;
+            const discountPercentage = ((discountAmount / p) * 100).toFixed(0); */
+            DiscountedPercentage = calculateDiscountPercentage(p,sp);
         }
 
         // Apply GST to price and salePrice
-        const priceWithGST = price + (price * gst / 100);
-        const salePriceWithGST = salePrice && salePrice > 0 ? salePrice + (salePrice * gst / 100) : null;
+        // const priceWithGST = price + (price * gst / 100);
+        // const salePriceWithGST = salePrice && salePrice > 0 ? salePrice + (salePrice * gst / 100) : null;
+        // priceWithGST = gst / (1 - (100 / (100 + gst)));
+        //originalPrice * (1 + (gstPercent / 100));
+        const priceWithGST = calculateGst(price,gst);
+        const salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
 
         // Create new product
         const newProduct = new ProductModel({
@@ -473,6 +478,7 @@ export const addNewProduct = async (req, res) => {
             title,
             shortTitle,
             size,
+            gst,
             description,
             careInstructions: careInstructions ? careInstructions : '',
             bulletPoints,
@@ -675,6 +681,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('productId', productId);
         addToUpdate('title', title);
         addToUpdate('description', description);
+        addToUpdate('gst', gst);
         addToUpdate('specification', specification);
         addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);
@@ -702,11 +709,12 @@ export const editProduct = async (req, res) => {
             if (totalStock > 0) updateFields.size = size;
             updateFields.totalStock = totalStock;
         }
-
         // Recalculate price and salePrice with GST
-        let priceWithGST = price + (price * gst / 100);
-        let salePriceWithGST = salePrice && salePrice > 0 ? salePrice + (salePrice * gst / 100) : null;
-
+        // [Value of supply x {100/ (100+GST%)}]
+        /* let priceWithGST = price * (100 / (100 + gst));
+        let salePriceWithGST = salePrice && salePrice > 0 ? salePrice * (100 / (100 + gst)) : null; */
+        let priceWithGST = calculateGst(price,gst);
+        let salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
         // Add the recalculated price and salePrice to the updateFields
         if (priceWithGST) updateFields.price = priceWithGST;
         if (salePriceWithGST) updateFields.salePrice = salePriceWithGST;
@@ -754,22 +762,47 @@ export const editProduct = async (req, res) => {
 };
 
 
-export const addCustomProductsRating = async(req,res)=>{
+export const addCustomProductsRating = async (req, res) => {
     try {
-        const {productId,ratingData} = req.body;
-        console.log("Adding Custom Rating: ", productId, ratingData);
-        const product = await ProductModel.findByIdAndUpdate(productId, {$push: {rating: ratingData}}, {new: true});
-        console.log("Updated Product: ", product);
-        if(!product) {
-            return res.status(404).json({Success: false, message: "Product not found"});
+        const { productId, ratingData } = req.body;
+
+        // Find and update the product with the new rating
+        const product = await ProductModel.findByIdAndUpdate(
+            productId,
+            { $push: { Rating: ratingData } }, 
+            { new: true }
+        );
+
+        // Check if the product was found
+        if (!product) {
+            return res.status(404).json({ Success: false, message: "Product not found" });
         }
-        res.status(200).json({Success: true, message: "Custom Rating Added Successfully",result: product})
+
+        // Calculate the average rating after updating
+        const total = product.Rating.reduce((acc, review) => acc + review.rating, 0);
+        const averageRating = total / product.Rating.length;
+
+        // Update the product's average rating field
+        product.averageRating = averageRating;
+
+        // Save the updated product with the new average rating
+        await product.save();
+
+        console.log("Updated Product with Average Rating: ", product);
+        
+        res.status(200).json({
+            Success: true, 
+            message: "Custom Rating Added Successfully", 
+            result: product
+        });
+
     } catch (error) {
         console.error('Product Update Failed: ', error);
-        logger.error('Product Add Custom Rating Failed: '+ error.message);
-        return res.status(500).json({Success: false, message: 'Internal Server Error'});
+        logger.error('Product Add Custom Rating Failed: ' + error.message);
+        return res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
-}
+};
+
 export const fetchAllRatingProducts = async(req,res)=>{
     try {
         const{productId} = req.params;
@@ -789,6 +822,7 @@ export const removeCustomProductsRating = async(req,res)=>{
     try {
         const {productId,ratingId} = req.body;
         console.log("Adding Custom Rating: ", productId, ratingId);
+        const product = await ProductModel.findByIdAndUpdate(productId, {$pull: {Rating: {_id: ratingId}}}, {new: true});
         res.status(200).json({Success:true,message:"Successfully Remove Rating Data"})
     } catch (error) {
         console.error('Product Update Failed: ', error);

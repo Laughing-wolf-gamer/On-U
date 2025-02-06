@@ -48,7 +48,7 @@ const ProductPreview = ({
         try {
             if (!productDataId) return;
             if(!ratingData) return;
-            const response = await axios.post(`${BASE_URL}/api/product/add-rating`, {productId: productDataId, ratingData});
+            const response = await axios.post(`${BASE_URL}/admin/product/add-rating`, {productId: productDataId, ratingData},Header());
             console.log("Rating Added: ", response.data);
             toast.success("Rating added successfully!");
             setRatingIsModalOpen(false);
@@ -62,14 +62,14 @@ const ProductPreview = ({
         try {
             if (!productDataId) return;
             if(!ratingDataId) return;
-            const response = await axios.post(`${BASE_URL}/api/product/remove-rating`, {productId: productDataId, ratingDataId});
+            const response = await axios.patch(`${BASE_URL}/admin/product/remove-rating`, {productId: productDataId, ratingId:ratingDataId},Header());
             console.log("Rating Added: ", response.data);
-            toast.success("Rating added successfully!");
+            toast.success("Rating Removed successfully!");
             setRatingIsModalOpen(false);
             fetchProductData();
         } catch (error) {
-            console.error("Error Adding Rating: ", error);
-            toast.error("Failed to add rating!");
+            console.error("Error Removing Rating: ", error);
+            toast.error("Failed to removing rating!");
         }
     }
 
@@ -127,19 +127,12 @@ const ProductPreview = ({
                             togglePopUp();
                             if(setCurrentPreviewProduct){
                                 setCurrentPreviewProduct(null);
-
                             }
                         }}
                     className="w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
                     />
                 </div>
                 <div className="flex flex-col w-full space-x-4">
-                    <button onClick={(e)=>{
-                        e.preventDefault();
-                        setRatingIsModalOpen(true);
-                    }}>
-                        Ratings
-                    </button>
                     <h3 className="font-semibold">All Sizes</h3>
                     {productData && (
                         <SizeDisplay
@@ -209,7 +202,7 @@ const ProductPreview = ({
                                 <h3 className="font-semibold text-gray-700 text-lg">GST:</h3>
                                 {isEditing ? (
                                     <input
-                                        type="number"
+                                        type="numeric"
                                         value={productData?.gst}
                                         onChange={(e) => handleInputChange(e, 'gst')}
                                         className="text-lg w-2/3 font-medium text-yellow-600 border-2"
@@ -251,6 +244,14 @@ const ProductPreview = ({
                                     </p>
                                 )}
                             </div>
+							<div onClick={()=>{
+								setRatingIsModalOpen(true);
+							}} className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold cursor-pointer text-gray-700 text-lg">Average Rating:</h3>
+                                <p className="text-lg font-medium text-red-600">
+									{productData?.averageRating}
+								</p>
+                            </div>
                             {/* Category and Subcategory */}
                             <div className="flex justify-between items-center border-b pb-4">
                                 <h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
@@ -281,7 +282,7 @@ const ProductPreview = ({
                                 )}
                             </div>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Special Category:</h3>
+                            	<h3 className="font-semibold text-gray-700 text-lg">Special Category:</h3>
                                 {isEditing ? (
                                     <div className='w-2/3'>
                                         <CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
@@ -295,69 +296,69 @@ const ProductPreview = ({
                             </div>
                             <h1 className='text-ellipsis font-serif font-bold'>Product Dimension</h1>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Width:</h3>
-                            {isEditing ? (
-                                <input
-                                    type="number"
-                                    value={productData?.width}
-                                    onChange={(e) => handleInputChange(e, 'width')}
-                                    className="text-lg w-2/3 text-gray-600 border-2"
-                                />
-                            ) : (
-                                <p className="text-lg text-gray-600">{productData?.width}</p>
-                            )}
+								<h3 className="font-semibold text-gray-700 text-lg">Width:</h3>
+								{isEditing ? (
+									<input
+										type="number"
+										value={productData?.width}
+										onChange={(e) => handleInputChange(e, 'width')}
+										className="text-lg w-2/3 text-gray-600 border-2"
+									/>
+								) : (
+									<p className="text-lg text-gray-600">{productData?.width}</p>
+								)}
                             </div>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Height:</h3>
-                            {isEditing ? (
-                                <input
-                                    type="number"
-                                    value={productData?.height}
-                                    onChange={(e) => handleInputChange(e, 'height')}
-                                    className="text-lg w-2/3 text-gray-600 border-2"
-                                />
-                            ) : (
-                                <p className="text-lg text-gray-600">{productData?.height}</p>
-                            )}
+								<h3 className="font-semibold text-gray-700 text-lg">Height:</h3>
+								{isEditing ? (
+									<input
+										type="number"
+										value={productData?.height}
+										onChange={(e) => handleInputChange(e, 'height')}
+										className="text-lg w-2/3 text-gray-600 border-2"
+									/>
+								) : (
+									<p className="text-lg text-gray-600">{productData?.height}</p>
+								)}
                             </div>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Breadth:</h3>
-                            {isEditing ? (
-                                <input
-                                type="number"
-                                value={productData?.breadth}
-                                onChange={(e) => handleInputChange(e, 'breadth')}
-                                className="text-lg w-2/3 text-gray-600 border-2"
-                                />
-                            ) : (
-                                <p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
-                            )}
+								<h3 className="font-semibold text-gray-700 text-lg">Breadth:</h3>
+								{isEditing ? (
+									<input
+									type="number"
+									value={productData?.breadth}
+									onChange={(e) => handleInputChange(e, 'breadth')}
+									className="text-lg w-2/3 text-gray-600 border-2"
+									/>
+								) : (
+									<p className="text-lg w-2/3 text-gray-600">{productData?.breadth}</p>
+								)}
                             </div>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Length:</h3>
-                            {isEditing ? (
-                                <input
-                                    type="number"
-                                    value={productData?.length}
-                                    onChange={(e) => handleInputChange(e, 'length')}
-                                    className="text-lg w-2/3 text-gray-600 border-2"
-                                />
-                            ) : (
-                                <p className="text-lg text-gray-600">{productData?.length}</p>
-                            )}
-                            </div>
+								<h3 className="font-semibold text-gray-700 text-lg">Length:</h3>
+								{isEditing ? (
+									<input
+										type="number"
+										value={productData?.length}
+										onChange={(e) => handleInputChange(e, 'length')}
+										className="text-lg w-2/3 text-gray-600 border-2"
+									/>
+								) : (
+									<p className="text-lg text-gray-600">{productData?.length}</p>
+								)}
+								</div>
                             <div className="flex justify-between items-center border-b pb-4">
-                            <h3 className="font-semibold text-gray-700 text-lg">Weight:</h3>
-                            {isEditing ? (
-                                <input
-                                type="number"
-                                value={productData?.weight}
-                                onChange={(e) => handleInputChange(e, 'weight')}
-                                className="text-lg w-2/3 text-gray-600 border-2"
-                                />
-                            ) : (
-                                <p className="text-lg text-gray-600">{productData?.weight}</p>
-                            )}
+								<h3 className="font-semibold text-gray-700 text-lg">Weight:</h3>
+								{isEditing ? (
+									<input
+									type="number"
+									value={productData?.weight}
+									onChange={(e) => handleInputChange(e, 'weight')}
+									className="text-lg w-2/3 text-gray-600 border-2"
+									/>
+								) : (
+									<p className="text-lg text-gray-600">{productData?.weight}</p>
+								)}
                             </div>
                         </div>
                         {/* Material and Additional Info */}

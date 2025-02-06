@@ -15,6 +15,10 @@ const productModelSchema = new mongoose.Schema({
         type:String,
         default:'On-U'
     },
+    gst:{
+        type:Number,
+        default:0
+    },
     salePrice:{
         type:Number,
         default:-1
@@ -89,6 +93,7 @@ const productModelSchema = new mongoose.Schema({
     length:Number,
     weight:Number,
     breadth:Number,
+    averageRating:Number,
 },{timestamps:true})
 productModelSchema.pre('save', function (next) {
     // Calculate averageRating when Rating is modified
@@ -112,13 +117,17 @@ productModelSchema.pre('save', function (next) {
         }
     }
 
+    // Logging the updated product (use this)
+    console.log("Updated Product: ", this);
+
     next();  // Proceed to save
 });
-productModelSchema.virtual('averageRating').get(function () {
+
+/* productModelSchema.virtual('averageRating').get(function () {
     if (this.Rating.length === 0) return 0;
     const total = this.Rating.reduce((acc, review) => acc + review.rating, 0);
     return total / this.Rating.length;
-});
+}); */
 productModelSchema.index({title: 1})
 
 const ProductModel = mongoose.model('product', productModelSchema)

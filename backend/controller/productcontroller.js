@@ -311,7 +311,7 @@ export const checkUserPurchasedProduct = async (req, res) => {
 export const setRating = async (req, res) => {
     try {
         const { productId } = req.params;
-        const { comment, rating} = req.body;
+        const { comment, rating } = req.body;
         
         console.log("Posting Rating: ", req.body);
 
@@ -346,7 +346,22 @@ export const setRating = async (req, res) => {
             { new: true } // Ensure that the updated document is returned
         );
 
-        console.log("Updated Product: ", product);
+        // If product not found
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
+        // Calculate average rating after adding the new rating
+        const totalRating = product.Rating.reduce((acc, review) => acc + review.rating, 0);
+        const averageRating = totalRating / product.Rating.length;
+
+        // Set the averageRating field
+        product.averageRating = averageRating;
+
+        // Save the updated product with the new average rating
+        await product.save();
+
+        console.log("Updated Product with Average Rating: ", product);
 
         // Respond with success
         res.status(200).json({ success: true, message: 'Rating set successfully', result: product });
@@ -356,6 +371,7 @@ export const setRating = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 }
+
 
 
 export const SendSingleProduct = async (req, res) => {

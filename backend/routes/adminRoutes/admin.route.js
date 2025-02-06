@@ -1,5 +1,5 @@
 import express from 'express';
-import { addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, removeCoupon, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
+import { addCustomProductsRating, addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, removeCoupon, removeCustomProductsRating, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
 import { addNewColorToSize, addNewSizeToProduct, fetchAllCustomerUsers, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getRecentOrders, getTopSellingProducts, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
@@ -18,6 +18,8 @@ route.post('/upload-image',ProtectAdminRoute,upload.single('my_file'),uploadImag
 route.post('/upload-image-all',isAuthenticateuser,ProtectAdminRoute,upload.array('my_files[]',10),uploadMultipleImages);
 
 route.get('/product/all',fetchAllProducts);
+route.post('/product/add-rating',ProtectAdminRoute,addCustomProductsRating);
+route.patch('/product/remove-rating',ProtectAdminRoute,removeCustomProductsRating);
 route.get('/product/get/:id',ProtectAdminRoute,getProductById);
 route.put('/product/edit/:id',ProtectAdminRoute,editProduct);
 route.delete('/product/del/:id',ProtectAdminRoute,deleteProduct);
