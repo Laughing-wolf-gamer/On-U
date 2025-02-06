@@ -958,7 +958,7 @@ const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onCancel, onConfirm }) =
 			<div className="bg-white p-6 rounded-lg shadow-lg w-96">
 				<div className="justify-end space-y-4 flex flex-col">
 					<FileUploadComponent
-						maxFiles={7}
+						maxFiles={8}
 						tag={colorId}
 						sizeTag={sizeId}
 						onSetImageUrls={(e) => {
