@@ -548,7 +548,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     return (
         <Fragment>
-            <div className='space-y-4 ml-4'>
+            <div className='space-y-4 font-kumbsan ml-4'>
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
                     <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
@@ -781,7 +781,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         style={{ backgroundColor: e.label }}
                                         className="w-10 h-7 border border-slate-400 rounded"
                                     ></div>
-                                    <label className="flex flex-col text-left text-sm">
+                                    <label className="flex flex-row whitespace-nowrap space-x-2 text-left text-sm">
                                         <span className="font-semibold">
                                             {e.name && (
                                                 <span>
@@ -930,7 +930,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
         }
     };
     return (
-      <div className="border-b-[1px] border-slate-900 px-7 py-4 overflow-hidden relative">
+      <div className="border-b-[1px] font-kumbsan border-slate-900 px-4 py-2 relative">
         <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
         <CustomSlider
             value={price}
@@ -944,7 +944,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
             }}
         />
   
-        <div className=" text-xs font-serif font-normal text-slate-400 justify-center items-center ">
+        <div className=" text-xs font-normal text-slate-400 justify-center items-center ">
             Showing products between Rs. {Math.floor(minPrice)} and Rs. {Math.floor(maxPrice)}.
             <br />
             <span>({sparraynew()})</span>
