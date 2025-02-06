@@ -20,7 +20,7 @@ const reducer = combineReducers({
       Allproducts:Allproducts,
       AllOptions:allOptions,
       AllCoupons:fetch_All_Coupons,
-
+      
       Sproduct: singleProduct,
       getAllAddress:getAddress,
       banners:fetch_banners_reducer,
@@ -32,14 +32,15 @@ const reducer = combineReducers({
       updateuser2:updatedetailsuserreducer,
       deletebagReducer:delete_bag_reducer,
       deletewish:delete_wish_reducer,
-
+    
+      
 
       createOrder: create_order_reducer,
       getOrderById:get_order_by_id_reducer,
       getallOrders:get_all_order_reducer,
-
+  
       RandomProducts:randomProducts,
-
+      
       fetchFormBanners:fetch_form_banners,
       allOptions:fetch_All_Options,
       

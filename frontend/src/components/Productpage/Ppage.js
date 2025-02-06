@@ -391,7 +391,7 @@ const Ppage = () => {
         <div ref={scrollableDivRef} className="w-screen font-sans h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 !productLoading ?
-                    <div className='max-w-screen-2xl w-full justify-self-center flex flex-col '>
+                    <div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2'>
                         <div className='grid grid-cols-2 gap-1 mt-2 py-4'>
                             <div>
                                 {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 && (
@@ -555,19 +555,17 @@ const Ppage = () => {
                         {/* {similar && similar.length > 0 && (
                         )} */}
                         {
-                            product && <div className='w-full justify-center items-center flex flex-col'>
+                            product && <div className='w-full justify-center items-center flex flex-col mb-4'>
                                 <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                                 <div className='w-full flex justify-start items-start'>
                                     <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-6 mx-auto'>
-                                        {Array(10).fill(0).map((pro, index) => (
+                                        {Array(20).fill(0).map((pro, index) => (
                                             <Single_product key={index} pro={product} user={user} />
                                         ))}
                                     </ul>
                                 </div>
                             </div>
                         }
-                        
-
                     </div>
                 :
                 <Loader />

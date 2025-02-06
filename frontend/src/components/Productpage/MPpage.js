@@ -809,62 +809,61 @@ const ProductReviews = ({ reviews }) => {
   return (
     <div>
       <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
-
-      <div
-        className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
-      >
-        {/* Display only the first 3 reviews or more based on showMore */}
-        {reviews.slice(0, 3).map((review, index) => {
-            const randomStars = review.rating; // Random stars between 1 and 5
-            return (
-                <div key={index} className="review-item mb-4">
-                    <div className="flex items-center">
-                        <div className="stars">
-                        {[...Array(randomStars)].map((_, i) => (
-                            <span key={i} className="star text-black hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
-                        ))}
-                        {[...Array(5 - randomStars)].map((_, i) => (
-                            <span key={i} className="star text-gray-300 hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
-                        ))}
-                        </div>
-                        <span className="ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 ease-in-out transition-all">{randomStars} Stars</span>
-                    </div>
-                    <p className="text-gray-700 mt-2">{review.comment}</p>
-                </div>
-            );
-        })}
-
-        {/* If showMore is true, display all reviews */}
-        {showMore &&
-          reviews.slice(3).map((review, index) => {
-            const randomStars = review.rating;
-            return (
-              <div key={index} className="review-item mb-4">
-                <div className="flex items-center">
-                  <div className="stars">
-                    {[...Array(randomStars)].map((_, i) => (
-                      <span key={i} className="star text-black">★</span>
-                    ))}
-                    {[...Array(5 - randomStars)].map((_, i) => (
-                      <span key={i} className="star text-gray-300">★</span>
-                    ))}
-                  </div>
-                  <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
-                </div>
-                <p className="text-gray-700 mt-2">{review.comment}</p>
-              </div>
-            );
-          })
-        }
-
-        {/* "View More" / "Show Less" Toggle Button */}
-        <button
-          onClick={handleToggleReviews}
-          className="mt-4 text-blue-500 hover:underline"
+        <div
+            className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
         >
-          {showMore ? 'Show Less' : 'View More'}
-        </button>
-      </div>
+            {/* Display only the first 3 reviews or more based on showMore */}
+            {reviews.slice(0, 3).map((review, index) => {
+                const randomStars = review.rating; // Random stars between 1 and 5
+                return (
+                    <div key={index} className="review-item mb-4">
+                        <div className="flex items-center">
+                            <div className="stars">
+                                {[...Array(randomStars)].map((_, i) => (
+                                    <span key={i} className="star text-black hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+                                ))}
+                                {[...Array(5 - randomStars)].map((_, i) => (
+                                    <span key={i} className="star text-gray-300 hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+                                ))}
+                            </div>
+                            <span className="ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 ease-in-out transition-all">{randomStars} Stars</span>
+                        </div>
+                        <p className="text-gray-700 mt-2">{review.comment}</p>
+                    </div>
+                );
+            })}
+
+            {/* If showMore is true, display all reviews */}
+            {showMore &&
+            reviews.slice(3).map((review, index) => {
+                const randomStars = review.rating;
+                return (
+                    <div key={index} className="review-item mb-4">
+                            <div className="flex items-center">
+                                <div className="stars">
+                                    {[...Array(randomStars)].map((_, i) => (
+                                        <span key={i} className="star text-black">★</span>
+                                    ))}
+                                    {[...Array(5 - randomStars)].map((_, i) => (
+                                        <span key={i} className="star text-gray-300">★</span>
+                                    ))}
+                                </div>
+                                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                            </div>
+                        <p className="text-gray-700 mt-2">{review.comment}</p>
+                    </div>
+                );
+            })
+            }
+
+            {/* "View More" / "Show Less" Toggle Button */}
+            <button
+                onClick={handleToggleReviews}
+                className="mt-4 text-blue-500 hover:underline"
+            >
+                {showMore ? 'Show Less' : 'View More'}
+            </button>
+        </div>
     </div>
   );
 };
