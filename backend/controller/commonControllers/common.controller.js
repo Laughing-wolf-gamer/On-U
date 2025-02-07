@@ -325,6 +325,78 @@ export const setAddressField = async(req,res)=>{
 		res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
 	}
 }
+export const setWebsiteDisclaimers = async(req,res)=>{
+    try {
+        const {websiteDisclaimers} = req.body;
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'WebsiteDisclaimers'}); 
+        if(!alreadyFoundWebsiteData){
+            const about = new WebSiteModel({WebsiteDisclaimers: [websiteDisclaimers], tag: 'WebsiteDisclaimers'});
+            await about.save();
+            // console.log("Website Disclaimers: ",about)
+            return res.status(200).json({Success:true,message: 'Website Disclaimers set successfully'});
+        }
+        alreadyFoundWebsiteData.WebsiteDisclaimers.push(websiteDisclaimers);
+        await alreadyFoundWebsiteData.save();
+        // console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
+        res.status(200).json({Success:true,message: 'Website Disclaimers set successfully',result: alreadyFoundWebsiteData?.WebsiteDisclaimers || []});
+    } catch (error) {
+        console.error(`Error setting about data `,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
+export const editDisclaimers = async(req,res)=>{
+    try {
+        const {disclaimersId, disclaimers} = req.body;
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'WebsiteDisclaimers'});
+        if(!alreadyFoundWebsiteData){
+            return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
+        }
+        const index = alreadyFoundWebsiteData.WebsiteDisclaimers.findIndex(item => item._id.toString() === disclaimersId);
+        if(index === -1){
+            return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
+        }
+        alreadyFoundWebsiteData.WebsiteDisclaimers[index] = disclaimers;
+        await alreadyFoundWebsiteData.save();
+        console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
+        
+    } catch (error) {
+        console.error(`Error setting about data`,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
+export const removeWebsiteDisclaimers = async(req,res)=>{
+    try {
+        const {disclaimersId} = req.params;
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'WebsiteDisclaimers'});
+        if(!alreadyFoundWebsiteData){
+            return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
+        }
+        const index = alreadyFoundWebsiteData.WebsiteDisclaimers.findIndex(item => item._id.toString() === disclaimersId);
+        if(index === -1){
+            return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
+        }
+        alreadyFoundWebsiteData.WebsiteDisclaimers.splice(index,1);
+        await alreadyFoundWebsiteData.save();
+        console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
+        
+    } catch (error) {
+        console.error(`Error setting about data`,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
+export const getWebsiteDisclaimers = async(req,res)=>{
+    try {
+        const aboutData = await WebSiteModel.findOne({tag:'WebsiteDisclaimers'});
+        if(!aboutData){
+            return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
+        }
+        console.log("All Website Disclaimers: ",aboutData)
+        res.status(200).json({Success:true,message: 'Website Disclaimers Found',result: aboutData.WebsiteDisclaimers || []});
+    } catch (error) {
+        console.error(`Error getting website disclaimers:`,error);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+    }
+}
 export const getAddressField = async(req,res)=>{
 	try {
 	  const aboutData = await WebSiteModel.findOne({tag:'Address'});

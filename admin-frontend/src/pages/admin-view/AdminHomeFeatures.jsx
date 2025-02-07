@@ -9,6 +9,7 @@ import { X } from 'lucide-react';
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
 import toast from 'react-hot-toast';
+import DisclaimerManager from '@/components/admin-view/DisclaimerManager';
 
 const AdminHomeFeatures = () => {
     const { featuresList } = useSelector(state => state.common);
@@ -39,14 +40,6 @@ const AdminHomeFeatures = () => {
     useEffect(() => {
         dispatch(getFeatureImage());
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
-    /* useEffect(()=>{
-        if(featuresList){
-            if(featuresList.length > 0){
-                console.log("featuresList: ",featuresList);
-                setCategories([...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))]);
-            }
-        }
-    },[featuresList]) */
     let categories = [];
     if(featuresList && featuresList.length > 0){
         categories = [...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))];
@@ -136,13 +129,6 @@ const AdminHomeFeatures = () => {
         setSelectedCategory(e.target.value);
         setImageUrlsCategory(e.target.value);
     };
-    /* useEffect(()=>{
-    },[featuresList]) */
-    /* if(featuresList){
-        if(featuresList.length > 0){
-            // setFilteredItems();
-        }
-    } */
     let filteredItems = [];
     if(featuresList && featuresList.length > 0) {
         filteredItems = featuresList.filter(
@@ -151,6 +137,7 @@ const AdminHomeFeatures = () => {
     }
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
+            <DisclaimerManager/>
             {/* Image Upload Section */}
             <div className="w-full sm:w-[60%] md:w-[50%] p-6 bg-white rounded-lg shadow-md">
                 <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
@@ -264,7 +251,6 @@ const AdminHomeFeatures = () => {
                     <p className="text-center text-gray-600">No images found for the selected category.</p>
                 )}
             </div>
-    
             {/* Confirm Delete Popup */}
             <ConfirmDeletePopup 
                 isOpen={isConfirmDeleteWindow} 
@@ -393,34 +379,4 @@ const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWin
         </div>
     );
 });
-
-
-/* { <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative">
-{item.Url && item.Url.length > 0 ? item.Url?.map((url, idx) => (
-    <div
-        key={idx}
-        className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden"
-    >
-        <LazyLoadImage
-            src={url}
-            alt={`Image ${idx + 1}`}
-            className="w-full h-full object-contain rounded-lg shadow-sm"
-        />
-        <Button
-            onClick={() => {
-                setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-                // handleDeleteImage(item._id, idx)
-                setDeletingImageCategory({itemId: item._id,idx: idx});
-            }}
-            className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg "
-        >
-            <X size={16} />
-        </Button>
-    </div>
-)):(
-    <div className='relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden'>
-        <p>No Images Uploaded!</p>
-    </div>
-)}
-</div> } */
 export default AdminHomeFeatures;

@@ -323,13 +323,6 @@ export const addProductsFromElement = [
         ],
         required:true,
     },
-    /* {
-        label:"Ratings",
-        name:'rating',
-        componentType:'Rating',
-        placeHolder:'set Product Rating',
-        required:false,
-    }, */
     {
         label:"Category",
         name:'category',

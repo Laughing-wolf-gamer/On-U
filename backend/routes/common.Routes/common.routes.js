@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -26,6 +26,11 @@ route.get('/website/get-contact-query',getContactQuery)
 route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
 route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);
 route.get('/website/address',getAddressField);
+
+route.put('/website/disclaimer',isAuthenticateuser,ProtectAdminRoute,setWebsiteDisclaimers);
+route.patch('/website/disclaimer/edit/:disclaimersId',isAuthenticateuser,ProtectAdminRoute,editDisclaimers);
+route.patch('/website/disclaimer/remove/:disclaimersId',isAuthenticateuser,ProtectAdminRoute,removeWebsiteDisclaimers);
+route.get('/website/disclaimer',getWebsiteDisclaimers);
 
 route.get('/options/get/all',getAllOptions)
 route.get('/options/getByType/:type', getOptions);

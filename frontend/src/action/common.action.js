@@ -10,6 +10,9 @@ import {
     FETCH_ALL_COUPONS_REQUEST,
     FETCH_ALL_COUPONS_SUCCESS,
     FETCH_ALL_COUPONS_FAIL,
+    FETCH_DISCLAIMERS_REQUEST,
+    FETCH_DISCLAIMERS_SUCCESS,
+    FETCH_DISCLAIMERS_FAIL,
 } from '../const/common.const'
 import { BASE_API_URL } from '../config'
 
@@ -17,12 +20,23 @@ export const fetchAddressForm = () => async (dispatch) => {
     try {
 
         dispatch({ type: FETCH_ADDRESS_FORM })
-        // const config = { headers: { "Content-Type": "application/json" } }
         const { data } = await axios.get(`${BASE_API_URL}/api/common/website/address`);
         console.log("Fetch Form: ",data);
         dispatch({ type: FETCH_ADDRESS_FORM_SUCCESS, payload: data.result || []})
     } catch (error) {
         dispatch({ type: FETCH_ADDRESS_FORM_FAIL, payload: error.response.data.message })
+    }
+}
+export const fetchWebsiteDisclaimer = () => async (dispatch) => {
+    try {
+        dispatch({ type: FETCH_DISCLAIMERS_REQUEST })
+        const { data } = await axios.get(`${BASE_API_URL}/api/common/website/disclaimer`);
+        // console.log("Website Disclaimer: ",data);
+        dispatch({ type: FETCH_DISCLAIMERS_SUCCESS, payload: data.result })
+        return data;
+    } catch (error) {
+        console.error("Error fetching website disclaimer: ",error);
+        dispatch({ type: FETCH_DISCLAIMERS_FAIL, payload: error.response.data.message })
     }
 }
 export const sendGetCoupon = ({fullName,email})=> async(dispatch)=>{

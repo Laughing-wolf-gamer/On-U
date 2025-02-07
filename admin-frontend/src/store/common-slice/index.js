@@ -11,6 +11,7 @@ const initialState = {
     convenienceFees:0,
     addressFormFields:[],
     ContactUsPageData:null,
+    DisclaimerData:[],
     filterOptions:null,
 
 }
@@ -89,6 +90,14 @@ const commonSlice = createSlice({
         }).addCase(sendContactUsPage.rejected,(state,action)=>{
             state.isLoading = false;
             state.ContactUsPageData = null;
+        }).addCase(fetchWebsiteDisclaimer.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchWebsiteDisclaimer.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.DisclaimerData = action?.payload?.result || [];
+        }).addCase(fetchWebsiteDisclaimer.rejected,(state)=>{
+            state.isLoading = false;
+            state.DisclaimerData = [];
         })
     }
 })
@@ -164,15 +173,44 @@ export const fetchAddressFormData = createAsyncThunk('/common/fetchAddressFormDa
         console.error(`Error Fetching Address Data: `,error);
     }
 })
-export const sendAboutData = createAsyncThunk('/common/sendAboutData',async(data)=>{
+export const sendAboutData = createAsyncThunk('/common/sendAboutData',async({websiteDisclaimers})=>{
     try {
-        const token = sessionStorage.getItem('token');
         // console.log(token);
-        const response = await axios.put(`${BASE_URL}/api/common/website/about`,data,Header());
+        const response = await axios.put(`${BASE_URL}/api/common/website/about`,{websiteDisclaimers},Header());
         console.log('Response: ', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error Sending About Page Data: `,error);
+    }
+})
+export const setDisclaimerData = createAsyncThunk('/common/setDisclaimerData',async(data)=>{
+    try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/disclaimer`,data,Header());
+        console.log('disclaimer Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error Sending About Page Data: `,error);
+        return false;
+    }
+})
+export const editDisclaimerData = createAsyncThunk('/common/setDisclaimerData',async({disclaimersId,disclaimers})=>{
+    try {
+        const response = await axios.patch(`${BASE_URL}/api/common/website/disclaimer/edit/${disclaimersId}`,disclaimers,Header());
+        console.log('disclaimer Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error Sending About Page Data: `,error);
+        return false;
+    }
+})
+export const removeDisclaimerData = createAsyncThunk('/common/setDisclaimerData',async({disclaimersId})=>{
+    try {
+        const response = await axios.patch(`${BASE_URL}/api/common/website/disclaimer/remove/${disclaimersId}`,{},Header());
+        console.log('disclaimer Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error Sending About Page Data: `,error);
+        return false;
     }
 })
 export const sendContactUsPage = createAsyncThunk('/common/contact-us',async(data) =>{
@@ -210,6 +248,15 @@ export const fetchAllOptions = createAsyncThunk('/common/fetchAllOptions',async(
         return response.data;
     } catch (error) {
         console.error("Error Fething All Options: ",error);   
+    }
+})
+export const fetchWebsiteDisclaimer = createAsyncThunk('/common/getAllDisclaimer',async()=>{
+    try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/disclaimer`);
+        console.log("Disclaimers: ",response?.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error Fetching All Options: ",error);
     }
 })
 

@@ -246,6 +246,9 @@ const isFormValid =(formData) => {
     if (!formData.size || formData.size.length === 0) {
         reasons.push("At least one size is required.");
     }
+    if (!formData.gst) {
+        reasons.push("GST required.");
+    }
 
     // Material check
     if (!formData.material) {
@@ -263,10 +266,21 @@ const isFormValid =(formData) => {
     }
 
     // Category check
-    if (!formData.category) {
+    if (!formData.width) {
+        reasons.push("width is required.");
+    }
+    if (!formData.height) {
+        reasons.push("height is required.");
+    }
+    if (!formData.length) {
         reasons.push("Category is required.");
     }
-
+    if (!formData.weight) {
+        reasons.push("weight is required.");
+    }
+    if (!formData.breadth) {
+        reasons.push("breadth is required.");
+    }
     // Quantity check
 
     // Bullet points check
@@ -281,113 +295,6 @@ const isFormValid =(formData) => {
         reasons
     }
 }
-/* export const addNewProduct = async (req, res) => {
-    try {
-        const {
-            productId,
-            title,
-            shortTitle,
-            size,
-            description,
-            specification,
-            careInstructions,
-            material,
-            gst,
-            bulletPoints,
-            gender,
-            category,
-            subCategory,
-            specialCategory,
-            price,
-            salePrice,
-            Rating,
-            width,
-            height,
-            length,
-            weight,
-            breadth,
-        } = req.body;
-        console.log("Adding Products fields ",isFormValid(req.body));
-        const isValid = isFormValid(req.body);
-        if(!isValid){
-            return res.status(401).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
-        }
-        if(!isValid.isValid){
-            return res.status(401).json({Success:false,message:"All fields are required ",reasons:"All Fields Required"});
-        }
-        const AllColors = []
-        size.forEach(s => {
-            if(s.colors){
-                s.colors.forEach(c => {
-                    const colorsImageArray = c.images.filter(c => c !== "");
-                    c.images = colorsImageArray;
-                    AllColors.push(c);
-                });
-            }
-        });
-        let totalStock = 0;
-        size.forEach(s => {
-            let sizeStock = 0;
-            if(s.colors){
-                s.colors.forEach(c => {
-                    sizeStock += c.quantity;
-                });
-            }
-            totalStock += sizeStock;
-        })
-        console.log("Total Stock: ",totalStock);
-        let DiscountedPercentage = 0;
-        if (price && salePrice && salePrice > 0) {
-            const discountAmount = price - salePrice;
-            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
-            DiscountedPercentage = discountPercentage;
-        } else {
-            const currentProduct = await ProductModel.findById(id);
-            const p = currentProduct.price;
-            const sp = currentProduct.salePrice;
-            const discountAmount = p - sp;
-            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
-            // If no salePrice, set DiscountedPercentage to 0
-            DiscountedPercentage = discountPercentage;
-        }
-        const newProduct = new ProductModel({
-            productId,
-            title,
-            shortTitle,
-            size,
-            description,
-            careInstructions:careInstructions ? careInstructions:'',
-            bulletPoints,
-            material,
-            gender,
-            category,
-            specification,
-            subCategory,
-            specialCategory:specialCategory,
-            price,
-            salePrice: salePrice && salePrice > 0 ? salePrice : null,
-            DiscountedPercentage:DiscountedPercentage,
-            totalStock,
-            AllColors:AllColors,
-            Rating:Rating && Rating.length > 0 ? [Rating]:[],
-            width,
-            height,
-            length,
-            weight,
-            breadth
-        });
-        if(!newProduct) return res.status(400).json({Success:false,message:"Product not created",result:null});
-        await newProduct.save();
-
-        console.log("New Products Data: ",newProduct);
-        res.status(201).json({Success: true, message: 'Product added successfully!', result: newProduct});
-        
-    } catch (error) {
-        console.error('Error while adding new product:', error);
-        logger.error("Error while creating new Product: " + error.message);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
-    }
-} */
 export const addNewProduct = async (req, res) => {
     try {
         const {
@@ -517,123 +424,6 @@ export const addNewProduct = async (req, res) => {
 };
 
 
-/* export const editProduct = async (req, res) => {
-    try {
-        const { id } = req.params;
-        if (!id) {
-            return res.status(400).json({ Success: false, message: "Product ID is required" });
-        }
-
-        const {
-            productId,
-            title,
-            size,
-            description,
-            specification,
-            careInstructions,
-            material,
-            bulletPoints,
-            gender,
-            category,
-            gst,
-            subCategory,
-            specialCategory,
-            price,
-            salePrice,
-            width,
-            height,
-            length,
-            weight,
-            breadth,
-        } = req.body;
-
-        console.log("Editing: ", req.body);
-
-        // Initialize updateFields object
-        const updateFields = {};
-
-        // Helper function to conditionally add fields to updateFields
-        const addToUpdate = (field, value) => {
-            if (value && (typeof value === 'string' ? value.length > 0 : value > 0)) {
-                updateFields[field] = value;
-            }
-        };
-
-        // Add basic fields to updateFields
-        addToUpdate('productId', productId);
-        addToUpdate('title', title);
-        addToUpdate('description', description);
-        addToUpdate('specification', specification);
-        addToUpdate('careInstructions', careInstructions);
-        addToUpdate('material', material);
-        addToUpdate('bulletPoints', bulletPoints);
-        addToUpdate('gender', gender);
-        addToUpdate('category', category);
-        addToUpdate('subCategory', subCategory);
-        addToUpdate('specialCategory', specialCategory);
-        addToUpdate('price', price);
-        addToUpdate('salePrice', salePrice && salePrice > 0 ? salePrice : null);
-        addToUpdate('width', width);
-        addToUpdate('height', height);
-        addToUpdate('length', length);
-        addToUpdate('weight', weight);
-        addToUpdate('breadth', breadth);
-
-        // Handle 'size' field separately (calculate totalStock)
-        if (size && size.length > 0) {
-            let totalStock = 0;
-            size.forEach(s => {
-                if (s.colors) {
-                    s.colors.forEach(c => {
-                        totalStock += c.quantity || 0;
-                    });
-                }
-            });
-            if (totalStock > 0) updateFields.size = size;
-            updateFields.totalStock = totalStock;
-        }
-
-        // Calculate and set the DiscountedPercentage field if salePrice exists
-        if (price && salePrice && salePrice > 0) {
-            const discountAmount = price - salePrice;
-            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
-            updateFields.DiscountedPercentage = discountPercentage;
-        } else {
-            const currentProduct = await ProductModel.findById(id);
-            const p = currentProduct.price;
-            const sp = currentProduct.salePrice;
-            const discountAmount = p - sp;
-            const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
-            // If no salePrice, set DiscountedPercentage to 0
-            updateFields.DiscountedPercentage = discountPercentage;
-        }
-
-        console.log("Updating Product Fields: ", updateFields);
-
-        // If no fields to update, return early
-        if (Object.keys(updateFields).length === 0) {
-            return res.status(400).json({ Success: false, message: "No fields provided for update" });
-        }
-
-        // Update product in the database
-        const updatedProduct = await ProductModel.findByIdAndUpdate(id, updateFields, { new: true });
-
-        // Check if update was successful
-        if (!updatedProduct) {
-            return res.status(404).json({ Success: false, message: "Product Update Failed" });
-        }
-
-        return res.status(200).json({
-            Success: true,
-            message: 'Product updated successfully!',
-            result: updatedProduct,
-        });
-    } catch (error) {
-        console.error('Error while editing a product:', error);
-        logger.error('Product Update Failed: ' + error.message);
-        return res.status(500).json({ Success: false, message: 'Internal Server Error' });
-    }
-}; */
 
 export const editProduct = async (req, res) => {
     try {
