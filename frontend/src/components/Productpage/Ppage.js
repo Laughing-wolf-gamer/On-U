@@ -441,7 +441,7 @@ const Ppage = () => {
                                 </div>
                                 {/* Color Selection */}
                                 <div className="w-full flex flex-col mt-2 py-2 space-y-2 mx-auto">
-                                    <h3 className='text-xl'>SELECTED COLOR: <span className='font-semibold'>{currentColor?.name}</span></h3>
+                                    <h3 className='text-base'>SELECTED COLOR: <span className='font-semibold'>{currentColor?.name}</span></h3>
                                     <div className="w-full flex flex-wrap gap-2 justify-start items-start font-extrabold">
                                         {selectedColor && selectedColor.length > 0 ? (
                                             selectedColor.map((color, i) => {
@@ -489,7 +489,7 @@ const Ppage = () => {
                                 <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
                                     {/* Size Selection */}
                                     <div className='w-full flex justify-between items-center'>
-                                        <h3 className='text-xl'>SELECTED SIZE: <span className='font-semibold'>{currentSize?.label}</span></h3>
+                                        <h3 className='text-base'>SELECTED SIZE: <span className='font-semibold'>{currentSize?.label}</span></h3>
                                         <SizeChartModal sizeChartData={clothingSizeChartData} />
                                     </div>
                                     <div className="w-full flex flex-wrap gap-4 justify-start items-start font-extrabold">
@@ -568,40 +568,42 @@ const Ppage = () => {
                                             </Fragment>
                                         )}
                                     </button>
-                                    <div className='w-fit space-x-4 justify-start items-start'>
-                                        <h1>Share: </h1>
-                                        <a
-                                            href="https://facebook.com"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-700 hover:text-blue-600 transition duration-300 text-3xl"
-                                        >
-                                        <ImFacebook />
-                                        </a>
-                                        <a
-                                            href="https://google.com"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-700 hover:text-red-600 transition duration-300 text-3xl"
-                                        >
-                                        <ImGoogle />
-                                        </a>
+                                    <div className='w-full flex mt-4'>
+                                        <div className='w-fit justify- space-x-4 justify-center flex flex-row items-center'>
+                                            <h1 className="text-gray-500 transition duration-300 text-xl">Share: </h1>
                                             <a
-                                                href="https://twitter.com"
+                                                href="https://facebook.com"
                                                 target="_blank"
                                                 rel="noopener noreferrer"
-                                                className="text-gray-700 hover:text-blue-400 transition duration-300 text-3xl"
+                                                className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-600 transition duration-300 text-xl"
                                             >
-                                            <ImTwitter />
-                                        </a>
-                                        <a
-                                            href="https://instagram.com"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-700 hover:text-pink-600 transition duration-300 text-3xl"
-                                        >
-                                            <ImInstagram />
-                                        </a>
+                                                <ImFacebook />
+                                            </a>
+                                            <a
+                                                href="https://google.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
+                                            >
+                                            <ImGoogle />
+                                            </a>
+                                                <a
+                                                    href="https://twitter.com"
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-400 transition duration-300 text-xl"
+                                                >
+                                                <ImTwitter />
+                                            </a>
+                                            <a
+                                                href="https://instagram.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-pink-600 transition duration-300 text-xl"
+                                            >
+                                                <ImInstagram />
+                                            </a>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -617,7 +619,7 @@ const Ppage = () => {
                 <Loader />
             }
             {
-                product && <div className='w-full justify-center items-center flex flex-col mb-4 2xl:px-0 px-6'>
+                product && <div className='w-full justify-center items-center flex flex-col mb-8 2xl:px-0 px-6'>
                     <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                     <div className='w-full flex justify-center items-center'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
