@@ -649,6 +649,6 @@ export function hexToRgba(hex, alpha = 1) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 export const formattedSalePrice = (price)=>{
-    return price ? price.toFixed(2) : "0.00";
+    return price ? Math.round(price) : "0";
 }
 export const BASE_URL = import.meta.env.VITE_BASE_LOCAL_API

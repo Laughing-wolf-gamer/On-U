@@ -225,7 +225,7 @@ const ProductPreview = ({
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-green-600">
-                                        ₹{formattedSalePrice(productData?.price)}
+                                        ₹{ productData?.price && formattedSalePrice(productData?.price)}
                                     </p>
                                 )}
                             </div>
@@ -240,7 +240,7 @@ const ProductPreview = ({
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-red-600">
-                                        ₹{formattedSalePrice(productData?.salePrice)}
+                                        ₹{productData?.salePrice && formattedSalePrice(productData?.salePrice)}
                                     </p>
                                 )}
                             </div>
