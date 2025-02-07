@@ -217,6 +217,7 @@ export const fetchAllCoupons = async(req, res) => {
     }
 }
 const isFormValid =(formData) => {
+    console.log("Check Form: ",formData);
     const reasons = [];
     if(!formData.productId){
         reasons.push("Product ID is required.");
@@ -266,19 +267,19 @@ const isFormValid =(formData) => {
     }
 
     // Category check
-    if (!formData.width) {
+    if (formData.Width === undefined) {
         reasons.push("width is required.");
     }
-    if (!formData.height) {
+    if (formData.Height === undefined) {
         reasons.push("height is required.");
     }
-    if (!formData.length) {
-        reasons.push("Category is required.");
+    if (formData.Length === undefined) {
+        reasons.push("length is required.");
     }
-    if (!formData.weight) {
+    if (formData.Weight === undefined) {
         reasons.push("weight is required.");
     }
-    if (!formData.breadth) {
+    if (formData.Breadth === undefined) {
         reasons.push("breadth is required.");
     }
     // Quantity check
