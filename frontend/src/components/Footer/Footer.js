@@ -1,8 +1,6 @@
-import React, { Fragment } from "react";
+import React from "react";
 import g1 from "../images/googleplay.png";
 import g2 from "../images/appleplay.png";
-import g3 from "../images/original.png";
-import g4 from "../images/return.png";
 import { AiFillFacebook, AiFillYoutube } from "react-icons/ai";
 import { ImTwitter, ImInstagram } from "react-icons/im";
 import { Link } from "react-router-dom";
@@ -10,12 +8,12 @@ import { ArrowUp } from "lucide-react";
 
 const Footer = () => {
     return (
-        <div className="w-screen bg-naturel-100 font-kumbsan">
+        <div className="w-screen bg-neutral-200 font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
                 {/* Online Shopping */}
                 {/* Owner Address Details */}
-                <div className="border-r border-gray-300 space-y-3 pr-4">
+                <div className="border-r border-gray-500 space-y-3 pr-4">
                     <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
                     <p className="text-sm hover:underline  text-gray-700">Owner: John Doe</p>
                     <div className="flex flex-row justify-start space-x-1 hover:text-pink-400 items-center">
@@ -40,7 +38,7 @@ const Footer = () => {
                 </div> */}
 
                 {/* Useful Links */}
-                <div className="border-r border-gray-300 pr-4">
+                <div className="border-r border-gray-500 pr-4">
                     <h1 className="text-lg font-bold text-gray-800 mb-4">USEFUL LINKS</h1>
                     <ul className="text-sm space-y-2">
                         <Link to="/about">
@@ -62,7 +60,7 @@ const Footer = () => {
                 </div>
 
                 {/* App and Social Media */}
-                <div className="border-r border-gray-300 pr-4">
+                <div className="border-r border-gray-500 pr-4">
                     <h1 className="text-lg font-bold mb-4 text-gray-800">EXPERIENCE ON-U APP</h1>
                     <div className="grid grid-cols-2 gap-4 mb-6 w-52 md:w-auto">
                         <img src={g1} alt="Google Play" />
@@ -107,14 +105,8 @@ const Footer = () => {
                 </div>
             </div>
                 {/* Popular Searches */}
-                <div className="text-sm mt-10">
-                    <h1 className="font-extrabold text-black mb-4">POPULAR SEARCHES</h1>
-                    <p className="text-gray-700">
-                        Shirts | Girls | T-Shirts | Sandals
-                    </p>
-                </div>
                 {/* Footer Bottom */}
-                <div className="mt-6 text-center text-gray-500 text-md">
+                <div className="mt-6 h-[200px] text-center text-gray-500 text-md">
                     &copy; 2025 www.theOnu.com. All rights reserved.
                 </div>
             </div>

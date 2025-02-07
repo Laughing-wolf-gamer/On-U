@@ -84,7 +84,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     return (
         <div 
             onClick={handleNavigation} 
-            className="w-full h-full font-sans min-h-[190px] sm:w-[180px] md:w-[185px] md:h-[350px] lg:w-[210px] lg:h-[390px] 2xl:w-[210px] 2xl:h-[400px] sm:h-[360px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
+            className="w-full h-full font-kumbsan min-h-[190px] sm:w-[180px] md:w-[185px] md:h-[350px] lg:w-[210px] lg:h-[390px] 2xl:w-[210px] 2xl:h-[400px] sm:h-[360px] border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
         >
             {/* Product Image Carousel */}
             <div className="w-full bg-gray-300 flex min-h-[70%] justify-center items-center">

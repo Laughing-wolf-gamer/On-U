@@ -17,7 +17,7 @@ const SizeChartModal = ({sizeChartData}) => {
   const toggleModal = () => setIsOpen(!isOpen);
 
   return (
-    <div className='pl-4 font-sans md:pl-3 lg:pl-0 2xl:pl-0'>
+    <div className='pl-4 font-kumbsan md:pl-3 lg:pl-0 2xl:pl-0'>
       {/* Button to open the modal */}
       <button
         onClick={toggleModal}

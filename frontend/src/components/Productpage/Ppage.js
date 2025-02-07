@@ -458,17 +458,17 @@ const Ppage = () => {
                                                             <button
                                                                 disabled={active.quantity <= 0}
                                                                 className={`${active.quantity <= 0 ?
-                                                                `w-14 h-14 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
-                                                                `w-14 h-14 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
+                                                                `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
+                                                                `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
                                                                 ${currentColor?._id === active?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
                                                                 title={active?.quantity || active?.label || "Color"}
                                                             >
                                                                 <div style={{ backgroundColor: active?.label || active._id }} className="w-full h-full rounded-full"></div>
                                                             </button>
                                                             {/* Out of Stock Label */}
-                                                            {active?.quantity > 0 && (
-                                                                <div className="absolute bottom-0 w-full flex justify-center items-center pb-1">
-                                                                    <div className="text-white justify-center flex text-[10px] bg-red-500 rounded-md px-2 py-1 whitespace-nowrap">
+                                                            {active?.quantity <= 0 && (
+                                                                <div className="absolute bottom-[-18px] w-fit flex justify-center items-center pb-1">
+                                                                    <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
                                                                         <span>Out of Stock</span>
                                                                     </div>
                                                                 </div>
@@ -498,7 +498,7 @@ const Ppage = () => {
                                                 <div key={`size_${index}_${active._id}`} className='w-fit h-fit p-1'>
                                                     <div
                                                         style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
-                                                        className={`flex flex-col w-14 h-14 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                                        className={`flex flex-col w-10 h-10 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
                                                         ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                     >
@@ -509,9 +509,9 @@ const Ppage = () => {
                                                         {active.label}
                                                     </button>
                                                     {/* Out of Stock Label */}
-                                                    {active?.quantity >= 0 && (
-                                                        <div className="absolute bottom-[-10px] w-full flex justify-center items-center pb-1">
-                                                            <div className="text-white justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
+                                                    {active?.quantity <= 0 && (
+                                                        <div className="absolute bottom-[-10px] w-fit flex justify-center items-center pb-1">
+                                                            <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
                                                                 <span>Out of Stock</span>
                                                             </div>
                                                         </div>
@@ -598,7 +598,7 @@ const Ppage = () => {
 }
 const ProductSkeletonLoader = () => {
     return (
-        <div className="flex flex-row gap-4 mb-6">
+        <div className="flex font-kumbsan flex-row gap-4 mb-6">
             {/* Skeleton for Left Column (Product Image) */}
             <div className="w-[50%] min-h-[200px] flex flex-col px-7">
                 <div className="w-[50%] bg-gray-300 animate-pulse h-64 rounded-md"></div>

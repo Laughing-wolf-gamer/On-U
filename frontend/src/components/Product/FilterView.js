@@ -575,7 +575,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
-                                    <span className='text-xs font-sans font-normal text-slate-400'> 
+                                    <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
                                 </label>
@@ -707,7 +707,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
-                                    <span className='text-xs font-sans font-normal text-slate-400'> 
+                                    <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({specialCategorynewarray.filter((f) => f === e).length})
                                     </span>
                                 </label>
@@ -741,7 +741,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 />
                                 <label className="font1 text-sm ml-2 mr-4 mb-2">
                                     UpTo {amount} %
-                                    <span className="text-xs font-sans font-normal text-slate-400"> 
+                                    <span className="text-xs font-kumbsan font-normal text-slate-400"> 
                                         ({discountedPercentageAmount.filter((f) => f === amount).length})
                                     </span>
                                 </label>
@@ -841,7 +841,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
                                     On Sale
-                                    <span className='text-xs font-sans font-normal text-slate-400'>
+                                    <span className='text-xs font-kumbsan font-normal text-slate-400'>
                                         ({onSale.length})
                                     </span>
                                 </label>

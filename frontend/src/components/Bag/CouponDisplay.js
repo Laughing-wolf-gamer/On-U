@@ -38,7 +38,7 @@ const CouponsDisplay = ({user}) => {
     },[dispatch])
     console.log("All Coupons: ",AllCoupons);
     return (
-        <div className="font-sans justify-center items-center flex flex-col px-4 py-8">
+        <div className="font-kumbsan justify-center items-center flex flex-col px-4 py-8">
             <h2 className="text-2xl font-bold mb-6 text-center">All Coupons</h2>
 
             {/* Coupons grid */}

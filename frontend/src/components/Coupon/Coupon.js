@@ -46,7 +46,7 @@ const Coupon = () => {
                         <div className="flex py-4">
                           <div className="text-[#3e4152] font1 font-semibold w-4/6">
                           <span className='text-base'>Coupon Code:</span> <span className='text-lg'>ONU300</span>
-                          <div className='text-xs font-sans font-light'>Applicable on your first order</div>
+                          <div className='text-xs font-kumbsan font-light'>Applicable on your first order</div>
                           </div>
                           <div className="">
                            <Link to='/registeruser'>

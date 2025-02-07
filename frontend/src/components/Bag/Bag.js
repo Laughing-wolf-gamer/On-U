@@ -294,7 +294,7 @@ const Bag = () => {
         }
     };
     return (
-        <div className="w-screen font-sans h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
+        <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
             <div className="w-full max-w-screen-2xl justify-self-center">
                 {isAuthentication ? (
                     <div>

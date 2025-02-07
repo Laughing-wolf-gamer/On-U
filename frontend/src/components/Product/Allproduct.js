@@ -110,7 +110,7 @@ const Allproductpage = ({user}) => {
     },[pro])
     console.log("All product: ",product);
     return (
-        <div className="w-screen font-sans h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
+        <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
             <div className='w-full max-w-screen-2xl justify-self-center'>
                 <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
@@ -138,7 +138,7 @@ const Allproductpage = ({user}) => {
                     <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
                             <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-12 2xl:gap-14 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {Array(10).fill(0).map((_, index) => (
                                         <li key={`productId_Skeleton_${index}`} className="w-full">
                                             <ProductCardSkeleton/>
@@ -148,7 +148,7 @@ const Allproductpage = ({user}) => {
                             </div>
                         ) : (
                             <div className='min-h-[200vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {pro && pro.length > 0 && pro.map((p, index) => (
                                         <li key={`productId_${p._id}_${index}`} className="w-full">
                                             <Single_product pro={p} user={user} wishlist={wishlist} />

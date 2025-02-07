@@ -29,10 +29,10 @@ const AdminProductTile = ({
         <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
             <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
-                <MemoizedImage
-                    imageUrl={selectedSizeColorImageArray[0]?.url}
+                {selectedSizeColorImageArray[0] && <MemoizedMedia
+                    mediaUrl={selectedSizeColorImageArray[0].url}
                     altText={product?.title}
-                />
+                />}
             </div>
 
             {/* Title and Price */}
@@ -95,25 +95,51 @@ const AdminProductTile = ({
     );
 };
 
-// Memoized Image Component
-const MemoizedImage = memo(({ imageUrl, altText }) => {
-    const imageRef = useRef(null);
+// Memoized Media Component
+const MemoizedMedia = memo(({ mediaUrl, altText }) => {
+    console.log("Media URL:", mediaUrl);
+    const mediaRef = useRef(null);
 
-    useLazyLoadImage(imageRef, imageUrl);
+    // Check if the URL corresponds to a video
+    const isVideo = typeof mediaUrl === 'string' && mediaUrl.match(/\.(mp4|webm|ogg)$/i);
 
-    return (
-        <img
-            ref={imageRef}
-            data-src={imageUrl}
-            alt={altText}
-            className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
-            loading="lazy"
-            style={{ opacity: 0 }}
-            onLoad={() => {
-                imageRef.current.style.opacity = 1;
-            }}
-        />
-    );
+    useLazyLoadImage(mediaRef, mediaUrl);
+
+    if (isVideo) {
+        return (
+            <video
+                src={mediaUrl}
+                loop = {true}
+                muted={true}
+                autoPlay={false}
+                ref={mediaRef}
+                className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
+                loading="lazy"
+                style={{ opacity: 0 }}
+                onLoadedData={() => {
+                    mediaRef.current.style.opacity = 1;
+                }}
+                controls
+            >
+                <source data-src={mediaUrl} />
+                Your browser does not support the video tag.
+            </video>
+        );
+    } else {
+        return (
+            <img
+                ref={mediaRef}
+                data-src={mediaUrl}
+                alt={altText}
+                className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
+                loading="lazy"
+                style={{ opacity: 0 }}
+                onLoad={() => {
+                    mediaRef.current.style.opacity = 1;
+                }}
+            />
+        );
+    }
 });
 
 // Lazy load custom hook
@@ -122,10 +148,14 @@ function useLazyLoadImage(ref, imageUrl) {
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting && entry.target) {
-                    const imageElement = entry.target;
-                    const imageUrl = imageElement.dataset.src;
-                    if (imageUrl) {
-                        imageElement.src = imageUrl;
+                    const mediaElement = entry.target;
+                    const mediaUrl = mediaElement.dataset.src || mediaElement.querySelector('source')?.dataset.src;
+                    if (mediaUrl) {
+                        if (mediaElement.tagName === 'VIDEO') {
+                            mediaElement.querySelector('source').src = mediaUrl;
+                        } else {
+                            mediaElement.src = mediaUrl;
+                        }
                     }
                     observer.unobserve(entry.target);
                 }

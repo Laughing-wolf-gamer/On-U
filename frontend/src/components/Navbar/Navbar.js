@@ -120,7 +120,7 @@ const Navbar = ({user}) => {
                             <li className='w-max flex items-stretch'>
                                 
                                 <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
-                                    <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-sans text-center text-gray-800'>On U</h1></Link>
+                                    <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-kumbsan text-center text-gray-800'>On U</h1></Link>
                                 </div>
                                 
                             </li>
@@ -185,7 +185,7 @@ const Navbar = ({user}) => {
                                     </Link>
                                 </div>
                             </li>
-                            <li className="w-max flex justify-center items-center pb-1.5 font1 font-semibold font-sans capitalize no-underline text-sm border-4 border-transparent relative">
+                            <li className="w-max flex justify-center items-center pb-1.5 font1 font-semibold font-kumbsan capitalize no-underline text-sm border-4 border-transparent relative">
                                 {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                                         <span>{bag.orderItems.length}</span>
