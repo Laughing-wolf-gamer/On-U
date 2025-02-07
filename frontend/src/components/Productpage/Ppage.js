@@ -441,7 +441,7 @@ const Ppage = () => {
                                 </div>
                                 {/* Color Selection */}
                                 <div className="w-full flex flex-col mt-2 py-2 space-y-2 mx-auto">
-                                    <h3 className='text-base'>SELECTED COLOR: <span className='font-semibold'>{currentColor?.name}</span></h3>
+                                    <h3 className='text-base'>Color: <span className='font-semibold'>{currentColor?.name}</span></h3>
                                     <div className="w-full flex flex-wrap gap-2 justify-start items-start font-extrabold">
                                         {selectedColor && selectedColor.length > 0 ? (
                                             selectedColor.map((color, i) => {
@@ -461,7 +461,7 @@ const Ppage = () => {
                                                                 className={`${active.quantity <= 0 ?
                                                                 `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out bg-gray-600` :
                                                                 `w-10 h-10 rounded-full flex items-center justify-center shadow-md outline-offset-4 transition-transform duration-300 ease-in-out
-                                                                ${currentColor?._id === active?._id ? "outline-offset-1 outline-1 border-2 p-1 border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
+                                                                ${currentColor?._id === active?._id ? "outline-offset-1 outline-1 border-2 p-1 hover:border-slate-900 shadow-md scale-110" : "scale-100 border-solid border-slate-300"}`}`}
                                                                 title={active?.quantity || active?.label || "Color"}
                                                             >
                                                                 <div style={{ backgroundColor: active?.label || active._id }} className="w-full h-full rounded-full"></div>
@@ -489,7 +489,7 @@ const Ppage = () => {
                                 <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
                                     {/* Size Selection */}
                                     <div className='w-full flex justify-between items-center'>
-                                        <h3 className='text-base'>SELECTED SIZE: <span className='font-semibold'>{currentSize?.label}</span></h3>
+                                        <h3 className='text-base'>Size: <span className='font-semibold'>{currentSize?.label}</span></h3>
                                         <SizeChartModal sizeChartData={clothingSizeChartData} />
                                     </div>
                                     <div className="w-full flex flex-wrap gap-4 justify-start items-start font-extrabold">
@@ -499,15 +499,18 @@ const Ppage = () => {
                                                 <div key={`size_${index}_${active._id}`} className='w-fit h-fit p-1'>
                                                     <div
                                                         style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
-                                                        className={`flex flex-col w-10 h-10 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 border-gray-900 ease-in-out border-[1px]
+                                                        className={`flex flex-col w-10 h-10 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
                                                         ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
+                                                        title={active?.quantity || active?.label || "Size"}
                                                     >
                                                     {
                                                         active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
                                                     }
-                                                    <button className="w-full h-full rounded-full flex items-center justify-center">
-                                                        {active.label}
+                                                    <button className="w-full h-full rounded-full flex items-center text-base font-bold justify-center">
+                                                        <span className='p-2'>
+                                                            {active.label}
+                                                        </span>
                                                     </button>
                                                     {/* Out of Stock Label */}
                                                     {active?.quantity <= 0 && (

@@ -17,13 +17,14 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Bus, Heart, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { ArrowDownCircle, Bus, Clock, Heart, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
 import MShareView from './MShareView';
+import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 
 const reviews = [
     {
@@ -462,7 +463,6 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
-                                                <MShareView/>
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -479,7 +479,6 @@ const MPpage = () => {
                                         ) : (
                                             // Render image using LazyLoadImage
                                             <div className="relative">
-                                                <MShareView/>
                                                 <LazyLoadImage
                                                     effect="blur"
                                                     src={im.url}
@@ -528,7 +527,7 @@ const MPpage = () => {
                                     inclusive of all taxes
                                 </h1> */}
                                 <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
-                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>SELECTED COLOR: <span className='font-normal'>{currentColor?.name}</span></h3></div>
+                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
                                     <div className="w-full flex flex-wrap gap-4 justify-start items-start">
                                         {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
                                             const active = color;
@@ -543,7 +542,7 @@ const MPpage = () => {
                                                         {
                                                             active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
                                                         }
-                                                        <button disabled={active.quantity <= 0} className={`w-[48px] h-[48px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
+                                                        <button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
                                                             <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
                                                         </button>
                                                         {active?.quantity <= 0 && (
@@ -561,7 +560,7 @@ const MPpage = () => {
                                 </div>
                                 <div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
                                     <div className='w-full flex justify-between items-center'>
-                                        <h3 className='text-sm text-left'>SELECTED SIZE: <span className='font-normal'>{currentSize?.label}</span>
+                                        <h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
                                         </h3>
                                         <SizeChartModal sizeChartData={clothingSizeChartData} />
                                     </div>
@@ -572,15 +571,15 @@ const MPpage = () => {
                                                 <div key={`size_${index}_${active._id}`}>
                                                     <div
                                                         style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
                                                         ${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                     >
                                                         {
                                                             active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
                                                         }
-                                                        <button disabled={active.quantity <= 0} className={`w-10 h-10 rounded-full flex relative items-center justify-center`}>
-                                                            {active.label}
+                                                        <button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
+                                                            <span className='text-base font-medium'>{active.label}</span>
                                                         </button>
                                                         {active?.quantity <= 0 && (
                                                             <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
@@ -653,10 +652,10 @@ const MPpage = () => {
                             <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
                                 <div className={`grid grid-cols-12 w-full font1 relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
                                     <div className="col-span-2 flex justify-center items-center p-1">
-                                        <button className="bg-gray-50 text-center w-12 h-12 border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+                                        <button className="bg-gray-50 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
                                             {
                                                 loadingWishList ? <Fragment>
-                                                    <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
+                                                    <div className="w-full h-full border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
                                                 </Fragment>:(
                                                     <Fragment>
                                                     {
@@ -681,6 +680,60 @@ const MPpage = () => {
                                     </div>
                                 </div>
                             </div>
+                            <div className='w-full flex mt-4'>
+                                <div className='w-fit space-x-2 justify-center flex flex-row items-center'>
+                                    <h1 className="text-gray-500 transition duration-300 text-xl">Share: </h1>
+                                    <a
+                                        href="https://facebook.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-600 transition duration-300 text-xl"
+                                    >
+                                        <ImFacebook />
+                                    </a>
+                                    <a
+                                        href="https://google.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
+                                    >
+                                    <ImGoogle />
+                                    </a>
+                                        <a
+                                            href="https://twitter.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-400 transition duration-300 text-xl"
+                                        >
+                                        <ImTwitter />
+                                    </a>
+                                    <a
+                                        href="https://instagram.com"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-pink-600 transition duration-300 text-xl"
+                                    >
+                                        <ImInstagram />
+                                    </a>
+                                </div>
+                            </div>
+                            <div className="w-full flex flex-col space-y-4 mt-4">
+                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+                                    <h1 className="text-gray-500"><Clock /></h1>
+                                    <h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+                                </div>
+
+                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+                                    <h1 className="text-gray-500"><RotateCw /></h1>
+                                    <h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+                                </div>
+
+                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+                                    <h1 className="text-gray-500"><Clock /></h1>
+                                    <h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+                                </div>
+                            </div>
+
                             <div className='w-full px-4 md:px-2'>
                                 {/* Reviews Section */}
                                 <div className='reviews-section'>
@@ -736,7 +789,7 @@ const MPpage = () => {
                                 </div>
                                 </div>
                                 {
-                                    similar && similar.length > 0 && <div className="mt-2 pb-6 pt-4 relative bg-white px-4">
+                                    similar && similar.length > 0 && <div className="mt-2 mb-7 pb-6 pt-4 relative bg-white px-4">
                                         <div className='w-full justify-center items-center flex px-1 py-2'>
                                             <h1 className="font1 flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
                                         </div>
@@ -799,7 +852,7 @@ const ProductReviews = ({ reviews }) => {
 
   return (
     <div>
-      <h2 className="text-xl font-bold mb-4">Product Reviews</h2>
+      <h2 className="text-xl font-kumbsan font-bold mb-4">Product Reviews</h2>
         <div
             className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
         >
@@ -870,7 +923,7 @@ const AverageRatingView = ({ ratings }) => {
 
     return (
         <Fragment>
-            <div className='average-rating mt-6'>
+            <div className='average-rating font-kumbsan mt-6'>
                 <div className='flex items-center'>
                     <div className='stars'>
                         {/* Render filled stars */}

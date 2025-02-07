@@ -14,7 +14,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     if (!pro || !imageArray?.length) {
         // If no product data is available, show skeleton loader
         return (
-            <div className="w-full h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden animate-pulse">
+            <div className="w-full font-kumbsan h-fit border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden animate-pulse">
                 {/* Skeleton Image Carousel */}
                 <div className="w-full bg-gray-200 min-h-[200px] rounded-md"></div>
 
@@ -42,7 +42,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     };
 
     const renderPrice = () => (
-        <p className="flex items-center px-0.5 pb-2 space-x-2 whitespace-nowrap">
+        <p className="flex items-center font-kumbsan px-0.5 pb-2 space-x-2 whitespace-nowrap">
             <span className="text-[12px] md:text-[14px] sm:text-base font-medium text-black">
                 ₹{formattedSalePrice(salePrice || price)}
             </span>
@@ -61,7 +61,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     
     
     const renderSizeOptions = () => (
-        <div className="flex-row flex justify-start items-center">
+        <div className="flex-row font-kumbsan flex justify-start items-center">
             <p className="font1 text-[10px] sm:text-sm px-2 text-[#5f5f5f9e]">Sizes:</p>
             {pro?.size?.map((item, i) => (
                 <span key={i} className="font1 text-[8px] sm:text-xs px-2 text-[#5f5f5f9e]">{item.label}</span>
