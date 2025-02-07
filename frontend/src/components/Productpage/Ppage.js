@@ -21,6 +21,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext'
 import toast from 'react-hot-toast'
 import StarRatingInput from './StarRatingInput'
 import ShareView from './ShareView'
+import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 
 const reviews = [
     {
@@ -567,6 +568,41 @@ const Ppage = () => {
                                             </Fragment>
                                         )}
                                     </button>
+                                    <div className='w-fit space-x-4 justify-start items-start'>
+                                        <h1>Share: </h1>
+                                        <a
+                                            href="https://facebook.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-gray-700 hover:text-blue-600 transition duration-300 text-3xl"
+                                        >
+                                        <ImFacebook />
+                                        </a>
+                                        <a
+                                            href="https://google.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-gray-700 hover:text-red-600 transition duration-300 text-3xl"
+                                        >
+                                        <ImGoogle />
+                                        </a>
+                                            <a
+                                                href="https://twitter.com"
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-gray-700 hover:text-blue-400 transition duration-300 text-3xl"
+                                            >
+                                            <ImTwitter />
+                                        </a>
+                                        <a
+                                            href="https://instagram.com"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-gray-700 hover:text-pink-600 transition duration-300 text-3xl"
+                                        >
+                                            <ImInstagram />
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
