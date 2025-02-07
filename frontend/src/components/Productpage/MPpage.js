@@ -23,7 +23,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
-import ShareView from './ShareView';
+import MShareView from './MShareView';
 
 const reviews = [
     {
@@ -462,7 +462,7 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
-                                                {/* <ShareView/> */}
+                                                <MShareView/>
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -479,7 +479,7 @@ const MPpage = () => {
                                         ) : (
                                             // Render image using LazyLoadImage
                                             <div className="relative">
-                                                {/* <ShareView/> */}
+                                                <MShareView/>
                                                 <LazyLoadImage
                                                     effect="blur"
                                                     src={im.url}
@@ -529,26 +529,34 @@ const MPpage = () => {
                                 </h1> */}
                                 <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
                                     <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>SELECTED COLOR: <span className='font-normal'>{currentColor?.name}</span></h3></div>
-                                    <div className="w-full grid grid-cols-4 justify-start items-center gap-3">
-                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => (
-                                            <div key={`color_${index}_${color._id}`}
-                                                style={{pointerEvents:color.quantity <= 0 ? 'none':'all'}}
-                                                className={`flex relative flex-col w-14 h-14 items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
-                                                ${currentColor?._id === color?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
-                                                onClick={() => { setCurrentColor(color); handleSetColorImages(color); }}
-                                            >
-                                                <button className={`w-full h-full rounded-full flex ${currentColor?._id === color?._id ? "p-1":""} items-center justify-center`}>
-                                                    <div style={{ backgroundColor: color?.label || color._id}} className='w-full h-full rounded-full'></div>
-                                                </button>
-                                                {color?.quantity <= 0 && (
-                                                    <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
-                                                        <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                            <span>Out of Stock</span>
-                                                        </div>
+                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
+                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
+                                            const active = color;
+                                            return(
+                                                <div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
+                                                    <div
+                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
+                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        ${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
+                                                        onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
+                                                    >
+                                                        {
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                        }
+                                                        <button disabled={active.quantity <= 0} className={`w-[48px] h-[48px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
+                                                            <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
+                                                        </button>
+                                                        {active?.quantity <= 0 && (
+                                                            <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                                    <span>Out of Stock</span>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                </div>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                                 <div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
@@ -557,30 +565,38 @@ const MPpage = () => {
                                         </h3>
                                         <SizeChartModal sizeChartData={clothingSizeChartData} />
                                     </div>
-                                    <div className="w-full grid grid-cols-4 justify-start items-center gap-3">
-                                        {product && product.size && product.size.length > 0 && product.size.map((size, index) => (
-                                            <div key={`size_${index}_${size._id}`}
-                                                style={{pointerEvents:size.quantity <= 0 ? 'none':'all'}}
-                                                className={`flex relative flex-col w-14 h-14 items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
-                                                ${currentSize?._id === size?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
-                                                onClick={() => { handleSetNewImageArray(size); }}
-                                            >
-                                                <button className={`w-8 h-8 rounded-full flex items-center justify-center`}>
-                                                    {size.label}
-                                                </button>
-                                                {size?.quantity <= 0 && (
-                                                    <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
-                                                        <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                            <span>Out of Stock</span>
-                                                        </div>
+                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
+                                        {product && product.size && product.size.length > 0 && product.size.map((size, index) => {
+                                            const active = size;
+                                            return(
+                                                <div key={`size_${index}_${active._id}`}>
+                                                    <div
+                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
+                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full p-2 font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        ${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
+                                                        onClick={() => { handleSetNewImageArray(active); }}
+                                                    >
+                                                        {
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                        }
+                                                        <button disabled={active.quantity <= 0} className={`w-10 h-10 rounded-full flex relative items-center justify-center`}>
+                                                            {active.label}
+                                                        </button>
+                                                        {active?.quantity <= 0 && (
+                                                            <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                                    <span>Out of Stock</span>
+                                                                </div>
+                                                            </div>
+                                                        )}
                                                     </div>
-                                                )}
-                                            </div>
-                                        ))}
+                                                </div>
+                                            )
+                                        })}
                                     </div>
                                 </div>
                             </div>
-                            <SizeChartModal sizeChartData={clothingSizeChartData}/>
+                            {/* <SizeChartModal sizeChartData={clothingSizeChartData}/> */}
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
@@ -843,34 +859,34 @@ const ProductReviews = ({ reviews }) => {
   );
 };
 const AverageRatingView = ({ ratings }) => {
-  if (!ratings || ratings.length === 0) return null;
+    if (!ratings || ratings.length === 0) return null;
 
-  // Calculate the average rating
-  const totalStars = ratings.reduce((acc, review) => acc + review.rating, 0);
-  const avgStars = totalStars / ratings.length;
-  const roundedAvg = Math.round(avgStars * 10) / 10; // Rounded to 1 decimal place
-  const fullStars = Math.floor(roundedAvg);
-  const emptyStars = 5 - fullStars;
+    // Calculate the average rating
+    const totalStars = ratings.reduce((acc, review) => acc + review.rating, 0);
+    const avgStars = totalStars / ratings.length;
+    const roundedAvg = Math.round(avgStars * 10) / 10; // Rounded to 1 decimal place
+    const fullStars = Math.floor(roundedAvg);
+    const emptyStars = 5 - fullStars;
 
-  return (
-    <Fragment>
-      <div className='average-rating mt-6'>
-        <div className='flex items-center'>
-          <div className='stars'>
-            {/* Render filled stars */}
-            {[...Array(fullStars)].map((_, i) => (
-              <span key={i} className='star text-[30px] text-black'>★</span>
-            ))}
-            {/* Render empty stars */}
-            {[...Array(emptyStars)].map((_, i) => (
-              <span key={i} className='star text-[30px] text-gray-300'>★</span>
-            ))}
-          </div>
-          <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
-        </div>
-      </div>
-    </Fragment>
-  );
+    return (
+        <Fragment>
+            <div className='average-rating mt-6'>
+                <div className='flex items-center'>
+                    <div className='stars'>
+                        {/* Render filled stars */}
+                        {[...Array(fullStars)].map((_, i) => (
+                            <span key={i} className='star text-[30px] text-black'>★</span>
+                        ))}
+                        {/* Render empty stars */}
+                        {[...Array(emptyStars)].map((_, i) => (
+                            <span key={i} className='star text-[30px] text-gray-300'>★</span>
+                        ))}
+                    </div>
+                    <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
+                </div>
+            </div>
+        </Fragment>
+    );
 };
 
 export default MPpage;

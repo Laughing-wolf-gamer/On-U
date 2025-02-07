@@ -10,22 +10,22 @@ import { ArrowUp } from "lucide-react";
 
 const Footer = () => {
     return (
-        <div className="w-screen font-kumbsan">
+        <div className="w-screen bg-naturel-100 font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
                 {/* Online Shopping */}
                 {/* Owner Address Details */}
                 <div className="border-r border-gray-300 space-y-3 pr-4">
                     <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
-                    <p className="text-sm text-gray-700">Owner: John Doe</p>
+                    <p className="text-sm hover:underline  text-gray-700">Owner: John Doe</p>
                     <div className="flex flex-row justify-start space-x-1 hover:text-pink-400 items-center">
-                    <h2 className="text-xl font-bold">GET DIRECTION</h2>
-                    <ArrowUp className="rotate-45"/>
+                        <h2 className="text-xl font-bold">GET DIRECTION</h2>
+                        <ArrowUp className="rotate-45"/>
                     </div>
-                    <p className="text-sm text-gray-700">Company: On-U.com</p>
-                    <p className="text-sm text-gray-700">Address: 1234, Some Street, City, Country</p>
-                    <p className="text-sm text-gray-700">Phone: +1 (234) 567-890</p>
-                    <p className="text-sm text-gray-700">Email: owner@onu.com</p>
+                    <p className="text-sm hover:underline text-gray-700">Company: On-U.com</p>
+                    <p className="text-sm hover:underline text-gray-700">Address: 1234, Some Street, City, Country</p>
+                    <p className="text-sm hover:underline text-gray-700">Phone: +1 (234) 567-890</p>
+                    <p className="text-sm hover:underline text-gray-700">Email: owner@onu.com</p>
                 </div>
                 {/* <div className="border-r border-gray-300 pr-4">
                     
@@ -58,8 +58,8 @@ const Footer = () => {
                         <Link to="/privacyPolicy">
                             <li className="hover:underline text-gray-700">Privacy Policy</li>
                         </Link>
-                        </ul>
-                    </div>
+                    </ul>
+                </div>
 
                 {/* App and Social Media */}
                 <div className="border-r border-gray-300 pr-4">
@@ -100,7 +100,7 @@ const Footer = () => {
                         <div className="flex mt-4 items-center">
                             <input type="checkbox" id="agreement" className="mr-2" />
                             <label htmlFor="agreement" className="text-sm text-gray-700">
-                                I agree to the <span className="text-blue-600">Terms & Conditions</span>
+                                I agree to the <span className="text-gray-900">Terms & Conditions</span>
                             </label>
                         </div>
                     </div>
@@ -110,7 +110,7 @@ const Footer = () => {
                 <div className="text-sm mt-10">
                     <h1 className="font-extrabold text-black mb-4">POPULAR SEARCHES</h1>
                     <p className="text-gray-700">
-                        Shirts | Dresses For Girls | T-Shirts | Sandals
+                        Shirts | Girls | T-Shirts | Sandals
                     </p>
                 </div>
                 {/* Footer Bottom */}
