@@ -19,6 +19,7 @@ import FullScreenOverLayCouponPopUp from './FullScreenOverLayCouponPopUp'
 import Footer from '../Footer/Footer'
 import GridImageView from './GridImageView'
 import { fetchWebsiteDisclaimer } from '../../action/common.action';
+import BackToTopButton from './BackToTopButton';
 
 
 const Home = ({user}) => {
@@ -203,10 +204,10 @@ const Home = ({user}) => {
         const randomComponent = Math.random() < 0.5 ? 'coupon' : 'dialog';
         setShowComponent(randomComponent);
     }, []);
-
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
     return (
-        <div className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {
                 window.screen.width > 1024 ?
                     <Fragment >
@@ -423,6 +424,7 @@ const Home = ({user}) => {
                     </Fragment>
 
             }
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
             {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
             {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
         </div>
