@@ -72,36 +72,26 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 		behavior: 'smooth', // This makes the scroll smooth
 	  });
 	};
-  
-	const handleImageClick = (e) => {
-	  /* e.preventDefault();
-	  if (!dragState.isDragging) {
-		navigation('/products');
-	  } */
-	};
-  
+    
 	return (
-		<div className="w-full font-kumbsan max-w-screen-md mx-auto justify-self-center">
-			<div className="grid grid-cols-1 min-h-[280px] relative px-1">	
+		<div className="grid grid-cols-1 min-h-[180px] relative px-4">	
 			<div className="relative w-full flex justify-start items-center">
 				{/* Left and Right Arrow Buttons */}
-				{showArrows && (
-					<Fragment>
-						<button
+				{/* <Fragment>
+					<button
 						onClick={() => scroll(-1)}
-						className="absolute h-[40%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
-						>
-						<ChevronLeft size={40} />
-						</button>
-		
-						<button
+						className="absolute h-[20%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-black hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
+					>
+					<ChevronLeft size={40} />
+					</button>
+	
+					<button
 						onClick={() => scroll(1)}
-						className="absolute h-[40%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
-						>
-							<ChevronRight size={40} />
-						</button>
-					</Fragment>
-				)}
+						className="absolute h-[20%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-black hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
+					>
+						<ChevronRight size={40} />
+					</button>
+				</Fragment> */}
 	
 				{/* Slider Container to hide overflow items */}
 				<div className="w-full overflow-hidden">
@@ -121,53 +111,34 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 								.fill(0)
 								.map((_, index) => (
 									<div
-										key={`skeleton_${index}`}
-										className="min-h-[200px] min-w-[200px] transform transition-transform duration-500 ease-in-out rounded-lg animate-pulse"
-									>
-										<div className="min-h-52 w-96 bg-gray-900 rounded-md"></div>
-									</div>
+                                        key={`skeleton_${index}`}
+                                        className="2xl:w-[300px] 2xl:h-[110px] md:h-[100px] m-2 md:w-[300px] lg:w-[305px] lg:h-[110px] p-2 sm:h-[110px] sm:w-[205px] h-[140px] w-[160px] transform transition-transform duration-500 ease-in-out bg-neutral-200 rounded-lg animate-pulse"
+                                    >
+                                        <div className="min-h-[90%] w-[260px] bg-neutral-400 rounded-md"></div>
+                                    </div>
 								))
 							) : (
 								AllCoupons.map((coupon, index) => (
 									<div
 										key={`q_banners_${index}`}
-										onClick={handleImageClick}
-										className="min-h-fit transform transition-transform duration-500 ease-in-out hover:scale-105"
+										className="min-h-full transform transition-transform duration-300 ease-in-out hover:scale-105"
 									>
-									<CouponCard coupon={coupon} checkAndCreateToast={checkAndCreateToast} />
+										<CouponCard coupon={coupon} checkAndCreateToast={checkAndCreateToast} />
 									</div>
 								))
 							)}
 					</ul>
 				</div>
 			</div>
-			</div>
 		</div>
 	);
 };
 
 
-{/* <div className="w-full overflow-x-auto">
-				<div className="flex space-x-6">
-					{AllCoupons && AllCoupons.length > 0 ? (
-						AllCoupons.map((coupon, index) => (
-						<CouponCard
-							key={coupon._id || index}
-							coupon={coupon}
-							checkAndCreateToast={checkAndCreateToast}
-						/>
-						))
-					) : (
-						<div className="col-span-full text-center text-gray-600">
-						<p>No coupons available.</p>
-						</div>
-					)}
-				</div>
-			</div> */}
   
 const CouponCard = ({ coupon, checkAndCreateToast }) => {
 	return (
-		<div className="flex-shrink-0 w-64 font-kumbsan h-full justify-center flex flex-col bg-white p-4 transform transition-all duration-500 hover:shadow-md border-dashed border-[2px] border-gray-900 border-opacity-60 hover:bg-gray-100 hover:border-gray-500">
+		<div className="flex-shrink-0 w-64 font-kumbsan h-full justify-center flex flex-col bg-white p-1 transform transition-all duration-500 hover:shadow-md border-dashed border-[2px] border-gray-900 border-opacity-60 hover:bg-gray-100 hover:border-gray-500">
 			<div className="flex items-center justify-between mb-4">
 				<h3 className="text-xs sm:text-sm font-bold text-gray-900">
 				{coupon?.FreeShipping ? (

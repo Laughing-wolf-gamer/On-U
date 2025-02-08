@@ -148,8 +148,8 @@ export const editCoupon = async (req, res) => {
         const updateFields = {};
 
         // Function to conditionally add fields to the updateFields object
-        const addFieldIfValid = (field, value, isString = true) => {
-            if (value && (isString ? value.length > 0 : value > 0)) {
+        const addFieldIfValid = (field, value) => {
+            if (value !== undefined) {
                 updateFields[field] = value;
             }
         };
@@ -165,7 +165,9 @@ export const editCoupon = async (req, res) => {
         addFieldIfValid('Discount', discount);
         addFieldIfValid('MinOrderAmount', minOrderAmount);
         addFieldIfValid('CustomerLogin', customerLogin);
-        if (freeShipping > 0) updateFields.FreeShipping = freeShipping; // Special case for freeShipping (numeric)
+        addFieldIfValid('FreeShipping', freeShipping);
+        // updateFields.FreeShipping = freeShipping ? freeShipping : false; // Special case for freeShipping (numeric)
+        // updateFields.FreeShipping = freeShipping ? freeShipping : false; // Special case for freeShipping (numeric)
         if (productId) updateFields.ProductId = productId; // ProductId is required, no need for length check
         if (category && category !== 'none') updateFields.Category = category; // Ensure 'none' is handled
         if (status && ["Active", "Inactive"].includes(status)) updateFields.Status = status;

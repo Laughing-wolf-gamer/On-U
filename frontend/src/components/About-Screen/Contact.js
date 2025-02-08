@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Footer from "../Footer/Footer";
 import { useDispatch } from "react-redux";
 import axios from "axios";
@@ -7,39 +7,19 @@ import LoadingOverlay from "../../utils/LoadingOverLay";
 import { useToast } from "../../Contaxt/ToastProvider";
 import toast from "react-hot-toast";
 import { useLocationContext } from "../../Contaxt/LocationContext";
+import { useSettingsContext } from "../../Contaxt/SettingsContext";
+import BackToTopButton from "../Home/BackToTopButton";
 
 const Contact = () => {
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
     const{pincode,position} = useLocationContext();
-
+    const {checkAndCreateToast} = useSettingsContext();
     const [formData, setFormData] = useState({});
     const[sendingFormData,setSendingFormData] = useState({});
     const [sendingMessage,setSendingMessage] = useState('');
     const[sendingMessageLoading,setSendingMessageLoading] = useState(false);
     const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(activeToast !== message){
-            switch(type){
-                case "error":
-                    toast.error(message)
-                    break;
-                case "warning":
-                    toast.warning(message)
-                    break;
-                case "info":
-                    toast.info(message)
-                    break;
-                case "success":
-                    toast.success(message)
-                    break;
-                default:
-                    toast.info(message)
-                    break;
-            }
-            showToast(message);
-        }
-    }
     // State for form handling
     const fetchContactUsPageData = async () => {
         setSendingMessageLoading(true);
@@ -98,7 +78,7 @@ const Contact = () => {
         fetchContactUsPageData();
     },[dispatch])
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (
                 <LoadingOverlay isLoading={sendingMessageLoading} />
             ) : (
@@ -223,6 +203,7 @@ const Contact = () => {
                 </div>
             )}
             <Footer />
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
   

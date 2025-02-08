@@ -270,7 +270,7 @@ const MPpage = () => {
         setCurrentSize(size);
         setSelectedSize(size);
         setSelectedColor(size.colors);
-        // setSelectedColorId(size.colors[0]._id);
+        setCurrentColor(null);
     };
 
     const handleSetColorImages = (color) => {

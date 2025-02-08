@@ -7,12 +7,12 @@ import { useRazorpay } from "react-razorpay";
 import { X } from "lucide-react";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 
-const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
+const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
     const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
     const [coupon, setCoupon] = useState("");
-    const [discount, setDiscount] = useState(0);
+    // const [discount, setDiscount] = useState(0);
     const [isPaymentStart, setIsPaymentStart] = useState(false);
     const {checkAndCreateToast} = useSettingsContext();
 
@@ -267,8 +267,8 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                         <span>₹{formattedSalePrice(originalsAmount)}</span>
                     </p>
                     <p className="flex justify-between text-sm">
-                        <span className="font-semibold">Discount:</span>
-                        <span>{discount}</span>
+                        <span className="font-semibold">Saved:</span>
+                        <span>{discountAmount}</span>
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>

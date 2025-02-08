@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
@@ -13,10 +13,12 @@ import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
 import ProductCardSkeleton from './ProductCardSkeleton';
 import { ChevronRight } from 'lucide-react';
+import BackToTopButton from '../Home/BackToTopButton';
 
 
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
     // const [sortBy, setSortBy] = useState('newest');  // Default value
@@ -109,8 +111,9 @@ const Allproductpage = ({user}) => {
         }
     },[pro])
     console.log("All product: ",product);
+
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
             <div className='w-full max-w-screen-2xl justify-self-center'>
                 <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
@@ -215,6 +218,7 @@ const Allproductpage = ({user}) => {
             </div>
             {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
             <Footer />
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
 };

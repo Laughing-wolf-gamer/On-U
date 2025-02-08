@@ -8,7 +8,7 @@ import { ArrowUp } from "lucide-react";
 
 const Footer = () => {
     return (
-        <div className="w-screen border-t-[1px] border-t-gray-300 shadow-lg bg-white font-kumbsan">
+        <div className="w-screen border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-200 pb-10">
                     {/* Online Shopping */}
@@ -74,9 +74,9 @@ const Footer = () => {
                         {/* Email Input and Agreement Section */}
                         <div className="flex w-full max-w-md border border-gray-300 rounded-full space-x-3 p-3 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
                             <input
-                            type="email"
-                            placeholder="Get Cool Coupons To your mail"
-                            className="rounded-full w-full text-black placeholder:text-gray-400 outline-none transition-all duration-300 ease-in-out"
+                                type="email"
+                                placeholder="Get Cool Coupons To your mail"
+                                className="rounded-full w-full text-black placeholder:text-gray-400 outline-none transition-all duration-300 ease-in-out"
                             />
                             <button className="bg-black p-3 hover:bg-gray-700 transition-all duration-300 ease-in-out text-white rounded-full transform hover:rotate-45 focus:outline-none">
                             <ArrowUp />
@@ -86,7 +86,7 @@ const Footer = () => {
 
                 </div>
 
-                <div className="mt-6 h-[150px] justify-end items-center flex flex-col text-center text-gray-500 text-md">
+                <div className="mt-6 h-[90px] justify-end items-center flex flex-col text-center text-gray-500 text-md">
                     <span>&copy; 2025 www.theOnu.com. All rights reserved.</span>
                 </div>
             </div>

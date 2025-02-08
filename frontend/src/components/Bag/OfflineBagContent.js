@@ -54,10 +54,11 @@ const OfflineBagContent = ({
 	}
 	return(
 		<div className="relative w-full px-10 mx-auto">
-			<NavigationBar showPayment={showPayment} selectedAddress={selectedAddress} />
 			
 			{sessionBagData && sessionBagData.length > 0 ? (
-				<div className="flex flex-col lg:flex-row gap-12 mt-12">
+				<div>
+					<NavigationBar showPayment={showPayment} selectedAddress={selectedAddress} />
+					<div className="flex flex-col lg:flex-row gap-12 mt-12">
 					<ProductListing
 						sessionBagData={sessionBagData}
 						updateQty={updateQty}
@@ -72,6 +73,7 @@ const OfflineBagContent = ({
 						convenienceFees={convenienceFees}
 						navigation={navigation}
 					/>
+				</div>
 				</div>
 			) : (
 				<Fragment>
@@ -111,58 +113,78 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,applyCoupon,coupon  }) => {
 	return (
 		<div className="flex-1 space-y-6">
-			{sessionBagData.map((item, i) => (
-				<div key={i} className="flex flex-col sm:flex-row items-center border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
-					{/* Product Image */}
-					<div className="w-28 h-28">
-						<Link to={`/products/${item.ProductData?._id}`} className="block w-full h-full">
-							<img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
-						</Link>
-					</div>
-
-					{/* Product Details */}
-					<div className="flex-1 space-y-2">
-						<h3 className="font-semibold text-sm sm:text-lg text-gray-800">{item?.ProductData?.title}</h3>
-						<p className="text-xs sm:text-sm text-gray-600">Size: {item?.size?.label}</p>
-						<div className="flex items-center space-x-4 text-xs sm:text-sm text-blue-500 mt-2">
-							{item?.ProductData?.salePrice ? (
-								<Fragment>
-									<span>₹{Math.round(formattedSalePrice(item?.ProductData?.salePrice))}</span>
-									<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(item.ProductData.price))}</span>
-									<span className="text-gray-700">({calculateDiscountPercentage(item.ProductData?.price, item.ProductData?.salePrice)}% OFF)</span>
-								</Fragment>
-							) : (
-								<span>₹ {Math.round(formattedSalePrice(item.ProductData.price))}</span>
-							)}
+			{sessionBagData.map((item, i) => {
+				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+				const isValidImage = (url) => {
+					return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+				};
+				const getImageExtensionsFile = () => {
+					
+					// Find the first valid image URL based on extensions
+					return item?.color?.images.find((image) => 
+						image.url && isValidImage(image.url)
+					);
+				};
+				const validImage = getImageExtensionsFile();
+				return(
+					(
+						<div key={i} className="flex flex-col sm:flex-row items-center border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
+							{/* Product Image */}
+							<div className="w-28 h-28">
+								<Link to={`/products/${item.ProductData?._id}`} className="block w-full h-full">
+									<img
+                                        src={validImage?.url}
+                                        alt={item?.ProductData?.title}
+                                        className="object-contain w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+                                    />
+								</Link>
+							</div>
+		
+							{/* Product Details */}
+							<div className="flex-1 space-y-2">
+								<h3 className="font-semibold text-sm sm:text-lg text-gray-800">{item?.ProductData?.title}</h3>
+								<p className="text-xs sm:text-sm text-gray-600">Size: {item?.size?.label}</p>
+								<div className="flex items-center space-x-4 text-xs sm:text-sm text-blue-500 mt-2">
+									{item?.ProductData?.salePrice ? (
+										<Fragment>
+											<span>₹{Math.round(formattedSalePrice(item?.ProductData?.salePrice))}</span>
+											<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(item.ProductData.price))}</span>
+											<span className="text-gray-700">({calculateDiscountPercentage(item.ProductData?.price, item.ProductData?.salePrice)}% OFF)</span>
+										</Fragment>
+									) : (
+										<span>₹ {Math.round(formattedSalePrice(item.ProductData.price))}</span>
+									)}
+								</div>
+		
+								{/* Quantity Selector */}
+								<div className="mt-4 flex items-center space-x-4">
+									<label className="text-xs sm:text-sm">Qty:</label>
+									<select
+										value={item?.quantity}
+										onChange={(e) => updateQty(e, item.ProductData._id)}
+										className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+									>
+										{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+											<option key={num + 1} value={num + 1}>{num + 1}</option>
+										))}
+									</select>
+								</div>
+							</div>
+		
+							{/* Delete Button */}
+							<X
+								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer mt-4 sm:mt-0"
+								onClick={(e) => {
+									handleDeleteBag(item.ProductData._id, item._id);
+								}}
+							/>
 						</div>
-
-						{/* Quantity Selector */}
-						<div className="mt-4 flex items-center space-x-4">
-							<label className="text-xs sm:text-sm">Qty:</label>
-							<select
-								value={item?.quantity}
-								onChange={(e) => updateQty(e, item.ProductData._id)}
-								className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
-							>
-								{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-									<option key={num + 1} value={num + 1}>{num + 1}</option>
-								))}
-							</select>
-						</div>
-					</div>
-
-					{/* Delete Button */}
-					<X
-						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer mt-4 sm:mt-0"
-						onClick={(e) => {
-							handleDeleteBag(item.ProductData._id, item._id);
-						}}
-					/>
-				</div>
-			))}
+					)
+				)
+			})}
 
 			{/* Coupon Section */}
-			<div className="mt-6 space-y-2">
+			{/* <div className="mt-6 space-y-2">
 				<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
 				<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
 					<input
@@ -179,7 +201,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 						<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>
 					</button>
 				</div>
-			</div>
+			</div> */}
 
 			{/* Coupons Display */}
 			<CouponsDisplay />

@@ -22,9 +22,9 @@ const ProductPreviewFull = ({ product ,user}) => {
         if (product) {
             // const randomizes = generateArrayOfRandomItems(product, 6);
             console.log("Products: ",product);
-            // const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, 5); // filter by bestSeller and take first 6 items
             const maxProductsAmount = window.screen.width > 1024 ? 5 : 6;
-            const itemsOfCategory = generateArrayOfRandomItems(product, maxProductsAmount); // filter by bestSeller and take first 6 items
+            const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, maxProductsAmount); // filter by bestSeller and take first 6 items
+            // const itemsOfCategory = generateArrayOfRandomItems(product, maxProductsAmount); // filter by bestSeller and take first 6 items
             setSelectedPreviewProducts(itemsOfCategory);
             setActivePreviews(previewProductsTitle);
         }
@@ -89,7 +89,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                         // const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
-                            <div key={p._id} className={`w-full h-full rounded-md bg-yellow-200 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>
+                            <div key={p._id} className={`w-full h-full rounded-md bg-gray-200 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base md:font-semibold sm:font-semibold font-normal 2xl:font-semibold xl:font-semibold font-kumbsan text-gray-800 text-left truncate">

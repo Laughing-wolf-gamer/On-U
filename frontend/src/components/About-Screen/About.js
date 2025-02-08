@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Footer from '../Footer/Footer';
 import { BASE_API_URL, extractSpecificWord } from '../../config';
 import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import LoadingOverlay from '../../utils/LoadingOverLay';
+import BackToTopButton from '../Home/BackToTopButton';
 
 const About = () => {
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const [aboutData, setAboutData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     
@@ -28,7 +30,7 @@ const About = () => {
     // console.log("About Data:,",aboutData);
     
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
                 <div className="bg-white py-12 px-6 lg:px-24">
                     {/* Header Section */}
@@ -127,6 +129,7 @@ const About = () => {
                 <LoadingOverlay isLoading={isLoading} />
             )}
             <Footer />
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
 };

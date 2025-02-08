@@ -1,4 +1,4 @@
-import React, { useState, useEffect, Fragment } from 'react';
+import React, { useState, useEffect, Fragment, useRef } from 'react';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { useSelector, useDispatch } from 'react-redux';
 import { getbag, getqtyupdate, deleteBag } from '../../action/orderaction';
@@ -20,6 +20,7 @@ import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import BagContent from './BagContent';
 import OfflineBagContent from './OfflineBagContent';
+import BackToTopButton from '../Home/BackToTopButton';
 
 
 const Bag = () => {
@@ -43,7 +44,7 @@ const Bag = () => {
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [showPayment,setShowPayment] = useState(false);
 
-    
+
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
@@ -276,9 +277,10 @@ const Bag = () => {
         }
     };
     console.log("Discounted Amount: ",discountedAmount)
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
-            <div className="w-full max-w-screen-2xl justify-self-center">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
+            <div className="w-full max-w-screen-2xl justify-self-center ">
                 {isAuthentication ? (
                     <BagContent 
                         bag={bag}
@@ -355,6 +357,7 @@ const Bag = () => {
                 </div>
             )}
             <Footer/>
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
 };

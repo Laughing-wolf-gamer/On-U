@@ -117,16 +117,18 @@ const Wishlist = () => {
                       </div>
                     
                     ) : (
-                        <div className="w-full h-full flex justify-center items-center">
-                            <div className="text-center">
-                                <h1 className="font1 font-semibold text-2xl text-slate-700">Your Wishlist is Empty</h1>
-                                <p className="mt-2 text-slate-400">Add items you like to your wishlist and review them later.</p>
-                                <img src={wish} alt="Empty Wishlist" className="mt-8 w-32 mx-auto" />
-                                <Link to="/products">
-                                    <button className="mt-6 py-3 px-12 bg-gray-900 text-white rounded font-medium hover:bg-gray-700 transition duration-200">
-                                        Continue Shopping
-                                    </button>
-                                </Link>
+                        <div className="flex flex-col w-full h-screen items-center justify-center text-center px-6 py-12">
+                            <div className="w-full max-w-md p-10 rounded-xl">
+                                <img
+                                    src={wish} // Replace with your actual image path
+                                    alt="Empty Bag"
+                                    className="mx-auto mb-8 w-36 h-36 object-contain hover:animate-bounce"
+                                />
+                                <h2 className="text-4xl font-semibold text-gray-800 mb-4">No Wish List Products</h2>
+                                <p className="text-gray-600 mb-8 text-lg leading-relaxed">It looks like you haven't added anything yet. Browse our collection!</p>
+                                <button onClick={()=> navigation('/products')} className="w-full px-6 py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all hover:scale-105 duration-300 text-lg shadow-md">
+                                    Continue Shopping
+                                </button>
                             </div>
                         </div>
                     )}

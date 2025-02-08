@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
@@ -7,10 +7,15 @@ import { getAddress, getConvinceFees, getuser, updateAddress } from '../../actio
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
-import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig } from '../../config';
+import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
 import CouponsDisplay from './CouponDisplay';
 import { X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
+import Footer from '../Footer/Footer';
+import { FormControl, FormHelperText } from '@mui/material';
+import { fetchAddressForm } from '../../action/common.action';
+import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
+import BackToTopButton from '../Home/BackToTopButton';
 
 const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -51,7 +56,7 @@ const CheckoutPage = () => {
 	/* useEffect(()=>{
 		console.log("Recently View Products Session Storage: ",sessionRecentlyViewProducts);
 	},[sessionRecentlyViewProducts]) */
-
+	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
 	useEffect(() => {
 		if (bag) {
@@ -292,157 +297,85 @@ const CheckoutPage = () => {
 			window.location.reload();
 		}
 	}
-	const [name, setName] = useState('');
-	const [email, setEmail] = useState('');
-	const [phone, setPhone] = useState('');
-	const [country, setCountry] = useState('');
-	const [state, setState] = useState('');
-	const [city, setCity] = useState('');
-	const [paymentMethod, setPaymentMethod] = useState('');
 
 	return (
-		<div className="w-full max-w-screen-xl mx-auto px-4 py-10">
-			<h1 className="text-3xl font-bold text-center mb-6">Checkout</h1>
-			
-			<div className="grid grid-cols-1 lg:grid-cols-2 md:grid-cols-2 2xl:grid-cols-2 xl:grid-cols-2 gap-8">
-				{/* Left Side: Address and Payment */}
-				<div className="lg:col-span-1 space-y-8">
-				<AddressAndPaymentComponent
-					totalProductSellingPrice={totalProductSellingPrice}
-					buttonPressed={buttonPressed}
-					allAddresses={allAddresses}
-					handleProceedToPayment={handleProceedToPayment}
-					handleOpenPopup={handleOpenPopup}
-					handleClosePopup={handleClosePopup}
-					selectedAddress={selectedAddress}
-					isAddressPopupOpen={isAddressPopupOpen}
-					handleSaveAddress={handleSaveAddress}
-					user={user}
-					handleAddressSelection={handleAddressSelection}
-				/>
+		<div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+			<div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2 sm:px-3 md:px-8 lg:px-4 xl:px-3'>
+				<h1 className="text-3xl font-bold text-center mb-6">Checkout</h1>
 				
-				{/* User Information Section */}
-				<section className="flex flex-col ">
-					<div>
-					<h3 className="text-xl font-semibold mb-4">Your Information</h3>
-					<form>
-						<div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-							{/* First Name */}
-							<div className="flex flex-col">
-								<label className="text-sm font-medium">First Name*</label>
-								<input
-								type="text"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-								/>
-							</div>
-							{/* Last Name */}
-							<div className="flex flex-col">
-								<label className="text-sm font-medium">Last Name*</label>
-								<input
-								type="text"
-								value={name}
-								onChange={(e) => setName(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-								/>
-							</div>
-							{/* Email */}
-							<div className="flex flex-col col-span-2">
-								<label className="text-sm font-medium">Email Address*</label>
-								<input
-								type="email"
-								value={email}
-								onChange={(e) => setEmail(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-								/>
-							</div>
-							{/* Phone Number */}
-							<div className="flex flex-col col-span-2">
-								<label className="text-sm font-medium">Phone Number*</label>
-								<input
-								type="tel"
-								value={phone}
-								onChange={(e) => setPhone(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-								/>
-						</div>
-						{/* Street Address */}
-						<div className="flex flex-col col-span-2">
-							<label className="text-sm font-medium">Street Address*</label>
-							<input
-							type="text"
-							value={address}
-							onChange={(e) => setAddress(e.target.value)}
-							className="border p-2 rounded-md mt-1"
-							required
+				<div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-6 2xl:grid-cols-6 xl:grid-cols-6 gap-8">
+					{/* Left Side: Address and Payment */}
+					<div className="col-span-5 lg:col-span-4 md:col-span-4 xl:col-span-4 2xl:col-span-4 space-y-8 pr-9 border-r-[1px]">
+						<AddressAndPaymentComponent
+							totalProductSellingPrice={totalProductSellingPrice}
+							buttonPressed={buttonPressed}
+							allAddresses={allAddresses}
+							handleProceedToPayment={handleProceedToPayment}
+							handleOpenPopup={handleOpenPopup}
+							handleClosePopup={handleClosePopup}
+							selectedAddress={selectedAddress}
+							isAddressPopupOpen={isAddressPopupOpen}
+							handleSaveAddress={handleSaveAddress}
+							user={user}
+							handleAddressSelection={handleAddressSelection}
+						/>
+						
+						{/* User Information Section */}
+						<section className="flex flex-col mb-10">
+							<h3 className="text-xl font-semibold mb-4">Your Information</h3>
+							<AddAddress
+								onSave={handleSaveAddress}
 							/>
-						</div>
-						{/* Town/City and State */}
-						<div className="flex flex-col sm:flex-row col-span-2 gap-6">
-							<div className="flex flex-col w-full">
-							<label className="text-sm font-medium">Town/City*</label>
-							<input
-								type="text"
-								value={city}
-								onChange={(e) => setCity(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-							/>
-							</div>
-							<div className="flex flex-col w-full">
-							<label className="text-sm font-medium">State*</label>
-							<input
-								type="text"
-								value={state}
-								onChange={(e) => setState(e.target.value)}
-								className="border p-2 rounded-md mt-1"
-								required
-							/>
-							</div>
-						</div>
-						{/* Postal Code */}
-						<div className="flex flex-col col-span-2">
-							<label className="text-sm font-medium">Postal Code*</label>
-							<input
-							type="text"
-							className="border p-2 rounded-md mt-1"
-							required
-							/>
-						</div>
-						{/* Note */}
-						<div className="flex flex-col col-span-2">
-							<label className="text-sm font-medium">Write note...</label>
-							<textarea
-							className="border p-2 rounded-md mt-1"
-							rows="4"
-							/>
-						</div>
-						</div>
-					</form>
+						</section>
 					</div>
-				</section>
-				</div>
 
-				{/* Right Side: Shopping Cart */}
-				<div className="lg:col-span-1">
-				<h3 className="text-xl font-semibold mb-4">Shopping Cart</h3>
-				<ProductListingComponent
-					bag={bag}
-					handleDeleteBag={handleDeleteBag}
+					{/* Right Side: Shopping Cart */}
+					<div className="col-span-5 lg:col-span-2 md:col-span-2 xl:col-span-2 2xl:col-span-2">
+						<h3 className="text-xl font-semibold mb-4">Shopping Cart</h3>
+						<ProductListingComponent
+							updateQty={updateQty}
+							bag={bag}
+							handleDeleteBag={handleDeleteBag}
+							user={user}
+							setCoupon={setCoupon}
+							applyCoupon={applyCoupon}
+							coupon={coupon}
+						/>
+						<PriceDetailsComponent
+							user={user}
+							bag={bag}
+							checkAndCreateToast = {checkAndCreateToast}
+							selectedAddress={selectedAddress}
+							totalSellingPrice={totalSellingPrice} 
+							discountedAmount={discountedAmount} 
+							convenienceFees={convenienceFees} 
+							totalProductSellingPrice={totalProductSellingPrice}
+							removeCoupon = {removeCoupon}
+							showPayment={showPayment}
+							setShowPayment = {setShowPayment}
+						/>
+					</div>
+				</div>
+			</div>
+			{user && showPayment && selectedAddress && bag && (
+				<PaymentProcessingPage
+					discountAmount = {discountedAmount}
+					selectedAddress={selectedAddress}
 					user={user}
-					setCoupon={setCoupon}
-					applyCoupon={applyCoupon}
-					coupon={coupon}
+					bag={bag}
+					totalAmount={totalProductSellingPrice}
+					originalsAmount={totalSellingPrice}
+					closePopup={() => {
+						dispatch(getbag({ userId: user.id }));
+						dispatch(getAddress());
+						setShowPayment(false);
+						setSelectedAddress(null);
+					}}
 				/>
-				</div>
-			</div>
-			</div>
-
+			)}
+			<Footer/>
+			<BackToTopButton scrollableDivRef={scrollableDivRef} />
+		</div>
 	);
 };
 const AddressAndPaymentComponent = ({ 
@@ -485,77 +418,165 @@ const AddressAndPaymentComponent = ({
 		</div>
 	</div>
 );
+const PriceDetailsComponent = ({user, bag, totalSellingPrice, discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon,selectedAddress,showPayment,setShowPayment }) => {
+	const navigate = useNavigate();
+	return (
+		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
+			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
+				ORDER DETAILS ({bag?.orderItems.length} items)
+			</h3>
+			<div className="space-y-4 sm:space-y-5">
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Total MRP</span>
+					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>You Saved</span>
+					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Coupon</span>
+					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+						{
+							bag?.Coupon?.CouponCode ? 
+							<button className='flex items-center space-x-1' onClick={(e)=> removeCoupon(e, bag?.Coupon?.CouponCode)}>
+								<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
+							</button> : 
+							<Fragment><span>No Coupon Applied</span></Fragment>
+						}
+					</span>
+				</div>
+				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
+					<span>Convenience Fee</span>
+					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+						₹{convenienceFees}
+					</span>
+				</div>} 
+				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
+					<span>Total</span>
+					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+				</div>
+				<div className="flex flex-col space-y-4 mt-6">
+					<button
+						// disabled ={showPayment || !selectedAddress}
+						onClick={()=> {
+							if(user){
+								if(selectedAddress){
+									setShowPayment(true);
+								}else{
+									checkAndCreateToast("error","Please select an address")
+								}
+							}else{
+								navigate("/Login")
+							}
+						}}
+						className={`w-full bg-black hover:bg-gray-900 focus:bg-gray-600 text-white py-3 rounded-lg shadow-lg justify-center items-center flex transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base`}
+					>
+						{
+							selectedAddress ? <Fragment>
+								{showPayment ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>
+										{user ? "Process Payment":"Login"}
+									</span>
+								}
+							</Fragment>:(
+								<span>
+									{user ? "Process Payment":"Log In"}
+								</span>
+							)
+						}
+					</button>
+				</div>
+			</div>
+		</div>
+
+	);
+}
+
+
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
-		{bag?.orderItems?.map((item, i) => (
-			<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
-				{/* Product Image */}
-				<div className="w-fit h-28 sm:w-40 sm:h-40 relative border-2 rounded-lg">
-				<Link to={`/products/${item.productId?._id}`}>
-					<img
-						src={item?.color?.images[0]?.url}
-						alt={item?.productId?.title}
-						className="w-full h-full object-contain"
+		{bag?.orderItems?.map((item, i) => {
+			const active = bag?.orderItems[0];
+			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+			const isValidImage = (url) => {
+				return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+			};
+			const getImageExtensionsFile = () => {
+				
+				// Find the first valid image URL based on extensions
+				return active?.color?.images.find((image) => 
+				  	image.url && isValidImage(image.url)
+				);
+			};
+			const validImage = getImageExtensionsFile();
+			return(
+				<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+					{/* Product Image */}
+					<div className="w-fit h-28 sm:w-40 sm:h-40 relative border-2 rounded-lg">
+						<Link to={`/products/${active.productId?._id}`}>
+							{validImage ? <img 
+								src={validImage?.url} 
+								alt={active?.productId?.title} 
+								className="w-full h-full object-contain transition-all duration-500 ease-in-out hover:scale-105"
+							/>:<p>No valid image available</p>}
+						</Link>
+						{/* Delete Button on the Image (visible on small screens only) */}
+						<div
+							className="absolute top-[-10px] right-[-10px] text-white bg-gray-200 p-1 Hover:text-black rounded-full cursor-pointer sm:hidden"
+							onClick={(e) => {
+								e.stopPropagation();
+								handleDeleteBag(active.productId._id, active._id);
+							}}
+						>
+							<X size={15} />
+						</div>
+						</div>
+					
+						{/* Product Info */}
+						<div className="ml-6 flex-1 w-full">
+						<h3 className="font-semibold text-lg text-gray-800">{active?.productId?.title}</h3>
+						<p className="text-sm text-gray-600">Size: {active?.size?.label}</p>
+					
+						{/* Price and Discount Info */}
+						<div className="flex items-center whitespace-nowrap space-x-4 text-sm text-blue-400 mt-2">
+							{active?.productId?.salePrice ? (
+							<>
+								<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+								<span className="line-through whitespace-nowrap text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+								<span className="text-gray-700 whitespace-nowrap font-normal">
+								(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)
+								</span>
+							</>
+							) : (
+							<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+							)}
+						</div>
+					
+						{/* Quantity Selector */}
+						<div className="mt-4 flex items-center space-x-4">
+							<label className="text-sm">Qty:</label>
+							<select
+							value={active?.quantity}
+							onChange={(e) => updateQty(e, active.productId._id)}
+							className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+							>
+							{[...Array(active?.size?.quantity || 0).keys()].map((num) => (
+								<option key={num + 1} value={num + 1}>
+								{num + 1}
+								</option>
+							))}
+							</select>
+						</div>
+					</div>
+				
+					{/* Delete Button for larger screens */}
+					<X
+					className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+					onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
 					/>
-				</Link>
-				{/* Delete Button on the Image (visible on small screens only) */}
-				<div
-					className="absolute top-[-10px] right-[-10px] text-white bg-gray-200 p-1 Hover:text-black rounded-full cursor-pointer sm:hidden"
-					onClick={(e) => {
-						e.stopPropagation();
-						handleDeleteBag(item.productId._id, item._id);
-					}}
-				>
-					<X size={15} />
 				</div>
-				</div>
-			
-				{/* Product Info */}
-				<div className="ml-6 flex-1 w-full">
-				<h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
-				<p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
-			
-				{/* Price and Discount Info */}
-				<div className="flex items-center whitespace-nowrap space-x-4 text-sm text-blue-400 mt-2">
-					{item?.productId?.salePrice ? (
-					<>
-						<span>₹ {formattedSalePrice(item?.productId?.salePrice)}</span>
-						<span className="line-through whitespace-nowrap text-gray-400">₹{formattedSalePrice(item.productId.price)}</span>
-						<span className="text-gray-700 whitespace-nowrap font-normal">
-						(₹{calculateDiscountPercentage(item.productId?.price, item.productId?.salePrice)}% OFF)
-						</span>
-					</>
-					) : (
-					<span>₹ {formattedSalePrice(item?.productId?.price)}</span>
-					)}
-				</div>
-			
-				{/* Quantity Selector */}
-				<div className="mt-4 flex items-center space-x-4">
-					<label className="text-sm">Qty:</label>
-					<select
-					value={item?.quantity}
-					onChange={(e) => updateQty(e, item.productId._id)}
-					className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-					>
-					{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-						<option key={num + 1} value={num + 1}>
-						{num + 1}
-						</option>
-					))}
-					</select>
-				</div>
-				</div>
-			
-				{/* Delete Button for larger screens */}
-				<X
-				className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-				onClick={(e) => handleDeleteBag(item.productId._id, item._id)}
-				/>
-			</div>
-		  
-		  
-		))}
+			)
+		})}
 
 		{/* Coupon Section */}
 		<div className="mt-6 space-y-2">
@@ -585,5 +606,94 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 	</div>
 
 );
+const AddAddress = ({onSave }) => {
+    const [formInitState, setFormInitState] = useState(null);
+    const [newAddress, setNewAddress] = useState({});
+    const { formData } = useSelector(state => state.fetchFormBanners);
+    const dispatch = useDispatch();
+    const [error, setError] = useState('');
+
+    // Handle changes in form fields
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setNewAddress((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleSave = () => {
+        if (Object.values(newAddress).every(value => value.trim() !== '')) {
+            onSave(newAddress);
+            setNewAddress(formInitState || {}); // Reset form
+            // onClose(); // Close modal
+            setError(''); // Clear any previous errors
+        } else {
+            setError('Please fill out all the fields.');
+        }
+    };
+
+    const handleFormInit = () => {
+        if (formData) {
+            const formInit = {};
+            formData.forEach(item => {
+                // Remove spaces from the key (item)
+                const key = removeSpaces(item); // Replace spaces with empty string
+                formInit[key] = '';
+            });
+            setFormInitState(formInit);
+        }
+    }
+
+    useEffect(() => {
+        handleFormInit();
+    }, [formData]);
+
+    useEffect(() => {
+        dispatch(fetchAddressForm());
+    }, [dispatch]);
+
+
+    return (
+		<div>
+			<h2 className="text-xl font-semibold mb-4 text-center">Add New Address</h2>
+			<form className="space-y-4">
+				{formData && formData.map((item, index) => (
+					<Fragment key={index}>
+						<div className="flex flex-col">
+							<FormControl fullWidth error={error}>
+								<label className="text-sm font-medium">{item}*</label>
+								<input
+									type="text"
+									value={newAddress[removeSpaces(item)] || ''}
+									id={removeSpaces(item)}
+									name={removeSpaces(item)}
+									onChange={handleChange}
+									className="border p-2 rounded-md mt-1"
+									required
+									placeholder={`Enter ${removeSpaces(item)}`}
+								/>
+								{error && (
+									<FormHelperText>{error}</FormHelperText>
+								)}
+							</FormControl>
+						</div>
+					</Fragment>
+				))}
+			</form>
+			{
+				formData && formData.length > 0 && <div className="flex justify-start mt-4 space-x-2">
+					<button
+						onClick={handleSave}
+						color="primary"
+						className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
+					>
+						Save
+					</button>
+				</div>
+			}
+		</div>
+    );
+};
 
 export default CheckoutPage;

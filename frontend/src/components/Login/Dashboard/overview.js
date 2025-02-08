@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Footer from '../../Footer/Footer';
 import OrdersReturns from './OrdersReturns';
 import SavedAddresses from './SavedAddresses';
@@ -6,6 +6,7 @@ import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
 import { useNavigate } from 'react-router-dom';
 import { AlignJustify } from 'lucide-react';
+import BackToTopButton from '../../Home/BackToTopButton';
 
 const Overview = ({ user }) => {
     const navigation = useNavigate();
@@ -22,9 +23,9 @@ const Overview = ({ user }) => {
             navigation('/Login')
         }
     },[])
-
+    const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             <div className="bg-gray-50 min-h-screen text-gray-800">
             {/* Account Header */}
             <div className="py-6 border-b mx-auto w-[90%] mt-5 2xl:w-[70%] px-4 xl:w-[70%] lg:w-[70%] bg-gray-200 shadow-md rounded-lg">
@@ -62,6 +63,7 @@ const Overview = ({ user }) => {
             </div>
             {/* Footer */}
             <Footer />
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
 };

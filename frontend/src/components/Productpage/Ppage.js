@@ -94,30 +94,6 @@ const Ppage = () => {
     const [isInWishList, setIsInWishList] = useState(false);
     const [isInBagList, setIsInBagList] = useState(false);
     const {checkAndCreateToast} = useSettingsContext();
-    /* const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(activeToast !== message){
-            switch(type){
-                case "error":
-                    toast.error(message)
-                    break;
-                case "warning":
-                    toast.warning(message)
-                    break;
-                case "info":
-                    toast.info(message)
-                    break;
-                case "success":
-                    toast.success(message)
-                    break;
-                default:
-                    toast.info(message)
-                    break;
-            }
-            showToast(message);
-        }
-    } */
     const navigation = useNavigate();
     const param = useParams()
     const dispatch = useDispatch()
@@ -318,13 +294,13 @@ const Ppage = () => {
         }
     }, [dispatch, param, warning]);
     const handleSetNewImageArray = (newSize)=>{
-        setCurrentSize(newSize);
-        setSelectedSize(newSize);
         setSelectedColor(newSize.colors);
+        setSelectedSize(newSize);
+        setCurrentSize(newSize);
+        setCurrentColor(null);
     }
     const handelSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images)
-
         setSelectedImage(color.images[0]);
     }
     useEffect(()=>{
@@ -361,7 +337,6 @@ const Ppage = () => {
             setSelectedColor(selectedSize.colors);
             const currentColor = selectedSize.colors[0];
             setSelectedSizeColorImageArray(currentColor.images);
-            // setSelectedColorId(currentColor._id);
             setSelectedImage(currentColor.images[0]);
         }
     },[selectedSize])
@@ -622,12 +597,12 @@ const Ppage = () => {
                 <Loader />
             }
             {
-                product && <div className='w-full justify-center items-center flex flex-col mb-8 2xl:px-0 px-6'>
+                product&&similar && similar.length > 0 && <div className='w-full justify-center items-center flex flex-col mb-8 2xl:px-0 px-6'>
                     <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                     <div className='w-full flex justify-center items-center'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
-                            {Array(18).fill(0).map((pro, index) => (
-                                <Single_product key={index} pro={product} user={user} />
+                            {similar.map((pro, index) => (
+                                <Single_product key={index} pro={pro} user={user} />
                             ))}
                         </ul>
                     </div>

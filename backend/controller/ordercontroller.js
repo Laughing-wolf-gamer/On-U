@@ -322,7 +322,7 @@ export const getwishlist = async (req, res) => {
         const userId = req.user.id;
         if(!userId) return res.status(404).json({success:false,message: "No WishList Found!",wishlist:[]}); //
         const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
-        console.log("All Wishlist: ", wishlist);
+        // console.log("All Wishlist: ", wishlist);
         res.status(200).json({
             success:true,
             wishlist: wishlist || []
@@ -362,7 +362,7 @@ export const applyCouponToBag = async(req,res)=>{
             return res.status(400).json({message: "Coupon cannot be applied to this bag"})
         }
         bag.Coupon = coupon._id;
-        coupon.Status = "Inactive";
+        // coupon.Status = "Inactive";
         
         await Promise.all([
             coupon.save(),
