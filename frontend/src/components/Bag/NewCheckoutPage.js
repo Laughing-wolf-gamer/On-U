@@ -401,7 +401,7 @@ const AddressAndPaymentComponent = ({
 					allAddresses.map((addr, index) => (
 						<div
 							key={index}
-							className={`p-4 border rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white hover:bg-gray-100'}`}
+							className={`p-4 border rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 ${selectedAddress === addr ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
 							onClick={() => handleAddressSelection(addr)}
 						>
 							{Object.entries(addr).map(([key, value]) => (
