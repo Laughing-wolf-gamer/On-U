@@ -1,139 +1,172 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 
-const NewCheckoutPage = () => {
-  const [activeTab, setActiveTab] = useState("shipping");
+const NewCheckout = () => {
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [products, setProducts] = useState([]);
+    const [couponCode, setCouponCode] = useState('');
+    const [discount, setDiscount] = useState(0);
+    const [selectedAddress, setSelectedAddress] = useState(null);
+    const [isNewAddress, setIsNewAddress] = useState(false);
 
-  return (
-        <div className="max-w-5xl mx-auto py-8">
-        {/* Navbar */}
-        <div className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-            <nav className="flex justify-between items-center p-4 border-b">
-            <ul className="flex space-x-8">
-                <li>
-                <button
-                    onClick={() => setActiveTab("shipping")}
-                    className={`text-lg ${activeTab === "shipping" ? "font-semibold text-blue-600" : "text-gray-600"}`}
-                >
-                    Shipping
-                </button>
-                </li>
-                <li>
-                <button
-                    onClick={() => setActiveTab("payment")}
-                    className={`text-lg ${activeTab === "payment" ? "font-semibold text-blue-600" : "text-gray-600"}`}
-                >
-                    Payment
-                </button>
-                </li>
-            </ul>
-            </nav>
+    // Calculate total
+    const calculateTotal = () => {
+        const total = products.reduce((acc, product) => acc + product.price * product.quantity, 0);
+        return total - discount;
+    };
+
+    return (
+        <div className="max-w-5xl mx-auto p-4">
+        {/* Login Prompt if not logged in */}
+        {!isLoggedIn && <LoginPrompt onLogin={() => setIsLoggedIn(true)} />}
+        
+        {/* Product List */}
+        <ProductList products={products} />
+        
+        {/* Coupon and Discount */}
+        <CouponInput couponCode={couponCode} setCouponCode={setCouponCode} setDiscount={setDiscount} />
+        <DiscountSummary discount={discount} />
+        
+        {/* Total Calculation */}
+        <div className="text-xl font-semibold mt-4">
+            <span>Total: </span>
+            <span>${calculateTotal()}</span>
         </div>
 
-        {/* Main Content */}
-        <div className="mt-24">
-            {activeTab === "shipping" && <ShippingDetails />}
-            {activeTab === "payment" && <PaymentDetails />}
-        </div>
+        {/* Delivery Address */}
+        <DeliveryAddress 
+            selectedAddress={selectedAddress}
+            setSelectedAddress={setSelectedAddress}
+            setIsNewAddress={setIsNewAddress}
+        />
+
+        {/* New Address Form */}
+        {isNewAddress && <NewAddressForm />}
+
+        {/* Payment Options */}
+        <PaymentOptions total={calculateTotal()} />
         </div>
     );
 };
-
-const ShippingDetails = () => {
-    const savedAddresses = [
-        { id: 1, address: "123 Main St, New York, NY" },
-        { id: 2, address: "456 Elm St, Los Angeles, CA" },
-    ];
-  
-    const [newAddress, setNewAddress] = useState("");
-    const [selectedAddress, setSelectedAddress] = useState(savedAddresses[0]);
-  
-    const handleAddAddress = () => {
-        if (newAddress) {
-            setNewAddress("");
+const ProductList = ({ products }) => {
+    return (
+        <div>
+            <h2 className="text-2xl font-semibold">Products in your Cart</h2>
+            <div className="mt-4 space-y-4">
+            {products.map((product) => (
+                <div key={product.id} className="flex justify-between items-center">
+                <div className="flex items-center">
+                    <img src={product.image} alt={product.name} className="w-16 h-16 object-cover mr-4" />
+                    <div>
+                    <h3 className="text-xl">{product.name}</h3>
+                    <p className="text-gray-500">x{product.quantity}</p>
+                    </div>
+                </div>
+                <div>
+                    <span>${product.price * product.quantity}</span>
+                </div>
+                </div>
+            ))}
+            </div>
+        </div>
+    );
+};
+const CouponInput = ({ couponCode, setCouponCode, setDiscount }) => {
+    const handleApplyCoupon = () => {
+        if (couponCode === "DISCOUNT10") {
+            setDiscount(10); // Apply 10% discount
+        } else {
+            setDiscount(0);
         }
     };
   
     return (
-        <div>
-            <h2 className="text-xl font-semibold">Shipping Details</h2>
-            <div className="mt-6">
-            <h3 className="font-semibold text-lg">Saved Addresses</h3>
-            <div className="space-y-4 mt-4">
-                {savedAddresses.map((address) => (
-                <div
-                    key={address.id}
-                    className={`p-4 border rounded-lg cursor-pointer ${
-                    selectedAddress.id === address.id ? "bg-blue-100" : "bg-white"
-                    }`}
-                    onClick={() => setSelectedAddress(address)}
-                >
-                    {address.address}
-                </div>
-                ))}
-            </div>
-    
-            <div className="mt-6">
-                <h3 className="font-semibold text-lg">Add New Address</h3>
-                <input
-                type="text"
-                className="mt-2 p-2 w-full border rounded-md"
-                placeholder="Enter new address"
-                value={newAddress}
-                onChange={(e) => setNewAddress(e.target.value)}
-                />
-                <button
-                onClick={handleAddAddress}
-                className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md"
-                >
-                Add Address
-                </button>
-            </div>
-            </div>
+        <div className="mt-4">
+            <input
+            type="text"
+            value={couponCode}
+            onChange={(e) => setCouponCode(e.target.value)}
+            className="border p-2 rounded"
+            placeholder="Enter Coupon Code"
+            />
+            <button onClick={handleApplyCoupon} className="bg-blue-500 text-white px-4 py-2 rounded ml-2">
+            Apply
+            </button>
         </div>
     );
 };
-const PaymentDetails = () => {
-    const [selectedPaymentMethod, setSelectedPaymentMethod] = useState("creditCard");
+const DiscountSummary = ({ discount }) => {
+    return (
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold">Discount Summary</h3>
+        <div className="flex justify-between">
+          <span>Discount:</span>
+          <span>-${discount}</span>
+        </div>
+      </div>
+    );
+};
+const PaymentOptions = ({ total }) => {
+    const handlePayment = (method) => {
+        console.log("Processing payment via", method);
+        // Implement payment logic here
+    };
   
     return (
-        <div>
-            <h2 className="text-xl font-semibold">Payment Details</h2>
-            <div className="mt-6">
-            <h3 className="font-semibold text-lg">Select Payment Method</h3>
-            <div className="space-y-4 mt-4">
-                <div
-                className={`p-4 border rounded-lg cursor-pointer ${
-                    selectedPaymentMethod === "creditCard" ? "bg-blue-100" : "bg-white"
-                }`}
-                onClick={() => setSelectedPaymentMethod("creditCard")}
-                >
-                Credit Card
-                </div>
-                <div
-                className={`p-4 border rounded-lg cursor-pointer ${
-                    selectedPaymentMethod === "paypal" ? "bg-blue-100" : "bg-white"
-                }`}
-                onClick={() => setSelectedPaymentMethod("paypal")}
-                >
-                PayPal
-                </div>
-                <div
-                className={`p-4 border rounded-lg cursor-pointer ${
-                    selectedPaymentMethod === "bankTransfer" ? "bg-blue-100" : "bg-white"
-                }`}
-                onClick={() => setSelectedPaymentMethod("bankTransfer")}
-                >
-                Bank Transfer
-                </div>
-            </div>
-            </div>
-            <div className="mt-6">
-            <button className="px-6 py-3 bg-blue-600 text-white rounded-md">
-                Proceed to Payment
+        <div className="mt-6">
+            <h3 className="text-lg font-semibold">Payment Options</h3>
+            <div className="mt-2 space-y-4">
+            <button onClick={() => handlePayment("Credit Card")} className="w-full bg-green-500 text-white py-3 rounded">
+                Pay with Credit Card
+            </button>
+            <button onClick={() => handlePayment("PayPal")} className="w-full bg-blue-500 text-white py-3 rounded">
+                Pay with PayPal
             </button>
             </div>
         </div>
     );
 };
+const LoginPrompt = ({ onLogin }) => {
+    return (
+        <div className="p-4 bg-yellow-200 mb-4">
+            <p>Please log in to proceed with your order.</p>
+            <button onClick={onLogin} className="bg-blue-500 text-white py-2 px-4 rounded">
+                Log In
+            </button>
+        </div>
+    );
+};
+const DeliveryAddress = ({ selectedAddress, setSelectedAddress, setIsNewAddress }) => {
+    const handleAddressSelection = (address) => {
+      setSelectedAddress(address);
+    };
+  
+    return (
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold">Delivery Address</h3>
+        {selectedAddress ? (
+          <div>
+            <p>{selectedAddress}</p>
+            <button onClick={() => setIsNewAddress(true)} className="text-blue-500">Change Address</button>
+          </div>
+        ) : (
+          <button onClick={() => setIsNewAddress(true)} className="bg-blue-500 text-white py-2 px-4 rounded">
+            Add New Address
+          </button>
+        )}
+      </div>
+    );
+};
+const NewAddressForm = () => {
+    return (
+        <div className="mt-4 p-4 border rounded">
+            <h3 className="text-lg font-semibold">New Delivery Address</h3>
+            <input type="text" className="border p-2 rounded mt-2 w-full" placeholder="Street Address" />
+            <input type="text" className="border p-2 rounded mt-2 w-full" placeholder="City" />
+            <input type="text" className="border p-2 rounded mt-2 w-full" placeholder="State" />
+            <input type="text" className="border p-2 rounded mt-2 w-full" placeholder="Postal Code" />
+            <button className="bg-blue-500 text-white py-2 px-4 rounded mt-4 w-full">Save Address</button>
+        </div>
+    );
+};
 
-export default NewCheckoutPage;
+export default NewCheckout;

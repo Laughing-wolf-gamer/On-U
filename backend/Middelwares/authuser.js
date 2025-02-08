@@ -15,7 +15,6 @@ export const isAuthenticateuser = async(req, res, next)=>{
     jwt.verify(token, process.env.SECRETID,(err, user) => {
         if(err) {
             console.error("Error Verification User: ",err.message);
-            logger.error("Error Verification User: ",err.message);
             // return res.status(403).json({success:false, message:"Token is not valid"});
             return res.status(401).json({success:false, message:err.message});
         }

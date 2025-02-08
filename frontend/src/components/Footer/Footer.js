@@ -8,67 +8,50 @@ import { ArrowUp } from "lucide-react";
 
 const Footer = () => {
     return (
-        <div className="w-screen border-t-[1px] border-t-gray-400 shadow-xl bg-neutral-100 drop-shadow-md font-kumbsan">
+        <div className="w-screen border-t-[1px] border-t-gray-300 shadow-lg bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-300 pb-10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-200 pb-10">
                     {/* Online Shopping */}
-                    <div className="border-r border-gray-500 space-y-3">
+                    <div className="border-r border-gray-200 space-y-3">
                         <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
-                        <p className="text-sm hover:underline text-gray-700">Owner: John Doe</p>
+                        <p className="text-sm hover:underline text-gray-600">Owner: John Doe</p>
                         <div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-pink-400 items-center">
                             <h2 className="text-xl font-bold">GET DIRECTION</h2>
-                            <ArrowUp className="rotate-45"/>
+                            <ArrowUp className="rotate-45" />
                         </div>
-                        <p className="text-sm hover:underline text-gray-700">Company: On-U.com</p>
-                        <p className="text-sm hover:underline text-gray-700">Address: 1234, Some Street, City, Country</p>
-                        <p className="text-sm hover:underline text-gray-700">Phone: +1 (234) 567-890</p>
-                        <p className="text-sm hover:underline text-gray-700">Email: owner@onu.com</p>
+                        <p className="text-sm hover:underline text-gray-600">Company: On-U.com</p>
+                        <p className="text-sm hover:underline text-gray-600">Address: 1234, Some Street, City, Country</p>
+                        <p className="text-sm hover:underline text-gray-600">Phone: +1 (234) 567-890</p>
+                        <p className="text-sm hover:underline text-gray-600">Email: owner@onu.com</p>
                     </div>
 
-                    {/* Useful Links */}
-                    {/* <div className="border-r border-gray-500 pr-4">
-                        <h1 className="text-lg font-bold text-gray-800 mb-4">USEFUL LINKS</h1>
-                        <ul className="text-sm space-y-2">
-                            <Link to="/">
-                                <li className="hover:underline text-gray-700">Home</li>
-                            </Link>
-                            <Link to="/dashboard">
-                                <li className="hover:underline text-gray-700">Profile</li>
-                            </Link>
-                            <Link to="/bag">
-                                <li className="hover:underline text-gray-700">Bag</li>
-                            </Link>
-                            <Link to="/my_wishlist">
-                                <li className="hover:underline text-gray-700">WishList</li>
-                            </Link>
-                        </ul>
-                    </div> */}
-                    <div className="border-r border-gray-500 pr-4">
+                    {/* Customer Services */}
+                    <div className="border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold text-gray-800 mb-4">CUSTOMER SERVICES</h1>
                         <ul className="text-sm space-y-2">
                             <Link to="/about">
-                                <li className="hover:underline text-gray-700">Shipping</li>
+                                <li className="hover:underline text-gray-600">Shipping</li>
                             </Link>
                             <Link to="/about">
-                                <li className="hover:underline text-gray-700">About Us</li>
+                                <li className="hover:underline text-gray-600">About Us</li>
                             </Link>
                             <Link to="/faq">
-                                <li className="hover:underline text-gray-700">FAQ</li>
+                                <li className="hover:underline text-gray-600">FAQ</li>
                             </Link>
                             <Link to="/contact">
-                                <li className="hover:underline text-gray-700">Orders</li>
+                                <li className="hover:underline text-gray-600">Orders</li>
                             </Link>
                             <Link to="/tc">
-                                <li className="hover:underline text-gray-700">Terms And Conditions</li>
+                                <li className="hover:underline text-gray-600">Terms And Conditions</li>
                             </Link>
                             <Link to="/privacyPolicy">
-                                <li className="hover:underline text-gray-700">Privacy Policy</li>
+                                <li className="hover:underline text-gray-600">Privacy Policy</li>
                             </Link>
                         </ul>
                     </div>
 
                     {/* App and Social Media */}
-                    <div className="border-r border-gray-500 pr-4">
+                    <div className="border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold mb-4 text-gray-800">EXPERIENCE ON-U APP</h1>
                         <div className="grid grid-cols-2 gap-4 mb-6 w-52 md:w-auto">
                             <img src={g1} alt="Google Play" className="object-contain w-full h-full" />
@@ -88,12 +71,11 @@ const Footer = () => {
 
                         {/* Email Input and Agreement Section */}
                         <div className="w-full flex flex-col items-center">
-                            <div className="flex w-full border border-gray-800 rounded-full space-x-3 p-3 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                            <div className="flex w-full border border-gray-300 rounded-full space-x-3 p-3 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
                                 <input
                                     type="email"
                                     placeholder="Get Cool Coupons To your mail"
                                     className="rounded-full p-3 w-full text-black placeholder:text-gray-400 outline-none transition-all duration-300 ease-in-out"
-                                    // onChange={(e) => setstate(e.target.value)}
                                 />
                                 <button className="bg-black p-3 hover:bg-gray-700 transition-all duration-300 ease-in-out text-white rounded-full transform hover:rotate-45 focus:outline-none">
                                     <ArrowUp />

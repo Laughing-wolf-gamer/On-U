@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { applyCouponToBag, create_order, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
-import { BASE_API_URL, BASE_CLIENT_URL, headerConfig } from "../../config";
+import { BASE_API_URL, BASE_CLIENT_URL, formattedSalePrice, headerConfig } from "../../config";
 import axios from "axios";
 import { useRazorpay } from "react-razorpay";
 import { X } from "lucide-react";
@@ -193,7 +193,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
     }, [dispatch]);
 
     return (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
+        <div className="fixed font-kumbsan inset-0 flex items-center justify-center bg-black bg-opacity-60 z-50">
             <div className="bg-white text-gray-900 p-6 rounded-lg relative shadow-xl w-full max-w-md mx-4 sm:mx-0">
                 {/* Header Section */}
                 <div className="w-full bg-black justify-center flex flex-col relative items-center shadow-md p-4 mb-6 rounded-lg ">
@@ -264,7 +264,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                 <div className="mt-6 space-y-4">
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Original Price:</span>
-                        <span>₹{originalsAmount}</span>
+                        <span>₹{formattedSalePrice(originalsAmount)}</span>
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Discount:</span>
@@ -272,7 +272,7 @@ const PaymentProcessingPage = ({ isOpen, selectedAddress, bag, totalAmount,origi
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>
-                        <span>₹{totalAmount}</span>
+                        <span>₹{formattedSalePrice(totalAmount)}</span>
                     </p>
                 </div>
 

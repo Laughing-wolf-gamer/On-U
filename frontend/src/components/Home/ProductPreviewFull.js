@@ -85,8 +85,8 @@ const ProductPreviewFull = ({ product ,user}) => {
             {/* Product Previews Section */}
             <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:grid-cols-5 justify-center md:px-12 lg:px-12 2xl:px-12 xl:px-12 px-2 md:gap-4 xl:gap-4 2xl:gap-5 gap-4 items-center">
                 {previewProducts && previewProducts.length > 0 &&
-                    Array(window.screen.width > 1024 ? 5 : 6).fill(0).map((_, index) => {
-                        const p = previewProducts[0];
+                    previewProducts.map((p, index) => {
+                        // const p = previewProducts[0];
                         const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
                             <div key={p._id} className={`w-full h-full rounded-md bg-yellow-200 relative flex flex-col justify-start items-center hover:shadow-md transform transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>

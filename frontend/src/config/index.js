@@ -185,7 +185,7 @@ export const setWishListProductInfo = (product,productId)=>{
 }
 
 export const formattedSalePrice = (price)=>{
-  return price ? price.toFixed(0) : "0";
+  return price ? Math.round(price) : "0";
 }
 export const calculateDiscountPercentage = (originalPrice, salePrice) => {
     if (originalPrice > 0 && salePrice > 0) {

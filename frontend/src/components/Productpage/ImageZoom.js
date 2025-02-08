@@ -60,7 +60,7 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
                 ></div>
             )}
             {/* Dropdown Button */}
-            <ShareView/>
+            {/* <ShareView/> */}
         </div>
     );
 };

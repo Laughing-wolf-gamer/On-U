@@ -41,7 +41,7 @@ const SavedAddresses = () => {
 
     const renderAddress = (i, address) => {
         return (
-            <div key={i} className="mb-4 relative p-6 border transition-color border-gray-300 rounded-lg shadow-sm bg-gray-200 hover:bg-gray-300 duration-300">
+            <div key={i} className="mb-4 font-kumbsan relative p-6 border transition-color border-gray-300 rounded-lg shadow-sm bg-gray-200 hover:bg-gray-300 duration-300">
                 {/* Centered "X" button */}
                 <button
                     className="absolute top-2 right-2 flex justify-center items-center bg-red-500 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-600 transition-colors duration-300"
@@ -70,7 +70,7 @@ const SavedAddresses = () => {
 
 
     return (
-        <div className="p-6 bg-gray-100 min-h-screen">
+        <div className="p-6 font-kumbsan bg-gray-100 min-h-screen">
             <h2 className="font-semibold text-lg text-gray-900 mb-4">Saved Addresses</h2>
 
             {/* Display saved addresses */}
