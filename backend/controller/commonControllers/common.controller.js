@@ -568,10 +568,10 @@ export const fetchCouponsByQuery = async (req,res)=>{
         // const {query} = req.query;
         console.log("Fetching Coupons Query: ",req.query);
         const filter = {};
+		filter.Status = "Active";
         if(req.query){
-            if(req.query.Status){
-                filter.Status = "Active";
-            }
+            /* if(req.query.Status){
+            } */
             if(req.query.MinimumAmount){
                 filter.MinimumAmount = {$lte: query.MinimumAmount}
             }
@@ -593,7 +593,7 @@ export const fetchCouponsByQuery = async (req,res)=>{
         }
         // filter.ValidDate = {$lt: Date.now()}
         const foundCoupons = await Coupon.find(filter).limit(10);
-        console.log("Fetched Coupons: ",foundCoupons);
+        // console.log("Fetched Coupons: ",foundCoupons);
         res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
     } catch (error) {
         console.error(`Error getting Coupons: `,error);

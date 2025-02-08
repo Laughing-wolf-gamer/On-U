@@ -128,8 +128,10 @@ export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
         console.log("remove Coupon: ", bagId, couponCode);
         const res = await axios.patch(`${BASE_API_URL}/api/shop/bag/removeCoupon/${bagId}`,{couponCode},headerConfig())
         console.log("Remove Coupon: ", res.data);
+        return res.data;
     } catch (error) {
         console.error("Error applying coupon: ",error);
+        return false;
     }
 }
 

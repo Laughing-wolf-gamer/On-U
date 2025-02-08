@@ -75,7 +75,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
     };
 
     return (
-        <div className="w-full max-w-screen-2xl mx-auto justify-self-center">
+        <div className="w-full font-kumbsan max-w-screen-2xl mx-auto justify-self-center">
             <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-1 sm:px-1 md:px-14">
                 <h1 className="text-3xl font-bold font1 tracking-widest text-slate-800 mb-8">
                     {headers}

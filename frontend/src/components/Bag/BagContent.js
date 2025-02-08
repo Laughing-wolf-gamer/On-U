@@ -1,14 +1,16 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import EmptyBag from './Emptybag';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
-import { getbag } from '../../action/orderaction';
+import { applyCouponToBag, getbag, removeCouponFromBag } from '../../action/orderaction';
 import { getAddress } from '../../action/useraction';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { X } from 'lucide-react';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../config';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import CouponsDisplay from './CouponDisplay';
 const BagContent = ({ 
 	bag, 
 	bagLoading, 
@@ -33,6 +35,33 @@ const BagContent = ({
 	handleAddressSelection
 }) => {
 	const dispatch = useDispatch();
+	const [coupon, setCoupon] = useState(null);
+	const [discount, setDiscount] = useState(0);
+	const {checkAndCreateToast} = useSettingsContext();
+	// Apply coupon discount
+	const applyCoupon = async (e) => {
+		e.preventDefault();
+		if (bag && coupon) {
+			await dispatch(applyCouponToBag({ bagId: bag._id, couponCode: coupon }));
+			checkAndCreateToast("success","Coupon Applied");
+			setCoupon(null);
+			// closePopup();
+			// dispatch(getbag({ userId: user.id }));
+			window.location.reload();
+		} else {
+			checkAndCreateToast("info","Please select a coupon and apply it before proceeding with payment");
+		}
+	};
+	const removeCoupon = async (e, code) => {
+		// e.preventDefault();
+		if (bag) {
+			await dispatch(removeCouponFromBag({ bagId: bag._id, couponCode: code }));
+			checkAndCreateToast("success","Coupon Removed");
+			setCoupon(null);
+			// dispatch(getbag({ userId: user.id }));
+			window.location.reload();
+		}
+	}
 	return (
 		<div className="relative font-kumbsan w-full px-10 mx-auto">
 			{/* Conditionally render the bag content based on loading state and items */}
@@ -43,20 +72,29 @@ const BagContent = ({
 		
 					{/* Main Content Section */}
 					<div className="flex flex-col lg:flex-row gap-12 mt-12">
-					<ProductListingComponent bag={bag} updateQty={updateQty} handleDeleteBag={handleDeleteBag} />
-		
-					{/* Price Details */}
-					<PriceDetailsComponent 
-						bag={bag} 
-						totalSellingPrice={totalSellingPrice} 
-						discountedAmount={discountedAmount} 
-						convenienceFees={convenienceFees} 
-						totalProductSellingPrice={totalProductSellingPrice}
-					/>
+						<ProductListingComponent 
+							bag={bag} 
+							updateQty={updateQty} 
+							handleDeleteBag={handleDeleteBag} 
+							applyCoupon={applyCoupon}
+							user={user}
+							setCoupon={setCoupon}
+							coupon={coupon}
+						/>
+			
+						{/* Price Details */}
+						<PriceDetailsComponent 
+							bag={bag} 
+							totalSellingPrice={totalSellingPrice} 
+							discountedAmount={discountedAmount} 
+							convenienceFees={convenienceFees} 
+							totalProductSellingPrice={totalProductSellingPrice}
+							removeCoupon = {removeCoupon}
+						/>
 					</div>
 		
 					{/* Address and Payment Section */}
-					<AddressAndPaymentComponent 
+					{/* <AddressAndPaymentComponent 
 						totalProductSellingPrice = {totalProductSellingPrice}
 						buttonPressed = {buttonPressed}
 						allAddresses={allAddresses}
@@ -68,14 +106,14 @@ const BagContent = ({
 						handleSaveAddress={handleSaveAddress}
 						user={user}
 						handleAddressSelection = {handleAddressSelection}
-					/>
+					/> */}
 					
 					{/* Add Address Popup */}
-					<AddAddressPopup
+					{/* <AddAddressPopup
 						isOpen={isAddressPopupOpen}
 						onClose={handleClosePopup}
 						onSave={handleSaveAddress}
-					/>
+					/> */}
 				</Fragment>
 			) : (
 				<Fragment>
@@ -121,79 +159,152 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 		</div>
 	</div>
 );
-const ProductListingComponent = ({ bag, updateQty, handleDeleteBag }) => (
+const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
 		{bag?.orderItems?.map((item, i) => (
-			<div key={i} className="flex items-center border-b py-6 space-x-6">
-			<Link to={`/products/${item.productId?._id}`} className="w-28 h-28">
-				<img src={item?.color?.images[0]?.url} alt={item?.productId?.title} className="w-full h-full object-contain rounded-lg" />
-			</Link>
-			<div className="ml-6 flex-1">
-				<h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
-				<p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
-				<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-					{item?.productId?.salePrice ? (
-						<>
-						<span>₹{Math.round(formattedSalePrice(item?.productId?.salePrice))}</span>
-						<span className="line-through text-[#94969f]">₹{formattedSalePrice(item.productId.price)}</span>
-						<span className="text-[#f26a10] font-normal">(₹{calculateDiscountPercentage(item.productId?.price, item.productId?.salePrice)}% OFF)</span>
-						</>
-					) : (
-						<span>₹ {Math.round(formattedSalePrice(item.productId.price))}</span>
-					)}
-				</div>
-				<div className="mt-4 flex items-center space-x-4">
-					<label className="text-sm">Qty:</label>
-					<select
-						value={item?.quantity}
-						onChange={(e) => updateQty(e, item.productId._id)}
-						className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+			<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+				{/* Product Image */}
+				<div className="w-fit h-28 sm:w-40 sm:h-40 relative border-2 rounded-lg">
+					<Link Link to={`/products/${item.productId?._id}`}>
+						<img 
+							src={item?.color?.images[0]?.url} 
+							alt={item?.productId?.title} 
+							className="w-full h-full object-contain"
+						/>
+					</Link>
+					{/* Delete Button on the Image */}
+					<div
+						className="absolute top-[-10px] shadow-sm right-[-10px] text-white-700 bg-gray-200 p-1 text-black rounded-full cursor-pointer sm:hidden"
+						onClick={(e) => {
+							e.stopPropagation();
+							handleDeleteBag(item.productId._id, item._id)
+						}}
 					>
-						{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-						<option key={num + 1} value={num + 1}>{num + 1}</option>
-						))}
-					</select>
+						<X size={15}/>
+					</div>
+				</div>
+			
+				{/* Product Info */}
+				<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
+					<h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
+					<p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+				
+					{/* Price and Discount Info */}
+					<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
+						{item?.productId?.salePrice ? (
+						<Fragment>
+							<span>₹ {formattedSalePrice(item?.productId?.salePrice)}</span>
+							<span className="line-through text-gray-400">₹{formattedSalePrice(item.productId.price)}</span>
+							<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(item.productId?.price, item.productId?.salePrice)}% OFF)</span>
+						</Fragment>
+						) : (
+						<span>₹ {formattedSalePrice(item?.productId?.price)}</span>
+						)}
+					</div>
+				
+					{/* Quantity Selector */}
+					<div className="mt-4 flex items-center space-x-4">
+						<label className="text-sm">Qty:</label>
+						<select
+							value={item?.quantity}
+							onChange={(e) => updateQty(e, item.productId._id)}
+							className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+						>
+							{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
+								<option key={num + 1} value={num + 1}>{num + 1}</option>
+							))}
+						</select>
+					</div>
+				</div>
+			
+				{/* Delete Button for larger screens */}
+				<X
+					className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+					onClick={(e) => handleDeleteBag(item.productId._id, item._id)}
+				/>
+			</div>
+		  
+		))}
+
+		{/* Coupon Section */}
+		<div className="mt-6 space-y-2">
+			<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
+			<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
+				{/* Coupon Input */}
+				<input
+					type="text"
+					value={coupon}
+					onChange={(e) => setCoupon(e.target.value)}
+					className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
+					placeholder="Add Voucher Code."
+				/>
+
+				{/* Apply Coupon Button */}
+				<button
+					onClick={applyCoupon}
+					className="w-full sm:w-[20%] h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
+				>
+					<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>
+				</button>
+			</div>
+		</div>
+
+		{/* Display Coupons */}
+		<CouponsDisplay user={user} />
+	</div>
+
+);
+const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, convenienceFees, totalProductSellingPrice,removeCoupon }) => {
+	const navigation = useNavigate();
+	return (
+		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 p-8 shadow-md">
+			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
+				ORDER DETAILS ({bag?.orderItems.length} items)
+			</h3>
+			<div className="space-y-4 sm:space-y-5">
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Total MRP</span>
+					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>You Saved</span>
+					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Coupon</span>
+					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
+						{
+							bag?.Coupon?.CouponCode ? 
+							<button className='flex items-center space-x-1' onClick={(e)=> removeCoupon(e, bag?.Coupon?.CouponCode)}>
+								<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
+							</button> : 
+							<Fragment><span>No Coupon Applied</span></Fragment>
+						}
+					</span>
+				</div>
+				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
+					<span>Convenience Fee</span>
+					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+						₹{convenienceFees}
+					</span>
+				</div>} 
+				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
+					<span>Total</span>
+					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+				</div>
+				<div className="flex flex-col space-y-4 mt-6">
+					<button
+						onClick={()=> navigation('/bag/checkout')}
+						className="w-full bg-black hover:bg-gray-900 text-white py-3 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+					>
+						Proceed to Checkout
+					</button>
 				</div>
 			</div>
-			<X
-				className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
-				onClick={(e) => handleDeleteBag(item.productId._id, item._id)}
-			/>
-			</div>
-		))}
-	</div>
-);
-const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, convenienceFees, totalProductSellingPrice }) => (
-	<div className="w-full font-kumbsan lg:w-1/3 bg-gray-50 p-8 rounded-lg shadow-md">
-	  <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({bag?.orderItems.length} items)</h3>
-	  <div className="space-y-5">
-		<div className="flex justify-between text-sm text-gray-700">
-		  <span>Total MRP</span>
-		  <span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
 		</div>
-		<div className="flex justify-between text-sm text-gray-700">
-		  <span>You Saved</span>
-		  <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>
-		</div>
-		<div className="flex justify-between text-sm text-gray-700">
-		  <span>Coupon</span>
-		  <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-			{bag?.Coupon?.CouponCode || "No Coupon Applied"}
-		  </span>
-		</div>
-		<div className="flex justify-between text-sm text-gray-700 mb-5">
-		  <span>Convenience Fee</span>
-		  <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-			₹{convenienceFees}
-		  </span>
-		</div>
-		<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-2xl font-semibold transition-colors">
-		  <span>Total</span>
-		  <span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
-		</div>
-	  </div>
-	</div>
-);
+
+	);
+}
 const AddressAndPaymentComponent = ({ 
 	handleProceedToPayment, 
 	handleOpenPopup, 
@@ -215,31 +326,31 @@ const AddressAndPaymentComponent = ({
 			{/* Address Display */}
 			{user?.user && allAddresses?.length > 0 && (
 				allAddresses.map((addr, index) => (
-				<div
-					key={index}
-					className={`p-4 border rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white hover:bg-gray-100'}`}
-					onClick={() => handleAddressSelection(addr)}
-				>
-					{Object.entries(addr).map(([key, value]) => (
-					<div key={key} className="flex justify-between mb-1">
-						<span className="font-medium text-sm">{capitalizeFirstLetterOfEachWord(key)}:</span>
-						<span className="text-sm">{value}</span>
+					<div
+						key={index}
+						className={`p-4 border rounded-lg transition-transform duration-300 ease-in-out transform hover:scale-105 ${selectedAddress === addr ? 'bg-gray-500 text-white' : 'bg-white hover:bg-gray-100'}`}
+						onClick={() => handleAddressSelection(addr)}
+					>
+						{Object.entries(addr).map(([key, value]) => (
+						<div key={key} className="flex justify-between mb-1">
+							<span className="font-medium text-sm">{capitalizeFirstLetterOfEachWord(key)}:</span>
+							<span className="text-sm">{value}</span>
+						</div>
+						))}
+						{selectedAddress === addr && <span className="text-xs text-white mt-2 block">Default Address</span>}
 					</div>
-					))}
-					{selectedAddress === addr && <span className="text-xs text-white mt-2 block">Default Address</span>}
-				</div>
 				))
 			)}
 
-			{/* Add New Address Button */}
-			<div className="mt-4 flex justify-center items-center w-full">
-				<button
-				onClick={handleOpenPopup}
-				className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
-				>
-				Add New Address
-				</button>
-			</div>
+				{/* Add New Address Button */}
+				<div className="mt-4 flex justify-center items-center w-full">
+					<button
+						onClick={handleOpenPopup}
+						className="bg-gray-600 hover:bg-gray-700 text-white py-2 px-6 rounded-lg transition duration-300 ease-in-out transform hover:scale-105"
+					>
+						Add New Address
+					</button>
+				</div>
 			</div>
 		</div>
 

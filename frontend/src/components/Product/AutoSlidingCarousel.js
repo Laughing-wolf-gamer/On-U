@@ -147,6 +147,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
 
     const addToWishList = async (e) => {
         e.stopPropagation();
+        e.preventDefault();
         if (user) {
             const response = await dispatch(createwishlist({ productId: pro._id }));
             await dispatch(getwishlist());

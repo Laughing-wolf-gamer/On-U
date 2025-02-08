@@ -19,6 +19,7 @@ import CouponsDisplay from './CouponDisplay';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import BagContent from './BagContent';
+import OfflineBagContent from './OfflineBagContent';
 
 
 const Bag = () => {
@@ -40,6 +41,9 @@ const Bag = () => {
     const [address, setAddress] = useState(null);
 
     const [selectedAddress, setSelectedAddress] = useState(null);
+    const [showPayment,setShowPayment] = useState(false);
+
+    
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
@@ -128,38 +132,39 @@ const Bag = () => {
         } else if (sessionBagData) {
             let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
             let totalMRP = 0;
-        
-            sessionBagData.forEach(item => {
-                const { ProductData, quantity } = item;
-                const { salePrice, price } = ProductData;
-                
-                // Use salePrice if available, else fallback to regular price
-                const productSellingPrice = salePrice || price;
-        
-                // Calculate the total sale price (totalSP) based on salePrice or regular price
-                const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                totalSP += itemTotalPrice;
-        
-                // Calculate the discount only if there is a sale price
-                if (salePrice && price > 0) {
-                    const discount = price - salePrice;
-                    totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                }
-        
-                // Total product selling price includes salePrice or regular price
-                totalProductSellingPrice += productSellingPrice * quantity;
-        
-                // Calculate the total MRP (Maximum Retail Price) based on regular price
-                totalMRP += price * quantity;
-            });
-        
-            // Add convenience fees to the total product selling price (only once, not for each item)
-            totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
-        
-            // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
-            setTotalProductSellingPrice(totalProductSellingPrice);
-            setDiscountAmount(totalDiscount);
-            setTotalMRP(totalMRP);
+            if(sessionBagData){
+                sessionBagData.forEach(item => {
+                    const { ProductData, quantity } = item;
+                    const { salePrice, price } = ProductData;
+                    
+                    // Use salePrice if available, else fallback to regular price
+                    const productSellingPrice = salePrice || price;
+            
+                    // Calculate the total sale price (totalSP) based on salePrice or regular price
+                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+                    totalSP += itemTotalPrice;
+            
+                    // Calculate the discount only if there is a sale price
+                    if (salePrice && price > 0) {
+                        const discount = price - salePrice;
+                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+                    }
+            
+                    // Total product selling price includes salePrice or regular price
+                    totalProductSellingPrice += productSellingPrice * quantity;
+            
+                    // Calculate the total MRP (Maximum Retail Price) based on regular price
+                    totalMRP += price * quantity;
+                });
+            
+                // Add convenience fees to the total product selling price (only once, not for each item)
+                totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
+            
+                // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
+                setTotalProductSellingPrice(totalProductSellingPrice);
+                setDiscountAmount(totalDiscount || 0);
+                setTotalMRP(totalMRP);
+            }
         }
         
     }, [bag,sessionBagData]);
@@ -188,7 +193,7 @@ const Bag = () => {
     const handleAddressSelection = (address) => {
         setSelectedAddress(address);
     };
-    const [showPayment,setShowPayment] = useState(false);
+    
 
     const placeOrder = () => {
         if (selectedAddress) {
@@ -270,6 +275,7 @@ const Bag = () => {
             },400)
         }
     };
+    console.log("Discounted Amount: ",discountedAmount)
     return (
         <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
             <div className="w-full max-w-screen-2xl justify-self-center">
@@ -299,129 +305,23 @@ const Bag = () => {
                     />
                   
                 ) : (
-                    <div>
-                    {sessionBagData && sessionBagData.length > 0 ? (
-                        <div className="relative w-full px-10 mx-auto">
-                        
-                        {/* Navigation Bar */}
-                        <div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
-                            <div className="flex space-x-8 text-gray-800">
-                            <span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
-                            <span className="text-gray-400">|</span>
-                            <span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
-                            <span className="text-gray-400">|</span>
-                            <span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
-                            </div>
-                            <div className="flex items-center space-x-3">
-                            <BsShieldFillCheck className="text-blue-600 text-2xl" />
-                            <span className="text-xs text-gray-600">100% SECURE</span>
-                            </div>
-                        </div>
-
-                        {/* Main Content */}
-                        <div className="flex flex-col lg:flex-row gap-12 mt-12">
-                            
-                            {/* Product Listing */}
-                            <div className="flex-1 space-y-6">
-                            {sessionBagData.map((item, i) => (
-                                <div key={i} className="flex items-center border-b py-6 space-x-8">
-                                <Link to={`/products/${item.ProductData?._id}`} className="w-28 h-28">
-                                    <img src={item?.color?.images[0]?.url} alt={item?.ProductData?.title} className="w-full h-full object-contain rounded-lg" />
-                                </Link>
-                                <div className="flex-1">
-                                    <h3 className="font-semibold text-lg text-gray-800">{item?.ProductData?.title}</h3>
-                                    <p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
-                                    <div className="flex items-center space-x-4 text-sm text-blue-500 mt-2">
-                                    {item?.ProductData?.salePrice ? (
-                                        <>
-                                        <span>₹{Math.round(formattedSalePrice(item?.ProductData?.salePrice))}</span>
-                                        <span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(item.ProductData.price))}</span>
-                                        <span className="text-orange-600">({calculateDiscountPercentage(item.ProductData?.price,item.ProductData?.salePrice)}% OFF)</span>
-                                        </>
-                                    ) : (
-                                        <span>₹ {Math.round(formattedSalePrice(item.ProductData.price))}</span>
-                                    )}
-                                    </div>
-                                    <div className="mt-4 flex items-center space-x-4">
-                                    <label className="text-sm">Qty:</label>
-                                    <select
-                                        value={item?.quantity}
-                                        onChange={(e) => updateQty(e, item.ProductData._id)}
-                                        className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    >
-                                        {[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-                                        <option key={num + 1} value={num + 1}>{num + 1}</option>
-                                        ))}
-                                    </select>
-                                    </div>
-                                </div>
-                                <X
-                                    className="text-xl text-gray-700 hover:text-red-500 cursor-pointer"
-                                    onClick={(e) => {
-                                    e.preventDefault();
-                                    handleDeleteBag(item.ProductData._id, item._id);
-                                    }}
-                                />
-                                </div>
-                            ))}
-                            </div>
-
-                            {/* Price Details */}
-                            <div className="w-full lg:w-1/3 bg-gray-50 p-8 rounded-xl shadow-md">
-                            <h3 className="font-semibold text-xl text-gray-800 mb-6">PRICE DETAILS ({sessionBagData.length} items)</h3>
-                            <div className="space-y-5">
-                                <div className="flex justify-between text-sm text-gray-700">
-                                <span>Total MRP</span>
-                                <span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700">
-                                <span>You Saved</span>
-                                <span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700">
-                                <span>Coupon</span>
-                                <span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-                                    {bag?.Coupon?.CouponCode || "No Coupon Applied"}
-                                </span>
-                                </div>
-                                <div className="flex justify-between text-sm text-gray-700 mb-5">
-                                <span>Convenience Fee</span>
-                                <span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-                                    ₹{convenienceFees}
-                                </span>
-                                </div>
-                                <div className="flex justify-between font-semibold text-xl text-gray-900">
-                                <span>Total</span>
-                                <span>₹{Math.round(totalProductSellingPrice)}</span>
-                                </div>
-                            </div>
-                            <div className="mt-6">
-                                <button
-                                onClick={() => navigation("/Login")}
-                                className="w-full rounded-xl py-4 bg-black text-white text-lg font-semibold hover:bg-gray-800 transition-colors"
-                                >
-                                Log In To Process Payment
-                                </button>
-                            </div>
-                            </div>
-                        </div>
-                        </div>
-                    ) : (
-                        <Fragment>
-                        {bagLoading ? (
-                            <SkeletonLoader />
-                        ) : (
-                            <div className="min-h-screen flex justify-center items-center">
-                                <Emptybag />
-                            </div>
-                        )}
-                        </Fragment>
-                    )}
-                    </div>
+                    <OfflineBagContent
+                        bag = {bag}
+                        discountedAmount = {discountedAmount}
+                        sessionBagData={sessionBagData}
+                        showPayment={showPayment}
+                        selectedAddress={selectedAddress}
+                        bagLoading = {bagLoading}
+                        totalSellingPrice={totalSellingPrice}
+                        totalProductSellingPrice={totalProductSellingPrice}
+                        convenienceFees={convenienceFees}
+                        navigation={navigation}
+                        handleDeleteBag={handleDeleteBag}
+                        updateQty = {updateQty}
+                    />
 
                 )}
             </div>
-            <CouponsDisplay user={user} />
             {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
                 <div className='w-full 2xl:px-12 justify-center items-center flex flex-col mb-5'>
                     <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>

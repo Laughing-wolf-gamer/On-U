@@ -26,6 +26,7 @@ import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js"
 import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
 import { FunctionProvider } from "./Contaxt/FunctionContext.js";
 import { Toaster } from 'react-hot-toast';
+import CheckoutPage from "./components/Bag/NewCheckoutPage.js";
 
 
 
@@ -84,6 +85,7 @@ function App() {
             {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
             <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
             <Route path='/bag' element={<Bag user={user}/>}/>
+            <Route path='/bag/checkout' element={<CheckoutPage/>}/>
             {user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
             <Route path='/address/bag' element={<Address user={user}/>}/>
             <Route path='/about' element={<About />}/>

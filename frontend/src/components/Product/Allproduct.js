@@ -234,7 +234,7 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
                 </div>
     
                 {/* Dropdown Content */}
-                <div onMouseLeave={()=> setOpenView(false)}  className={`absolute left-0 top-8 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
+                <div onMouseLeave={()=> setOpenView(false)}  className={`absolute left-0 top-8 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0 pointer-events-none"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
                         <span className="font1 text-gray-800">What`s New</span>
                     </div>

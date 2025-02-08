@@ -341,9 +341,12 @@ export const applyCouponToBag = async(req,res)=>{
         const{couponCode} = req.body;
         
         const coupon = await Coupon.findOne({CouponCode: couponCode});
-        console.log("Coupon Code: ",coupon)
+        // console.log("Coupon Code: ",coupon)
         if(!coupon){
             return res.status(404).json({message: "Coupon Not Found"})
+        }
+        if (coupon.Status === "Inactive") {
+            return res.status(400).json({ message: "Coupon is inactive" });
         }
         if (coupon.ValidDate < Date.now()) {
             return res.status(400).json({ message: "Coupon is expired" });
@@ -379,7 +382,7 @@ export const removeCouponToBag = async(req,res)=>{
         const{bagId} = req.params;
         const{couponCode} = req.body;
         const bag = await Bag.findById(bagId).populate("Coupon");
-        // console.error("Coupon bag",bag);
+        // console.error("Removing Coupon bag",bag);
         if(!bag){
             return res.status(404).json({message: "Bag Not Found"})
         }
@@ -462,7 +465,7 @@ export const removeCouponToBag = async(req,res)=>{
 } */
 export const addItemsArrayToBag = async (req, res) => {
     try {
-        console.log("Bag Array: ", req.body);
+        // console.log("Bag Array: ", req.body);
 
         // Check if the user is logged in
         if (!req.user || !req.user.id) {
