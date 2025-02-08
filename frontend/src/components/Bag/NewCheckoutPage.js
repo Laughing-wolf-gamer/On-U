@@ -657,7 +657,7 @@ const AddAddress = ({onSave }) => {
     return (
 		<div>
 			<h2 className="text-xl font-semibold mb-4 text-center">Add New Address</h2>
-			<form className="space-y-4">
+			<form className="space-y-4 flex flex-col">
 				{formData && formData.map((item, index) => (
 					<Fragment key={index}>
 						<div className="flex flex-col">
@@ -682,11 +682,12 @@ const AddAddress = ({onSave }) => {
 				))}
 			</form>
 			{
-				formData && formData.length > 0 && <div className="flex justify-start mt-4 space-x-2">
+				formData && formData.length > 0 && <div className="flex justify-end mt-4 space-x-2">
 					<button
+						disabled = {Object.values(newAddress).every(value => value.trim() === '')}
 						onClick={handleSave}
 						color="primary"
-						className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
+						className={`px-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
 					>
 						Save
 					</button>

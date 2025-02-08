@@ -16,7 +16,7 @@ export const createOrder = async (req, res) => {
         console.log("Payment Amount:", req.body);
         const { amount ,selectedAddress, orderDetails, totalAmount, bagId } = req.body;
         const options = {
-            amount: Number(amount * 100),
+            amount: Number(Math.round(amount) * 100),
             currency: "INR",
             receipt: `order_receipt_${Date.now()}`,
             payment_capture: 1, // auto-capture payment (1) or manual (0)

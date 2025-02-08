@@ -37,7 +37,7 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     
     
     return (
-        <div className="relative h-full w-full bg-blue-200 overflow-hidden">
+        <div className="relative h-full w-full bg-gray-200 overflow-hidden">
             <img
                 loading="lazy"
                 src={imageSrc}

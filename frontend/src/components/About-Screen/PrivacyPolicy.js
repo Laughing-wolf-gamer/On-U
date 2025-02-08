@@ -1,12 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import Footer from '../Footer/Footer';
+import BackToTopButton from '../Home/BackToTopButton';
 
 const PrivacyPolicy = () => {
+  const scrollableDivRef = useRef(null); // Create a ref to access the div element
   useEffect(()=>{
     window.scrollTo(0,0)
   },[])
   return (
-    <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       <div className="bg-white relative h-32 flex flex-col justify-center items-center rounded-md">
         <img
           src="https://indiater.com/wp-content/uploads/2019/10/free-modern-fashion-cover-banner-design-psd-template.jpg"
@@ -124,6 +126,7 @@ const PrivacyPolicy = () => {
         </div>
       </div>
       <Footer/>
+      <BackToTopButton scrollableDivRef={scrollableDivRef} />
     </div>
   );
 };

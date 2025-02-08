@@ -1,8 +1,10 @@
 import { ChevronDown, ChevronRight, ChevronUp } from 'lucide-react';
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Footer from '../Footer/Footer';
+import BackToTopButton from '../Home/BackToTopButton';
 
 const FAQ = () => {
+  const scrollableDivRef = useRef(null); // Create a ref to access the div element
   // Example FAQ Data
   const faqData = [
     {
@@ -51,7 +53,7 @@ const FAQ = () => {
   },[])
 
   return (
-    <div className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+    <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
       <div className="bg-gray-50 py-12 pb-10 px-6 lg:px-24 my-3 h-fit w-full">
         {/* Header Section */}
         <header className="text-center mb-12">
@@ -89,6 +91,7 @@ const FAQ = () => {
         </div>
       </div>
       <Footer/>
+      <BackToTopButton scrollableDivRef={scrollableDivRef} />
     </div>
   );
 };

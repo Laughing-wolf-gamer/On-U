@@ -5,6 +5,7 @@ import { fetchAllOptions } from '@/store/common-slice';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const AdminCouponFormPage = () => {
     const { Coupons } = useSelector(state => state.adminProducts);
@@ -59,9 +60,11 @@ const AdminCouponFormPage = () => {
         if (modalCoupon === null) {
             console.log("New Coupon: ", newCoupon);
             await dispatch(createNewCoupon({ couponData: newCoupon }));
+            toast.success("Coupon created successfully")
         } else {
             console.log("Editing Coupon: ", modalCoupon);
             await dispatch(editCoupon({ couponId: modalCoupon._id, couponData: newCoupon }));
+            toast.success("Coupon updated successfully")
         }
         resetForm();
         setModalCoupon(null);
@@ -203,7 +206,7 @@ const AdminCouponFormPage = () => {
                                     <div className="text-sm sm:text-base">{coupon?.CouponName}</div>
                                     <div className="text-sm sm:text-base">{coupon?.CouponCode}</div>
                                     <div className="text-sm sm:text-base">
-                                        <Badge className={`justify-center items-center py-1 px-3 hover:bg-transparent hover:shadow-md bg-black hover:bg-gray-600 text-white`}>
+                                        <Badge className={`justify-center items-center py-1 px-3 hover:bg-transparent hover:shadow-md ${coupon.Status === "Active" ?"bg-green-600":"bg-red-600"} hover:bg-gray-600 text-white`}>
                                             {coupon.Status}
                                         </Badge>
                                     </div>

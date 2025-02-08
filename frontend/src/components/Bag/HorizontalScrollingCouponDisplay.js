@@ -77,21 +77,21 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 		<div className="grid grid-cols-1 min-h-[180px] relative px-4">	
 			<div className="relative w-full flex justify-start items-center">
 				{/* Left and Right Arrow Buttons */}
-				{/* <Fragment>
+				<Fragment>
 					<button
 						onClick={() => scroll(-1)}
-						className="absolute h-[20%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-black hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
+						className="absolute h-[20%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
 					>
-					<ChevronLeft size={40} />
+					<ChevronLeft  />
 					</button>
 	
 					<button
 						onClick={() => scroll(1)}
-						className="absolute h-[20%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-black hover:text-purple-500 hover:scale-110 opacity-90 hover:opacity-100 z-10 hover:border bg-transparent"
+						className="absolute h-[20%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
 					>
-						<ChevronRight size={40} />
+						<ChevronRight />
 					</button>
-				</Fragment> */}
+				</Fragment>
 	
 				{/* Slider Container to hide overflow items */}
 				<div className="w-full overflow-hidden">

@@ -6,8 +6,10 @@ import axios from "axios";
 import { useRazorpay } from "react-razorpay";
 import { X } from "lucide-react";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
+import { useNavigate } from "react-router-dom";
 
 const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
+    const navigation = useNavigate();
     const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
     const [paymentMethod, setPaymentMethod] = useState("");
@@ -165,6 +167,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
     const confirmPayment = async () => {
         if (paymentMethod) {
             if (paymentMethod === "COD") {
+                setIsPaymentStart(true);
                 const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
                 const orderData = {
                     bagId: bag?._id,
@@ -174,13 +177,16 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                     Address: selectedAddress,
                     status: 'Order Confirmed'
                 };
-                dispatch(create_order(orderData));
+                await dispatch(create_order(orderData));
+                navigation('/bag')
                 closePopup();
+                setIsPaymentStart(false);
             } else {
                 handleRazerPayPayment();
             }
         } else {
             checkAndCreateToast("info","Please select a payment method.");
+            setIsPaymentStart(false);
         }
     };
     useEffect(()=>{
@@ -268,7 +274,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Saved:</span>
-                        <span>{discountAmount}</span>
+                        <span>{formattedSalePrice(discountAmount)}</span>
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>
@@ -278,11 +284,11 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 
                 {/* Confirm Payment Button */}
                 <button
-                    disabled={isPaymentStart}
+                    disabled={isPaymentStart || !paymentMethod || paymentMethod ===  '' }
                     onClick={confirmPayment}
-                    className="w-full bg-black text-white p-4 rounded-md mt-6 hover:bg-gray-800 focus:ring-2 focus:ring-black"
+                    className="w-full bg-black text-white p-4 rounded-md mt-6 hover:bg-gray-800 focus:ring-2 flex flex-row justify-center items-center focus:ring-black disabled:bg-gray-700"
                 >
-                    {isPaymentStart ? "Payment Started" : "Confirm Payment"}
+                    {isPaymentStart ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : <span>Confirm Payment</span>}
                 </button>
             </div>
         </div>

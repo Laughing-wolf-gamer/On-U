@@ -118,7 +118,7 @@ const BagContent = ({
 			) : (
 				<Fragment>
 					{bagLoading ? <SkeletonLoader /> : 
-						<div className="min-h-screen flex justify-center items-center bg-slate-100">
+						<div className="min-h-screen flex justify-center items-center">
 							<EmptyBag />
 						</div>
 					}

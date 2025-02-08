@@ -392,7 +392,7 @@ export const SendSingleProduct = async (req, res) => {
             _id: { $ne: id }  // Exclude the current product by its _id
         }).limit(20);  // Limit to 20 similar products
 
-        console.log("Product Single: ", product, "Similar Product: ", similarProduct);
+        // console.log("Product Single: ", product, "Similar Product: ", similarProduct);
 
         res.status(200).json({
             success: true,
