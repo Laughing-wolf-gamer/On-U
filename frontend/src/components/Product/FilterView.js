@@ -753,7 +753,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
-                <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative`}>
+                <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative scrollbar-thin scrollbar-track-gray-400 scrollbar-thumb-gray-700`}>
                     <h1 className="font1 text-base font-semibold mb-2">COLOR</h1>
                     {AllProductsColor && AllProductsColor.length > 0 && 
                         AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {

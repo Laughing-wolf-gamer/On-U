@@ -42,16 +42,16 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     };
 
     const renderPrice = () => (
-        <p className="flex items-center font-kumbsan px-0.5 pb-2 space-x-2 whitespace-nowrap">
-            <span className="text-[12px] md:text-[14px] sm:text-base font-medium text-black">
+        <p className="flex items-center font-kumbsan px-0.5 pb-2 space-x-[1.5px] whitespace-nowrap">
+            <span className="text-[10px] md:text-[14px] sm:text-base font-medium text-black">
                 ₹{formattedSalePrice(salePrice || price)}
             </span>
             {salePrice && (
-                <div className="w-full justify-start space-x-3 flex flex-row items-center">
+                <div className="w-full justify-start space-x-[1.5px] flex flex-row items-center">
                     <span className="text-[10px] sm:text-base font-medium text-slate-400 line-through">
                         ₹{Math.round(formattedSalePrice(price))}
                     </span>
-                    <span className="text-[12px] inline-flex sm:text-sm font-medium md:text-[13px] text-red-500 hover:animate-vibrateScale">
+                    <span className="text-[10px] inline-flex whitespace-nowrap sm:text-sm font-medium md:text-[13px] text-red-500 hover:animate-vibrateScale">
                         ({calculateDiscountPercentage(price, salePrice)}% OFF)
                     </span>
                 </div>

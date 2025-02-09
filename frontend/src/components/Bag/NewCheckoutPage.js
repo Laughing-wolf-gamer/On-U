@@ -300,7 +300,7 @@ const CheckoutPage = () => {
 
 	return (
 		<div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
-			<div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2 sm:px-3 md:px-8 lg:px-4 xl:px-3'>
+			<div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2 sm:px-3 md:px-8 lg:px-4 xl:px-3 pb-10'>
 				<h1 className="text-3xl font-bold text-center mb-6">Checkout</h1>
 				
 				<div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-6 2xl:grid-cols-6 xl:grid-cols-6 gap-8">

@@ -15,7 +15,7 @@ import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { ShoppingCart, UserRound } from 'lucide-react'
+import { ChevronDown, ChevronRight, ShoppingCart, UserRound } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 
@@ -304,16 +304,16 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <li
-                                    className="text-black font1 pl-5 py-4 w-full flex flex-row justify-between items-center"
+                                    className="text-black font1 pl-5 py-4 w-full flex flex-row justify-start items-center"
                                     onClick={() => {
                                         setWomen(!Women);
                                         setMenu2(Menu2 === "hidden" ? "block" : "hidden");
                                     }}
                                 >
                                     <span className="">Shop</span>
-                                    <div className='mx-5 flex h-full w-14 justify-center'>
-                                        <span className="border-l-[0.5px] w-full border-gray-700">{Women ? <IoIosArrowDown strokeWidth={0.6} size={30} /> : <IoIosArrowForward strokeWidth={0.6} size={30} />}</span>
-                                    </div>
+                                    {/* <div className='mx-5 flex h-full w-14 justify-center'>
+                                        <span className="w-full border-gray-700">{Women ? <ChevronDown strokeWidth={0.6} size={30} /> : <ChevronRight strokeWidth={0.6} size={30} />}</span>
+                                    </div> */}
                                 </li>
                             </Ripples>
 

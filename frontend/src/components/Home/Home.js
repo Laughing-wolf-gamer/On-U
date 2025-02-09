@@ -362,7 +362,7 @@ const Home = ({user}) => {
                                 </div>
                             </div>
                         }
-                        <div className="w-screen h-fit flex flex-col  justify-center items-center pb-7 space-y-3">
+                        <div className="w-screen h-fit flex flex-col justify-center items-center pb-7 space-y-3">
                             <h1 className='text-xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
                             </h1>
@@ -371,7 +371,7 @@ const Home = ({user}) => {
                             </div>
                         </div>
                         <div className='pt-4 grid grid-cols-1 min-h-[200px] '>
-                            <h1 className='text-xl px-8 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
+                            <h1 className='text-xl px-10 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-screen flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
@@ -391,7 +391,7 @@ const Home = ({user}) => {
                             </div>
                         </div>
 
-                        <div className='pt-4 px-4 w-[100vw] '>
+                        <div className='pt-4 px-2 w-[100vw] '>
                             <Carousel 
                                 preventMovementUntilSwipeScrollTolerance
                                 autoPlay={50000}

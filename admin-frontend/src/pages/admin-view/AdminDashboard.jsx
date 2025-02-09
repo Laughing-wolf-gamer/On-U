@@ -517,8 +517,8 @@ const AllRecentOrders = ({allOrders}) => {
                     </tr>
                 </thead>
                 <tbody>
-                    {allOrders && allOrders.length > 0 && allOrders.map((order) => (
-                        <tr key={order.id} className="border-b hover:bg-gray-100">
+                    {allOrders && allOrders.length > 0 && allOrders.map((order,index) => (
+                        <tr key={order._id || index} className="border-b hover:bg-gray-100">
                             <td className="py-3 px-4 text-sm font-medium text-gray-700">{order._id}</td>
                             <td className="py-3 px-4 text-sm text-gray-700">{order?.userId?.name}</td>
                             <td className="py-3 px-4 text-sm text-gray-600">{new Date(order?.createdAt).toLocaleDateString()}</td>
