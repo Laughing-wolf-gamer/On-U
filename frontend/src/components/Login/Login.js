@@ -162,14 +162,14 @@ const Login = () => {
                         <input
                             type="number"
                             maxLength={6}
-                            className="w-full p-4 border-2 border-gray-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-teal-500 mb-6 text-lg text-gray-700 placeholder-gray-600 bg-gray-300"
+                            className="w-full p-4 border-2 border-gray-700 rounded-lg focus:outline-none focus:ring-4 focus:ring-gray-500 mb-6 text-lg text-gray-700 placeholder-gray-600 bg-gray-300"
                             onChange={handleOtpChange}
                             value={otp}
                             placeholder="Enter OTP"
                         />
                         <div className="flex justify-center items-center gap-4">
                             <button
-                                className="w-full py-3 bg-teal-600 text-white font-semibold rounded-lg shadow-md hover:bg-teal-700 transition duration-200"
+                                className="w-full py-3 bg-gray-800 text-white font-semibold rounded-lg shadow-md hover:bg-gray-900 transition duration-200"
                                 onClick={handleOtpVerify}
                             >
                                 Verify OTP

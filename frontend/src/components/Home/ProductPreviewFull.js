@@ -22,7 +22,7 @@ const ProductPreviewFull = ({ product ,user}) => {
         if (product) {
             // const randomizes = generateArrayOfRandomItems(product, 6);
             console.log("Products: ",product);
-            const maxProductsAmount = window.screen.width > 1024 ? 5 : 6;
+            const maxProductsAmount = window.screen.width > 1024 ? 5 : 4;
             const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, maxProductsAmount); // filter by bestSeller and take first 6 items
             // const itemsOfCategory = generateArrayOfRandomItems(product, maxProductsAmount); // filter by bestSeller and take first 6 items
             setSelectedPreviewProducts(itemsOfCategory);

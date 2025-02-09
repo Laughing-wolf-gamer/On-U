@@ -640,7 +640,7 @@ const MPpage = () => {
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
                             <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
-                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#F72C5B] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
+                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
                             </div>
 
                             <div className='h-full w-full justify-center items-center flex flex-col space-y-5'>

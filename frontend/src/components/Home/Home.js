@@ -327,7 +327,7 @@ const Home = ({user}) => {
                         </div>
 
 
-                        <div className=''>
+                        <div className='px-4'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
@@ -346,7 +346,7 @@ const Home = ({user}) => {
                                 )}
                             </ul>
                         </div>
-                        {/* <OurMotoData/> */}
+                        <OurMotoData/>
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-screen justify-center items-center flex pr-3 pl-3 '>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
@@ -391,7 +391,7 @@ const Home = ({user}) => {
                             </div>
                         </div>
 
-                        <div className='pt-4 w-[100vw] '>
+                        <div className='pt-4 px-4 w-[100vw] '>
                             <Carousel 
                                 preventMovementUntilSwipeScrollTolerance
                                 autoPlay={50000}
@@ -513,76 +513,81 @@ const OurMotoData = () => {
     },[dispatch])
     console.log("WebsiteDisclaimer options: ", WebsiteDisclaimer)
     return (
-        <div className="h-fit w-screen  py-10">
+        <div className="h-fit w-screen py-10">
             <div className="w-full flex justify-center items-center px-4 md:px-8 h-full">
-                <div className="w-full max-w-6xl grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-12">
+                <div className="w-full max-w-6xl grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-10 md:gap-12 xl:gap-12 2xl:gap-12 lg:gap-12">
                     {
-                        WebsiteDisclaimer && WebsiteDisclaimer.length > 0 ? WebsiteDisclaimer.map((website,index)=>(
-                            <div key={`${index}-${website._id}`} className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                {/* <Truck size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" /> */}
-                                <img src={website?.iconImage} alt={`Disclaimer_Icon_${index}`} className="w-16 h-16 transition-transform duration-150 group-hover:scale-110 mb-4"/>
-                                <h3 className="font-semibold text-xl text-gray-800">{website?.header}</h3>
-                                <p className="font-light text-sm text-gray-600 text-center">{website?.body}</p>
+                        WebsiteDisclaimer && WebsiteDisclaimer.length > 0 ? WebsiteDisclaimer.map((website, index) => (
+                            <div key={`${index}-${website._id}`} className="relative group justify-between md:justify-center sm:justify-center flex flex-col items-center min-w-[140px] p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                                <img src={website?.iconImage} alt={`Disclaimer_Icon_${index}`} className="w-12 h-12 sm:w-16 sm:h-16 transition-transform duration-150 group-hover:scale-110 mb-4"/>
+                                <div>
+                                    <h3 className="font-semibold text-center text-base sm:text-sm text-gray-800">{website?.header}</h3>
+                                    <p className="font-light text-xs sm:text-sm text-gray-600 text-center">{website?.body}</p>
+                                </div>
                                 
                                 {/* Hover Text */}
                                 <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                    <p className="text-center text-sm">{website?.hoverBody}</p>
+                                    <p className="text-center text-xs sm:text-sm">{website?.hoverBody}</p>
                                 </div>
                             </div>
-                        )):(<Fragment>
-                            {/* First Grid Item - Free Shipping */}
-                            <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                <Truck size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
-                                <h3 className="font-semibold text-xl text-gray-800">FREE SHIPPING</h3>
-                                <p className="font-light text-sm text-gray-600 text-center">On all orders over ₹75.00</p>
-                                
-                                {/* Hover Text */}
-                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                    <p className="text-center text-sm">Enjoy free shipping on all your orders over ₹75.00.</p>
+                        )) : (
+                            <Fragment>
+                                {/* First Grid Item - Free Shipping */}
+                                <div className="relative group flex flex-col items-center p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                                    <Truck size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                                    <h3 className="font-semibold text-lg sm:text-xl text-gray-800">FREE SHIPPING</h3>
+                                    <p className="font-light text-xs sm:text-sm text-gray-600 text-center">On all orders over ₹75.00</p>
+                                    
+                                    {/* Hover Text */}
+                                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                                        <p className="text-center text-xs sm:text-sm">Enjoy free shipping on all your orders over ₹75.00.</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Second Grid Item - Support 24/7 */}
-                            <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                <Clock size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
-                                <h3 className="font-semibold text-xl text-gray-800">SUPPORT 24/7</h3>
-                                <p className="font-light text-sm text-gray-600 text-center">Available to assist you anytime</p>
-                                
-                                {/* Hover Text */}
-                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                    <p className="text-center text-sm">Our support team is available 24/7 to assist you with any questions or issues.</p>
+                                {/* Second Grid Item - Support 24/7 */}
+                                <div className="relative group flex flex-col items-center p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                                    <Clock size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                                    <h3 className="font-semibold text-lg sm:text-xl text-gray-800">SUPPORT 24/7</h3>
+                                    <p className="font-light text-xs sm:text-sm text-gray-600 text-center">Available to assist you anytime</p>
+                                    
+                                    {/* Hover Text */}
+                                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                                        <p className="text-center text-xs sm:text-sm">Our support team is available 24/7 to assist you with any questions or issues.</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Third Grid Item - Money Return */}
-                            <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                <CircleDollarSign size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
-                                <h3 className="font-semibold text-xl text-gray-800">MONEY RETURN</h3>
-                                <p className="font-light text-sm text-gray-600 text-center">Hassle-free returns within 30 days</p>
+                                {/* Third Grid Item - Money Return */}
+                                <div className="relative group flex flex-col items-center p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                                    <CircleDollarSign size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                                    <h3 className="font-semibold text-lg sm:text-xl text-gray-800">MONEY RETURN</h3>
+                                    <p className="font-light text-xs sm:text-sm text-gray-600 text-center">Hassle-free returns within 30 days</p>
 
-                                {/* Hover Text */}
-                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                    <p className="text-center text-sm">Enjoy hassle-free returns on all your purchases within 30 days.</p>
+                                    {/* Hover Text */}
+                                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                                        <p className="text-center text-xs sm:text-sm">Enjoy hassle-free returns on all your purchases within 30 days.</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                            {/* Fourth Grid Item - Order Discount */}
-                            <div className="relative group flex flex-col items-center p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                <BadgeIndianRupee size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
-                                <h3 className="font-semibold text-xl text-gray-800">ORDER DISCOUNT</h3>
-                                <p className="font-light text-sm text-gray-600 text-center">Exclusive discounts on your orders</p>
+                                {/* Fourth Grid Item - Order Discount */}
+                                <div className="relative group flex flex-col items-center p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
+                                    <BadgeIndianRupee size={40} className="text-gray-700 transition-transform duration-150 group-hover:scale-110 mb-4" />
+                                    <h3 className="font-semibold text-lg sm:text-xl text-gray-800">ORDER DISCOUNT</h3>
+                                    <p className="font-light text-xs sm:text-sm text-gray-600 text-center">Exclusive discounts on your orders</p>
 
-                                {/* Hover Text */}
-                                <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
-                                    <p className="text-center text-sm">Get exclusive discounts on your orders during special promotions.</p>
+                                    {/* Hover Text */}
+                                    <div className="absolute top-0 left-0 right-0 bottom-0 bg-black bg-opacity-50 text-white p-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-lg">
+                                        <p className="text-center text-xs sm:text-sm">Get exclusive discounts on your orders during special promotions.</p>
+                                    </div>
                                 </div>
-                            </div>
 
-                        </Fragment>)
+                            </Fragment>
+                        )
                     }
                 </div>
             </div>
         </div>
+
+
     );
 };  
 export default Home;

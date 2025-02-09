@@ -289,13 +289,17 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, conve
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
 						{
 							bag?.Coupon?.CouponCode ? 
-							<button className='flex items-center space-x-1' onClick={(e)=> removeCoupon(e, bag?.Coupon?.CouponCode)}>
-								<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
-							</button> : 
+							<div>
+								<button className='flex items-center space-x-1' onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}>
+									<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
+								</button>
+								<span className="text-xs text-gray-500 mt-1">{`Discount: ${bag?.Coupon?.Discount}`}</span> {/* Show the discount */}
+							</div> : 
 							<Fragment><span>No Coupon Applied</span></Fragment>
 						}
 					</span>
 				</div>
+
 				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
 					<span>Convenience Fee</span>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>

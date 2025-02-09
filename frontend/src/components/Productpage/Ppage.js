@@ -483,7 +483,7 @@ const Ppage = () => {
                                                         active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
                                                     }
                                                     <button className="w-full h-full rounded-full flex items-center text-base font-bold justify-center">
-                                                        <span className='p-2'>
+                                                        <span className='p-4'>
                                                             {active.label}
                                                         </span>
                                                     </button>
