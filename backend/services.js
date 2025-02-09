@@ -19,7 +19,7 @@ const server = App.listen(process.env.PORT, ()=>{
     } */
 })
 
-connectdatabse()
+// connectdatabse()
 
 process.on('unhandledRejection', (err)=>{
     console.log(`Error `,err);
