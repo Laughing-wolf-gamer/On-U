@@ -97,11 +97,11 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 	return (
 		<div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
 			<div className="flex space-x-8 text-gray-800">
-				<span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+				<span className={`font-semibold text-lg ${!showPayment ? "text-gray-800" : "text-gray-400"}`}>BAG</span>
 				<span className="text-gray-400">|</span>
-				<span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+				<span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>ADDRESS</span>
 				<span className="text-gray-400">|</span>
-				<span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
+				<span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>PAYMENT</span>
 			</div>
 			<div className="flex items-center space-x-3">
 				<BsShieldFillCheck className="text-blue-600 text-2xl" />
@@ -176,7 +176,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 								<div className="flex items-center space-x-2">
 									<button
 										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-500"
+										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-300"
 										disabled={active?.quantity <= 1}
 									>
 										<Minus strokeWidth={3} />
@@ -184,7 +184,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 									<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
 									<button
 										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-300"
 										disabled={active?.quantity >= active?.size?.quantity}
 									>
 										<Plus strokeWidth={3} />
@@ -246,12 +246,12 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 
 				{/* Saved Section */}
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
-					<span>Saved</span>
-					<span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
+					<span>Total GST</span>
+					<span>+ {Math.round(totalGst)} %</span>
 				</div>
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
-					<span>Total GST</span>
-					<span>₹{Math.round(totalGst)}</span>
+					<span>Saved</span>
+					<span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
 				</div>
 
 				{/* Convenience Fee Section */}
