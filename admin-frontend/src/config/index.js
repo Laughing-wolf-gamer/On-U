@@ -608,7 +608,7 @@ export const sortOptions = [
 export function capitalizeFirstLetterOfEachWord(str) {
     console.log(str);
     if(!str){
-        return "NO TEXT"
+        return "-"
     }
     return str.split(' ').map(word =>word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()).join(' ');
 }
