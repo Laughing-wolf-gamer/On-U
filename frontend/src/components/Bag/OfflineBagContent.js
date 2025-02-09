@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import EmptyBag from './Emptybag';
 import { calculateDiscountPercentage, formattedSalePrice } from '../../config';
-import { X } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import CouponsDisplay from './CouponDisplay';
@@ -114,6 +114,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 	return (
 		<div className="flex-1 space-y-6">
 			{sessionBagData.map((item, i) => {
+				const active = item;
 				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 				const isValidImage = (url) => {
 					return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
@@ -121,7 +122,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 				const getImageExtensionsFile = () => {
 					
 					// Find the first valid image URL based on extensions
-					return item?.color?.images.find((image) => 
+					return active?.color?.images.find((image) => 
 						image.url && isValidImage(image.url)
 					);
 				};
@@ -130,55 +131,74 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 					(
 						<div key={i} className="flex flex-col sm:flex-row items-center border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
 							{/* Product Image */}
-							<div className="w-28 h-28">
-								<Link to={`/products/${item.ProductData?._id}`} className="block w-full h-full">
+							<div className="w-fit h-28 sm:w-40 sm:h-40 relative bg-black border-2 rounded-lg">
+								<Link to={`/products/${active.ProductData?._id}`} className="block bg-black w-full h-full">
 									<img
-                                        src={validImage?.url}
-                                        alt={item?.ProductData?.title}
-                                        className="object-contain w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-                                    />
+										src={validImage?.url}
+										alt={active?.ProductData?.title}
+										className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+									/>
 								</Link>
+								{/* Delete Button on the Image */}
+								<div
+									className="absolute top-[-10px] shadow-sm right-[-10px] text-white-700 bg-black p-1 text-white rounded-full cursor-pointer sm:hidden"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleDeleteBag(active.ProductData._id, active._id)
+									}}
+								>
+									<X size={15}/>
+								</div>
 							</div>
-		
+
 							{/* Product Details */}
 							<div className="flex-1 space-y-2">
-								<h3 className="font-semibold text-sm sm:text-lg text-gray-800">{item?.ProductData?.title}</h3>
-								<p className="text-xs sm:text-sm text-gray-600">Size: {item?.size?.label}</p>
-								<div className="flex items-center space-x-4 text-xs sm:text-sm text-blue-500 mt-2">
-									{item?.ProductData?.salePrice ? (
+								<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800">{active?.ProductData?.title}</h3>
+								<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
+								<div className="flex items-center space-x-4 text-xs sm:text-sm lg:text-base text-blue-500 mt-2">
+									{active?.ProductData?.salePrice ? (
 										<Fragment>
-											<span>₹{Math.round(formattedSalePrice(item?.ProductData?.salePrice))}</span>
-											<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(item.ProductData.price))}</span>
-											<span className="text-gray-700">({calculateDiscountPercentage(item.ProductData?.price, item.ProductData?.salePrice)}% OFF)</span>
+											<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
+											<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(active.ProductData.price))}</span>
+											<span className="text-gray-700">({calculateDiscountPercentage(active.ProductData?.price, active.ProductData?.salePrice)}% OFF)</span>
 										</Fragment>
 									) : (
-										<span>₹ {Math.round(formattedSalePrice(item.ProductData.price))}</span>
+										<span>₹ {Math.round(formattedSalePrice(active.ProductData.price))}</span>
 									)}
 								</div>
-		
-								{/* Quantity Selector */}
-								<div className="mt-4 flex items-center space-x-4">
-									<label className="text-xs sm:text-sm">Qty:</label>
-									<select
-										value={item?.quantity}
-										onChange={(e) => updateQty(e, item.ProductData._id)}
-										className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+							</div>
+
+							{/* Quantity Selector */}
+							<div className="mt-4 flex items-center space-x-4 shadow-md rounded-lg border-gray-700 border p-3">
+								<label className="text-xs sm:text-sm lg:text-base">Qty:</label>
+								<div className="flex items-center space-x-2">
+									<button
+										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
+										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+										disabled={active?.quantity <= 1}
 									>
-										{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-											<option key={num + 1} value={num + 1}>{num + 1}</option>
-										))}
-									</select>
+										<Minus strokeWidth={3} />
+									</button>
+									<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
+									<button
+										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
+										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+										disabled={active?.quantity >= active?.size?.quantity}
+									>
+										<Plus strokeWidth={3} />
+									</button>
 								</div>
 							</div>
-		
+
 							{/* Delete Button */}
 							<X
-								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer mt-4 sm:mt-0"
+								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
 								onClick={(e) => {
-									handleDeleteBag(item.ProductData._id, item._id);
+									handleDeleteBag(active.ProductData._id, active._id);
 								}}
 							/>
 						</div>
+
 					)
 				)
 			})}

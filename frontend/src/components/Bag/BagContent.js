@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { applyCouponToBag, getbag, removeCouponFromBag } from '../../action/orderaction';
 import { getAddress } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
-import { X } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../config';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
@@ -162,6 +162,7 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
 		{bag?.orderItems?.map((item, i) => {
+			const active = item;
 			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 			const isValidImage = (url) => {
 				return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
@@ -169,7 +170,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 			const getImageExtensionsFile = () => {
 				
 				// Find the first valid image URL based on extensions
-				return item?.color?.images.find((image) => 
+				return active?.color?.images.find((image) => 
 				  	image.url && isValidImage(image.url)
 				);
 			};
@@ -177,21 +178,21 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 			return(
 				<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
 					{/* Product Image */}
-					<div className="w-fit h-28 sm:w-40 sm:h-40 relative border-2 rounded-lg">
-						<Link Link to={`/products/${item.productId?._id}`}>
+					<div className="w-fit h-28 sm:w-40 sm:h-40 relative bg-black border-2 rounded-lg">
+						<Link Link to={`/products/${active.productId?._id}`}>
 							{validImage ? <img 
 								src={validImage?.url} 
-								alt={item?.productId?.title} 
-								className="w-full h-full object-contain transition-all duration-500 ease-in-out hover:scale-105"
+								alt={active?.productId?.title} 
+								className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 							/>:<p>No valid image available</p>}
 							
 						</Link>
 						{/* Delete Button on the Image */}
 						<div
-							className="absolute top-[-10px] shadow-sm right-[-10px] text-white-700 bg-gray-200 p-1 text-black rounded-full cursor-pointer sm:hidden"
+							className="absolute top-[-10px] shadow-sm right-[-10px] text-white-700 bg-black p-1 text-white rounded-full cursor-pointer sm:hidden"
 							onClick={(e) => {
 								e.stopPropagation();
-								handleDeleteBag(item.productId._id, item._id)
+								handleDeleteBag(active.productId._id, active._id)
 							}}
 						>
 							<X size={15}/>
@@ -200,41 +201,54 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 				
 					{/* Product Info */}
 					<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
-						<h3 className="font-semibold text-lg text-gray-800">{item?.productId?.title}</h3>
-						<p className="text-sm text-gray-600">Size: {item?.size?.label}</p>
+						<h3 className="font-semibold text-lg text-gray-800">{active?.productId?.title}</h3>
+						<p className="text-sm text-gray-600">Size: {active?.size?.label}</p>
 					
 						{/* Price and Discount Info */}
 						<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-							{item?.productId?.salePrice ? (
-							<Fragment>
-								<span>₹ {formattedSalePrice(item?.productId?.salePrice)}</span>
-								<span className="line-through text-gray-400">₹{formattedSalePrice(item.productId.price)}</span>
-								<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(item.productId?.price, item.productId?.salePrice)}% OFF)</span>
-							</Fragment>
+							{active?.productId?.salePrice ? (
+								<Fragment>
+									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+									<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+									<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+								</Fragment>
 							) : (
-							<span>₹ {formattedSalePrice(item?.productId?.price)}</span>
+								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
 							)}
 						</div>
 					
 						{/* Quantity Selector */}
 						<div className="mt-4 flex items-center space-x-4">
 							<label className="text-sm">Qty:</label>
-							<select
-								value={item?.quantity}
-								onChange={(e) => updateQty(e, item.productId._id)}
-								className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-							>
-								{[...Array(item?.size?.quantity || 0).keys()].map((num) => (
-									<option key={num + 1} value={num + 1}>{num + 1}</option>
-								))}
-							</select>
+							<div className="flex items-center space-x-2">
+								{/* Decrease Button */}
+								<button
+									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
+									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									disabled={active?.quantity <= 1}
+								>
+								<Minus/>
+								</button>
+								
+								{/* Display Current Quantity */}
+								<span className="text-sm">{active?.quantity}</span>
+								
+								{/* Increase Button */}
+								<button
+									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									disabled={active?.quantity >= active?.size?.quantity}
+								>
+								<Plus/>
+								</button>
+							</div>
 						</div>
 					</div>
 				
 					{/* Delete Button for larger screens */}
 					<X
 						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-						onClick={(e) => handleDeleteBag(item.productId._id, item._id)}
+						onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
 					/>
 				</div>
 			)
@@ -287,18 +301,29 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, conve
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Coupon</span>
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-						{
-							bag?.Coupon?.CouponCode ? 
-							<div>
-								<button className='flex items-center space-x-1' onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}>
-									<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
+						{bag?.Coupon?.CouponCode ? (
+							<div className="space-y-1">
+								{/* Coupon and Remove Button */}
+								<button 
+									className="flex items-center space-x-1 text-xs sm:text-sm"
+									onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
+								>
+									<X size={20} />
+									<span className="text-sm">{bag?.Coupon?.CouponCode}</span>
 								</button>
-								<span className="text-xs text-gray-500 mt-1">{`Discount: ${bag?.Coupon?.Discount}`}</span> {/* Show the discount */}
-							</div> : 
-							<Fragment><span>No Coupon Applied</span></Fragment>
-						}
+								{/* Discount Info */}
+								<span className="text-xs sm:text-sm text-gray-500">
+									{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+								</span>
+							</div>
+						) : (
+							<Fragment>
+								<span>No Coupon Applied</span>
+							</Fragment>
+						)}
 					</span>
 				</div>
+
 
 				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
 					<span>Convenience Fee</span>

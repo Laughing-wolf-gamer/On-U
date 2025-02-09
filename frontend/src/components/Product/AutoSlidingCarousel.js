@@ -221,7 +221,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                                     <img
                                         loading="lazy"
                                         src={mediaItem.url}
-                                        className="w-full h-[90%] object-contain"
+                                        className="w-full h-full object-contain"
                                         width="100%"
                                         alt="product"
                                         onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded

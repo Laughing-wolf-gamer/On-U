@@ -9,7 +9,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
 import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
 import CouponsDisplay from './CouponDisplay';
-import { X } from 'lucide-react';
+import { Minus, Plus, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
 import { FormControl, FormHelperText } from '@mui/material';
@@ -437,15 +437,29 @@ const PriceDetailsComponent = ({user, bag, totalSellingPrice, discountedAmount, 
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Coupon</span>
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
-						{
-							bag?.Coupon?.CouponCode ? 
-							<button className='flex items-center space-x-1' onClick={(e)=> removeCoupon(e, bag?.Coupon?.CouponCode)}>
-								<X size={20}/> <span>{bag?.Coupon?.CouponCode}</span>
-							</button> : 
-							<Fragment><span>No Coupon Applied</span></Fragment>
-						}
+						{bag?.Coupon?.CouponCode ? (
+						<div className="space-y-1">
+							{/* Coupon Code and Remove Button */}
+							<button
+							className="flex items-center space-x-1 text-xs sm:text-sm"
+							onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
+							>
+							<X size={20} />
+							<span>{bag?.Coupon?.CouponCode}</span>
+							</button>
+							{/* Discount Information */}
+							<span className="text-xs sm:text-sm text-gray-500 mt-1">
+							{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+							</span>
+						</div>
+						) : (
+						<Fragment>
+							<span>No Coupon Applied</span>
+						</Fragment>
+						)}
 					</span>
-				</div>
+					</div>
+
 				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
 					<span>Convenience Fee</span>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
@@ -496,7 +510,7 @@ const PriceDetailsComponent = ({user, bag, totalSellingPrice, discountedAmount, 
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
 		{bag?.orderItems?.map((item, i) => {
-			const active = bag?.orderItems[0];
+			const active = item;
 			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 			const isValidImage = (url) => {
 				return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
@@ -517,7 +531,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 							{validImage ? <img 
 								src={validImage?.url} 
 								alt={active?.productId?.title} 
-								className="w-full h-full object-contain transition-all duration-500 ease-in-out hover:scale-105"
+								className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 							/>:<p>No valid image available</p>}
 						</Link>
 						{/* Delete Button on the Image (visible on small screens only) */}
@@ -540,32 +554,43 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 						{/* Price and Discount Info */}
 						<div className="flex items-center whitespace-nowrap space-x-4 text-sm text-blue-400 mt-2">
 							{active?.productId?.salePrice ? (
-							<>
-								<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-								<span className="line-through whitespace-nowrap text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-								<span className="text-gray-700 whitespace-nowrap font-normal">
-								(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)
-								</span>
-							</>
+								<Fragment>
+									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+									<span className="line-through whitespace-nowrap text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+									<span className="text-gray-700 whitespace-nowrap font-normal">
+									(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)
+									</span>
+								</Fragment>
 							) : (
-							<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
 							)}
 						</div>
 					
 						{/* Quantity Selector */}
-						<div className="mt-4 flex items-center space-x-4">
+						<div className="mt-4 flex items-center space-x-4 shadow-md justify-between rounded-lg border-gray-700 border p-3">
 							<label className="text-sm">Qty:</label>
-							<select
-							value={active?.quantity}
-							onChange={(e) => updateQty(e, active.productId._id)}
-							className="h-10 w-16 px-3 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
-							>
-							{[...Array(active?.size?.quantity || 0).keys()].map((num) => (
-								<option key={num + 1} value={num + 1}>
-								{num + 1}
-								</option>
-							))}
-							</select>
+							<div className="flex items-center space-x-2">
+								{/* Decrease Button */}
+								<button
+									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
+									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									disabled={active?.quantity <= 1}
+								>
+								<Minus/>
+								</button>
+								
+								{/* Display Current Quantity */}
+								<span className="text-sm">{active?.quantity}</span>
+								
+								{/* Increase Button */}
+								<button
+									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									disabled={active?.quantity >= active?.size?.quantity}
+								>
+								<Plus/>
+								</button>
+							</div>
 						</div>
 					</div>
 				
