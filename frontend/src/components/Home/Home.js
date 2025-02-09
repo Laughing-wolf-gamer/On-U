@@ -327,7 +327,7 @@ const Home = ({user}) => {
                         </div>
 						<OurMotoData/>
 
-                        <div className='px-4'>
+                        <div className='px-2'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
