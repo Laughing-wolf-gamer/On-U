@@ -11,7 +11,7 @@ import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 
 const Wishlist = () => {
-    const { sessionData, sessionBagData, updateBagQuantity, removeBagSessionStorage, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
+    const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
     const [currentWishListItem, setCurrentWishListItem] = useState([]);
     const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
     const { isAuthentication, loading: userloading, error, user } = useSelector(state => state.user);
@@ -100,7 +100,8 @@ const Wishlist = () => {
                                                             navigation(`/products/${productId}`);
                                                         }}
                                                     >
-                                                        <Single_product pro={pro?.productId} user={user} showWishList={false} />
+														{pro && pro.productId && <Single_product pro={pro.productId} user={user} showWishList={false} />}
+                                                        
                                                     </div>
 
                                                     {/* Remove button */}

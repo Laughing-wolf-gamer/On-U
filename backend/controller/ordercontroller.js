@@ -9,6 +9,7 @@ import WebSiteModel from '../model/websiteData.model.js'
 import { sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
+import { getOriginalAmount } from '../utilis/basicUtils.js'
 
 export const createPaymentOrder = async (req, res, next) => {
     try {
@@ -368,8 +369,8 @@ export const applyCouponToBag = async(req,res)=>{
             coupon.save(),
             bag.save()
         ])
-        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);  
-        res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP}})
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);  
+        res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst}})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
         res.status(500).json({success:false,message:"Internal server error"});
@@ -534,11 +535,12 @@ export const addItemsArrayToBag = async (req, res) => {
 
 // Helper function to update bag totals
 const updateBagTotals = (bag, totals) => {
-    const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = totals;
+    const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = totals;
     if (totalProductSellingPrice) bag.totalProductSellingPrice = totalProductSellingPrice;
     if (totalSP) bag.totalSP = totalSP;
     if (totalDiscount) bag.totalDiscount = totalDiscount;
     if (totalMRP) bag.totalMRP = totalMRP;
+    if (totalGst) bag.totalGst = totalGst;
 };
     
 
@@ -591,11 +593,12 @@ export const addItemsToBag = async (req, res) => {
             const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
             const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
             console.log("Creating Bag: ",bag);
-            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
             if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
             if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
             if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
             if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+            if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
             
             await bag.save();
         }else{
@@ -605,12 +608,13 @@ export const addItemsToBag = async (req, res) => {
             }else{
                 FindUserBag.orderItems.push({productId,quantity,color,size})
             }
-            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
+            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(FindUserBag);
             console.log("Total Product Selling Price: ", totalProductSellingPrice, totalSP, totalDiscount, totalMRP)
             if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
             if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
             if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
             if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
+            if(totalGst && totalGst !== 0) FindUserBag.totalGst = totalGst;
             await FindUserBag.save()
         }
         const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
@@ -625,7 +629,7 @@ export const addItemsToBag = async (req, res) => {
 const getItemsData = async (bag) => {
     console.log("getItemsData Bag Items: ",bag.orderItems)
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-    let totalMRP = 0;
+    let totalMRP = 0, totalGst = 0;
 
     // Use for...of to handle async properly
     for (const item of bag.orderItems) {
@@ -634,7 +638,12 @@ const getItemsData = async (bag) => {
         // Await the database query
         const productData = await ProductModel.findById(productId?._id || productId);
         console.log("Deconstruct Product data: ", productData)
-        const { salePrice, price } = productData;
+        const { salePrice, price ,gst } = productData;
+		const priceWithoutGst = getOriginalAmount(gst,price)
+		let salePriceWithouGst = 0;
+		if(salePrice){
+			salePriceWithouGst = getOriginalAmount(gst,salePrice);
+		}
 
         // Calculate item totals
         const productSellingPrice = salePrice || price;
@@ -646,12 +655,13 @@ const getItemsData = async (bag) => {
             const discount = price - salePrice;
             totalDiscount += discount * quantity;
         }
+		totalGst += gst;
 
         // Add to the product selling price
         totalProductSellingPrice += (productSellingPrice * quantity);
 
         // Add to MRP
-        totalMRP += price * quantity;
+        totalMRP += priceWithoutGst * quantity;
     }
 
     // If coupon logic is required:
@@ -685,7 +695,7 @@ const getItemsData = async (bag) => {
     // Optionally, if convenience fee is applied once:
     totalProductSellingPrice += bag?.ConvenienceFees || 0;
 
-    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP };
+    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
 };
 
 function calculateTotalAmount(products) {
@@ -807,12 +817,13 @@ export const updateqtybag = async (req, res, next) => {
         const TotalBagAmount = calculateTotalAmount(bag.orderItems);
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
-        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
         console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
         if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
         if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
         if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+        if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
         // Save the updated bag
         await bag.save();
 

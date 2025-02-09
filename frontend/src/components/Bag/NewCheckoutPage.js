@@ -7,7 +7,7 @@ import { getAddress, getConvinceFees, getuser, updateAddress } from '../../actio
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
-import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
+import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getOriginalAmount, headerConfig, removeSpaces } from '../../config';
 import CouponsDisplay from './CouponDisplay';
 import { Minus, Plus, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
@@ -32,6 +32,7 @@ const CheckoutPage = () => {
 	const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
 	const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
 	const[totalSellingPrice,setTotalMRP] = useState(0)
+	const [allgst, setTotalGST] = useState(0);
 	const [discountedAmount, setDiscountAmount] = useState(0);
 	const [address, setAddress] = useState(null);
 
@@ -62,11 +63,12 @@ const CheckoutPage = () => {
 		if (bag) {
 			if (bag?.orderItems) {
 				let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-				let totalMRP = 0;
+				let totalMRP = 0, totalGst = 0;
 		
 				bag.orderItems.forEach(item => {
 					const { productId, quantity } = item;
-					const { salePrice, price } = productId;
+					const { salePrice, price,gst } = productId;
+					const priceWithoutGst = getOriginalAmount(gst,price);
 					
 					// Use salePrice if available, else fallback to regular price
 					const productSellingPrice = salePrice || price;
@@ -85,7 +87,8 @@ const CheckoutPage = () => {
 					totalProductSellingPrice += productSellingPrice * quantity;
 		
 					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += price * quantity;
+					totalMRP += priceWithoutGst * quantity;
+					totalGst += gst;
 				});
 		
 				// Add convenience fees to the total product selling price (only once, not for each item)
@@ -123,15 +126,16 @@ const CheckoutPage = () => {
 				setTotalProductSellingPrice(totalProductSellingPrice);
 				setDiscountAmount(totalDiscount);
 				setTotalMRP(totalMRP);
+				setTotalGST(totalGst);
 			}
 		} else if (sessionBagData) {
 			let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-			let totalMRP = 0;
+			let totalMRP = 0, totalGst = 0;
 			if(sessionBagData){
 				sessionBagData.forEach(item => {
 					const { ProductData, quantity } = item;
-					const { salePrice, price } = ProductData;
-					
+					const { salePrice, price,gst } = ProductData;
+					const priceWithoutGst = getOriginalAmount(gst,price);
 					// Use salePrice if available, else fallback to regular price
 					const productSellingPrice = salePrice || price;
 			
@@ -149,7 +153,8 @@ const CheckoutPage = () => {
 					totalProductSellingPrice += productSellingPrice * quantity;
 			
 					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += price * quantity;
+					totalMRP += priceWithoutGst * quantity;
+					totalGst += gst;
 				});
 			
 				// Add convenience fees to the total product selling price (only once, not for each item)
@@ -159,6 +164,8 @@ const CheckoutPage = () => {
 				setTotalProductSellingPrice(totalProductSellingPrice);
 				setDiscountAmount(totalDiscount || 0);
 				setTotalMRP(totalMRP);
+				setTotalGST(totalGst);
+
 			}
 		}
 		
@@ -344,6 +351,7 @@ const CheckoutPage = () => {
 						<PriceDetailsComponent
 							user={user}
 							bag={bag}
+							totalGst = {allgst}
 							checkAndCreateToast = {checkAndCreateToast}
 							selectedAddress={selectedAddress}
 							totalSellingPrice={totalSellingPrice} 
@@ -418,7 +426,7 @@ const AddressAndPaymentComponent = ({
 		</div>
 	</div>
 );
-const PriceDetailsComponent = ({user, bag, totalSellingPrice, discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon,selectedAddress,showPayment,setShowPayment }) => {
+const PriceDetailsComponent = ({user, bag,totalGst, totalSellingPrice, discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon,selectedAddress,showPayment,setShowPayment }) => {
 	const navigate = useNavigate();
 	return (
 		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
@@ -429,6 +437,10 @@ const PriceDetailsComponent = ({user, bag, totalSellingPrice, discountedAmount, 
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Total MRP</span>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Total GST</span>
+					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}%</span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>

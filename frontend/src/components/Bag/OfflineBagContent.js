@@ -13,6 +13,7 @@ const OfflineBagContent = ({
 	bag,
 	sessionBagData, 
 	showPayment, 
+	totalGst,
 	selectedAddress, 
 	bagLoading, 
 	totalSellingPrice, 
@@ -67,6 +68,7 @@ const OfflineBagContent = ({
 					<PriceDetails
 						sessionBagData={sessionBagData}
 						bag={bag}
+						totalGst = {totalGst}
 						totalSellingPrice={totalSellingPrice}
 						discountedAmount={discountedAmount}
 						totalProductSellingPrice={totalProductSellingPrice}
@@ -174,7 +176,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 								<div className="flex items-center space-x-2">
 									<button
 										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base"
+										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-500"
 										disabled={active?.quantity <= 1}
 									>
 										<Minus strokeWidth={3} />
@@ -231,7 +233,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 }
 
 // PriceDetails Component
-const PriceDetails = ({ sessionBagData, bag, totalSellingPrice, discountedAmount, totalProductSellingPrice, convenienceFees, navigation }) => {
+const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discountedAmount, totalProductSellingPrice, convenienceFees, navigation }) => {
 	return(
 		<div className="w-full h-fit lg:w-1/3 bg-gray-100 p-8 shadow-md">
 			<h3 className="font-semibold text-xl text-gray-800 mb-6">ORDER DETAILS ({sessionBagData.length} items)</h3>
@@ -246,6 +248,10 @@ const PriceDetails = ({ sessionBagData, bag, totalSellingPrice, discountedAmount
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
 					<span>Saved</span>
 					<span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
+				</div>
+				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
+					<span>Total GST</span>
+					<span>₹{Math.round(totalGst)}</span>
 				</div>
 
 				{/* Convenience Fee Section */}

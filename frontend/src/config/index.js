@@ -193,6 +193,11 @@ export const calculateDiscountPercentage = (originalPrice, salePrice) => {
     }
     return 0; // Return 0 if the prices are invalid or zero
 };
+export function getOriginalAmount(gstRate, amountWithGST) {
+    // Calculate the original amount before GST
+    const originalAmount = amountWithGST / (1 + (gstRate / 100));
+    return originalAmount;
+}
 
 export const DevMode = true;
 // export const BASE_API_URL = DevMode ? process.env.REACT_APP_API_URL : "https://api.theonu.in";

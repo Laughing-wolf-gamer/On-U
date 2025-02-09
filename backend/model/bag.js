@@ -21,6 +21,7 @@ const BagSchema = new mongoose.Schema({
         size:Object,
         quantity:Number,
     }],
+	totalGst:Number,
     totalProductSellingPrice:Number,
     totalSP:Number,
     totalMRP:Number,

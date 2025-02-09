@@ -8,7 +8,7 @@ import './bag.css';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import Emptybag from './Emptybag';
-import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig } from '../../config';
+import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getOriginalAmount, headerConfig } from '../../config';
 import { X } from 'lucide-react';
 import axios from 'axios';
 import Footer from '../Footer/Footer';
@@ -39,6 +39,7 @@ const Bag = () => {
     const [totalProductSellingPrice, setTotalProductSellingPrice] = useState(0);
     const[totalSellingPrice,setTotalMRP] = useState(0)
     const [discountedAmount, setDiscountAmount] = useState(0);
+    const [allgst, setTotalGST] = useState(0);
     const [address, setAddress] = useState(null);
 
     const [selectedAddress, setSelectedAddress] = useState(null);
@@ -68,12 +69,12 @@ const Bag = () => {
         if (bag) {
             if (bag?.orderItems) {
                 let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-                let totalMRP = 0;
+                let totalMRP = 0,totalGst = 0;
         
                 bag.orderItems.forEach(item => {
                     const { productId, quantity } = item;
-                    const { salePrice, price } = productId;
-                    
+                    const { salePrice, price,gst } = productId;
+                    const priceWithoutGst = getOriginalAmount(gst,price);
                     // Use salePrice if available, else fallback to regular price
                     const productSellingPrice = salePrice || price;
         
@@ -91,7 +92,8 @@ const Bag = () => {
                     totalProductSellingPrice += productSellingPrice * quantity;
         
                     // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
+                    totalMRP += priceWithoutGst * quantity;
+					totalGst += gst;
                 });
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
@@ -129,15 +131,17 @@ const Bag = () => {
                 setTotalProductSellingPrice(totalProductSellingPrice);
                 setDiscountAmount(totalDiscount);
                 setTotalMRP(totalMRP);
+				setTotalGST(totalGst);
             }
         } else if (sessionBagData) {
             let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
-            let totalMRP = 0;
+            let totalMRP = 0,totalGst = 0;
             if(sessionBagData){
                 sessionBagData.forEach(item => {
                     const { ProductData, quantity } = item;
-                    const { salePrice, price } = ProductData;
-                    
+                    const { salePrice, price,gst} = ProductData;
+                    const priceWithoutGst = getOriginalAmount(gst,price);
+					
                     // Use salePrice if available, else fallback to regular price
                     const productSellingPrice = salePrice || price;
             
@@ -155,9 +159,10 @@ const Bag = () => {
                     totalProductSellingPrice += productSellingPrice * quantity;
             
                     // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
+                    totalMRP += priceWithoutGst * quantity;
+					totalGst += gst;
                 });
-            
+				console.log("Price WithouGst; ",allgst,totalMRP);
                 // Add convenience fees to the total product selling price (only once, not for each item)
                 totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
             
@@ -165,6 +170,7 @@ const Bag = () => {
                 setTotalProductSellingPrice(totalProductSellingPrice);
                 setDiscountAmount(totalDiscount || 0);
                 setTotalMRP(totalMRP);
+				setTotalGST(totalGst);
             }
         }
         
@@ -276,7 +282,7 @@ const Bag = () => {
             },400)
         }
     };
-    console.log("Discounted Amount: ",discountedAmount)
+    console.log("GST Amount: ",allgst)
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
@@ -284,6 +290,7 @@ const Bag = () => {
                 {isAuthentication ? (
                     <BagContent 
                         bag={bag}
+						totalGst = {allgst}
                         bagLoading={bagLoading}
                         totalSellingPrice={totalSellingPrice}
                         discountAmount={discountedAmount}
@@ -312,6 +319,7 @@ const Bag = () => {
                         discountedAmount = {discountedAmount}
                         sessionBagData={sessionBagData}
                         showPayment={showPayment}
+						totalGst={allgst}
                         selectedAddress={selectedAddress}
                         bagLoading = {bagLoading}
                         totalSellingPrice={totalSellingPrice}

@@ -4,7 +4,11 @@
 export const calculateGst= (originalPrice,gst)=>{
     return originalPrice * (1 + (gst / 100)).toFixed(1)
 }
-
+export function getOriginalAmount(gstRate, amountWithGST) {
+    // Calculate the original amount before GST
+    const originalAmount = amountWithGST / (1 + (gstRate / 100));
+    return originalAmount;
+}
 export const calculateDiscount = (originalPrice, salePrice) => {
     // Ensure prices are valid (greater than 0)
     if (originalPrice <= 0 || salePrice < 0) {

@@ -14,6 +14,7 @@ import CouponsDisplay from './CouponDisplay';
 const BagContent = ({ 
 	bag, 
 	bagLoading, 
+	totalGst,
 	totalSellingPrice, 
 	discountedAmount, 
 	convenienceFees, 
@@ -84,7 +85,8 @@ const BagContent = ({
 			
 						{/* Price Details */}
 						<PriceDetailsComponent 
-							bag={bag} 
+							bag={bag}
+							totalGst = {totalGst}
 							totalSellingPrice={totalSellingPrice} 
 							discountedAmount={discountedAmount} 
 							convenienceFees={convenienceFees} 
@@ -282,7 +284,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 	</div>
 
 );
-const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, convenienceFees, totalProductSellingPrice,removeCoupon }) => {
+const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees, totalProductSellingPrice,removeCoupon }) => {
 	const navigation = useNavigate();
 	return (
 		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 p-8 shadow-md">
@@ -293,6 +295,10 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice, discountedAmount, conve
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Total MRP</span>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<span>Total GST</span>
+					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}% </span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
