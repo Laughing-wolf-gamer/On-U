@@ -162,7 +162,7 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 	</div>
 );
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
-	<div className="flex-1 font-kumbsan space-y-6">
+	<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] border-r-gray-800 border-opacity-20 pr-5">
 		{bag?.orderItems?.map((item, i) => {
 			const active = item;
 			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
@@ -220,7 +220,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 						</div>
 					
 						{/* Quantity Selector */}
-						<div className="mt-4 flex items-center space-x-4">
+						<div className="mt-4 flex w-fit items-center space-x-4 shadow-md justify-center sm:justify-between rounded-md border-gray-700 border border-opacity-40 p-3">
 							<label className="text-sm">Qty:</label>
 							<div className="flex items-center space-x-2">
 								{/* Decrease Button */}

@@ -450,24 +450,24 @@ const PriceDetailsComponent = ({user, bag,totalGst, totalSellingPrice, discounte
 					<span>Coupon</span>
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
 						{bag?.Coupon?.CouponCode ? (
-						<div className="space-y-1">
-							{/* Coupon Code and Remove Button */}
-							<button
-							className="flex items-center space-x-1 text-xs sm:text-sm"
-							onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
-							>
-							<X size={20} />
-							<span>{bag?.Coupon?.CouponCode}</span>
-							</button>
-							{/* Discount Information */}
-							<span className="text-xs sm:text-sm text-gray-500 mt-1">
-							{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
-							</span>
-						</div>
+							<div className="space-y-1">
+								{/* Coupon Code and Remove Button */}
+								<button
+									className="flex items-center space-x-1 text-xs sm:text-sm"
+									onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
+								>
+									<X size={20} />
+									<span>{bag?.Coupon?.CouponCode}</span>
+								</button>
+								{/* Discount Information */}
+								<span className="text-xs sm:text-sm text-gray-500 mt-1">
+								{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+								</span>
+							</div>
 						) : (
-						<Fragment>
-							<span>No Coupon Applied</span>
-						</Fragment>
+							<Fragment>
+								<span>No Coupon Applied</span>
+							</Fragment>
 						)}
 					</span>
 					</div>

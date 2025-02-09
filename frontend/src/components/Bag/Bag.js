@@ -282,7 +282,7 @@ const Bag = () => {
             },400)
         }
     };
-    console.log("GST Amount: ",allgst)
+    // console.log("GST Amount: ",allgst)
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
