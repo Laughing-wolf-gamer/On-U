@@ -94,7 +94,7 @@ const Wishlist = () => {
                                             >
                                                 <div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
                                                     <div
-                                                        className="w-full h-full flex"
+                                                        className="w-full h-full flex-1"
                                                         onClick={(e) => {
                                                             const productId = pro?.productId?._id || pro?.productId;
                                                             navigation(`/products/${productId}`);

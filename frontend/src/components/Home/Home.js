@@ -325,7 +325,7 @@ const Home = ({user}) => {
                                     )}
                             </Carousel>
                         </div>
-
+						<OurMotoData/>
 
                         <div className='px-4'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
@@ -346,7 +346,7 @@ const Home = ({user}) => {
                                 )}
                             </ul>
                         </div>
-                        <OurMotoData/>
+                        
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-screen justify-center items-center flex pr-3 pl-3 '>
                                 <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
@@ -481,7 +481,7 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                 ))
             ) : (
                 // Actual content when URLs are available
-                Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_3.urls.slice(0, window.screen.width > 1024 ? 8 : 4).map((url, index) => (
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
