@@ -372,7 +372,7 @@ const Home = ({user}) => {
                         </div>
                         <div className='pt-4 grid grid-cols-1 min-h-[200px] '>
                             <h1 className='text-xl px-10 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
-                            <div className='w-screen flex justify-start items-center'>
+                            <div className='w-full px-2 flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
                                         <Link key={index} to='/products' className='m-2'>
