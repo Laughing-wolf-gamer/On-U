@@ -32,3 +32,13 @@ export const calculateDiscountPercentage = (originalPrice, salePrice) => {
     }
     return 0; // Return 0 if the prices are invalid or zero
 };
+
+export function generateWaybill() {
+	// Logic to generate a unique waybill number
+	return 'WB' + Math.floor(Math.random() * 1000000000);
+}
+
+export function generateOrderId() {
+	// Logic to generate a unique order ID
+	return 'ORD' + Math.floor(Math.random() * 1000000000);
+}

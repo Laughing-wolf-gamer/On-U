@@ -25,6 +25,7 @@ import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
 import MShareView from './MShareView';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
+import BackToTopButton from '../Home/BackToTopButton';
 
 const reviews = [
     {
@@ -810,6 +811,7 @@ const MPpage = () => {
                 ) : (
                     <Loader />
                 )}
+				<BackToTopButton scrollableDivRef={scrollContainerRef} />
             </div>
         </Fragment>
     );

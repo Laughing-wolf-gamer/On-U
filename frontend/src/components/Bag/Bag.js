@@ -334,7 +334,7 @@ const Bag = () => {
             </div>
             {sessionRecentlyViewProducts && sessionRecentlyViewProducts.length > 0 && (
                 <div className='w-full justify-center items-center flex flex-col mb-5'>
-                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
+                    <h1 className='flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>RECENTLY VIEWED</h1>
                     <div className='w-full flex justify-start items-start '>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
                             {
@@ -348,7 +348,7 @@ const Bag = () => {
             )}
             {randomProducts && randomProducts.length > 0 && (
                 <div className='w-full justify-center items-center flex flex-col mb-10'>
-                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl'>DISCOVER MORE</h1>
+                    <h1 className='flex items-center justify-center text-center mt-4 font-semibold text-2xl'>DISCOVER MORE</h1>
                     <div className='w-full flex justify-start items-start'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 p-4 gap-6 2xl:p-6 mx-auto'>
                             {

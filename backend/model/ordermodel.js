@@ -1,7 +1,7 @@
 import mongoose from 'mongoose'
 
 const ordersSchema = new mongoose.Schema({
-    ShipRocketOrderId:{type:String,required:true},
+    order_id:{type:String},
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user",
@@ -14,7 +14,8 @@ const ordersSchema = new mongoose.Schema({
     razorpay_order_id:{type:String},
     paymentId:{type:String},
     TotalAmount:{type:Number,required:true},
-    SelectedAddress:{type:Object,required:true},
+    address:{type:String,required:true},
+	// phone:{type:String,required:true},
     paymentMode:{type:String,default:"PrePaid",required:true},
     status: { type: String, default:"Processing", required: true },
     current_status: { type: String,default:"Processing"},

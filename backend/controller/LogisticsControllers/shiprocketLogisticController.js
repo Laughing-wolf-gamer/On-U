@@ -2,6 +2,7 @@ import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
 import qs from 'querystring'
+import { generateOrderId, generateWaybill } from '../../utilis/basicUtils.js';
 
 dotenv.config();
 
@@ -12,6 +13,11 @@ const DELEIVARY_API = process.env.DELIVARY_API_START;
 const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
+const environment = process.env.DELIVARY_ENV || 'staging'; // can be 'staging' or 'production'
+const apiUrls = {
+  staging: 'https://staging-express.delhivery.com/api/cmu/create.json',
+  production: 'https://track.delhivery.com/api/cmu/create.json'
+};
 let token = '';
 
 export const getAuthToken = async () => {
@@ -95,7 +101,112 @@ export const logoutAuthToken = async ()=>{
     "invoice_number": "INV123456", // Optional, provide if applicable
     "order_type": "adhoc" // Make sure this is the correct order type, e.g., "adhoc"
 }; */
+export const createDelivaryOneShipment = async (shipMedData) => {
+	const {
+		order_id,
+		waybill = generateWaybill(),
+		package_type,
+		payment_mode,
+		consignee,
+		seller_details,
+		warehouse_details,
+		fragile_shipment,
+		gst_details,
+		products,
+		country = 'IN', // Default country is India
+		pickup_location,
+	} = shipMedData;
 
+	try {
+		// Validate special characters in the payload
+		// validatePayload(shipMedData);
+
+		// Handle missing mandatory fields
+		if (!consignee || !consignee.pin || !consignee.phone || !consignee.address) {
+			// return res.status(400).json({ error: 'Missing mandatory fields: pin, phone, or address' });
+			console.error("Missing mandatory fields: pin, phone, or address");
+			return {success:false,data:null};
+		}
+
+		// Handle fragile shipment
+		if (fragile_shipment && typeof fragile_shipment !== 'boolean') {
+			// return res.status(400).json({ error: 'fragile_shipment should be a boolean value (true or false)' });
+			console.log("fragile_shipment should be a boolean value (true or false)");
+			return {success:false,data:null};
+		}
+
+		// Handle GST details if applicable
+		if (gst_details) {
+			if (!gst_details.seller_gst_tin || !gst_details.hsn_code) {
+				// return res.status(400).json({ error: 'Missing mandatory GST fields: seller_gst_tin or hsn_code' });
+				console.error("Missing mandatory GST fields: seller_gst_tin or hsn_code")
+				return {success:false,data:null};
+			}
+		}
+
+		// Ensure order ID is unique if waybill is not passed
+		const finalOrderId = waybill ? order_id : generateOrderId(waybill);
+
+		// Construct the payload
+		const payload = {
+			format: 'json',
+			data: {
+				order_id: finalOrderId,
+				waybill: waybill || null,
+				package_type,
+				payment_mode,
+				consignee: {
+					name: consignee.name,
+					phone: consignee.phone,
+					address: consignee.address,
+					pin: consignee.pin,
+					country: country === 'BD' ? 'BD' : 'IN', // Bangladesh or India
+				},
+				seller_details: {
+					gst_tin: seller_details.seller_gst_tin,
+					name: seller_details.name,
+				},
+				warehouse_details: {
+					name: warehouse_details.name,
+					location: warehouse_details.location,
+				},
+				fragile_shipment: fragile_shipment || false,
+				gst_details: gst_details || null,
+				products: products.map((product) => ({
+					product_name: product.name,
+					hsn_code: product.hsn_code,
+					quantity: product.quantity,
+					value: product.value,
+				})),
+				pickup_location: pickup_location,
+			},
+		};
+
+		// Determine the appropriate environment URL
+		const url = process.env.NODE_ENV === 'production' ? PRODUCTION_URL : STAGING_URL;
+
+		// Send the API request to Delhivery
+		const response = await axios.post(url, payload);
+
+		// Handle the response
+		if (response.data && response.data.status === 'success') {
+			/* res.status(200).json({
+				success: true,
+				message: 'Shipment created successfully',
+				data: response.data,
+			}); */
+			console.log("Response: ",response.data);
+			return {success:true,message:"Shipment created successfully",data: response.data};
+		} else {
+			// res.status(400).json({ error: response.data.message || 'Failed to create shipment' });
+			console.error("Failed to create shipment");
+			return {success:false,data:"Failed to create shipment"};
+		}
+	} catch (error) {
+		console.error('Error:', error.message);
+		// res.status(500).json({ error: error.message || 'An unexpected error occurred' });
+	}
+};
 export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
     // if(!token) await getAuthToken();
     try {

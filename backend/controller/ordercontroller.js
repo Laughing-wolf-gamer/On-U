@@ -10,6 +10,7 @@ import { sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
+import { createDelivaryOneShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 
 export const createPaymentOrder = async (req, res, next) => {
     try {
@@ -65,12 +66,12 @@ export const verifyPayment = async (req, res, next) => {
             // If bag data exists
             if (bagData) {
                 console.log("Bag Data: ", bagData);
-
+				const addressString = Object.values(SelectedAddress).join(", ");
                 // Create new order
                 const orderData = new OrderModel({
                     userId: req.user.id,
                     orderItems: orderDetails,
-                    SelectedAddress: SelectedAddress,
+                    address: addressString,
                     TotalAmount: totalAmount,
                     paymentMode: paymentStatus[0].payment_group,
                     status: 'Order Confirmed',
@@ -134,10 +135,11 @@ export const createorder = async (req, res, next) => {
         if (!req.user) {
             return res.status(400).json({ success: false, message: "No User Found" });
         }
-
+		// console.log("Req user: ",req.user);
+		// const activeUser = req.user.user;
         // Destructure and validate the required fields from the body
         const { orderItems, Address, bagId, TotalAmount, paymentMode, status } = req.body;
-
+		// console.log("Order Data: ",req.body);
         if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
             return res.status(400).json({ success: false, message: "Please Provide All the Data" });
         }
@@ -146,17 +148,50 @@ export const createorder = async (req, res, next) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
-
+		const addressString = Object.values(Address).join(", ");
         // Create a new order entry
         const orderData = new OrderModel({
-            ShipRocketOrderId: randomOrderShipRocketId,
+            order_id: randomOrderShipRocketId,
             userId: req.user.id,
             orderItems,
-            SelectedAddress: Address,
+            address: addressString,
             TotalAmount,
             paymentMode,
             status: 'Processing',
         });
+		/*
+			order_id
+			waybill
+			package_type
+			payment_mode
+			consignee
+			seller_details
+			warehouse_details
+			fragile_shipment
+			gst_details
+			products
+			country
+			pickup_location 
+		*/
+		/* const{success,data} = createDelivaryOneShipment({
+				order_id: randomOrderShipRocketId,
+				consignee_name: activeUser?.name,
+				phone: activeUser.phoneNumber,
+				address: addressString,
+				pin: Address.pincode,
+				payment_mode: "COD",
+				shipment_cost:2000,
+				warehouse_name: "warehouse 1",
+				seller_gst_tin: "GST12345",
+				hsn_code: "123456",
+				invoice_reference: "INV123456",
+				country: "IN",
+				waybill: "EWB123456789" 
+			});
+		if(!success){
+			console.log("Data: NOt Accurate: ",data);
+			return;
+		} */
 
         // Save the order data to the database
         await orderData.save();

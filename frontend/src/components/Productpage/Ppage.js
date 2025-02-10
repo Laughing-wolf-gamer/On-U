@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Heart, ShoppingBag, ShoppingCart} from 'lucide-react'
+import { Clock, Heart, RotateCw, ShoppingBag, ShoppingCart, Truck} from 'lucide-react'
 import SizeChartModal from './SizeChartModal'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
@@ -22,6 +22,7 @@ import toast from 'react-hot-toast'
 import StarRatingInput from './StarRatingInput'
 import ShareView from './ShareView'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
+import BackToTopButton from '../Home/BackToTopButton'
 
 const reviews = [
     {
@@ -463,7 +464,7 @@ const Ppage = () => {
                                 {/* Size and Color Selection */}
                                 <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
                                     {/* Size Selection */}
-                                    <div className='w-full flex justify-between items-center'>
+                                    <div className='w-[92%] flex justify-between items-center'>
                                         <h3 className='text-base'>Size: <span className='font-semibold'>{currentSize?.label}</span></h3>
                                         <SizeChartModal sizeChartData={clothingSizeChartData} />
                                     </div>
@@ -583,6 +584,22 @@ const Ppage = () => {
                                             </a>
                                         </div>
                                     </div>
+									<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
+										<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
+											<h1 className="text-gray-500"><Clock /></h1>
+											<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+										</div>
+
+										<div className="w-full flex flex-row items-center space-x-2 justify-start">
+											<h1 className="text-gray-500"><RotateCw /></h1>
+											<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+										</div>
+
+										<div className="w-full flex flex-row items-center space-x-2 justify-start">
+											<h1 className="text-gray-500"><Truck /></h1>
+											<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+										</div>
+									</div>
                                 </div>
                             </div>
                         </div>
@@ -609,6 +626,7 @@ const Ppage = () => {
                 </div>
             }
             <Footer/>
+			<BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     )
 }
@@ -816,6 +834,7 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                     </div>
                 )}
             </div>
+			
         </div>
 
     );

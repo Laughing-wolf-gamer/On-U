@@ -1,4 +1,4 @@
-import { Ruler } from 'lucide-react';
+import { Ruler, Scale } from 'lucide-react';
 import React, { Fragment, useState } from 'react';
 
 // Sample size chart data
@@ -21,9 +21,9 @@ const SizeChartModal = ({sizeChartData}) => {
       {/* Button to open the modal */}
       <button
         onClick={toggleModal}
-        className="font1 ml-2 mt-2 font1 lg:font-semibold 2xl:font-semibold md:font-semibold text-[14px] md:text-xl font-thin w-full justify-start items-start flex flex-row space-x-2"
+        className="ml-2 mt-2 lg:font-semibold 2xl:font-semibold md:font-semibold text-[14px] md:text-xl font-thin w-full justify-start items-start flex flex-row space-x-2"
       >
-        <h1 className='text-[12px] md:text-xl font-medium hover:underline sm:underline'>SIZE CHART</h1>
+        <div className='text-[12px] text-gray-500 flex space-x-2 md:text-base font-medium hover:underline sm:underline'><Ruler/> <span className='font-bold'>SIZE CHART</span></div>
       </button>
 
       {/* Modal */}

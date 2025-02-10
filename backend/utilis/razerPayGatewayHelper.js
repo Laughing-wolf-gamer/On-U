@@ -70,14 +70,15 @@ export const paymentVerification = async (req, res) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
+		const addressString = Object.values(selectedAddress).join(", ");
         const orderData = new OrderModel({
-            ShipRocketOrderId: randomOrderShipRocketId,
+            order_id: randomOrderShipRocketId,
             userId: id,
             razorpay_order_id:razorpay_order_id,
             orderItems: orderDetails,
-            SelectedAddress: selectedAddress,
+            address: addressString,
             TotalAmount: totalAmount,
-            paymentMode: 'Prepaid',
+            paymentMode: 'Pre-paid',
             paymentStatus:"Paid",
             status: 'Order Confirmed',
         });
