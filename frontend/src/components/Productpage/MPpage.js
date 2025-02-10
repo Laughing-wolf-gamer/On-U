@@ -26,6 +26,7 @@ import SizeChartModal from './SizeChartModal';
 import MShareView from './MShareView';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import BackToTopButton from '../Home/BackToTopButton';
+import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 
 const reviews = [
     {
@@ -276,9 +277,43 @@ const MPpage = () => {
 
     const handleSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images);
-        // setSelectedImage(color.images[0]);
-        // setSelectedColorId(color._id);
     };
+	const getProductURL = () => {
+		return window.location.href; // Gets the current URL of the page
+	};
+	// Method to generate the WhatsApp share link
+	const generateWhatsAppLink = (url) => {
+		const encodedUrl = encodeURIComponent(url); // Encode the URL to make it URL-safe
+		return `https://wa.me/?text=Check%20out%20this%20product!%20${encodedUrl}`;
+	};
+
+	// Method to handle the sharing
+	const handleShare = () => {
+		const productURL = getProductURL(); // Get the active page URL
+		const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
+		// Open the WhatsApp share link in a new window or tab
+		window.open(shareLink, "_blank");
+	};
+
+	const getCopyUrl = () => {
+		const productURL = getProductURL(); // Get the active page URL
+		const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
+		return shareLink;
+	};
+
+	// Handle button click for different share types
+	const HandleOnShareTypeButtonClick = (type) => {
+		switch (type) {
+		case "whatsApp":
+			handleShare();
+			checkAndCreateToast("success", "Sharing The Product On Whatsapp!");
+			break;
+		case "copyUrl":
+			navigator.clipboard.writeText(window.location.href);
+			checkAndCreateToast("success", "Link Copied to Clipboard!");
+			break;
+		}
+	};
     const PostRating = async (e)=>{
         e.preventDefault();
         try {
@@ -687,38 +722,18 @@ const MPpage = () => {
                             <div className='w-full flex mt-4'>
                                 <div className='w-fit space-x-2 justify-center flex flex-row items-center'>
                                     <h1 className="text-gray-500 transition duration-300 text-xl">Share: </h1>
-                                    <a
-                                        href="https://facebook.com"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                    <div
+										onClick={() => HandleOnShareTypeButtonClick("whatsApp")}
                                         className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-600 transition duration-300 text-xl"
                                     >
-                                        <ImFacebook />
-                                    </a>
-                                    <a
-                                        href="https://google.com"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
+                                        <IoLogoWhatsapp />
+                                    </div>
+                                    <div
+										onClick={() => HandleOnShareTypeButtonClick("copyUrl")}
                                         className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
                                     >
-                                    <ImGoogle />
-                                    </a>
-                                        <a
-                                            href="https://twitter.com"
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-400 transition duration-300 text-xl"
-                                        >
-                                        <ImTwitter />
-                                    </a>
-                                    <a
-                                        href="https://instagram.com"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-pink-600 transition duration-300 text-xl"
-                                    >
-                                        <ImInstagram />
-                                    </a>
+                                    	<IoIosCopy />
+                                    </div>
                                 </div>
                             </div>
                             <div className="w-full flex flex-col space-y-4 mt-4">

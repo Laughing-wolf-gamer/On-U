@@ -9,7 +9,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
 import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getOriginalAmount, headerConfig, removeSpaces } from '../../config';
 import CouponsDisplay from './CouponDisplay';
-import { Minus, Plus, X } from 'lucide-react';
+import { Minus, Plus, Trash, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
 import { FormControl, FormHelperText } from '@mui/material';
@@ -456,7 +456,7 @@ const PriceDetailsComponent = ({user, bag,totalGst, totalSellingPrice, discounte
 									className="flex items-center space-x-1 text-xs sm:text-sm"
 									onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
 								>
-									<X size={20} />
+									<Trash size={20} />
 									<span>{bag?.Coupon?.CouponCode}</span>
 								</button>
 								{/* Discount Information */}
@@ -554,7 +554,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 								handleDeleteBag(active.productId._id, active._id);
 							}}
 						>
-							<X size={15} />
+							<Trash size={15} />
 						</div>
 						</div>
 					
@@ -606,9 +606,9 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 					</div>
 				
 					{/* Delete Button for larger screens */}
-					<X
-					className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-					onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
+					<Trash
+						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+						onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
 					/>
 				</div>
 			)

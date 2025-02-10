@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux';
 import { applyCouponToBag, getbag, removeCouponFromBag } from '../../action/orderaction';
 import { getAddress } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
-import { Minus, Plus, X } from 'lucide-react';
+import { Minus, Plus, Trash, X } from 'lucide-react';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../config';
 import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
@@ -197,7 +197,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 								handleDeleteBag(active.productId._id, active._id)
 							}}
 						>
-							<X size={15}/>
+							<Trash size={15}/>
 						</div>
 					</div>
 				
@@ -247,7 +247,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 					</div>
 				
 					{/* Delete Button for larger screens */}
-					<X
+					<Trash
 						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
 						onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
 					/>
