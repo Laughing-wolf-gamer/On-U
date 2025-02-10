@@ -579,13 +579,12 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 						</div>
 					
 						{/* Quantity Selector */}
-						<div className="mt-4 flex items-center space-x-4 shadow-md justify-between rounded-lg border-gray-700 border p-3">
-							<label className="text-sm">Qty:</label>
-							<div className="flex items-center space-x-2">
+						<div className="mt-4 flex w-fit items-center space-x-4 shadow-md justify-between rounded-full p-3">
+							<div className="flex items-center space-x-2 justify-between">
 								{/* Decrease Button */}
 								<button
 									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
-									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
 									disabled={active?.quantity <= 1}
 								>
 								<Minus/>
@@ -597,7 +596,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 								{/* Increase Button */}
 								<button
 									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
-									className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500"
+									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
 									disabled={active?.quantity >= active?.size?.quantity}
 								>
 								<Plus/>

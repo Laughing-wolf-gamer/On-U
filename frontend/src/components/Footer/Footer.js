@@ -8,7 +8,7 @@ import { ArrowUp } from "lucide-react";
 
 const Footer = () => {
     return (
-        <div className="w-screen border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
+        <div className="w-screen h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-200 pb-10">
                     {/* Online Shopping */}

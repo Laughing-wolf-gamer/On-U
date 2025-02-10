@@ -311,6 +311,7 @@ export const addNewProduct = async (req, res) => {
             material,
             gst,
             bulletPoints,
+			delivaryPoints,
             gender,
             category,
             subCategory,
@@ -392,6 +393,7 @@ export const addNewProduct = async (req, res) => {
             description,
             careInstructions: careInstructions ? careInstructions : '',
             bulletPoints,
+			delivaryPoints,
             material,
             gender,
             category,
@@ -444,6 +446,7 @@ export const editProduct = async (req, res) => {
             careInstructions,
             material,
             bulletPoints,
+			delivaryPoints,
             gender,
             category,
             gst,
@@ -457,7 +460,6 @@ export const editProduct = async (req, res) => {
             weight,
             breadth,
         } = req.body;
-
         console.log("Editing: ", req.body);
 
         // Initialize updateFields object
@@ -465,7 +467,9 @@ export const editProduct = async (req, res) => {
 
         // Helper function to conditionally add fields to updateFields
         const addToUpdate = (field, value) => {
-            if (value && (typeof value === 'string' ? value.length > 0 : value > 0)) {
+			
+			console.log("Updating: ",field,Array.isArray(value));
+            if (value && (!Array.isArray(value) ? value.length > 0 : value.length > 0)) {
                 updateFields[field] = value;
             }
         };
@@ -479,6 +483,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);
         addToUpdate('bulletPoints', bulletPoints);
+        addToUpdate('delivaryPoints', delivaryPoints);
         addToUpdate('gender', gender);
         addToUpdate('category', category);
         addToUpdate('subCategory', subCategory);

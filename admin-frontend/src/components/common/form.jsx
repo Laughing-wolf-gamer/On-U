@@ -6,6 +6,7 @@ import { Button } from '../ui/button';
 import SizeSelector from '../admin-view/SizeSelector';
 import BulletPointsForm from '../admin-view/BulletPointsForm';
 import CustomSelect from '../admin-view/CustomSelect';
+import TextInputArrayCustom from '../admin-view/TextInputArrayCustom';
 
 const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonText, isBtnValid }) => {
 
@@ -54,6 +55,13 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
                     }}
                 />
             );
+		case "arrayTexts":
+		return <TextInputArrayCustom
+			onChange={(e)=>{
+				console.log("changes: ",[controlItems.name],e)
+				setFormData({...formData,[controlItems.name]:e})
+			}}
+		/>
         case 'sizeSelect':
             return (
                 <SizeSelector

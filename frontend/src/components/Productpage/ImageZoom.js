@@ -1,8 +1,6 @@
 import React, { useState, useCallback } from 'react';
-import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
-import { FaShare } from "react-icons/fa";
 import ShareView from './ShareView';
-const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
+const ImageZoom = ({ imageSrc, zoomSize = 80 }) => {
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
 
@@ -60,7 +58,7 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
                 ></div>
             )}
             {/* Dropdown Button */}
-            {/* <ShareView/> */}
+            <ShareView/>
         </div>
     );
 };

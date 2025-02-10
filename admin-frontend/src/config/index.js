@@ -324,6 +324,13 @@ export const addProductsFromElement = [
         required:true,
     },
     {
+        label:"Delivary Points",
+        name:'delivaryPoints',
+        componentType:'arrayTexts',
+        required:false,
+    },
+
+    {
         label:"Category",
         name:'category',
         componentType:'select',

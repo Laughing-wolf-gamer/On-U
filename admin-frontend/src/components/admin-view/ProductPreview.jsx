@@ -15,6 +15,8 @@ import FileUploadComponent from './FileUploadComponent';
 import CustomSelect from './CustomSelect';
 import toast from 'react-hot-toast';
 import RatingDataView from './RatingDataView';
+import TextInputArrayCustom from './TextInputArrayCustom';
+import TextArrayView from './TextArrayView';
 
 const ProductPreview = ({
 	categories,
@@ -390,7 +392,41 @@ const ProductPreview = ({
                                 )}
                             </div>
                         </div>
-            
+						{/* Description and Bullet Points */}
+                        <div className="mb-6 space-y-4">
+                            {
+                                isEditing ? <BulletPointsForm onChange={(e)=>{
+                                    // console.log("Editing Bullet Points: ",e);
+                                    setProductData({
+                                        ...productData,
+                                        ["bulletPoints"]: e,
+                                    });
+                                }}/>:(
+                                    <>
+                                        {productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
+                                            <BulletPointView points={productData?.bulletPoints} />
+                                        )}
+                                    </>
+                                )
+                            }
+                        </div>
+						<div className="mb-6 space-y-4">
+                            {
+                                isEditing ? <TextInputArrayCustom defualt={productData?.delivaryPoints} onChange={(e)=>{
+                                    // console.log("Editing Bullet Points: ",e);
+                                    setProductData({
+                                        ...productData,
+                                        ["delivaryPoints"]: e,
+                                    });
+                                }}/>:(
+                                    <>
+                                        {productData?.delivaryPoints && productData?.delivaryPoints.length > 0 && (
+                                            <TextArrayView points={productData?.delivaryPoints} />
+                                        )}
+                                    </>
+                                )
+                            }
+                        </div>
                         {/* Edit and Delete Buttons */}
                         <div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
                             <Button
@@ -428,24 +464,7 @@ const ProductPreview = ({
                             Remove Product
                             </Button>
                         </div>
-                        {/* Description and Bullet Points */}
-                        <div className="mb-6 space-y-4">
-                            {
-                                isEditing ? <BulletPointsForm onChange={(e)=>{
-                                    // console.log("Editing Bullet Points: ",e);
-                                    setProductData({
-                                        ...productData,
-                                        ["bulletPoints"]: e,
-                                    });
-                                }}/>:(
-                                    <>
-                                        {productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
-                                            <BulletPointView points={productData?.bulletPoints} />
-                                        )}
-                                    </>
-                                )
-                            }
-                        </div>
+                        
                     </div>
                 </div>
             </div>

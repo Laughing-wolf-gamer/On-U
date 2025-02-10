@@ -325,7 +325,7 @@ const Home = ({user}) => {
                                     )}
                             </Carousel>
                         </div>
-						<OurMotoData/>
+						{/* <OurMotoData/> */}
 
                         <div className='px-2'>
                             <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>

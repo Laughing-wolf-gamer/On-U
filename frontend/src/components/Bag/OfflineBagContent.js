@@ -171,12 +171,11 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 							</div>
 
 							{/* Quantity Selector */}
-							<div className="mt-4 flex items-center space-x-4 shadow-md rounded-lg border-gray-700 border p-3">
-								<label className="text-xs sm:text-sm lg:text-base">Qty:</label>
-								<div className="flex items-center space-x-2">
+							<div className="mt-4 flex items-center space-x-4 shadow-full rounded-lg border-gray-700 border p-3">
+								<div className="flex items-center space-x-2 justify-between">
 									<button
 										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-300"
+										className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 										disabled={active?.quantity <= 1}
 									>
 										<Minus strokeWidth={3} />
@@ -184,7 +183,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 									<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
 									<button
 										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 text-sm sm:text-base disabled:text-gray-300"
+										className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 										disabled={active?.quantity >= active?.size?.quantity}
 									>
 										<Plus strokeWidth={3} />

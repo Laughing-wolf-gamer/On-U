@@ -17,7 +17,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { ArrowDownCircle, Bus, Clock, Heart, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { ArrowDownCircle, Bus, Clock, Heart, RotateCw, ShoppingBag, ShoppingCart, Truck } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -464,6 +464,7 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
+												<MShareView/>
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -480,6 +481,7 @@ const MPpage = () => {
                                         ) : (
                                             // Render image using LazyLoadImage
                                             <div className="relative">
+												
                                                 <LazyLoadImage
                                                     effect="blur"
                                                     src={im.url}
@@ -488,6 +490,7 @@ const MPpage = () => {
                                                     className="w-full h-full object-contain"
                                                 />
                                                 {/* <div className="h-[30px] bg-white"></div> */}
+												<MShareView/>
                                             </div>
                                         )
                                         ) : (
@@ -524,9 +527,9 @@ const MPpage = () => {
                                         </Fragment>
                                     )}
                                 </h1>
-                                {/* <h1 className="text-[#0db7af] font-semibold text-sm mt-1">
-                                    inclusive of all taxes
-                                </h1> */}
+                                <h1 className="text-gray-800 font-semibold text-sm mt-1">
+                                    inclusive {product?.gst} % GST
+                                </h1>
                                 <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
                                     <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
                                     <div className="w-full flex flex-wrap gap-4 justify-start items-start">
@@ -614,34 +617,34 @@ const MPpage = () => {
                                 }
                             </div>
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
-                            <div className='col-span-12 md:col-span-3'>
-                                <div className='absolute bg-[#0db7af] font1 px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
-                                <Bus/>
-                            </div>
-                            <div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
-                                <h1 className='text-sm font1 font-semibold'>RETURN WITH IN 45 DAYS</h1>
-                            </div>
+                            	<div className='col-span-12 md:col-span-3'>
+									<div className='absolute bg-[#0db7af] font1 px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
+									<Bus/>
+								</div>
+								<div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
+									<h1 className='text-sm font1 font-semibold'>RETURN WITH IN 45 DAYS</h1>
+								</div>
                             </div>
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
-                            <div className="col-span-1 text-center text-xs text-slate-500">
-                                <img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
-                                Genuine Products
-                            </div>
-                            <div className="col-span-1 text-center text-xs text-slate-500">
-                                <img src={img2} alt="Product_images" className='w-[75px] mx-auto' />
-                                7 step Quality Check
-                            </div>
-                            <div className="col-span-1 text-center text-xs text-slate-500">
-                                <img src={img3} alt="Product_images" className='w-[75px] mx-auto' />
-                                Secure Payments
-                            </div>
+								<div className="col-span-1 text-center text-xs text-slate-500">
+									<img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
+									Genuine Products
+								</div>
+								<div className="col-span-1 text-center text-xs text-slate-500">
+									<img src={img2} alt="Product_images" className='w-[75px] mx-auto' />
+									7 step Quality Check
+								</div>
+								<div className="col-span-1 text-center text-xs text-slate-500">
+									<img src={img3} alt="Product_images" className='w-[75px] mx-auto' />
+									Secure Payments
+								</div>
                             </div>
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
                             <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
-                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || "No Brand"}</span></li>
+                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || ""}</span></li>
                             </div>
 
                             <div className='h-full w-full justify-center items-center flex flex-col space-y-5'>
@@ -719,20 +722,33 @@ const MPpage = () => {
                                 </div>
                             </div>
                             <div className="w-full flex flex-col space-y-4 mt-4">
-                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-                                    <h1 className="text-gray-500"><Clock /></h1>
-                                    <h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-                                </div>
+								{
+									product && product?.delivaryPoints && product?.delivaryPoints.length > 0 ? product?.delivaryPoints.map((point,index)=>{
+										return(
+											<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+												<h1 className="text-gray-500">{point}</h1>
+											</div>
+										)
+									}):(
+										<Fragment>
+											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+											</div>
 
-                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-                                    <h1 className="text-gray-500"><RotateCw /></h1>
-                                    <h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-                                </div>
+											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+												<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+											</div>
 
-                                <div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-                                    <h1 className="text-gray-500"><Clock /></h1>
-                                    <h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-                                </div>
+											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+											</div>
+										</Fragment>
+									)
+								}
                             </div>
 
                             <div className='w-full px-4 md:px-2'>
@@ -741,10 +757,10 @@ const MPpage = () => {
                                     <h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
                                     <div className='reviews-list mt-4 overflow-y-auto h-72'>
                                         <div className='reviews-list mt-4 overflow-y-auto'>
-                                            {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={/* product.Rating */reviews}/> : <ProductReviews reviews={reviews}/>}
+                                            {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
                                         </div>
                                     </div>
-                                    {!hasPurchased && <Fragment>
+                                    {hasPurchased && <Fragment>
                                         {/* Review Input Section */}
                                         <div className='w-full flex flex-col justify-start items-center'>
                                             <div className='mt-6 w-full max-w-3xl'>

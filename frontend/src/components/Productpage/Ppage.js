@@ -389,7 +389,7 @@ const Ppage = () => {
                             <div className='flex flex-col justify-start h-[900px] px-8'>
                                 {/* Product Title and Gender */}
                                 <div className='pt-1'>
-                                    <h1 className='font1 text-2xl font-semibold text-slate-800'>
+                                    <h1 className='text-2xl font-semibold text-slate-800'>
                                         {capitalizeFirstLetterOfEachWord(product?.title)}
                                     </h1>
                                     <h1 className='text-xl text-[#808080e8] font-light'>
@@ -399,8 +399,8 @@ const Ppage = () => {
                                 </div>
 
                                 {/* Price and Discount */}
-                                <div className='border-b-[1px] border-slate-200 pb-6 pt-4'>
-                                    <h1 className='font1 text-xl font-semibold text-slate-800'>
+                                <div className='border-b-[1px] border-slate-200 pb-6 pt-1'>
+                                    <h1 className='text-xl font-semibold text-slate-800'>
                                         <span className="mr-4 font-bold">
                                             ₹ {formattedSalePrice(product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                         </span>
@@ -411,9 +411,9 @@ const Ppage = () => {
                                             </Fragment>
                                         )}
                                     </h1>
-                                    {/* <h1 className='text-[#0db7af] font-semibold font1 text-sm mt-1'>
-                                        inclusive of all taxes
-                                    </h1> */}
+                                    <h1 className='text-[#111313] font-semibold text-sm mt-1'>
+                                        inclusive {product?.gst} % GST
+                                    </h1>
                                 </div>
                                 {/* Color Selection */}
                                 <div className="w-full flex flex-col mt-2 py-2 space-y-2 mx-auto">
@@ -512,7 +512,7 @@ const Ppage = () => {
                                     <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                                         <button
                                             disabled={bagLoading}
-                                            className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900"
+                                            className="h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] bg-gray-800 text-white mt-4 rounded-md hover:border-2 hover:bg-gray-900"
                                             onClick={addToBag}
                                         >
                                             {bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
@@ -524,7 +524,7 @@ const Ppage = () => {
                                         </button>
                                         <button
                                             disabled={loadingWishList}
-                                            className="font1 h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900"
+                                            className="h-16 font-semibold text-base w-full p-2 inline-flex items-center justify-center mt-4 rounded-md border-[0.5px] hover:border-[1px] hover:border-gray-900"
                                             onClick={addToWishList}
                                         >
                                             {loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
@@ -537,7 +537,7 @@ const Ppage = () => {
                                     </div>
                                     <button
                                         disabled={bagLoading || loadingWishList}
-                                        className="font1 h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"
+                                        className="h-16 font-semibold text-base w-full p-4 inline-flex items-center justify-center border-[1px] border-slate-300 mt-4 rounded-md hover:border-[1px] hover:border-gray-900"
                                         onClick={handleBuyNow}
                                     >
                                         {bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
@@ -585,20 +585,33 @@ const Ppage = () => {
                                         </div>
                                     </div>
 									<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
-										<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
-											<h1 className="text-gray-500"><Clock /></h1>
-											<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-										</div>
+										{
+											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 ? product?.delivaryPoints.map((point,index)=>{
+												return(
+													<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-left justify-start">
+														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+														<h1 className="text-gray-500">{point}</h1>
+													</div>
+												)
+											}):(
+												<Fragment>
+													<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
+														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+														<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+													</div>
 
-										<div className="w-full flex flex-row items-center space-x-2 justify-start">
-											<h1 className="text-gray-500"><RotateCw /></h1>
-											<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-										</div>
+													<div className="w-full flex flex-row items-center space-x-2 justify-start">
+														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+														<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+													</div>
 
-										<div className="w-full flex flex-row items-center space-x-2 justify-start">
-											<h1 className="text-gray-500"><Truck /></h1>
-											<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-										</div>
+													<div className="w-full flex flex-row items-center space-x-2 justify-start">
+														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
+														<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+													</div>
+												</Fragment>
+											)
+										}
 									</div>
                                 </div>
                             </div>
@@ -615,7 +628,7 @@ const Ppage = () => {
             }
             {
                 product&&similar && similar.length > 0 && <div className='w-full justify-center items-center flex flex-col mb-8 2xl:px-0 px-6'>
-                    <h1 className='font1 flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
+                    <h1 className='flex items-center justify-center text-center mt-4 font-semibold text-2xl p-8'>SIMILAR PRODUCTS</h1>
                     <div className='w-full flex justify-center items-center'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
                             {similar.map((pro, index) => (
@@ -780,7 +793,7 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                                     <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
                                     <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
                                         {product && product.Rating && product.Rating.length > 0 ? (
-                                            <ProductReviews reviews={/* product.Rating */ reviews} />
+                                            <ProductReviews reviews={product.Rating} />
                                         ) : (
                                             <ProductReviews reviews={reviews} />
                                         )}
