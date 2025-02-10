@@ -16,7 +16,7 @@ const Footer = () => {
                         <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
                         <p className="text-sm hover:underline text-gray-600">Owner: John Doe</p>
                         <div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-pink-400 items-center">
-                            <h2 className="text-xl font-bold">GET DIRECTION</h2>
+                            <Link to={'contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
                             <ArrowUp className="rotate-45" />
                         </div>
                         <p className="text-sm hover:underline text-gray-600">Company: On-U.com</p>
@@ -60,29 +60,30 @@ const Footer = () => {
                     </div>
 
                     {/* Features */}
-                    <div className="flex w-full flex-col justify-center items-start py-3">
-                        <h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
+                    <div className="flex w-full flex-col justify-start items-start py-3">
+						<h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
 
-                        {/* Social Media Icons */}
-                        <div className="flex space-x-6 text-3xl text-gray-800 mb-6">
-                            <AiFillFacebook className="transition-transform transform hover:scale-110 hover:text-blue-600" />
-                            <ImTwitter className="transition-transform transform hover:scale-110 hover:text-blue-400" />
-                            <AiFillYoutube className="transition-transform transform hover:scale-110 hover:text-red-600" />
-                            <ImInstagram className="transition-transform transform hover:scale-110 hover:text-pink-600" />
-                        </div>
+						{/* Social Media Icons */}
+						<div className="flex space-x-6 text-3xl text-gray-800 mb-6">
+							<AiFillFacebook className="transition-transform transform hover:scale-110 hover:text-blue-600" />
+							<ImTwitter className="transition-transform transform hover:scale-110 hover:text-blue-400" />
+							<AiFillYoutube className="transition-transform transform hover:scale-110 hover:text-red-600" />
+							<ImInstagram className="transition-transform transform hover:scale-110 hover:text-pink-600" />
+						</div>
 
-                        {/* Email Input and Agreement Section */}
-                        <div className="flex w-full max-w-md border border-gray-300 rounded-full space-x-3 p-3 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
-                            <input
-                                type="email"
-                                placeholder="Get Cool Coupons To your mail"
-                                className="rounded-full w-full text-black placeholder:text-gray-400 outline-none transition-all duration-300 ease-in-out"
-                            />
-                            <button className="bg-black p-3 hover:bg-gray-700 transition-all duration-300 ease-in-out text-white rounded-full transform hover:rotate-45 focus:outline-none">
-                            <ArrowUp />
-                            </button>
-                        </div>
-                    </div>
+						{/* Email Input and Agreement Section */}
+						<div className="flex w-full max-w-md border border-gray-300 rounded-full space-x-3 p-3 shadow-md hover:shadow-lg transition-shadow duration-300 ease-in-out">
+							<input
+								type="email"
+								placeholder="Get Cool Coupons To your mail"
+								className="rounded-full w-full text-black placeholder:text-gray-400 outline-none transition-all duration-300 ease-in-out"
+							/>
+							<button className="bg-black p-3 hover:bg-gray-700 transition-all duration-300 ease-in-out text-white rounded-full transform hover:rotate-45 focus:outline-none">
+								<ArrowUp />
+							</button>
+						</div>
+					</div>
+
 
                 </div>
 
