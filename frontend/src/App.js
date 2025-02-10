@@ -27,6 +27,7 @@ import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
 import { FunctionProvider } from "./Contaxt/FunctionContext.js";
 import { Toaster } from 'react-hot-toast';
 import CheckoutPage from "./components/Bag/NewCheckoutPage.js";
+import NotFoundPage from "./NotFoundPage.js";
 
 
 
@@ -73,26 +74,27 @@ function App() {
             <MNavbar user={user}/>
             {/* <Coupon /> */}
             <Routes>
-            <Route path="/" element={<Home user={user}/>}/>
-            <Route path="/Login" element={<Login/>}/>
-            <Route path="/verifying" element={<Otpverify/>}/>
-            <Route path='/registeruser' element={<Registeruser/>}/>
-            <Route path='/dashboard' element={<Overview user={user} loading = {loading}/>}/>
-            {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
-            {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
-            <Route path='/products' element={<Allproductpage user = {user}/>}/>
-            {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
-            {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
-            <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
-            <Route path='/bag' element={<Bag user={user}/>}/>
-            <Route path='/bag/checkout' element={<CheckoutPage/>}/>
-            {user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
-            <Route path='/address/bag' element={<Address user={user}/>}/>
-            <Route path='/about' element={<About />}/>
-            <Route path='/contact' element={<Contact />}/>
-            <Route path='/faq' element={<FAQ />}/>
-            <Route path='/tc' element={<TermsAndConditions />}/>
-            <Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
+				<Route path="/" element={<Home user={user}/>}/>
+				<Route path="/Login" element={<Login/>}/>
+				<Route path="/verifying" element={<Otpverify/>}/>
+				<Route path='/registeruser' element={<Registeruser/>}/>
+				<Route path='/dashboard' element={<Overview user={user} loading = {loading}/>}/>
+				{loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
+				{loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
+				<Route path='/products' element={<Allproductpage user = {user}/>}/>
+				{window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
+				{window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
+				<Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
+				<Route path='/bag' element={<Bag user={user}/>}/>
+				<Route path='/bag/checkout' element={<CheckoutPage/>}/>
+				{user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
+				<Route path='/address/bag' element={<Address user={user}/>}/>
+				<Route path='/about' element={<About />}/>
+				<Route path='/contact' element={<Contact />}/>
+				<Route path='/faq' element={<FAQ />}/>
+				<Route path='/tc' element={<TermsAndConditions />}/>
+				<Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
+				<Route path="*" element={<NotFoundPage />} /> {/* Catch-all route for 404 */}
             </Routes>
             
             

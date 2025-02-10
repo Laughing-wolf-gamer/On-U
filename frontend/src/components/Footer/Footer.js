@@ -16,7 +16,7 @@ const Footer = () => {
                         <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
                         <p className="text-sm hover:underline text-gray-600">Owner: On-U</p>
                         <div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
-                            <Link to={'contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
+                            <Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
                             <ArrowUp className="rotate-45" />
                         </div>
                         <p className="text-sm hover:underline text-gray-600">Company: On-U.com</p>
