@@ -75,6 +75,7 @@ const productModelSchema = new mongoose.Schema({
     subCategory:{
         type:String,
     },
+	delivaryPoints:[{type:String,default:[]}],
     specialCategory:{type:String},
     totalStock:{type: Number},
     Rating:[
