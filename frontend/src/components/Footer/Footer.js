@@ -60,7 +60,7 @@ const Footer = () => {
                     </div>
 
                     {/* Features */}
-                    <div className="flex w-full flex-col justify-start items-start py-3">
+                    <div className="flex w-full flex-col justify-start items-start">
 						<h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
 
 						{/* Social Media Icons */}
