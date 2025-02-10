@@ -175,10 +175,10 @@ const removeProduct = async (productId, color, size, quantity) => {
         console.log("Product Updated:", product);
 
         // Respond with success
-        res.status(200).json({ success: true, message: "Product removed successfully" });
+        // res.status(200).json({ success: true, message: "Product removed successfully" });
     } catch (error) {
         console.error("Error Removing Product:", error);
-        res.status(500).json({ success: false, message: "Error removing product", error: error.message });
+        // res.status(500).json({ success: false, message: "Error removing product", error: error.message });
     }
 };
 
