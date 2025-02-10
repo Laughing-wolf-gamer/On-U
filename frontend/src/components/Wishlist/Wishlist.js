@@ -9,6 +9,7 @@ import { getuser, clearErrors } from '../../action/useraction';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { getRandomArrayOfProducts } from '../../action/productaction';
+import Footer from '../Footer/Footer';
 
 const Wishlist = () => {
     const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
@@ -168,6 +169,7 @@ const Wishlist = () => {
                     </div>
                 )}
             </div>
+			<Footer/>
         </div>
     );
 };
