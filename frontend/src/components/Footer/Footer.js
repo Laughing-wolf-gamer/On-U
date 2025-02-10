@@ -14,8 +14,8 @@ const Footer = () => {
                     {/* Online Shopping */}
                     <div className="border-r border-gray-200 space-y-3">
                         <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
-                        <p className="text-sm hover:underline text-gray-600">Owner: John Doe</p>
-                        <div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-pink-400 items-center">
+                        <p className="text-sm hover:underline text-gray-600">Owner: On-U</p>
+                        <div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
                             <Link to={'contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
                             <ArrowUp className="rotate-45" />
                         </div>
