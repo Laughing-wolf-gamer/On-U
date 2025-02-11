@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getHomeBanners, getOptions, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -19,7 +19,18 @@ route.get('/website/convenienceFees',getConvenienceFees)
 route.put('/website/contact-us',isAuthenticateuser,ProtectAdminRoute,setContactUsePageData)
 route.get('/website/contact-us',getContactUsPageData)
 
+// t&c
+route.put('/website/terms-and-condition',isAuthenticateuser,ProtectAdminRoute,setTermsAndConditionWebsite)
+route.get('/website/terms-and-condition',getTermsAndConditionWebsite)
 
+// pp
+route.put('/website/privacy-policy',isAuthenticateuser,ProtectAdminRoute,setPrivacyPolicyWebsite)
+route.get('/website/privacy-policy',getPrivacyPolicyWebsite)
+
+// faqs
+route.put('/website/faqs',isAuthenticateuser,ProtectAdminRoute,setFAQWebsite)
+route.patch('/website/faqs',isAuthenticateuser,ProtectAdminRoute,removeFAQById)
+route.get('/website/faqs',getFAQWebsite)
 
 route.post('/website/send-contact-query',createContactQuery)
 route.get('/website/get-contact-query',getContactQuery)

@@ -741,31 +741,14 @@ const MPpage = () => {
                             </div>
                             <div className="w-full flex flex-col space-y-4 mt-4">
 								{
-									product && product?.delivaryPoints && product?.delivaryPoints.length > 0 ? product?.delivaryPoints.map((point,index)=>{
+									product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
 										return(
 											<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
 												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
 												<h1 className="text-gray-500">{point}</h1>
 											</div>
 										)
-									}):(
-										<Fragment>
-											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-											</div>
-
-											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-												<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-											</div>
-
-											<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-												<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-											</div>
-										</Fragment>
-									)
+									})
 								}
                             </div>
 

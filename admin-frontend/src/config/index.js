@@ -171,6 +171,12 @@ export const adminSideBarMenu = [
                 path: 'pages/privacyPolicy',
             },
             {
+                id:'faqs',
+                label:'FAQs',
+                accessRole:['superAdmin'],
+                path: 'pages/faqs',
+            },
+            {
                 id:'termsAndConditions',
                 label:'Terms and Conditions',
                 accessRole:['superAdmin'],

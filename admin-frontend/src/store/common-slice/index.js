@@ -8,8 +8,11 @@ const initialState = {
 	featuresList:[],
     AllOptions:[],
     aboutData:null,
+    termsAndCondition:null,
+    privacyPolicy:null,
     convenienceFees:0,
     addressFormFields:[],
+    faqsWebsite:[],
     ContactUsPageData:null,
     DisclaimerData:[],
     filterOptions:null,
@@ -98,6 +101,30 @@ const commonSlice = createSlice({
         }).addCase(fetchWebsiteDisclaimer.rejected,(state)=>{
             state.isLoading = false;
             state.DisclaimerData = [];
+        }).addCase(fetchTermsAndCondition.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchTermsAndCondition.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.termsAndCondition = action?.payload?.result || null;
+        }).addCase(fetchTermsAndCondition.rejected,(state)=>{
+            state.isLoading = false;
+            state.termsAndCondition = null;
+        }).addCase(fetchPrivacyPolicyWebsite.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchPrivacyPolicyWebsite.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.privacyPolicy = action?.payload?.result || null;
+        }).addCase(fetchPrivacyPolicyWebsite.rejected,(state)=>{
+            state.isLoading = false;
+            state.privacyPolicy = null;
+        }).addCase(fetchFAQSWebstis.pending,(state)=>{
+            state.isLoading = true;
+        }).addCase(fetchFAQSWebstis.fulfilled,(state,action)=>{
+            state.isLoading = false;
+            state.faqsWebsite = action?.payload?.result || [];
+        }).addCase(fetchFAQSWebstis.rejected,(state)=>{
+            state.isLoading = false;
+            state.faqsWebsite = [];
         })
     }
 })
@@ -181,6 +208,77 @@ export const sendAboutData = createAsyncThunk('/common/sendAboutData',async({web
         return response.data;
     } catch (error) {
         console.error(`Error Sending About Page Data: `,error);
+    }
+})
+export const setTermsAndCondition = createAsyncThunk('/common/updateTermsAndCondition',async(data)=>{
+	try {
+		const response = await axios.put(`${BASE_URL}/api/common/website/terms-and-condition`,data,Header());
+		console.log('Termsn and Conditions Response: ', response.data);
+        return response.data;
+	} catch (error) {
+		console.error('Error deleting option:', error);
+        throw error;
+	}
+})
+export const fetchTermsAndCondition = createAsyncThunk('/common/getTermsAndCondition',async()=>{
+	try {
+		const response = await axios.get(`${BASE_URL}/api/common/website/terms-and-condition`);
+		console.log('Termsn and Conditions Response: ', response.data);
+        return response.data;
+	} catch (error) {
+		console.error("Error Deleting ")
+		throw error;
+	}
+})
+export const setPrivacyPolicyWebsite = createAsyncThunk('/common/setPrivacyPolicy',async(data)=>{
+	try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/privacy-policy`,data,Header());
+        console.log('Privacy Policy Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error Sending About Page Data: `,error);
+        return false;
+    }
+})
+export const setFAQSWebstis = createAsyncThunk('/common/setFAQS',async(faqData)=>{
+	try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/faqs`,{faqData},Header());
+        console.log('Privacy Policy Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error Sending About Page Data: `,error);
+        return false;
+    }
+})
+export const fetchFAQSWebstis = createAsyncThunk('/common/faq',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/faqs`);
+        // console.log('FAQs Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Fetching FAQs: `,error);
+    }
+});
+export const removeFAQById = createAsyncThunk('/common/removeFAQ',async({faqId})=>{
+
+	try {
+		console.log("Removing FAQ: ",faqId);
+        const response = await axios.patch(`${BASE_URL}/api/common/website/faqs?faqId=${faqId}`,{},Header());
+        console.log('Privacy Policy Response: ', response.data);
+        return response?.data?.Success;
+    } catch (error) {
+        console.error(`Error removing FAQId Data: `,error);
+        return false;
+    }
+})
+
+export const fetchPrivacyPolicyWebsite = createAsyncThunk('/common/getPrivacyPolicy',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/privacy-policy`);
+        console.log('Privacy Policy Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Fetching Privacy Policy: `,error);
     }
 })
 export const setDisclaimerData = createAsyncThunk('/common/setDisclaimerData',async(data)=>{
@@ -329,6 +427,7 @@ export const updateColorName = createAsyncThunk('/common/updateColorName', async
         throw error;
     }
 });
+
 
 
 

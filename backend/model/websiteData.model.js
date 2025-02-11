@@ -4,6 +4,12 @@ const websiteSchema = new mongoose.Schema({
     tag:String,
     AboutData:Object,
     Address:Array,
+    faqArray:[{
+		question:String,
+        answer:String,
+    }],
+	termsAndCondition:Object,
+	privacyPolicy:Object,
     ConvenienceFees:Number,
     ContactUsePageData:Object,
     WebsiteDisclaimers:[{

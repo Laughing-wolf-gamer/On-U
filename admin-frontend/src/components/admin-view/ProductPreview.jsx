@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { ChevronUp, Eye, FilePenLine, Minus, Plus, X, XCircle } from 'lucide-react';
+import { ChevronUp, Edit, Eye, FilePenLine, Minus, MinusCircleIcon, Plus, PlusCircleIcon, Shirt, X, XCircle } from 'lucide-react';
 import axios from 'axios';
 import { addProductsFromElement, BASE_URL, formattedSalePrice, Header } from '@/config';
 import SizeSelector from './SizeSelector';
@@ -17,7 +17,6 @@ import toast from 'react-hot-toast';
 import RatingDataView from './RatingDataView';
 import TextInputArrayCustom from './TextInputArrayCustom';
 import TextArrayView from './TextArrayView';
-
 const ProductPreview = ({
 	categories,
 	subcategories,
@@ -816,13 +815,24 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	  }, [selectedColorImages]); // Memoize only when selectedColorImages change
 	return (
 		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> {/* Make the container a column layout */}
-			<div className='flex justify-center items-center gap-4'>
+			<div className="flex justify-center items-center gap-4">
 				<Button
 					disabled={isLoading}
 					onClick={() => setToggleAddNewSize(!toggleAddNewSize)}
-					className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md"
+					className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md flex items-center gap-2"
 				>
-					{toggleAddNewSize ? "Hide Add New Size":"Show New Size"} 
+					{/* Toggle between the Plus and Minus icon based on the state */}
+					{toggleAddNewSize ? (
+						<>
+							<MinusCircleIcon className="h-5 w-5" />
+							<span className="text-sm">Hide New Size</span> {/* Optional text for additional context */}
+						</>
+					) : (
+						<>
+							<PlusCircleIcon className="h-5 w-5" />
+							<span className="text-sm">New Size</span> {/* Optional text for additional context */}
+						</>
+					)}
 				</Button>
 			</div>
 			{
@@ -851,13 +861,13 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				<div key={i} className="border p-4 rounded-md shadow-md w-full relative flex flex-col gap-4"> {/* Flex layout for size box */}
 					<h2 className="text-xl font-semibold">Size: {size.label} {renderLowQuantityIndicator(sizeQuantities[size._id])}</h2>
 					<p className="text-sm text-gray-500">Quantity: {sizeQuantities[size._id]}</p>
-					<div className='flex justify-center items-center gap-4'>
+					<div className='flex justify-end items-center gap-4'>
 						<Button
 							disabled={isLoading}
 							onClick={() => setToggleEditColorsColor(!toggleEditColor)}
-							className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md"
+							className={`bg-black hover:bg-gray-700 p-2 rounded-md`}
 						>
-							{toggleEditColor ? "Hide Add New Color":"Show New Color"} 
+							Color<Edit size={20} />
 						</Button>
 					</div>
 					

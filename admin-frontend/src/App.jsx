@@ -29,6 +29,7 @@ import AdminTermsConditionsPage from "./pages/admin-view/AdminTermsConditionsPag
 import { Toaster } from "react-hot-toast"
 import AdminUsers from "./pages/admin-view/AdminUsers"
 import { ToastContainer } from "react-toastify"
+import AdminFAQPage from "./pages/admin-view/AdminFAQPage"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -85,6 +86,7 @@ function App() {
                     <Route path="pages/contactUsManagement" element={<AdminContactPage/>}/>
                     <Route path="pages/privacyPolicy" element={<AdminPrivacyPolicyPage/>}/>
                     <Route path="pages/termsAndCond" element={<AdminTermsConditionsPage />}/>
+                    <Route path="pages/faqs" element={<AdminFAQPage />}/>
                 </Route>
                 <Route path="*" element = {<NotFound user={user} isAuthenticated={isAuthenticated}/>}/>
             </Routes>

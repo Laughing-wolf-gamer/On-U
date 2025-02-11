@@ -1,6 +1,10 @@
+import { setPrivacyPolicyWebsite } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
 
 const AdminPrivacyPolicyPage = () => {
+	const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         effectiveDate: "",
         introduction: "",
@@ -20,13 +24,15 @@ const AdminPrivacyPolicyPage = () => {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData((prevState) => ({
-        ...prevState,
-        [name]: value
+			...prevState,
+			[name]: value
         }));
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
         e.preventDefault();
+		await dispatch(setPrivacyPolicyWebsite(formData))
+		toast.success("Your privacy policy has been updated");
         // You can add API calls here to save the data
         console.log("Form Data Submitted:", formData);
     };
@@ -34,19 +40,19 @@ const AdminPrivacyPolicyPage = () => {
     useEffect(() => {
         // Simulate fetching data (for editing purposes)
         const fetchedData = {
-        effectiveDate: "January 16, 2025",
-        introduction: "Welcome to ON-U. This Privacy Policy explains how we collect, use, and protect your personal information when you visit our website or use our services. By using our services, you agree to the terms of this Privacy Policy.",
-        informationCollect: "We collect various types of information, including: Personal Information: When you register or make a purchase, we collect personal details such as your name, email address, shipping address, and payment information. Usage Information: We collect information about your browsing activities, such as your IP address, browser type, and pages visited. Cookies: We use cookies to improve your experience and analyze how our website is used.",
-        usageInfo: "We use the information we collect for the following purposes: To process your orders and provide customer support. To personalize your shopping experience. To send you marketing communications (if you have opted in). To improve our website and services. To comply with legal requirements.",
-        dataSecurity: "We take reasonable precautions to protect your personal information. We use encryption, secure servers, and other measures to safeguard your data. However, no method of transmission over the internet is 100% secure, so we cannot guarantee the absolute security of your information.",
-        sharingInfo: "We may share your information with: Third-party service providers who assist with processing payments, shipping, or marketing. Law enforcement or government authorities if required by law. In the event of a merger, acquisition, or sale of ON-U, your information may be transferred to the new owner.",
-        rights: "You have the following rights regarding your personal information: Access and update your personal data. Request deletion of your personal data, subject to certain conditions. Opt-out of marketing communications at any time.",
-        cookiesInfo: "We use cookies to enhance your browsing experience. Cookies are small text files stored on your device that help us analyze usage patterns and personalize content. You can control cookies through your browser settings.",
-        thirdPartyLinks: "Our website may contain links to third-party websites. These sites have their own privacy policies, and we are not responsible for their content or practices. Please review the privacy policy of any third-party site you visit.",
-        changesPolicy: "We may update this Privacy Policy from time to time. When we make changes, we will post the updated policy on this page and update the effective date. Please check this page periodically for updates.",
-        contactInfo: "If you have any questions about this Privacy Policy, please contact us at:",
-        phoneNumber: "(123) 456-7890",
-        businessAddress: "123 ON-U Street, City, Country"
+			effectiveDate: "January 16, 2025",
+			introduction: "Welcome to ON-U. This Privacy Policy explains how we collect, use, and protect your personal information when you visit our website or use our services. By using our services, you agree to the terms of this Privacy Policy.",
+			informationCollect: "We collect various types of information, including: Personal Information: When you register or make a purchase, we collect personal details such as your name, email address, shipping address, and payment information. Usage Information: We collect information about your browsing activities, such as your IP address, browser type, and pages visited. Cookies: We use cookies to improve your experience and analyze how our website is used.",
+			usageInfo: "We use the information we collect for the following purposes: To process your orders and provide customer support. To personalize your shopping experience. To send you marketing communications (if you have opted in). To improve our website and services. To comply with legal requirements.",
+			dataSecurity: "We take reasonable precautions to protect your personal information. We use encryption, secure servers, and other measures to safeguard your data. However, no method of transmission over the internet is 100% secure, so we cannot guarantee the absolute security of your information.",
+			sharingInfo: "We may share your information with: Third-party service providers who assist with processing payments, shipping, or marketing. Law enforcement or government authorities if required by law. In the event of a merger, acquisition, or sale of ON-U, your information may be transferred to the new owner.",
+			rights: "You have the following rights regarding your personal information: Access and update your personal data. Request deletion of your personal data, subject to certain conditions. Opt-out of marketing communications at any time.",
+			cookiesInfo: "We use cookies to enhance your browsing experience. Cookies are small text files stored on your device that help us analyze usage patterns and personalize content. You can control cookies through your browser settings.",
+			thirdPartyLinks: "Our website may contain links to third-party websites. These sites have their own privacy policies, and we are not responsible for their content or practices. Please review the privacy policy of any third-party site you visit.",
+			changesPolicy: "We may update this Privacy Policy from time to time. When we make changes, we will post the updated policy on this page and update the effective date. Please check this page periodically for updates.",
+			contactInfo: "If you have any questions about this Privacy Policy, please contact us at:",
+			phoneNumber: "(123) 456-7890",
+			businessAddress: "123 ON-U Street, City, Country"
         };
 
         setFormData(fetchedData);

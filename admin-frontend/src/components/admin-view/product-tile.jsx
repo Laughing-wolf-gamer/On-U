@@ -65,14 +65,14 @@ const AdminProductTile = ({
             {/* Stock Amount Low Indicator */}
             {isStockLow && !isStockLowCritical && (
                 <div className="mb-4">
-                    <Badge className="text-sm bg-yellow-500 text-white">
+                    <Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white">
                         Stock Low ({product?.totalStock} left)
                     </Badge>
                 </div>
             )}
             {isStockLow && isStockLowCritical && (
                 <div className="mb-4">
-                    <Badge className="text-sm bg-red-500 text-white">
+                    <Badge className="text-sm bg-red-500 hover:bg-red-700 text-white">
                         Stock Critical ({product?.totalStock} left)
                     </Badge>
                 </div>

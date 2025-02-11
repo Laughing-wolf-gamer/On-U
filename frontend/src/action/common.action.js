@@ -13,6 +13,15 @@ import {
     FETCH_DISCLAIMERS_REQUEST,
     FETCH_DISCLAIMERS_SUCCESS,
     FETCH_DISCLAIMERS_FAIL,
+	FETCH_TERMS_AND_CONDITIONS,
+	FETCH_TERMS_AND_CONDITIONS_SUCCESS,
+	FETCH_TERMS_AND_CONDITIONS_FAIL,
+	FETCH_PRIVACY_AND_POLICY_FAIL,
+	FETCH_PRIVACY_AND_POLICY_SUCCESS,
+	FETCH_PRIVACY_AND_POLICY,
+	FETCH_FAQS_SUCCESS,
+	FETCH_FAQS_FAIL,
+	FETCH_FAQS,
 } from '../const/common.const'
 import { BASE_API_URL } from '../config'
 
@@ -37,6 +46,40 @@ export const fetchWebsiteDisclaimer = () => async (dispatch) => {
     } catch (error) {
         console.error("Error fetching website disclaimer: ",error);
         dispatch({ type: FETCH_DISCLAIMERS_FAIL, payload: error.response.data.message })
+    }
+}
+export const fetchTermsAndCondition = ()=> async(dispatch)=>{
+	try {
+        dispatch({ type: FETCH_TERMS_AND_CONDITIONS })
+        const { data } = await axios.get(`${BASE_API_URL}/api/common/website/terms-and-condition`);
+        console.log("Terms and Condition: ",data);
+        dispatch({ type: FETCH_TERMS_AND_CONDITIONS_SUCCESS, payload: data.result})
+    } catch (error) {
+        console.error("Error fetching terms and conditions: ",error);
+        dispatch({ type: FETCH_TERMS_AND_CONDITIONS_FAIL, payload: error.response.data.message })
+    }
+}
+
+export const fetchPrivacyAndPolicy = ()=> async(dispatch)=>{
+	try {
+		dispatch({ type: FETCH_PRIVACY_AND_POLICY })
+        const { data } = await axios.get(`${BASE_API_URL}/api/common/website/privacy-policy`);
+        console.log("Privacy and Policy: ",data);
+        dispatch({ type: FETCH_PRIVACY_AND_POLICY_SUCCESS, payload: data.result})
+    } catch (error) {
+        console.error("Error fetching privacy and policy: ",error);
+        dispatch({ type: FETCH_PRIVACY_AND_POLICY_FAIL, payload: error.response.data.message })
+    }
+}
+export const fetchFAQ = ()=> async(dispatch)=>{
+	try {
+		dispatch({ type: FETCH_FAQS })
+        const { data } = await axios.get(`${BASE_API_URL}/api/common/website/faqs`);
+        console.log("FAQs: ",data);
+        dispatch({ type: FETCH_FAQS_SUCCESS, payload: data.result })
+    } catch (error) {
+        console.error("Error fetching FAQs: ",error);
+        dispatch({ type: FETCH_FAQS_FAIL, payload: error.response.data.message })
     }
 }
 export const sendGetCoupon = ({fullName,email})=> async(dispatch)=>{

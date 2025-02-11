@@ -14,7 +14,7 @@ import { getwishlist } from '../../action/orderaction';
 import ProductCardSkeleton from './ProductCardSkeleton';
 import { ChevronRight } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
-
+import Loader from '../Loader/Loader';
 
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
@@ -222,6 +222,15 @@ const Allproductpage = ({user}) => {
         </div>
     );
 };
+/*  <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-12 2xl:gap-14 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                    {Array(10).fill(0).map((_, index) => (
+                                        <li key={`productId_Skeleton_${index}`} className="w-full">
+                                            <ProductCardSkeleton/>
+                                        </li>
+                                    ))}
+                                </ul>
+                            </div> */
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     const [openView,setOpenView] = useState(false);
     return (

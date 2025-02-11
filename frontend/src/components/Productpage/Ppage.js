@@ -21,7 +21,6 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext'
 import toast from 'react-hot-toast'
 import StarRatingInput from './StarRatingInput'
 import ShareView from './ShareView'
-import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 
@@ -516,7 +515,7 @@ const Ppage = () => {
                                                 <div key={`size_${index}_${active._id}`} className='w-fit h-fit p-1'>
                                                     <div
                                                         style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
-                                                        className={`flex flex-col w-10 h-10 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
+                                                        className={`flex flex-col w-14 h-14 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
                                                         ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                         title={active?.quantity || active?.label || "Size"}
@@ -524,8 +523,8 @@ const Ppage = () => {
                                                     {
                                                         active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
                                                     }
-                                                    <button className="w-full h-full rounded-full flex items-center text-base font-bold justify-center">
-                                                        <span className='p-4'>
+                                                    <button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
+                                                        <span className='m-2'>
                                                             {active.label}
                                                         </span>
                                                     </button>
@@ -607,31 +606,14 @@ const Ppage = () => {
                                     </div>
 									<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
 										{
-											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 ? product?.delivaryPoints.map((point,index)=>{
+											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
 												return(
 													<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-left justify-start">
 														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
 														<h1 className="text-gray-500">{point}</h1>
 													</div>
 												)
-											}):(
-												<Fragment>
-													<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
-														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-														<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-													</div>
-
-													<div className="w-full flex flex-row items-center space-x-2 justify-start">
-														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-														<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-													</div>
-
-													<div className="w-full flex flex-row items-center space-x-2 justify-start">
-														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
-														<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-													</div>
-												</Fragment>
-											)
+											})
 										}
 									</div>
                                 </div>
@@ -968,7 +950,7 @@ const NewLeftSideImageContent = ({
                         <ShareView/>
                     </div>
                 ) : (
-                    <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={200}/>
+                    <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={110}/>
                 )
             }
         </div>
