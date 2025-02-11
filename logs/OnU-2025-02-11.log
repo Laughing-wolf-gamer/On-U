@@ -1,2 +1,112 @@
 2025-02-10T20:08:53.026Z error: Error Getting Products: Cast to ObjectId failed for value "aisjdfijasidjf" (type string) at path "_id" for model "product"
 2025-02-10T20:08:53.026Z error: Error Getting Products: Cast to ObjectId failed for value "aisjdfijasidjf" (type string) at path "_id" for model "product"
+2025-02-11T15:20:48.299Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:20:48.299Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:20:48.311Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:20:48.311Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:20:48.315Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:20:48.315Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:20:58.330Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:20:58.330Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:22.119Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:22.119Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:22.128Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:22.133Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:22.128Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:22.133Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:32.145Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:32.145Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:32.682Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:32.682Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:32.685Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:32.685Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:32.689Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:32.689Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:33.998Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:33.998Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:34.000Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:34.000Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:34.001Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:34.001Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:34.862Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:34.862Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:24:34.863Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:34.865Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:34.863Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:34.865Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:24:44.875Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:24:44.875Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:17.454Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:17.454Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:17.466Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:17.466Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:17.471Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:17.471Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:27.478Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:27.478Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:42.126Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:42.126Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:42.128Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:42.128Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:42.131Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:42.131Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:43.365Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:43.365Z error: Error getting Coupons:  Operation `coupons.find()` buffering timed out after 10000ms - MongooseError: Operation `coupons.find()` buffering timed out after 10000ms
+    at Timeout._onTimeout (D:\Github-Proj\On-U\node_modules\mongoose\lib\drivers\node-mongodb-native\collection.js:188:23)
+    at listOnTimeout (node:internal/timers:594:17)
+    at process.processTimers (node:internal/timers:529:7)
+2025-02-11T15:27:43.367Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:43.367Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:43.370Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:43.370Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-11T15:27:53.389Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:27:53.389Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:28:39.381Z error: Error Fetching Products: Operation `products.find()` buffering timed out after 10000ms
+2025-02-11T15:28:39.381Z error: Error Fetching Products: Operation `products.find()` buffering timed out after 10000ms
+2025-02-11T15:28:39.396Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-11T15:28:39.396Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms

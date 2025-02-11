@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from 'react'
 import EmptyBag from './Emptybag';
 import { calculateDiscountPercentage, formattedSalePrice } from '../../config';
-import { Minus, Plus, X } from 'lucide-react';
+import { Minus, Plus, Trash, X } from 'lucide-react';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import CouponsDisplay from './CouponDisplay';
@@ -60,22 +60,22 @@ const OfflineBagContent = ({
 				<div>
 					<NavigationBar showPayment={showPayment} selectedAddress={selectedAddress} />
 					<div className="flex flex-col lg:flex-row gap-12 mt-12">
-					<ProductListing
-						sessionBagData={sessionBagData}
-						updateQty={updateQty}
-						handleDeleteBag={handleDeleteBag}
-					/>
-					<PriceDetails
-						sessionBagData={sessionBagData}
-						bag={bag}
-						totalGst = {totalGst}
-						totalSellingPrice={totalSellingPrice}
-						discountedAmount={discountedAmount}
-						totalProductSellingPrice={totalProductSellingPrice}
-						convenienceFees={convenienceFees}
-						navigation={navigation}
-					/>
-				</div>
+						<ProductListing
+							sessionBagData={sessionBagData}
+							updateQty={updateQty}
+							handleDeleteBag={handleDeleteBag}
+						/>
+						<PriceDetails
+							sessionBagData={sessionBagData}
+							bag={bag}
+							totalGst = {totalGst}
+							totalSellingPrice={totalSellingPrice}
+							discountedAmount={discountedAmount}
+							totalProductSellingPrice={totalProductSellingPrice}
+							convenienceFees={convenienceFees}
+							navigation={navigation}
+						/>
+					</div>
 				</div>
 			) : (
 				<Fragment>
@@ -131,74 +131,64 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 				const validImage = getImageExtensionsFile();
 				return(
 					(
-						<div key={i} className="flex flex-col sm:flex-row items-center border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
-							{/* Product Image */}
-							<div className="w-fit h-28 sm:w-40 sm:h-40 relative bg-black border-2 rounded-lg">
-								<Link to={`/products/${active.ProductData?._id}`} className="block bg-black w-full h-full">
-									<img
-										src={validImage?.url}
-										alt={active?.ProductData?.title}
-										className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-									/>
-								</Link>
-								{/* Delete Button on the Image */}
-								<div
-									className="absolute top-[-10px] shadow-sm right-[-10px] text-white-700 bg-black p-1 text-white rounded-full cursor-pointer sm:hidden"
+						<div key={i} className="flex flex-col items-center border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
+							<div key={i} className="flex flex-row w-full justify-between items-start border-b py-6 space-y-4 sm:space-x-8 sm:space-y-0">
+								<div className='w-fit flex flex-row justify-start items-start space-x-4'>
+									<div className="w-fit h-28 sm:w-40 sm:h-40 relative bg-black border-2 rounded-lg flex-shrink-0">
+										<Link to={`/products/${active?.ProductData?._id}`} className="block bg-black w-full h-full">
+											<img
+												src={validImage?.url}
+												alt={active?.ProductData?.shortTitle}
+												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+											/>
+										</Link>
+									</div>
+									<div className="flex-1 space-y-2 text-left sm:text-left">
+										<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800">{active?.ProductData?.title}</h3>
+										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
+										<div className="flex items-center justify-center sm:justify-start space-x-4 text-xs sm:text-sm lg:text-base text-blue-500 mt-2">
+											{active?.ProductData?.salePrice ? (
+												<Fragment>
+													<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
+													<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(active.ProductData.price))}</span>
+													<span className="text-gray-700">({calculateDiscountPercentage(active.ProductData?.price, active.ProductData?.salePrice)}% OFF)</span>
+												</Fragment>
+											) : (
+												<span>₹ {Math.round(formattedSalePrice(active.ProductData.price))}</span>
+											)}
+										</div>
+
+										{/* Quantity Selector */}
+										<div className="mt-4 flex w-fit items-center space-x-4 shadow-full rounded-full border-gray-700 border">
+											<div className="flex items-center space-x-2 justify-between">
+												<button
+													onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
+													className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
+													disabled={active?.quantity <= 1}
+												>
+													<Minus strokeWidth={3} />
+												</button>
+												<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
+												<button
+													onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
+													className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
+													disabled={active?.quantity >= active?.size?.quantity}
+												>
+													<Plus strokeWidth={3} />
+												</button>
+											</div>
+										</div>
+									</div>
+								</div>
+								<Trash
+									className="text-xl text-gray-900 hover:text-gray-500 cursor-pointer mt-4 sm:mt-0"
 									onClick={(e) => {
-										e.stopPropagation();
-										handleDeleteBag(active.ProductData._id, active._id)
+										handleDeleteBag(active.ProductData._id, active._id);
 									}}
-								>
-									<X size={15}/>
-								</div>
+								/>
 							</div>
-
-							{/* Product Details */}
-							<div className="flex-1 space-y-2">
-								<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800">{active?.ProductData?.title}</h3>
-								<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
-								<div className="flex items-center space-x-4 text-xs sm:text-sm lg:text-base text-blue-500 mt-2">
-									{active?.ProductData?.salePrice ? (
-										<Fragment>
-											<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
-											<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(active.ProductData.price))}</span>
-											<span className="text-gray-700">({calculateDiscountPercentage(active.ProductData?.price, active.ProductData?.salePrice)}% OFF)</span>
-										</Fragment>
-									) : (
-										<span>₹ {Math.round(formattedSalePrice(active.ProductData.price))}</span>
-									)}
-								</div>
-							</div>
-
-							{/* Quantity Selector */}
-							<div className="mt-4 flex items-center space-x-4 shadow-full rounded-lg border-gray-700 border p-3">
-								<div className="flex items-center space-x-2 justify-between">
-									<button
-										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={active?.quantity <= 1}
-									>
-										<Minus strokeWidth={3} />
-									</button>
-									<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
-									<button
-										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-										className="h-10 w-10 px-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={active?.quantity >= active?.size?.quantity}
-									>
-										<Plus strokeWidth={3} />
-									</button>
-								</div>
-							</div>
-
-							{/* Delete Button */}
-							<X
-								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-								onClick={(e) => {
-									handleDeleteBag(active.ProductData._id, active._id);
-								}}
-							/>
 						</div>
+
 
 					)
 				)

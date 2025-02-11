@@ -486,6 +486,20 @@ export const updateColorName = async(req,res)=>{
 		if(!updatedOption){
 			return res.status(404).json({ message: 'Option not found' });
 		}
+		const allProductsUpdate = await ProductModel.updateMany(
+			{},  // Empty filter to match all products
+			{ 
+				$set: {
+				"AllColors.$[elem].name": name  // Update the name of the matching label
+				}
+			},
+			{
+				arrayFilters: [
+				{ "elem.label": value }  // Specify the label to match (e.g., "color")
+				]
+			}
+		);
+		console.log("Updated Products: ",allProductsUpdate);
 		res.status(200).json({ Success:true,message: 'Color Option updated successfully', result: updatedOption });
     } catch (error) {
         console.error(`Error updating color name`, error);

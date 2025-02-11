@@ -12,7 +12,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 		setSelectedColorArray(selectedColorArray.map((s) => s.id === color.id ? {...s, images:allImages } : s));
 		if (OnChange) {
 			OnChange(selectedColorArray);
-			console.log("Color Images Image Urls:  ",selectedColorArray);
+			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 		
 	}
@@ -45,7 +45,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 		// console.log("Selected Size Array: ",selectedSizeArray);
 		if (OnChange) {
 			OnChange(selectedColorArray);
-			console.log("Color Images Image Urls:  ",selectedColorArray);
+			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	};
 
@@ -67,7 +67,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 		}
 		if (OnChange) {
 			OnChange(selectedColorArray);
-			console.log("Color Images Image Urls:  ",selectedColorArray);
+			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	};
 	const changeColorLabel = (id,label,name) =>{
@@ -76,7 +76,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 		setSelectedColorArray(selectedColorArray.map((s) => s.id === id ? {...s, label:label ,name:name} : s));
 		if (OnChange) {
 			OnChange(selectedColorArray);
-			console.log("Color Images Image Urls:  ",selectedColorArray);
+			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	}
 	useEffect(()=>{
@@ -187,12 +187,12 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 											key={option.id}
 											value={option.label}
 											style={{
-											backgroundColor: option.label, // Set background color to the hex value
-											color: option.label === '#ffffff' ? 'black' : 'white', // Adjust text color for readability
+												backgroundColor: option.label, // Set background color to the hex value
+												color: option.label === '#ffffff' ? 'black' : 'white', // Adjust text color for readability
 											}}
 										>
 											<div className="w-full h-full p-1 flex items-center justify-center rounded-full">
-											{option?.name || option?.label}
+												{option?.name || option?.label}
 											</div>
 										</option>
 										))}
