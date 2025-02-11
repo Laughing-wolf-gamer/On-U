@@ -1,10 +1,11 @@
-import { setPrivacyPolicyWebsite } from "@/store/common-slice";
+import { fetchFAQSWebstis, fetchPrivacyPolicyWebsite, setPrivacyPolicyWebsite } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-toastify";
 
 const AdminPrivacyPolicyPage = () => {
 	const dispatch = useDispatch();
+	const{privacyPolicy} = useSelector(state => state.common);
     const [formData, setFormData] = useState({
         effectiveDate: "",
         introduction: "",
@@ -39,7 +40,7 @@ const AdminPrivacyPolicyPage = () => {
 
     useEffect(() => {
         // Simulate fetching data (for editing purposes)
-        const fetchedData = {
+        /* const fetchedData = {
 			effectiveDate: "January 16, 2025",
 			introduction: "Welcome to ON-U. This Privacy Policy explains how we collect, use, and protect your personal information when you visit our website or use our services. By using our services, you agree to the terms of this Privacy Policy.",
 			informationCollect: "We collect various types of information, including: Personal Information: When you register or make a purchase, we collect personal details such as your name, email address, shipping address, and payment information. Usage Information: We collect information about your browsing activities, such as your IP address, browser type, and pages visited. Cookies: We use cookies to improve your experience and analyze how our website is used.",
@@ -55,15 +56,23 @@ const AdminPrivacyPolicyPage = () => {
 			businessAddress: "123 ON-U Street, City, Country"
         };
 
-        setFormData(fetchedData);
+        setFormData(fetchedData); */
+		dispatch(fetchPrivacyPolicyWebsite());
     }, []);
-
+	useEffect(()=>{
+		// Check if privacy policy has been updated and display a notification if so
+        if(privacyPolicy){
+            // toast.info("Your privacy policy has been updated");
+			setFormData(privacyPolicy);
+        }
+	},[dispatch,privacyPolicy])
+	console.log("Fetched Dat: ",privacyPolicy);
     return (
-        <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="w-full mx-auto px-6 py-12">
         <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
             Admin Privacy Policy Editor
         </h1>
-        <form onSubmit={handleSubmit} className="space-y-8">
+        <form onSubmit={handleSubmit} className="space-y-8 px-3">
             {/* Effective Date */}
             <div className="space-y-2">
             <label className="text-lg font-medium text-gray-800" htmlFor="effectiveDate">

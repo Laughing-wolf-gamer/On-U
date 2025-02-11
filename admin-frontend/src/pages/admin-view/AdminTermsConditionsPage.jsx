@@ -1,8 +1,9 @@
 import { fetchTermsAndCondition, setTermsAndCondition } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 const AdminTermsConditionsPage = () => {
+	const{termsAndCondition} = useSelector(state => state.common);
 	const dispatch = useDispatch();
     const [formData, setFormData] = useState({
         effectiveDate: "",
@@ -39,30 +40,17 @@ const AdminTermsConditionsPage = () => {
     };
 
     useEffect(() => {
-        // Simulate fetching data (for editing purposes)
-        const fetchedData = {
-			effectiveDate: "January 16, 2025",
-			acceptanceOfTerms: "By accessing or using the ON-U website (the 'Site'), you agree to comply with and be bound by these Terms and Conditions, including any future amendments. If you do not agree with any part of these terms, please discontinue using the website.",
-			useOfWebsite: "Eligibility: You must be at least 18 years old to use the services on ON-U. If you are under 18, you may use the Site only with the consent and involvement of a parent or legal guardian. Account Responsibility: You are responsible for maintaining the confidentiality of your account information. Prohibited Activities: You agree not to: Use the Site for any unlawful purpose. Attempt to interfere with the Site’s operation or security. Violate any applicable laws.",
-			productsAndPricing: "Product Descriptions: ON-U strives to provide accurate descriptions of products, but we do not guarantee that product descriptions, pricing, or availability are free from errors. Pricing: Prices on the Site may change without notice. All prices listed are in [currency], and applicable taxes or shipping fees will be added at checkout.",
-			ordersAndPayments: "Order Confirmation: Once an order is placed, you will receive an email confirmation. This email does not constitute an acceptance of your order. Payment Methods: We accept various payment methods, including [credit cards, PayPal, etc.]. Order Cancellation: ON-U reserves the right to cancel orders for any reason, including fraud prevention or errors in product availability or pricing.",
-			shippingAndDelivery: "Shipping Rates: Shipping rates are calculated at checkout based on the delivery address and product weight/size. Delivery Times: Estimated delivery times are provided but are not guaranteed. Damaged or Lost Items: In the case of a damaged or lost item, please contact customer service within [timeframe] to report the issue.",
-			returnsAndRefunds: "Return Policy: ON-U accepts returns for most products within [X] days of delivery, provided the item is unused and in its original packaging. Refunds: Refunds will be processed to the original payment method after the returned product is inspected. Shipping costs are non-refundable. Exempt Items: Some products may be non-returnable, including but not limited to personalized or perishable items.",
-			privacyAndDataProtection: "ON-U respects your privacy and is committed to protecting your personal data. Please refer to our Privacy Policy for details on how we handle your information.",
-			intellectualProperty: "Ownership: The content, design, and logos on ON-U are owned by ON-U or its licensors and are protected by copyright and trademark laws. Limited License: You are granted a limited, non-exclusive, non-transferable license to access and use the Site for personal use, subject to these Terms and Conditions.",
-			indemnification: "You agree to indemnify and hold ON-U, its affiliates, officers, and employees harmless from any claims, losses, liabilities, or expenses arising from your use of the Site or violation of these Terms and Conditions.",
-			governingLawAndDispute: "Governing Law: These Terms and Conditions are governed by the laws of [Jurisdiction]. Dispute Resolution: Any disputes arising under these terms will be resolved through binding arbitration or in the courts of [Jurisdiction], depending on your location.",
-			modificationsToTerms: "ON-U reserves the right to update or modify these Terms and Conditions at any time. Any changes will be posted on this page, and the 'Effective Date' will be updated accordingly.",
-			contactInfo: "For any questions or concerns about these Terms and Conditions, please contact us at:",
-			phoneNumber: "(123) 456-7890",
-			businessAddress: "123 ON-U Street, City, Country"
-        };
-
-        setFormData(fetchedData);
+		dispatch(fetchTermsAndCondition());
     }, []);
+	useEffect(()=>{
+		if(termsAndCondition){
+			setFormData(termsAndCondition)
+		}
+	},[dispatch,termsAndCondition])
+	console.log("Fetched Dat: ",formData);
 
     return (
-        <div className="max-w-7xl mx-auto px-6 py-12">
+        <div className="w-full mx-auto px-6 py-12">
             <h1 className="text-3xl font-extrabold text-gray-900 mb-8">
                 Admin Terms & Conditions Editor
             </h1>

@@ -38,7 +38,7 @@ const AdminFAQPage = () => {
 	console.log("FAQ Webstis: ",faqsWebsite);
 
 	return (
-		<div className="max-w-4xl mx-auto mt-10 p-5 bg-white shadow-lg rounded-lg">
+		<div className="w-full mx-auto mt-10 p-5 bg-white shadow-lg rounded-lg">
 		<h2 className="text-2xl font-semibold mb-4">FAQ Admin Dashboard</h2>
 
 		{/* FAQ Form */}
@@ -53,7 +53,7 @@ const AdminFAQPage = () => {
 					value={question}
 					onChange={(e) => setQuestion(e.target.value)}
 					placeholder="Enter your question"
-					className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+					className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500"
 				/>
 			</div>
 
@@ -67,13 +67,13 @@ const AdminFAQPage = () => {
 					onChange={(e) => setAnswer(e.target.value)}
 					placeholder="Enter the answer"
 					rows="4"
-					className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+					className="w-full mt-1 p-2 border rounded-md shadow-sm focus:ring-gray-500 focus:border-gray-500"
 				/>
 			</div>
 
 			<button
 				type="submit"
-				className="w-full mt-4 bg-indigo-600 text-white py-2 px-4 rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+				className="w-full mt-4 bg-gray-600 text-white py-2 px-4 rounded-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
 			>
 			Add FAQ
 			</button>
