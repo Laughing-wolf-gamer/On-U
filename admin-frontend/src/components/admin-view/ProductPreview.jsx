@@ -156,7 +156,7 @@ const ProductPreview = ({
                                         rows={4}
                                         value={productData?.description}
                                         placeholder='Enter product description'
-                                        onChange={(e) => handleInputChange(e, 'descriptions')}
+                                        onChange={(e) => handleInputChange(e, 'description')}
                                         className="text-lg w-2/3 font-medium text-gray-600 border-2"
                                     />
                                 ) : (
