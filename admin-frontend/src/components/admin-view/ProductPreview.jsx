@@ -496,8 +496,10 @@ const ProductPreview = ({
             />
         </div>
     );
-	
-    return <div className="container mx-auto w-screen p-6">{showPopUp && renderPopUpContent()}</div>;
+	if(!showPopUp){
+		return null;
+	}
+    return <div className="container mx-auto w-screen p-6">{renderPopUpContent()}</div>;
 };
   
 const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
