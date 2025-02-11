@@ -299,9 +299,9 @@ const AdminOptions = () => {
 									<span className='font-sans'>{item?.value}</span>
 									<button
 										onClick={() => handleRemoveOption('category', item)}
-										className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+										className="p-2  text-black rounded-md  transition duration-300"
 									>
-										Remove
+										<Trash/>
 									</button>
 								</li>
 							))}
@@ -339,9 +339,9 @@ const AdminOptions = () => {
 									<span className='font-sans'>{item?.value}</span>
 									<button
 										onClick={() => handleRemoveOption('subcategory', item)}
-										className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition-all duration-300"
+										className="p-2  text-black rounded-md  transition-all duration-300"
 									>
-									Remove
+									<Trash/>
 									</button>
 								</li>
 							))}
@@ -379,9 +379,9 @@ const AdminOptions = () => {
 										<span className="font-sans">{item?.value}</span>
 										<button
 										onClick={() => handleRemoveOption('gender', item)}
-										className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+										className="p-2  text-black rounded-md  transition duration-300"
 										>
-										Remove
+										<Trash/>
 										</button>
 									</li>
 								))}
@@ -420,9 +420,9 @@ const AdminOptions = () => {
 									<span className='font-sans'>{item?.value}</span>
 									<button
 									onClick={() => handleRemoveOption('clothingSize', item)}
-									className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+									className="p-2 text-black rounded-md transition duration-300"
 									>
-									Remove
+									<Trash/>
 									</button>
 								</li>
 								))}
@@ -458,9 +458,9 @@ const AdminOptions = () => {
 								<span className="font-sans">{item?.value}</span>
 								<button
 									onClick={() => handleRemoveOption('footWearSize', item)}
-									className="p-2 bg-red-500 text-white rounded-md hover:bg-red-600 transition duration-300"
+									className="p-2  text-black rounded-md  transition duration-300"
 								>
-									Remove
+									<Trash/>
 								</button>
 							</li>
 						))}
