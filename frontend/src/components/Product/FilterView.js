@@ -33,7 +33,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // Generate category, gender, color, and price arrays
     const categoriesarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => AllProductsCategory.push(p.category));
+            product.forEach(p => {
+				if(!AllProductsCategory.includes(p.category)){
+					AllProductsCategory.push(p.category)
+				}
+			});
         }
     };
     function SetOnSale (){
@@ -78,14 +82,22 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     };
     const subcategoryarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => AllProductsSubcategory.push(p.subCategory));
+            product.forEach(p => {
+				if(!AllProductsSubcategory.includes(p.subCategory)){
+					AllProductsSubcategory.push(p.subCategory)
+				}
+			});
         }
     };
 
 
     const genderarray = () => {
         if (product && product.length > 0) {
-            product.forEach(p => AllProductsGender.push(p.gender));
+            product.forEach(p => {
+				if(!AllProductsGender.includes(p.gender)){
+					AllProductsGender.push(p.gender)
+				}
+			});
         }
     };
     function sizearray() {
@@ -543,7 +555,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
     }
-    console.log("All Colors: ",AllProductsColor);
+    console.log("All gendernewarray: ",gendernewarray);
     
 
     return (
@@ -574,7 +586,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    {e?.length > 20 ? e.slice(0,5) : e} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
