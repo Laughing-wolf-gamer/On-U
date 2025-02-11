@@ -28,6 +28,7 @@ import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import BackToTopButton from '../Home/BackToTopButton';
 import { IoIosCopy, IoIosRibbon, IoLogoWhatsapp } from 'react-icons/io';
 import { RiSecurePaymentFill } from "react-icons/ri";
+import { IoShieldCheckmarkSharp } from "react-icons/io5";
 const reviews = [
     {
         rating: 5,
@@ -661,25 +662,26 @@ const MPpage = () => {
                             </div>
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
-								<div className="col-span-1 text-center text-xs text-slate-500">
-									<img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
+								<div className="col-span-1 text-center text-xs text-slate-700">
+									{/* <img src={img1} alt="Product_images" className='w-[75px] mx-auto' /> */}
+									<IoShieldCheckmarkSharp color='black' size={75} className='w-[75px] mx-auto'/>
 									Genuine Products
 								</div>
-								<div className="col-span-1 text-center text-xs text-slate-500">
+								<div className="col-span-1 text-center text-xs text-slate-700">
 									{/* <img src={img2} alt="Product_images" className='w-[75px] mx-auto' /> */}
-									<IoIosRibbon size={75} className='w-[75px] mx-auto'/>
+									<IoIosRibbon color='black' size={75} className='w-[75px] mx-auto'/>
 									7 step Quality Check
 								</div>
-								<div className="col-span-1 text-center text-xs text-slate-500">
+								<div className="col-span-1 text-center text-xs text-slate-700">
 									{/* <img src={img3} alt="Product_images" className='w-[75px] mx-auto' /> */}
-									<RiSecurePaymentFill size={75} className='w-[75px] mx-auto'  />
+									<RiSecurePaymentFill color='black' size={75} className='w-[75px] mx-auto'  />
 									Secure Payments
 								</div>
                             </div>
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
                             <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
-                            <li className='list-none mt-2'>Product Code:&nbsp;{product?.style_no?.toUpperCase()}</li>
+                            <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>
                             <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || ""}</span></li>
                             </div>
 
