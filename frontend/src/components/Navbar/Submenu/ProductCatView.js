@@ -51,37 +51,38 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 	};
   
 	const getGenderCategories = (gender) => productsOptions.find((p) => p.Gender === gender)?.category || [];
-  
+	console.log("memoizedProductsOptions: ",memoizedProductsOptions);
+	if(!memoizedProductsOptions || memoizedProductsOptions.length <= 0) return null;
 	return (
 		<Fragment>
 			<div className={`w-[100%] font-kumbsan h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
 			{transitions((styles, item) =>
 				item && (
-				<animated.div style={styles}>
-					<div
-					className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-neutral-100`}
-					onMouseEnter={() => parentCallback('block', true)}
-					onMouseLeave={() => parentCallback('hidden', false)}
-					>
-					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
-						{['Men', 'Women', 'Kids'].map((gender) => {
-						const categories = getGenderCategories(gender);
-						return (
-							categories.length > 0 && (
-							<div key={gender} className="h-fit">
-								<CategorySection
-								title={gender}
-								categories={categories}
-								parentCallback={parentCallback}
-								handelSetQuery={handelSetQuery}
-								/>
-							</div>
-							)
-						);
-						})}
-					</div>
-					</div>
-				</animated.div>
+					<animated.div style={styles}>
+						<div
+							className={`container absolute right-10 top-[-30px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-neutral-100`}
+							onMouseEnter={() => parentCallback('block', true)}
+							onMouseLeave={() => parentCallback('hidden', false)}
+						>
+						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
+							{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((gender) => {
+								const categories = getGenderCategories(gender);
+								return (
+									categories.length > 0 && (
+										<div key={gender} className="h-fit">
+											<CategorySection
+												title={gender}
+												categories={categories}
+												parentCallback={parentCallback}
+												handelSetQuery={handelSetQuery}
+											/>
+										</div>
+									)
+								);
+							})}
+						</div>
+						</div>
+					</animated.div>
 				)
 			)}
 			</div>
