@@ -51,7 +51,7 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 	};
   
 	const getGenderCategories = (gender) => productsOptions.find((p) => p.Gender === gender.Gender)?.category || [];
-	console.log("memoizedProductsOptions: ",memoizedProductsOptions);
+	// console.log("memoizedProductsOptions: ",memoizedProductsOptions);
 	if(!memoizedProductsOptions || memoizedProductsOptions.length <= 0) return null;
 	return (
 		<Fragment>
@@ -67,7 +67,6 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
 							{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((genderCurrent,index) => {
 								const categories = getGenderCategories(genderCurrent);
-								console.log("genders Category",categories);
 								return (
 									categories.length > 0 && (
 										<div key={index} className="h-fit">
