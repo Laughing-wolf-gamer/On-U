@@ -36,61 +36,63 @@ const AdminProductTile = ({
             </div>
 
             {/* Title and Price */}
-            <h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 truncate">
-                {product?.title?.length > 20 ? `${product?.title.slice(0, 20)}...` : product?.title}
-            </h2>
-            <div className="flex items-center justify-between mb-4">
-                <span className={`text-lg font-semibold ${product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'}`}>
-                    ₹{formattedSalePrice(product?.price)}
-                </span>
-                {product?.salePrice > 0 && (
-                    <span className="text-red-600 text-xl font-bold">
-                        ₹{formattedSalePrice(product?.salePrice)}
-                    </span>
-                )}
-            </div>
+            <div className='h-full space-y-2 justify-start flex-col flex'>
+				<h2 className="text-xl sm:text-2xl font-semibold text-gray-900 mb-2 truncate">
+					{product?.title?.length > 20 ? `${product?.title.slice(0, 20)}...` : product?.title}
+				</h2>
+				<div className="flex items-center justify-between mb-4">
+					<span className={`text-lg font-semibold ${product?.salePrice > 0 ? 'line-through text-gray-500' : 'text-gray-700'}`}>
+						₹{formattedSalePrice(product?.price)}
+					</span>
+					{product?.salePrice > 0 && (
+						<span className="text-red-600 text-xl font-bold">
+							₹{formattedSalePrice(product?.salePrice)}
+						</span>
+					)}
+				</div>
 
-            {/* Category, SubCategory, Material */}
-            <div className="w-full space-y-2 mb-4">
-                <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 font-medium">Category:</span>
-                    <span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.category)}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 font-medium">SubCategory:</span>
-                    <span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.subCategory)}</span>
-                </div>
-            </div>
+				{/* Category, SubCategory, Material */}
+				<div className="w-full space-y-2 mb-4">
+					<div className="flex items-center justify-between">
+						<span className="text-sm text-gray-600 font-medium">Category:</span>
+						<span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.category)}</span>
+					</div>
+					<div className="flex items-center justify-between">
+						<span className="text-sm text-gray-600 font-medium">SubCategory:</span>
+						<span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.subCategory)}</span>
+					</div>
+				</div>
 
-            {/* Stock Amount Low Indicator */}
-            {isStockLow && !isStockLowCritical && (
-                <div className="mb-4">
-                    <Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white">
-                        Stock Low ({product?.totalStock} left)
-                    </Badge>
-                </div>
-            )}
-            {isStockLow && isStockLowCritical && (
-                <div className="mb-4">
-                    <Badge className="text-sm bg-red-500 hover:bg-red-700 text-white">
-                        Stock Critical ({product?.totalStock} left)
-                    </Badge>
-                </div>
-            )}
+				{/* Stock Amount Low Indicator */}
+				{isStockLow && !isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white">
+							Stock Low ({product?.totalStock} left)
+						</Badge>
+					</div>
+				)}
+				{isStockLow && isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white">
+							Stock Critical ({product?.totalStock} left)
+						</Badge>
+					</div>
+				)}
 
-            {/* View More / Less Button */}
-            <div className="w-full h-fit justify-center items-center flex">
-                <Button
-                    title={"View More"}
-                    onClick={() => {
-                        setOpenProductPreview(product._id);
-                        togglePopUp();
-                    }}
-                    className="text-sm text-white bg-gray-700 hover:bg-gray-800 transition-colors"
-                >
-                    View More
-                </Button>
-            </div>
+				{/* View More / Less Button */}
+				<div className="w-full h-fit justify-center items-center flex">
+					<Button
+						title={"View More"}
+						onClick={() => {
+							setOpenProductPreview(product._id);
+							togglePopUp();
+						}}
+						className="text-sm text-white bg-gray-700 hover:bg-gray-800 transition-colors"
+					>
+						View More
+					</Button>
+				</div>
+			</div>
         </Card>
     );
 };

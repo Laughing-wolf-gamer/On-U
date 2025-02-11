@@ -73,88 +73,96 @@ import DeliveryStatus from './DeliveryStatus';
   
   }; */
 
-
 const OrderCard = ({ order, onViewDetails }) => {
-  console.log("Order: ",order);
-  return (
-    <div onClick={(e)=>{
-      e.preventDefault();
-      onViewDetails(order);
-    }} className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6">
-        {/* Delivery Status Progress Bar */}
-        <div className="w-full flex-wrap  justify-center items-center">
-            <DeliveryStatus status={order?.status} />
-          </div>
-      <div className="flex justify-between items-center space-x-6">
-        <div className="flex-1 space-y-2">
-          <p className="text-gray-700"><strong>Order ID:</strong> {order?._id || 'Not Available'}</p>
-          <p className="text-gray-700"><strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}</p>
-          <p className="text-gray-700"><strong>Order Status:</strong> {order?.status || 'Pending'}</p>
-
-        </div>
-          
-      </div>
-    </div>
-  );
+	return (
+		<div
+		onClick={(e) => {
+			e.preventDefault();
+			onViewDetails(order);
+		}}
+		className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 cursor-pointer hover:shadow-xl transition duration-300"
+		>
+		{/* Delivery Status Progress Bar */}
+		<div className="w-full flex-wrap justify-center items-center">
+			<DeliveryStatus status={order?.status} />
+		</div>
+		<div className="flex justify-between items-center space-x-6">
+			<div className="flex-1 space-y-2">
+			<p className="text-gray-700">
+				<strong>Order ID:</strong> {order?._id || 'Not Available'}
+			</p>
+			<p className="text-gray-700">
+				<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
+			</p>
+			<p className="text-gray-700">
+				<strong>Order Status:</strong> {order?.status || 'Pending'}
+			</p>
+			</div>
+		</div>
+		</div>
+	);
 };
-  
+
 const OrdersReturns = () => {
-  const{allorder,loading:orderLoading} = useSelector(state => state.getallOrders);
-  const navigation = useNavigate();
-  const dispatch = useDispatch();
-  const [selectedOrder, setSelectedOrder] = useState(null);
-  const handleViewDetails = (order) => {
-    setSelectedOrder(order);
-    navigation(`/order/details/${order._id}`);
-  };
+	const { allorder, loading: orderLoading } = useSelector((state) => state.getallOrders);
+	const navigation = useNavigate();
+	const dispatch = useDispatch();
+	const [selectedOrder, setSelectedOrder] = useState(null);
 
-  const handleCloseModal = () => {
-      setSelectedOrder(null);
-  };
-  useEffect(()=>{
-    dispatch(fetchAllOrders());
-  },[dispatch])
-  // console.log("All Order And Returns all Orders: ",allorder);
+	const handleViewDetails = (order) => {
+		setSelectedOrder(order);
+		navigation(`/order/details/${order._id}`);
+	};
+
+	const handleCloseModal = () => {
+		setSelectedOrder(null);
+	};
+
+	useEffect(() => {
+		dispatch(fetchAllOrders());
+	}, [dispatch]);
+
   return (
-    <div className="space-y-6 w-full flex flex-col items-center">
-      <h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
-      {
-        orderLoading ? (
-          // If no orders or loading, show skeletons
-          Array(9)
-            .fill(0)
-            .map((_, index) => <OrderCardSkeleton key={index} />)
-        ):(
-          <Fragment>
-            {allorder && allorder.length > 0 ? (
-                allorder.map((order, index) => (
-                  <OrderCard key={index} order={order} onViewDetails={handleViewDetails}/>
-                ))
-            ) : (
-                <p className="text-gray-500">No orders yet.</p>
-            )}          
-          </Fragment>
-        )
-      }
-    </div>
-  );
+		<div className="space-y-6 w-full flex flex-col items-center px-4 sm:px-6 md:px-8">
+		<h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
+		{orderLoading ? (
+			// If no orders or loading, show skeletons
+			Array(9)
+			.fill(0)
+			.map((_, index) => <OrderCardSkeleton key={index} />)
+		) : (
+			<Fragment>
+			{allorder && allorder.length > 0 ? (
+				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+				{allorder.map((order, index) => (
+					<OrderCard key={index} order={order} onViewDetails={handleViewDetails} />
+				))}
+				</div>
+			) : (
+				<p className="text-gray-500">No orders yet.</p>
+			)}
+			</Fragment>
+		)}
+		</div>
+	);
 };
-const OrderCardSkeleton = () => {
-  return (
-    <div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 animate-pulse">
-      {/* Delivery Status Progress Bar */}
-      <div className="w-full flex-wrap justify-center items-center">
-        <div className="h-6 w-3/4 bg-gray-300 rounded"></div> {/* Placeholder for delivery status progress */}
-      </div>
 
-      <div className="flex justify-between items-center space-x-6">
-        <div className="flex-1 space-y-2">
-          <div className="h-4 bg-gray-300 rounded w-3/4"></div> {/* Order ID placeholder */}
-          <div className="h-4 bg-gray-300 rounded w-1/2"></div> {/* Total items placeholder */}
-          <div className="h-4 bg-gray-300 rounded w-2/3"></div> {/* Order status placeholder */}
-        </div>
-      </div>
-    </div>
-  );
+const OrderCardSkeleton = () => {
+	return (
+		<div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 animate-pulse">
+		{/* Delivery Status Progress Bar */}
+		<div className="w-full flex-wrap justify-center items-center">
+			<div className="h-6 w-3/4 bg-gray-300 rounded"></div>
+		</div>
+
+		<div className="flex justify-between items-center space-x-6">
+			<div className="flex-1 space-y-2">
+			<div className="h-4 bg-gray-300 rounded w-3/4"></div> {/* Order ID placeholder */}
+			<div className="h-4 bg-gray-300 rounded w-1/2"></div> {/* Total items placeholder */}
+			<div className="h-4 bg-gray-300 rounded w-2/3"></div> {/* Order status placeholder */}
+			</div>
+		</div>
+		</div>
+	);
 };
 export default OrdersReturns;

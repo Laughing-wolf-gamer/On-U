@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { ChevronUp, Edit, Eye, FilePenLine, Minus, MinusCircleIcon, Plus, PlusCircleIcon, Shirt, X, XCircle } from 'lucide-react';
+import { ChevronUp, Edit, Eye, FilePenLine, FileWarning, Minus, MinusCircleIcon, Plus, PlusCircleIcon, X } from 'lucide-react';
 import axios from 'axios';
 import { addProductsFromElement, BASE_URL, formattedSalePrice, Header } from '@/config';
 import SizeSelector from './SizeSelector';
@@ -93,45 +93,49 @@ const ProductPreview = ({
     
     const renderPopUpContent = () => (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
-            <div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto">
+		
+            <div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto relative">
+				<X
+					onClick={(e) => {
+						e.preventDefault();
+						togglePopUp();
+						if (setCurrentPreviewProduct) {
+							setCurrentPreviewProduct(null);
+						}
+					}}
+					className="absolute top-2 right-2 w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
+				/>
                 <div className="flex justify-between items-center mb-4">
-                    <div className="flex flex-col gap-2">
-                        <span>ProductId: {productData?.productId}</span>
-                        <h2 className="text-2xl font-bold">
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    value={productData?.title}
-                                    onChange={(e) => handleInputChange(e, 'title')}
-                                    className="text-2xl font-bold"
-                                />
-                            ) : (
-                                `Title: ${productData?.title}`
-                            )}
-                        </h2>
-                        <h3 className="text-xl font-normal">
-                            {isEditing ? (
-                                <input
-                                    type="text"
-                                    value={productData?.shortTitle}
-                                    onChange={(e) => handleInputChange(e, 'shortTitle')}
-                                    className="text-xl font-normal"
-                                />
-                            ) : (
-                                `Short Title: ${productData?.shortTitle}`
-                            )}
-                        </h3>
-                    </div>
-                    <XCircle
-                        onClick={(e) => {
-                            e.preventDefault();
-                            togglePopUp();
-                            if(setCurrentPreviewProduct){
-                                setCurrentPreviewProduct(null);
-                            }
-                        }}
-                    className="w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
-                    />
+                    <div className="relative flex flex-col gap-2">
+						<span>ProductId: {productData?.productId}</span>
+
+						<h2 className="text-2xl font-bold">
+							{isEditing ? (
+							<input
+								type="text"
+								value={productData?.title}
+								onChange={(e) => handleInputChange(e, 'title')}
+								className="text-2xl font-bold"
+							/>
+							) : (
+							`Title: ${productData?.title}`
+							)}
+						</h2>
+
+						<h3 className="text-xl font-normal">
+							{isEditing ? (
+							<input
+								type="text"
+								value={productData?.shortTitle}
+								onChange={(e) => handleInputChange(e, 'shortTitle')}
+								className="text-xl font-normal"
+							/>
+							) : (
+							`Short Title: ${productData?.shortTitle}`
+							)}
+						</h3>
+						</div>
+
                 </div>
                 <div className="flex flex-col w-full space-x-4">
                     <h3 className="font-semibold">All Sizes</h3>
@@ -748,7 +752,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const renderLowQuantityIndicator = (quantity) => {
 		if (isLowQuantity(quantity)) {
 			return (
-				<span className="text-red-500 ml-2" title="Low Quantity">
+				<span className="text-red-500 ml-2 hover:animate-bounce" title="Low Quantity">
 					⚠️
 				</span>
 			);

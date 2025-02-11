@@ -222,7 +222,7 @@ const AdminProducts = () => {
                 const data = await dispatch(addNewProduct({ ...formData }));
                 if (!data?.payload?.Success) {
                     // toast.error(`Error: ${data?.payload?.message}`);
-                    throw new Error(`Error: ${data?.payload?.message}`);
+                    throw new Error(`Fill All Fields ${data?.payload?.message}`);
                 }
                 setOpenCreateProduct(false);
                 setUploadedImageUrls([]);
@@ -548,71 +548,75 @@ const PaginatedProductList = ({
     togglePopUp,
     setCurrentPreviewProduct
   }) => {
-    // Calculate the total number of pages
-    const totalPages = Math.ceil(totalProducts / maxAmountPerPage);
-  
-    // Slice the products for the current page
-    const startIndex = (currentPage - 1) * maxAmountPerPage;
-    const endIndex = startIndex + maxAmountPerPage;
-    const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
-  
-    return (
-      <div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-        <ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
-          {currentPageProducts.length > 0 ? (
-            currentPageProducts.map((product, i) => (
-              <AdminProductTile
-                key={`products_${i}`}
-                togglePopUp={togglePopUp}
-                setOpenProductPreview={setCurrentPreviewProduct}
-                product={product}
-              />
-            ))
-          ) : (
-            <p>No Products found for the selected filter.</p>
-          )}
-        </ul>
-  
-        <div className="font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-row items-center w-full justify-center space-x-3 mt-6">
-          {/* Pagination Info */}
-          <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
-            Page {currentPage} of {totalPages}
-          </span>
-  
-          {/* Previous Button */}
-          {currentPage === 1 ? (
-            ""
-          ) : (
-            <button
-              className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
-              onClick={() => {
-                setCurrentPage(currentPage - 1);
-                setCurrentPageNo(currentPage - 1);
-              }}
-            >
-              <ChevronLeft />
-              <h1>Previous</h1>
-            </button>
-          )}
-  
-          {/* Next Button */}
-          {currentPage === totalPages ? (
-            ""
-          ) : (
-            <button
-              className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
-              onClick={() => {
-                setCurrentPage(currentPage + 1);
-                setCurrentPageNo(currentPage + 1);
-              }}
-            >
-              <h1>Next</h1>
-              <ChevronRight />
-            </button>
-          )}
-        </div>
-      </div>
-    );
+	// Calculate the total number of pages
+	const totalPages = Math.ceil(totalProducts / maxAmountPerPage);
+
+	// Slice the products for the current page
+	const startIndex = (currentPage - 1) * maxAmountPerPage;
+	const endIndex = startIndex + maxAmountPerPage;
+	const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
+
+	return (
+	<div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+		<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
+			Total Products: {totalProducts}
+		</h1>
+		<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
+			{currentPageProducts.length > 0 ? (
+			currentPageProducts.map((product, i) => (
+				<AdminProductTile
+				key={`products_${i}`}
+				togglePopUp={togglePopUp}
+				setOpenProductPreview={setCurrentPreviewProduct}
+				product={product}
+				/>
+			))
+			) : (
+			<p className="col-span-full text-center text-gray-500">No Products found for the selected filter.</p>
+			)}
+		</ul>
+
+		<div className="font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center w-full justify-center space-y-3 sm:space-y-0 sm:space-x-3 mt-6">
+			{/* Pagination Info */}
+			<span className="text-sm text-gray-500 sm:absolute sm:left-0 sm:text-base">
+			Page {currentPage} of {totalPages}
+			</span>
+
+			{/* Previous Button */}
+			{currentPage === 1 ? (
+			""
+			) : (
+			<button
+				className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
+				onClick={() => {
+				setCurrentPage(currentPage - 1);
+				setCurrentPageNo(currentPage - 1);
+				}}
+			>
+				<ChevronLeft />
+				<h1>Previous</h1>
+			</button>
+			)}
+
+			{/* Next Button */}
+			{currentPage === totalPages ? (
+			""
+			) : (
+			<button
+				className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
+				onClick={() => {
+				setCurrentPage(currentPage + 1);
+				setCurrentPageNo(currentPage + 1);
+				}}
+			>
+				<h1>Next</h1>
+				<ChevronRight />
+			</button>
+			)}
+		</div>
+		</div>
+
+	);
   };
   
 

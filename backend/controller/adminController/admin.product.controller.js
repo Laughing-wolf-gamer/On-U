@@ -319,11 +319,11 @@ export const addNewProduct = async (req, res) => {
             price,
             salePrice,
             Rating,
-            width,
-            height,
-            length,
-            weight,
-            breadth,
+            Width,
+            Height,
+            Length,
+            Weight,
+            Breadth,
         } = req.body;
 
         // Log incoming data for debugging
@@ -406,11 +406,11 @@ export const addNewProduct = async (req, res) => {
             totalStock,
             AllColors: AllColors,
             Rating: Rating && Rating.length > 0 ? [Rating] : [],
-            width,
-            height,
-            length,
-            weight,
-            breadth,
+            width:Width,
+            height:Height,
+            length:Length,
+            weight:Weight,
+            breadth:Breadth,
         });
 
         if (!newProduct) return res.status(400).json({ Success: false, message: "Product not created", result: null });
