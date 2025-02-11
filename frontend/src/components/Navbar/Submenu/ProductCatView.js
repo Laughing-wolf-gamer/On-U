@@ -50,7 +50,7 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 		window.location.reload();
 	};
   
-	const getGenderCategories = (gender) => productsOptions.find((p) => p.Gender === gender)?.category || [];
+	const getGenderCategories = (gender) => productsOptions.find((p) => p.Gender === gender.Gender)?.category || [];
 	console.log("memoizedProductsOptions: ",memoizedProductsOptions);
 	if(!memoizedProductsOptions || memoizedProductsOptions.length <= 0) return null;
 	return (
@@ -65,13 +65,14 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 							onMouseLeave={() => parentCallback('hidden', false)}
 						>
 						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
-							{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((gender) => {
-								const categories = getGenderCategories(gender);
+							{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((genderCurrent,index) => {
+								const categories = getGenderCategories(genderCurrent);
+								console.log("genders Category",categories);
 								return (
 									categories.length > 0 && (
-										<div key={gender} className="h-fit">
+										<div key={index} className="h-fit">
 											<CategorySection
-												title={gender}
+												title={genderCurrent.Gender}
 												categories={categories}
 												parentCallback={parentCallback}
 												handelSetQuery={handelSetQuery}
