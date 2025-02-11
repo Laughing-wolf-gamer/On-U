@@ -97,11 +97,11 @@ const Allproductpage = ({user}) => {
                 setstate(true);
             }
         }
+        dispatch(getwishlist())
     }, [dispatch, error, state, productLoading, state1]);
 
     useEffect(() => {
         window.scrollTo(0, 0);
-        dispatch(getwishlist())
     }, []);
     useEffect(()=>{
         if(pro){
