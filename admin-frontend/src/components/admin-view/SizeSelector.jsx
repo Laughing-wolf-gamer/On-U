@@ -254,19 +254,17 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 								</div>
 
 								{selectedSizeArray.length > 0 && (
-								<div className="mt-4 w-full">
-									<ColorPresetSelector
-										sizeTitle={size.label}
-										colorOptions={colorOptions}
-										sizeTag={size.id}
-										OnChange={(e) => handelSetImagesByColor(size, e)}
-									/>
-								</div>
+									<div className="mt-4 w-full">
+										<ColorPresetSelector
+											sizeTitle={size.label}
+											colorOptions={colorOptions}
+											sizeTag={size.id}
+											OnChange={(e) => handelSetImagesByColor(size, e)}
+										/>
+									</div>
 								)}
 								{selectedSizeArray.length === 0 && (
-									<Fragment>
-										<span>You need to have at least one size quantity to set colors</span>
-									</Fragment>
+									<span>You need to have at least one size quantity to set colors</span>
 								)}
 						
 						</div>

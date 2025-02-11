@@ -634,7 +634,6 @@ const MPpage = () => {
                                     </div>
                                 </div>
                             </div>
-                            {/* <SizeChartModal sizeChartData={clothingSizeChartData}/> */}
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
                                 <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
@@ -663,7 +662,8 @@ const MPpage = () => {
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
 								<div className="col-span-1 text-center text-xs text-slate-500">
-									<img src={img1} alt="Product_images" className='w-[75px] mx-auto' />
+									{/* <img src={img1} alt="Product_images" className='w-[75px] mx-auto' /> */}
+                                    
 									Genuine Products
 								</div>
 								<div className="col-span-1 text-center text-xs text-slate-500">
