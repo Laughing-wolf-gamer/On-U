@@ -132,15 +132,15 @@ const OrdersReturns = () => {
 			.map((_, index) => <OrderCardSkeleton key={index} />)
 		) : (
 			<Fragment>
-			{allorder && allorder.length > 0 ? (
-				<div className="grid grid-cols-1 w-full">
-				{allorder.map((order, index) => (
-					<OrderCard key={index} order={order} onViewDetails={handleViewDetails} />
-				))}
-				</div>
-			) : (
-				<p className="text-gray-500">No orders yet.</p>
-			)}
+				{allorder && allorder.length > 0 ? (
+					<div className="grid grid-cols-1 w-full">
+						{allorder.map((order, index) => (
+							<OrderCard key={index} order={order} onViewDetails={handleViewDetails} />
+						))}
+					</div>
+				) : (
+					<p className="text-gray-500">No orders yet.</p>
+				)}
 			</Fragment>
 		)}
 		</div>
