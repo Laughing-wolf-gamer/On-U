@@ -527,8 +527,8 @@ const MFilter = ({ product ,handleSortChange}) => {
         <div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
             <div className='absolute bottom-0 h-[45%] w-full bg-white'>
             <h1 className="font-semibold text-base font1 py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
-            <div className="text-base font1 py-3 px-6 flex justify-start items-center"><AiOutlineFire className='text-xl mr-2' onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} />Popularity</div>
-            <div className="text-base font1 py-3 px-6 flex justify-start items-center"><AiOutlineStar className='text-xl mr-2' onClick={() => (/* datefun(1) */handleSortChange("Popularity"), setsortvi('hidden'))} />Latest</div>
+            <div className="text-base font1 py-3 px-6 flex justify-start items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} ><AiOutlineFire className='text-xl mr-2'/>Popularity</div>
+            <div className="text-base font1 py-3 px-6 flex justify-start items-center" onClick={() => (/* datefun(1) */handleSortChange("Popularity"), setsortvi('hidden'))}><AiOutlineStar className='text-xl mr-2' />Latest</div>
             <div className="text-base font1 py-3 px-6 flex justify-start items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
                 <img src={Per} width='28px' alt="jhgjhsd" /> Better Discount
             </div>
