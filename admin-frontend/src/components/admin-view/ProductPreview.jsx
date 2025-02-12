@@ -19,6 +19,7 @@ import TextInputArrayCustom from './TextInputArrayCustom';
 import TextArrayView from './TextArrayView';
 const ProductPreview = ({
 	categories,
+	genders,
 	subcategories,
 	productDataId,
 	showPopUp,
@@ -88,6 +89,7 @@ const ProductPreview = ({
         });
     };
     const specialCategory = {options:addProductsFromElement.find(e => e.name === "specialCategory").options};
+    const gendersOptions = {options:genders.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
     const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
     const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
     
@@ -257,6 +259,19 @@ const ProductPreview = ({
 									{productData?.averageRating}
 								</p>
                             </div>
+							<div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
+									{isEditing ? (
+										<div className='w-2/3'>
+											<CustomSelect defaultValue={productData?.gender} controlItems={gendersOptions} setChangeData={(e)=>{
+												console.log("Changed category",e);
+												handleInputChange({target:{value:e}},"gender")
+											}}/>
+										</div>
+									) : (
+										<p className="text-lg text-gray-600">{productData?.gender}</p>
+									)}
+                            </div>
                             {/* Category and Subcategory */}
                             <div className="flex justify-between items-center border-b pb-4">
                                 <h3 className="font-semibold text-gray-700 text-lg">Category:</h3>
@@ -381,19 +396,7 @@ const ProductPreview = ({
                                 <p className="text-lg text-gray-600">{productData?.material}</p>
                             )}
                             </div>
-                            <div className="flex justify-between items-center border-b pb-4">
-                                <h3 className="font-semibold text-gray-700 text-lg">Gender:</h3>
-                                {isEditing ? (
-                                    <input
-                                        type="text"
-                                        value={productData?.gender}
-                                        onChange={(e) => handleInputChange(e, 'gender')}
-                                        className="text-lg w-2/3 text-gray-600"
-                                    />
-                                ) : (
-                                    <p className="text-lg text-gray-600">{productData?.gender}</p>
-                                )}
-                            </div>
+                            
                         </div>
 						{/* Description and Bullet Points */}
                         <div className="mb-6 space-y-4">

@@ -62,16 +62,16 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     
     const renderSizeOptions = () => (
         <div className="flex-row font-kumbsan flex justify-start items-center">
-            <p className="font1 text-[10px] sm:text-sm px-2 text-[#5f5f5f9e]">Sizes:</p>
+            <p className=" text-[10px] sm:text-sm px-2 text-[#5f5f5f9e]">Sizes:</p>
             {pro?.size?.map((item, i) => (
-                <span key={i} className="font1 text-[8px] sm:text-xs px-2 text-[#5f5f5f9e]">{item.label}</span>
+                <span key={i} className=" text-[8px] sm:text-xs px-2 text-[#5f5f5f9e]">{item.label}</span>
             ))}
         </div>
     );
     
     /* const renderHoverDetails = () => (
         <div className={`${pro._id}hover hidden absolute pb-6 bottom-0 w-full bg-white transition-all duration-300 ease-in-out sm:hidden md:block`}>
-            <div className="w-full text-center flex items-center justify-center py-1 font1 border-[1px] border-slate-300 cursor-pointer hover:bg-[#f26a10] hover:text-white">
+            <div className="w-full text-center flex items-center justify-center py-1  border-[1px] border-slate-300 cursor-pointer hover:bg-[#f26a10] hover:text-white">
                 <IoIosHeartEmpty className="text-lg mr-1" />
                 <span className="text-xs sm:text-sm md:text-lg lg:text-xl">ADD TO CART</span>
             </div>
@@ -93,7 +93,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     
             {/* Product Details Section */}
             <div className="relative pb-3 flex-col flex justify-between items-start gap-2 p-1">
-                <p className="font1 text-[12px] sm:text-lg md:text-xl px-2 text-gray-800 font-semibold truncate">{productTitle.slice(0,10)}</p>
+                <p className=" text-[12px] sm:text-lg md:text-xl px-2 text-gray-800 font-semibold truncate">{productTitle.slice(0,10)}</p>
                 <p className="text-[10px] sm:text-sm md:text-base overflow-hidden px-2 text-left text-ellipsis h-fit whitespace-nowrap text-slate-500">{productSubCategory}</p>
                 {renderPrice()}
             </div>

@@ -92,7 +92,7 @@ const Bag = () => {
                     totalProductSellingPrice += productSellingPrice * quantity;
         
                     // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += priceWithoutGst * quantity;
+                    totalMRP += price * quantity;
 					totalGst += gst;
                 });
         
@@ -159,7 +159,7 @@ const Bag = () => {
                     totalProductSellingPrice += productSellingPrice * quantity;
             
                     // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += priceWithoutGst * quantity;
+                    totalMRP += price * quantity;
 					totalGst += gst;
                 });
 				console.log("Price WithouGst; ",allgst,totalMRP);

@@ -10,7 +10,6 @@ import { sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
-import { createDelivaryOneShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 
 export const createPaymentOrder = async (req, res, next) => {
     try {
@@ -72,6 +71,7 @@ export const verifyPayment = async (req, res, next) => {
                     userId: req.user.id,
                     orderItems: orderDetails,
                     address: addressString,
+					ConveenianceFees: bagData.ConvenienceFees,
                     TotalAmount: totalAmount,
                     paymentMode: paymentStatus[0].payment_group,
                     status: 'Order Confirmed',
@@ -138,9 +138,9 @@ export const createorder = async (req, res, next) => {
 		// console.log("Req user: ",req.user);
 		// const activeUser = req.user.user;
         // Destructure and validate the required fields from the body
-        const { orderItems, Address, bagId, TotalAmount, paymentMode, status } = req.body;
+        const { orderItems, Address, bagId, TotalAmount, paymentMode,ConvenienceFees, status } = req.body;
 		// console.log("Order Data: ",req.body);
-        if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+        if (!orderItems || !Address || !bagId || !TotalAmount || !ConvenienceFees || !paymentMode || !status) {
             return res.status(400).json({ success: false, message: "Please Provide All the Data" });
         }
 
@@ -153,6 +153,7 @@ export const createorder = async (req, res, next) => {
         const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
+			ConveenianceFees: ConvenienceFees,
             orderItems,
             address: addressString,
             TotalAmount,
@@ -696,7 +697,7 @@ const getItemsData = async (bag) => {
         totalProductSellingPrice += (productSellingPrice * quantity);
 
         // Add to MRP
-        totalMRP += priceWithoutGst * quantity;
+        totalMRP += price * quantity;
     }
 
     // If coupon logic is required:

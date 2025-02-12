@@ -83,7 +83,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                 }
             </div>
             {/* Product Previews Section */}
-            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:grid-cols-5 justify-center md:px-12 lg:px-12 2xl:px-12 xl:px-12 px-2 md:gap-4 xl:gap-4 2xl:gap-5 gap-4 items-center">
+            <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-5 xl:grid-cols-5 lg:grid-cols-5 2xl:grid-cols-5 justify-center md:px-12 lg:px-12 2xl:px-12 xl:px-12 px-2 gap-3 items-center">
                 {previewProducts && previewProducts.length > 0 &&
                     previewProducts.map((p, index) => {
                         // const p = previewProducts[0];

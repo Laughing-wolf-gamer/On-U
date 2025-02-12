@@ -171,6 +171,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                 const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
                 const orderData = {
                     bagId: bag?._id,
+					ConvenienceFees:bag?.ConvenienceFees || 0,
                     orderItems: orderDetails,
                     paymentMode: paymentMethod,
                     TotalAmount: totalAmount,

@@ -124,7 +124,7 @@ const Allproductpage = ({user}) => {
 
                 <div className='text-slate-900 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 pb-2">
-                        <span className="font1 text-sm capitalize">NO OF ITEMS</span>
+                        <span className=" text-sm capitalize">NO OF ITEMS</span>
                         <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
                     </div>
                 </div>
@@ -140,18 +140,10 @@ const Allproductpage = ({user}) => {
 
                     <div className="w-full 2xl:col-span-10 xl:col-span-10 lg:col-span-10 2xl:p-4 xl:p-4 lg:p-4 bg-gray-50 text-slate-900 2xl:ml-7 lg:ml-5">
                         {productLoading ? (
-                            <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-12 2xl:gap-14 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
-                                    {Array(10).fill(0).map((_, index) => (
-                                        <li key={`productId_Skeleton_${index}`} className="w-full">
-                                            <ProductCardSkeleton/>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                            <Loader/>
                         ) : (
                             <div className='min-h-[200vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-8 2xl:gap-10 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
+                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-1 sm:gap-4 md:gap-4 lg:gap-5 xl:gap-5 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {pro && pro.length > 0 && pro.map((p, index) => (
                                         <li key={`productId_${p._id}_${index}`} className="w-full">
                                             <Single_product pro={p} user={user} wishlist={wishlist} />
@@ -161,7 +153,7 @@ const Allproductpage = ({user}) => {
 
 
 
-                                <div className="paginationBox font1 border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                                <div className="paginationBox  border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
                                     {/* Pagination Info */}
                                     <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
                                         Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
@@ -236,7 +228,7 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     return (
         <div className="hidden font-kumbsan 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
             {/* Filters Title */}
-            <div className="col-span-2 font-semibold text-base font1 text-slate-900">FILTERS</div>
+            <div className="col-span-2 font-semibold text-base  text-slate-900">FILTERS</div>
     
             {/* Sort Dropdown */}
             <div className="col-span-3 relative group cursor-pointer" onMouseLeave={()=> setOpenView(false)}>
@@ -249,19 +241,19 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
                 {/* Dropdown Content */}
                 <div onMouseLeave={()=> setOpenView(false)}  className={`absolute left-0 top-8 w-full bg-white border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0 pointer-events-none"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
-                        <span className="font1 text-gray-800">What`s New</span>
+                        <span className=" text-gray-800">What`s New</span>
                     </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
-                        <span className="font1 text-gray-800">Popularity</span>
+                        <span className=" text-gray-800">Popularity</span>
                     </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
-                        <span className="font1 text-gray-800">Better Discount</span>
+                        <span className=" text-gray-800">Better Discount</span>
                     </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
-                        <span className="font1 text-gray-800">Price: High To Low</span>
+                        <span className=" text-gray-800">Price: High To Low</span>
                     </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
-                        <span className="font1 text-gray-800">Price: Low To High</span>
+                        <span className=" text-gray-800">Price: Low To High</span>
                     </div>
                 </div>
             </div>

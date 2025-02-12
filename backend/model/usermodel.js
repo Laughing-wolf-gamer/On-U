@@ -9,6 +9,7 @@ const userModelSchema = new mongoose.Schema({
         required: true,
         default: "unverified"
     },
+	profilePic:{type:String,default:null},
     email:{
         type:String,
         validate:[validator.isEmail, 'Please enter valid Email ID ']

@@ -506,6 +506,7 @@ const AdminProducts = () => {
             }
 			{currentPreviewProductId && (
 				<ProductPreview
+					genders={genders}
 					categories = {categories}
 					subcategories = {subcategories}
 					setFormData={setFormData}

@@ -6,12 +6,46 @@ import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
 import { useNavigate } from 'react-router-dom';
 import { AlignJustify, LogOut } from 'lucide-react';
-import { FaSignOutAlt } from 'react-icons/fa'; // Import the react-icon for logout
+import { FaExclamationTriangle, FaUser } from 'react-icons/fa'; // Import the react-icon for logout
 import BackToTopButton from '../../Home/BackToTopButton';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
+const NotLoggedInModal = () => {
+	const navigate = useNavigate();
 
-const Overview = ({ user ,loading}) => {
+	const handleLoginRedirect = () => {
+		navigate('/');
+	};
+
+	return (
+		<div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+			{/* Modal Container */}
+			<div className="bg-white rounded-lg p-6 w-96 shadow-lg">
+				{/* Exclamation Icon */}
+				<div className="flex items-center justify-center mb-4 text-yellow-500">
+					<FaExclamationTriangle size={48} />
+				</div>
+				<h2 className="text-2xl font-semibold text-gray-800 mb-4">Not Logged In</h2>
+				<p className="text-gray-600 mb-4">
+					You need to log in to access this feature. Please log in to continue.
+				</p>
+
+				{/* Log In Button with User Icon */}
+				<div className="flex justify-center items-center">
+					<button
+						onClick={handleLoginRedirect}
+						className="px-4 py-2 bg-gray-600 text-white rounded-lg hover:bg-gray-700 transition duration-300 flex items-center space-x-2"
+					>
+						<FaUser size={20} /> {/* User icon next to the text */}
+						<span>Log In</span>
+					</button>
+				</div>
+			</div>
+		</div>
+	);
+};
+const Overview = ({ user ,loading,isAuthentication}) => {
+	console.log("user: ",user);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [activeSection, setActiveSection] = useState('User-Details');
@@ -22,13 +56,13 @@ const Overview = ({ user ,loading}) => {
 	}, []);
 
 	// If no user, show warning
-	useEffect(() => {
-		if(!loading){
+	/* useEffect(() => {
+		if(!loading && !isAuthentication){
 			if (!user ) {
 				navigate('/Login');
 			}
 		}
-	}, [user, navigate]);
+	}, [user, navigate]); */
 
 	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
@@ -36,12 +70,15 @@ const Overview = ({ user ,loading}) => {
 		await dispatch(logout())
 		navigate('/');
 	};
+	if(!loading && !isAuthentication && !user){
+		return <NotLoggedInModal/>;
+	}
 
 	return (
 		<div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto bg-gray-50 text-gray-800">
 			<div className="container mx-auto px-4">
 				{/* Account Header */}
-				<div className="py-6 border-b px-3 mx-auto w-full lg:w-[80%] xl:w-[70%] bg-white rounded-lg">
+				<div className="py-6 border-b px-3 mx-auto w-full bg-white">
 					<div className="flex justify-between items-center">
 						{/* Account Info Section */}
 						<div>
@@ -60,7 +97,7 @@ const Overview = ({ user ,loading}) => {
 				</div>
 
 
-				<div className="flex flex-col lg:flex-row mt-4">
+			<div className="flex flex-col lg:flex-row mt-4">
 				{/* Toggle Button for Small Screens */}
 				<button
 					className="lg:hidden p-4 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400"
@@ -77,8 +114,8 @@ const Overview = ({ user ,loading}) => {
 				</div>
 
 				{/* Profile Details */}
-				<div className="w-full lg:w-[75%] py-4 px-6">
-					<div className="bg-white p-6 rounded-lg">
+				<div className="w-full lg:w-[75%] py-4">
+					<div className="bg-white rounded-lg">
 						{/* Render active section */}
 						{activeSection === 'User-Details' && <UserDetails user={user?.user} />}
 						{activeSection === 'Orders-Returns' && <OrdersReturns />}

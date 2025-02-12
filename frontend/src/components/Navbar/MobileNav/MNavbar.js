@@ -232,7 +232,7 @@ const MNavbar = ({ user }) => {
                         {/* Conditional rendering for user login state */}
                         {/* {user ? (
                             <div
-                                className="text-slate-400 font1 text-xs font-bold absolute right-14 top-32"
+                                className="text-slate-400  text-xs font-bold absolute right-14 top-32"
                                 onClick={(e) => {
                                     e.stopPropagation();
                                     loginClose();
@@ -243,7 +243,7 @@ const MNavbar = ({ user }) => {
                                 <span>LOGOUT</span>
                             </div>
                         ) : (
-                            <div className="text-slate-400 font1 text-xs font-bold absolute right-14 top-32" onClick={() => loginClose()}>
+                            <div className="text-slate-400  text-xs font-bold absolute right-14 top-32" onClick={() => loginClose()}>
                                 <Link to="/registeruser">
                                     <span>SIGN UP.</span>
                                 </Link>
@@ -256,7 +256,7 @@ const MNavbar = ({ user }) => {
                         <ul>
                             <Ripples color="#D0DDD0" className="w-full">
                                 {/* <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setShow(false);
@@ -269,7 +269,7 @@ const MNavbar = ({ user }) => {
                                     }}
                                 >
                                 </li> */}
-                                <div className="font1 px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex">
+                                <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex">
                                     <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={(e)=>{
                                         if(user){
                                             navigation("/dashboard");
@@ -290,7 +290,7 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <div
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         e.stopPropagation();
                                         setShow(false);
@@ -304,16 +304,13 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="#D0DDD0" className="w-full">
                                 <li
-                                    className="text-black font1 pl-5 py-4 w-full flex flex-row justify-start items-center"
+                                    className="text-black  pl-5 py-4 w-full flex flex-row justify-start items-center"
                                     onClick={() => {
                                         setWomen(!Women);
                                         setMenu2(Menu2 === "hidden" ? "block" : "hidden");
                                     }}
                                 >
                                     <span className="">Shop</span>
-                                    {/* <div className='mx-5 flex h-full w-14 justify-center'>
-                                        <span className="w-full border-gray-700">{Women ? <ChevronDown strokeWidth={0.6} size={30} /> : <ChevronRight strokeWidth={0.6} size={30} />}</span>
-                                    </div> */}
                                 </li>
                             </Ripples>
 
@@ -327,7 +324,7 @@ const MNavbar = ({ user }) => {
                             />
                             <Ripples color="re" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
@@ -349,7 +346,7 @@ const MNavbar = ({ user }) => {
                             </Ripples>
                             <Ripples color="re" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
@@ -371,7 +368,7 @@ const MNavbar = ({ user }) => {
                             </Ripples>
                             <Ripples color="re" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
@@ -393,7 +390,7 @@ const MNavbar = ({ user }) => {
                             </Ripples>
                             <Ripples color="re" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
@@ -406,7 +403,7 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="black" className="w-full">
                                 <li
-                                    className="text-black font1 px-5 py-4 relative w-full flex"
+                                    className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");
@@ -421,10 +418,10 @@ const MNavbar = ({ user }) => {
                         </ul>
                         <hr />
                         <div className="px-5 flex-row flex space-x-4 mt-7 text-[#282c3fd2] text-sm">
-                            <ImFacebook size={20} className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl" />
-                            <ImGoogle size={20} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
-                            <ImTwitter size={20} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
-                            <ImInstagram size={20} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
+                            <ImFacebook size={30} className="text-gray-700 hover:text-blue-600 transition duration-300 text-xl" />
+                            <ImGoogle size={30} className="text-gray-700 hover:text-red-600 transition duration-300 text-xl" />
+                            <ImTwitter size={30} className="text-gray-700 hover:text-blue-400 transition duration-300 text-xl" />
+                            <ImInstagram size={30} className="text-gray-700 hover:text-pink-600 transition duration-300 text-xl" />
                         </div>
                     </div>
                 </div>

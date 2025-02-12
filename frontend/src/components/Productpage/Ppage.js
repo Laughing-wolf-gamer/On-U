@@ -484,7 +484,7 @@ const Ppage = () => {
                                                             </button>
                                                             {/* Out of Stock Label */}
                                                             {active?.quantity <= 0 && (
-                                                                <div className="absolute bottom-[-18px] w-fit flex justify-center items-center pb-1">
+                                                                <div className="absolute bottom-[-18px] z-[3px] w-fit flex justify-center items-center pb-1">
                                                                     <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
                                                                         <span>Out of Stock</span>
                                                                     </div>
@@ -518,10 +518,10 @@ const Ppage = () => {
                                                         className={`flex flex-col w-14 h-14 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
                                                         ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
-                                                        title={active?.quantity || active?.label || "Size"}
+                                                        title={active.quantity >= 0 ? "In Stock " + active?.quantity || active?.label: "out of stock"}
                                                     >
                                                     {
-                                                        active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                        active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[2px] bg-opacity-40'></div>
                                                     }
                                                     <button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
                                                         <span className='m-2'>
@@ -530,7 +530,7 @@ const Ppage = () => {
                                                     </button>
                                                     {/* Out of Stock Label */}
                                                     {active?.quantity <= 0 && (
-                                                        <div className="absolute bottom-[-10px] w-fit flex justify-center items-center pb-1">
+                                                        <div className="absolute bottom-[-10px] z-[3px] w-fit flex justify-center items-center pb-1">
                                                             <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
                                                                 <span>Out of Stock</span>
                                                             </div>
@@ -604,7 +604,7 @@ const Ppage = () => {
                                             </div>
                                         </div>
                                     </div>
-									<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
+									<div className="w-full flex flex-col space-y-3 mt-4 text-sm">
 										{
 											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
 												return(
@@ -947,7 +947,7 @@ const NewLeftSideImageContent = ({
                             playing={true}
                             light={false}
                         />
-                        <ShareView/>
+                        {/* <ShareView/> */}
                     </div>
                 ) : (
                     <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={110}/>

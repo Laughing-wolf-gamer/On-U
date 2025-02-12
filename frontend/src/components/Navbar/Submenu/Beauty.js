@@ -21,7 +21,7 @@ const Beauty = ({show, CMenu, parentCallback}) => {
   return (
     
    <Fragment>
-       <div className={`w-[100%] h-screen bg-[#64646435] sticky top-0  ${CMenu} z-10 font1`}>
+       <div className={`w-[100%] h-screen bg-[#64646435] sticky top-0  ${CMenu} z-10 `}>
       { transitions((styles, item) => item && <animated.div style={styles}>
         <div className={`container max-w-[90%] w-[90%] mx-auto h-[480px] ${CMenu}  Mmenu bg-white `}
           onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}

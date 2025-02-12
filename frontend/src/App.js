@@ -79,7 +79,7 @@ function App() {
 				<Route path="/verifying" element={<Otpverify/>}/>
 				<Route path='/registeruser' element={<Registeruser/>}/>
 				<Route path='/dashboard' element={<Overview user={user} loading = {loading}/>}/>
-				{loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user}/>}/>)}
+				{loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication = {isAuthentication}/>}/>)}
 				{loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
 				<Route path='/products' element={<Allproductpage user = {user}/>}/>
 				{window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}

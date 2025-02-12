@@ -1,63 +1,69 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { useParams } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { fetchOrderById } from '../../../action/orderaction';
 import DeliveryStatus from './DeliveryStatus';
+import Loader from '../../Loader/Loader';
+import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../../config';
+import Footer from '../../Footer/Footer';
+import BackToTopButton from '../../Home/BackToTopButton';
+import { ChevronLeft } from 'lucide-react';
 
-// Reusable component for displaying order items
+// Helper function to format the date
+const formatDate = (date) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(date).toLocaleDateString(undefined, options);
+};
+
 const OrderItem = ({ item }) => {
     return (
-        <div key={item._id} className="flex items-center justify-start space-x-4 border-b pb-4">
-            <img
-                src={item.color.images[0].url}
-                alt="Product"
-                className="w-20 h-20 object-contain rounded"
-            />
-            <div className="w-52 flex flex-col overflow-hidden">
-                <div className="flex flex-row justify-start w-full h-fit p-2">
-                    <span className="font-extrabold text-black">
-                        {item?.productId?.title?.length > 20
-                            ? `${item?.productId?.title?.slice(0, 20)}...`
-                            : item?.productId?.title}
-                    </span>
-                </div>
-                <div className="flex flex-row justify-start w-full h-fit p-2">
-                    <span className="font-semibold">Color:</span>
-                    <span
-                        className="ml-2 w-5 h-5 border-2 rounded-full"
-                        style={{ backgroundColor: item.color.label }}
-                        title={`Color: ${item.color.label}`}
+        <div key={item._id} className="border-b pb-6">
+            <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+                <Link to={`/products/${item?.productId?._id}`} className="w-full md:w-1/4 flex justify-center">
+                    <img
+                        src={item?.color.images[0].url}
+                        alt="Product"
+                        className="w-28 h-28 object-contain rounded cursor-pointer"
                     />
+                </Link>
+                <div className="flex-1">
+                    <h3 className="text-xl font-semibold text-gray-800 truncate">
+						{item?.productId?.title?.length > 20 ? `${capitalizeFirstLetterOfEachWord(item?.productId?.title.slice(0,50))}` : capitalizeFirstLetterOfEachWord(item?.productId?.title)} 
+					</h3>
+					
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
+                        <span className="font-semibold">Color:</span>
+                        <span
+                            className="w-5 h-5 border-2 rounded-full"
+                            style={{ backgroundColor: item.color.label }}
+                            title={`Color: ${item.color.label}`}
+                        />
+                    </div>
+                    <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
+                        <span className="font-semibold">Size:</span>
+                        <span className="ml-2 w-10 h-5 border-2 text-center flex items-center justify-center rounded-md">{item.size}</span>
+                    </div>
                 </div>
-                <div className="flex flex-row justify-start w-full h-fit p-2">
-                    <span className="font-semibold">Size:</span>
-                    <span className="ml-2 w-10 h-5 border-2 text-center flex items-center justify-center rounded-md">
-                        {item.size}
-                    </span>
-                </div>
+                <div className="text-lg font-semibold text-gray-800 mt-2">₹ {formattedSalePrice(item.productId?.salePrice || item.productId?.price)}</div>
             </div>
         </div>
     );
 };
 
-// Reusable component for displaying address
 const AddressSection = ({ address, userName }) => (
-    <div className="mb-4">
-        <h2 className="text-xl font-semibold">Address</h2>
-        <h1>{userName}</h1>
-        <div className="h-fit p-2 justify-start gap-4 items-center flex flex-col shadow-md rounded-md">
-            {['address1', 'address2', 'citystate', 'pincode'].map((field) => (
-                <div key={field} className="flex flex-row justify-start w-full h-fit p-2">
-                    <span className="font-semibold">{field.replace(/([A-Z])/g, ' $1')}: </span>
-                    <p className="ml-1 pl-5">{address?.[field]}</p>
-                </div>
-            ))}
+    <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
+        <div className="bg-gray-100 p-6 rounded-md shadow-md">
+            <p className="font-bold">{userName}</p>
+            <p>{address}</p>
         </div>
     </div>
 );
 
 const OrderDetailsPage = ({ user }) => {
-    const { orderbyid } = useSelector(state => state.getOrderById);
+    const scrollableDivRef = useRef(null);
+    const navigate = useNavigate(); // useNavigate hook to navigate back
+    const { orderbyid, loading } = useSelector(state => state.getOrderById);
     const [orderItems, setOrderItems] = useState([]);
     const dispatch = useDispatch();
     const { id } = useParams();
@@ -74,53 +80,89 @@ const OrderDetailsPage = ({ user }) => {
         }
     }, [orderbyid]);
 
+    // Back button handler
+    const handleBackButtonClick = () => {
+        navigate(-1); // This will go back to the previous page
+    };
+
     return (
-        <Fragment>
-            {orderbyid && (
-                <>
-                    <h1 className="text-2xl font-bold mb-6">Order Id: {orderbyid._id}</h1>
-                    <div className="w-screen mx-auto p-6 gap-y-9 bg-white shadow-lg rounded-lg">
-                        {/* Address Section */}
-                        <AddressSection address={orderbyid?.SelectedAddress} userName={user?.user?.name} />
+        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto bg-gray-50 font-sans">
+            {!loading && orderbyid ? (
+                <div className="max-w-screen-2xl w-full mx-auto py-8 px-6">
+                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Details</h1>
 
-                        {/* Order Items Section */}
-                        <div className="mb-4">
-                            <h2 className="text-xl font-semibold">Order Items</h2>
-                            <ul className="space-y-4">
-                                {orderItems && [1,2,3,5,4,5,6,7,8].map((item) => (
-                                    <OrderItem key={item._id} item={orderItems[0]} />
+                    {/* Back Button */}
+                    <button
+                        onClick={handleBackButtonClick}
+                        className="text-sm hover:underline font-semibold text-gray-600 mb-6 flex items-center space-x-2"
+                    >
+                        <ChevronLeft />
+                        <span>Back to Orders</span>
+                    </button>
+
+                    <div className="grid grid-cols-12 gap-8">
+                        <div className="col-span-12 lg:col-span-8 bg-white shadow-lg rounded-lg p-6 space-y-6">
+                            {/* Order Created Date */}
+                            {orderbyid?.createdAt && (
+                                <div className="space-y-2">
+                                    <h2 className="text-xl font-semibold text-gray-800">Order Date</h2>
+                                    <p className="text-lg text-gray-600">{formatDate(orderbyid.createdAt)}</p>
+                                </div>
+                            )}
+
+                            {/* Address Section */}
+                            {orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
+
+                            {/* Order Items Section */}
+                            <div className="space-y-4">
+                                <h2 className="text-xl font-semibold text-gray-800">Order Items</h2>
+                                {orderItems?.length > 0 && orderItems.map((item, index) => (
+                                    <OrderItem key={item._id || index} item={item} />
                                 ))}
-                            </ul>
-                        </div>
+                            </div>
 
-                        {/* Delivery Status Progress Bar */}
-                        <div className="w-full min-h-fit justify-center items-center flex">
-                            <DeliveryStatus status={orderbyid?.status || "Processing"} />
-                        </div>
+                            {/* Delivery Status */}
+                            <div className="space-y-4">
+                                <h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
+                                <DeliveryStatus status={orderbyid?.status || "Processing"} />
+                            </div>
 
-                        {/* Total Amount Section */}
-                        <div className="mb-4">
-                            <h2 className="text-xl font-semibold">Total Amount</h2>
-                            <p className="text-lg font-bold">₹ {orderbyid?.TotalAmount}</p>
-                        </div>
+                            {/* Total Amount Section */}
+                            <div className="space-y-2">
+                                <h2 className="text-xl font-semibold text-gray-800">Total Amount</h2>
+                                <p className="text-lg font-bold text-gray-800">₹ {formattedSalePrice(orderbyid?.TotalAmount)}</p>
+                            </div>
 
-                        {/* Delivery and Payment Status Section */}
-                        <div className="mb-4">
-                            <div className="flex justify-between">
-                                <div>
-                                    <h2 className="text-xl font-semibold">Delivery Status</h2>
+                            {/* Payment and Delivery Status */}
+                            <div className="grid grid-cols-2 gap-8">
+                                <div className="space-y-2">
+                                    <h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
                                     <p>{orderbyid?.status}</p>
                                 </div>
-                                <div>
-                                    <h2 className="text-xl font-semibold">Payment Status</h2>
+                                <div className="space-y-2">
+                                    <h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
                                     <p>{orderbyid?.paymentMode}</p>
                                 </div>
                             </div>
                         </div>
+
+                        {/* Sidebar - Order Summary */}
+                        <div className="col-span-12 lg:col-span-4 bg-gray-100 p-6 rounded-lg space-y-6">
+                            <h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
+                            <div className="bg-white p-6 rounded-md shadow-md space-y-4">
+                                <p className="font-semibold text-gray-800">Total Items: {orderbyid?.orderItems?.length}</p>
+                                <p className="font-semibold text-gray-800">Total Amount: ₹ {formattedSalePrice(orderbyid?.TotalAmount)}</p>
+                                <p className="font-semibold text-gray-800">Shipping: ₹ {formattedSalePrice(orderbyid?.ConveenianceFees)}</p>
+                            </div>
+                        </div>
                     </div>
-                </>
+                </div>
+            ) : (
+                <Loader />
             )}
-        </Fragment>
+            <Footer />
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
+        </div>
     );
 };
 

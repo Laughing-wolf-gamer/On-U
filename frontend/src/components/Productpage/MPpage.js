@@ -445,7 +445,7 @@ const MPpage = () => {
                     <div>
                         {
                             scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-20 hidden`}>
-                                <div className='grid grid-cols-12 w-full font1 bg-white border-t-[0.5px] border-slate-200 relative z-10'>
+                                <div className='grid grid-cols-12 w-full bg-white border-t-[0.5px] border-slate-200 relative z-10'>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
                                             {
@@ -465,7 +465,7 @@ const MPpage = () => {
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-white bg-black text-white" onClick={addToBag}>
+                                        <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-white bg-black text-white" onClick={addToBag}>
                                             {
                                                 bagLoading? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-500 rounded-full animate-spin "></div>:<Fragment>
                                                     <ShoppingCart className='mr-4' />
@@ -538,7 +538,7 @@ const MPpage = () => {
                         </Carousel>
                         <div className="bg-white p-4">
                             <div className="border-b border-gray-300 pb-6 pt-4">
-                                <h1 className="font1 text-xl font-semibold text-slate-800">
+                                <h1 className=" text-xl font-semibold text-slate-800">
                                     {capitalizeFirstLetterOfEachWord(product?.title)}
                                 </h1>
                                 <h1 className="text-xl text-gray-500 font-light">
@@ -547,7 +547,7 @@ const MPpage = () => {
                             </div>
                             
                             <div className="border-b border-gray-600 pb-2 pt-2 bg-white">
-                                <h1 className="font1 text-lg font-semibold text-slate-800">
+                                <h1 className=" text-lg font-semibold text-slate-800">
                                     <span className="mr-4 font-bold">
                                         ₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                     </span>
@@ -586,7 +586,7 @@ const MPpage = () => {
                                                             <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
                                                         </button>
                                                         {active?.quantity <= 0 && (
-                                                            <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
                                                                 <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
                                                                     <span>Out of Stock</span>
                                                                 </div>
@@ -616,13 +616,13 @@ const MPpage = () => {
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                     >
                                                         {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 z-[2px] bg-gray-700 bg-opacity-40'></div>
                                                         }
                                                         <button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
                                                             <span className='text-base font-medium'>{active.label}</span>
                                                         </button>
                                                         {active?.quantity <= 0 && (
-                                                            <div className="absolute bottom-[-10px] w-[30%] h-6 flex justify-center items-center pb-1">
+                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
                                                                 <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
                                                                     <span>Out of Stock</span>
                                                                 </div>
@@ -637,13 +637,13 @@ const MPpage = () => {
                             </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>
-                                <h1 className='font1 flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
+                                <h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
                             </div>
                             <div className='mt-2 pb-4 pt-4 bg-white px-4'>
                                 {
                                     product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
                                         <Fragment>
-                                            <h1 className='font1 flex items-center mt-2 font-semibold'>{e.header}</h1>
+                                            <h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
                                             <span className='mt-4'>
                                                 <li className='list-disc mt-2'>{e.body}</li>
                                             </span>
@@ -651,48 +651,45 @@ const MPpage = () => {
                                     )
                                 }
                             </div>
-                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
+                            {/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
                             	<div className='col-span-12 md:col-span-3'>
-									<div className='absolute bg-[#0db7af] font1 px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
+									<div className='absolute bg-[#0db7af]  px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
 									<Bus/>
 								</div>
 								<div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
-									<h1 className='text-sm font1 font-semibold'>RETURN WITH IN 45 DAYS</h1>
+									<h1 className='text-sm  font-semibold'>RETURN WITH IN 45 DAYS</h1>
 								</div>
                             </div>
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
 								<div className="col-span-1 text-center text-xs text-slate-700">
-									{/* <img src={img1} alt="Product_images" className='w-[75px] mx-auto' /> */}
 									<IoShieldCheckmarkSharp color='black' size={75} className='w-[75px] mx-auto'/>
 									Genuine Products
 								</div>
 								<div className="col-span-1 text-center text-xs text-slate-700">
-									{/* <img src={img2} alt="Product_images" className='w-[75px] mx-auto' /> */}
 									<IoIosRibbon color='black' size={75} className='w-[75px] mx-auto'/>
 									7 step Quality Check
 								</div>
 								<div className="col-span-1 text-center text-xs text-slate-700">
-									{/* <img src={img3} alt="Product_images" className='w-[75px] mx-auto' /> */}
 									<RiSecurePaymentFill color='black' size={75} className='w-[75px] mx-auto'  />
 									Secure Payments
 								</div>
-                            </div>
+                            </div> */}
 
                             <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                            <h1 className='font1 flex items-center mt-2 font-semibold'>More Information</h1>
+                            <h1 className=' flex items-center mt-2 font-semibold'>More Information</h1>
                             <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>
                             <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || ""}</span></li>
                             </div>
 
                             <div className='h-full w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}>
+                                <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}>
                                     <ShoppingBag className='mr-4' /><span>BUY NOW</span>
                                 </button>
                             </div>
 
                             <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
-                                <div className={`grid grid-cols-12 w-full font1 relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
+                                <div className={`grid grid-cols-12 w-full  relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
                                     <div className="col-span-2 flex justify-center items-center p-1">
                                         <button className="bg-gray-50 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
                                             {
@@ -711,7 +708,7 @@ const MPpage = () => {
                                         </button>
                                     </div>
                                     <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className="font1 font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+                                        <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
                                             {
                                                 bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
                                                     <ShoppingCart className='mr-4' size={30}/>
@@ -809,7 +806,7 @@ const MPpage = () => {
                                 {
                                     similar && similar.length > 0 && <div className="mt-2 mb-7 pb-6 pt-4 relative bg-white px-4">
                                         <div className='w-full justify-center items-center flex px-1 py-2'>
-                                            <h1 className="font1 flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
+                                            <h1 className=" flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
                                         </div>
                                         <div className="overflow-x-auto">
                                             <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">

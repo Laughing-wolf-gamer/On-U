@@ -563,7 +563,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             <div className='space-y-4 font-kumbsan ml-4'>
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
-                    <h1 className='font1 text-base font-normal mb-2'>GENDER</h1>
+                    <h1 className=' text-base font-normal mb-2'>GENDER</h1>
                     {gendernewarray && gendernewarray.length > 0 && gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -585,8 +585,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? e.slice(0,5) : e} 
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
+                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
@@ -597,7 +597,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
                 {/* Categories Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>CATEGORIES</h1>
+                    <h1 className=' text-base font-semibold mb-2'>CATEGORIES</h1>
                     {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -619,7 +619,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({AllProductsCategory.filter((f) => f === e).length})
@@ -631,7 +631,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
                 {/* Subcategories Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>SUBCATEGORIES</h1>
+                    <h1 className=' text-base font-semibold mb-2'>SUBCATEGORIES</h1>
                     {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
                         // Check if the current subcategory 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -653,7 +653,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
@@ -662,7 +662,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
                 {/* Size Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-semibold mb-2'>SIZE</h1>
+                    <h1 className=' text-base font-semibold mb-2'>SIZE</h1>
                     {size && size.length > 0 && size.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -684,7 +684,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({size.filter((f) => f === e).length})
@@ -695,7 +695,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-normal mb-2'>SPECIAL CATEGORY</h1>
+                    <h1 className=' text-base font-normal mb-2'>SPECIAL CATEGORY</h1>
                     {specialCategorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -717,7 +717,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({specialCategorynewarray.filter((f) => f === e).length})
@@ -728,7 +728,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-normal mb-2'>DISCOUNT</h1>
+                    <h1 className=' text-base font-normal mb-2'>DISCOUNT</h1>
                     {discountedPercentageAmount.map((amount, i) => {
                         // Get the 'discountedAmount' value from the URL
                         const params = new URLSearchParams(window.location.search);
@@ -751,7 +751,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
                                     // No need for onChange handler since radio buttons will handle state automatically
                                 />
-                                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                                <label className=" text-sm ml-2 mr-4 mb-2">
                                     UpTo {amount} %
                                     <span className="text-xs font-kumbsan font-normal text-slate-400"> 
                                         ({discountedPercentageAmount.filter((f) => f === amount).length})
@@ -766,7 +766,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
                 <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative scrollbar-thin scrollbar-track-gray-400 scrollbar-thumb-gray-700`}>
-                    <h1 className="font1 text-base font-semibold mb-2">COLOR</h1>
+                    <h1 className=" text-base font-semibold mb-2">COLOR</h1>
                     {AllProductsColor && AllProductsColor.length > 0 && 
                         AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
                             // Check if the current color 'e.label' exists in the URL parameters
@@ -816,7 +816,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     {AllProductsColor.length > 5 && colorul !== 'max-h-max' && (
                         <div className="flex justify-center mt-5">
                             <button 
-                                className={`font1 text-gray-600 ${colorulbtn}`} 
+                                className={` text-gray-600 ${colorulbtn}`} 
                                 onClick={() => {
                                     setcolorul('max-h-max');
                                     setcolorulbtn('hidden');
@@ -828,7 +828,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
 
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className='font1 text-base font-normal mb-2'>On Sale</h1>
+                    <h1 className=' text-base font-normal mb-2'>On Sale</h1>
                     {onSale && onSale.length > 0 && [1].map((_, i) => {
                         // Get the URL search parameters
                         const params = new URLSearchParams(window.location.search);
@@ -851,7 +851,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked based on URL parameter
                                     onChange={() => {}} // No need to handle change here; onClick will update URL
                                 />
-                                <label className='font1 text-sm ml-2 mr-4 mb-2'>
+                                <label className=' text-sm ml-2 mr-4 mb-2'>
                                     On Sale
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'>
                                         ({onSale.length})
@@ -947,7 +947,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
     };
     return (
       <div className="border-b-[1px] font-kumbsan border-slate-900 px-4 py-2 relative">
-        <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+        <h1 className=" text-base font-semibold mb-2">PRICE</h1>
         <CustomSlider
             value={price}
             onChange={priceHandler}
@@ -1022,7 +1022,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
   
     return (
         <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 overflow-hidden relative`}>
-            <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+            <h1 className=" text-base font-semibold mb-2">PRICE</h1>
     
             <li className="items-center">
                 <input
@@ -1034,7 +1034,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
                     checked={selectedPriceRange.price1}
                     id={`id${Math.max(...result[0]) + 1}`}
                 />
-                    <label className="font1 text-sm ml-2 mr-4 mb-2">
+                    <label className=" text-sm ml-2 mr-4 mb-2">
                         Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
                         <span className="text-xs font-serif font-normal text-slate-400">
                             ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
@@ -1052,7 +1052,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
                     checked={selectedPriceRange.price2}
                     id={`id${Math.max(...result[1]) + 1}`}
                 />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                <label className=" text-sm ml-2 mr-4 mb-2">
                     Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
                     <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
                 </label>
@@ -1068,7 +1068,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
                     checked={selectedPriceRange.price3}
                     id={`id${Math.min(...result[2]) + 1}`}
                 />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                <label className=" text-sm ml-2 mr-4 mb-2">
                     Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
                     <span className="text-xs font-serif font-normal text-slate-400">
                     ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})

@@ -28,8 +28,8 @@ const PriceSlider = ({ result, spARRAY }) => {
     };
 
     return (
-        <ul className="pl-8 border-b-[1px] border-slate-200 py-4">
-            <h1 className="font1 text-base font-semibold mb-2">PRICE</h1>
+        <ul className="pl-8 font-kumbsan border-b-[1px] border-slate-200 py-4">
+            <h1 className=" text-base font-semibold mb-2">PRICE</h1>
 
             {/* Price Range 1 Slider */}
             <li className="items-center">
@@ -42,7 +42,7 @@ const PriceSlider = ({ result, spARRAY }) => {
                     onChange={handleRange1Change}
                     className="mb-2 accent-pink-500"
                 />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                <label className=" text-sm ml-2 mr-4 mb-2">
                     ₹ {range1[0]} to ₹ {range1[1]}
                     <span className="text-xs font-serif font-normal text-slate-400">
                         ({getFilteredCount(range1[0], range1[1])})
@@ -61,7 +61,7 @@ const PriceSlider = ({ result, spARRAY }) => {
                     onChange={handleRange2Change}
                     className="mb-2 accent-pink-500"
                 />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                <label className=" text-sm ml-2 mr-4 mb-2">
                     ₹ {range2[0]} to ₹ {range2[1]}
                     <span className="text-xs font-serif font-normal text-slate-400">
                         ({getFilteredCount(range2[0], range2[1])})
@@ -80,7 +80,7 @@ const PriceSlider = ({ result, spARRAY }) => {
                     onChange={handleRange3Change}
                     className="mb-2 accent-pink-500"
                 />
-                <label className="font1 text-sm ml-2 mr-4 mb-2">
+                <label className=" text-sm ml-2 mr-4 mb-2">
                     ₹ {range3[0]} +
                     <span className="text-xs font-serif font-normal text-slate-400">
                         ({getFilteredCount(range3[0], Infinity)})

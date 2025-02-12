@@ -234,10 +234,10 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 				</div>
 
 				{/* Saved Section */}
-				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
+				{/* <div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
 					<span>Total GST</span>
 					<span>+ {Math.round(totalGst)} %</span>
-				</div>
+				</div> */}
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
 					<span>Saved</span>
 					<span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>

@@ -291,10 +291,10 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 					<span>Total MRP</span>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
 				</div>
-				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+				{/* <div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Total GST</span>
 					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}% </span>
-				</div>
+				</div> */}
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
 					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>

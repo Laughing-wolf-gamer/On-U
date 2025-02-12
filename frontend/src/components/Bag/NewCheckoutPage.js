@@ -87,7 +87,7 @@ const CheckoutPage = () => {
 					totalProductSellingPrice += productSellingPrice * quantity;
 		
 					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += priceWithoutGst * quantity;
+					totalMRP += price * quantity;
 					totalGst += gst;
 				});
 		
@@ -153,7 +153,7 @@ const CheckoutPage = () => {
 					totalProductSellingPrice += productSellingPrice * quantity;
 			
 					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += priceWithoutGst * quantity;
+					totalMRP += price * quantity;
 					totalGst += gst;
 				});
 			
@@ -438,10 +438,10 @@ const PriceDetailsComponent = ({user, bag,totalGst, totalSellingPrice, discounte
 					<span>Total MRP</span>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
 				</div>
-				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+				{/* <div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Total GST</span>
 					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}%</span>
-				</div>
+				</div> */}
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
 					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>

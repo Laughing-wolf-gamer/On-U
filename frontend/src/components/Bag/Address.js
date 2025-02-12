@@ -121,7 +121,7 @@ const Address = () => {
                     <div className="text-[#535766] relative mt-2">Discount on MRP <span className="absolute right-0 text-[#0db7af]">-&#8377;{Math.round(priceDetails.ds)}</span></div>
                     <div className="text-[#535766] relative mt-2 mb-2">Convenience Fee <span className="absolute right-0"><span className="line-through">-&#8377;99</span> <span className="text-[#0db7af]">FREE</span></span></div>
                     <div className="py-2 border-t-[1px] bg-white">
-                    <div className="relative font1 text-base">Total Amount <span className="absolute right-0">&#8377;{Math.round(priceDetails.sp)}</span></div>
+                    <div className="relative text-base">Total Amount <span className="absolute right-0">&#8377;{Math.round(priceDetails.sp)}</span></div>
                     <button className="mt-2 bg-[#ff3f6c] text-center w-full py-3 text-white font-bold">CONTINUE</button>
                     </div>
                 </div>

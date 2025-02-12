@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAddress, removeAddress, updateAddress } from '../../../action/useraction';
 import AddAddressPopup from '../../Bag/AddAddressPopup';
-import { X } from 'lucide-react';
+import { X, MapPin, Plus } from 'lucide-react';  // Added icons
 import { capitalizeFirstLetterOfEachWord } from '../../../config';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
 
@@ -68,32 +68,30 @@ const SavedAddresses = () => {
         );
     };
 
-
     return (
         <div className="p-6 font-kumbsan bg-gray-100 min-h-screen">
             <h2 className="font-semibold text-lg text-gray-900 mb-4">Saved Addresses</h2>
 
             {/* Display saved addresses */}
-            {
-                addressStateLoading ? (
-                    // If no orders or loading, show skeletons
-                    Array(4).fill(0).map((_, index) => <AddressSkeleton key={index} />
-                )
-                ):(<Fragment>
-                {allAddresses && allAddresses.length > 0 ? (
-                    allAddresses.map((address, index) => renderAddress(index, address))
-                ) : (
-                    <p className="text-gray-600">No addresses saved.</p>
-                )}
-
-                </Fragment>)
-            }
+            {addressStateLoading ? (
+                // If no addresses or loading, show skeletons
+                Array(4).fill(0).map((_, index) => <AddressSkeleton key={index} />)
+            ) : (
+                <Fragment>
+                    {allAddresses && allAddresses.length > 0 ? (
+                        allAddresses.map((address, index) => renderAddress(index, address))
+                    ) : (
+                        <p className="text-gray-600">No addresses saved.</p>
+                    )}
+                </Fragment>
+            )}
 
             {/* Button to open the "Add Address" popup */}
             <button
                 onClick={handleOpenPopup}
-                className="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
+                className="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 flex items-center"
             >
+                <Plus className="mr-2" size={16} /> {/* Add Icon */}
                 Add Address
             </button>
 

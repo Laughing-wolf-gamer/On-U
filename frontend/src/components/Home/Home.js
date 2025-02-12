@@ -207,7 +207,7 @@ const Home = ({user}) => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
     return (
-        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
                 window.screen.width > 1024 ?
                     <Fragment >
@@ -232,7 +232,7 @@ const Home = ({user}) => {
                         }
                         
                         <div className="w-full justify-self-center max-w-screen-2xl h-fit flex flex-col justify-center items-center pb-7 space-y-3 px-14">
-                            <h1 className='text-3xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
+                            <h1 className='text-3xl font-bold text-center  tracking-widest text-gray-700 mb-10'>
                                 {Wide_Screen_Section_3.header}
                             </h1>
                             <div className='w-full justify-center items-center flex'>
@@ -272,7 +272,7 @@ const Home = ({user}) => {
                         <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header} bannerLoading = {bannerLoading}/>
                         
                         <div className=' w-full max-w-screen-2xl justify-self-center justify-center items-center flex flex-col px-14'>
-                            <h1 className='text-3xl font-bold font1 tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                            <h1 className='text-4xl font-extrabold tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
                             <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
                                 {
                                     !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
@@ -325,10 +325,27 @@ const Home = ({user}) => {
                                     )}
                             </Carousel>
                         </div>
+						
+                        
+                        {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
+                            <div className='w-screen justify-center items-center flex pr-3 pl-3 '>
+                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
+                                    {
+                                        Array(6).fill(0).map((_, index) => (
+                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[140px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
+                                                <div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
+
+                                                </div>
+                                            </div>
+                                        ))
+                                    }
+                                </div>
+                            </div>
+                        }
 						{/* <OurMotoData/> */}
 
                         <div className='px-2'>
-                            <h1 className='text-xl px-8 font-bold font1 text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
+                            <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
                                     Small_Screen_Section_3.urls.map((d, index) => (
@@ -346,32 +363,16 @@ const Home = ({user}) => {
                                 )}
                             </ul>
                         </div>
-                        
-                        {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
-                            <div className='w-screen justify-center items-center flex pr-3 pl-3 '>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
-                                    {
-                                        Array(6).fill(0).map((_, index) => (
-                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[140px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
-                                                <div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
-
-                                                </div>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
-                        }
-                        <div className="w-screen h-fit flex flex-col justify-center items-center pb-7 space-y-3">
-                            <h1 className='text-xl font-bold text-center font1 tracking-widest text-gray-700 mb-10'>
+                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
+                            <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
                                 {Wide_Screen_Section_3.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
                                 <GridVideoBox bannerLoading={bannerLoading} Wide_Screen_Section_3 ={Wide_Screen_Section_3} categoriesOptions = {categoriesOptions} />
                             </div>
                         </div>
-                        <div className='pt-4 grid grid-cols-1 min-h-[200px] '>
-                            <h1 className='text-xl px-10 font-bold font1 text-center text-slate-900 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
+                        <div className='mt-1 grid grid-cols-1 min-h-[200px] '>
+                            <h1 className='text-2xl font-extrabold text-center text-gray-700 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-full px-2 flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (

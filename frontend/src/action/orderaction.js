@@ -257,7 +257,7 @@ export const fetchOrderById = (id) => async (dispatch) => {
         
         dispatch({ type: REQUEST_GET_ORDER })
         const { data } = await axios.get(`${BASE_API_URL}/api/shop/orders/get_order/${id}`, headerConfig())
-        // console.log("Order: ",data);
+        console.log("Order: ",data);
         dispatch({ type: SUCCESS_GET_ORDER, payload: data.result})
     } catch (error) {
         dispatch({ type: FAIL_GET_ORDER, payload: error.response.data.message })

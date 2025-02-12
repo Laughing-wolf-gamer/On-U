@@ -24,8 +24,11 @@ export const registermobile = A(async (req, res, next) => {
         }
         const otp = Math.floor((1 + Math.random()) * 90000)
         await sendVerificationEmail(email, otp)
+		// https://avatar-placeholder.iran.liara.run/
+		const profilePic = `https://avatar.iran.liara.run/public/${gender}?${name}`
         const user = await User.create({
             name,
+			profilePic,
             email,
             phoneNumber:phonenumber,
             gender,
@@ -33,7 +36,7 @@ export const registermobile = A(async (req, res, next) => {
             role:'user',
         })
         // console.log("New User: ",user)
-        logger.info("New User: " + user?.name)
+        // logger.info("New User: " + user?.name)
         res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
     } catch (error) {
         console.log("Error Registering User: ",error)
@@ -78,11 +81,34 @@ export const loginMobileNumber = A(async(req, res, next) => {
     } catch (error) {
         console.error("Error Sending otp");
     }
-    sendVerificationEmail(user.email, otp) 
+    sendVerificationEmail(user.email, otp);
+	if(user.profilePic === ''){
+		const profilePic = `https://avatar.iran.liara.run/public/${user.gender}?${user.name}`
+		user.profilePic = profilePic;
+	}
+	console.log("Loging In User: ",user);
     user.otp = otp;
     await user.save();
     return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
 })
+
+export const updateProfilePic = async(req,res)=>{
+	try {
+		const id = req.user.id;
+		const {profilePic} = req.body;
+		console.log("Updateing Profile Pic: ",req.body);
+		const user = await User.findByIdAndUpdate(id, {profilePic: profilePic}, {new: true});
+		console.log("Updated User: ",user);
+		if(!user){
+            return res.status(404).json({message: "User not found"});
+        }
+		res.status(200).json({message: "Profile Pic Updated Successfully", result:user,token:sendtoken(user)})
+	} catch (error) {
+		console.error("Error getting user id",error);
+		res.status(500).json({message: "Internal server error"});
+
+	}
+}
 export const loginOtpCheck = A(async(req,res,next)=>{
     const{otp,phoneNumber,email} = req.body;
     let user = await User.findOne({phoneNumber:phoneNumber});
@@ -90,7 +116,7 @@ export const loginOtpCheck = A(async(req,res,next)=>{
         // return next( new Errorhandler('Mobile Number not found', 404))
         user = await User.findOne({email:email});
         if(!user){
-        return next( new Errorhandler('Email not found', 404))
+        	return next( new Errorhandler('Email not found', 404))
         }
     }
     console.log("user: ",user);
