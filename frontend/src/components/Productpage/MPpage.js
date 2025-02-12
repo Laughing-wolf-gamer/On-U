@@ -500,7 +500,7 @@ const MPpage = () => {
                                         // Check if the file is a video (based on file extension)
                                         im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
                                             <div className="relative">
-												<MShareView/>
+												{/* <MShareView/> */}
                                                 <ReactPlayer
                                                     className="w-full h-full object-contain"
                                                     url={im.url}
@@ -526,7 +526,7 @@ const MPpage = () => {
                                                     className="w-full h-full object-contain"
                                                 />
                                                 {/* <div className="h-[30px] bg-white"></div> */}
-												<MShareView/>
+												{/* <MShareView/> */}
                                             </div>
                                         )
                                         ) : (
