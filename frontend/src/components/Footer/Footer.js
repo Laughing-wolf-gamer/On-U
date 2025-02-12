@@ -1,12 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import g1 from "../images/googleplay.png";
 import g2 from "../images/appleplay.png";
 import { AiFillFacebook, AiFillYoutube } from "react-icons/ai";
 import { ImTwitter, ImInstagram } from "react-icons/im";
 import { Link } from "react-router-dom";
 import { ArrowUp } from "lucide-react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchTermsAndCondition } from "../../action/common.action";
 
 const Footer = () => {
+	const{ termsAndCondition,loading } = useSelector(state => state.TermsAndConditions);
+	const dispath = useDispatch();
+	useEffect(()=>{
+		dispath(fetchTermsAndCondition());
+	},[dispath])
     return (
         <div className="w-screen h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
@@ -19,10 +26,10 @@ const Footer = () => {
                             <Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
                             <ArrowUp className="rotate-45" />
                         </div>
-                        <p className="text-sm hover:underline text-gray-600">Company: On-U.com</p>
-                        <p className="text-sm hover:underline text-gray-600">Address: 1234, Some Street, City, Country</p>
-                        <p className="text-sm hover:underline text-gray-600">Phone: +1 (234) 567-890</p>
-                        <p className="text-sm hover:underline text-gray-600">Email: owner@onu.com</p>
+                        <p className="text-sm hover:underline text-gray-600">Company: On-U</p>
+                        <p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
+                        <p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
+                        <p className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</p>
                     </div>
 
                     {/* Customer Services */}
