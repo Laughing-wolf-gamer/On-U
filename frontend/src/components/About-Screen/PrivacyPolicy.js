@@ -15,7 +15,7 @@ const PrivacyPolicy = () => {
 	useEffect(()=>{
 		window.scrollTo(0,0)
 	},[])
-	console.log("Privacy Policy: ", privacyPolicy);
+	// console.log("Privacy Policy: ", privacyPolicy);
 	return (
 		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 		<div className="relative h-32 flex flex-col justify-center items-center rounded-md">
