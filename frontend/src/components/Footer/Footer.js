@@ -15,8 +15,8 @@ const Footer = () => {
 		dispath(fetchTermsAndCondition());
 	},[dispath])
     return (
-        <div className="w-screen h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
-            <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-[900px] font1">
+        <div className="w-screen min-h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
+            <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-fit">
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 text-black border-b border-gray-200 pb-10">
                     {/* Online Shopping */}
                     <div className="md:border-r lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
@@ -94,7 +94,7 @@ const Footer = () => {
 
                 </div>
 
-                <div className="mt-6 h-[50px] justify-end items-center flex flex-col text-center text-gray-500 text-md">
+                <div className="mt-6 h-[100px] justify-end items-center flex flex-col text-center text-gray-500 text-md">
                     <span>&copy; 2025 www.theOnu.com. All rights reserved.</span>
                 </div>
             </div>

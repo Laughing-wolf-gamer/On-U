@@ -207,7 +207,7 @@ const Home = ({user}) => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
     return (
-        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
                 window.screen.width > 1024 ?
                     <Fragment >

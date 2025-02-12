@@ -113,7 +113,7 @@ const Allproductpage = ({user}) => {
     console.log("All product: ",product);
 
     return (
-        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 2xl:pr-10">
             <div className='w-full max-w-screen-2xl justify-self-center'>
                 <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
