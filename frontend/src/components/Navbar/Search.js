@@ -4,7 +4,7 @@ import {Allproduct} from '../../action/productaction'
 import {useDispatch } from 'react-redux'
 import { useNavigate  } from 'react-router-dom'
 
-const Search = () => {
+const Search = ({toggleSearchBar}) => {
     const [state, setstate] = useState("")
     const dispatch = useDispatch()
     const navigate = useNavigate ()
@@ -13,6 +13,9 @@ const Search = () => {
         if (state.trim()) {
             navigate(`/products?keyword=${state}`)
             dispatch(Allproduct())
+			if(toggleSearchBar){
+				toggleSearchBar();
+			}
         } else {
             navigate('/products')
         }

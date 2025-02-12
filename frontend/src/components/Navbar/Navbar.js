@@ -152,7 +152,9 @@ const Navbar = ({user}) => {
                             </li>
                         </Link>
                         <div className="flex flex-row w-full h-14 space-x-5 mb-5 mx-4">
-                        {isSearchVisible && <Search />}
+                        {isSearchVisible && <Search toggleSearchBar = {()=>{
+							setIsSearchVisible(!isSearchVisible);
+						}} />}
                             <button onClick={toggleSearchBar} className="text-slate-800 hover:border border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
                                 <SearchIcon size={25}/>
                             </button>
