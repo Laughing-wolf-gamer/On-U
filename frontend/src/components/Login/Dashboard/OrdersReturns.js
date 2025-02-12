@@ -82,23 +82,23 @@ const OrderCard = ({ order, onViewDetails }) => {
 		}}
 		className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 cursor-pointer hover:shadow-xl transition duration-300"
 		>
-		{/* Delivery Status Progress Bar */}
-		<div className="w-full flex-wrap justify-center items-center">
-			<DeliveryStatus status={order?.status} />
-		</div>
-		<div className="flex justify-between items-center space-x-6">
-			<div className="flex-1 space-y-2">
-			<p className="text-gray-700">
-				<strong>Order ID:</strong> {order?._id || 'Not Available'}
-			</p>
-			<p className="text-gray-700">
-				<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
-			</p>
-			<p className="text-gray-700">
-				<strong>Order Status:</strong> {order?.status || 'Pending'}
-			</p>
+			{/* Delivery Status Progress Bar */}
+			<div className="w-full flex-wrap justify-center items-center">
+				<DeliveryStatus status={order?.status} />
 			</div>
-		</div>
+			<div className="flex justify-between items-center space-x-6">
+				<div className="flex-1 space-y-2">
+				<p className="text-gray-700">
+					<strong>Order ID:</strong> {order?._id || 'Not Available'}
+				</p>
+				<p className="text-gray-700">
+					<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
+				</p>
+				<p className="text-gray-700">
+					<strong>Order Status:</strong> {order?.status || 'Pending'}
+				</p>
+				</div>
+			</div>
 		</div>
 	);
 };
@@ -133,7 +133,7 @@ const OrdersReturns = () => {
 		) : (
 			<Fragment>
 			{allorder && allorder.length > 0 ? (
-				<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 w-full">
+				<div className="grid grid-cols-1 w-full">
 				{allorder.map((order, index) => (
 					<OrderCard key={index} order={order} onViewDetails={handleViewDetails} />
 				))}
