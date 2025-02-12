@@ -563,7 +563,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             <div className='space-y-4 font-kumbsan ml-4'>
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
-                    <h1 className=' text-base font-normal mb-2'>GENDER</h1>
+                    <h1 className=' text-base font-semibold mb-2'>GENDER</h1>
                     {gendernewarray && gendernewarray.length > 0 && gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -695,7 +695,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className=' text-base font-normal mb-2'>SPECIAL CATEGORY</h1>
+                    <h1 className=' text-base font-semibold mb-2'>SPECIAL CATEGORY</h1>
                     {specialCategorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
@@ -728,7 +728,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className=' text-base font-normal mb-2'>DISCOUNT</h1>
+                    <h1 className=' text-base font-semibold mb-2'>DISCOUNT</h1>
                     {discountedPercentageAmount.map((amount, i) => {
                         // Get the 'discountedAmount' value from the URL
                         const params = new URLSearchParams(window.location.search);
@@ -828,7 +828,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
 
                 <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className=' text-base font-normal mb-2'>On Sale</h1>
+                    <h1 className=' text-base font-semibold mb-2'>On Sale</h1>
                     {onSale && onSale.length > 0 && [1].map((_, i) => {
                         // Get the URL search parameters
                         const params = new URLSearchParams(window.location.search);
