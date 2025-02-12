@@ -439,7 +439,7 @@ const MPpage = () => {
     return (
         <Fragment>
             
-            <div ref={scrollContainerRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+            <div ref={scrollContainerRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 
                 {loading === false ? (
                     <div>

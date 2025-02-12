@@ -862,9 +862,13 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     })}
                 </ul>
 
-                <button className='bg-slate-900 text-white text-sm p-2 h-10 pb-3 text-center mx-auto mt-5 justify-center items-center flex w-[50%]' onClick={clearAllFilters}>
-                    <span className='w-full h-full text-center font-bold'>Clear</span>
-                </button>
+                <button
+					className='bg-slate-900 text-white text-sm font-bold h-10 mx-auto text-center mt-5 flex justify-center items-center w-[50%]'
+					onClick={clearAllFilters}
+				>
+					Clear All Filter
+				</button>
+
             </div>
         </Fragment>
     );

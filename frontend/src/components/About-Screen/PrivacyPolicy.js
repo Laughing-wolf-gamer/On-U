@@ -17,7 +17,7 @@ const PrivacyPolicy = () => {
 	},[])
 	console.log("Privacy Policy: ", privacyPolicy);
 	return (
-		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 		<div className="bg-white relative h-32 flex flex-col justify-center items-center rounded-md">
 			<img
 				src="https://indiater.com/wp-content/uploads/2019/10/free-modern-fashion-cover-banner-design-psd-template.jpg"

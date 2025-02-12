@@ -406,7 +406,7 @@ const Ppage = () => {
     console.log("current Scroll Amount: ",scrollPosition);
     
     return (
-        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
                 !productLoading ?
                     <div className='max-w-screen-2xl w-full justify-self-center flex flex-col py-2'>

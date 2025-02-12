@@ -29,7 +29,7 @@ const Footer = () => {
                         <p className="text-sm hover:underline text-gray-600">Company: On-U</p>
                         <p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
                         <p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
-                        <p className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</p>
+                        <a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</a>
                     </div>
 
                     {/* Customer Services */}
