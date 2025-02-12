@@ -505,7 +505,7 @@ const MFilter = ({ product ,handleSortChange}) => {
     }
     return (
         <Fragment>
-        <div className='hidden mobilevisible fixed bottom-0 w-full '>
+        <div className='hidden mobilevisible fixed z-10 bottom-0 w-full '>
 
             {/* Sort and Filter Div ************************************************************************************* */}
             <div className='grid grid-cols-12 w-full font1 bg-white py-3 border-t-[0.5px] border-slate-200 relative z-10'>
@@ -553,7 +553,7 @@ const MFilter = ({ product ,handleSortChange}) => {
             <div className=''>
 
             <h1 className='w-full px-8 font1 font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
-                {document.URL.includes('?') && <span className='absolute right-8 text-blue-400' onClick={clearall}>CLEAR ALL</span>} </h1>
+                {document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
             <div className='grid grid-cols-12 h-[93%] '>
                 <div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
                     <h1 className={`filter1 foo w-full text-left border-b-[1px] font1 text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
