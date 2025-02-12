@@ -297,10 +297,10 @@ export const generateOrderForShipment = async(shipmentData,randomOrderId) =>{
             }
         })
         .then(response => {
-        console.log('Success:', response.data);
+            console.log('Success:', response.data);
         })
         .catch(error => {
-        console.error('Error:', error.response ? error.response.data : error.message);
+            console.error('Error:', error.response ? error.response.data : error.message);
         });
         /* const data = {
             pickup_time: '14:30:00',  // Example time in hh:mm:ss

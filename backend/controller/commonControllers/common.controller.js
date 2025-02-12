@@ -9,20 +9,80 @@ import { sendCouponMail } from "../emailController.js";
 
 export const getHomeBanners = async (req,res)=>{
 	try {
-		const banners = await BannerModel.find();
+		const banners = await BannerModel.find({});
 		// console.log("Banners: ",banners)
-		return res.status(200).json({Success: true,message:"Successfully Fetched Banners", result:banners});
+		return res.status(200).json({Success: true,message:"Successfully Fetched Banners", result:banners || []});
 	} catch (error) {
 		console.error(`Error getting Banners: `,error);
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
-export const addHomeCarousalMultiple = async(req,res)=>{
+export const addHomeCarousalMultiple = async (req, res) => {
+    try {
+        // Destructuring inputs from the request body
+        const { images, CategoryType, Header } = req.body;
+
+        // Validation check for images
+        if (!images || !images.length) {
+            return res.status(400).json({ Success: false, message: "At least one image is required" });
+        }
+
+        // Extract image URLs
+        const imageUrls = images.map(img => img.url);
+        console.log("Add Home Carousal Multiple req.body", imageUrls);
+
+        // Find existing banner by CategoryType
+        let banner = await BannerModel.findOne({ CategoryType });
+
+        // If no banner found, create a new one
+        if (!banner) {
+            banner = new BannerModel({
+                CategoryType,
+                Header,
+                Url: imageUrls,
+            });
+        } else {
+            // Update banner's header and add new images if needed
+            if (Header) {
+                banner.Header = Header;
+            }
+            if (imageUrls.length) {
+                banner.Url.push(...imageUrls);
+            }
+        }
+
+        // Save the banner document
+        await banner.save();
+
+        // Fetch all banners (assuming you need all for response)
+        const banners = await BannerModel.find({});
+
+        console.log("Banners: ", banners);
+
+        // Send success response with all banners
+        return res.status(201).json({
+            Success: true,
+            message: 'Home Carousal added successfully!',
+            result: banners
+        });
+
+    } catch (error) {
+        // Log error and return internal server error response
+        console.error("Error adding home carousel:", error);
+        logger.error(`Error adding home carousel: ${error.message}`);
+        
+        return res.status(500).json({
+            Success: false,
+            message: `Internal Server Error: ${error.message}`,
+        });
+    }
+};
+
+/* export const addHomeCarousalMultiple = async(req,res)=>{
 	try {
 		const{images,CategoryType,Header} = req.body;
 		const ImageFiltered = images.map(img => img.url)
 		console.log("Add Home Carousal Multiple req.body",images.map(img => img.url));
-		// return;
 		if(!images ||!images.length) return res.status(400).json({Success: false, message: "At least one image is required"});
 		let banner = await BannerModel.findOne({CategoryType: CategoryType});
 		if(!banner){
@@ -45,8 +105,9 @@ export const addHomeCarousalMultiple = async(req,res)=>{
         logger.error("Error getting: " + error.message);
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
-}
-export const addHomeCarousal = async (req, res) => {
+} */
+
+/* export const addHomeCarousal = async (req, res) => {
 	try {
 		const{url,CategoryType,Header} = req.body;
 		console.log("Add Home Carousal req.body",req.body);
@@ -71,8 +132,62 @@ export const addHomeCarousal = async (req, res) => {
         logger.error("Error adding Banners: " + error.message);
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
-}
-export const removeHomeCarousal = async (req, res) => {
+} */
+export const addHomeCarousal = async (req, res) => {
+	try {
+		const { url, CategoryType, Header } = req.body;
+
+		// Early validation check
+		if (!url && !Header) {
+			return res.status(400).json({ Success: false, message: "URL or Header is required" });
+		}
+
+		console.log("Add Home Carousal req.body", req.body);
+
+		// Find existing banner by CategoryType
+		let banner = await BannerModel.findOne({ CategoryType });
+
+		// If no banner exists, create a new one; otherwise, update it
+		if (!banner) {
+			banner = new BannerModel({
+				CategoryType,
+				Header,
+				Url: [url], // Initialize URL array with the provided URL
+			});
+		} else {
+			if (Header) banner.Header = Header;
+			if (url) banner.Url.push(url);
+		}
+
+		// Save the banner to the database
+		await banner.save();
+
+		// Fetch all banners to return
+		const banners = await BannerModel.find({});
+
+		console.log("Banners: ", banners);
+
+		// Respond with success message and the updated banners
+		return res.status(201).json({
+			Success: true,
+			message: 'Home Carousal added successfully!',
+			result: banners,
+		});
+
+	} catch (error) {
+		// Handle error and log it
+		console.error("Error adding Banners:", error);
+		logger.error(`Error adding Banners: ${error.message}`);
+
+		// Respond with error message
+		return res.status(500).json({
+			Success: false,
+			message: `Internal Server Error: ${error.message}`,
+		});
+	}
+};
+	
+/* export const removeHomeCarousal = async (req, res) => {
     try {
         const { id, imageIndex } = req.params;
     
@@ -120,11 +235,58 @@ export const removeHomeCarousal = async (req, res) => {
         logger.error("Error removing banner: " + error.message);
         res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
     }
+}; */
+
+export const removeHomeCarousal = async (req, res) => {
+    try {
+        const { id, imageIndex } = req.params;
+
+        // Validate inputs early
+        if (!id || !imageIndex) {
+            return res.status(400).json({ Success: false, message: "Id and image index are required" });
+        }
+
+        // Find the banner by ID
+        const banner = await BannerModel.findById(id);
+        if (!banner) {
+            return res.status(404).json({ Success: false, message: "Banner not found" });
+        }
+
+        // Validate the image index
+        if (imageIndex < 0 || imageIndex >= banner.Url.length) {
+            return res.status(400).json({ Success: false, message: "Invalid image index" });
+        }
+
+        // Identify the URL to remove
+        const urlToRemove = banner.Url[imageIndex];
+
+        // Update the banner by removing the URL at the specified index
+        const updatedBanner = await BannerModel.findByIdAndUpdate(
+            id, 
+            { $pull: { Url: urlToRemove } },
+            { new: true }  // Ensure the updated document is returned
+        );
+
+        if (!updatedBanner) {
+            return res.status(500).json({ Success: false, message: "Failed to remove image" });
+        }
+
+        // Respond with the updated banner
+        return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanner });
+
+    } catch (error) {
+        // Handle and log error
+        console.error(`Error removing banner: `, error);
+        logger.error("Error removing banner: " + error.message);
+
+        // Return internal server error
+        return res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+    }
 };
 
 // Filters...
 
-export const FetchAllFilters  = async (req, res) => {
+/* export const FetchAllFilters  = async (req, res) => {
     try {
         const filters = await ProductModel.find({})
         .select('category subCategory gender AllColors -_id')  // Select only the category field and exclude _id
@@ -137,8 +299,40 @@ export const FetchAllFilters  = async (req, res) => {
         console.error("Error Fetching Filters",error);
         res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
     }
-}
-export const setAboutData = async (req, res) => {
+} */
+
+export const FetchAllFilters = async (req, res) => {
+	try {
+		// Fetch only necessary fields
+		const filters = await ProductModel.find({}).select('category subCategory gender AllColors -_id');
+
+		// Reduce the filters data to avoid multiple iterations (more efficient)
+		const filterData = filters.reduce((acc, item) => {
+			if (item.category) acc.AllCategory.add(item.category);
+			if (item.gender) acc.AllGenders.add(item.gender);
+			if (item.subCategory) acc.AllSubCategory.add(item.subCategory);
+			return acc;
+		}, { AllCategory: new Set(), AllGenders: new Set(), AllSubCategory: new Set() });
+
+		// Convert Set to array
+		const result = {
+			AllCategory: [...filterData.AllCategory],
+			AllGenders: [...filterData.AllGenders],
+			AllSubCategory: [...filterData.AllSubCategory],
+		};
+
+		// Send the response
+		res.status(200).json({ Success: true, message: "All Filters", result });
+
+	} catch (error) {
+		// Log the error in a concise way
+		console.error("Error Fetching Filters:", error.message);
+		res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+	}
+};
+	
+
+/* export const setAboutData = async (req, res) => {
     try {
         const { header, subHeader, ourMissionDescription, outMoto, teamMembers } = req.body;
         console.log("About Body:", req.body);
@@ -189,10 +383,76 @@ export const setAboutData = async (req, res) => {
         logger.error(`Error setting about data: ${error.message}`);
         res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
     }
+}; */
+
+export const setAboutData = async (req, res) => {
+    try {
+        const { header, subHeader, ourMissionDescription, outMoto, teamMembers } = req.body;
+        console.log("About Body:", req.body);
+
+        const alreadyFoundWebsiteData = await WebSiteModel.findOne({ tag: 'AboutData' });
+
+        // Helper function to conditionally set data only if provided
+        const updateField = (currentValue, newValue) => {
+            if (newValue != null && (!Array.isArray(newValue) ? newValue.trim() !== '' : newValue.length > 0)) {
+                return newValue;
+            }
+            return currentValue;
+        };
+
+        const aboutData = {
+            header: updateField('', header),
+            subHeader: updateField('', subHeader),
+            ourMissionDescription: updateField('', ourMissionDescription),
+            outMoto: updateField([], outMoto),
+            teamMembers: updateField([], teamMembers),
+        };
+
+        if (!alreadyFoundWebsiteData) {
+            // No existing AboutData, create a new entry
+            const newWebsiteData = new WebSiteModel({
+                AboutData: aboutData,
+                tag: 'AboutData',
+            });
+
+            await newWebsiteData.save();
+            console.log("New About Data Created: ", newWebsiteData);
+
+            return res.status(200).json({
+                Success: true,
+                message: 'About Data set successfully',
+                result: newWebsiteData,
+            });
+        }
+
+        // If found, update the existing AboutData with the new values
+        alreadyFoundWebsiteData.AboutData = {
+            header: updateField(alreadyFoundWebsiteData.AboutData.header, header),
+            subHeader: updateField(alreadyFoundWebsiteData.AboutData.subHeader, subHeader),
+            ourMissionDescription: updateField(alreadyFoundWebsiteData.AboutData.ourMissionDescription, ourMissionDescription),
+            outMoto: updateField(alreadyFoundWebsiteData.AboutData.outMoto, outMoto),
+            teamMembers: updateField(alreadyFoundWebsiteData.AboutData.teamMembers, teamMembers),
+        };
+
+        await alreadyFoundWebsiteData.save();
+        console.log("Updated About Data: ", alreadyFoundWebsiteData);
+
+        res.status(200).json({
+            Success: true,
+            message: 'About Data updated successfully',
+            result: alreadyFoundWebsiteData,
+        });
+    } catch (error) {
+        console.error("Error setting about data:", error.message);
+        logger.error("Error setting about data: " + error.message);
+        res.status(500).json({
+            Success: false,
+            message: `Internal Server Error: ${error.message}`,
+        });
+    }
 };
 
-
-export const setTermsAndConditionWebsite = async(req,res)=>{
+/* export const setTermsAndConditionWebsite = async(req,res)=>{
 	try {
 		console.log("terms and Condition Data",req.body);
 		const alreadyPresetTermsAndCondition = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
@@ -208,8 +468,44 @@ export const setTermsAndConditionWebsite = async(req,res)=>{
 	} catch (error) {
 		res.status(500).json({Success:false,message:"Internal server Error"})
 	}
-}
-export const getTermsAndConditionWebsite = async(req,res)=>{
+} */
+
+export const setTermsAndConditionWebsite = async (req, res) => {
+	try {
+		const termsAndConditionData = req.body;
+		console.log("Terms and Condition Data received: ", termsAndConditionData);
+	
+		// Check if the "Terms and Condition" data already exists
+		let websiteData = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
+	
+		if (websiteData) {
+		// If the document exists, update the terms and condition
+		websiteData.termsAndCondition = termsAndConditionData;
+		await websiteData.save();
+		return res.status(200).json({ Success: true, message: "Terms and Conditions updated successfully." });
+		}
+	
+		// If the document does not exist, create a new entry
+		const newTermsAndCondition = new WebSiteModel({
+		termsAndCondition: termsAndConditionData,
+		tag: 'terms-and-condition',
+		});
+	
+		await newTermsAndCondition.save();
+		console.log("New Terms and Condition created: ", newTermsAndCondition);
+	
+		res.status(200).json({ Success: true, message: "Terms and Conditions set successfully." });
+	
+	} catch (error) {
+		console.error("Error setting Terms and Conditions:", error.message);
+		res.status(500).json({
+		Success: false,
+		message: `Internal Server Error: ${error.message}`,
+		});
+	}
+};
+
+/* export const getTermsAndConditionWebsite = async(req,res)=>{
 	try {
 		const termsAndCondition = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
 		console.log("termsAndCondition: ",termsAndCondition);
@@ -222,8 +518,44 @@ export const getTermsAndConditionWebsite = async(req,res)=>{
 		console.error("Error while getting terms and condition: ",error);
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
-}
-export const setPrivacyPolicyWebsite = async(req,res)=>{
+} */
+
+export const getTermsAndConditionWebsite = async (req, res) => {
+	try {
+		// Fetch terms and condition data based on the tag 'terms-and-condition'
+		const termsAndCondition = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
+	
+		if (termsAndCondition) {
+			// Return the found terms and condition if exists
+			return res.status(200).json({
+				Success: true,
+				message: "Terms and Conditions fetched successfully",
+				result: termsAndCondition.termsAndCondition,
+			});
+		}
+	
+		// If no terms and condition data found, return a friendly message
+		return res.status(200).json({
+			Success: false,
+			message: "No Terms and Conditions found",
+			result: null,
+		});
+		
+	} catch (error) {
+		// Log detailed error message for debugging purposes
+		console.error("Error while fetching terms and conditions: ", error.message);
+		logger.error(`Error While Fetching Terms and Conditions: ${error.message}`)
+		// Return the error in response
+		res.status(500).json({
+			Success: false,
+			message: `Internal Server Error: ${error.message}`,
+		});
+	}
+};
+	  
+
+
+/* export const setPrivacyPolicyWebsite = async(req,res)=>{
 	try {
 		// console.log("Privacy and Policy Data",req.body);
 		const alreadyprivacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
@@ -239,7 +571,47 @@ export const setPrivacyPolicyWebsite = async(req,res)=>{
 	} catch (error) {
 		res.status(500).json({Success:false,message:"Internal server Error"})
 	}
-}
+} */
+export const setPrivacyPolicyWebsite = async (req, res) => {
+	try {
+		// Search for existing privacy policy document
+		const existingPrivacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
+	
+		// If the document already exists, update it
+		if (existingPrivacyPolicy) {
+			existingPrivacyPolicy.privacyPolicy = req.body;
+			await existingPrivacyPolicy.save();
+			return res.status(200).json({
+				Success: true,
+				message: "Successfully updated Privacy Policy"
+			});
+		}
+	
+		// If no document exists, create a new one
+		const newPrivacyPolicy = new WebSiteModel({
+			privacyPolicy: req.body,
+			tag: 'privacy-policy'
+		});
+		await newPrivacyPolicy.save();
+	
+		// Log success for newly created Privacy Policy
+		console.log("New Privacy Policy set: ", newPrivacyPolicy);
+	
+		return res.status(200).json({
+			Success: true,
+			message: "Successfully set Privacy Policy"
+		});
+	} catch (error) {
+		// Log error details for debugging purposes
+		console.error("Error setting Privacy Policy: ", error.message);
+	
+		return res.status(500).json({
+			Success: false,
+			message: `Internal Server Error: ${error.message}`
+		});
+	}
+};
+	  
 export const getPrivacyPolicyWebsite = async(req,res)=>{
 	try {
 		const privacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
@@ -374,7 +746,7 @@ export const getConvenienceFees = async(req,res)=>{
         res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
-export const patchConvenienceOptions = async(req,res)=>{
+/* export const patchConvenienceOptions = async(req,res)=>{
 	try {
 		const {convenienceFees} = req.body;
 		console.log("Convenience: ",req.body);
@@ -396,7 +768,52 @@ export const patchConvenienceOptions = async(req,res)=>{
 		console.error("Error Patching Options: ",error);
 		res.status(500).json({Success:false,message: 'Internal Server Error'});
 	}
-}
+} */
+export const patchConvenienceOptions = async (req, res) => {
+	try {
+		const { convenienceFees } = req.body;
+	
+		// Ensure convenienceFees is provided
+		if (!convenienceFees) {
+		return res.status(400).json({ Success: false, message: "Convenience Fees are required" });
+		}
+	
+		// Convert convenienceFees to a number and handle invalid inputs
+		const feeValue = Number(convenienceFees);
+		if (isNaN(feeValue)) {
+		return res.status(400).json({ Success: false, message: "Invalid convenience fee value" });
+		}
+	
+		// Check if the convenience fees already exist in the database
+		let websiteData = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+	
+		// If no data found, create a new record
+		if (!websiteData) {
+			websiteData = new WebSiteModel({ tag: 'ConvenienceFees', ConvenienceFees: feeValue });
+			await websiteData.save();
+			return res.status(200).json({
+				Success: true,
+				message: 'Convenience Fees added successfully',
+				result: websiteData.ConvenienceFees,
+			});
+		}
+	
+		// If found, update the existing data
+		websiteData.ConvenienceFees = feeValue;
+		await websiteData.save();
+	
+		return res.status(200).json({
+		Success: true,
+		message: 'Convenience Fees updated successfully',
+		result: websiteData.ConvenienceFees,
+		});
+	
+	} catch (error) {
+		console.error("Error Patching Convenience Fees: ", error.message); // Only log error message for clarity
+		res.status(500).json({ Success: false, message: 'Internal Server Error' });
+	}
+};
+	  
 export const removeAddressFormField = async(req,res)=>{
 	try {
 		const {addressFormFields} = req.body;
