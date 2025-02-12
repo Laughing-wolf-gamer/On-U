@@ -18,15 +18,15 @@ const PrivacyPolicy = () => {
 	console.log("Privacy Policy: ", privacyPolicy);
 	return (
 		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
-		<div className="bg-white relative h-32 flex flex-col justify-center items-center rounded-md">
-			<img
+		<div className="relative h-32 flex flex-col justify-center items-center rounded-md">
+			{/* <img
 				src="https://indiater.com/wp-content/uploads/2019/10/free-modern-fashion-cover-banner-design-psd-template.jpg"
 				alt="banner"
 				className="w-full h-full object-cover rounded-lg"
-			/>
-			<div className="bg-black absolute inset-0 opacity-50 flex justify-center items-center">
-				<h1 className="text-3xl md:text-3xl font-semibold text-center text-white mb-6">
-				Privacy Policy
+			/> */}
+			<div className="bg-black absolute inset-0 flex justify-center items-center">
+				<h1 className="text-3xl sm:text-2xl md:text-4xl font-extrabold text-center text-white">
+					Privacy Policy
 				</h1>
 			</div>
 		</div>
@@ -119,7 +119,7 @@ const PrivacyPolicy = () => {
 					If you have any questions about this Privacy Policy, please contact us at:
 					</p>
 					<ul className="text-gray-700">
-					<li>Email: <a href={`mailto:${privacyPolicy?.contactInfo}`} className="text-blue-500">{privacyPolicy?.contactInfo}</a></li>
+					<li>Email: <a href={`mailto:${privacyPolicy?.contactInfo}`} className="text-gray-500">{privacyPolicy?.contactInfo}</a></li>
 					<li>Phone: {privacyPolicy.phoneNumber}</li>
 					<li>Address: {privacyPolicy?.businessAddress}</li>
 					</ul>
