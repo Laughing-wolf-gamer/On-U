@@ -563,8 +563,8 @@ const MPpage = () => {
                                         </Fragment>
                                     )}
                                 </h1>
-                                <h1 className="text-gray-800 font-semibold text-sm mt-1">
-                                    inclusive {product?.gst} % GST
+                                <h1 className="text-green-800 font-semibold text-sm mt-1">
+                                    inclusive all taxes.
                                 </h1>
                                 <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
                                     <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>

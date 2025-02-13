@@ -451,8 +451,8 @@ const Ppage = () => {
                                             </Fragment>
                                         )}
                                     </h1>
-                                    <h1 className='text-[#111313] font-semibold text-sm mt-1'>
-                                        inclusive {product?.gst} % GST
+                                    <h1 className='text-green-700 font-semibold text-sm mt-1'>
+                                        inclusive all taxes.
                                     </h1>
                                 </div>
                                 {/* Color Selection */}

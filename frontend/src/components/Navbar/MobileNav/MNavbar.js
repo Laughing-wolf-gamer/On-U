@@ -279,7 +279,7 @@ const MNavbar = ({ user }) => {
 									setShow(false);
 									setClass("hidden");
 								}}>
-                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500'>
+                                    <div className='w-8 h-8 rounded-full jurstify-center items-center flex bg-gray-500'>
                                         <UserRound size={15}/>
                                     </div>
                                     <span className="float-left text-black font-bold flex items-center">
