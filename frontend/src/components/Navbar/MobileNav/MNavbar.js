@@ -269,20 +269,20 @@ const MNavbar = ({ user }) => {
                                     }}
                                 >
                                 </li> */}
-                                <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex">
-                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500' onClick={(e)=>{
-                                        if(user){
-                                            navigation("/dashboard");
-                                        }else{
-                                            navigation('/Login');
-                                        }
-                                        e.stopPropagation();
-                                        setShow(false);
-                                        setClass("hidden");
-                                    }}>
+                                <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex" onClick={(e)=>{
+									e.stopPropagation();
+									if(user){
+										navigation("/dashboard");
+									}else{
+										navigation('/Login');
+									}
+									setShow(false);
+									setClass("hidden");
+								}}>
+                                    <div className='w-8 h-8 rounded-full justify-center items-center flex bg-gray-500'>
                                         <UserRound size={15}/>
                                     </div>
-                                    <span className="float-left text-black font-light flex items-center">
+                                    <span className="float-left text-black font-bold flex items-center">
                                         {user ? user?.user?.name || user?.name:"Login"}
                                     </span>
                                 </div>

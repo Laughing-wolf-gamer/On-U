@@ -344,7 +344,16 @@ const Home = ({user}) => {
                         }
 						{/* <OurMotoData/> */}
 
-                        <div className='px-2'>
+                        
+                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
+                            <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
+                                {Wide_Screen_Section_3.header}
+                            </h1>
+                            <div className='w-screen justify-center items-center flex'>
+                                <GridVideoBox bannerLoading={bannerLoading} Wide_Screen_Section_3 ={Wide_Screen_Section_3} categoriesOptions = {categoriesOptions} />
+                            </div>
+                        </div>
+						<div className='px-2'>
                             <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
@@ -362,14 +371,6 @@ const Home = ({user}) => {
                                     ))
                                 )}
                             </ul>
-                        </div>
-                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
-                            <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
-                                {Wide_Screen_Section_3.header}
-                            </h1>
-                            <div className='w-screen justify-center items-center flex'>
-                                <GridVideoBox bannerLoading={bannerLoading} Wide_Screen_Section_3 ={Wide_Screen_Section_3} categoriesOptions = {categoriesOptions} />
-                            </div>
                         </div>
                         <div className='mt-1 grid grid-cols-1 min-h-[200px] '>
                             <h1 className='text-2xl font-extrabold text-center text-gray-700 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>

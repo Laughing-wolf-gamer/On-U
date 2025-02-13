@@ -5,7 +5,6 @@ import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import LoadingOverlay from "../../utils/LoadingOverLay";
 import { useToast } from "../../Contaxt/ToastProvider";
-import toast from "react-hot-toast";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 import BackToTopButton from "../Home/BackToTopButton";
@@ -27,8 +26,10 @@ const Contact = () => {
             const res = await axios.get(`${BASE_API_URL}/api/common/website/contact-us`);
             console.log("Contact us Page Data ",res?.data?.result);
             setFormData(res?.data?.result || null);
+			checkAndCreateToast("success","Contact us page data fetched successfully.");
         } catch (error) {
             console.error("Error Fetching About Data: ",error);
+			
             setFormData({});
         }finally{
             setSendingMessageLoading(false);
