@@ -5,6 +5,7 @@ import ColorPresetSelector from "@/pages/admin-view/ColorPresetSelector";
 import { ChevronDown, ChevronRight, Minus, Plus, X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchOptionsByType } from "@/store/common-slice";
+import AllColorsWithImages from "./AllColorsWithImages";
 
 const SizeSelector = ({ sizeType, OnChange }) => {
 	const [sizeOptions, setSizeOptions] = useState([]);
@@ -13,7 +14,7 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 	const [selectedSizeArray, setSelectedSizeArray] = useState([]);
 	const [showMore, setShowMore] = useState([]);
 	const dispatch = useDispatch();
-
+	const[availableColors, setAvailableColors] = useState([]);
 	// Handle Increment and Decrement of Quantity
 	const handleIncrement = (size, action) => {
 		const alreadyPresent = selectedSizeArray.find((s) => s.id === size.id);
@@ -148,9 +149,16 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 			{ id: optionsArray.length + 1, label: `New Size`, quantity: 1 },
 		]);
 	};
-
+	console.log("Availbale Options Array: ", availableColors);
+	console.log("All Options Array: ", colorOptions);
 	return (
 		<div className="p-4 mx-auto w-full bg-gray-100">
+			<AllColorsWithImages
+				OnChangeColorsActive={(changedFiles)=>{
+					// console.log("Changed Files: ",changedFiles)
+					setAvailableColors(changedFiles);
+				}}
+			/>
 			<h2 className="mb-4 text-lg font-bold text-gray-700">Select a Size</h2>
 			{selectedSizeArray.length > 0 && (
 				<div className="mt-6">
@@ -257,7 +265,7 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 									<div className="mt-4 w-full">
 										<ColorPresetSelector
 											sizeTitle={size.label}
-											colorOptions={colorOptions}
+											colorOptions={availableColors}
 											sizeTag={size.id}
 											OnChange={(e) => handelSetImagesByColor(size, e)}
 										/>

@@ -372,14 +372,7 @@ export const addProductsFromElement = [
         ],
         required:true,
     },
-	{
-        label:"Color Select",
-        name:'AllColors',
-        componentType:'colorSelect',
-        placeHolder:'Select Product Size',
-        options:[],
-        required:true,
-    },
+	
     {
         label:"ClothSize",
         name:'clothingSize',
@@ -394,6 +387,13 @@ export const addProductsFromElement = [
         componentType:'sizeSelect',
         placeHolder:'Select Product Shoes Size',
         options:[],
+        required:true,
+    },
+	{
+        label:"AllColorSelect",
+        name:'allColors',
+        componentType:'allcolorSelect',
+        placeHolder:'Select Product All Colors',
         required:true,
     },
     {

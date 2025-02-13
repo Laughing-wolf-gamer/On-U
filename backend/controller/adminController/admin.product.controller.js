@@ -249,9 +249,9 @@ const isFormValid =(formData) => {
     if (!formData.size || formData.size.length === 0) {
         reasons.push("At least one size is required.");
     }
-    if (!formData.gst) {
+    /* if (!formData.gst) {
         reasons.push("GST required.");
-    }
+    } */
 
     // Material check
     if (!formData.material) {

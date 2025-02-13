@@ -70,10 +70,10 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	};
-	const changeColorLabel = (id,label,name) =>{
+	const changeColorLabel = (id,selectedColor) =>{
 		// console.log("Color Label: ",label,id);
-		setOptionsArray(optionsArray.map((s) => s.id === id ? {...s, label:label,name: name} : s));
-		setSelectedColorArray(selectedColorArray.map((s) => s.id === id ? {...s, label:label ,name:name} : s));
+		setOptionsArray(optionsArray.map((s) => s.id === id ? {...s, label:selectedColor.label,name:selectedColor.name, images:selectedColor.images} : s));
+		setSelectedColorArray(selectedColorArray.map((s) => s.id === id ? {...s, label:selectedColor.label,name:selectedColor.name, images:selectedColor.images} : s));
 		if (OnChange) {
 			OnChange(selectedColorArray);
 			// console.log("Color Images Image Urls:  ",selectedColorArray);
@@ -176,7 +176,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 											const selectedOption = colorOptions.find(option => option.label === e.target.value);
 											if (selectedOption) {
 												console.log("Color Selected: ", selectedOption);
-												changeColorLabel(color.id, selectedOption.label, selectedOption.name);
+												changeColorLabel(color.id, selectedOption);
 											}
 										}}
 										className="w-full h-full text-black m-2"
@@ -245,7 +245,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 								</button>
 							</div>
 							
-							{selectedColorArray.find((s) => s.id === color.id)?.quantity > 0 && (
+							{/* {selectedColorArray.find((s) => s.id === color.id)?.quantity > 0 && (
 									<Fragment>
 										<span className="font-normal text-gray-500">Add Images For Color</span>
 										<FileUploadComponent
@@ -262,7 +262,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 										/>
 									</Fragment>
 								)
-							}
+							} */}
 						</div>
 					</Fragment>
 				))}
@@ -277,7 +277,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 					onClick={(e) => {
 						e.preventDefault();
 						setShowMore((prev) => [...prev, { id: optionsArray.length, value: false }]);
-							setOptionsArray([
+						setOptionsArray([
 							...optionsArray,
 							{ id: optionsArray.length + 1, label: "#ffffff", quantity: 0 },
 						]);

@@ -7,12 +7,12 @@ import SizeSelector from '../admin-view/SizeSelector';
 import BulletPointsForm from '../admin-view/BulletPointsForm';
 import CustomSelect from '../admin-view/CustomSelect';
 import TextInputArrayCustom from '../admin-view/TextInputArrayCustom';
-import ColorPresetsCreator from '@/pages/admin-view/ColorPresetsCreator';
+import AllColorsWithImages from '../admin-view/AllColorsWithImages';
 
 const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonText, isBtnValid }) => {
-
     // Function to render form controls based on their type
     function renderInputControllersByType(controlItems) {
+		console.log("controlItems",controlItems)
         const value = formData[controlItems.name] || '';
         switch (controlItems.componentType) {
         case 'text':
@@ -33,7 +33,7 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
                 <CustomSelect
                     controlItems={controlItems}
                     setChangeData={(e) => {
-                    setFormData({ ...formData, [controlItems.name]: e });
+                    	setFormData({ ...formData, [controlItems.name]: e });
                     }}
                 />
             );
@@ -63,17 +63,12 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
 				setFormData({...formData,[controlItems.name]:e})
 			}}
 		/>
-		/* case 'colorSelect':
-			<div className="mt-4 w-full">
-				<ColorPresetsCreator
-					sizeTag={"allSizes"}
-					sizeTitle = {"allSize-new"}
-					OnChange={(changedFiles)=>{
-						console.log("Color Images Image Urls:  ",changedFiles);
-						// setFormData({...formData, ['colorImages']: changedFiles});
-					}}
-				/>
-			</div>
+		/* case 'allcolorSelect':
+			return <AllColorsWithImages
+				OnChange={(changedFiles)=>{
+					console.log("Changed Files: ",changedFiles)
+				}}
+			/>
 		break; */
         case 'sizeSelect':
             return (
@@ -81,21 +76,22 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
                     sizeType={controlItems?.name}
                     sizeOptions={controlItems.options}
                     OnChange={(e) => {
+						console.log("All Sizes: ",e);
                         setFormData({ ...formData, ['size']: e });
                     }}
                 />
             );
         default:
             return (
-            <Input
-                value={value}
-                name={controlItems.name}
-                placeholder={controlItems.placeholder}
-                id={controlItems.name}
-                type={controlItems.type}
-                onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
-                className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full"
-            />
+				<Input
+					value={value}
+					name={controlItems.name}
+					placeholder={controlItems.placeholder}
+					id={controlItems.name}
+					type={controlItems.type}
+					onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
+					className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full"
+				/>
             );
         }
     }
