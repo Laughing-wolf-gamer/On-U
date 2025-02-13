@@ -279,8 +279,8 @@ const MNavbar = ({ user }) => {
 									setShow(false);
 									setClass("hidden");
 								}}>
-                                    <div className='w-8 h-8 rounded-full jurstify-center items-center flex bg-gray-500'>
-                                        <UserRound size={15}/>
+                                    <div className='w-8 h-8 p-2 rounded-full flex justify-center items-center bg-gray-500'>
+                                        <UserRound size={15} className=''/>
                                     </div>
                                     <span className="float-left text-black font-bold flex items-center">
                                         {user ? user?.user?.name || user?.name:"Login"}
@@ -403,7 +403,7 @@ const MNavbar = ({ user }) => {
 
                             <Ripples color="black" className="w-full">
                                 <li
-                                    className="text-black  px-5 py-4 relative w-full flex"
+                                    className="text-black px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         setShow(false);
                                         setClass("hidden");

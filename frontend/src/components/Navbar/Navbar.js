@@ -156,7 +156,7 @@ const Navbar = ({user}) => {
                         {isSearchVisible && <Search toggleSearchBar = {()=>{
 							setIsSearchVisible(false);
 						}} />}
-                            <button onClick={toggleSearchBar} className="text-slate-800 hover:border border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
+                            <button onClick={toggleSearchBar} className="text-slate-800 hover:border hover:animate-vibrateScale border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
                                 <SearchIcon size={25}/>
                             </button>
                         </div>

@@ -35,7 +35,7 @@ const Footer = () => {
                     {/* Customer Services */}
                     <div className="md:border-r lg:border-r xl:border-r 2xl:border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold text-gray-800 mb-4">USEFULL LINKS</h1>
-                        <ul className="text-sm space-y-2">
+                        <ul className="text-sm space-y-4">
                             <Link to="/about">
                                 <li className="hover:underline text-gray-600">Shipping</li>
                             </Link>
