@@ -68,7 +68,7 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 
 	const handleLogout = async () => {
 		await dispatch(logout())
-		navigate('/');
+		navigate('/Login');
 	};
 	if(!loading && !isAuthentication && !user){
 		return <NotLoggedInModal/>;

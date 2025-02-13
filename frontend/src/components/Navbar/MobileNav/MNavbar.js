@@ -279,8 +279,8 @@ const MNavbar = ({ user }) => {
 									setShow(false);
 									setClass("hidden");
 								}}>
-                                    <div className='w-8 h-8 p-2 rounded-full flex justify-center items-center bg-gray-500'>
-                                        <UserRound size={15} className=''/>
+                                    <div className='w-10 h-10 p-2 rounded-full flex justify-center items-center bg-gray-500'>
+                                        <UserRound size={20} className=''/>
                                     </div>
                                     <span className="float-left text-black font-bold flex items-center">
                                         {user ? user?.user?.name || user?.name:"Login"}

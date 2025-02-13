@@ -171,7 +171,7 @@ const Navbar = ({user}) => {
                                     </Link>
                                 </div>
                             </li>
-                            <li className="w-max flex justify-center items-center  font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
+                            <li onClick={()=> setIsSearchVisible(false)} className="w-max flex justify-center items-center  font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                                         <span>{wishlist.orderItems.length}</span>
@@ -182,7 +182,7 @@ const Navbar = ({user}) => {
                                         <span>{currentWishListCount}</span>
                                     </div>
                                 )}
-                                <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
+                                <div onClick={()=> setIsSearchVisible(false)} className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
                                     <Link to="/my_wishlist">
                                         <FaHeart className='w-full h-full justify-self-center text-slate-800'/>
                                     </Link>

@@ -729,7 +729,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 </ul>
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>DISCOUNT</h1>
-                    {discountedPercentageAmount.map((amount, i) => {
+                    {discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((amount, i) => {
                         // Get the 'discountedAmount' value from the URL
                         const params = new URLSearchParams(window.location.search);
                         const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL

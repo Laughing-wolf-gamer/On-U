@@ -400,8 +400,8 @@ export const addNewProduct = async (req, res) => {
             specification,
             subCategory,
             specialCategory: specialCategory,
-            price: priceWithGST, // Price after applying GST
-            salePrice: salePriceWithGST, // SalePrice after applying GST (if applicable)
+            price: price, // Price after applying GST
+            salePrice: salePrice, // SalePrice after applying GST (if applicable)
             DiscountedPercentage: DiscountedPercentage,
             totalStock,
             AllColors: AllColors,
@@ -514,13 +514,13 @@ export const editProduct = async (req, res) => {
         let priceWithGST = calculateGst(price,gst);
         let salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
         // Add the recalculated price and salePrice to the updateFields
-        if (priceWithGST) updateFields.price = priceWithGST;
-        if (salePriceWithGST) updateFields.salePrice = salePriceWithGST;
+        if (price && price > 0) updateFields.price = price;
+        if (salePrice && salePrice > 0) updateFields.salePrice = salePrice;
 
         // Calculate and set the DiscountedPercentage field if salePrice exists
-        if (priceWithGST && salePriceWithGST && salePriceWithGST > 0) {
-            const discountAmount = priceWithGST - salePriceWithGST;
-            const discountPercentage = ((discountAmount / priceWithGST) * 100).toFixed(0);
+        if (price && salePrice && salePrice > 0) {
+            const discountAmount = price - salePrice;
+            const discountPercentage = ((discountAmount / salePrice) * 100).toFixed(0);
             updateFields.DiscountedPercentage = discountPercentage;
         } else {
             const currentProduct = await ProductModel.findById(id);

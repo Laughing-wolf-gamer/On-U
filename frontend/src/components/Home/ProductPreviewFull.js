@@ -60,7 +60,7 @@ const ProductPreviewFull = ({ product ,user}) => {
     return (
         <div className='max-w-screen-2xl font-kumbsan w-full flex flex-col justify-self-center justify-center space-y-5 items-center bg-slate-200'>
             {/* Preview Headers Section */}
-            <div className="min-w-fit font-kumbsan flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 my-4 max-w-full">
+            <div className="min-w-fit flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 my-4 max-w-full">
                 {previewHeader && previewHeader.length > 0 &&
                     previewHeader.map((h, index) => (
                         <button
@@ -75,7 +75,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                             key={index}
                             className={`border-2 border-gray-600 border-opacity-70 p-2 sm:p-3 md:p-4 lg:p-4 xl:p-5 px-5 py-2 sm:px-6 sm:py-3 flex items-center justify-center md:w-[130px] lg:w-[150px] xl:w-[180px] 2xl:w-[200px] sm:w-[120px] sm:h-[35px] h-[40px] transform font-kumbsan transition-transform duration-300 ease-out hover:scale-110 cursor-pointer rounded-full ${activePreview === h.id ? 'bg-black text-white' : 'bg-neutral-50'}`}
                         >
-                            <span className="inline-block text-center text-[10px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] whitespace-nowrap overflow-hidden text-ellipsis">
+                            <span className="inline-block font-medium text-center text-[10px] sm:text-[12px] md:text-[14px] lg:text-[16px] xl:text-[18px] whitespace-nowrap overflow-hidden text-ellipsis">
                                 {h?.title}
                             </span>
                         </button>

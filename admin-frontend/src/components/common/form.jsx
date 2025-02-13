@@ -7,6 +7,7 @@ import SizeSelector from '../admin-view/SizeSelector';
 import BulletPointsForm from '../admin-view/BulletPointsForm';
 import CustomSelect from '../admin-view/CustomSelect';
 import TextInputArrayCustom from '../admin-view/TextInputArrayCustom';
+import ColorPresetsCreator from '@/pages/admin-view/ColorPresetsCreator';
 
 const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonText, isBtnValid }) => {
 
@@ -17,13 +18,13 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
         case 'text':
             return (
                 <Input
-                    name={controlItems.name}
-                    placeholder={controlItems.placeholder}
-                    id={controlItems.name}
-                    type={controlItems.type}
-                    value={value}
-                    onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
-                    className={`px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full`}
+				name={controlItems.name}
+				placeholder={controlItems.placeholder}
+				id={controlItems.name}
+				type={controlItems.type}
+				value={value}
+				onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
+				className={`px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full`}
             />
             
             );
@@ -62,6 +63,18 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
 				setFormData({...formData,[controlItems.name]:e})
 			}}
 		/>
+		/* case 'colorSelect':
+			<div className="mt-4 w-full">
+				<ColorPresetsCreator
+					sizeTag={"allSizes"}
+					sizeTitle = {"allSize-new"}
+					OnChange={(changedFiles)=>{
+						console.log("Color Images Image Urls:  ",changedFiles);
+						// setFormData({...formData, ['colorImages']: changedFiles});
+					}}
+				/>
+			</div>
+		break; */
         case 'sizeSelect':
             return (
                 <SizeSelector

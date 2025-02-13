@@ -4,11 +4,13 @@ import { addNewOption, deleteOption, fetchAllOptions, setConvenienceFees, update
 import { ChevronDown, ChevronUp, Trash, X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const AdminOptions = () => {
     const { AllOptions,convenienceFees } = useSelector(state => state.common);
     const[currentUpdatingColorNameData,setUpdatingColorNameData] = useState(null);
-    const{toast} = useToast();
+    // const{toast} = useToast();
+	
     const [dropdowns, setDropdowns] = useState({
         categories: false,
         subcategories: false,
@@ -67,13 +69,13 @@ const AdminOptions = () => {
             default:
             break;
         }
-        toast({title:"Updated New Options"});
+        toast.success(`Added New ${type}`);
     };
 
     const handleRemoveOption = async (type, value) => {
         await dispatch(deleteOption({ type: type, value: value.value }));
         dispatch(fetchAllOptions());
-        toast({title:`Removed New ${type}`,type:"error"});
+        toast();
     };
     const handleToggleShowOptionInProducts = async (type, value,checked) => {
         console.log("Toggle show option in products: ",type,value,checked);

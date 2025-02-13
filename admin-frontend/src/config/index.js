@@ -293,14 +293,14 @@ export const addProductsFromElement = [
         placeHolder:'Enter Specification',
         required:true,
     },
-    {
+    /* {
         label:'GST',
         name:'gst',
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Price',
         required:true,
-    },
+    }, */
     {
         label:'Price',
         name:'price',
@@ -370,6 +370,14 @@ export const addProductsFromElement = [
         placeHolder:'Select Product Sub-Category',
         options:[
         ],
+        required:true,
+    },
+	{
+        label:"Color Select",
+        name:'AllColors',
+        componentType:'colorSelect',
+        placeHolder:'Select Product Size',
+        options:[],
         required:true,
     },
     {

@@ -297,11 +297,11 @@ const Home = ({user}) => {
                     </Fragment >
                 :
                     <Fragment>
-                        <div className='w-[100vw]'>
+                        <div className='w-[100vw] pb-7'>
                             <Carousel
                                 preventMovementUntilSwipeScrollTolerance
                                 className='' 
-                                autoPlay={50000}
+                                autoPlay={5000}
                                 swipeable
                                 infiniteLoop={true}
                                 showThumbs={false} 
@@ -318,9 +318,9 @@ const Home = ({user}) => {
                                     ) : (
                                         // Skeleton Loader for the Carousel Items
                                         Array(8).fill(0).map((_, index) => (
-                                            <div className='h-[200px] w-full bg-gray-100 p-1 animate-pulse' >
-                                                <div key={index} className="w-[98%] h-[90%] bg-gray-300 animate-pulse rounded-lg" />
-                                            </div>
+                                            <div className='w-full p-1 animate-pulse'>
+												<div key={index} className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] bg-gray-300 animate-pulse rounded-lg" />
+											</div>
                                         ))
                                     )}
                             </Carousel>
@@ -328,19 +328,19 @@ const Home = ({user}) => {
 						
                         
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
-                            <div className='w-screen justify-center items-center flex pr-3 pl-3 '>
-                                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-2 lg:grid-cols-5 2xl:grid-cols-5 2xl:space-x-4 md:space-x-1 sm:space-x-4 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
-                                    {
-                                        Array(6).fill(0).map((_, index) => (
-                                            <div key={`skeleton_${index}`} className="bg-gray-400 w-[140px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
-                                                <div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
+                            <div className='w-full justify-center items-center flex pr-3 pl-3 '>
+								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
+									{
+										Array(6).fill(0).map((_, index) => (
+											<div key={`skeleton_${index}`} className="bg-gray-400 w-full sm:w-[140px] md:w-[180px] lg:w-[200px] xl:w-[220px] h-[301px] rounded-md relative flex flex-col justify-between items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105 animate-pulse">
+												<div className='w-full absolute bottom-2 h-7 bg-gray-700 animate-pulse'>
+												</div>
+											</div>
+										))
+									}
+								</div>
+							</div>
 
-                                                </div>
-                                            </div>
-                                        ))
-                                    }
-                                </div>
-                            </div>
                         }
 						{/* <OurMotoData/> */}
 
@@ -385,8 +385,12 @@ const Home = ({user}) => {
                                     )):(
                                         Array(8).fill(0).map((_, index) => (
                                             <li key={`skeleton_${index}`} className='m-2'>
-                                                <div className="w-[120px] h-[170px] bg-gray-300 animate-pulse rounded-lg"></div>
-                                            </li>
+												<div className="w-[100px] sm:w-[120px] md:w-[150px] lg:w-[170px] xl:w-[200px] 
+																h-[150px] sm:h-[170px] md:h-[200px] lg:h-[220px] xl:h-[250px] 
+																bg-gray-300 animate-pulse rounded-lg">
+												</div>
+											</li>
+
                                         ))
                                     )}
                                 </ul>
@@ -396,7 +400,7 @@ const Home = ({user}) => {
                         <div className='pt-4 px-2 w-[100vw] '>
                             <Carousel 
                                 preventMovementUntilSwipeScrollTolerance
-                                autoPlay={50000}
+                                autoPlay={5000}
                                 swipeable
                                 infiniteLoop={true}
                                 showThumbs={false} 
@@ -492,12 +496,17 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                         {inView[index] ? (
                             <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
                         ) : (
-                            <div className="w-[140px] sm:w-[200px] md:w-[250px] lg:w-[300px] xl:w-[350px] 2xl:w-[400px] h-[300px] sm:h-[350px] md:h-[400px] lg:h-[450px] xl:h-[500px] 2xl:h-[550px] bg-gray-200 animate-pulse rounded-lg">
-                                <div className="w-full h-full relative">
-                                    <div className="min-w-full bg-gray-300 h-10 sm:h-12 md:h-14 lg:h-16 xl:h-18 2xl:h-20 bottom-5 left-0 justify-start absolute animate-pulse items-start px-2 flex flex-row">
-                                    </div>
-                                </div>
-                            </div>
+                            <div className="w-[120px] sm:w-[160px] md:w-[200px] lg:w-[250px] xl:w-[300px] 2xl:w-[350px] 
+								h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px] 
+								bg-gray-200 animate-pulse rounded-lg">
+								<div className="w-full h-full relative">
+									<div className="min-w-full bg-gray-300 
+										h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 2xl:h-18 
+										bottom-5 left-0 justify-start absolute animate-pulse items-start px-1 sm:px-2 md:px-3 flex flex-row">
+									</div>
+								</div>
+							</div>
+
 
                         )}
                     </div>

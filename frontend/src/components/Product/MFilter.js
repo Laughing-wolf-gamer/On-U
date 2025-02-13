@@ -662,7 +662,7 @@ const MFilter = ({ product ,handleSortChange}) => {
                     </ul>
                     <ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
                         {
-                            discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.map((e,i) =>
+                            discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((e,i) =>
 
                                 <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.toString()} relative`}
                                 onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
