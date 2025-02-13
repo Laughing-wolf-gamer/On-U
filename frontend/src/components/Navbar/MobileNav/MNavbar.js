@@ -28,7 +28,8 @@ const MNavbar = ({ user }) => {
     const dispatch = useDispatch()
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const navigation = useNavigate()
-    const [show, setShow] = useState(false);
+    const [showMenuView, setMenuShow] = useState(false);
+    const [showbagView, setBagShow] = useState(false);
     const [Class, setClass] = useState("hidden");
     const [Menul, setMenul] = useState("hidden");
     const [Menu2, setMenu2] = useState("hidden");
@@ -44,10 +45,10 @@ const MNavbar = ({ user }) => {
     const [Beauty, setBeauty] = useState(false)
     const classchange = () => setClass("block");
     const classunchange = () => setClass("hidden");
-    const handleClose = () => (setShow(false), navigation('/products'));
-    const handleShow = () => setShow(true);
+    const handleMenuClose = () => (setMenuShow(false), navigation('/products'));
+    const handleShow = () => setMenuShow(true);
     const loginunchange = () => setClass("hidden");
-    const loginClose = () => setShow(false);
+    const loginClose = () => setMenuShow(false);
     const [isSwiping, setIsSwiping] = useState(false);
     
 
@@ -178,7 +179,7 @@ const MNavbar = ({ user }) => {
                                         <span>{currentBagCount}</span>
                                     </div>
                                 )}
-                                <Link to='/bag'><ShoppingCart size={26} color='black'/></Link>
+                                <button onClick={()=> setBagShow(!showbagView)}><ShoppingCart size={26} color='black'/></button>
                             </div>
                             <div className='float-right relative m-2 pb-0.5'>
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
@@ -211,64 +212,45 @@ const MNavbar = ({ user }) => {
                 </div>
             </div>
 
-
-            <div>
+			<div>
 
                 {/* Overlay */}
-                {show && (
+                {showbagView && (
                     <div
                         className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
-                        onClick={handleClose}
+                        onClick={()=> setBagShow(false)}
                     ></div>
                 )}
 
                 {/* Offcanvas */}
                 <div
-                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${show ? 'translate-x-0' : 'translate-x-full'}`}
+                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
-                    <div className="p-4">
-                        {/* <img src={Mbanner} alt="Banner" className="min-h-[150px]" /> */}
-                    
-                        {/* Conditional rendering for user login state */}
-                        {/* {user ? (
-                            <div
-                                className="text-slate-400  text-xs font-bold absolute right-14 top-32"
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    loginClose();
-                                    loginunchange();
-                                    logoutBTN();
-                                }}
-                            >
-                                <span>LOGOUT</span>
-                            </div>
-                        ) : (
-                            <div className="text-slate-400  text-xs font-bold absolute right-14 top-32" onClick={() => loginClose()}>
-                                <Link to="/registeruser">
-                                    <span>SIGN UP.</span>
-                                </Link>
-                                <Link to="/Login">
-                                    <span>&nbsp;&nbsp;&nbsp;LOGIN</span>
-                                </Link>
-                            </div>
-                        )} */}
-                    
+                    <div className="p-4">                    
+                        <ul>
+                            
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div>
+
+                {/* Overlay */}
+                {showMenuView && (
+                    <div
+                        className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
+                        onClick={handleMenuClose}
+                    ></div>
+                )}
+
+                {/* Offcanvas */}
+                <div
+                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
+                >
+                    <div className="p-4">                    
                         <ul>
                             <Ripples color="#D0DDD0" className="w-full">
-                                {/* <li
-                                    className="text-black  px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setShow(false);
-                                        setClass("hidden");
-                                        if (user) {
-                                            navigation('/dashboard');
-                                        } else {
-                                            navigation('/Login');
-                                        }
-                                    }}
-                                >
-                                </li> */}
                                 <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex" onClick={(e)=>{
 									e.stopPropagation();
 									if(user){
@@ -276,7 +258,7 @@ const MNavbar = ({ user }) => {
 									}else{
 										navigation('/Login');
 									}
-									setShow(false);
+									setMenuShow(false);
 									setClass("hidden");
 								}}>
                                     <div className='w-10 h-10 p-2 rounded-full flex justify-center items-center bg-gray-500'>
@@ -293,7 +275,7 @@ const MNavbar = ({ user }) => {
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         navigation("/");
                                     }}
@@ -317,7 +299,7 @@ const MNavbar = ({ user }) => {
                             <MProductsBar
                                 showProducts={Menu2}
                                 onClose={() => {
-                                    setShow(false);
+                                    setMenuShow(false);
                                     setClass("hidden");
                                     setMenu2("hidden");
                                 }}
@@ -326,7 +308,7 @@ const MNavbar = ({ user }) => {
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         // Create the URL with query parameters
                                         const queryParams = new URLSearchParams();
@@ -348,7 +330,7 @@ const MNavbar = ({ user }) => {
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         /* // Create the URL with query parameters
                                         const queryParams = new URLSearchParams();
@@ -370,7 +352,7 @@ const MNavbar = ({ user }) => {
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         // Create the URL with query parameters
                                         const queryParams = new URLSearchParams();
@@ -392,7 +374,7 @@ const MNavbar = ({ user }) => {
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         navigation("/about");
                                     }}
@@ -405,7 +387,7 @@ const MNavbar = ({ user }) => {
                                 <li
                                     className="text-black px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
-                                        setShow(false);
+                                        setMenuShow(false);
                                         setClass("hidden");
                                         navigation("/contact");
                                     }}
@@ -414,7 +396,7 @@ const MNavbar = ({ user }) => {
                                 </li>
                             </Ripples>
 
-                            <Mhome Mhome={Menu4} fun1={handleClose} fun2={classunchange} />
+                            <Mhome Mhome={Menu4} fun1={handleMenuClose} fun2={classunchange} />
                         </ul>
                         <hr />
                         <div className="px-5 flex-row flex space-x-4 mt-7 text-[#282c3fd2] text-sm">

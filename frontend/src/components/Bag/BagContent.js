@@ -94,28 +94,6 @@ const BagContent = ({
 							removeCoupon = {removeCoupon}
 						/>
 					</div>
-		
-					{/* Address and Payment Section */}
-					{/* <AddressAndPaymentComponent 
-						totalProductSellingPrice = {totalProductSellingPrice}
-						buttonPressed = {buttonPressed}
-						allAddresses={allAddresses}
-						handleProceedToPayment={handleProceedToPayment} 
-						handleOpenPopup={handleOpenPopup} 
-						handleClosePopup={handleClosePopup} 
-						selectedAddress={selectedAddress} 
-						isAddressPopupOpen={isAddressPopupOpen} 
-						handleSaveAddress={handleSaveAddress}
-						user={user}
-						handleAddressSelection = {handleAddressSelection}
-					/> */}
-					
-					{/* Add Address Popup */}
-					{/* <AddAddressPopup
-						isOpen={isAddressPopupOpen}
-						onClose={handleClosePopup}
-						onSave={handleSaveAddress}
-					/> */}
 				</Fragment>
 			) : (
 				<Fragment>

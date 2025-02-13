@@ -4,7 +4,7 @@ import logger from "../../utilis/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
-import { calculateDiscountPercentage, calculateGst } from "../../utilis/basicUtils.js";
+import { calculateDiscountPercentage, calculateGst, getStringFromObject } from "../../utilis/basicUtils.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -219,7 +219,7 @@ export const fetchAllCoupons = async(req, res) => {
     }
 }
 const isFormValid =(formData) => {
-    console.log("Check Form: ",formData);
+    // console.log("Check Form: ",formData);
     const reasons = [];
     if(!formData.productId){
         reasons.push("Product ID is required.");
@@ -327,12 +327,13 @@ export const addNewProduct = async (req, res) => {
         } = req.body;
 
         // Log incoming data for debugging
-        console.log("Adding Products fields ", isFormValid(req.body));
+        console.log("Adding Products fields ", getStringFromObject(isFormValid(req.body)));
 
         // Check if form data is valid
-        const isValid = isFormValid(req.body);
+        const isValid = isFormValid(req.body)
+		
         if (!isValid || !isValid.isValid) {
-            return res.status(401).json({ Success: false, message: "All fields are required", reasons: "All Fields Required" });
+            return res.status(201).json({ Success: false, message: "All fields are required", reasons: `Missing Fields: ${getStringFromObject(isFormValid(req.body))}` });
         }
 
         // Handle colors

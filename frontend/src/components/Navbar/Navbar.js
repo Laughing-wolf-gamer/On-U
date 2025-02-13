@@ -14,6 +14,7 @@ import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/in
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
 import { IoBagRemoveSharp } from 'react-icons/io5'
+import SideBarBag from './SideBarBag.js'
 
 
 const Navbar = ({user}) => {
@@ -26,7 +27,7 @@ const Navbar = ({user}) => {
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
     const { options } = useSelector((state) => state.AllOptions);
-    
+    const [showbagView, setBagShow] = useState(false);
     const [Menu1, setMenu1] = useState('hidden')
     const [Menu2, setMenu2] = useState('hidden')
     const [Menu3, setMenu3] = useState('hidden')
@@ -200,9 +201,9 @@ const Navbar = ({user}) => {
                                     </div>
                                 )}
                                 <div className="flex flex-row w-full h-7 mb-5 mx-4 hover:animate-vibrateScale">
-                                    <Link to="/bag">
+                                    <div onClick={()=> setBagShow(true)}>
                                         <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/>
-                                    </Link>
+                                    </div>
                                 </div>
                             </li>
                         </ul>
@@ -214,6 +215,25 @@ const Navbar = ({user}) => {
                 
                 <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
         </div>
+		<div>
+
+			{/* Overlay */}
+			{showbagView && (
+				<div
+					className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
+					onClick={()=> setBagShow(false)}
+				></div>
+			)}
+
+			{/* Offcanvas */}
+			<div
+				className={`fixed top-0 right-0 w-[800px] h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
+			>
+				<div className="p-1">                    
+					<SideBarBag/>
+				</div>
+			</div>
+		</div>
         </Fragment>
     )
 }

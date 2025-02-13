@@ -222,7 +222,7 @@ const AdminProducts = () => {
                 const data = await dispatch(addNewProduct({ ...formData }));
                 if (!data?.payload?.Success) {
                     // toast.error(`Error: ${data?.payload?.message}`);
-                    throw new Error(`Fill All Fields ${data?.payload?.message}`);
+                    throw new Error(`Missing Fields ${data?.payload?.reasons}`);
                 }
                 setOpenCreateProduct(false);
                 setUploadedImageUrls([]);
@@ -230,8 +230,8 @@ const AdminProducts = () => {
                 dispatch(fetchAllProducts({pageNo:currentPage}));
                 toast.success("Product Added Success")
             } catch (error) {
-                console.error(`Failed to Add New Product: ${error.message}`,error);
-                toast.error(`${error.message}`)
+                console.error(`Failed to Add New Product: ${error.message}`);
+                toast.info(error.message)
             }
         
         } 

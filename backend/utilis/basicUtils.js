@@ -9,6 +9,9 @@ export function getOriginalAmount(gstRate, amountWithGST) {
     const originalAmount = amountWithGST / (1 + (gstRate / 100));
     return originalAmount;
 }
+export const getStringFromObject = (objectData)=>{
+	return Object.values(objectData).join(", ");
+}
 export const calculateDiscount = (originalPrice, salePrice) => {
     // Ensure prices are valid (greater than 0)
     if (originalPrice <= 0 || salePrice < 0) {
