@@ -15,9 +15,10 @@ import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { ChevronDown, ChevronRight, ShoppingCart, UserRound } from 'lucide-react'
+import { ChevronDown, ChevronRight, ShoppingCart, UserRound, X } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
+import SideBarBag from '../SideBarBag'
 
 
 const MNavbar = ({ user }) => {
@@ -226,9 +227,18 @@ const MNavbar = ({ user }) => {
                 <div
                     className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
-                    <div className="p-4">                    
+                    <div className="p-3 sm:relative">                    
+						{/* X Button at Top Left */}
+						<button 
+							onClick={() => {
+								// Implement the function to hide or close the left section (you can set state to toggle visibility)
+								setBagShow(false);
+							}} 
+							className="absolute top-0 left-3 block sm:hidden text-black rounded-full w-8 h-8 items-center justify-center text-lg">
+							<X size={24} className='text-3xl' />
+						</button>
                         <ul>
-                            
+                            <SideBarBag/>
                         </ul>
                     </div>
                 </div>

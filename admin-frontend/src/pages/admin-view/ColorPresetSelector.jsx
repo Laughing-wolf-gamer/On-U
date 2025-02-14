@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { ChevronDown, ChevronUp, Minus, Plus, X } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import FileUploadComponent from "@/components/admin-view/FileUploadComponent";
-const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
+const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMode = false}) => {
 	const[isLoading, setIsLoading] = useState(false);
 	const[optionsArray, setOptionsArray] = useState([]);
 	const [selectedColorArray, setSelectedColorArray] = useState([]);
@@ -245,7 +245,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 								</button>
 							</div>
 							
-							{/* {selectedColorArray.find((s) => s.id === color.id)?.quantity > 0 && (
+							{editingMode && selectedColorArray.find((s) => s.id === color.id)?.quantity > 0 && (
 									<Fragment>
 										<span className="font-normal text-gray-500">Add Images For Color</span>
 										<FileUploadComponent
@@ -262,7 +262,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange}) => {
 										/>
 									</Fragment>
 								)
-							} */}
+							}
 						</div>
 					</Fragment>
 				))}

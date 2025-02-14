@@ -12,7 +12,7 @@ const optionSchema = new mongoose.Schema({
     type: {
       type: String,
       required: true,
-      enum: ['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'],
+      enum: ['category', 'subcategory', 'color', 'clothingSize', 'gender'],
     },
     value: {
       type: String,

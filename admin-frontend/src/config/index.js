@@ -381,21 +381,21 @@ export const addProductsFromElement = [
         options:[],
         required:true,
     },
-    {
+    /* {
         label:"FootwearSize",
         name:'footWearSize',
         componentType:'sizeSelect',
         placeHolder:'Select Product Shoes Size',
         options:[],
         required:true,
-    },
-	{
+    }, */
+	/* {
         label:"AllColorSelect",
         name:'allColors',
         componentType:'allcolorSelect',
         placeHolder:'Select Product All Colors',
         required:true,
-    },
+    }, */
     {
         label:"Bullet Points",
         name:'bulletPoints',

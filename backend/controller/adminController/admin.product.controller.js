@@ -221,9 +221,15 @@ export const fetchAllCoupons = async(req, res) => {
 const isFormValid =(formData) => {
     // console.log("Check Form: ",formData);
     const reasons = [];
+	if(!formData){
+		reasons.push("Form data is required.");
+		return {
+			isValid:reasons.length === 0,
+			reasons
+		}
+	}
     if(!formData.productId){
         reasons.push("Product ID is required.");
-        return;
     }
     // Title check
     if (!formData.title) {
@@ -249,10 +255,6 @@ const isFormValid =(formData) => {
     if (!formData.size || formData.size.length === 0) {
         reasons.push("At least one size is required.");
     }
-    /* if (!formData.gst) {
-        reasons.push("GST required.");
-    } */
-
     // Material check
     if (!formData.material) {
         reasons.push("Material is required.");
@@ -325,9 +327,8 @@ export const addNewProduct = async (req, res) => {
             Weight,
             Breadth,
         } = req.body;
-
         // Log incoming data for debugging
-        console.log("Adding Products fields ", getStringFromObject(isFormValid(req.body)));
+        console.log("Adding Products fields ", isFormValid(req.body));
 
         // Check if form data is valid
         const isValid = isFormValid(req.body)

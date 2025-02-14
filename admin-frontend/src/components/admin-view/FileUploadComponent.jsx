@@ -150,30 +150,34 @@ const FileUploadComponent = ({
             <span className="mb-4">
                 Files: {files.filter((file) => file !== '').length} / {maxFiles}
             </span>
-            <div
-                ref={dropzoneRef}
-                className="w-full h-40 border-2 border-dashed rounded-md p-4 text-center"
-                onDragOver={handleDragOver}
-                onDragLeave={handleDragLeave}
-                onDrop={handleDrop}
-            >
-                <input
-                    type="file"
-                    id={`file-upload-${tag}-${sizeTag}`} 
-                    className="hidden"
-                    multiple
-                    ref={inputRef}
-                    onChange={handleFileChange}
-                    disabled={files.length >= maxFiles} 
-                />
-                <label
-                    htmlFor={`file-upload-${tag}-${sizeTag}`} 
-                    className="flex flex-col justify-center items-center cursor-pointer"
-                >
-                <div className="mb-2">Drag & Drop or Click to Upload</div>
-                <button className="btn btn-primary">Upload Files</button>
-                </label>
-            </div>
+           <div
+				ref={dropzoneRef}
+				className="w-full h-40 border-2 border-dashed rounded-md p-4 text-center"
+				onDragOver={handleDragOver}
+				onDragLeave={handleDragLeave}
+				onDrop={handleDrop}
+				onClick={() => inputRef.current?.click()} // Trigger file input click when drop zone is clicked
+				>
+				<input
+					type="file"
+					id={`file-upload-${tag}-${sizeTag}`}
+					className="hidden"
+					multiple
+					ref={inputRef}
+					onChange={handleFileChange}
+					disabled={files.length >= maxFiles}
+				/>
+				<label
+					htmlFor={`file-upload-${tag}-${sizeTag}`}
+					className="flex flex-col justify-center items-center cursor-pointer"
+				>
+					<div className="mb-2">Drag & Drop or Click to Upload</div>
+					<button onClick={(e) => e.preventDefault()} className="btn btn-primary">
+					Upload Files
+					</button>
+				</label>
+			</div>
+
 
             {isLoading && <span>Please wait while the files are uploading...</span>}
 

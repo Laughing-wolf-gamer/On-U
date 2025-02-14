@@ -32,7 +32,7 @@ const AdminOptions = () => {
     const [category, setCategory] = useState('');
     const [subcategory, setSubcategory] = useState('');
     const [color, setColor] = useState('');
-    const [footWearSize, setFootWearSize] = useState('');
+    // const [footWearSize, setFootWearSize] = useState('');
     const [clothingWearSize, setClothingWearSize] = useState('');
     const [gender, setGender] = useState('');
 
@@ -57,9 +57,9 @@ const AdminOptions = () => {
             case 'color':
                 setColor('');
                 break;
-            case 'footWearSize':
+            /* case 'footWearSize':
                 setFootWearSize('');
-                break;
+                break; */
             case 'clothingSize':
                 setClothingWearSize('');
                 break;
@@ -112,9 +112,9 @@ const AdminOptions = () => {
                 case 'color':
                     setColors(AllOptions.filter(item => item.type === 'color') || []);
                     break;
-                case 'footWearSize':
+                /* case 'footWearSize':
                     setFootWearSizes(AllOptions.filter(item => item.type === 'footWearSize'));
-                    break;
+                    break; */
                 case 'clothingSize':
                     setClothingWearSizes(AllOptions.filter(item => item.type === 'clothingSize'));
                     break;
@@ -215,21 +215,21 @@ const AdminOptions = () => {
                 </div>
 
                 {/* Product Size */}
-                <div>
+                {/* <div>
                     <label className="block font-medium text-gray-700">Product FootWear Size</label>
                     <input
-                    type="text"
-                    value={footWearSize}
-                    onChange={(e) => setFootWearSize(e.target.value)}
-                    className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+						type="text"
+						value={footWearSize}
+						onChange={(e) => setFootWearSize(e.target.value)}
+						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
                     <button
-                    onClick={() => handleAddOption('footWearSize', footWearSize)}
-                    className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+						onClick={() => handleAddOption('footWearSize', footWearSize)}
+						className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
                     >
                     Add Foot Wear Size
                     </button>
-                </div>
+                </div> */}
                 <div>
                     <label className="block font-medium text-gray-700">Product Cloth Size</label>
                     <input
@@ -265,21 +265,21 @@ const AdminOptions = () => {
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-700">Manage Options</h2>
             <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Categories
+                <h3 className="text-3xl font-bold text-red-600 flex items-center justify-between">
+                	Delivary Convenience Fees 
+                	<span className='text-red-700'>{convenienceFees}</span>
                 </h3>
-                <span>{convenienceFees}</span>
             </div>
+            <h2 className="text-2xl font-semibold text-gray-700">Manage Options</h2>
             {/* Categories List */}
             <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                Product Categories
-                <button onClick={() => toggleDropdown('categories')} className="text-black">
-                    {dropdowns.categories ? <ChevronDown/> : <ChevronUp/>}
+                <button onClick={() => toggleDropdown('categories')} className="text-xl font-medium text-gray-800 flex w-full items-center justify-between">
+					Product Categories: {categories && categories.length > 0? `(${categories.length})` : 'No Categories'}
+					<div  className="text-black">
+						{dropdowns.categories ? <ChevronDown/> : <ChevronUp/>}
+					</div>
                 </button>
-                </h3>
 				<ul
 					className="mt-2 space-y-2"
 					style={{
@@ -313,13 +313,13 @@ const AdminOptions = () => {
             </div>
 
             {/* Subcategories List */}
-            <div>
-                <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                    Product Subcategories
-                    <button onClick={() => toggleDropdown('subcategories')} className="text-black">
+            <div onClick={() => toggleDropdown('subcategories')}>
+                <button className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
+					<h3>Product Subcategories:  {subcategories && subcategories.length > 0? `(${subcategories.length})` : 'No Values'}</h3>
+                    <div  className="text-black">
                         {dropdowns.subcategories ? <ChevronDown/> : <ChevronUp/>}
-                    </button>
-                </h3>
+                    </div>
+                </button>
 				<ul
 					className="mt-2 space-y-2"
 					style={{
@@ -354,12 +354,12 @@ const AdminOptions = () => {
 
                 {/* Genders List */}
                 <div>
-					<h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-						Product Genders
-						<button onClick={() => toggleDropdown('genders')} className="text-black">
-						{dropdowns.genders ? <ChevronDown/> : <ChevronUp/>}
-						</button>
-					</h3>
+					<button onClick={() => toggleDropdown('genders')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
+						<h3>Product Genders: {genders && genders.length > 0 ? `(${genders.length})` : 'No Values' }</h3>
+						<div  className="text-black text-base">
+							{dropdowns.genders ? <ChevronDown/> : <ChevronUp/>}
+						</div>
+					</button>
 					<ul
 						className="mt-2 space-y-2"
 						style={{
@@ -373,15 +373,15 @@ const AdminOptions = () => {
 								{genders.map((item, index) => (
 									<li key={index} className="flex justify-between items-center">
 										<input
-										type="checkbox"
-										id="Genders-select"
-										checked={item?.isActive || false}
-										onChange={(e) => handleToggleShowOptionInProducts('gender', item, e.target.value)}
+											type="checkbox"
+											id="Genders-select"
+											checked={item?.isActive || false}
+											onChange={(e) => handleToggleShowOptionInProducts('gender', item, e.target.value)}
 										/>
 										<span className="font-sans">{item?.value}</span>
 										<button
-										onClick={() => handleRemoveOption('gender', item)}
-										className="p-2  text-black rounded-md  transition duration-300"
+											onClick={() => handleRemoveOption('gender', item)}
+											className="p-2  text-black rounded-md  transition duration-300"
 										>
 										<Trash/>
 										</button>
@@ -394,13 +394,13 @@ const AdminOptions = () => {
 
 
                 {/* Clothing Size List */}
-                <div>
-                    <h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-                        Product Clothing Size
-                        <button onClick={() => toggleDropdown('clothingWearSizes')} className="text-black">
+                <div  className='w-full cursor-pointer'>
+                    <div onClick={() => toggleDropdown('clothingWearSizes')} className="text-xl font-medium cursor-pointer text-gray-800 flex items-center justify-between">
+                        <h3>Product Clothing Size: {clothingWearSizes && clothingWearSizes.length > 0 ? `(${clothingWearSizes.length})` : 'No Values' }</h3>
+                        <div className="text-black">
                             {dropdowns.clothingWearSizes ? <ChevronDown/> : <ChevronUp/>}
-                        </button>
-                    </h3>
+                        </div>
+                    </div>
 					<ul
 						className="mt-2 space-y-2"
 						style={{
@@ -417,12 +417,18 @@ const AdminOptions = () => {
 										type="checkbox"
 										id='Clothing-Size-select'
 										checked={item?.isActive || false}
-										onChange={(e) => handleToggleShowOptionInProducts('clothingSize',item, e.target.value)}
+										onChange={(e) => {
+											e.stopPropagation();
+											handleToggleShowOptionInProducts('clothingSize',item, e.target.value)
+										}}
 									/>
 									<span className='font-sans'>{item?.value}</span>
 									<button
-									onClick={() => handleRemoveOption('clothingSize', item)}
-									className="p-2 text-black rounded-md transition duration-300"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleRemoveOption('clothingSize', item)
+										}}
+										className="p-2 text-black rounded-md transition duration-300"
 									>
 									<Trash/>
 									</button>
@@ -434,7 +440,7 @@ const AdminOptions = () => {
                 </div>
 
                 {/* Footwear Size List */}
-                <div
+                {/* <div
 					style={{
 						maxHeight: '400px', // Set the maximum height for the scrollable area
 						overflowY: 'auto',  // Enable vertical scrolling when content exceeds max height
@@ -468,15 +474,15 @@ const AdminOptions = () => {
 						))}
 						</ul>
 					)}
-				</div>
+				</div> */}
 
 
                 {/* Colors List */}
                 {/* Colors List */}
 				<div>
-					<div className="text-xl font-medium text-gray-800 flex items-center justify-between">
-						All Colors
-						<button onClick={() => toggleDropdown('colors')} className="text-black">
+					<div onClick={() => toggleDropdown('colors')} className="text-xl font-medium text-gray-800 flex items-center cursor-pointer justify-between">
+						Colors: {colors && colors.length > 0 ? `(${colors.length})` : 'No Values' }
+						<button  className="text-black">
 							{dropdowns.colors ? <ChevronDown/> : <ChevronUp/>}
 						</button>
 					</div>

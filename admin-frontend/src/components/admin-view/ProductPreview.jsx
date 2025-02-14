@@ -517,7 +517,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
 	const[sizeDeletingData,setSizeDeletingData] = useState(null);
 	const[colorDeletingData, setColorDeletingData] = useState(null)
-	const[toggleEditColor,setToggleEditColorsColor] = useState(false);
+	const[toggleEditColor,setToggleEditColorsColor] = useState(null);
 	const[toggleAddNewSize,setToggleAddNewSize] = useState(false);
 	// State variables
 	const [isLoading, setIsLoading] = useState(false);
@@ -629,7 +629,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setIsLoading(false);
 			OnRefresh();
 			setUpdatingColors(null);
-			setToggleEditColorsColor(false);
+			setToggleEditColorsColor(null);
 			setToggleAddNewSize(false);
 		}
 	};
@@ -647,7 +647,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			console.log(`New Size Added:`, response.data);
 			setUpdatingColors([]);
 			setNewSize(null);
-			setToggleEditColorsColor(false);
+			setToggleEditColorsColor(null);
 			setToggleAddNewSize(false);
 			toast.success("New Size Added Successfully");
 		} catch (error) {
@@ -658,7 +658,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setIsLoading(false);
 			setUpdatingColors([]);
 			setNewSize(null);
-			setToggleEditColorsColor(false);
+			setToggleEditColorsColor(null);
 			setToggleAddNewSize(false);
 		}
 	};
@@ -871,7 +871,13 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					<div className='flex justify-end items-center gap-4'>
 						<Button
 							disabled={isLoading}
-							onClick={() => setToggleEditColorsColor(!toggleEditColor)}
+							onClick={() => {
+								if(toggleEditColor){
+									setToggleEditColorsColor(null);
+								}else{
+									setToggleEditColorsColor(size?._id)
+								}
+							}}
 							className={`bg-black hover:bg-gray-700 p-2 rounded-md`}
 						>
 							Color<Edit size={20} />
@@ -879,11 +885,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					</div>
 					
 					
-					<div className={`flex justify-center flex-col my-7 space-y-9 items-center ${toggleEditColor ? 'block' : 'hidden'}`}>
+					<div className={`flex justify-center flex-col my-7 space-y-9 items-center ${toggleEditColor && toggleEditColor === size._id ? 'block' : 'hidden'}`}>
 						<ColorPresetSelector
 							colorOptions={colorOptions}
 							sizeTag={size._id}
 							sizeTitle={size.label}
+							editingMode = {true}
 							OnChange={(e) => {
 								setUpdatingColors({ sizeId: size._id, colors: e });
 							}}

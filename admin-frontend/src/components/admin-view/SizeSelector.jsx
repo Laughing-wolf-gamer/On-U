@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import ColorPresetSelector from "@/pages/admin-view/ColorPresetSelector";
-import { ChevronDown, ChevronRight, Minus, Plus, X } from "lucide-react";
+import { ChevronDown, ChevronRight, Minus, PencilRuler, Plus, X } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { fetchOptionsByType } from "@/store/common-slice";
 import AllColorsWithImages from "./AllColorsWithImages";
@@ -155,7 +155,6 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 		<div className="p-4 mx-auto w-full bg-gray-100">
 			<AllColorsWithImages
 				OnChangeColorsActive={(changedFiles)=>{
-					// console.log("Changed Files: ",changedFiles)
 					setAvailableColors(changedFiles);
 				}}
 			/>
@@ -282,9 +281,10 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 
 			<div className="mt-6 flex justify-center">
 				<Button
-					className="w-full md:w-1/2 bg-black text-white py-2 rounded-lg focus:outline-none"
+					className="w-full bg-black text-white py-2 rounded-lg focus:outline-none"
 					onClick={handleAddSize}
 				>
+					<PencilRuler />
 					Add Size
 				</Button>
 			</div>
