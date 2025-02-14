@@ -10,7 +10,24 @@ import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
 import toast from 'react-hot-toast';
 import DisclaimerManager from '@/components/admin-view/DisclaimerManager';
-
+const allCategories = [
+	'Wide Screen Section- 1',
+	'Wide Screen Section- 2',
+    'Wide Screen Section- 3',
+    'Wide Screen Section- 4',
+    'Wide Screen Section- 5',
+    'Wide Screen Section- 6',
+	'Wide Screen Section- 7',
+    'Wide Screen Section- 8',
+    'Wide Screen Section- 9',
+    'Wide Screen Section- 10',
+    'Wide Screen Section- 11',
+    'Small Screen Section- 1',
+	'Small Screen Section- 2',
+    'Small Screen Section- 3',
+    'Small Screen Section- 4',
+    'Small Screen Section- 5'
+];
 const AdminHomeFeatures = () => {
     const { featuresList } = useSelector(state => state.common);
     const dispatch = useDispatch();
@@ -40,10 +57,10 @@ const AdminHomeFeatures = () => {
     useEffect(() => {
         dispatch(getFeatureImage());
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
-    let categories = [];
+    /* let categories = [];
     if(featuresList && featuresList.length > 0){
         categories = [...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))];
-    }
+    } */
 
     const handleImageUpload = async (url) => {
         try {
@@ -216,7 +233,7 @@ const AdminHomeFeatures = () => {
                     className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 >
                     <option value="">All Categories</option>
-                        {categories.map((category, index) => (
+                        {allCategories.map((category, index) => (
                             <option key={index} value={category}>
                                 {capitalizeFirstLetterOfEachWord(category)}
                             </option>
