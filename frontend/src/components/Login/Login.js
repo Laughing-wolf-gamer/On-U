@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import './Login.css';
 import { useDispatch } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
@@ -86,7 +86,6 @@ const Login = () => {
             sessionStorage.setItem("bagItem", JSON.stringify([]));
         }
     }
-
     const handleCloseOtpModal = () => {
         setOtpData(false);
         setOtp('');

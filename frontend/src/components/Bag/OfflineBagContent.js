@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react'
 import EmptyBag from './Emptybag';
 import { calculateDiscountPercentage, formattedSalePrice } from '../../config';
 import { Minus, Plus, Trash, X } from 'lucide-react';
-import { BsShieldFillCheck } from 'react-icons/bs';
+import { BsCurrencyRupee, BsShieldFillCheck } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import CouponsDisplay from './CouponDisplay';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -223,6 +223,7 @@ const ProductListing = ({ sessionBagData, updateQty, handleDeleteBag,setCoupon,a
 
 // PriceDetails Component
 const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discountedAmount, totalProductSellingPrice, convenienceFees, navigation }) => {
+	console.log("Converenece Fees: ", convenienceFees);
 	return(
 		<div className="w-full h-fit lg:w-1/3 bg-gray-100 p-8 shadow-md">
 			<h3 className="font-semibold text-xl text-gray-800 mb-6">ORDER DETAILS ({sessionBagData.length} items)</h3>
@@ -244,14 +245,12 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 				</div>
 
 				{/* Convenience Fee Section */}
-				{convenienceFees && (
-					<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2 mb-5">
-						<span>Convenience Fee</span>
-						<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-							₹{convenienceFees}
-						</span>
-					</div>
-				)}
+				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2 mb-5">
+					<span>Convenience Fee</span>
+					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
+					</span>
+				</div>
 
 				{/* Total Section */}
 				<div className="flex justify-between font-semibold text-xl text-gray-900">

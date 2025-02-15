@@ -303,13 +303,12 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 					</span>
 				</div>
 
-
-				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
+				<div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
 					<span>Convenience Fee</span>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-						₹{convenienceFees}
+						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
 					</span>
-				</div>} 
+				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
 					<span>Total</span>
 					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>

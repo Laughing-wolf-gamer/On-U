@@ -335,9 +335,9 @@ const SideBarBag = ({OnChangeing}) => {
 											<button
 												onClick={() => {
 													if (isAuthentication) {
-														navigation("/Login");
-													} else {
 														navigation('/bag');
+													} else {
+														navigation("/Login");
 													}
 													handleOnChange();
 												}}
