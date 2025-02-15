@@ -202,7 +202,10 @@ const Navbar = ({user}) => {
                                     </div>
                                 )}
                                 <div className="flex flex-row w-full h-7 mb-5 mx-4 hover:animate-vibrateScale">
-                                    <div onClick={()=> setBagShow(true)}>
+                                    <div onClick={()=> {
+										setIsSearchVisible(false);
+										setBagShow(true)
+									}}>
                                         <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/>
                                     </div>
                                 </div>

@@ -353,7 +353,7 @@ const SideBarBag = ({OnChangeing}) => {
 												}}
 												className="w-full bg-black h-12 text-white py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
 											>
-												Checkout
+												{isAuthentication? "Checkout" : "Login to Checkout"}
 											</button>
 										</div>
 									</div>
