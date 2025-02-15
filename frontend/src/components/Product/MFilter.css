@@ -10,7 +10,7 @@
 }
 
 .tickcolor{
-    border-color: #fb56c1!important;
+    border-color: #4a3944!important;
     border-width: 1px!important;
 
 }
@@ -21,15 +21,15 @@
 
 .rightdiv{
     
-        content: "";
-        top: 4px;
-        left: 4px;
-        width: 8px;
-        height: 5px;
-        border-color: #bfc0c6;
-        border-style: none none solid solid;
-        border-width: 1px;
-        transform: rotate(-45deg);
+	content: "";
+	top: 4px;
+	left: 4px;
+	width: 8px;
+	height: 5px;
+	border-color: #bfc0c6;
+	border-style: none none solid solid;
+	border-width: 1px;
+	transform: rotate(-45deg);
     
 }
 

@@ -49,14 +49,23 @@ export const getallproducts = async (req, res) => {
                     // Assuming you have a discount field, you can sort based on that
                     sort.salePrice = -1; // Descending order for higher discounts
                     break;  
-                case "high-to-low":
+                case "price-high-to-low":
                     // Sort by price in descending order
                     sort.price = -1;  // Highest price first
                     break;
             
-                case "low-to-high":
+                case "price-low-to-high":
                     // Sort by price in ascending order
                     sort.price = 1;   // Lowest price first
+                    break;
+				case "rating-high-to-low":
+                    // Sort by price in descending order
+                    sort.averageRating = -1;  // Highest price first
+                    break;
+            
+                case "rating-low-to-high":
+                    // Sort by price in ascending order
+                    sort.averageRating = 1;   // Lowest price first
                     break;
                 default:
                     // Default sorting (e.g., by price if no valid `sortBy` provided)

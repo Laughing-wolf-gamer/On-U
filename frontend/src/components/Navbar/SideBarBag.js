@@ -12,8 +12,9 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
 import SingleProduct from '../Product/Single_product';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
+import SideBarBagProductItem from '../Product/SideBarBagProductItem';
 
-const SideBarBag = () => {
+const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
     const { user, isAuthentication } = useSelector(state => state.user);
@@ -197,7 +198,11 @@ const SideBarBag = () => {
         dispatch(getRandomArrayOfProducts());
     }, [dispatch,deleteBagResult, user, isAuthentication]);
 
-    
+    const handleOnChange = ()=>{
+		if(OnChangeing){
+			OnChangeing();
+		}
+	}
     /* const verifyAnyOrdersPayment = async()=>{
         if(!sessionStorage.getItem("checkoutData")) return;
         try {
@@ -239,57 +244,86 @@ const SideBarBag = () => {
             }
         }
     },[allAddresses,dispatch])
-	console.log("Bag: ",user);
+	console.log("Bag: ",bag);
 	return (
-		<div className="flex flex-row font-kumbsan justify-start items-start min-h-screen gap-4 p-3">
+		<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2">
 			{/* Left Section (Product Listing) */}
-			<div className="md:w-[32%] px-3 border-r border-gray-800 flex-col items-center hidden md:flex pb-10">
+			<div className="md:w-[35%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
 				{randomProducts && randomProducts.length > 0 && (
-					<div className="flex flex-col items-center w-full my-auto pb-8">
-						<h1 className="text-center mt-4 font-medium text-xl text-gray-800">YOU MAY LIKE</h1>
-						<ul className="grid grid-cols-1 gap-3 w-full max-h-screen overflow-y-auto pb-20">
-							{RandomProductLoading ? (
-								<ProductCardSkeleton />
-							) : (
-								<Fragment>
-									{randomProducts.map((pro) => (
-										<SingleProduct pro={pro} user={user} key={pro._id} />
-									))}
-								</Fragment>
-							)}
-						</ul>
+					<div className="flex flex-col overflow-hidden items-center w-full p-3">
+						<h1 className="text-center font-bold text-xl text-gray-800 uppercase">You May Like</h1>
+						{RandomProductLoading ? (
+							<ProductCardSkeleton />
+						) : (
+							<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
+								{Array(10).fill(null).map((pro, index) => (
+									<SideBarBagProductItem pro={randomProducts[0]} user={user} key={index} />
+								))}
+							</ul>
+						)}
 					</div>
 				)}
 			</div>
 
 			{/* Right Section (Bag Content) */}
-			<div className="md:w-[68%] xl:w-[68%] 2xl:w-[68%] w-full flex bg-slate-100 max-h-screen justify-self-start flex-col h-full justify-start items-center">
-				<h3 className="font-bold text-xl sm:text-lg md:text-xl text-gray-800 text-left">
-					ORDER DETAILS ({sessionBagData.length} items)
-				</h3>
+			<div className="w-full flex flex-col relative h-full justify-between items-center px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pt-4">
+				{/* Order Details Header */}
+				<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-2xl text-gray-800 text-left w-full mb-3">
+				{
+					isAuthentication && bag && bag.orderItems && bag.orderItems.length > 0 ? (
+						`cart (${bag.orderItems.length} items)`
+					):(
+						`cart (${sessionBagData.length} items)`
+					)
+				}
+				</h1>
+				{
+					isAuthentication && user ? (
+						<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+							{
+								bag && bag.orderItems && bag.orderItems.length > 0 && <ProductListingComponent
+									bag={bag}
+									updateQty={updateQty}
+									handleDeleteBag={handleDeleteBag}
+									user={user}
+								
+								/>
+							}
+						</ul>
+					):(
+						<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+							{sessionBagData && sessionBagData.length > 0 ? (
+								<OfflineBagContent
+									sessionBagData={sessionBagData}
+									updateQty={updateQty}
+									handleDeleteBag={handleDeleteBag}
+								/>
+							):(
+								<div className="flex min-h-[470px] font-medium text-base sm:text-base md:text-base justify-start items-start text-left">
+									<p className="text-gray-800">
+										Your shopping bag is empty. Add some items to continue.
+									</p>
+								</div>
+							)}
+						</ul>
 
-				<div className="w-full max-h-full py-2 overflow-y-auto">
-					{sessionBagData && sessionBagData.length > 0 && (
-						<OfflineBagContent
-							sessionBagData={sessionBagData}
-							updateQty={updateQty}
-							handleDeleteBag={handleDeleteBag}
-						/>
-					)}
-				</div>
+					)
+				}
 
-				<div className="w-full min-h-[270px] space-y-3 justify-center bg-white flex items-center md:p-4">
-					<div className="w-full max-w-xl p-2 sm:p-4">
-						<div className="space-y-2">
-							<div className="flex justify-between font-semibold text-xl sm:text-2xl text-gray-900">
+				{/* Center content section (scrollable) */}
+
+				{/* Subtotal and Button Section (Always at the bottom) */}
+				<div className="min-w-full space-y-2 bg-gray-50 p-3 font1 min-h-fit justify-center flex items-center">
+					<div className="w-full h-fit">
+						<div className="space-y-2 w-full">
+							{/* Subtotal */}
+							<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
 								<span>SubTotal</span>
 								<span>₹{Math.round(totalProductSellingPrice)}</span>
 							</div>
 							<br />
-
-							<div className="flex flex-col justify-between text-xs sm:text-sm text-gray-700 border-b border-gray-300 md:pb-2">
 							{/* Button Section */}
-							<div className="grid grid-cols-1 sm:grid-cols-2 gap-2 md:gap-4 md:px-3 xl:px-4">
+							<div className="grid grid-cols-2 gap-2">
 								<button
 									onClick={() => {
 										if (isAuthentication) {
@@ -297,8 +331,9 @@ const SideBarBag = () => {
 										} else {
 											navigation('/bag');
 										}
+										handleOnChange();
 									}}
-									className="w-full bg-gray-50 border border-black hover:border-opacity-60 text-black hover:text-white py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+									className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
 								>
 									View Bag
 								</button>
@@ -310,25 +345,32 @@ const SideBarBag = () => {
 										} else {
 											navigation('/Login');
 										}
+										handleOnChange();
 									}}
-									className="w-full bg-black text-white py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+									className="w-full bg-black h-12 text-white py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
 								>
 									Checkout
 								</button>
 							</div>
-							<br />
-						</div>
-						<div className='w-full justify-center md:mt-4 flex items-center'>
-							<span className="text-xs sm:text-sm">or Continue Shopping</span>
 						</div>
 
+						{/* Continue Shopping */}
+						<div
+							onClick={(e) => {
+								e.stopPropagation();
+								navigation('/products');
+								window.scrollTo(0, 0);
+								handleOnChange();
+							}}
+							className="w-full justify-center mt-5 hover:underline uppercase cursor-pointer flex items-center"
+						>
+							<span className="text-sm sm:text-base md:text-lg hover:text-gray-700 text-black">on Continue Shoppping</span>
 						</div>
 					</div>
 				</div>
 			</div>
+
 		</div>
-
-
 	);
 
 }
@@ -346,87 +388,93 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 	};
 
 	return (
-		<div className="w-full flex flex-col space-y-4">
-		{[1, 2, 3, 4, 5, 5].map((item, i) => {
-			const active = sessionBagData[0];
-			const validImage = getImageExtensionsFile(active?.color);
+		<div className="flex flex-col space-y-4 w-full">
+			{Array(20).fill(null).map((item, i) => {
+				const active = sessionBagData[0];
+				const validImage = getImageExtensionsFile(active?.color);
 
-			return (
-				<div key={i} className="flex flex-col items-start border-b py-4 space-y-2 sm:space-x-4 sm:space-y-0">
-					{/* Product Item */}
-					<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
-					<div className="flex flex-row justify-start items-start space-x-2">
-						{/* Product Image */}
-						<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-							<Link to={`/products/${active?.ProductData?._id}`} className="block w-full h-full">
-								<img
-									src={validImage?.url}
-									alt={active?.ProductData?.shortTitle}
-									className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-								/>
-							</Link>
-						</div>
+				return (
+					<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= sessionBagData.length - 1 ? "border-b":""} py-3 space-y-4 sm:space-x-4 sm:space-y-0`}>
+						{/* Product Item */}
+						<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
+							<div className="flex flex-row justify-start items-start space-x-2">
+								{/* Product Image */}
+								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
+									<Link to={`/products/${active?.ProductData?._id}`} className="block w-full h-full">
+										<img
+											src={validImage?.url}
+											alt={active?.ProductData?.shortTitle}
+											className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+										/>
+									</Link>
+								</div>
 
-						{/* Product Info */}
-						<div className="flex-1 space-y-1 text-left sm:text-left">
-						<h3 className="font-semibold text-xs sm:text-sm lg:text-base text-gray-800">{active?.ProductData?.title}</h3>
-						<p className="text-xs sm:text-sm lg:text-sm text-gray-600">Size: {active?.size?.label}</p>
+									{/* Product Info */}
+								<div className="flex-1 space-y-1 text-left sm:text-left">
+									<h3 className="font-semibold text-lg sm:text-sm md:text-base text-gray-800">
+										{active?.ProductData?.title}
+									</h3>
+									<p className="text-xs sm:text-sm md:text-sm text-gray-600">Size: {active?.size?.label}</p>
 
-						{/* Price Section */}
-						<div className="flex items-center justify-start space-x-2 text-xs sm:text-sm lg:text-base text-blue-500 mt-1">
-							{active?.ProductData?.salePrice ? (
-								<Fragment>
-									<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
-									<span className="line-through text-gray-400">₹{Math.round(formattedSalePrice(active.ProductData.price))}</span>
-									<span className="text-gray-700">({calculateDiscountPercentage(active.ProductData?.price, active.ProductData?.salePrice)}% OFF)</span>
-								</Fragment>
-							) : (
-								<span>₹ {Math.round(formattedSalePrice(active.ProductData.price))}</span>
-							)}
-						</div>
+									{/* Price Section */}
+									<div className="flex items-center justify-start space-x-2 text-xs sm:text-sm md:text-[12px] text-blue-500 mt-1">
+										{active?.ProductData?.salePrice ? (
+											<Fragment>
+												<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
+												<span className="line-through text-gray-400">
+													₹{Math.round(formattedSalePrice(active.ProductData.price))}
+												</span>
+												{/* <span className="text-gray-700">
+													({calculateDiscountPercentage(active.ProductData?.price, active.ProductData?.salePrice)}% OFF)
+												</span> */}
+											</Fragment>
+										) : (
+											<span>₹ {Math.round(formattedSalePrice(active.ProductData.price))}</span>
+										)}
+									</div>
 
-						{/* Quantity Selector */}
-						<div className="mt-2 flex w-32 sm:w-40 md:w-48 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border">
-							<div className="flex w-full px-2 items-center space-x-1 justify-between">
-								<button
-								onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-								className="h-8 w-8 sm:h-9 sm:w-9 px-2 rounded-full text-xs sm:text-sm disabled:text-gray-300"
-								disabled={active?.quantity <= 1}
-								>
-								<Minus strokeWidth={3} />
-								</button>
-								<span className="text-xs sm:text-sm lg:text-base">{active?.quantity}</span>
-								<button
-									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-									className="h-8 w-8 sm:h-9 sm:w-9 px-2 rounded-full text-xs sm:text-sm disabled:text-gray-300"
-									disabled={active?.quantity >= active?.size?.quantity}
-								>
-								<Plus strokeWidth={3} />
-								</button>
+									{/* Quantity Selector */}
+									<div className="mt-2 flex w-20 sm:w-28 md:w-32 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+										<div className="flex w-full items-center space-x-1 justify-between">
+											<button
+												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
+												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+												disabled={active?.quantity <= 1}
+											>
+												<Minus strokeWidth={1.5} />
+											</button>
+											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
+											<button
+												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
+												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+												disabled={active?.quantity >= active?.size?.quantity}
+											>
+												<Plus strokeWidth={1.5} />
+											</button>
+										</div>
+									</div>
+								</div>
 							</div>
-						</div>
 
+							{/* Delete Button */}
+							<Trash
+								size={20}
+								className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
+								onClick={() => handleDeleteBag(active.ProductData._id, active._id)}
+							/>
 						</div>
 					</div>
-
-					{/* Delete Button */}
-					<Trash
-						className="text-lg text-gray-900 hover:text-gray-500 cursor-pointer mt-2 sm:mt-0"
-						onClick={() => handleDeleteBag(active.ProductData._id, active._id)}
-					/>
-					</div>
-				</div>
-			);
-		})}
+				);
+			})}
 		</div>
 	);
 };
 
 
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
-	<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] border-r-gray-800 border-opacity-20 pr-5">
-		{bag?.orderItems?.map((item, i) => {
-			const active = item;
+	<div className="flex flex-col space-y-4 w-full">
+		{Array(10).fill(null).map((item, i) => {
+			const active = bag?.orderItems[0];
 			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 			const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 
@@ -435,89 +483,97 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 			const validImage = getImageExtensionsFile();
 
 			return (
-				<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+				<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= bag.orderItems.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
 					{/* Product Image */}
-					<div className="w-fit h-28 sm:w-40 sm:h-40 relative bg-black border-2 rounded-lg">
-						<Link to={`/products/${active.productId?._id}`}>
-							{validImage ? (
-								<img
-									src={validImage?.url}
-									alt={active?.productId?.title}
-									className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
-								/>
-							) : (
-								<p>No valid image available</p>
-							)}
-						</Link>
-						{/* Delete Button on the Image (Mobile) */}
-						<div
-							className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleDeleteBag(active.productId._id, active._id);
-							}}
-						>
-							<Trash size={15} />
+					<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
+						<div className="flex flex-row justify-start items-start space-x-2">
+						
+							<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
+								<Link to={`/products/${active.productId?._id}`}>
+									{validImage ? (
+										<img
+											src={validImage?.url}
+											alt={active?.productId?.title}
+											className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+										/>
+									) : (
+										<p>No valid image available</p>
+									)}
+								</Link>
+								{/* Delete Button on the Image (Mobile) */}
+								{/* <div
+									className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleDeleteBag(active.productId._id, active._id);
+									}}
+								>
+									<Trash size={15} />
+								</div> */}
+							</div>
+
+							{/* Product Info */}
+							<div className="flex-1 space-y-1 text-left sm:text-left">
+								<h3 className="font-semibold text-xs sm:text-sm md:text-base text-gray-800">{active?.productId?.title}</h3>
+								<p className="text-xs sm:text-sm md:text-sm text-gray-600">Size: {active?.size?.label}</p>
+
+								{/* Price and Discount Info */}
+								<div className="flex items-center justify-start space-x-2 text-xs sm:text-sm md:text-[12px] text-blue-500 mt-1">
+									{active?.productId?.salePrice ? (
+										<Fragment>
+											<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+											<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+											<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+										</Fragment>
+									) : (
+										<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+									)}
+								</div>
+
+								{/* Quantity Selector */}
+								<div className="mt-2 flex w-20 sm:w-24 md:w-28 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+									<div className="flex w-full items-center space-x-1 justify-between">
+										{/* Decrease Button */}
+										<button
+											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
+											className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+											disabled={active?.quantity <= 1}
+										>
+											<Minus strokeWidth={1.5} />
+										</button>
+
+										{/* Display Current Quantity */}
+										<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
+
+										{/* Increase Button */}
+										<button
+											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+											className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+											disabled={active?.quantity >= active?.size?.quantity}
+										>
+											<Plus strokeWidth={1.5} />
+										</button>
+									</div>
+								</div>
+							</div>
+						
 						</div>
+
+						{/* Delete Button for larger screens */}
+						<Trash
+							size={20}
+							className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
+							onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
+						/>
 					</div>
-
-					{/* Product Info */}
-					<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
-						<h3 className="font-semibold text-lg text-gray-800 truncate">{active?.productId?.title}</h3>
-						<p className="text-sm text-gray-600">Size: {active?.size?.label}</p>
-
-						{/* Price and Discount Info */}
-						<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-							{active?.productId?.salePrice ? (
-								<>
-									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-									<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-									<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
-								</>
-							) : (
-								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
-							)}
-						</div>
-
-						{/* Quantity Selector */}
-						<div className="mt-4 flex w-fit items-center space-x-4 px-5 shadow-md justify-center rounded-full border-gray-700 border border-opacity-40 p-1">
-							{/* Decrease Button */}
-							<button
-								onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
-								className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
-								disabled={active?.quantity <= 1}
-							>
-								<Minus />
-							</button>
-
-							{/* Display Current Quantity */}
-							<span className="text-sm">{active?.quantity}</span>
-
-							{/* Increase Button */}
-							<button
-								onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
-								className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
-								disabled={active?.quantity >= active?.size?.quantity}
-							>
-								<Plus />
-							</button>
-						</div>
-					</div>
-
-					{/* Delete Button for larger screens */}
-					<Trash
-						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-						onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
-					/>
 				</div>
 			);
 		})}
 
 		{/* Coupon Section */}
-		<div className="mt-6 space-y-2">
+		{/* <div className="mt-6 space-y-2">
 			<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
 			<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
-				{/* Coupon Input */}
 				<input
 					type="text"
 					value={coupon}
@@ -526,7 +582,6 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 					placeholder="Add Voucher Code."
 				/>
 
-				{/* Apply Coupon Button */}
 				<button
 					onClick={applyCoupon}
 					className="w-full sm:w-[20%] h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
@@ -536,8 +591,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 			</div>
 		</div>
 
-		{/* Display Coupons */}
-		<CouponsDisplay user={user} />
+		<CouponsDisplay user={user} /> */}
 	</div>
 );
 

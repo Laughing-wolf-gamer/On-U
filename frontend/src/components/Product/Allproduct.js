@@ -243,17 +243,23 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
                         <span className=" text-gray-800">What`s New</span>
                     </div>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("Popularity"), setSortValue('Popularity'))}>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("popularity"), setSortValue('Popularity'))}>
                         <span className=" text-gray-800">Popularity</span>
                     </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
                         <span className=" text-gray-800">Better Discount</span>
                     </div>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("high-to-low"), setSortValue('Price: High To Low'))}>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("price-high-to-low"), setSortValue('Price: High To Low'))}>
                         <span className=" text-gray-800">Price: High To Low</span>
                     </div>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("low-to-high"), setSortValue('Price: Low To High'))}>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("price-low-to-high"), setSortValue('Price: Low To High'))}>
                         <span className=" text-gray-800">Price: Low To High</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("rating-high-to-low"), setSortValue('Rating: High To Low'))}>
+                        <span className=" text-gray-800">Rating: High To Low</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("rating-low-to-high"), setSortValue('Rating: Low To High'))}>
+                        <span className=" text-gray-800">Rating: Low To High</span>
                     </div>
                 </div>
             </div>

@@ -220,16 +220,16 @@ const MNavbar = ({ user }) => {
                 {/* Overlay */}
                 {showbagView && (
                     <div
-                        className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
+                        className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 transition-opacity duration-300"
                         onClick={()=> setBagShow(false)}
                     ></div>
                 )}
 
                 {/* Offcanvas */}
                 <div
-                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
+                    className={`fixed top-0 right-0 w-[75vw] h-full bg-white shadow-lg z-[60] border border-gray-700 border-opacity-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
-                    <div className="p-3 sm:relative">                    
+                    <div className="py-3 sm:relative">                    
 						{/* X Button at Top Left */}
 						<button 
 							onClick={() => {
@@ -239,8 +239,10 @@ const MNavbar = ({ user }) => {
 							className="absolute top-0 left-3 block sm:hidden text-black rounded-full w-8 h-8 items-center justify-center text-lg">
 							<X size={24} className='text-3xl' />
 						</button>
-                        <ul>
-                            <SideBarBag/>
+                        <ul className='min-w-full py-4'>
+                            <SideBarBag OnChangeing={()=>{
+								setBagShow(false);
+							}}/>
                         </ul>
                     </div>
                 </div>

@@ -9,6 +9,8 @@ import './MFilter.css'
 import { capitalizeFirstLetterOfEachWord } from '../../config'
 import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
+import { BsSortDown, BsSortUp } from 'react-icons/bs'
+import { ArrowDown01, ArrowDown10, BadgePercent } from 'lucide-react'
 
 
 const CustomSlider = styled(Slider)({
@@ -505,7 +507,7 @@ const MFilter = ({ product ,handleSortChange}) => {
     }
     return (
         <Fragment>
-        <div className='hidden font-kumbsan mobilevisible fixed z-10 bottom-0 w-full '>
+        <div className='hidden font1 mobilevisible fixed z-10 bottom-0 w-full '>
 
             {/* Sort and Filter Div ************************************************************************************* */}
             <div className='grid grid-cols-12 w-full bg-white py-3 border-t-[0.5px] border-slate-200 relative z-10'>
@@ -525,20 +527,34 @@ const MFilter = ({ product ,handleSortChange}) => {
         {/* SORT Div ********************************************************************************************************** */}
 
         <div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
-            <div className='absolute bottom-0 h-[45%] w-full bg-white'>
+            <div className='absolute bottom-0 h-fit w-full bg-white'>
             <h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
-            <div className="text-base py-3 px-6 flex justify-start items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} ><AiOutlineFire className='text-xl mr-2'/>Popularity</div>
-            <div className="text-base py-3 px-6 flex justify-start items-center" onClick={() => (/* datefun(1) */handleSortChange("Popularity"), setsortvi('hidden'))}><AiOutlineStar className='text-xl mr-2' />Latest</div>
-            <div className="text-base py-3 px-6 flex justify-start items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
-                <img src={Per} width='28px' alt="jhgjhsd" /> Better Discount
+            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} >
+				<AiOutlineFire className='text-xl mr-2'/>
+				<span>What`s New</span>
+			</div>
+            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("popularity"), setsortvi('hidden'))}>
+				<AiOutlineStar className='text-xl mr-2' />
+				<span>Popularity</span>
+			</div>
+            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
+                <BadgePercent size={20} strokeWidth={1.5} /> <span>Better Discount</span>
             </div>
-            <div className="text-base py-3 px-6 flex justify-start items-center" onClick={() => (/* pricefun(-1) */handleSortChange("high-to-low"), setsortvi('hidden'))}>
-                <svg width="24" height="24" viewBox="0 0 24 24" className="text-xl mr-2"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z" opacity="0.05"></path><path d="M4 6.215h4.962v2.43H4.505L4.13 9.858h4.764a3.05 3.05 0 01-.827 1.539 2.99 2.99 0 01-2.022.895l-1.361-.003a.304.304 0 00-.214.519l6.717 6.779 1.697-.004-6.107-6.16a4.193 4.193 0 002.14-1.167 4.256 4.256 0 001.198-2.398h2.474l.376-1.215h-2.799v-2.43h3.496V5H4v1.215zm12.389 10.028h1.337l-1.337 1.354v-1.354zm-.818 3.309c.23.09.488.04.663-.127l3.312-3.326a.567.567 0 000-.828.627.627 0 00-.574-.152H16.39v-5.043a.571.571 0 00-.58-.585.587.587 0 00-.587.597v8.935c0 .237.12.439.35.529z" fill="#282C3F"></path></g>
-                </svg>Price: High To Low
+            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("price-high-to-low"), setsortvi('hidden'))}>
+				<BsSortDown/>
+				<span>Price: High To Low</span>
             </div>
-            <div className="text-base py-3 px-6 flex justify-start items-center" onClick={() => (/* pricefun(1) */handleSortChange("low-to-high"), setsortvi('hidden'))}>
-                <svg width="24" height="24" viewBox="0 0 24 24" className="text-xl mr-2"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z" opacity="0.05"></path><path d="M4 6.136h4.637v2.272H4.472l-.351 1.135h4.45a2.855 2.855 0 01-.772 1.44c-.51.514-1.177.81-1.888.836H5.91l-1.272-.002c-.25-.001-.377.305-.2.484l6.276 6.338 1.586-.002-5.706-5.76a3.92 3.92 0 002-1.092 3.984 3.984 0 001.119-2.242h2.311l.352-1.135H9.76V6.136h3.267V5H4v1.136zm12.626.733l1.249 1.265h-1.25V6.869zm-1.09-1.333v8.35c0 .3.232.557.548.557a.534.534 0 00.542-.547V9.184h2.414a.586.586 0 00.537-.143.53.53 0 00-.001-.773L16.48 5.161a.585.585 0 00-.62-.12.508.508 0 00-.326.495z" fill="#282C3F"></path></g>
-                </svg>Price: Low To High
+            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("price-low-to-high"), setsortvi('hidden'))}>
+				<BsSortUp/>
+				<span>Price: Low To High</span>
+            </div>
+			<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-high-to-low"), setsortvi('hidden'))}>
+				<ArrowDown10 size={20} strokeWidth={1.5}  />
+				<span>Rating: High To Low</span>
+            </div>
+			<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-low-to-high"), setsortvi('hidden'))}>
+				<ArrowDown01 size={20} strokeWidth={1.5}  />
+				<span>Rating: Low To High</span>
             </div>
             {/* <div className="text-base  py-3 px-6 flex justify-start items-center" onClick={() => setsortvi('hidden')}>
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-xl mr-2"><path d="M13.7441 7.76569L15.5512 4.25163C15.7206 3.91273 16.2062 3.91728 16.3711 4.25845L18.2794 8.20012L22.6123 8.86767C22.9864 8.92567 23.132 9.38625 22.859 9.64896L19.6975 12.6808L20.406 17.0046C20.4674 17.3776 20.0728 17.6596 19.7385 17.48L16.3074 15.516" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.98042 5.62951L12.0297 9.8623L16.681 10.5776C17.0518 10.6345 17.1973 11.0939 16.9244 11.3544L13.5331 14.6091L14.2917 19.2502C14.3531 19.6209 13.9619 19.9007 13.6298 19.7233L9.48344 17.5023L5.3041 19.6607C4.96975 19.8325 4.58195 19.547 4.64905 19.1763L5.47923 14.5489L2.13576 11.2429C1.86737 10.9779 2.01976 10.5219 2.39277 10.4696L7.05317 9.82477L9.16615 5.62382C9.3356 5.2872 9.81665 5.29061 9.98042 5.62951Z" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -556,15 +572,15 @@ const MFilter = ({ product ,handleSortChange}) => {
                 {document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
             <div className='grid grid-cols-12 h-[93%] '>
                 <div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
-                    <h1 className={`filter1 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Sub Categories</h1>
-                    <h1 className={`filter4 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
-                    <h1 className={`filter4 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
-                    <h1 className={`filter3 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-lg py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
+                    <h1 className={`filter1 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
+                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
+                    <h1 className={`filter3 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Sub Categories</h1>
+                    <h1 className={`filter4 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
+                    <h1 className={`filter5 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
+                    <h1 className={`filter6 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
+                    <h1 className={`filter7 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
+                    <h1 className={`filter8 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
+                    <h1 className={`filter9 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
                 </div>
 
                 <div className='col-span-8 '>

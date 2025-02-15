@@ -227,10 +227,10 @@ const Navbar = ({user}) => {
 
 			{/* Offcanvas */}
 			<div
-				className={`fixed top-0 right-0 w-[800px] h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
+				className={`fixed top-0 right-0 w-[52vw] h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
 			>
 				<div className="p-1">                    
-					<SideBarBag/>
+					<SideBarBag OnChangeing={()=> setBagShow(false)}/>
 				</div>
 			</div>
 		</div>
