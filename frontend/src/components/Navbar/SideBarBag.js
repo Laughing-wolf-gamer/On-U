@@ -253,20 +253,24 @@ const SideBarBag = ({OnChangeing}) => {
 					<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2">
 						{/* Left Section (Product Listing) */}
 						<div className="md:w-[35%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
-							{randomProducts && randomProducts.length > 0 && (
-								<div className="flex flex-col overflow-hidden items-center w-full p-3">
-									<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
-									{RandomProductLoading ? (
+							<div className="flex flex-col overflow-hidden items-center w-full p-3">
+								<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
+								{RandomProductLoading ? (
+									<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
 										<ProductCardSkeleton />
-									) : (
-										<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
-											{Array(10).fill(null).map((pro, index) => (
-												<SideBarBagProductItem pro={randomProducts[0]} user={user} key={index} />
-											))}
-										</ul>
-									)}
-								</div>
-							)}
+									</ul>
+								) : (
+									<Fragment>
+										{randomProducts && randomProducts.length > 0 && (
+											<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
+												{randomProducts.map((pro, index) => (
+													<SideBarBagProductItem pro={pro} user={user} key={index} />
+												))}
+											</ul>
+										)}
+									</Fragment>
+								)}
+							</div>
 						</div>
 
 						{/* Right Section (Bag Content) */}
@@ -395,8 +399,8 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 
 	return (
 		<div className="flex flex-col space-y-4 w-full">
-			{Array(20).fill(null).map((item, i) => {
-				const active = sessionBagData[0];
+			{sessionBagData.map((item, i) => {
+				const active = item;
 				const validImage = getImageExtensionsFile(active?.color);
 
 				return (
