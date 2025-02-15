@@ -95,13 +95,28 @@ export const getallproducts = async (req, res) => {
 
         // Color filter
         if (req.query.color) {
-            const colorNames = req.query.color.split(',');
-            filter.AllColors = {
-                $elemMatch: {
-                    label: { $in: colorNames }
-                }
-            };
-        }
+			// Check if color is an array
+			if (Array.isArray(req.query.color)) {
+				filter.AllColors = {
+					$elemMatch: {
+						label: { $in: req.query.color }
+					}
+				};
+			}
+			// Check if color is a string (comma-separated)
+			else if (typeof req.query.color === 'string') {
+				const colorNames = req.query.color.split(',');
+				filter.AllColors = {
+					$elemMatch: {
+						label: { $in: colorNames }
+					}
+				};
+			} else {
+				console.error('Invalid color parameter');
+				logger.error('Invalid color parameter');
+			}
+		}
+
         if(req.query.discountedAmount){
             filter.DiscountedPercentage = { $gte: parseFloat(req.query.discountedAmount) };
         }

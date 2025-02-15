@@ -1,2 +1,16 @@
 2025-02-14T19:14:28.281Z error: Error while creating new Product: Cast to ObjectId failed for value "dfasd34dfasdf" (type string) at path "_id" for model "product"
 2025-02-14T19:14:28.281Z error: Error while creating new Product: Cast to ObjectId failed for value "dfasd34dfasdf" (type string) at path "_id" for model "product"
+2025-02-15T14:23:37.931Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:23:37.931Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:23:44.867Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:23:44.867Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:23:56.944Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:23:56.944Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:24:14.301Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:24:14.301Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:25:08.307Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:25:08.307Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:25:42.973Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:25:42.973Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:27:29.313Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T14:27:29.313Z error: Error Fetching Products: req.query.color.split is not a function

@@ -507,7 +507,7 @@ const MFilter = ({ product ,handleSortChange}) => {
     }
     return (
         <Fragment>
-        <div className='hidden font1 mobilevisible fixed z-10 bottom-0 w-full '>
+        <div className='hidden font1 uppercase mobilevisible fixed z-10 bottom-0 w-full '>
 
             {/* Sort and Filter Div ************************************************************************************* */}
             <div className='grid grid-cols-12 w-full bg-white py-3 border-t-[0.5px] border-slate-200 relative z-10'>
