@@ -36,7 +36,7 @@ const Footer = () => {
                     <div className="md:border-r lg:border-r xl:border-r 2xl:border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold text-gray-800 mb-4">USEFULL LINKS</h1>
                         <ul className="text-sm space-y-4">
-                            <Link to="/about">
+                            <Link to="/dashboard">
                                 <li className="hover:underline text-gray-600">Shipping</li>
                             </Link>
                             <Link to="/about">
@@ -46,7 +46,7 @@ const Footer = () => {
                                 <li className="hover:underline text-gray-600">FAQ</li>
                             </Link>
                             <Link to="/contact">
-                                <li className="hover:underline text-gray-600">Orders</li>
+                                <li className="hover:underline text-gray-600">Contact Us</li>
                             </Link>
                             <Link to="/tc">
                                 <li className="hover:underline text-gray-600">Terms And Conditions</li>
@@ -68,7 +68,7 @@ const Footer = () => {
 
                     {/* Features */}
                     <div className="flex w-full flex-col justify-start items-start">
-						<h1 className="text-lg font-normal text-gray-800 mb-4">KEEP IN TOUCH</h1>
+						<h1 className="text-lg font-bold text-gray-800 mb-4">KEEP IN TOUCH</h1>
 
 						{/* Social Media Icons */}
 						<div className="flex space-x-6 text-3xl text-gray-800 mb-6">

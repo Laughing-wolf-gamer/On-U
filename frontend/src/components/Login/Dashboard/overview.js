@@ -6,24 +6,25 @@ import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
 import { useNavigate } from 'react-router-dom';
 import { AlignJustify, LogOut } from 'lucide-react';
-import { FaExclamationTriangle, FaUser } from 'react-icons/fa'; // Import the react-icon for logout
+import { FaExclamationTriangle, FaUser, FaUserAltSlash } from 'react-icons/fa'; // Import the react-icon for logout
 import BackToTopButton from '../../Home/BackToTopButton';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
 const NotLoggedInModal = () => {
 	const navigate = useNavigate();
 
-	const handleLoginRedirect = () => {
+	const handleLoginRedirect = (e) => {
+		e.stopPropagation();
 		navigate('/Login');
 	};
 
-	return (
-		<div className="fixed inset-0 bg-gray-600 bg-opacity-50 flex justify-center items-center z-50">
+	 return (
+		<div className="fixed inset-0 bg-gray-600 bg-opacity-40 flex justify-center items-center z-50">
 			{/* Modal Container */}
 			<div className="bg-white rounded-lg p-6 w-96 shadow-lg">
 				{/* Exclamation Icon */}
-				<div className="flex items-center justify-center mb-4 text-yellow-500">
-					<FaExclamationTriangle size={48} />
+				<div className="flex items-center justify-center mb-4 text-gray-500">
+					<FaUserAltSlash size={60} />
 				</div>
 				<h2 className="text-2xl font-semibold text-gray-800 mb-4">Not Logged In</h2>
 				<p className="text-gray-600 mb-4">
