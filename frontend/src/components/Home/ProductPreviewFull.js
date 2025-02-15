@@ -131,16 +131,24 @@ const ProductPreviewFull = ({ product ,user}) => {
                                     {/* Color Options */}
                                     {p.AllColors && p.AllColors.length > 0 && (
                                         <div className="mt-2 flex space-x-2">
-                                            {p.AllColors.slice(0, 7).map((color, colorIndex) => (
-                                                <div
-                                                    onClick={() => handleColorChange(p._id, color.images)} // Update color for this product
-                                                        key={colorIndex}
-                                                        className={`w-4 h-4 md:w-6 md:h-6 shadow-md rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out`}
-                                                        style={{
-                                                        backgroundColor: color.label, // Assuming color is a hex or RGB string
-                                                    }}
-                                                />
-                                            ))}
+                                            {p.AllColors
+												.slice(0, 7)
+												.filter((value, index, self) => 
+													index === self.findIndex((t) => (
+													t.label === value.label // Checking if the color hex code is already in the array
+													))
+												)
+												.map((color, colorIndex) => (
+													<div
+														onClick={() => handleColorChange(p._id, color.images)} // Update color for this product
+														key={colorIndex}
+														className={`w-4 h-4 md:w-6 md:h-6 shadow-md rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out`}
+														style={{
+															backgroundColor: color.label, // Assuming color is a hex or RGB string
+														}}
+													/>
+											))}
+
                                         </div>
                                     )}
                                 </div>
