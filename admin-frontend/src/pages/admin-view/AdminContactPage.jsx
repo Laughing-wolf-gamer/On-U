@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
-import { useDispatch } from 'react-redux';
-import { sendContactUsPage } from '@/store/common-slice';
+import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { getContactUsPageData, sendContactUsPage } from '@/store/common-slice';
+import toast from 'react-hot-toast';
 
 const AdminContactPage = () => {
     const dispatch = useDispatch();
-    // const { toast } = useToast();
+	const {ContactUsPageData} = useSelector(state => state.common);
     
     // State variables for Contact Us form
     const [header, setHeader] = useState('');
@@ -15,6 +16,9 @@ const AdminContactPage = () => {
     const [mapLink, setMapLink] = useState('');
     const [formDataForContactUs, setFormData] = useState([]);
     const[newField,setNewField] = useState('');
+
+
+
     // Handle adding a new Team Member
     const handelAddNewField = (e) => {
         if(newField){
@@ -39,30 +43,8 @@ const AdminContactPage = () => {
             mapLink,
             formData: formDataForContactUs,
         });
-        await handleSetContactData();
-
-        // alert('Contact Us page details saved successfully!');
-        // Reset form
-        setHeader('');
-        setSubHeader('');
-        setEmail('');
-        setPhoneNumber('');
-        setAddress('');
-        setMapLink('');
-        setFormData([]);
-        setNewField('');
-    };
-
-    const handleImageUpload = (index, imageUrl) => {
-        setFormData((prev) => {
-            prev[index].image = imageUrl;
-            return prev;
-        });
-    };
-
-    // Function to send the data to the backend
-    const handleSetContactData = async () => {
-        await dispatch(sendContactUsPage({
+        // await handleSetContactData();
+		await dispatch(sendContactUsPage({
             header,
             subHeader,
             email,
@@ -71,18 +53,32 @@ const AdminContactPage = () => {
             mapLink,
             formDataForContactUs,
         }))
-        /* await dispatch(sendContactData({
-        header,
-        subHeader,
-        email,
-        phoneNumber,
-        address,
-        mapLink,
-        formData,
-        })); */
-        // toast({ title: 'Contact Us Data Saved Successfully' });
+
+        toast.success('Contact Us page details Updated successfully!');
     };
 
+    /* const handleImageUpload = (index, imageUrl) => {
+        setFormData((prev) => {
+            prev[index].image = imageUrl;
+            return prev;
+        });
+    }; */
+
+    // Function to send the data to the backend
+	useEffect(()=>{
+		dispatch(getContactUsPageData());
+	},[dispatch])
+	useEffect(()=>{
+		if(ContactUsPageData){
+			setHeader(ContactUsPageData.header);
+            setSubHeader(ContactUsPageData.subHeader);
+            setFormData(ContactUsPageData.formDataForContactUs);
+            setAddress(ContactUsPageData.address);
+            setMapLink(ContactUsPageData.mapLink);
+            setPhoneNumber(ContactUsPageData.phoneNumber);
+            setEmail(ContactUsPageData.email);
+		}
+	},[dispatch,ContactUsPageData])
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
             <h1 className="text-3xl font-bold mb-6 text-center">Admin: Contact Us Page Management</h1>

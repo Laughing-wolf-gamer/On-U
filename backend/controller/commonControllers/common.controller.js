@@ -943,7 +943,6 @@ export const getAboutData = async(req,res)=>{
 	} catch (error) {
 		console.error(`Error setting about data `,error);
 		res.status(500).json({Success:false,message: 'Internal Server Error'});
-	  
 	}
 }
 
@@ -964,7 +963,7 @@ export const getOptions = async (req, res) => {
 	try {
 		const { type } = req.params; // Get the type of option (e.g., category)
 		
-		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
+		if (!['category', 'subcategory', 'color', 'clothingSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}
 	
@@ -980,7 +979,7 @@ export const addOption = async (req, res) => {
 	try {
 		const { type, value } = req.body;
 	
-		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
+		if (!['category', 'subcategory', 'color', 'clothingSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}
 	

@@ -812,7 +812,7 @@ const MPpage = () => {
                                             <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
                                             {similar.map((pro) => (
                                                     <li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-                                                        <Single_product pro={pro} />
+                                                        <Single_product pro={pro} refreshTwice ={true}/>
                                                     </li>
                                                 ))}
                                             </ul>

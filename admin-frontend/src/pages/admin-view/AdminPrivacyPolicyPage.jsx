@@ -238,13 +238,13 @@ const AdminPrivacyPolicyPage = () => {
             <label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
                 Contact Information
             </label>
-            <textarea
+            <input
                 id="contactInfo"
                 name="contactInfo"
+				type="email"
                 value={formData.contactInfo}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-                rows="4"
                 required
             />
             </div>

@@ -47,12 +47,12 @@ const commonSlice = createSlice({
         }).addCase(delFeatureImage.rejected,(state)=>{
             state.isLoading = false;
 			state.featuresList = [];
-        }).addCase(sendAboutData.pending,(state)=>{
+        }).addCase(fetchAboutData.pending,(state)=>{
             state.isLoading = true;
-        }).addCase(sendAboutData.fulfilled,(state,action)=>{
+        }).addCase(fetchAboutData.fulfilled,(state,action)=>{
             state.isLoading = false;
-            state.aboutData = action?.payload?.result;
-        }).addCase(sendAboutData.rejected,(state)=>{
+            state.aboutData = action?.payload?.aboutData;
+        }).addCase(fetchAboutData.rejected,(state)=>{
             state.isLoading = false;
             state.aboutData = null;
         }).addCase(fetchAllFilters.pending,(state)=>{
@@ -85,12 +85,12 @@ const commonSlice = createSlice({
             state.isLoading = false;
             console.error(action.error);
             state.convenienceFees = -1;
-        }).addCase(sendContactUsPage.pending,(state) =>{
+        }).addCase(getContactUsPageData.pending,(state) =>{
             state.isLoading = true;
-        }).addCase(sendContactUsPage.fulfilled,(state,action)=>{
+        }).addCase(getContactUsPageData.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.ContactUsPageData = action?.payload?.result;
-        }).addCase(sendContactUsPage.rejected,(state,action)=>{
+        }).addCase(getContactUsPageData.rejected,(state,action)=>{
             state.isLoading = false;
             state.ContactUsPageData = null;
         }).addCase(fetchWebsiteDisclaimer.pending,(state)=>{
@@ -200,14 +200,24 @@ export const fetchAddressFormData = createAsyncThunk('/common/fetchAddressFormDa
         console.error(`Error Fetching Address Data: `,error);
     }
 })
-export const sendAboutData = createAsyncThunk('/common/sendAboutData',async({websiteDisclaimers})=>{
+export const sendAboutData = createAsyncThunk('/common/sendAboutData',async(abouts)=>{
     try {
         // console.log(token);
-        const response = await axios.put(`${BASE_URL}/api/common/website/about`,{websiteDisclaimers},Header());
+        const response = await axios.put(`${BASE_URL}/api/common/website/about`,abouts,Header());
         console.log('Response: ', response.data);
         return response.data;
     } catch (error) {
         console.error(`Error Sending About Page Data: `,error);
+    }
+})
+export const fetchAboutData = createAsyncThunk('/common/fetchAboutData',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/about`);
+        console.log('About Page Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error Fetching About Page Data")
+        throw error;
     }
 })
 export const setTermsAndCondition = createAsyncThunk('/common/updateTermsAndCondition',async(data)=>{
@@ -236,7 +246,7 @@ export const setPrivacyPolicyWebsite = createAsyncThunk('/common/setPrivacyPolic
         console.log('Privacy Policy Response: ', response.data);
         return response?.data?.Success;
     } catch (error) {
-        console.error(`Error Sending About Page Data: `,error);
+        console.error(`Error Sending Privacy Policy Page Data: `,error);
         return false;
     }
 })
@@ -246,7 +256,7 @@ export const setFAQSWebstis = createAsyncThunk('/common/setFAQS',async(faqData)=
         console.log('Privacy Policy Response: ', response.data);
         return response?.data?.Success;
     } catch (error) {
-        console.error(`Error Sending About Page Data: `,error);
+        console.error(`Error Sending FAQs Page Data: `,error);
         return false;
     }
 })
@@ -318,6 +328,15 @@ export const sendContactUsPage = createAsyncThunk('/common/contact-us',async(dat
         return response.data;
     } catch (error) {
         console.error(`Error Sending Contact Us Page Data: `,error);
+    }
+})
+export const getContactUsPageData = createAsyncThunk('/common/getContactUsPageData',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/contact-us`);
+        console.log('Contact Use Page Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Fetching Contact Us Page Data: `,error);
     }
 })
 

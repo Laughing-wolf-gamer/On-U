@@ -635,7 +635,7 @@ const Ppage = () => {
                     <div className='w-full flex justify-center items-center'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
                             {similar.map((pro, index) => (
-                                <Single_product key={index} pro={pro} user={user} />
+                                <Single_product key={index} pro={pro} user={user} refreshTwice ={true} />
                             ))}
                         </ul>
                     </div>

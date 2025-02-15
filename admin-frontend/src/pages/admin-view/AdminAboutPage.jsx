@@ -1,11 +1,12 @@
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
-import { sendAboutData } from '@/store/common-slice';
-import React, { useState } from 'react';
+import { fetchAboutData, sendAboutData } from '@/store/common-slice';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 
 const AdminAboutPage = () => {
     const dispatch = useDispatch();
+	const{aboutData} = useSelector(state => state.common);
     const [imageLoading, setImageLoading] = useState(false);
     // Existing state variables
     const [mission, setMission] = useState('');
@@ -33,29 +34,14 @@ const AdminAboutPage = () => {
 
     // Handle saving the form data
     const handleSave = async () => {
-        console.log({
+        console.log("About Data.",{
             header,
             subHeader,
             ourMissionDescription,
             outMoto,
             teamMembers,
         });
-        await handelSetAboutData();
-        toast.success('About page details saved successfully!');
-    };
-    const handleAddTeamMember = () => {
-        setTeamMembers([...teamMembers, { name: '', image: '', designation: '' }]);
-    };
-    const handleRemoveTeamMember = (index) => {
-        const updatedTeamMembers = teamMembers.filter((_, i) => i !== index);
-        setTeamMembers(updatedTeamMembers);
-    };
-    const handleImageUpload = (index, imageUrl) => {
-        setTeamMembers((prev) => {prev[index].image = imageUrl; return prev;});
-    };
-    // Function to send the data to the backend
-    const handelSetAboutData = async () => {
-        if(imageLoading){
+		if(imageLoading){
             return;
         }
         await dispatch(sendAboutData({
@@ -67,7 +53,30 @@ const AdminAboutPage = () => {
         }))
         toast.success("Data Saved Successfully");
     };
-    console.log("Team Members: ",teamMembers);
+    const handleAddTeamMember = () => {
+        setTeamMembers([...teamMembers, { name: '', image: '', designation: '' }]);
+    };
+    const handleRemoveTeamMember = (index) => {
+        const updatedTeamMembers = teamMembers.filter((_, i) => i !== index);
+        setTeamMembers(updatedTeamMembers);
+    };
+    /* const handleImageUpload = (index, imageUrl) => {
+        setTeamMembers((prev) => {prev[index].image = imageUrl; return prev;});
+    }; */
+	useEffect(()=>{
+		dispatch(fetchAboutData());
+	},[dispatch])
+	useEffect(()=>{
+		if(aboutData){
+			setHeader(aboutData?.header);
+            setSubHeader(aboutData?.subHeader);
+            setOurMissionDescription(aboutData?.ourMissionDescription);
+            setOutMoto(aboutData?.outMoto);
+            setTeamMembers(aboutData?.teamMembers);
+		}
+	},[aboutData,dispatch])
+    // console.log("Team Members: ",teamMembers);
+	console.log("About Data: ",aboutData);
 
     return (
         <div className="p-6 bg-gray-100 min-h-screen">
@@ -176,8 +185,14 @@ const AdminAboutPage = () => {
                             }}
                             placeholder="Team Member Designation"
                         />
+						<img
+							src={team?.image}
+							alt="Team Member Image"
+                            className="h-20 w-20 object-cover rounded-full"
+                            style={{ maxWidth: '100%', height: 'auto' }}
+						/>
                         <FileUploadComponent
-                            maxFiles={5}
+                            maxFiles={1}
                             tag={`tag-${index}`}
                             sizeTag={`team-${index}`}
                             onSetImageUrls={(e) => {

@@ -1,0 +1,2 @@
+2025-02-14T19:14:28.281Z error: Error while creating new Product: Cast to ObjectId failed for value "dfasd34dfasdf" (type string) at path "_id" for model "product"
+2025-02-14T19:14:28.281Z error: Error while creating new Product: Cast to ObjectId failed for value "dfasd34dfasdf" (type string) at path "_id" for model "product"

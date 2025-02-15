@@ -88,10 +88,11 @@ const Contact = () => {
                 {/* Header Section */}
                 <header className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-                    Get in Touch with ON-U
+						{formData.header ? formData?.header :"Get in Touch with ON-U"}
+                    
                     </h1>
                     <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
-                    We would love to hear from you! Whether it's an inquiry, feedback, or support, reach out to us and we will get back to you as soon as possible.
+                    	{formData.subheader ? formData?.subheader :"We would love to hear from you! Whether it's an inquiry, feedback, or support, reach out to us and we will get back"}
                     </p>
                 </header>
         
@@ -106,13 +107,13 @@ const Contact = () => {
                                     <div key={i}>
                                         <label
                                             htmlFor={field?.fieldName}
-                                            className="block text-sm font-medium text-gray-700"
+                                            className="block text-sm font-medium relative text-gray-700"
                                         >
                                             {field?.fieldName}
-                                            
+                                            <span className="absolute top-0 left-30 text-red-600">*</span>
                                         </label>
                                         {sendingFormData && (
-                                            <div className="relative">
+                                            <div className="">
                                                 <input
                                                     required
                                                     type="text"
@@ -122,7 +123,7 @@ const Contact = () => {
                                                     onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
                                                     className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
                                                 />
-                                                <span className="absolute top-[-10px] right-0 text-red-600">*</span>
+                                                
                                             </div>
                                         )}
                                     </div>
@@ -132,11 +133,11 @@ const Contact = () => {
                             <div className="relative">
                                 <label
                                     htmlFor="message"
-                                    className="block text-sm font-medium text-gray-700"
+                                    className="block text-sm relative font-medium text-gray-700"
                                 >
                                     Your Message
+                                	<span className="absolute top-0 left-30 text-red-600">*</span>
                                 </label>
-                                <span className="absolute top-[-5px] right-0 text-red-600">*</span>
                                 <textarea
                                     placeholder="Please write your message here..."
                                     id="message"

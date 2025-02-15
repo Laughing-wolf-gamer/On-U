@@ -1,12 +1,11 @@
 import React, { useMemo } from 'react';
 import './Single_product.css';
-import { IoIosHeartEmpty } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 
-const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true }) => {
+const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true ,refreshTwice = false}) => {
     const{updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -38,7 +37,9 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     const handleNavigation = () => {
         navigation(`/products/${pro._id}`);
         updateRecentlyViewProducts(pro);
-        window.location.reload();
+		if(refreshTwice){
+        	window.location.reload();
+		}
     };
 
     const renderPrice = () => (
