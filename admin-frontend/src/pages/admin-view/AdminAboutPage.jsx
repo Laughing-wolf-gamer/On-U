@@ -13,6 +13,15 @@ const AdminAboutPage = () => {
     const [vision, setVision] = useState('');
 
     // New state variables
+	const [founderData,setFounderData] = useState({
+		name:'',
+		image:'',
+		designation:'',
+		introduction:'',
+		details:'',
+		founderVision:'',
+		goals:'',
+	});
     const [header, setHeader] = useState('');
     const [subHeader, setSubHeader] = useState('');
     const [ourMissionDescription, setOurMissionDescription] = useState('');
@@ -40,6 +49,7 @@ const AdminAboutPage = () => {
             ourMissionDescription,
             outMoto,
             teamMembers,
+			founderData,
         });
 		if(imageLoading){
             return;
@@ -49,6 +59,7 @@ const AdminAboutPage = () => {
             subHeader,
             ourMissionDescription,
             outMoto,
+			founderData,
             teamMembers:teamMembers.filter(member => member.title !== '' && member.image !== '' && member.designation !== ''),
         }))
         toast.success("Data Saved Successfully");
@@ -73,6 +84,7 @@ const AdminAboutPage = () => {
             setOurMissionDescription(aboutData?.ourMissionDescription);
             setOutMoto(aboutData?.outMoto);
             setTeamMembers(aboutData?.teamMembers);
+			setFounderData(aboutData?.founderData);
 		}
 	},[aboutData,dispatch])
     // console.log("Team Members: ",teamMembers);
@@ -157,6 +169,7 @@ const AdminAboutPage = () => {
                 Add Out Moto
                 </button>
             </div>
+			
 
             {/* Team Members */}
             <div className="mb-8 bg-white p-4 rounded shadow">
@@ -218,6 +231,90 @@ const AdminAboutPage = () => {
                 Add Team Member
                 </button>
             </div>
+			<div className="mb-8 bg-white p-4 rounded shadow">
+				<h2 className="text-xl font-semibold mb-4">Founder</h2>
+				<div className="mb-4">
+					{/* <img
+						src={founderData.image}
+						alt="Founder Image"
+						className="w-32 h-32 object-cover rounded-full mb-4"
+					/>
+					<h3 className="text-2xl font-semibold">{founderData.name}</h3>
+					<p className="text-gray-600 mb-2">{founderData.nameDescription}</p>
+					<p className="mb-4">{founderData.description}</p>
+					<p className="text-gray-600 font-medium">{founderData.details}</p>
+					<h4 className="text-xl font-semibold mt-4">{founderData.founderVision}</h4>
+					<p className="mt-2">{founderData.community}</p> */}
+					<img
+						src={founderData?.image}
+						alt="Founder Image"
+						className="w-32 h-32 object-cover rounded-full mb-4"
+					/>
+					<FileUploadComponent
+						maxFiles={1}
+						tag={`Founder-image`}
+						sizeTag={`founder-vision-image`}
+						onSetImageUrls={(e) => {
+							// const updatedTeamMembers = [...teamMembers];
+							// updatedTeamMembers[index].image = e[0].url;
+							// setTeamMembers(updatedTeamMembers);
+							setFounderData({...founderData, image: e[0].url });
+						}}
+						isLoading = {imageLoading}
+						setIsLoading={setImageLoading}
+					/>
+					<input
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData.name}
+                        onChange={(e) => setFounderData({...founderData, name: e.target.value })}
+						placeholder="Founder Name"
+                    />
+					<input
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData.designation}
+                        onChange={(e) => setFounderData({...founderData, designation: e.target.value })}
+						placeholder="Founder Designation"
+                    />
+					<textarea
+                        className="w-full p-2 border rounded h-32"
+                        value={founderData.introduction}
+                        onChange={(e) => setFounderData({...founderData, introduction: e.target.value })}
+                        placeholder="Founder introduction"
+						rows={5}
+						cols={30}
+						required
+					/>
+					<textarea
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData.details}
+                        onChange={(e) => setFounderData({...founderData, details: e.target.value })}
+						placeholder="Founder Details"
+                    />
+					<textarea
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData.founderVision}
+                        onChange={(e) => setFounderData({...founderData, founderVision: e.target.value })}
+						placeholder="Founder Vision"
+						rows={5}
+						cols={30}
+						required
+                    />
+					<textarea
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData.goals}
+                        onChange={(e) => setFounderData({...founderData, goals: e.target.value })}
+						placeholder="goals"
+						rows={5}
+						cols={30}
+						required
+                    />
+				</div>
+			</div>
 
             {/* Save Button */}
             <div className="text-center">

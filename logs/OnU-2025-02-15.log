@@ -14,3 +14,5 @@
 2025-02-15T14:25:42.973Z error: Error Fetching Products: req.query.color.split is not a function
 2025-02-15T14:27:29.313Z error: Error Fetching Products: req.query.color.split is not a function
 2025-02-15T14:27:29.313Z error: Error Fetching Products: req.query.color.split is not a function
+2025-02-15T18:17:47.448Z error: Error setting about data: newValue.trim is not a function
+2025-02-15T18:17:47.448Z error: Error setting about data: newValue.trim is not a function

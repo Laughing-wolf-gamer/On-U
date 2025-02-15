@@ -566,39 +566,7 @@ const MPpage = () => {
                                 <h1 className="text-green-800 font-semibold text-sm mt-1">
                                     inclusive all taxes.
                                 </h1>
-                                <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
-                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
-                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
-                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
-                                            const active = color;
-                                            return(
-                                                <div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
-                                                    <div
-                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
-                                                        ${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
-                                                        onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
-                                                    >
-                                                        {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
-                                                        }
-                                                        <button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
-                                                            <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
-                                                        </button>
-                                                        {active?.quantity <= 0 && (
-                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
-                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                                    <span>Out of Stock</span>
-                                                                </div>
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                                <div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
+								<div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
                                     <div className='w-full flex justify-between items-center'>
                                         <h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
                                         </h3>
@@ -634,6 +602,39 @@ const MPpage = () => {
                                         })}
                                     </div>
                                 </div>
+                                <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
+                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
+                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
+                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
+                                            const active = color;
+                                            return(
+                                                <div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
+                                                    <div
+                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
+                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        ${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
+                                                        onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
+                                                    >
+                                                        {
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                        }
+                                                        <button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
+                                                            <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
+                                                        </button>
+                                                        {active?.quantity <= 0 && (
+                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
+                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                                    <span>Out of Stock</span>
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+                                </div>
+                                
                             </div>
                             <PincodeChecker productId={product?._id}/>
                             <div className='mt-2 pt-4 bg-white px-4'>

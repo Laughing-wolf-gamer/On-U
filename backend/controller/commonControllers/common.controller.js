@@ -387,12 +387,12 @@ export const FetchAllFilters = async (req, res) => {
 
 export const setAboutData = async (req, res) => {
     try {
-        const { header, subHeader, ourMissionDescription, outMoto, teamMembers } = req.body;
+        const { header, subHeader, ourMissionDescription, outMoto, teamMembers,founderData } = req.body;
         console.log("About Body:", req.body);
 
         const alreadyFoundWebsiteData = await WebSiteModel.findOne({ tag: 'AboutData' });
 
-        // Helper function to conditionally set data only if provided
+        /* // Helper function to conditionally set data only if provided
         const updateField = (currentValue, newValue) => {
             if (newValue != null && (!Array.isArray(newValue) ? newValue.trim() !== '' : newValue.length > 0)) {
                 return newValue;
@@ -406,12 +406,13 @@ export const setAboutData = async (req, res) => {
             ourMissionDescription: updateField('', ourMissionDescription),
             outMoto: updateField([], outMoto),
             teamMembers: updateField([], teamMembers),
-        };
+            founderData: updateField({}, founderData),
+        }; */
 
         if (!alreadyFoundWebsiteData) {
             // No existing AboutData, create a new entry
             const newWebsiteData = new WebSiteModel({
-                AboutData: aboutData,
+                AboutData: {...req.body},
                 tag: 'AboutData',
             });
 
@@ -426,13 +427,14 @@ export const setAboutData = async (req, res) => {
         }
 
         // If found, update the existing AboutData with the new values
-        alreadyFoundWebsiteData.AboutData = {
+        /* alreadyFoundWebsiteData.AboutData = {
             header: updateField(alreadyFoundWebsiteData.AboutData.header, header),
             subHeader: updateField(alreadyFoundWebsiteData.AboutData.subHeader, subHeader),
             ourMissionDescription: updateField(alreadyFoundWebsiteData.AboutData.ourMissionDescription, ourMissionDescription),
             outMoto: updateField(alreadyFoundWebsiteData.AboutData.outMoto, outMoto),
             teamMembers: updateField(alreadyFoundWebsiteData.AboutData.teamMembers, teamMembers),
-        };
+        }; */
+		alreadyFoundWebsiteData.AboutData = {...req.body};
 
         await alreadyFoundWebsiteData.save();
         console.log("Updated About Data: ", alreadyFoundWebsiteData);

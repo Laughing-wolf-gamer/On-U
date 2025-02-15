@@ -26,7 +26,7 @@ const Contact = () => {
             const res = await axios.get(`${BASE_API_URL}/api/common/website/contact-us`);
             console.log("Contact us Page Data ",res?.data?.result);
             setFormData(res?.data?.result || null);
-			checkAndCreateToast("success","Contact us page data fetched successfully.");
+			// checkAndCreateToast("success","Contact us page data fetched successfully.");
         } catch (error) {
             console.error("Error Fetching About Data: ",error);
 			
@@ -95,95 +95,96 @@ const Contact = () => {
                     	{formData.subheader ? formData?.subheader :"We would love to hear from you! Whether it's an inquiry, feedback, or support, reach out to us and we will get back"}
                     </p>
                 </header>
-        
-                {/* Contact Form Section */}
-                <section className="max-w-4xl mx-auto bg-neutral-100 p-8 rounded-lg shadow-lg space-y-8">
-                    <h2 className="text-3xl font-semibold text-gray-900 text-center mb-6">Contact Us</h2>
-                    
-                    {formData && formData.formDataForContactUs && formData.formDataForContactUs.length > 0 && (
-                        <form onSubmit={handleSubmit} className="space-y-8">
-                            <div className="grid grid-cols-1 gap-8">
-                                {formData.formDataForContactUs.map((field, i) => (
-                                    <div key={i}>
-                                        <label
-                                            htmlFor={field?.fieldName}
-                                            className="block text-sm font-medium relative text-gray-700"
-                                        >
-                                            {field?.fieldName}
-                                            <span className="absolute top-0 left-30 text-red-600">*</span>
-                                        </label>
-                                        {sendingFormData && (
-                                            <div className="">
-                                                <input
-                                                    required
-                                                    type="text"
-                                                    id={`${field?.fieldName}_field ${i}`}
-                                                    name={field?.fieldName.toLowerCase()}
-                                                    value={sendingFormData[field?.fieldName]}
-                                                    onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
-                                                    className="mt-2 p-4 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                                                />
-                                                
-                                            </div>
-                                        )}
-                                    </div>
-                                ))}
-                            </div>
-            
-                            <div className="relative">
-                                <label
-                                    htmlFor="message"
-                                    className="block text-sm relative font-medium text-gray-700"
-                                >
-                                    Your Message
-                                	<span className="absolute top-0 left-30 text-red-600">*</span>
-                                </label>
-                                <textarea
-                                    placeholder="Please write your message here..."
-                                    id="message"
-                                    name="message"
-                                    value={sendingMessage}
-                                    onChange={(e) => setSendingMessage(e.target.value)}
-                                    rows="6"
-                                    required
-                                    className="mt-2 p-4 w-full border border-gray-300 placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
-                                />
-                                </div>
-                
-                            <div className="flex justify-center">
-                                <button
-                                    type="submit"
-                                    className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
-                                >
-                                    Send Message
-                                </button>
-                            </div>
-                        </form>
-                    )}
-                </section>
-        
-                {/* Contact Details Section */}
-                <section className="mt-16 text-center">
-                    <h3 className="text-3xl font-semibold text-gray-900 mb-6">Our Contact Information</h3>
-                    <p className="mt-4 text-lg text-gray-600">
-                    You can also reach us through the following contact details:
-                    </p>
-                    <div className="mt-8 text-lg text-gray-700 space-y-4">
-                    <p className="text-gray-500">
-                        Email:{" "}
-                        <a href={`mailto:${formData?.email}`} className="text-gray-800 hover:underline">
-                        {formData?.email}
-                        </a>
-                    </p>
-                    <p className="text-gray-500">
-                        Phone:{" "}
-                        <a href={`tel:${formData?.phoneNumber}`} className="text-gray-800 hover:underline">
-                        {formData?.phoneNumber}
-                        </a>
-                    </p>
-                    <p className="text-gray-500">{formData?.address}</p>
-                    </div>
-                </section>
+				<div className="w-full grid grid-cols-2 justify-center items-center">
+					{/* Contact Form Section */}
+					<section className="w-full bg-white p-8 rounded-lg shadow-lg space-y-8">
+						<h2 className="text-3xl font-semibold text-gray-900 text-center mb-6">Contact Us</h2>
+						
+						{formData && formData.formDataForContactUs && formData.formDataForContactUs.length > 0 && (
+							<form onSubmit={handleSubmit} className="space-y-8">
+								<div className="grid grid-cols-1 gap-8">
+									{formData.formDataForContactUs.map((field, i) => (
+										<div key={i}>
+											<label
+												htmlFor={field?.fieldName}
+												className="block text-sm font-medium relative text-gray-700"
+											>
+												{field?.fieldName}
+												<span className="absolute top-0 left-30 text-red-600">*</span>
+											</label>
+											{sendingFormData && (
+												<div className="">
+													<input
+														required
+														type="text"
+														id={`${field?.fieldName}_field ${i}`}
+														name={field?.fieldName.toLowerCase()}
+														value={sendingFormData[field?.fieldName]}
+														onChange={(e) => handleChange({ name: field?.fieldName, value: e.target.value })}
+														className="mt-2 p-4 w-full border-2 border-gray-300 rounded-md focus:outline-none hover:border-black focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+													/>
+													
+												</div>
+											)}
+										</div>
+									))}
+								</div>
+				
+								<div className="relative">
+									<label
+										htmlFor="message"
+										className="block text-sm relative font-medium text-gray-700"
+									>
+										Your Message
+										<span className="absolute top-0 left-30 text-red-600">*</span>
+									</label>
+									<textarea
+										placeholder="Please write your message here..."
+										id="message"
+										name="message"
+										value={sendingMessage}
+										onChange={(e) => setSendingMessage(e.target.value)}
+										rows="6"
+										required
+										className="mt-2 p-4 w-full border-2 border-gray-300 hover:border-black placeholder:text-gray-500 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300"
+									/>
+									</div>
+					
+								<div className="flex justify-center">
+									<button
+										type="submit"
+										className="px-8 py-3 bg-black text-white text-lg font-semibold rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 transform hover:scale-105"
+									>
+										Send Message
+									</button>
+								</div>
+							</form>
+						)}
+					</section>
+			
+					{/* Contact Details Section */}
+					<section className="mt-16 text-center">
+						<h3 className="text-3xl font-semibold text-gray-900 mb-6">Our Contact Information</h3>
+						<p className="mt-4 text-lg text-gray-600">
+						You can also reach us through the following contact details:
+						</p>
+						<div className="mt-8 text-lg text-gray-700 space-y-4">
+						<p className="text-gray-500">
+							Email:{" "}
+							<a href={`mailto:${formData?.email}`} className="text-gray-800 hover:underline">
+							{formData?.email}
+							</a>
+						</p>
+						<p className="text-gray-500">
+							Phone:{" "}
+							<a href={`tel:${formData?.phoneNumber}`} className="text-gray-800 hover:underline">
+							{formData?.phoneNumber}
+							</a>
+						</p>
+						<p className="text-gray-500">{formData?.address}</p>
+						</div>
+					</section>
+				</div>
         
                 {/* Map Section */}
                 <section className="mt-16 mb-12">

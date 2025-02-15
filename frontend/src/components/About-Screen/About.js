@@ -10,7 +10,16 @@ const About = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const [aboutData, setAboutData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    
+    const founderData = {
+		image: "https://th.bing.com/th?id=OIP.rVHb8aGuPiS7hU7mOGBIvAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2",
+		name: "John Doe",
+		designation: "CEO & Founder of Our Company",
+		introduction: "John has a long and distinguished history of leadership in the tech industry, having played pivotal roles in driving innovation and fostering creativity within teams. Over the years, he has built a reputation as a visionary who pushes the boundaries of what's possible in the world of technology, encouraging his teams to embrace cutting-edge solutions and disruptive ideas. His expertise spans across numerous successful projects that have shaped the tech landscape.",
+		details: "With over 20 years of experience in the tech field, John has successfully founded and grown several startups, as well as led large, multi-national organizations. His business acumen and passion for technological advancement have earned him numerous accolades and recognition. John’s leadership style is focused on empowering individuals and creating an environment where innovation thrives. Throughout his career, he has worked with a diverse range of teams and clients, always striving to find solutions that bring about lasting change and progress in the industry.",
+		founderVision: "Our vision is to bring unique, sustainable, and exceptional products from all around the world, offering them to a global community of individuals who share a love for creativity, craftsmanship, and quality. We aim to foster a world where sustainability is at the core of all products, ensuring that each item we offer contributes positively to the environment and the lives of our customers. By collaborating with artisans and creators from diverse cultures, we believe we can provide a platform for the celebration of culture, creativity, and conscious living.",
+		goals: "On-U’s community is built around sharing knowledge, sustainability, and a passion for exceptional, one-of-a-kind products. We are not just a marketplace, but a space for individuals who are passionate about contributing to positive change. Our members are thought leaders, innovators, and people who believe in the power of connection and conscious consumption. By joining the On-U community, you become part of a global movement that values creativity, sustainability, and high-quality craftsmanship. We are committed to providing a platform where like-minded individuals can share experiences, ideas, and collaborate on building a better, more sustainable future."
+	}
+
     const fetchPageAboutData = async () => {
         setIsLoading(true);
         try {
@@ -33,6 +42,7 @@ const About = () => {
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
                 <div className="bg-white py-12 px-6 lg:px-24">
+					
                     {/* Header Section */}
                     <header className="text-center mb-12">
                         <h1 className="text-4xl font-extrabold text-gray-700 sm:text-5xl md:text-6xl">
@@ -42,6 +52,10 @@ const About = () => {
                             {aboutData ? aboutData.subheader : "Where innovation meets style – Your go-to e-commerce destination"}
                         </p>
                     </header>
+					{
+						aboutData && aboutData.founderData &&  <FounderSection founderData={aboutData.founderData}/>
+					}
+					
 
                     {/* Mission Statement Section */}
                     <section className="mb-16">
@@ -52,6 +66,7 @@ const About = () => {
                             </p>
                         </div>
                     </section>
+					
 
                     {/* Values Section */}
                     <section className="py-10 mb-8">
@@ -132,6 +147,104 @@ const About = () => {
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>
     );
+};
+const FounderSection = ({ founderData }) => {
+	const [activeTab, setActiveTab] = useState('introduction');
+	const [isExpanded, setIsExpanded] = useState(false);
+
+	const toggleShowMore = () => {
+		setIsExpanded(!isExpanded);
+	};
+
+	return (
+		<section className="bg-white font-kumbsan max-w-screen-2xl mx-auto py-12 px-6 lg:px-24">
+			{/* Founder Information Section */}
+			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+				{/* Founder Image */}
+				<div className="flex max-h-[600px] h-[400px] justify-center items-center">
+					<img
+						src={founderData.image || 'https://th.bing.com/th?id=OIP.rVHb8aGuPiS7hU7mOGBIvAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2'}
+						alt="Founder"
+						className="w-full h-full object-cover rounded-lg shadow-md"
+					/>
+				</div>
+
+				{/* Tabs and Information */}
+				<div className="w-full justify-start items-start bg-neutral-50">
+					{/* Header Section */}
+					<div className="flex font-bold justify-between mb-4 items-center px-2">
+						<h1 className="text-4xl">{founderData.designation}</h1>
+					</div>
+
+					{/* Tabs Section */}
+					<div className="mb-4">
+						<div className="flex justify-between items-center space-x-2">
+							<button
+								className={`px-4 py-2 transition-colors duration-500 ease-in-out border-b-orange-400 ${activeTab === 'introduction' ? 'border-b text-gray-700' : 'text-gray-800'}`}
+								onClick={() => setActiveTab('introduction')}
+							>
+								Founder
+							</button>
+							<button
+								className={`px-4 py-2 transition-all duration-300 ease-in-out border-b-orange-400 ${activeTab === 'founderVision' ? 'border-b text-gray-700' : 'text-gray-800'}`}
+								onClick={() => setActiveTab('founderVision')}
+							>
+								Founder Vision
+							</button>
+							<button
+								className={`px-4 py-2 transition-all duration-300 ease-in-out border-b-orange-400 ${activeTab === 'goals' ? 'border-b text-gray-700' : 'text-gray-800'}`}
+								onClick={() => setActiveTab('goals')}
+							>
+								Founder Goals
+							</button>
+						</div>
+					</div>
+
+					{/* Tab Content */}
+					<div className="mt-6 justify-start overflow-hidden items-center">
+						{/* Founder Tab */}
+						{activeTab === 'introduction' && (
+							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
+								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
+									{isExpanded ? founderData.introduction: founderData.introduction.slice(0, 300) + '...'}
+								</p>
+								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
+									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+								</button>
+							</div>
+						)}
+
+						{/* Founder Vision Tab */}
+						{activeTab === 'founderVision' && (
+							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
+								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
+									<span className="block mt-2 max-h-[200px] overflow-y-auto">
+										{isExpanded? founderData.founderVision : founderData.founderVision.slice(0, 300) + '...'}
+									</span>
+								</p>
+								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
+									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+								</button>
+							</div>
+						)}
+
+						{/* Community Tab */}
+						{activeTab === 'goals' && (
+							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
+								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
+									{isExpanded ?  founderData.goals : founderData.goals.slice(0, 300) + '...'}
+								</p>
+								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
+									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+								</button>
+							</div>
+						)}
+					</div>
+				</div>
+
+			</div>
+		</section>
+	);
 };
 
 export default About;

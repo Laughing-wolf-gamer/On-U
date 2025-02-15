@@ -129,7 +129,7 @@ const Navbar = ({user}) => {
                             </li>
                         </Link>
                     </ul>
-                    <div className='h-full font-medium mt-3 w-fit flex flex-row px-5 items-center justify-end'>
+                    <div className='h-full font-bold mt-3 w-fit flex flex-row px-5 items-center justify-end'>
                         <Link onClick={()=> setIsSearchVisible(false)} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5' to="/">
 							<li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
 								onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}

@@ -272,7 +272,7 @@ const Home = ({user}) => {
                         <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header} bannerLoading = {bannerLoading}/>
                         
                         <div className=' w-full max-w-screen-2xl justify-self-center justify-center items-center flex flex-col px-14'>
-                            <h1 className='text-4xl font-extrabold tracking-widest text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+                            <h1 className='text-4xl font-bold text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
                             <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
                                 {
                                     !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 

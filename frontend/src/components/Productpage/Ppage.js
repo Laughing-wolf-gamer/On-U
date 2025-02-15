@@ -455,6 +455,49 @@ const Ppage = () => {
                                         inclusive all taxes.
                                     </h1>
                                 </div>
+								{/* Size and Color Selection */}
+                                <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
+                                    {/* Size Selection */}
+                                    <div className='w-[92%] flex justify-between items-center'>
+                                        <h3 className='text-base'>Size: <span className='font-semibold'>{currentSize?.label}</span></h3>
+                                        <SizeChartModal sizeChartData={clothingSizeChartData} />
+                                    </div>
+                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start font-extrabold">
+                                        {product && product?.size && product?.size.length > 0 && product?.size.map((size, index) => {
+                                            const active = size;
+                                            return(
+                                                <div key={`size_${index}_${active._id}`} className='w-fit h-fit p-1'>
+                                                    <div
+                                                        style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
+                                                        className={`flex flex-col w-14 h-14 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
+                                                        ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
+                                                        onClick={() => { handleSetNewImageArray(active); }}
+                                                        title={active.quantity >= 0 ? "In Stock " + active?.quantity || active?.label: "out of stock"}
+                                                    >
+                                                    {
+                                                        active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[2px] bg-opacity-40'></div>
+                                                    }
+                                                    <button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
+                                                        <span className='m-2'>
+                                                            {active.label}
+                                                        </span>
+                                                    </button>
+                                                    {/* Out of Stock Label */}
+                                                    {active?.quantity <= 0 && (
+                                                        <div className="absolute bottom-[-10px] z-[3px] w-fit flex justify-center items-center pb-1">
+                                                            <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
+                                                                <span>Out of Stock</span>
+                                                            </div>
+                                                        </div>
+                                                    )}
+                                                    </div>
+
+                                                </div>
+                                            )
+                                        })}
+                                    </div>
+
+                                </div>
                                 {/* Color Selection */}
                                 <div className="w-full flex flex-col mt-2 py-2 space-y-2 mx-auto">
                                     <h3 className='text-base'>Color: <span className='font-semibold'>{currentColor?.name}</span></h3>
@@ -501,49 +544,7 @@ const Ppage = () => {
 
                                 </div>
 
-                                {/* Size and Color Selection */}
-                                <div className="w-full flex flex-col py-1 space-y-3 mx-auto">
-                                    {/* Size Selection */}
-                                    <div className='w-[92%] flex justify-between items-center'>
-                                        <h3 className='text-base'>Size: <span className='font-semibold'>{currentSize?.label}</span></h3>
-                                        <SizeChartModal sizeChartData={clothingSizeChartData} />
-                                    </div>
-                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start font-extrabold">
-                                        {product && product?.size && product?.size.length > 0 && product?.size.map((size, index) => {
-                                            const active = size;
-                                            return(
-                                                <div key={`size_${index}_${active._id}`} className='w-fit h-fit p-1'>
-                                                    <div
-                                                        style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
-                                                        className={`flex flex-col w-14 h-14 items-center relative justify-center rounded-full shadow-md transition-transform duration-300 hover:border-gray-900 ease-in-out border-[1px]
-                                                        ${currentSize?._id === active?._id ? "border-2 bg-black text-white" : "bg-gray-200 text-gray-900"}`}
-                                                        onClick={() => { handleSetNewImageArray(active); }}
-                                                        title={active.quantity >= 0 ? "In Stock " + active?.quantity || active?.label: "out of stock"}
-                                                    >
-                                                    {
-                                                        active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[2px] bg-opacity-40'></div>
-                                                    }
-                                                    <button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
-                                                        <span className='m-2'>
-                                                            {active.label}
-                                                        </span>
-                                                    </button>
-                                                    {/* Out of Stock Label */}
-                                                    {active?.quantity <= 0 && (
-                                                        <div className="absolute bottom-[-10px] z-[3px] w-fit flex justify-center items-center pb-1">
-                                                            <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
-                                                                <span>Out of Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    )}
-                                                    </div>
-
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-
-                                </div>
+                                
                                 
 
                                 {/* Add to Cart & Wishlist Buttons */}

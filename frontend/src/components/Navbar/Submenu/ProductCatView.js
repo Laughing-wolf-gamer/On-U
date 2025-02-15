@@ -106,6 +106,7 @@ const CategorySection = ({ title, categories, parentCallback, handelSetQuery }) 
 				</div>
 			))}
 	</div>
+
 );
 
 export default ProductCatView;
