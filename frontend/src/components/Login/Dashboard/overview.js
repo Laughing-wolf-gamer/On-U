@@ -14,7 +14,7 @@ const NotLoggedInModal = () => {
 	const navigate = useNavigate();
 
 	const handleLoginRedirect = () => {
-		navigate('/');
+		navigate('/Login');
 	};
 
 	return (
