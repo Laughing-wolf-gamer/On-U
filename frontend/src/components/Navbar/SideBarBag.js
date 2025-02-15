@@ -13,6 +13,7 @@ import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } fr
 import SingleProduct from '../Product/Single_product';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
+import Loader from '../Loader/Loader';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -246,131 +247,136 @@ const SideBarBag = ({OnChangeing}) => {
     },[allAddresses,dispatch])
 	console.log("Bag: ",bag);
 	return (
-		<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2">
-			{/* Left Section (Product Listing) */}
-			<div className="md:w-[35%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
-				{randomProducts && randomProducts.length > 0 && (
-					<div className="flex flex-col overflow-hidden items-center w-full p-3">
-						<h1 className="text-center font-bold text-xl text-gray-800 uppercase">You May Like</h1>
-						{RandomProductLoading ? (
-							<ProductCardSkeleton />
-						) : (
-							<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
-								{Array(10).fill(null).map((pro, index) => (
-									<SideBarBagProductItem pro={randomProducts[0]} user={user} key={index} />
-								))}
-							</ul>
-						)}
-					</div>
-				)}
-			</div>
-
-			{/* Right Section (Bag Content) */}
-			<div className="w-full flex flex-col relative h-full justify-between items-center px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pt-4">
-				{/* Order Details Header */}
-				<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-2xl text-gray-800 text-left w-full mb-3">
-				{
-					isAuthentication && bag && bag.orderItems && bag.orderItems.length > 0 ? (
-						`cart (${bag.orderItems.length} items)`
-					):(
-						`cart (${sessionBagData.length} items)`
-					)
-				}
-				</h1>
-				{
-					isAuthentication && user ? (
-						<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
-							{
-								bag && bag.orderItems && bag.orderItems.length > 0 && <ProductListingComponent
-									bag={bag}
-									updateQty={updateQty}
-									handleDeleteBag={handleDeleteBag}
-									user={user}
-								
-								/>
-							}
-						</ul>
-					):(
-						<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
-							{sessionBagData && sessionBagData.length > 0 ? (
-								<OfflineBagContent
-									sessionBagData={sessionBagData}
-									updateQty={updateQty}
-									handleDeleteBag={handleDeleteBag}
-								/>
-							):(
-								<div className="flex min-h-[470px] font-medium text-base sm:text-base md:text-base justify-start items-start text-left">
-									<p className="text-gray-800">
-										Your shopping bag is empty. Add some items to continue.
-									</p>
+		<Fragment>
+			{
+				bagLoading ?  <Loader/>: (
+					<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2">
+						{/* Left Section (Product Listing) */}
+						<div className="md:w-[35%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
+							{randomProducts && randomProducts.length > 0 && (
+								<div className="flex flex-col overflow-hidden items-center w-full p-3">
+									<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
+									{RandomProductLoading ? (
+										<ProductCardSkeleton />
+									) : (
+										<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
+											{Array(10).fill(null).map((pro, index) => (
+												<SideBarBagProductItem pro={randomProducts[0]} user={user} key={index} />
+											))}
+										</ul>
+									)}
 								</div>
 							)}
-						</ul>
-
-					)
-				}
-
-				{/* Center content section (scrollable) */}
-
-				{/* Subtotal and Button Section (Always at the bottom) */}
-				<div className="min-w-full space-y-2 bg-gray-50 p-3 font1 min-h-fit justify-center flex items-center">
-					<div className="w-full h-fit">
-						<div className="space-y-2 w-full">
-							{/* Subtotal */}
-							<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
-								<span>SubTotal</span>
-								<span>₹{Math.round(totalProductSellingPrice)}</span>
-							</div>
-							<br />
-							{/* Button Section */}
-							<div className="grid grid-cols-2 gap-2">
-								<button
-									onClick={() => {
-										if (isAuthentication) {
-											navigation("/Login");
-										} else {
-											navigation('/bag');
-										}
-										handleOnChange();
-									}}
-									className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
-								>
-									View Bag
-								</button>
-
-								<button
-									onClick={() => {
-										if (isAuthentication) {
-											navigation("/bag/checkout");
-										} else {
-											navigation('/Login');
-										}
-										handleOnChange();
-									}}
-									className="w-full bg-black h-12 text-white py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
-								>
-									Checkout
-								</button>
-							</div>
 						</div>
 
-						{/* Continue Shopping */}
-						<div
-							onClick={(e) => {
-								e.stopPropagation();
-								navigation('/products');
-								window.scrollTo(0, 0);
-								handleOnChange();
-							}}
-							className="w-full justify-center mt-5 hover:underline uppercase cursor-pointer flex items-center"
-						>
-							<span className="text-sm sm:text-base md:text-lg hover:text-gray-700 text-black">on Continue Shoppping</span>
+						{/* Right Section (Bag Content) */}
+						<div className="w-full flex flex-col relative h-full justify-between items-center px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pt-4">
+							{/* Order Details Header */}
+							<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-2xl text-gray-800 text-left w-full mb-3">
+							{
+								isAuthentication && bag && bag.orderItems && bag.orderItems.length > 0 ? (
+									`cart (${bag.orderItems.length} items)`
+								):(
+									`cart (${sessionBagData.length} items)`
+								)
+							}
+							</h1>
+							{
+								isAuthentication && user ? (
+									<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+										{
+											bag && bag.orderItems && bag.orderItems.length > 0 && <ProductListingComponent
+												bag={bag}
+												updateQty={updateQty}
+												handleDeleteBag={handleDeleteBag}
+												user={user}
+											
+											/>
+										}
+									</ul>
+								):(
+									<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+										{sessionBagData && sessionBagData.length > 0 ? (
+											<OfflineBagContent
+												sessionBagData={sessionBagData}
+												updateQty={updateQty}
+												handleDeleteBag={handleDeleteBag}
+											/>
+										):(
+											<div className="flex min-h-[470px] font-medium text-base sm:text-base md:text-base justify-start items-start text-left">
+												<p className="text-gray-800">
+													Your shopping bag is empty. Add some items to continue.
+												</p>
+											</div>
+										)}
+									</ul>
+
+								)
+							}
+
+							{/* Center content section (scrollable) */}
+
+							{/* Subtotal and Button Section (Always at the bottom) */}
+							<div className="min-w-full space-y-2 bg-gray-50 p-3 font1 min-h-fit justify-center flex items-center">
+								<div className="w-full h-fit">
+									<div className="space-y-2 w-full">
+										{/* Subtotal */}
+										<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
+											<span>SubTotal</span>
+											<span>₹{Math.round(totalProductSellingPrice)}</span>
+										</div>
+										<br />
+										{/* Button Section */}
+										<div className="grid grid-cols-2 gap-2">
+											<button
+												onClick={() => {
+													if (isAuthentication) {
+														navigation("/Login");
+													} else {
+														navigation('/bag');
+													}
+													handleOnChange();
+												}}
+												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+											>
+												View Bag
+											</button>
+
+											<button
+												onClick={() => {
+													if (isAuthentication) {
+														navigation("/bag/checkout");
+													} else {
+														navigation('/Login');
+													}
+													handleOnChange();
+												}}
+												className="w-full bg-black h-12 text-white py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
+											>
+												Checkout
+											</button>
+										</div>
+									</div>
+
+									{/* Continue Shopping */}
+									<div
+										onClick={(e) => {
+											e.stopPropagation();
+											navigation('/products');
+											window.scrollTo(0, 0);
+											handleOnChange();
+										}}
+										className="w-full justify-center mt-5 hover:underline uppercase cursor-pointer flex items-center"
+									>
+										<span className="text-sm sm:text-base md:text-lg hover:text-gray-700 text-black">on Continue Shoppping</span>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-
-		</div>
+				)
+			}
+		</Fragment>
 	);
 
 }
@@ -473,8 +479,8 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 
 const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
 	<div className="flex flex-col space-y-4 w-full">
-		{Array(10).fill(null).map((item, i) => {
-			const active = bag?.orderItems[0];
+		{bag?.orderItems.map((item, i) => {
+			const active = item;
 			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 			const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 

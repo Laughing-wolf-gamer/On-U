@@ -15,6 +15,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
 import { IoBagRemoveSharp } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
+import Loader from '../Loader/Loader.js'
 
 
 const Navbar = ({user}) => {
@@ -232,6 +233,7 @@ const Navbar = ({user}) => {
 				<div className="p-1">                    
 					<SideBarBag OnChangeing={()=> setBagShow(false)}/>
 				</div>
+				
 			</div>
 		</div>
         </Fragment>
