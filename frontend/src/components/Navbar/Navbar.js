@@ -166,7 +166,7 @@ const Navbar = ({user}) => {
                                 onClick={() => (setMenu7(Menu7 === 'block' ? "hidden" : "block"), setShow7(!show7))}
                                 onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
                             >
-                                <div className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
+                                <div onClick={()=> setIsSearchVisible(false)} className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
                                     <Link to="/dashboard">
                                         <FaUser className='w-full h-full justify-self-center text-slate-800'/>
                                     </Link>
