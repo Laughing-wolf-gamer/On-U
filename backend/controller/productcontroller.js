@@ -203,6 +203,10 @@ export const getallproducts = async (req, res) => {
                 };
             }
         }
+		if (req.query.onSale === 'true') {
+			// Add the filter for salePrice greater than 0
+			filter.salePrice = { $gt: 0 };  // This will filter for products with salePrice > 0
+		}
         const allProducts = await ProductModel.find({});
         // Paginate products
         const itemsPerPage = 20;

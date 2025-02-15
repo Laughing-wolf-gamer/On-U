@@ -517,7 +517,11 @@ export const editProduct = async (req, res) => {
         let salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
         // Add the recalculated price and salePrice to the updateFields
         if (price && price > 0) updateFields.price = price;
-        if (salePrice && salePrice > 0) updateFields.salePrice = salePrice;
+        if (salePrice && salePrice > 0) {
+			updateFields.salePrice = salePrice
+		}else{
+			updateFields.salePrice = null; // If no salePrice, set salePrice to null in the updateFields object.
+		}
 
         // Calculate and set the DiscountedPercentage field if salePrice exists
         if (price && salePrice && salePrice > 0) {
