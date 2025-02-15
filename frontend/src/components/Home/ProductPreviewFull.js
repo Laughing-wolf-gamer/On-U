@@ -96,7 +96,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                         {p?.shortTitle?.length > 26 ? `${p?.shortTitle.slice(0, 10)}` : p?.shortTitle}
                                     </h2>
                                     
-                                    <div className="w-full justify-start gap-y-1 items-start flex flex-row space-x-2">
+                                    <div className="w-full justify-start gap-y-1 items-center flex flex-row space-x-2">
                                         {/* Sale Price */}
                                         <div className="text-xs md:text-sm font-light md:font-medium font-kumbsan text-slate-700">
                                             {p.salePrice && p.salePrice > 0 && (
@@ -106,7 +106,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                             )}
                                         </div>
                                         {/* Regular Price */}
-                                        <div className="text-xs md:text-sm font-light md:font-medium font-kumbsan text-slate-700 hover:animate-bounce">
+                                        <div className="text-xs md:text-lg font-light md:font-medium font-kumbsan text-slate-700 hover:animate-bounce">
                                             {p.salePrice && p.salePrice > 0 ? (
                                                 <span className="line-through text-gray-500">
                                                     ₹{formattedSalePrice(p.price)}
