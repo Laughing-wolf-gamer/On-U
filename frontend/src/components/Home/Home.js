@@ -309,8 +309,8 @@ const Home = ({user}) => {
                                 showArrows={false} 
                                 showIndicators={true} 
                                 renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                                    {!bannerLoading &&  Small_Screen_Section_2 && Small_Screen_Section_2.urls && Small_Screen_Section_2.urls.length > 0 ? (
-                                        Small_Screen_Section_2.urls.map((mb, index) => (
+                                    {!bannerLoading &&  Small_Screen_Section_1 && Small_Screen_Section_1.urls && Small_Screen_Section_1.urls.length > 0 ? (
+                                        Small_Screen_Section_1.urls.map((mb, index) => (
                                             <Link key={`mb_banners_${index}`} to='/products'>
                                                 <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
                                             </Link>

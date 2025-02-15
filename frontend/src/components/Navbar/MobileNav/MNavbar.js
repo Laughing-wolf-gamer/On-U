@@ -180,7 +180,9 @@ const MNavbar = ({ user }) => {
                                         <span>{currentBagCount}</span>
                                     </div>
                                 )}
-                                <button onClick={()=> setBagShow(!showbagView)}><ShoppingCart size={26} color='black'/></button>
+                                <button onClick={()=> {
+									setBagShow(!showbagView)
+								}}><ShoppingCart size={26} color='black'/></button>
                             </div>
                             <div className='float-right relative m-2 pb-0.5'>
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
@@ -204,7 +206,7 @@ const MNavbar = ({ user }) => {
                     <div className='grid grid-cols-12 py-3 px-[6px]'>
                         <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=> setserdiv('hidden')}><MdArrowBack color='black'/></div>
                         <div className="col-span-10">
-                        <input type="text" placeholder='Search for brands & products' 
+                        <input type="text" placeholder='Search for products' 
                             className='msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
                         </div>
                         <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='black' strokeWidth={.9} className='text-2xl text-black' /></div>
