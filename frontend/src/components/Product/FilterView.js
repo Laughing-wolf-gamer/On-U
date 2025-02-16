@@ -34,7 +34,9 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const categoriesarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
-				AllProductsCategory.push(p.category)
+				if(!AllProductsCategory.includes(p.category)){
+					AllProductsCategory.push(p.category)
+				}
 			});
         }
     };
@@ -553,7 +555,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
     }
-    console.log("All AllProductsCategory: ",AllProductsCategory);
+    // console.log("All AllProductsCategory: ",AllProductsCategory);
     
 
     return (
