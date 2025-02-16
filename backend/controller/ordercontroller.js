@@ -154,7 +154,7 @@ export const createorder = async (req, res, next) => {
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
 			ConveenianceFees: ConvenienceFees,
-            orderItems,
+            orderItems:orderItems.filter((item) => item.isChecked),
             address: addressString,
             TotalAmount,
             paymentMode,
@@ -224,6 +224,7 @@ export const createorder = async (req, res, next) => {
         }
     }
 };
+
 
 
 const removeProduct = async(productId,color,size,quantity) => {
@@ -527,6 +528,7 @@ export const addItemsArrayToBag = async (req, res) => {
                     quantity: p.quantity,
                     color: p.color,
                     size: p.size,
+					isChecked:p.isChecked,
                 })),
             });
 
@@ -627,7 +629,7 @@ export const addItemsToBag = async (req, res) => {
         const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
         if(!FindUserBag){
             const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
-            const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size}]})
+            const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:[{productId,quantity,color,size,isChecked:true}]})
             console.log("Creating Bag: ",bag);
             const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
             if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
@@ -669,35 +671,36 @@ const getItemsData = async (bag) => {
 
     // Use for...of to handle async properly
     for (const item of bag.orderItems) {
-        const { productId, quantity } = item;
+        const { productId, quantity,isChecked } = item;
+		if(isChecked){
+			// Await the database query
+			const productData = await ProductModel.findById(productId?._id || productId);
+			console.log("Deconstruct Product data: ", productData)
+			const { salePrice, price ,gst } = productData;
+			const priceWithoutGst = getOriginalAmount(gst,price)
+			let salePriceWithouGst = 0;
+			if(salePrice){
+				salePriceWithouGst = getOriginalAmount(gst,salePrice);
+			}
 
-        // Await the database query
-        const productData = await ProductModel.findById(productId?._id || productId);
-        console.log("Deconstruct Product data: ", productData)
-        const { salePrice, price ,gst } = productData;
-		const priceWithoutGst = getOriginalAmount(gst,price)
-		let salePriceWithouGst = 0;
-		if(salePrice){
-			salePriceWithouGst = getOriginalAmount(gst,salePrice);
+			// Calculate item totals
+			const productSellingPrice = salePrice || price;
+			const itemTotalPrice = (salePrice && salePrice > 0 ? salePrice : price) * quantity;
+			totalSP += itemTotalPrice;
+
+			// Calculate discount if both salePrice and price are valid
+			if (salePrice && price && price > 0) {
+				const discount = price - salePrice;
+				totalDiscount += discount * quantity;
+			}
+			totalGst += gst;
+
+			// Add to the product selling price
+			totalProductSellingPrice += (productSellingPrice * quantity);
+
+			// Add to MRP
+			totalMRP += price * quantity;
 		}
-
-        // Calculate item totals
-        const productSellingPrice = salePrice || price;
-        const itemTotalPrice = (salePrice && salePrice > 0 ? salePrice : price) * quantity;
-        totalSP += itemTotalPrice;
-
-        // Calculate discount if both salePrice and price are valid
-        if (salePrice && price && price > 0) {
-            const discount = price - salePrice;
-            totalDiscount += discount * quantity;
-        }
-		totalGst += gst;
-
-        // Add to the product selling price
-        totalProductSellingPrice += (productSellingPrice * quantity);
-
-        // Add to MRP
-        totalMRP += price * quantity;
     }
 
     // If coupon logic is required:
@@ -809,7 +812,55 @@ export const getbag = async (req, res) => {
 };
 
 
+export const updateItemCheckedInBag = async (req, res, next) => {
+	try {
+		// Destructure the request body to get the product ID and checkedIn status
+        const { id, isChecked } = req.body;
+		console.log("updateItemCheckedInBag id: ", id, "isChecked: ", isChecked);
+		// Find the original product from the database
+        const originalProductData = await ProductModel.findById(id);
+        if (!originalProductData) {
+            return res.status(400).json({ message: "Product Not Found" });
+        }
+		
+        // Find the user's shopping bag
+		const bag = await Bag.findOne({ userId: req.user.id }).populate('orderItems.productId');;
+        if (!bag) {
+            return res.status(400).json({ message: "Bag Not Found" });
+        }
+		
+        // Find the specific product in the user's bag
+		const product = bag.orderItems.find(p => p.productId._id.toString() === id);
+        if (!product) {
+            return res.status(400).json({ message: "Product not found in bag" });
+        }
+		console.log("Product in Bag: ", product);
+		// Update the checkedIn status
+		product.isChecked = !product.isChecked;
+		const TotalBagAmount = calculateTotalAmount(bag.orderItems);
+        bag.TotalBagAmount = TotalBagAmount;
+        // console.log("Updated Bag:", bag);
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
+        console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+        bag.totalProductSellingPrice = totalProductSellingPrice;
+        bag.totalSP = totalSP;
+        bag.totalDiscount = totalDiscount;
+        bag.totalMRP = totalMRP;
+        bag.totalGst = totalGst;
+		await bag.save();
+		console.log("bag after update: ", bag);
+		res.status(200).json({
+            success: true,
+            message: "Successfully updated Bag",
+            bag
+        });
 
+	} catch (error) {
+		console.error("Error Occurred during updating item checked in bag: ", error);
+		logger.error("Error Occurred during updating item checked in bag: " + error.message);
+		res.status(500).json({ success:false, message: "Internal Server Error" });
+	}
+}
 export const updateqtybag = async (req, res, next) => {
     try {
         // Destructure the request body to get the product ID and quantity
@@ -848,6 +899,8 @@ export const updateqtybag = async (req, res, next) => {
             // console.log("Updating size quantity");
             product.size.quantity = originalProductDataSize.quantity; // Sync with original product size quantity
         }
+		if(product.price !== originalProductData.price) product.price = originalProductData.price; // Sync with original product price
+		if(product.salePrice !== originalProductData.salePrice) product.salePrice = originalProductData.salePrice; // Sync with original product sale price
         // Update the quantity in the bag
         product.quantity = qty;
         const TotalBagAmount = calculateTotalAmount(bag.orderItems);

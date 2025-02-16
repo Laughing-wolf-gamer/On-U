@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getbag, getqtyupdate, deleteBag } from '../../action/orderaction';
+import { getbag, getqtyupdate, deleteBag, itemCheckUpdate } from '../../action/orderaction';
 import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
 import { useNavigate } from 'react-router-dom';
 import './bag.css';
@@ -19,7 +19,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
-    const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
+    const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
     const { user, isAuthentication } = useSelector(state => state.user);
     const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
@@ -66,28 +66,30 @@ const Bag = () => {
                 let totalMRP = 0,totalGst = 0;
         
                 bag.orderItems.forEach(item => {
-                    const { productId, quantity } = item;
-                    const { salePrice, price,gst } = productId;
-                    const priceWithoutGst = getOriginalAmount(gst,price);
-                    // Use salePrice if available, else fallback to regular price
-                    const productSellingPrice = salePrice || price;
-        
-                    // Calculate the total sale price (totalSP) based on salePrice or regular price
-                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                    totalSP += itemTotalPrice;
-        
-                    // Calculate the discount only if there is a sale price
-                    if (salePrice && price > 0) {
-                        const discount = price - salePrice;
-                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                    }
-        
-                    // Total product selling price includes salePrice or regular price
-                    totalProductSellingPrice += productSellingPrice * quantity;
-        
-                    // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
-					totalGst += gst;
+                    const { productId, quantity,isChecked } = item;
+					if(isChecked){
+						const { salePrice, price,gst } = productId;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+			
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+			
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+			
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+			
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
+					}
                 });
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
@@ -132,29 +134,31 @@ const Bag = () => {
             let totalMRP = 0,totalGst = 0;
             if(sessionBagData){
                 sessionBagData.forEach(item => {
-                    const { ProductData, quantity } = item;
-                    const { salePrice, price,gst} = ProductData;
-                    const priceWithoutGst = getOriginalAmount(gst,price);
-					
-                    // Use salePrice if available, else fallback to regular price
-                    const productSellingPrice = salePrice || price;
-            
-                    // Calculate the total sale price (totalSP) based on salePrice or regular price
-                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                    totalSP += itemTotalPrice;
-            
-                    // Calculate the discount only if there is a sale price
-                    if (salePrice && price > 0) {
-                        const discount = price - salePrice;
-                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                    }
-            
-                    // Total product selling price includes salePrice or regular price
-                    totalProductSellingPrice += productSellingPrice * quantity;
-            
-                    // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
-					totalGst += gst;
+                    const { ProductData, quantity,isChecked } = item;
+					if(isChecked){
+						const { salePrice, price,gst} = ProductData;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+				
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+				
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+				
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+				
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
+					}
                 });
 				console.log("Price WithouGst; ",allgst,totalMRP);
                 // Add convenience fees to the total product selling price (only once, not for each item)
@@ -181,6 +185,17 @@ const Bag = () => {
             updateBagQuantity(itemId, e.target.value)
         }
     };
+	const updateChecked = async (e, itemId) => {
+		console.log("Item ID: ", itemId);
+		e.stopPropagation();
+		if(isAuthentication){
+			await dispatch(itemCheckUpdate({ id: itemId }));
+			dispatch(getbag({ userId: user.id }));
+		}else{
+			// updateBagQuantity(itemId, e.target.value)
+			toggleBagItemCheck(itemId)
+		}
+	};
 
     const handleDeleteBag = async (productId,bagOrderItemId) => {
         if(isAuthentication){
@@ -301,6 +316,7 @@ const Bag = () => {
                         setSelectedAddress={setSelectedAddress}
                         totalProductSellingPrice={totalProductSellingPrice}
                         updateQty = {updateQty}
+						updateChecked = {updateChecked}
                         handleDeleteBag = {handleDeleteBag}
                         allAddresses={allAddresses}
                         buttonPressed = {buttonPressed}
@@ -322,6 +338,7 @@ const Bag = () => {
                         navigation={navigation}
                         handleDeleteBag={handleDeleteBag}
                         updateQty = {updateQty}
+						updateChecked = {updateChecked}
                     />
 
                 )}

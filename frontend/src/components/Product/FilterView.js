@@ -34,9 +34,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const categoriesarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
-				if(!AllProductsCategory.includes(p.category)){
-					AllProductsCategory.push(p.category)
-				}
+				AllProductsCategory.push(p.category)
 			});
         }
     };
@@ -555,7 +553,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
     }
-    console.log("All gendernewarray: ",gendernewarray);
+    console.log("All AllProductsCategory: ",AllProductsCategory);
     
 
     return (
@@ -620,7 +618,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {capitalizeFirstLetterOfEachWord(e)} 
+                                    {e} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({AllProductsCategory.filter((f) => f === e).length})
                                     </span>
@@ -653,8 +651,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     checked={isChecked} // Set checkbox checked if it's selected in the URL
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
+                                <label className=' text-sm uppercase ml-2 mr-4 mb-2'>
+                                    {e} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
                         );
@@ -685,7 +683,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {capitalizeFirstLetterOfEachWord(e)} 
+                                    {e} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({size.filter((f) => f === e).length})
                                     </span>

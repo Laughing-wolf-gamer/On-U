@@ -16,7 +16,8 @@ import {
     applyCouponToBag, 
     removeCouponToBag, 
     addItemsArrayToBag, 
-    addItemsArrayToWishList 
+    addItemsArrayToWishList, 
+	updateItemCheckedInBag
 } from "../controller/ordercontroller.js";
 
 
@@ -49,6 +50,7 @@ route.patch('/bag/removeCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
 
 route.get('/bag/:userId',isAuthenticateuser, getbag)
 route.put('/bag/update_bag',isAuthenticateuser, updateqtybag)
+route.put('/bag/update_bagItemChecked',isAuthenticateuser, updateItemCheckedInBag)
 route.put('/bag/removeBagItem',isAuthenticateuser, deletebag)
 
 

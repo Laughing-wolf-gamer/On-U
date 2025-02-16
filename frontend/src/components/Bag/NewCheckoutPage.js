@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { applyCouponToBag, deleteBag, getbag, getqtyupdate, removeCouponFromBag } from '../../action/orderaction';
+import { applyCouponToBag, deleteBag, getbag, getqtyupdate, itemCheckUpdate, removeCouponFromBag } from '../../action/orderaction';
 import { getAddress, getConvinceFees, getuser, updateAddress } from '../../action/useraction';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -19,7 +19,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 
 const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
-	const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
+	const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
 	const { user, isAuthentication, loading:userLoading } = useSelector(state => state.user);
 	const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
 	const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
@@ -66,29 +66,31 @@ const CheckoutPage = () => {
 				let totalMRP = 0, totalGst = 0;
 		
 				bag.orderItems.forEach(item => {
-					const { productId, quantity } = item;
-					const { salePrice, price,gst } = productId;
-					const priceWithoutGst = getOriginalAmount(gst,price);
-					
-					// Use salePrice if available, else fallback to regular price
-					const productSellingPrice = salePrice || price;
-		
-					// Calculate the total sale price (totalSP) based on salePrice or regular price
-					const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-					totalSP += itemTotalPrice;
-		
-					// Calculate the discount only if there is a sale price
-					if (salePrice && price > 0) {
-						const discount = price - salePrice;
-						totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+					const { productId, quantity,isChecked } = item;
+					if(isChecked){
+						const { salePrice, price,gst } = productId;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+			
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+			
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+			
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+			
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
 					}
-		
-					// Total product selling price includes salePrice or regular price
-					totalProductSellingPrice += productSellingPrice * quantity;
-		
-					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += price * quantity;
-					totalGst += gst;
 				});
 		
 				// Add convenience fees to the total product selling price (only once, not for each item)
@@ -133,28 +135,30 @@ const CheckoutPage = () => {
 			let totalMRP = 0, totalGst = 0;
 			if(sessionBagData){
 				sessionBagData.forEach(item => {
-					const { ProductData, quantity } = item;
-					const { salePrice, price,gst } = ProductData;
-					const priceWithoutGst = getOriginalAmount(gst,price);
-					// Use salePrice if available, else fallback to regular price
-					const productSellingPrice = salePrice || price;
-			
-					// Calculate the total sale price (totalSP) based on salePrice or regular price
-					const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-					totalSP += itemTotalPrice;
-			
-					// Calculate the discount only if there is a sale price
-					if (salePrice && price > 0) {
-						const discount = price - salePrice;
-						totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+					const { ProductData, quantity,isChecked } = item;
+					if(isChecked){
+						const { salePrice, price,gst } = ProductData;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+				
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+				
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+				
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+				
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
 					}
-			
-					// Total product selling price includes salePrice or regular price
-					totalProductSellingPrice += productSellingPrice * quantity;
-			
-					// Calculate the total MRP (Maximum Retail Price) based on regular price
-					totalMRP += price * quantity;
-					totalGst += gst;
 				});
 			
 				// Add convenience fees to the total product selling price (only once, not for each item)
@@ -180,6 +184,18 @@ const CheckoutPage = () => {
 			dispatch(getbag({ userId: user.id }));
 		}else{
 			updateBagQuantity(itemId, e.target.value)
+		}
+	};
+	const updateChecked = async (e, itemId) => {
+		// console.log("Item ID: ", itemId);
+		e.stopPropagation();
+		// console.log("Is Checked Value: ", e.target.checked);
+		if(isAuthentication){
+			await dispatch(itemCheckUpdate({ id: itemId }));
+			dispatch(getbag({ userId: user.id }));
+		}else{
+			// updateBagQuantity(itemId, e.target.value)
+			toggleBagItemCheck(itemId)
 		}
 	};
 
@@ -328,8 +344,8 @@ const CheckoutPage = () => {
 						/>
 						
 						{/* User Information Section */}
-						<section className="flex flex-col mb-10">
-							<h3 className="text-xl font-semibold mb-4">Your Information</h3>
+						<section className="flex min-w-full justify-start items-start flex-col mb-10">
+							<h3 className="text-xl font-semibold mb-4 text-left">Your Information</h3>
 							<AddAddress
 								onSave={handleSaveAddress}
 							/>
@@ -341,6 +357,7 @@ const CheckoutPage = () => {
 						<h3 className="text-xl font-semibold mb-4">Shopping Cart</h3>
 						<ProductListingComponent
 							updateQty={updateQty}
+							updateChecked = {updateChecked}
 							bag={bag}
 							handleDeleteBag={handleDeleteBag}
 							user={user}
@@ -519,7 +536,7 @@ const PriceDetailsComponent = ({user, bag,totalGst, totalSellingPrice, discounte
 }
 
 
-const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
+const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
 		{bag?.orderItems?.map((item, i) => {
 			const active = item;
@@ -536,50 +553,66 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 			};
 			const validImage = getImageExtensionsFile();
 			return(
-				<div key={i} className="relative flex flex-col sm:flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+				<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
 					{/* Product Image */}
-					<div className="w-fit h-28 sm:w-40 sm:h-40 relative border-2 rounded-lg">
+					<div className="relative w-28 h-28 sm:w-40 sm:h-40 border-2 rounded-lg">
 						<Link to={`/products/${active.productId?._id}`}>
-							{validImage ? <img 
-								src={validImage?.url} 
-								alt={active?.productId?.title} 
+						{validImage ? (
+							<div className="relative w-full h-full">
+							<img
+								src={validImage?.url}
+								alt={active?.productId?.title}
 								className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
-							/>:<p>No valid image available</p>}
+							/>
+							<div
+								onClick={(e) => updateChecked(e, active.productId?._id)}
+								className="absolute top-2 left-2 w-5 h-5 cursor-pointer"
+							>
+								<input
+								type="checkbox"
+								className="w-full h-full"
+								checked={active?.isChecked}
+								onChange={() => {}}
+								/>
+							</div>
+							</div>
+						) : (
+							<p>No valid image available</p>
+						)}
 						</Link>
-						{/* Delete Button on the Image (visible on small screens only) */}
+
+						{/* Delete Button on the Image (Mobile Only) */}
 						<div
-							className="absolute top-[-10px] right-[-10px] text-white bg-gray-200 p-1 Hover:text-black rounded-full cursor-pointer sm:hidden"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleDeleteBag(active.productId._id, active._id);
-							}}
+						className="absolute top-[-10px] right-[-10px] text-white bg-gray-200 p-1 rounded-full cursor-pointer sm:hidden"
+						onClick={(e) => {
+							e.stopPropagation();
+							handleDeleteBag(active.productId._id, active._id);
+						}}
 						>
-							<Trash size={15} />
+						<Trash size={15} />
 						</div>
-						</div>
-					
-						{/* Product Info */}
-						<div className="ml-6 flex-1 w-full">
-						<h3 className="font-semibold text-lg text-gray-800">{active?.productId?.title}</h3>
+					</div>
+
+					{/* Product Info */}
+					<div className="ml-6 flex-1 w-full">
+						<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate">{active?.productId?.title}</h3>
 						<p className="text-sm text-gray-600">Size: {active?.size?.label}</p>
-					
+
 						{/* Price and Discount Info */}
-						<div className="flex items-center whitespace-nowrap space-x-4 text-sm text-blue-400 mt-2">
+						<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
 							{active?.productId?.salePrice ? (
-								<Fragment>
-									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-									<span className="line-through whitespace-nowrap text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-									<span className="text-gray-700 whitespace-nowrap font-normal">
-									(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)
-									</span>
-								</Fragment>
+								<>
+								<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+								<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+								<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+								</>
 							) : (
 								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
 							)}
 						</div>
-					
+
 						{/* Quantity Selector */}
-						<div className="mt-4 flex w-fit items-center space-x-4 shadow-md justify-between rounded-full p-3">
+						<div className="mt-4 flex w-fit items-center space-x-4 px-3 sm:px-5 shadow-md justify-between rounded-full p-2">
 							<div className="flex items-center space-x-2 justify-between">
 								{/* Decrease Button */}
 								<button
@@ -587,30 +620,31 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag,user,setCoupo
 									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
 									disabled={active?.quantity <= 1}
 								>
-								<Minus/>
+								<Minus />
 								</button>
-								
+
 								{/* Display Current Quantity */}
 								<span className="text-sm">{active?.quantity}</span>
-								
+
 								{/* Increase Button */}
 								<button
-									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
-									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
-									disabled={active?.quantity >= active?.size?.quantity}
+								onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+								className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
+								disabled={active?.quantity >= active?.size?.quantity}
 								>
-								<Plus/>
+								<Plus />
 								</button>
 							</div>
 						</div>
 					</div>
-				
+
 					{/* Delete Button for larger screens */}
 					<Trash
-						className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+						className="text-xl text-black hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
 						onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
 					/>
-				</div>
+					</div>
+
 			)
 		})}
 
@@ -691,34 +725,35 @@ const AddAddress = ({onSave }) => {
 
 
     return (
-		<div>
-			<h2 className="text-xl font-semibold mb-4 text-center">Add New Address</h2>
-			<form className="space-y-4 flex flex-col">
+		<div className=' w-full justify-start items-start flex flex-col'>
+			<h2 className="text-xl w-full flex flex-col font-semibold mb-4 text-left">Add New Address</h2>
+			<form className="space-y-4 w-full flex flex-col">
 				{formData && formData.map((item, index) => (
-					<Fragment key={index}>
-						<div className="flex flex-col">
-							<FormControl fullWidth error={error}>
-								<label className="text-sm font-medium">{item}*</label>
-								<input
-									type="text"
-									value={newAddress[removeSpaces(item)] || ''}
-									id={removeSpaces(item)}
-									name={removeSpaces(item)}
-									onChange={handleChange}
-									className="border p-2 rounded-md mt-1"
-									required
-									placeholder={`Enter ${removeSpaces(item)}`}
-								/>
-								{error && (
-									<FormHelperText>{error}</FormHelperText>
-								)}
-							</FormControl>
-						</div>
-					</Fragment>
+					<div key={index} className='w-full flex flex-col justify-start items-start space-y-3'>
+						<label className="text-sm font-medium">{item}
+							{
+								!newAddress[removeSpaces(item)] && <span className='text-red-300'>*</span>
+							}
+							
+						</label>
+						<input
+							type="text"
+							value={newAddress[removeSpaces(item)] || ''}
+							id={removeSpaces(item)}
+							name={removeSpaces(item)}
+							onChange={handleChange}
+							className="border p-2 rounded-md mt-1 w-full"
+							required
+							placeholder={`Enter ${removeSpaces(item)}`}
+						/>
+						{error && (
+							<FormHelperText>{error}</FormHelperText>
+						)}
+					</div>
 				))}
 			</form>
 			{
-				formData && formData.length > 0 && <div className="flex justify-end mt-4 space-x-2">
+				formData && formData.length > 0 && <div className="flex justify-end mt-4 w-full space-x-2">
 					<button
 						disabled = {Object.values(newAddress).every(value => value.trim() === '')}
 						onClick={handleSave}

@@ -55,6 +55,19 @@ export const SessionStorageProvider = ({ children }) => {
             setBagSessionData(bagItem)
         }
     }
+	const toggleBagItemCheck = (productId)=>{
+		let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+		if (!bagItem) {
+			bagItem = [];
+		}
+		// console.log("bag: ",b)
+		let index = bagItem?.findIndex((item) => item.productId === productId);
+		if (index!== -1) {
+			bagItem[index].isChecked =!bagItem[index].isChecked;
+			sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+			setBagSessionData(bagItem)
+		}
+	}
     const removeBagSessionStorage = (productId)=>{
         let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
         if (!bagItem) {
@@ -134,7 +147,7 @@ export const SessionStorageProvider = ({ children }) => {
     };
 
     return (
-        <SessionStorageContext.Provider value={{ sessionData,sessionBagData,sessionRecentlyViewProducts, updateSessionStorage,setWishListProductInfo ,setSessionStorageBagListItem,updateBagQuantity,removeBagSessionStorage,updateRecentlyViewProducts}}>
+        <SessionStorageContext.Provider value={{ sessionData,sessionBagData,sessionRecentlyViewProducts, updateSessionStorage,setWishListProductInfo ,setSessionStorageBagListItem,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,updateRecentlyViewProducts}}>
             {children}
         </SessionStorageContext.Provider>
     );

@@ -386,8 +386,8 @@ const Home = ({user}) => {
                                         Array(8).fill(0).map((_, index) => (
                                             <li key={`skeleton_${index}`} className='m-2'>
 												<div className="w-[100px] sm:w-[120px] md:w-[150px] lg:w-[170px] xl:w-[200px] 
-																h-[150px] sm:h-[170px] md:h-[200px] lg:h-[220px] xl:h-[250px] 
-																bg-gray-300 animate-pulse rounded-lg">
+													h-[150px] sm:h-[170px] md:h-[200px] lg:h-[220px] xl:h-[250px] 
+													bg-gray-300 animate-pulse rounded-lg">
 												</div>
 											</li>
 

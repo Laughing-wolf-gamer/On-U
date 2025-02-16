@@ -168,7 +168,13 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
         if (paymentMethod) {
             if (paymentMethod === "COD") {
                 setIsPaymentStart(true);
-                const orderDetails = bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity }));
+				const filterdOrderDetails = bag.orderItems.filter(item => item.productId.isChecked);
+				if(filterdOrderDetails.length === 0){
+                    checkAndCreateToast("error","Please select products to proceed with COD");
+                    setIsPaymentStart(false);
+                    return;
+                }
+                const orderDetails = filterdOrderDetails.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity,isChecked:item.isChecked }));
                 const orderData = {
                     bagId: bag?._id,
 					ConvenienceFees:bag?.ConvenienceFees || 0,

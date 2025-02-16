@@ -174,6 +174,21 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
         dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
     }
 }
+export const itemCheckUpdate = (checkedData) => async () => {
+
+    try {
+        // dispatch({ type: REQUEST_UPDATE_QTY_BAG })
+        // const token = sessionStorage.getItem('token');
+		
+        console.log("Update Bag: ",checkedData)
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/bag/update_bagItemChecked`,checkedData, headerConfig());
+		return data.success;
+        // dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
+    } catch (error) {
+        // dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
+		return false;
+    }
+}
 
 export const deleteBag = (deletingProductData) => async (dispatch) => {
     try {

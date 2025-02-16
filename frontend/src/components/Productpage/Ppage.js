@@ -162,6 +162,7 @@ const Ppage = () => {
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
+				isChecked:true,
             };
             const response = await dispatch(createbag(orderData));
             if(response){
@@ -180,6 +181,7 @@ const Ppage = () => {
                 color: currentColor,
                 size: currentSize,
                 ProductData: product,
+				isChecked:true,
             };
             setSessionStorageBagListItem(orderData, param.id);
             checkAndCreateToast("success", "Product successfully in Bag");

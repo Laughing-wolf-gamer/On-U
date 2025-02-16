@@ -17,6 +17,7 @@ const BagSchema = new mongoose.Schema({
             ref:"product",
             required:true,
         },
+		isChecked:{type:Boolean, default:true},
         color:Object,
         size:Object,
         quantity:Number,

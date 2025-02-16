@@ -4,7 +4,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getAddress, getConvinceFees, getuser } from '../../action/useraction';
-import { deleteBag, getbag, getqtyupdate } from '../../action/orderaction';
+import { deleteBag, getbag, getqtyupdate, itemCheckUpdate } from '../../action/orderaction';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import CouponsDisplay from '../Bag/CouponDisplay';
 import { Minus, Plus, Trash } from 'lucide-react';
@@ -17,7 +17,7 @@ import Loader from '../Loader/Loader';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
-    const { sessionBagData,updateBagQuantity,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
+    const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
     const { user, isAuthentication } = useSelector(state => state.user);
     const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
@@ -57,28 +57,30 @@ const SideBarBag = ({OnChangeing}) => {
                 let totalMRP = 0,totalGst = 0;
         
                 bag.orderItems.forEach(item => {
-                    const { productId, quantity } = item;
-                    const { salePrice, price,gst } = productId;
-                    const priceWithoutGst = getOriginalAmount(gst,price);
-                    // Use salePrice if available, else fallback to regular price
-                    const productSellingPrice = salePrice || price;
-        
-                    // Calculate the total sale price (totalSP) based on salePrice or regular price
-                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                    totalSP += itemTotalPrice;
-        
-                    // Calculate the discount only if there is a sale price
-                    if (salePrice && price > 0) {
-                        const discount = price - salePrice;
-                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                    }
-        
-                    // Total product selling price includes salePrice or regular price
-                    totalProductSellingPrice += productSellingPrice * quantity;
-        
-                    // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
-					totalGst += gst;
+                    const { productId, quantity,isChecked } = item;
+					if(isChecked){
+						const { salePrice, price,gst } = productId;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+			
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+			
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+			
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+			
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
+					}
                 });
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
@@ -123,29 +125,31 @@ const SideBarBag = ({OnChangeing}) => {
             let totalMRP = 0,totalGst = 0;
             if(sessionBagData){
                 sessionBagData.forEach(item => {
-                    const { ProductData, quantity } = item;
-                    const { salePrice, price,gst} = ProductData;
-                    const priceWithoutGst = getOriginalAmount(gst,price);
-					
-                    // Use salePrice if available, else fallback to regular price
-                    const productSellingPrice = salePrice || price;
-            
-                    // Calculate the total sale price (totalSP) based on salePrice or regular price
-                    const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
-                    totalSP += itemTotalPrice;
-            
-                    // Calculate the discount only if there is a sale price
-                    if (salePrice && price > 0) {
-                        const discount = price - salePrice;
-                        totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
-                    }
-            
-                    // Total product selling price includes salePrice or regular price
-                    totalProductSellingPrice += productSellingPrice * quantity;
-            
-                    // Calculate the total MRP (Maximum Retail Price) based on regular price
-                    totalMRP += price * quantity;
-					totalGst += gst;
+                    const { ProductData, quantity, isChecked} = item;
+					if(isChecked){
+						const { salePrice, price,gst} = ProductData;
+						const priceWithoutGst = getOriginalAmount(gst,price);
+						
+						// Use salePrice if available, else fallback to regular price
+						const productSellingPrice = salePrice || price;
+				
+						// Calculate the total sale price (totalSP) based on salePrice or regular price
+						const itemTotalPrice = (salePrice > 0 ? salePrice : price) * quantity;
+						totalSP += itemTotalPrice;
+				
+						// Calculate the discount only if there is a sale price
+						if (salePrice && price > 0) {
+							const discount = price - salePrice;
+							totalDiscount += discount * quantity; // Multiply discount by quantity to account for multiple items
+						}
+				
+						// Total product selling price includes salePrice or regular price
+						totalProductSellingPrice += productSellingPrice * quantity;
+				
+						// Calculate the total MRP (Maximum Retail Price) based on regular price
+						totalMRP += price * quantity;
+						totalGst += gst;
+					}
                 });
 				console.log("Price WithouGst; ",allgst,totalMRP);
                 // Add convenience fees to the total product selling price (only once, not for each item)
@@ -170,6 +174,17 @@ const SideBarBag = ({OnChangeing}) => {
             dispatch(getbag({ userId: user.id }));
         }else{
             updateBagQuantity(itemId, e.target.value)
+        }
+    };
+    const updateChecked = async (e, itemId) => {
+        console.log("Item ID: ", itemId);
+        console.log("Is Checked Value: ", e.target.checked);
+        if(isAuthentication){
+            await dispatch(itemCheckUpdate({ id: itemId }));
+            dispatch(getbag({ userId: user.id }));
+        }else{
+            // updateBagQuantity(itemId, e.target.value)
+			toggleBagItemCheck(itemId)
         }
     };
 
@@ -293,6 +308,7 @@ const SideBarBag = ({OnChangeing}) => {
 												bag={bag}
 												updateQty={updateQty}
 												handleDeleteBag={handleDeleteBag}
+												updateChecked = {updateChecked}
 												user={user}
 											
 											/>
@@ -334,11 +350,7 @@ const SideBarBag = ({OnChangeing}) => {
 										<div className="grid grid-cols-2 gap-2">
 											<button
 												onClick={() => {
-													if (isAuthentication) {
-														navigation('/bag');
-													} else {
-														navigation("/Login");
-													}
+													navigation('/bag');
 													handleOnChange();
 												}}
 												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
@@ -370,7 +382,7 @@ const SideBarBag = ({OnChangeing}) => {
 											window.scrollTo(0, 0);
 											handleOnChange();
 										}}
-										className="w-full bg-gray-700 text-white mt-2 py-3 text-center  transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
+										className="w-full text-white mt-2 py-3 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
 									>
 										Continue Shoppping
 									</div>
@@ -481,7 +493,7 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 };
 
 
-const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
+const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
 	<div className="flex flex-col space-y-4 w-full">
 		{bag?.orderItems.map((item, i) => {
 			const active = item;
@@ -499,27 +511,33 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 						<div className="flex flex-row justify-start items-start space-x-2">
 						
 							<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-								<Link to={`/products/${active.productId?._id}`}>
+								<Link to={`/products/${active.productId?._id}`} className="relative">
 									{validImage ? (
-										<img
-											src={validImage?.url}
-											alt={active?.productId?.title}
-											className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-										/>
+										<div className="relative">
+											<img
+												src={validImage?.url}
+												alt={active?.productId?.title}
+												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+											/>
+											{/* Checkbox positioned at the top-right corner */}
+											<div onClick={(e)=>{
+												updateChecked(e, active.productId?._id);
+											}} className="absolute top-1 left-1 w-5 h-5 cursor-pointer">
+												<input
+													type="checkbox"
+													className="w-full h-full"
+													checked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+													onChange={(e) => {
+														// updateChecked(e, active.productId?._id);
+														// console.log("")
+													}} // We can add the change handler if needed, or leave empty
+												/>
+											</div>
+										</div>
 									) : (
 										<p>No valid image available</p>
 									)}
 								</Link>
-								{/* Delete Button on the Image (Mobile) */}
-								{/* <div
-									className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
-									onClick={(e) => {
-										e.stopPropagation();
-										handleDeleteBag(active.productId._id, active._id);
-									}}
-								>
-									<Trash size={15} />
-								</div> */}
 							</div>
 
 							{/* Product Info */}
@@ -541,12 +559,12 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 								</div>
 
 								{/* Quantity Selector */}
-								<div className="mt-2 flex w-20 sm:w-24 md:w-28 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+								<div className="mt-2 flex w-fit items-center space-x-2 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
 									<div className="flex w-fit items-center space-x-3 justify-between">
 										{/* Decrease Button */}
 										<button
 											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
-											className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
+											className="h-fit rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity <= 1}
 										>
 											<Minus strokeWidth={1.5} />
@@ -558,7 +576,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 										{/* Increase Button */}
 										<button
 											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
-											className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
+											className="h-fit rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity >= active?.size?.quantity}
 										>
 											<Plus strokeWidth={1.5} />

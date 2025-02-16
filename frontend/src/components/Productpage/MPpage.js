@@ -193,6 +193,7 @@ const MPpage = () => {
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
+				isChecked:true,
             };
             await dispatch(createbag(orderData));
             // await dispatch(getwishlist());
@@ -205,6 +206,7 @@ const MPpage = () => {
                 color: currentColor,
                 size: currentSize,
                 ProductData: product,
+				isChecked:true,
             };
             setSessionStorageBagListItem(orderData, param.id);
         }
