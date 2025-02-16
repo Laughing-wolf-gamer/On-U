@@ -7,15 +7,15 @@ const BackToTopButton = ({scrollableDivRef}) => {
 	const scrollToTop = () => {
 		// Scroll the div to the top smoothly
 		if (scrollableDivRef.current) {
-		scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
 	};
 
 	useEffect(() => {
 		const handleScroll = () => {
-		if (scrollableDivRef.current) {
-			setScrollPosition(scrollableDivRef.current.scrollTop);
-		}
+			if (scrollableDivRef.current) {
+				setScrollPosition(scrollableDivRef.current.scrollTop);
+			}
 		};
 
 		// Attach the scroll event listener when the component mounts
@@ -28,7 +28,7 @@ const BackToTopButton = ({scrollableDivRef}) => {
 		};
 	}, []);
 
-	console.log("Scroll position: ", scrollPosition);
+	// console.log("Scroll position: ", scrollPosition);
 
 	return (
 		<div>

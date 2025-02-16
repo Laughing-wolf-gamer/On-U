@@ -159,7 +159,7 @@ const Navbar = ({user}) => {
 							setIsSearchVisible(false);
 						}} />}
                             <button onClick={toggleSearchBar} className="text-slate-800 hover:border hover:animate-vibrateScale border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
-                                <SearchIcon size={25}/>
+                                <SearchIcon strokeWidth={.5} size={25}/>
                             </button>
                         </div>
                         <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>
@@ -168,7 +168,7 @@ const Navbar = ({user}) => {
                                 onMouseEnter={() => (setMenu7('block'), setShow7(true))} onMouseLeave={() => (setMenu7('hidden'), setShow7(false))}
                             >
                                 <div onClick={()=> setIsSearchVisible(false)} className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
-                                    <Link to="/dashboard">
+                                    <Link to={`${user ? "/dashboard":"/Login"}`}>
                                         <FaUser className='w-full h-full justify-self-center text-slate-800'/>
                                     </Link>
                                 </div>
@@ -176,7 +176,7 @@ const Navbar = ({user}) => {
                             <li onClick={()=> setIsSearchVisible(false)} className="w-max flex justify-center items-center  font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{wishlist.orderItems.length}</span>
+                                        <span>{wishlist?.orderItems?.length}</span>
                                     </div>
                                 )}
                                 {!user && currentWishListCount > 0 && (

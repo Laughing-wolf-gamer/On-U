@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { AiOutlineFire, AiOutlineStar } from 'react-icons/ai'
 import Per from '../images/per.png'
 import { useNavigate, Link } from 'react-router-dom'
@@ -10,7 +10,7 @@ import { capitalizeFirstLetterOfEachWord } from '../../config'
 import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
 import { BsSortDown, BsSortUp } from 'react-icons/bs'
-import { ArrowDown01, ArrowDown10, BadgePercent } from 'lucide-react'
+import { ArrowDown01, ArrowDown10, ArrowUpDown, BadgePercent, Filter, SortAsc } from 'lucide-react'
 
 
 const CustomSlider = styled(Slider)({
@@ -33,7 +33,7 @@ const CustomSlider = styled(Slider)({
     },
 });
 
-const MFilter = ({ product ,handleSortChange}) => {
+const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     const dispatch = useDispatch()
     const navigation = useNavigate()
 
@@ -505,212 +505,263 @@ const MFilter = ({ product ,handleSortChange}) => {
         reloadproducts()
         // window.location.reload();
     }
+	const [scrollPosition, setScrollPosition] = useState(0);
+	const [isScrollingUp, setIsScrollingUp] = useState(true);
+  	const [isVisible, setIsVisible] = useState(true);
+	let lastScrollTop = 0;
+    useEffect(() => {
+		const handleScroll = () => {
+			if (scrollableDivRef.current) {
+				const currentScrollTop = scrollableDivRef.current.scrollTop;
+
+				// Determine scroll direction
+				if (currentScrollTop < lastScrollTop) {
+				// Scrolling Up
+				setIsScrollingUp(true);
+				setIsVisible(true); // Show the div
+				} else {
+				// Scrolling Down
+				setIsScrollingUp(false);
+				setIsVisible(false); // Hide the div
+				}
+
+				// Update the last scroll position
+				lastScrollTop = currentScrollTop <= 0 ? 0 : currentScrollTop;
+
+				// Update the current scroll position
+				setScrollPosition(currentScrollTop);
+			}
+		};
+
+		const divElement = scrollableDivRef.current;
+		divElement.addEventListener('scroll', handleScroll);
+
+		return () => {
+			divElement.removeEventListener('scroll', handleScroll); // Clean up the event listener
+		};
+	}, []);
+	console.log('scrollPosition: ', scrollPosition);
     return (
         <Fragment>
-        <div className='hidden font1 uppercase mobilevisible fixed z-10 bottom-0 w-full '>
+			<div
+				className={`hidden font-kumbsan uppercase mobilevisible fixed z-10 top-12 transition-all duration-300 
+					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
+					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
+				>
+				<div className="flex-row flex justify-end px-5 items-center py-2 border-t-[0.5px] border-slate-200 relative space-x-2 z-10">
+					{/* Sort Section */}
+					<div
+						className="text-[13px] rounded-full flex justify-center items-center cursor-pointer bg-white p-3"
+						onClick={() => setsortvi('block')}
+						role="button"
+						aria-label="Sort items"
+					>
+						<ArrowUpDown size={18}/>
+					</div>
+					
+					{/* Filter Section */}
+					<div
+						className="text-[13px] rounded-full flex justify-center items-center cursor-pointer bg-white p-3"
+						onClick={filterdiv}
+						role="button"
+						aria-label="Filter items"
+					>
+						<Filter size={18}/>
+					</div>
 
-            {/* Sort and Filter Div ************************************************************************************* */}
-            <div className='grid grid-cols-12 w-full bg-white py-3 border-t-[0.5px] border-slate-200 relative z-10'>
-            <div className="col-span-6 text-lg flex justify-center items-center " onClick={() => setsortvi('block')}>
-                <svg width="24" height="24" viewBox="0 0 24 24" className="mr-2"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z" opacity="0.05"></path><path fill="#282C3F" d="M7.445 7.48V5.672L5.665 7.48h1.78zm1.09-4.42c.304.12.465.39.465.706v16.437a.784.784 0 01-.783.797.762.762 0 01-.772-.781V8.982H4.003a.832.832 0 01-.765-.204.759.759 0 01.002-1.105L7.652 3.23a.832.832 0 01.882-.17zm8.02 15.269l1.78-1.81h-1.78v1.81zm4.207-3.107a.76.76 0 01-.002 1.106l-4.412 4.442a.832.832 0 01-.882.17c-.305-.12-.466-.39-.466-.706V3.797c0-.432.332-.797.783-.797.45 0 .772.35.772.781v11.237h3.442a.833.833 0 01.765.204z"></path></g></svg>
-                SORT</div>
-            <div className="col-span-6 text-lg flex justify-center text-center " onClick={filterdiv}>
-                <svg width="24" height="24" viewBox="0 0 24 24" className="mr-2"><g fill="none" fill-rule="evenodd"><path d="M0 0h24v24H0z" opacity="0.05"></path><path fill="#282C3F" d="M3.749 7.508a.75.75 0 010-1.5h3.138a2.247 2.247 0 014.243 0h9.121a.75.75 0 010 1.5h-9.126a2.248 2.248 0 01-4.232 0H3.749zm13.373 9h3.129a.75.75 0 010 1.5h-3.135a2.247 2.247 0 01-4.231 0H3.749a.75.75 0 010-1.5h9.13a2.248 2.248 0 014.243 0z"></path></g></svg>
-                FILTER</div>
-            <span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>
-            </div>
-
-
-
-        </div>
-
-        {/* SORT Div ********************************************************************************************************** */}
-
-        <div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
-            <div className='absolute bottom-0 h-fit w-full bg-white'>
-            <h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
-            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} >
-				<AiOutlineFire className='text-xl mr-2'/>
-				<span>What`s New</span>
+					{/* Separator */}
+					<span className="absolute h-[24px] border-r-[1px] border-slate-300 top-[33.33%] left-1/2 transform -translate-x-1/2"></span>
+				</div>
 			</div>
-            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("popularity"), setsortvi('hidden'))}>
-				<AiOutlineStar className='text-xl mr-2' />
-				<span>Popularity</span>
+
+
+			{/* SORT Div ********************************************************************************************************** */}
+
+			<div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
+				<div className='absolute bottom-0 h-fit w-full bg-white'>
+				<h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} >
+					<AiOutlineFire className='text-xl mr-2'/>
+					<span>What`s New</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("popularity"), setsortvi('hidden'))}>
+					<AiOutlineStar className='text-xl mr-2' />
+					<span>Popularity</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
+					<BadgePercent size={20} strokeWidth={1.5} /> <span>Better Discount</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("price-high-to-low"), setsortvi('hidden'))}>
+					<BsSortDown/>
+					<span>Price: High To Low</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("price-low-to-high"), setsortvi('hidden'))}>
+					<BsSortUp/>
+					<span>Price: Low To High</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-high-to-low"), setsortvi('hidden'))}>
+					<ArrowDown10 size={20} strokeWidth={1.5}  />
+					<span>Rating: High To Low</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-low-to-high"), setsortvi('hidden'))}>
+					<ArrowDown01 size={20} strokeWidth={1.5}  />
+					<span>Rating: Low To High</span>
+				</div>
+				{/* <div className="text-base  py-3 px-6 flex justify-start items-center" onClick={() => setsortvi('hidden')}>
+					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-xl mr-2"><path d="M13.7441 7.76569L15.5512 4.25163C15.7206 3.91273 16.2062 3.91728 16.3711 4.25845L18.2794 8.20012L22.6123 8.86767C22.9864 8.92567 23.132 9.38625 22.859 9.64896L19.6975 12.6808L20.406 17.0046C20.4674 17.3776 20.0728 17.6596 19.7385 17.48L16.3074 15.516" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.98042 5.62951L12.0297 9.8623L16.681 10.5776C17.0518 10.6345 17.1973 11.0939 16.9244 11.3544L13.5331 14.6091L14.2917 19.2502C14.3531 19.6209 13.9619 19.9007 13.6298 19.7233L9.48344 17.5023L5.3041 19.6607C4.96975 19.8325 4.58195 19.547 4.64905 19.1763L5.47923 14.5489L2.13576 11.2429C1.86737 10.9779 2.01976 10.5219 2.39277 10.4696L7.05317 9.82477L9.16615 5.62382C9.3356 5.2872 9.81665 5.29061 9.98042 5.62951Z" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path>
+					</svg>Customer Rating
+				</div> */}
+				</div>
 			</div>
-            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
-                <BadgePercent size={20} strokeWidth={1.5} /> <span>Better Discount</span>
-            </div>
-            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("price-high-to-low"), setsortvi('hidden'))}>
-				<BsSortDown/>
-				<span>Price: High To Low</span>
-            </div>
-            <div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("price-low-to-high"), setsortvi('hidden'))}>
-				<BsSortUp/>
-				<span>Price: Low To High</span>
-            </div>
-			<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-high-to-low"), setsortvi('hidden'))}>
-				<ArrowDown10 size={20} strokeWidth={1.5}  />
-				<span>Rating: High To Low</span>
-            </div>
-			<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-low-to-high"), setsortvi('hidden'))}>
-				<ArrowDown01 size={20} strokeWidth={1.5}  />
-				<span>Rating: Low To High</span>
-            </div>
-            {/* <div className="text-base  py-3 px-6 flex justify-start items-center" onClick={() => setsortvi('hidden')}>
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-xl mr-2"><path d="M13.7441 7.76569L15.5512 4.25163C15.7206 3.91273 16.2062 3.91728 16.3711 4.25845L18.2794 8.20012L22.6123 8.86767C22.9864 8.92567 23.132 9.38625 22.859 9.64896L19.6975 12.6808L20.406 17.0046C20.4674 17.3776 20.0728 17.6596 19.7385 17.48L16.3074 15.516" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.98042 5.62951L12.0297 9.8623L16.681 10.5776C17.0518 10.6345 17.1973 11.0939 16.9244 11.3544L13.5331 14.6091L14.2917 19.2502C14.3531 19.6209 13.9619 19.9007 13.6298 19.7233L9.48344 17.5023L5.3041 19.6607C4.96975 19.8325 4.58195 19.547 4.64905 19.1763L5.47923 14.5489L2.13576 11.2429C1.86737 10.9779 2.01976 10.5219 2.39277 10.4696L7.05317 9.82477L9.16615 5.62382C9.3356 5.2872 9.81665 5.29061 9.98042 5.62951Z" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path>
-                </svg>Customer Rating
-            </div> */}
-            </div>
-        </div>
 
-        {/* FILTER Div ********************************************************************************************************** */}
+			{/* FILTER Div ********************************************************************************************************** */}
 
-        <div className={`${filter} z-20 bg-white w-full h-full fixed top-0 `}>
-            <div className=''>
+			<div className={`${filter} z-20 bg-white w-full h-full fixed top-0 `}>
+				<div className=''>
 
-            <h1 className='w-full px-8  font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
-                {document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
-            <div className='grid grid-cols-12 h-[93%] '>
-                <div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
-                    <h1 className={`filter1 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
-                    <h1 className={`filter2 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
-                    <h1 className={`filter3 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Sub Categories</h1>
-                    <h1 className={`filter4 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
-                    <h1 className={`filter5 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
-                    <h1 className={`filter6 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
-                    <h1 className={`filter7 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
-                    <h1 className={`filter8 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
-                    <h1 className={`filter9 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
-                </div>
+				<h1 className='w-full px-8  font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
+					{document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
+				<div className='grid grid-cols-12 h-[93%] '>
+					<div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
+						<h1 className={`filter1 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
+						<h1 className={`filter2 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
+						<h1 className={`filter3 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(3), addclass3(3))}>Sub Categories</h1>
+						<h1 className={`filter4 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
+						<h1 className={`filter5 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
+						<h1 className={`filter6 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
+						<h1 className={`filter7 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
+						<h1 className={`filter8 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
+						<h1 className={`filter9 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
+					</div>
 
-                <div className='col-span-8 '>
+					<div className='col-span-8 '>
 
-                    <ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
-                        {
-                            gender && gender.map((e,i) =>
+						<ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
+							{
+								gender && gender.map((e,i) =>
 
-                                <li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                    onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
+									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
+										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul2`}>
-                        {
-                            Categorynewarray && Categorynewarray.map((e,i) =>
+								)
+							}
+						</ul>
+						
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul2`}>
+							{
+								Categorynewarray && Categorynewarray.map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (categoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{category.filter((f) => f === e).length}</span></li>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
+									onClick={() => (categoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{category.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul3`}>
-                        {
-                            subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
+								)
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul3`}>
+							{
+								subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
+									onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul4`}>
-                        {
-                            size && size.map((e,i) =>
+								)
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul4`}>
+							{
+								size && size.map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{size.filter((f) => f === e).length}</span></li>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
+									onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{size.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
-                        {
-                            sp &&
-                            <div className='mt-10 ml-8 mr-8'>
-                                <h1 className='text-xs text-slate-500'>Selected price range</h1>
-                                <h1 className='text-base text-slate-900'>&#x20B9; {price[0]} - &#x20B9;{price[1]}</h1>
-                                <CustomSlider
-                                    value={price}
-                                    onChange={priceHandler}
-                                    valueLabelDisplay="auto"
-                                    aria-labelledby="range-slider"
-                                    min={Math.floor(Math.min(...sp))}
-                                    max={Math.floor(Math.max(...sp))}
-                                />
-                            </div>
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul6`}>
-                        {
-                            colornewarray && colornewarray.map((e,i) =>
+								)
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
+							{
+								sp &&
+								<div className='mt-10 ml-8 mr-8'>
+									<h1 className='text-xs text-slate-500'>Selected price range</h1>
+									<h1 className='text-base text-slate-900'>&#x20B9; {price[0]} - &#x20B9;{price[1]}</h1>
+									<CustomSlider
+										value={price}
+										onChange={priceHandler}
+										valueLabelDisplay="auto"
+										aria-labelledby="range-slider"
+										min={Math.floor(Math.min(...sp))}
+										max={Math.floor(Math.max(...sp))}
+									/>
+								</div>
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul6`}>
+							{
+								colornewarray && colornewarray.map((e,i) =>
 
-                                <li key={`color_key_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
-                                onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
-                                    <span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
-                                    
-                                    </span>
-                                    <div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
+									<li key={`color_key_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
+									onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
+										<span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
+										
+										</span>
+										<div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
 
-                                    </div>
-                                <span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
+										</div>
+									<span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul7`}>
-                        {
-                            specialCategoryNewArray && specialCategoryNewArray.length > 0 && specialCategoryNewArray.map((e,i) =>
+								)
+							}
+						</ul>
+						
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul7`}>
+							{
+								specialCategoryNewArray && specialCategoryNewArray.length > 0 && specialCategoryNewArray.map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.replace(/ /g, "")} relative`}
-                                onClick={() => (specialCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-                                <span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{specialCategoryNewArray.filter((f) => f === e).length}</span></li>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.replace(/ /g, "")} relative`}
+									onClick={() => (specialCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{specialCategoryNewArray.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
-                        {
-                            discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((e,i) =>
+								)
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
+							{
+								discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((e,i) =>
 
-                                <li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.toString()} relative`}
-                                onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
-                                <span className={`text-sm`}>Up to {e}% OFF</span> <span className={`absolute right-6 text-xs`}>{discountedPercentageAmount.filter((f) => f === e).length}</span></li>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.toString()} relative`}
+									onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
+									<span className={`text-sm`}>Up to {e}% OFF</span> <span className={`absolute right-6 text-xs`}>{discountedPercentageAmount.filter((f) => f === e).length}</span></li>
 
-                            )
-                        }
-                    </ul>
-                    <ul className={`hidden overflow-scroll h-[86%] ulco ul9`}>
-                        <li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
-                            onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>
-                        <span className={`text-sm`}>On Sale</span> <span className={`absolute right-6 text-xl`}>{onSale.length}</span></li>
-                    </ul>
-                </div>
+								)
+							}
+						</ul>
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul9`}>
+							<li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
+								onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>
+							<span className={`text-sm`}>On Sale</span> <span className={`absolute right-6 text-xl`}>{onSale.length}</span></li>
+						</ul>
+					</div>
 
-            </div>
+				</div>
 
-            <div className='grid grid-cols-12 w-full  bg-white py-3 border-t-[0.5px] border-slate-200 absolute bottom-0 h-[7%]'>
-                <div className="col-span-6 text-lg flex justify-center items-center " onClick={filterdiv}>
-                CLOSE</div>
-                <div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
-                onClick={() => (setMMainlink( MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
-                ,filterdiv(), reloadproducts() )}>
-                <Link to={MMainlink}>
-                    APPLY
-                </Link>
+				<div className='grid grid-cols-12 w-full  bg-white py-3 border-t-[0.5px] border-slate-200 absolute bottom-0 h-[7%]'>
+					<div className="col-span-6 text-lg flex justify-center items-center " onClick={filterdiv}>
+					CLOSE</div>
+					<div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
+					onClick={() => (setMMainlink( MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
+					,filterdiv(), reloadproducts() )}>
+					<Link to={MMainlink}>
+						APPLY
+					</Link>
 
-                </div>
-                <span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>
-            </div>
-            </div>
-        </div>
+					</div>
+					<span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>
+				</div>
+				</div>
+			</div>
 
         </Fragment>
     )

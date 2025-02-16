@@ -586,7 +586,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    {capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
@@ -620,7 +620,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    {capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({AllProductsCategory.filter((f) => f === e).length})
                                     </span>
@@ -654,7 +654,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,20))}...` :capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
+                                    {capitalizeFirstLetterOfEachWord(e)} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
                         );
@@ -685,7 +685,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    {capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({size.filter((f) => f === e).length})
                                     </span>
@@ -718,7 +718,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e?.length > 20 ? `${capitalizeFirstLetterOfEachWord(e.slice(0,5))}` :capitalizeFirstLetterOfEachWord(e)} 
+                                    {capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({specialCategorynewarray.filter((f) => f === e).length})
                                     </span>

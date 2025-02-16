@@ -208,7 +208,7 @@ const Allproductpage = ({user}) => {
                 }
 
             </div>
-            {(window.screen.width < 1024 && product) && <MFilter product={product} handleSortChange={handleSortChange} />}
+            {(window.screen.width < 1024 && product) && <MFilter scrollableDivRef = {scrollableDivRef} product={product} handleSortChange={handleSortChange} />}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
         </div>

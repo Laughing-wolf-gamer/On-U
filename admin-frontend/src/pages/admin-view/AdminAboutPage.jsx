@@ -21,6 +21,7 @@ const AdminAboutPage = () => {
 		details:'',
 		founderVision:'',
 		goals:'',
+		promises:'',
 	});
     const [header, setHeader] = useState('');
     const [subHeader, setSubHeader] = useState('');
@@ -268,20 +269,20 @@ const AdminAboutPage = () => {
                         className="w-full p-2 border rounded mb-2"
                         value={founderData.name}
                         onChange={(e) => setFounderData({...founderData, name: e.target.value })}
-						placeholder="Founder Name"
+						placeholder="Add Founder's Name"
                     />
 					<input
                         type="text"
                         className="w-full p-2 border rounded mb-2"
                         value={founderData.designation}
                         onChange={(e) => setFounderData({...founderData, designation: e.target.value })}
-						placeholder="Founder Designation"
+						placeholder="Add Founder's Designation"
                     />
 					<textarea
                         className="w-full p-2 border rounded h-32"
                         value={founderData.introduction}
                         onChange={(e) => setFounderData({...founderData, introduction: e.target.value })}
-                        placeholder="Founder introduction"
+                        placeholder="Add Founder's introduction"
 						rows={5}
 						cols={30}
 						required
@@ -291,14 +292,14 @@ const AdminAboutPage = () => {
                         className="w-full p-2 border rounded mb-2"
                         value={founderData.details}
                         onChange={(e) => setFounderData({...founderData, details: e.target.value })}
-						placeholder="Founder Details"
+						placeholder="Add Founder's Details"
                     />
 					<textarea
                         type="text"
                         className="w-full p-2 border rounded mb-2"
                         value={founderData.founderVision}
                         onChange={(e) => setFounderData({...founderData, founderVision: e.target.value })}
-						placeholder="Founder Vision"
+						placeholder="Add Founder's Vision"
 						rows={5}
 						cols={30}
 						required
@@ -308,7 +309,17 @@ const AdminAboutPage = () => {
                         className="w-full p-2 border rounded mb-2"
                         value={founderData.goals}
                         onChange={(e) => setFounderData({...founderData, goals: e.target.value })}
-						placeholder="goals"
+						placeholder="Add Founder's goals"
+						rows={5}
+						cols={30}
+						required
+                    />
+					<textarea
+                        type="text"
+                        className="w-full p-2 border rounded mb-2"
+                        value={founderData?.promises}
+                        onChange={(e) => setFounderData({...founderData, promises: e.target.value })}
+						placeholder="Add Founde's promises"
 						rows={5}
 						cols={30}
 						required

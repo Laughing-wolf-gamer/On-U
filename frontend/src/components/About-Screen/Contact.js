@@ -95,7 +95,7 @@ const Contact = () => {
                     	{formData.subheader ? formData?.subheader :"We would love to hear from you! Whether it's an inquiry, feedback, or support, reach out to us and we will get back"}
                     </p>
                 </header>
-				<div className="w-full grid grid-cols-2 justify-center items-center">
+				<div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 gap-3 justify-center items-center">
 					{/* Contact Form Section */}
 					<section className="w-full bg-white p-8 rounded-lg shadow-lg space-y-8">
 						<h2 className="text-3xl font-semibold text-gray-900 text-center mb-6">Contact Us</h2>
@@ -163,25 +163,25 @@ const Contact = () => {
 					</section>
 			
 					{/* Contact Details Section */}
-					<section className="mt-16 text-center">
+					<section className="text-center min-h-full justify-center items-center border-gray-200 flex flex-col border">
 						<h3 className="text-3xl font-semibold text-gray-900 mb-6">Our Contact Information</h3>
 						<p className="mt-4 text-lg text-gray-600">
 						You can also reach us through the following contact details:
 						</p>
 						<div className="mt-8 text-lg text-gray-700 space-y-4">
-						<p className="text-gray-500">
-							Email:{" "}
-							<a href={`mailto:${formData?.email}`} className="text-gray-800 hover:underline">
-							{formData?.email}
-							</a>
-						</p>
-						<p className="text-gray-500">
-							Phone:{" "}
-							<a href={`tel:${formData?.phoneNumber}`} className="text-gray-800 hover:underline">
-							{formData?.phoneNumber}
-							</a>
-						</p>
-						<p className="text-gray-500">{formData?.address}</p>
+							<p className="text-gray-500">
+								Email:{" "}
+								<a href={`mailto:${formData?.email}`} className="text-gray-800 hover:underline">
+								{formData?.email}
+								</a>
+							</p>
+							<p className="text-gray-500">
+								Phone:{" "}
+								<a href={`tel:${formData?.phoneNumber}`} className="text-gray-800 hover:underline">
+								{formData?.phoneNumber}
+								</a>
+							</p>
+							<p className="text-gray-500">{formData?.address}</p>
 						</div>
 					</section>
 				</div>

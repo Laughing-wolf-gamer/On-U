@@ -13,12 +13,13 @@ import { useDispatch, useSelector} from 'react-redux'
 import {MdArrowBack} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
-import { FaUserAlt } from 'react-icons/fa'
+import { FaHeart, FaUserAlt } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { ChevronDown, ChevronRight, ShoppingCart, UserRound, X } from 'lucide-react'
+import { ChevronDown, ChevronRight, ListTree, ShoppingCart, TableOfContents, UserRound, X } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import SideBarBag from '../SideBarBag'
+import { IoBagRemoveSharp, IoMenu } from 'react-icons/io5'
 
 
 const MNavbar = ({ user }) => {
@@ -164,7 +165,7 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row justify-center items-center'>
-                            <AiOutlineMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
+                            <IoMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
                             <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
                         </div>
 
@@ -182,7 +183,7 @@ const MNavbar = ({ user }) => {
                                 )}
                                 <button onClick={()=> {
 									setBagShow(!showbagView)
-								}}><ShoppingCart size={26} color='black'/></button>
+								}}><IoBagRemoveSharp size={26} color='black'/></button>
                             </div>
                             <div className='float-right relative m-2 pb-0.5'>
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
@@ -195,9 +196,9 @@ const MNavbar = ({ user }) => {
                                         <span>{currentWishListCount}</span>
                                     </div>
                                 )}
-                                <Link to='/my_wishlist'><BsHeart size={26} color='black'/></Link>
+                                <Link to='/my_wishlist'><FaHeart size={26} color='black'/></Link>
                             </div>
-                            <FiSearch size={25} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
+                            <FiSearch size={25} strokeWidth={.9} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
                     

@@ -250,19 +250,19 @@ const SideBarBag = ({OnChangeing}) => {
 		<Fragment>
 			{
 				bagLoading ?  <Loader/>: (
-					<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2">
+					<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2 pt-1">
 						{/* Left Section (Product Listing) */}
-						<div className="md:w-[35%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
-							<div className="flex flex-col overflow-hidden items-center w-full p-3">
+						<div className="md:w-[43%] border-r border-gray-300 border-opacity-60 flex-col items-center max-h-screen min-h-full justify-between hidden md:flex pb-3">
+							<div className="flex flex-col overflow-hidden items-center w-full">
 								<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
 								{RandomProductLoading ? (
-									<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
+									<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2">
 										<ProductCardSkeleton />
 									</ul>
 								) : (
 									<Fragment>
 										{randomProducts && randomProducts.length > 0 && (
-											<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2 ">
+											<ul className="grid grid-cols-1 w-full max-h-screen px-2 overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
 												{randomProducts.map((pro, index) => (
 													<SideBarBagProductItem pro={pro} user={user} key={index} />
 												))}
@@ -274,20 +274,20 @@ const SideBarBag = ({OnChangeing}) => {
 						</div>
 
 						{/* Right Section (Bag Content) */}
-						<div className="w-full flex flex-col relative h-full justify-between items-center px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pt-4">
+						<div className="w-full flex flex-col relative h-full justify-between items-center px-2 sm:px-3 md:px-4 lg:px-5 xl:px-6 pt-1">
 							{/* Order Details Header */}
-							<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-2xl text-gray-800 text-left w-full mb-3">
+							<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-xl text-gray-800 text-left w-full mb-3">
 							{
 								isAuthentication && bag && bag.orderItems && bag.orderItems.length > 0 ? (
-									`cart (${bag.orderItems.length} items)`
+									<span className='text-center flex justify-start items-center space-x-1'>cart <span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span>items</span>
 								):(
-									`cart (${sessionBagData.length} items)`
+									<span className='text-center flex justify-start items-center space-x-1'>cart <span className='text-gray-600 text-sm'>{`(${sessionBagData.length} items )`}</span></span>
 								)
 							}
 							</h1>
 							{
 								isAuthentication && user ? (
-									<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+									<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
 										{
 											bag && bag.orderItems && bag.orderItems.length > 0 && <ProductListingComponent
 												bag={bag}
@@ -299,7 +299,7 @@ const SideBarBag = ({OnChangeing}) => {
 										}
 									</ul>
 								):(
-									<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-transparent scrollbar-track-transparent`}>
+									<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 px-3`}>
 										{sessionBagData && sessionBagData.length > 0 ? (
 											<OfflineBagContent
 												sessionBagData={sessionBagData}
@@ -321,13 +321,13 @@ const SideBarBag = ({OnChangeing}) => {
 							{/* Center content section (scrollable) */}
 
 							{/* Subtotal and Button Section (Always at the bottom) */}
-							<div className="min-w-full space-y-2 bg-gray-50 p-3 font1 min-h-fit justify-center flex items-center">
+							<div className="min-w-full space-y-2 bg-gray-50 px-4 font1 min-h-fit justify-center flex items-center">
 								<div className="w-full h-fit">
 									<div className="space-y-2 w-full">
 										{/* Subtotal */}
 										<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
 											<span>SubTotal</span>
-											<span>₹{Math.round(totalProductSellingPrice)}</span>
+											<span>₹ {Math.round(totalProductSellingPrice)}</span>
 										</div>
 										<br />
 										{/* Button Section */}
@@ -341,7 +341,7 @@ const SideBarBag = ({OnChangeing}) => {
 													}
 													handleOnChange();
 												}}
-												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
 											>
 												View Bag
 											</button>
@@ -355,7 +355,7 @@ const SideBarBag = ({OnChangeing}) => {
 													}
 													handleOnChange();
 												}}
-												className="w-full bg-black h-12 text-white py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
+												className="w-full bg-black h-12 text-white  py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out whitespace-nowrap transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
 											>
 												{isAuthentication? "Checkout" : "Login to Checkout"}
 											</button>
@@ -370,9 +370,9 @@ const SideBarBag = ({OnChangeing}) => {
 											window.scrollTo(0, 0);
 											handleOnChange();
 										}}
-										className="w-full justify-center mt-5 hover:underline uppercase cursor-pointer flex items-center"
+										className="w-full bg-gray-700 text-white mt-2 py-3 text-center  transition-all duration-300 ease-in-out transform hover:scale-105 text-lg sm:text-base"
 									>
-										<span className="text-sm sm:text-base md:text-lg hover:text-gray-700 text-black">on Continue Shoppping</span>
+										Continue Shoppping
 									</div>
 								</div>
 							</div>
@@ -444,22 +444,22 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 									</div>
 
 									{/* Quantity Selector */}
-									<div className="mt-2 flex w-20 sm:w-28 md:w-32 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
-										<div className="flex w-full items-center space-x-1 justify-between">
+									<div className="mt-2 flex w-20 h-7 sm:w-28 md:w-32  items-center space-x-2 sm:space-x-3 justify-center shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+										<div className="flex w-fit items-center space-x-3 justify-between">
 											<button
 												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+												className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
-												<Minus strokeWidth={1.5} />
+												<Minus className='justify-self-center' strokeWidth={1.5} />
 											</button>
 											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
 											<button
 												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
-												<Plus strokeWidth={1.5} />
+												<Plus className='justify-self-center' strokeWidth={1.5} />
 											</button>
 										</div>
 									</div>
@@ -542,11 +542,11 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 
 								{/* Quantity Selector */}
 								<div className="mt-2 flex w-20 sm:w-24 md:w-28 items-center space-x-2 sm:space-x-3 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
-									<div className="flex w-full items-center space-x-1 justify-between">
+									<div className="flex w-fit items-center space-x-3 justify-between">
 										{/* Decrease Button */}
 										<button
 											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
-											className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+											className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity <= 1}
 										>
 											<Minus strokeWidth={1.5} />
@@ -558,7 +558,7 @@ const ProductListingComponent = ({ bag, updateQty, handleDeleteBag, user, setCou
 										{/* Increase Button */}
 										<button
 											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
-											className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-[10px] sm:text-sm text-black disabled:text-gray-300"
+											className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity >= active?.size?.quantity}
 										>
 											<Plus strokeWidth={1.5} />
