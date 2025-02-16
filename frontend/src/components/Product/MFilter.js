@@ -551,7 +551,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 				<div className="flex-row flex justify-end px-5 items-center py-2 border-t-[0.5px] border-slate-200 relative space-x-2 z-10">
 					{/* Sort Section */}
 					<div
-						className="text-[13px] rounded-full flex justify-center items-center cursor-pointer bg-white p-3"
+						className="text-[13px] rounded-full flex justify-center shadow-md border items-center cursor-pointer bg-white p-3"
 						onClick={() => setsortvi('block')}
 						role="button"
 						aria-label="Sort items"
@@ -561,7 +561,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					
 					{/* Filter Section */}
 					<div
-						className="text-[13px] rounded-full flex justify-center items-center cursor-pointer bg-white p-3"
+						className="text-[13px] rounded-full flex justify-center shadow-md border items-center cursor-pointer bg-white p-3"
 						onClick={filterdiv}
 						role="button"
 						aria-label="Filter items"

@@ -302,7 +302,7 @@ const SideBarBag = ({OnChangeing}) => {
 							</h1>
 							{
 								isAuthentication && user ? (
-									<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
+									<ul className={`w-full flex flex-col flex-grow ${bag && bag.orderItems && bag.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(95vh-195px)] min-h-[calc(90vh-190px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
 										{
 											bag && bag.orderItems && bag.orderItems.length > 0 && <ProductListingComponent
 												bag={bag}
@@ -337,7 +337,7 @@ const SideBarBag = ({OnChangeing}) => {
 							{/* Center content section (scrollable) */}
 
 							{/* Subtotal and Button Section (Always at the bottom) */}
-							<div className="min-w-full space-y-2 bg-gray-50 px-4 font1 min-h-fit justify-center flex items-center">
+							<div className="min-w-full space-y-1 bg-gray-50 px-4 font1 min-h-fit justify-center flex items-center">
 								<div className="w-full h-fit">
 									<div className="space-y-2 w-full">
 										{/* Subtotal */}
@@ -353,7 +353,7 @@ const SideBarBag = ({OnChangeing}) => {
 													navigation('/bag');
 													handleOnChange();
 												}}
-												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
+												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 											>
 												View Bag
 											</button>
@@ -367,7 +367,7 @@ const SideBarBag = ({OnChangeing}) => {
 													}
 													handleOnChange();
 												}}
-												className="w-full bg-black h-12 text-white  py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out whitespace-nowrap transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
+												className="w-full bg-black h-12 text-white  py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out whitespace-nowrap transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 											>
 												{isAuthentication? "Checkout" : "Login to Checkout"}
 											</button>
@@ -382,7 +382,7 @@ const SideBarBag = ({OnChangeing}) => {
 											window.scrollTo(0, 0);
 											handleOnChange();
 										}}
-										className="w-full text-white mt-2 py-3 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[10px] md:text-lg xl:text-lg sm:text-sm"
+										className="w-full text-black mt-1 py-1 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 									>
 										Continue Shoppping
 									</div>
