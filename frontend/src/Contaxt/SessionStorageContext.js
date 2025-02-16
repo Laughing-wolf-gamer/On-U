@@ -63,7 +63,7 @@ export const SessionStorageProvider = ({ children }) => {
 		// console.log("bag: ",b)
 		let index = bagItem?.findIndex((item) => item.productId === productId);
 		if (index!== -1) {
-			bagItem[index].isChecked =!bagItem[index].isChecked;
+			bagItem[index].isChecked = !bagItem[index].isChecked;
 			sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
 			setBagSessionData(bagItem)
 		}

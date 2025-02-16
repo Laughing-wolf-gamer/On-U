@@ -566,11 +566,11 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							/>
 							<div
 								onClick={(e) => updateChecked(e, active.productId?._id)}
-								className="absolute top-2 left-2 w-5 h-5 cursor-pointer"
+								className="absolute top-2 left-2 w-5 h-5"
 							>
 								<input
 								type="checkbox"
-								className="w-full h-full"
+								className="w-full h-full cursor-pointer"
 								checked={active?.isChecked}
 								onChange={() => {}}
 								/>

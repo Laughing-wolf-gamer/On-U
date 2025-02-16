@@ -147,10 +147,10 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 												/>
 												<div onClick={(e) => {
 													updateChecked(e, active.ProductData?._id);
-												}} className="absolute top-2 left-2 w-5 h-5 cursor-pointer">
+												}} className="absolute top-2 left-2 w-5 h-5">
 													<input
 														type="checkbox"
-														className="w-full h-full"
+														className="w-full h-full cursor-pointer"
 														checked={active?.isChecked} // Set checkbox checked if it's selected in the URL
 														onChange={(e) => {}}
 													/>
@@ -192,7 +192,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 										<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 											<button
 												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
-												className="p-2 bg-blue-100 rounded-full text-sm sm:text-base disabled:text-gray-300"
+												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
 												<Minus className=' justify-self-center' strokeWidth={3} />
@@ -202,7 +202,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 
 											<button
 												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
-												className="p-2 bg-blue-100 rounded-full text-sm sm:text-base disabled:text-gray-300"
+												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
 												<Plus className=' justify-self-center' strokeWidth={3} />

@@ -178,14 +178,15 @@ const SideBarBag = ({OnChangeing}) => {
     };
     const updateChecked = async (e, itemId) => {
         console.log("Item ID: ", itemId);
-        console.log("Is Checked Value: ", e.target.checked);
+		e.stopPropagation();
+        // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){
-            await dispatch(itemCheckUpdate({ id: itemId }));
-            dispatch(getbag({ userId: user.id }));
-        }else{
-            // updateBagQuantity(itemId, e.target.value)
+			await dispatch(itemCheckUpdate({ id: itemId }));
+			dispatch(getbag({ userId: user.id }));
+		}else{
+			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId)
-        }
+		}
     };
 
     const handleDeleteBag = async (productId,bagOrderItemId) => {
@@ -294,9 +295,9 @@ const SideBarBag = ({OnChangeing}) => {
 							<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-xl text-gray-800 text-left w-full mb-3">
 							{
 								isAuthentication && bag && bag.orderItems && bag.orderItems.length > 0 ? (
-									<span className='text-center flex justify-start items-center space-x-1'>cart <span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span>items</span>
+									<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span><span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span>items</span>
 								):(
-									<span className='text-center flex justify-start items-center space-x-1'>cart <span className='text-gray-600 text-sm'>{`(${sessionBagData.length} items )`}</span></span>
+									<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span> <span className='text-gray-600 text-sm'>{`(${sessionBagData.length} items )`}</span></span>
 								)
 							}
 							</h1>
@@ -320,6 +321,7 @@ const SideBarBag = ({OnChangeing}) => {
 											<OfflineBagContent
 												sessionBagData={sessionBagData}
 												updateQty={updateQty}
+												updateChecked = {updateChecked}
 												handleDeleteBag={handleDeleteBag}
 											/>
 										):(
@@ -382,7 +384,7 @@ const SideBarBag = ({OnChangeing}) => {
 											window.scrollTo(0, 0);
 											handleOnChange();
 										}}
-										className="w-full text-black mt-1 py-1 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
+										className="w-full text-black mt-4 py-1 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 									>
 										Continue Shoppping
 									</div>
@@ -396,7 +398,7 @@ const SideBarBag = ({OnChangeing}) => {
 	);
 
 }
-const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
+const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDeleteBag }) => {
 	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 
 	// Check if the URL is a valid image
@@ -414,7 +416,7 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 			{sessionBagData.map((item, i) => {
 				const active = item;
 				const validImage = getImageExtensionsFile(active?.color);
-
+				console.log("Updated Checked", active);
 				return (
 					<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= sessionBagData.length - 1 ? "border-b":""} py-3 space-y-4 sm:space-x-4 sm:space-y-0`}>
 						{/* Product Item */}
@@ -423,11 +425,23 @@ const OfflineBagContent = ({ sessionBagData, updateQty, handleDeleteBag }) => {
 								{/* Product Image */}
 								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
 									<Link to={`/products/${active?.ProductData?._id}`} className="block w-full h-full">
-										<img
-											src={validImage?.url}
-											alt={active?.ProductData?.shortTitle}
-											className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-										/>
+										<div className="relative w-full h-full">
+											<img
+												src={validImage?.url}
+												alt={active?.ProductData?.shortTitle}
+												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
+											/>
+											<div onClick={(e) => {
+												updateChecked(e, active.ProductData?._id);
+											}} className="absolute top-2 left-2 w-5 h-5">
+												<input
+													type="checkbox"
+													className="w-full h-full cursor-pointer"
+													checked={active.isChecked} // Set checkbox checked if it's selected in the URL
+													// onChange={(e) => {}}
+												/>
+											</div>
+										</div>
 									</Link>
 								</div>
 

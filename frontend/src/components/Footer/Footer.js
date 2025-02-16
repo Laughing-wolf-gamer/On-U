@@ -92,7 +92,7 @@ const Footer = () => {
 							<div className="w-full justify-between flex flex-row items-center">
 								<h1 className="text-lg font-bold text-gray-800">SHOP</h1>
 								<ChevronUp
-									className={`${openDropdown["shop"] ? "rotate-180 transition-transform duration-500 ease-in-out" : ""}`}
+									className={`${openDropdown["shop"] ? "rotate-180" : ""} transition-transform duration-300 ease-in-out`}
 								/>
 							</div>
 
@@ -103,29 +103,29 @@ const Footer = () => {
 								}`}
 							>
 								{memoizedProductsOptions &&
-								memoizedProductsOptions.length > 0 &&
-								memoizedProductsOptions.map((gender, index) => {
-									return (
-									<Fragment key={index}>
-										<h3 className="hover:underline text-gray-600 font-bold">
-										{gender?.Gender}
-										</h3>
-										{gender?.category &&
-										gender?.category.length > 0 &&
-										gender?.category.map((category, subCatIndex) => (
-											<li
-											key={subCatIndex}
-											onClick={() =>
-												handelSetQuery(gender?.Gender, category?.title)
-											}
-											className="hover:underline text-gray-600"
-											>
-											{category?.title}
-											</li>
-										))}
-									</Fragment>
-									);
-								})}
+									memoizedProductsOptions.length > 0 &&
+									memoizedProductsOptions.map((gender, index) => {
+										return (
+										<Fragment key={index}>
+											<h3 className="hover:underline text-gray-600 font-bold">
+											{gender?.Gender}
+											</h3>
+											{gender?.category &&
+											gender?.category.length > 0 &&
+											gender?.category.map((category, subCatIndex) => (
+												<li
+												key={subCatIndex}
+												onClick={() =>
+													handelSetQuery(gender?.Gender, category?.title)
+												}
+												className="hover:underline text-gray-600"
+												>
+												{category?.title}
+												</li>
+											))}
+										</Fragment>
+										);
+									})}
 							</ul>
 							)}
 						</div>
@@ -148,7 +148,7 @@ const Footer = () => {
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
 						<div onClick={()=> toggleDropdown("information")} className="w-full justify-start p-2 border-t border-b border-gray-200 flex flex-col items-center">
 							<div className="w-full justify-between flex flex-row items-center">
-								<h1 className="text-lg font-bold text-gray-800">INFO</h1> <ChevronUp className={`${openDropdown["information"] ? " rotate-180":""}`} />
+								<h1 className="text-lg font-bold text-gray-800">INFO</h1> <ChevronUp className={`${openDropdown["information"] ? " rotate-180":""} transition-transform duration-300 ease-in-out`}/>
 							</div>
 							{
 								openDropdown["information"] && (
@@ -197,7 +197,7 @@ const Footer = () => {
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
 						<div onClick={()=> toggleDropdown("services")} className="w-full justify-start p-2 border-t border-b border-gray-200 flex flex-col items-center">
 							<div className="w-full justify-between flex flex-row items-center">
-								<h1 className="text-lg font-bold text-gray-800">USEFULL LINKS</h1> <ChevronUp className={`${openDropdown["services"] ? " rotate-180":""}`} />
+								<h1 className="text-lg font-bold text-gray-800">USEFULL LINKS</h1> <ChevronUp className={`${openDropdown["services"] ? " rotate-180":""} transition-transform duration-300 ease-in-out`} />
 							</div>
 							{
 								openDropdown["services"] && (

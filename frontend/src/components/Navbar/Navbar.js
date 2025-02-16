@@ -13,7 +13,7 @@ import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
-import { IoBagRemoveSharp } from 'react-icons/io5'
+import { IoBagRemoveSharp, IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
 import Loader from '../Loader/Loader.js'
 
@@ -159,7 +159,7 @@ const Navbar = ({user}) => {
 							setIsSearchVisible(false);
 						}} />}
                             <button onClick={toggleSearchBar} className="text-slate-800 hover:border hover:animate-vibrateScale border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
-                                <SearchIcon strokeWidth={.5} size={25}/>
+                                <IoSearch strokeWidth={.5} size={25}/>
                             </button>
                         </div>
                         <ul className='flex float-right h-full w-full text-[#282c3f] tracking-[.3px] sent'>

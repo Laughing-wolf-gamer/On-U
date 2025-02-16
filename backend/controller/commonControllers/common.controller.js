@@ -259,20 +259,38 @@ export const removeHomeCarousal = async (req, res) => {
 
         // Identify the URL to remove
         const urlToRemove = banner.Url[imageIndex];
+		const isEmpty = banner.Url.length - 1 === 0
+		console.log("Url to isEmpty: ", isEmpty);
+		if (isEmpty) {
+			const bannerWithRemovedUrl = await BannerModel.findByIdAndUpdate(
+				id, 
+				{ 
+					$pull: { Url: urlToRemove },
+					$unset: { Header: "" }  // Unset the header field if the condition is met
+				},
+				{ new: true }  // Ensure the updated document is returned
+			);
+			if (!bannerWithRemovedUrl) {
+				return res.status(500).json({ Success: false, message: "Failed to remove image" });
+			}
+			console.log("Updated Banners: ", bannerWithRemovedUrl);
+			// Respond with the updated banner
+			return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: bannerWithRemovedUrl });
+		}else{
+			// Update the banner by removing the URL at the specified index
+			const updatedBanner = await BannerModel.findByIdAndUpdate(
+				id, 
+				{ $pull: { Url: urlToRemove} },
+				{ new: true }  // Ensure the updated document is returned
+			);
+			if (!updatedBanner) {
+				return res.status(500).json({ Success: false, message: "Failed to remove image" });
+			}
 
-        // Update the banner by removing the URL at the specified index
-        const updatedBanner = await BannerModel.findByIdAndUpdate(
-            id, 
-            { $pull: { Url: urlToRemove } },
-            { new: true }  // Ensure the updated document is returned
-        );
+			// Respond with the updated banner
+			return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanner });
+		}
 
-        if (!updatedBanner) {
-            return res.status(500).json({ Success: false, message: "Failed to remove image" });
-        }
-
-        // Respond with the updated banner
-        return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanner });
 
     } catch (error) {
         // Handle and log error

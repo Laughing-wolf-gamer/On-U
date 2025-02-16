@@ -19,7 +19,7 @@ import { ChevronDown, ChevronRight, ListTree, ShoppingCart, TableOfContents, Use
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import SideBarBag from '../SideBarBag'
-import { IoBagRemoveSharp, IoMenu } from 'react-icons/io5'
+import { IoBagRemoveSharp, IoMenu, IoSearch } from 'react-icons/io5'
 
 
 const MNavbar = ({ user }) => {
@@ -198,7 +198,7 @@ const MNavbar = ({ user }) => {
                                 )}
                                 <Link to='/my_wishlist'><FaHeart size={26} color='black'/></Link>
                             </div>
-                            <FiSearch size={25} strokeWidth={.9} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
+                            <IoSearch size={25} strokeWidth={.9} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
                     </div>
                     

@@ -326,7 +326,30 @@ const Home = ({user}) => {
                             </Carousel>
                         </div>
 						
-                        
+                        {/* <div className='px-2'>
+                            {!bannerLoading && Small_Screen_Section_2.header && <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_2.header}</h1>}
+                            <ul className='flex overflow-x-scroll'>
+                                {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls.length > 0 ? 
+                                    Small_Screen_Section_2.urls.map((d, index) => (
+                                        <Link key={`${Small_Screen_Section_2.header}_banners${index}`} to='/products'>
+                                            <li className='w-max mr-2'>
+                                                <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_2.header}_${index}`} className="w-[50vw] min-h-[200px]" />
+                                            </li>
+                                        </Link>
+                                )) : (
+                                    Array(6).fill(0).map((_, index) =>(
+                                        <div key={index} className='w-[300px] m-1 h-[200px] bg-gray-200 p-1 animate-pulse' >
+                                            <div className="w-[280px] h-[90%] bg-gray-400 animate-pulse rounded-lg" />
+                                        </div>
+                                    ))
+                                )}
+                            </ul>
+                        </div> */}
+						<div className='bg-slate-200 px-2'>{/* Category */}
+							<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+								<DraggingScrollView images={Small_Screen_Section_2.urls} />
+							</ul>
+						</div>
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-full justify-center items-center flex pr-3 pl-3 '>
 								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
