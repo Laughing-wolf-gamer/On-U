@@ -60,7 +60,7 @@ const Registeruser = () => {
                             <input
                                 type="text"
                                 name="PhoneNumber"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                                 placeholder="Phone Number"
                                 value={phoneNumber}
                                 onChange={(e) => setPhoneNumber(e.target.value)}
@@ -68,7 +68,7 @@ const Registeruser = () => {
                             <input
                                 type="text"
                                 name="name"
-                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-pink-400"
+                                className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-400"
                                 placeholder="Full Name"
                                 value={name}
                                 onChange={(e) => setname(e.target.value)}

@@ -21,8 +21,13 @@ const Otpverify = () => {
         e.preventDefault();
         console.log(otp, userVerify)
 
-        await dispatch(otpverifie({ otp: otp, mobileno: user?.user?.phoneNumber }))
-
+        const response = await dispatch(otpverifie({ otp: otp, mobileno: user?.user?.phoneNumber }))
+		console.log("Resending Otp: ", response);
+		if(response?.success){
+			checkAndCreateToast("Verification Successfull")
+		}else{
+			checkAndCreateToast("error", 'invalid Otp')
+		}
         if (error) {
             let par = document.getElementById('error')
             par.innerHTML = error
@@ -33,8 +38,8 @@ const Otpverify = () => {
         if (user) {
             console.log("Resending Otp: ", user?.user);
             const response = await dispatch(resendotp({ email: user?.user.email }))
-            if (!response) {
-                checkAndCreateToast("error", response.error)
+            if (!response.payload?.success) {
+                checkAndCreateToast("error", 'invalid Otp')
                 return
             }
             checkAndCreateToast("success", "Otp Successfully Resent");

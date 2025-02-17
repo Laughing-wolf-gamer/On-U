@@ -215,13 +215,14 @@ export const getuser = A(async(req, res, next)=>{
 export const optverify = A(async (req, res, next)=>{
     // const {otp} = req.body
     const{id,otp} = req.params;
-    // console.log("OTP: ",otp,id)
     const user = await User.findOne({phoneNumber: id})
+    console.log("OTP: ",user);
     if (!user.otp) {
         return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
     }
     if (user.otp.toString() !== otp) {
-        return next( new Errorhandler("You entered expire or wrong OTP", 400))
+        // return next( new Errorhandler("You entered expire or wrong OTP", 400))
+		res.status(200).json({success:false,message: 'OTP Do not Match'});
     }
     user.otp = null;
     user.verify = 'verified';

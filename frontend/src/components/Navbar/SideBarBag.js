@@ -258,7 +258,7 @@ const SideBarBag = ({OnChangeing}) => {
 			}
 			navigation("/bag/checkout");
 		} else {
-			checkAndCreateToast("info",'Log in to checkout');
+			checkAndCreateToast("error",'Log in to checkout');
 			navigation('/Login');
 		}
 		handleOnChange();
@@ -281,7 +281,8 @@ const SideBarBag = ({OnChangeing}) => {
 			navigation('/bag');
 			handleOnChange();
 		}else{
-			if(sessionBagData){
+
+			if(!sessionBagData){
 				checkAndCreateToast("error","No Bag Found! Please add items to your bag");
 			}
 			if(sessionBagData.length === 0){
