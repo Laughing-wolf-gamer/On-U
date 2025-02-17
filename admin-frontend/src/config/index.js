@@ -315,7 +315,7 @@ export const addProductsFromElement = [
         componentType:'input',
         type:'number',
         placeHolder:'Enter Product Sale Price (Option)',
-        required:true,
+        required:false,
     },
     {
         label:"Gender",
