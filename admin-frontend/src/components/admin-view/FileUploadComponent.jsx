@@ -3,18 +3,18 @@ import axios from 'axios';
 import { BASE_URL, Header } from '@/config';
 import { Button } from '../ui/button';
 import { Label } from '../ui/label';
-import { X } from 'lucide-react';
+import {File, X } from 'lucide-react';
 import UploadOverlay from './UploadOverlay';
 import toast from 'react-hot-toast';
 
 const FileUploadComponent = ({
-  maxFiles = 5,
-  tag,
-  sizeTag,
-  onSetImageUrls,
-  isLoading,
-  setIsLoading,
-  onReset,
+    maxFiles = 5,
+    tag,
+    sizeTag,
+    onSetImageUrls,
+    isLoading,
+    setIsLoading,
+    onReset,
 }) => {
     const [files, setFiles] = useState([]); // Array of selected files
     const [loadingStates, setLoadingStates] = useState([]); // Loading state per file
@@ -152,29 +152,31 @@ const FileUploadComponent = ({
             </span>
            <div
 				ref={dropzoneRef}
-				className="w-full h-40 border-2 border-dashed rounded-md p-4 text-center"
+				className="w-full h-32 border-2 justify-center items-center flex flex-col border-dashed border-gray-400 rounded-md p-4 text-center cursor-pointer transition-colors duration-300 hover:bg-gray-100"
 				onDragOver={handleDragOver}
 				onDragLeave={handleDragLeave}
 				onDrop={handleDrop}
-				onClick={() => inputRef.current?.click()} // Trigger file input click when drop zone is clicked
+				onClick={(e) => {
+                    e.stopPropagation(); // Prevent the event from propagating
+                    document.getElementById(`file-upload-${tag}-${sizeTag}`).click();
+                }} // Trigger file input click when drop zone is clicked
 				>
 				<input
+                    style={{ pointerEvents: 'none' }}
 					type="file"
 					id={`file-upload-${tag}-${sizeTag}`}
 					className="hidden"
 					multiple
-					ref={inputRef}
 					onChange={handleFileChange}
+                    onClick = {(event)=> event.stopPropagation()}
 					disabled={files.length >= maxFiles}
 				/>
 				<label
 					htmlFor={`file-upload-${tag}-${sizeTag}`}
 					className="flex flex-col justify-center items-center cursor-pointer"
 				>
-					<div className="mb-2">Drag & Drop or Click to Upload</div>
-					<button onClick={(e) => e.preventDefault()} className="btn btn-primary">
-					Upload Files
-					</button>
+					<span className="mb-2 text-lg font-semibold">Drag & Drop or Click to Upload</span>
+					<File className="w-10 h-10 text-gray-500" />
 				</label>
 			</div>
 
@@ -185,11 +187,13 @@ const FileUploadComponent = ({
                 {files.map((file, index) => (
                     <div key={index} className="flex justify-between gap-7 items-center p-2 border-b">
                         <div className="flex items-center">
-                            <p className="text-sm font-medium">File: {index + 1}</p>
-                                {file?.type?.startsWith("video/") && (
+                            <h2 className="text-sm font-medium">File: {index + 1}</h2>
+                                {file?.type?.startsWith("video/") ? (
                                     <video width="100" controls>
                                         <source src={file.url} type={file.type} />
                                     </video>
+                                ):(
+                                    <img src={file.url || URL.createObjectURL(file)} alt="file-preview" className="w-16 h-16 object-cover rounded-md" />
                                 )}
                         </div>
                         {loadingStates[index] ? (
