@@ -8,6 +8,7 @@ import WebSiteModel from '../model/websiteData.model.js';
 import { sendVerificationEmail } from './emailController.js';
 import { sendOTP } from '../utilis/smsAuthentication.js';
 import logger from '../utilis/loggerUtils.js';
+import { removeSpaces } from '../utilis/basicUtils.js';
 
 export const registermobile = A(async (req, res, next) => {
     try {
@@ -25,7 +26,7 @@ export const registermobile = A(async (req, res, next) => {
         const otp = Math.floor((1 + Math.random()) * 90000)
         await sendVerificationEmail(email, otp)
 		// https://avatar-placeholder.iran.liara.run/
-		const profilePic = `https://avatar.iran.liara.run/public/${gender}?${name}`
+		const profilePic = `https://avatar.iran.liara.run/public/${gender}?${removeSpaces(name)}`
         const user = await User.create({
             name,
 			profilePic,
@@ -276,10 +277,10 @@ export const logInUser = async (req,res) =>{
 export const updateuser =A( async(req,res,next)=>{
     console.log("User: ",req.user);
     console.log("Updating User: ",req.body)
-    const{ name, gender,email,dob} = req.body
-    const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender}},{new:true})
+    const{ name, gender,email,dob,profilePic} = req.body
+    const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender,profilePic:profilePic}},{new:true})
     if(!user){
-        return next( new Errorhandler('User not found', 404))
+        return res.status(303).json({success:false,message: 'User not found'});
     }
     return res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
 })

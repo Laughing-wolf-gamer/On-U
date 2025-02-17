@@ -9,6 +9,7 @@ export function getOriginalAmount(gstRate, amountWithGST) {
     const originalAmount = amountWithGST / (1 + (gstRate / 100));
     return originalAmount;
 }
+export const removeSpaces = (str) => str.replace(/\s+/g, '');
 export const getStringFromObject = (objectData)=>{
 	return Object.values(objectData).join(", ");
 }

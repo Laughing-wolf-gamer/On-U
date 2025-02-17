@@ -7,7 +7,7 @@ const initialState = {
 	isLoading:false,
 	featuresList:[],
     AllOptions:[],
-	
+	CategoryNameBanners:[],
     aboutData:null,
     termsAndCondition:null,
     privacyPolicy:null,
@@ -449,6 +449,34 @@ export const updateColorName = createAsyncThunk('/common/updateColorName', async
 });
 
 
+
+export const fetchAllCategoryNameBanners = createAsyncThunk('/common/getAllCategoryNameBanners',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/categoryBanners/all`);
+        console.log("Category Name Banners: ",response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Fetching All Options: `,error);
+    }
+})
+export const addCategoryNameBanner = createAsyncThunk('/common/addCategoryNameBanner',async(data) =>{
+	try {
+        const response = await axios.post(`${BASE_URL}/api/common/categoryBanners/add`,data,Header());
+        console.log("Add Category Name Banner Response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Adding Category Name Banner: `,error);
+    }
+})
+export const removeCategoryBanners = createAsyncThunk('/common/removeCategoryBanners',async({id,imageIndex}) =>{
+	try {
+        const response = await axios.delete(`${BASE_URL}/api/common/categoryBanners/del/${id}/${imageIndex}`,{},Header());
+        console.log("Remove Category Name Banner Response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Removing Category Name Banner: `,error);
+    }
+})
 
 
 // export const {resetSearchResult} = searchProductSlice.actions;

@@ -97,7 +97,7 @@ const UserDetails = ({ user }) => {
 		const file = e.target.files[0];
 		if (file) {
 			const newProfileImage = await handleUploadImage(file);
-			// console.log("New Profile Pic: ", newProfileImage);
+			console.log("New Profile Pic: ", newProfileImage);
 			if(newProfileImage){
 				// setProfilePic(newProfileImage);
 				await dispatch(updateuser({...editedUser,profilePic:newProfileImage}));
@@ -132,34 +132,37 @@ const UserDetails = ({ user }) => {
 	return (
 		<div className="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg">
 			{/* Profile Picture Section */}
-			{
-				isLoadingImage ? <Loader/>:(
-					<div className="flex justify-center mb-6">
-						<div className="relative">
-							<img
-								src={profilePic || editedUser?.profilePic} // Fallback to default image if no profile picture
-								alt="Profile"
-								className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
-							/>
-							<button
-								disabled = {isLoadingImage}
-								onClick={() => document.getElementById("profile-pic-input").click()}
-								className="absolute bottom-0 right-0 bg-gray-500 text-white rounded-full p-2 hover:bg-gray-600 transition"
-							>
-								<Edit size={16} />
-							</button>
-							<input
-								disabled = {isLoadingImage}
-								type="file"
-								id="profile-pic-input"
-								className="hidden"
-								accept="image/*"
-								onChange={handleProfilePicChange}
-							/>
-						</div>
-					</div>
-				)
-			}
+			<div className="flex justify-center mb-6">
+			<div className="relative">
+				{
+					isLoadingImage ? <div className="w-32 h-32 justify-center flex items-center bg-opacity-40 rounded-full bg-gray-300 border border-gray-300">
+						<div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+					</div>:(
+						<img
+							src={profilePic || editedUser?.profilePic} // Fallback to default image if no profile picture
+							alt="Profile"
+							className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+						/>
+					)
+				}
+				
+				<button
+					disabled = {isLoadingImage}
+					onClick={() => document.getElementById("profile-pic-input").click()}
+					className="absolute bottom-0 right-0 bg-gray-500 text-white rounded-full p-2 hover:bg-gray-600 transition"
+				>
+					<Edit size={16} />
+				</button>
+				<input
+					disabled = {isLoadingImage}
+					type="file"
+					id="profile-pic-input"
+					className="hidden"
+					accept="image/*"
+					onChange={handleProfilePicChange}
+				/>
+			</div>
+		</div>
 
 			{/* Header Section */}
 			<div className="text-center mb-6">
