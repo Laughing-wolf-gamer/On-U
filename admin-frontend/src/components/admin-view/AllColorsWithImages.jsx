@@ -27,7 +27,13 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	const removeColorFromAllColors = (id) => {
 		setAllColors(allColors.filter((color) => color.id !== id));
 	};
-
+	const handelSetActiveColorSelect = (color) => {
+		if(activeColorSelect) {
+			setActiveColorSelect({...activeColorSelect,id:color.id, label: color.label, name: color.name});
+		}else{
+			setActiveColorSelect(color);
+		}
+	}
 	// Add the selected color to the array
 	const updateSelectedColorArray = (e) => {
 		e.preventDefault();
@@ -55,7 +61,7 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	}, [dispatch]);
 
 	// Log selected colors for debugging purposes
-	// console.log("selectedColorArray: ", allColors);
+	console.log("selectedColorArray: ", activeColorSelect);
 
 	return (
 		<div className="p-3 w-full bg-white">
@@ -117,11 +123,7 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 								const selectedOption = colorOptions.find(option => option.label === e.target.value);
 								if (selectedOption) {
 									console.log("Color Selected: ", selectedOption);
-									setActiveColorSelect(selectedOption);
-									setOnReset(true);
-									setTimeout(() => {
-										setOnReset(false);
-									}, 100);
+									handelSetActiveColorSelect(selectedOption);
 								} else {
 									setActiveColorSelect(null);
 								}

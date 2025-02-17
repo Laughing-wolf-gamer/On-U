@@ -94,7 +94,6 @@ const productModelSchema = new mongoose.Schema({
     length:Number,
     weight:Number,
     breadth:Number,
-    averageRating:Number,
 },{timestamps:true})
 productModelSchema.pre('save', function (next) {
     // Calculate averageRating when Rating is modified
