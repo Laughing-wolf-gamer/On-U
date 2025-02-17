@@ -162,18 +162,19 @@ const FileUploadComponent = ({
                 }} // Trigger file input click when drop zone is clicked
 				>
 				<input
-                    style={{ pointerEvents: 'none' }}
+                    style={{ display: 'none' }}
 					type="file"
 					id={`file-upload-${tag}-${sizeTag}`}
-					className="hidden"
+					// className="hidden"
+                    accept=".jpg, .jpeg, .png, .gif, .mp4, .mov, .avi, .mkv, .webp"
 					multiple
 					onChange={handleFileChange}
                     onClick = {(event)=> event.stopPropagation()}
 					disabled={files.length >= maxFiles}
 				/>
 				<label
-					htmlFor={`file-upload-${tag}-${sizeTag}`}
-					className="flex flex-col justify-center items-center cursor-pointer"
+					// htmlFor={`file-upload-${tag}-${sizeTag}`}
+					className="flex flex-col justify-center cursor-pointer hover:scale-105 transition-all duration-500 ease-ease-in-out-expo items-center"
 				>
 					<span className="mb-2 text-lg font-semibold">Drag & Drop or Click to Upload</span>
 					<File className="w-10 h-10 text-gray-500" />
