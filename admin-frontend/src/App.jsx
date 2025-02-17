@@ -32,6 +32,7 @@ import { ToastContainer } from "react-toastify"
 import AdminFAQPage from "./pages/admin-view/AdminFAQPage"
 import AdminCategoryBanners from "./pages/admin-view/AdminCategoryBanners"
 import AdminHomeCouponBanner from "./pages/admin-view/AdminHomeCouponBanner"
+import DisclaimerManager from "./components/admin-view/DisclaimerManager"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -83,10 +84,11 @@ function App() {
                     <Route path="features/addOptions" element={<AdminOptions/>}/>
                     <Route path="features/addressOptions" element={<AdminAddressPage/>}/>
                     <Route path="features/couponManagement" element={<AdminCouponFormPage/>}/>
+                    <Route path="features/couponBanner" element={<AdminHomeCouponBanner/>}/>
+                    <Route path="features/homeDisclaimers" element={<DisclaimerManager/>}/>
 
                     <Route path="orders" element={<AdminOrders/>}/>
                     <Route path="pages/about" element={<AdminAboutPage/>}/>
-                    <Route path="pages/couponBanner" element={<AdminHomeCouponBanner/>}/>
                     <Route path="pages/contactUsManagement" element={<AdminContactPage/>}/>
                     <Route path="pages/privacyPolicy" element={<AdminPrivacyPolicyPage/>}/>
                     <Route path="pages/termsAndCond" element={<AdminTermsConditionsPage />}/>

@@ -97,11 +97,11 @@ const DisclaimerManager = () => {
     }, [dispatch]);
 
     return (
-        <div className="max-w-4xl mx-auto p-6">
+        <div className="w-full justify-center items-center flex flex-col border-b border-gray-800">
             <div className="mb-4">
                 <h1 className="text-2xl font-semibold">Manage Disclaimers</h1>
             </div>
-            <div className="space-y-4">
+            <div className="space-y-4 w-full">
                 {/* Disclaimer Form */}
                 <div className="space-y-2">
                     <input

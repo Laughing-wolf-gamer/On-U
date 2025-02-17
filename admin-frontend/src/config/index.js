@@ -166,7 +166,7 @@ export const adminSideBarMenu = [
         dropDownView:[
             {
                 id:'privacyPolicy',
-                label:'Privacy and Policy',
+                label:'Privacy and Policy Page',
                 accessRole:['superAdmin'],
                 path: 'pages/privacyPolicy',
             },
@@ -178,28 +178,23 @@ export const adminSideBarMenu = [
             },
             {
                 id:'termsAndConditions',
-                label:'Terms and Conditions',
+                label:'Terms and Conditions Page',
                 accessRole:['superAdmin'],
                 path: 'pages/termsAndCond',
             },
             {
                 id:'contactManagement',
-                label:'Contact Us',
+                label:'Contact Us Page',
                 accessRole:['superAdmin'],
                 path: 'pages/contactUsManagement',
             },
             {
                 id:'adminAbout',
-                label:'Admin About',
+                label:'About Page',
                 accessRole:['superAdmin'],
                 path: 'pages/about',
             },
-            {
-                id:'couponBanner',
-                label:'Home Coupon Banner',
-                accessRole:['superAdmin'],
-                path: 'pages/couponBanner',
-            },
+            
         ]
         
     },
@@ -221,22 +216,34 @@ export const adminSideBarMenu = [
                 path: 'features/categoryBanners',
             },
             {
-                id:'adminOptionsManagement',
-                label:'Admin Add Options',
+                id:'CouponManagement',
+                label:'Coupon Management',
+                accessRole:['superAdmin'],
+                path: 'features/couponManagement',
+            },
+			{
+                id:'couponBanner',
+                label:'Home Coupon Banner',
+                accessRole:['superAdmin'],
+                path: 'features/couponBanner',
+            },
+			{
+                id:'disclaimerBanners',
+                label:'Home Disclaimer Banner',
+                accessRole:['superAdmin'],
+                path: 'features/homeDisclaimers',
+            },
+			{
+                id:'productsOptionsManagement',
+                label:'Products Options',
                 accessRole:['superAdmin'],
                 path: 'features/addOptions',
             },
             {
-                id:'adminAddressManagement',
-                label:'Admin Address Options',
+                id:'addressManagement',
+                label:'Address Data',
                 accessRole:['superAdmin'],
                 path: 'features/addressOptions',
-            },
-            {
-                id:'adminCouponManagement',
-                label:'Admin Coupon Management',
-                accessRole:['superAdmin'],
-                path: 'features/couponManagement',
             },
         ]
         

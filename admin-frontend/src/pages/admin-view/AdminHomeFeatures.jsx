@@ -10,10 +10,10 @@ import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
 import toast from 'react-hot-toast';
 import DisclaimerManager from '@/components/admin-view/DisclaimerManager';
-const allCategories = [
+const allPositions = [
 	'Wide Screen Section- 1',
 	'Wide Screen Section- 2',
-    'Wide Screen Section- 3',
+    // 'Wide Screen Section- 3',
     'Wide Screen Section- 4',
     'Wide Screen Section- 5',
     'Wide Screen Section- 6',
@@ -23,7 +23,7 @@ const allCategories = [
     'Wide Screen Section- 10',
     'Wide Screen Section- 11',
     'Small Screen Section- 1',
-	'Small Screen Section- 2',
+	// 'Small Screen Section- 2',
     'Small Screen Section- 3',
     'Small Screen Section- 4',
     'Small Screen Section- 5'
@@ -167,11 +167,10 @@ const AdminHomeFeatures = () => {
     }
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
-            <DisclaimerManager/>
             {/* Image Upload Section */}
-            <div className="w-full sm:w-[60%] md:w-[50%] p-6 bg-white rounded-lg shadow-md">
+            <div className="w-full">
                 <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-                    Upload Banners
+                    Upload/edit Home Page Banners
                 </h1>
                 <div className='w-full h-fit justify-center mx-auto px-4 flex flex-row items-center space-x-5 mb-7'>
                     <h1 className='font-bold text-center text-gray-700'>Bulk Upload</h1>
@@ -201,9 +200,9 @@ const AdminHomeFeatures = () => {
                         <Button
                             disabled={imageLoading}
                             onClick={HandleMultipleImagesUpload}
-                            className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+                            className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
                         >
-                            Upload Multiple Images
+                            Upload All Images
                         </Button>
                     </div>
                 ) : (
@@ -220,7 +219,7 @@ const AdminHomeFeatures = () => {
                         <Button
                             disabled={imageLoading}
                             onClick={() => handleImageUpload(imageUrls)}
-                            className="w-full h-12 mt-4 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition duration-200"
+                            className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
                         >
                             Upload
                         </Button>
@@ -233,7 +232,7 @@ const AdminHomeFeatures = () => {
 					<select
 						value={currentImageCategoryName}
 						onChange={(e) => setCurrentImageCategoryName(e.target.value)}
-						className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+						className="w-full h-12 p-3  border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
 					>
 						<option value="none">All Categoryies Names</option>
 							{allProductsCategory.map((category, index) => (
@@ -248,30 +247,30 @@ const AdminHomeFeatures = () => {
                     value={imageHeader}
                     onChange={(e) => setImageHeader(e.target.value)}
                     placeholder="Enter Header"
-                    className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-12 mt-4 p- border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 />
                 {/* <Input
                     type="text"
                     value={currentImageCategoryName}
                     onChange={(e) => setCurrentImageCategoryName(e.target.value)}
                     placeholder="Enter Category Name"
-                    className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 /> */}
 				
             </div>
     
             {/* Category Dropdown Section */}
-            <div className="w-full sm:w-[60%] md:w-[50%] p-6 bg-white rounded-lg shadow-md">
+            <div className="w-full p-3">
                 <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-                    Select a Category to View Images
+                    Select a Position to View Images/Video
                 </h1>
                 <select
                     value={selectedCategory}
                     onChange={handleSelectedCategory}
-                    className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
                 >
-                    <option value="">All Categories</option>
-                        {allCategories.map((category, index) => (
+                    <option value="">All Positions</option>
+                        {allPositions.map((category, index) => (
                             <option key={index} value={category}>
                                 {capitalizeFirstLetterOfEachWord(category)}
                             </option>
@@ -280,7 +279,7 @@ const AdminHomeFeatures = () => {
             </div>
     
             {/* Selected Category Display */}
-            <div className="w-full sm:w-[90%] md:w-[80%] p-6 bg-white rounded-lg shadow-md">
+            <div className="w-full ">
                 {filteredItems && filteredItems.length > 0 ? (
                     filteredItems.map((item, index) => (
                         <div key={index} className="mb-8">
