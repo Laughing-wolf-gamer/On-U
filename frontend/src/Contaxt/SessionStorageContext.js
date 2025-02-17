@@ -42,39 +42,39 @@ export const SessionStorageProvider = ({ children }) => {
             window.removeEventListener('storage', handleStorageChange);
         };
     }, []);
-    const updateBagQuantity = (productId,quantity)=>{
+    const updateBagQuantity = (productId,size,color,quantity)=>{
         let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
         if (!bagItem) {
             bagItem = [];
         }
-        // console.log("bag: ",b)
-        let index = bagItem?.findIndex((item) => item.productId === productId);
+        let index = bagItem?.findIndex((item) => item.productId === productId && item.size?._id === size._id && item.color?._id === color._id);
+        // console.log("Sesseon bag: ",bagItem)
         if (index !== -1) {
             bagItem[index].quantity = quantity;
             sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
             setBagSessionData(bagItem)
         }
     }
-	const toggleBagItemCheck = (productId)=>{
+	const toggleBagItemCheck = (productId,size,color)=>{
 		let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
 		if (!bagItem) {
 			bagItem = [];
 		}
 		// console.log("bag: ",b)
-		let index = bagItem?.findIndex((item) => item.productId === productId);
+		let index = bagItem?.findIndex((item) => item.productId === productId && item.color._id === color._id && item.size._id === size._id);
 		if (index!== -1) {
 			bagItem[index].isChecked = !bagItem[index].isChecked;
 			sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
 			setBagSessionData(bagItem)
 		}
 	}
-    const removeBagSessionStorage = (productId)=>{
+    const removeBagSessionStorage = (productId,size,color)=>{
         let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
         if (!bagItem) {
             bagItem = [];
         }
         // console.log("bag: ",b)
-        let index = bagItem?.findIndex((item) => item.productId === productId);
+        let index = bagItem?.findIndex((item) => item.productId === productId && item.color._id === color._id && item.size._id === size._id);
         if (index!== -1) {
             bagItem.splice(index,1);
             sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
@@ -86,7 +86,7 @@ export const SessionStorageProvider = ({ children }) => {
         if (!bagItem) {
             bagItem = [];
         }
-        // console.log("bag: ",b)
+        console.log("Adding Items: bag: ",orderData,productId)
         let index = bagItem?.findIndex((item) => item.productId === productId);
         if (index !== -1) {
             if(bagItem[index].size._id === orderData.size._id && bagItem[index].color._id === orderData.color._id) {
@@ -94,7 +94,6 @@ export const SessionStorageProvider = ({ children }) => {
             }else{
                 bagItem.push(orderData);
             }
-      
         } else {
             bagItem.push(orderData);
         }

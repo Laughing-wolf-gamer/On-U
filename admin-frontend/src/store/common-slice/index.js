@@ -7,6 +7,7 @@ const initialState = {
 	isLoading:false,
 	featuresList:[],
     AllOptions:[],
+	
     aboutData:null,
     termsAndCondition:null,
     privacyPolicy:null,

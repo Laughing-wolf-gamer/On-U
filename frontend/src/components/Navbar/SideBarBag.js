@@ -166,35 +166,34 @@ const SideBarBag = ({OnChangeing}) => {
     }, [bag,sessionBagData]);
 
 
-    const updateQty = async (e, itemId) => {
-        console.log("Item ID: ", itemId);
-        console.log("Qty Value: ", e.target.value);
+    const updateQty = async (e, itemId,size,color) => {
+        console.log("Update Quatity Data: ", itemId,size,color,e.target.value);
         if(isAuthentication){
-            await dispatch(getqtyupdate({ id: itemId, qty: Number(e.target.value) }));
+            await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
             dispatch(getbag({ userId: user.id }));
         }else{
-            updateBagQuantity(itemId, e.target.value)
+            updateBagQuantity(itemId,size,color, e.target.value)
         }
     };
-    const updateChecked = async (e, itemId) => {
-        console.log("Item ID: ", itemId);
+    const updateChecked = async (e, itemId,size,color) => {
+        console.log("Upadting Checked Item ", itemId,size,color);
 		e.stopPropagation();
         // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){
-			await dispatch(itemCheckUpdate({ id: itemId }));
+			await dispatch(itemCheckUpdate({ id: itemId ,size,color}));
 			dispatch(getbag({ userId: user.id }));
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
-			toggleBagItemCheck(itemId)
+			toggleBagItemCheck(itemId,size,color)
 		}
     };
 
-    const handleDeleteBag = async (productId,bagOrderItemId) => {
+    const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
-            await dispatch(deleteBag({productId,bagOrderItemId}));
+            await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
             dispatch(getbag({ userId: user.id }));
         }else{
-            removeBagSessionStorage(productId)
+            removeBagSessionStorage(productId,size,color)
         }
     };
 
@@ -242,6 +241,63 @@ const SideBarBag = ({OnChangeing}) => {
             console.error(`Error Verifying order: `,error);
         }
     } */
+	const HandleTryCheckOut = ()=>{
+		if (isAuthentication) {
+			if(!bag){
+				checkAndCreateToast("error","Bag is empty");
+                return;
+			}
+			if(bag?.orderItems.length === 0){
+				checkAndCreateToast("error","Bag is empty");
+                return;
+			}
+			const totalCheckingOutItems = bag.orderItems.filter(item=>item.isChecked);
+			if(totalCheckingOutItems.length === 0){
+				checkAndCreateToast("error","No items selected for checkout");
+                return;
+			}
+			navigation("/bag/checkout");
+		} else {
+			checkAndCreateToast("info",'Log in to checkout');
+			navigation('/Login');
+		}
+		handleOnChange();
+	}
+	const HandleGoToBag = ()=>{
+		if(isAuthentication){
+			if(!bag){
+				checkAndCreateToast("error","Bag is empty");
+                return;
+			}
+			if(bag?.orderItems.length === 0){
+				checkAndCreateToast("error","Bag is empty");
+                return;
+			}
+			const totalCheckingOutItems = bag.orderItems.filter(item=>item.isChecked);
+			if(totalCheckingOutItems.length === 0){
+				checkAndCreateToast("error","No items selected for checkout");
+                return;
+			}
+			navigation('/bag');
+			handleOnChange();
+		}else{
+			if(sessionBagData){
+				checkAndCreateToast("error","No Bag Found! Please add items to your bag");
+			}
+			if(sessionBagData.length === 0){
+				checkAndCreateToast("error","Bag is empty");
+				return;
+			}
+			const totalCheckingOutItems = sessionBagData.filter(item=>item.isChecked);
+			if(totalCheckingOutItems.length === 0){
+				checkAndCreateToast("error","No items selected for checkout");
+				return;
+			}
+			navigation('/bag');
+			handleOnChange();
+		}
+		
+	}
     const handleConvenienceFeesChange = async () => {
         try {
             const fees = await dispatch(getConvinceFees())
@@ -351,10 +407,7 @@ const SideBarBag = ({OnChangeing}) => {
 										{/* Button Section */}
 										<div className="grid grid-cols-2 gap-2">
 											<button
-												onClick={() => {
-													navigation('/bag');
-													handleOnChange();
-												}}
+												onClick={HandleGoToBag}
 												className="w-full h-12 border border-black hover:border-opacity-40 text-black py-3 shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 											>
 												View Bag
@@ -362,16 +415,11 @@ const SideBarBag = ({OnChangeing}) => {
 
 											<button
 												onClick={() => {
-													if (isAuthentication) {
-														navigation("/bag/checkout");
-													} else {
-														navigation('/Login');
-													}
-													handleOnChange();
+													HandleTryCheckOut();
 												}}
 												className="w-full bg-black h-12 text-white  py-3 shadow-lg shadow-gray-400 transition-all duration-300 ease-in-out whitespace-nowrap transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 											>
-												{isAuthentication? "Checkout" : "Login to Checkout"}
+												{isAuthentication? "Checkout" : "Login"}
 											</button>
 										</div>
 									</div>
@@ -384,7 +432,7 @@ const SideBarBag = ({OnChangeing}) => {
 											window.scrollTo(0, 0);
 											handleOnChange();
 										}}
-										className="w-full text-black mt-4 py-1 text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
+										className="w-full text-black mt-4 py-1 hover:underline text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 									>
 										Continue Shoppping
 									</div>
@@ -432,7 +480,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
 											/>
 											<div onClick={(e) => {
-												updateChecked(e, active.ProductData?._id);
+												updateChecked(e, active.ProductData?._id,active.size,active.color);
 											}} className="absolute top-2 left-2 w-5 h-5">
 												<input
 													type="checkbox"
@@ -473,7 +521,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 									<div className="mt-2 flex w-20 h-7 sm:w-28 md:w-32  items-center space-x-2 sm:space-x-3 justify-center shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
 										<div className="flex w-fit items-center space-x-3 justify-between">
 											<button
-												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
+												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id,active.size,active.color)}
 												className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
@@ -481,7 +529,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 											</button>
 											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
 											<button
-												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
+												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id,active.size,active.color)}
 												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
@@ -496,7 +544,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 							<Trash
 								size={20}
 								className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
-								onClick={() => handleDeleteBag(active.ProductData._id, active._id)}
+								onClick={() => handleDeleteBag(active.ProductData._id, active._id,active.size,active.color)}
 							/>
 						</div>
 					</div>
@@ -535,7 +583,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 											/>
 											{/* Checkbox positioned at the top-right corner */}
 											<div onClick={(e)=>{
-												updateChecked(e, active.productId?._id);
+												updateChecked(e, active.productId?._id,active.size,active.color);
 											}} className="absolute top-1 left-1 w-5 h-5 cursor-pointer">
 												<input
 													type="checkbox"
@@ -577,7 +625,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 									<div className="flex w-fit items-center space-x-3 justify-between">
 										{/* Decrease Button */}
 										<button
-											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
+											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
 											className="h-fit rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity <= 1}
 										>
@@ -589,7 +637,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 										{/* Increase Button */}
 										<button
-											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
 											className="h-fit rounded-full text-black disabled:text-gray-300"
 											disabled={active?.quantity >= active?.size?.quantity}
 										>
@@ -605,7 +653,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 						<Trash
 							size={20}
 							className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
-							onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
+							onClick={(e) => handleDeleteBag(active.productId._id, active._id,active.size, active.color)}
 						/>
 					</div>
 				</div>

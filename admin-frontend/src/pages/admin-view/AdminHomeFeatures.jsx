@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ImageUpload from '@/components/admin-view/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { addFeaturesImage, addMultipleImages, delFeatureImage, getFeatureImage } from '@/store/common-slice';
+import { addFeaturesImage, addMultipleImages, delFeatureImage, fetchOptionsByType, getFeatureImage } from '@/store/common-slice';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
 import { X } from 'lucide-react';
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
@@ -38,12 +38,14 @@ const AdminHomeFeatures = () => {
     const[resetImageUpload,setResetImageUpload] = useState(false);
     const[toggleBulkUpload,setToggleBulkUpload] = useState(true);
     const [imageLoading, setImageLoading] = useState(false);
+	const[allProductsCategory,setAllProductsCategory] = useState([]);
 
     // String State.............................................................
     const [imageFile, setImageFile] = useState('');
     const [imageUrls, setImageUrls] = useState('');
     const [imageUrlsCategory, setImageUrlsCategory] = useState('');
     const[imageHeader,setImageHeader] = useState('');
+    const[currentImageCategoryName,setCurrentImageCategoryName] = useState('');
     const [selectedCategory, setSelectedCategory] = useState('');
 
     // Array State..............................................................
@@ -56,12 +58,23 @@ const AdminHomeFeatures = () => {
 
     useEffect(() => {
         dispatch(getFeatureImage());
+		fetchCategoryOptions();
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
     /* let categories = [];
     if(featuresList && featuresList.length > 0){
         categories = [...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))];
     } */
-
+	console.log("allProductsCategory: ",allProductsCategory);
+	const fetchCategoryOptions = async () => {
+		try {
+			const data = await dispatch(fetchOptionsByType("category"));
+			const categoryData = data.payload?.result;
+			console.log("Category Options: ",categoryData)
+			setAllProductsCategory(categoryData?.map((s) => ({ id: s._id, label: s.value })) || []);
+		} catch (error) {
+			console.error("Error Fetching Category Options: ", error);
+		}
+	};
     const handleImageUpload = async (url) => {
         try {
             if (!imageUrlsCategory) {
@@ -213,6 +226,23 @@ const AdminHomeFeatures = () => {
                         </Button>
                     </div>
                 )}
+				<div className="w-full p-6 bg-white rounded-lg shadow-md">
+					<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
+						Select a Category Name
+					</h1>
+					<select
+						value={currentImageCategoryName}
+						onChange={(e) => setCurrentImageCategoryName(e.target.value)}
+						className="w-full h-12 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+					>
+						<option value="none">All Categoryies Names</option>
+							{allProductsCategory.map((category, index) => (
+								<option key={index} value={category.label}>
+									{capitalizeFirstLetterOfEachWord(category.label)}
+								</option>
+							))}
+					</select>
+				</div>
                 <Input
                     type="text"
                     value={imageHeader}
@@ -220,6 +250,14 @@ const AdminHomeFeatures = () => {
                     placeholder="Enter Header"
                     className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                 />
+                {/* <Input
+                    type="text"
+                    value={currentImageCategoryName}
+                    onChange={(e) => setCurrentImageCategoryName(e.target.value)}
+                    placeholder="Enter Category Name"
+                    className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                /> */}
+				
             </div>
     
             {/* Category Dropdown Section */}

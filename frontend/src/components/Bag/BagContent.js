@@ -89,6 +89,7 @@ const BagContent = ({
 						<PriceDetailsComponent 
 							bag={bag}
 							totalGst = {totalGst}
+							checkAndCreateToast = {checkAndCreateToast}
 							totalSellingPrice={totalSellingPrice} 
 							discountedAmount={discountedAmount} 
 							convenienceFees={convenienceFees} 
@@ -167,7 +168,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 									/>
 									<div
 										onClick={(e) => {
-											updateChecked(e, active.productId?._id);
+											updateChecked(e, active.productId?._id,active.size,active.color);
 										}}
 										className="absolute top-2 left-2 w-5 h-5"
 									>
@@ -188,7 +189,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 								className="absolute top-[-10px] right-[-10px] text-white bg-red-600 p-1 rounded-full cursor-pointer sm:hidden"
 								onClick={(e) => {
 									e.stopPropagation();
-									handleDeleteBag(active.productId._id, active._id);
+									handleDeleteBag(active.productId._id, active._id,active.size,active.color);
 								}}
 							>
 								<X size={15} />
@@ -217,7 +218,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 								{/* Decrease Button */}
 								<button
-									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id)}
+									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
 									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 									disabled={active?.quantity <= 1}
 								>
@@ -229,7 +230,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 								{/* Increase Button */}
 								<button
-									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id)}
+									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
 									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 									disabled={active?.quantity >= active?.size?.quantity}
 								>
@@ -241,7 +242,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 						{/* Delete Button for larger screens */}
 						<Trash
 							className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-							onClick={(e) => handleDeleteBag(active.productId._id, active._id)}
+							onClick={(e) => handleDeleteBag(active.productId._id, active._id,active.size,active.color)}
 						/>
 					</div>
 
@@ -277,7 +278,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 	</div>
 );
 
-const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees, totalProductSellingPrice,removeCoupon }) => {
+const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon }) => {
 	console.log("Bag Details:", bag);
 	const navigation = useNavigate();
 	return (
@@ -336,8 +337,16 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button
-						onClick={()=> navigation('/bag/checkout')}
-						className="w-full bg-black hover:bg-gray-900 text-white py-3 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
+						disabled = {bag?.orderItems?.filter(item=>item.isChecked).length === 0}
+						onClick={()=> {
+							const totalCheckingOutItems = bag?.orderItems?.filter(item=>item.isChecked);
+							if(totalCheckingOutItems.length === 0){
+								checkAndCreateToast("error","No items selected for checkout");
+								return;
+							}
+							navigation('/bag/checkout')
+						}}
+						className="w-full bg-black hover:bg-gray-900 text-white disabled:bg-gray-500 py-3 rounded-lg shadow-lg transition-all duration-300 ease-in-out transform hover:scale-105 text-sm sm:text-base"
 					>
 						Proceed to Checkout
 					</button>

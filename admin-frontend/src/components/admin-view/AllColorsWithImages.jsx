@@ -10,6 +10,7 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	const [isLoading, setIsLoading] = useState(false);
 	const [colorOptions, setColorOptions] = useState([]);
 	const [activeColorSelect, setActiveColorSelect] = useState(null);
+	const[rest,setOnReset] = useState(false);
 
 	// Fetch color options from the store on mount
 	const fetchColorOptions = async () => {
@@ -30,11 +31,13 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	// Add the selected color to the array
 	const updateSelectedColorArray = (e) => {
 		e.preventDefault();
-		const alreadyPresent = allColors.find((s) => s.id === activeColorSelect.id);
-		if(!alreadyPresent) {
-			if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
-				setAllColors([...allColors, activeColorSelect]);
-				setActiveColorSelect(null);
+		if(activeColorSelect){
+			const alreadyPresent = allColors.find((s) => s.id === activeColorSelect?.id);
+			if(!alreadyPresent) {
+				if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
+					setAllColors([...allColors, activeColorSelect]);
+					setActiveColorSelect(null);
+				}
 			}
 		}
 	};
@@ -115,6 +118,10 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 								if (selectedOption) {
 									console.log("Color Selected: ", selectedOption);
 									setActiveColorSelect(selectedOption);
+									setOnReset(true);
+									setTimeout(() => {
+										setOnReset(false);
+									}, 100);
 								} else {
 									setActiveColorSelect(null);
 								}
@@ -162,10 +169,11 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 						sizeTag={'allColors'}
 						onSetImageUrls={(files) => {
 						console.log('Image Urls: ', files);
-						setActiveColorSelect({ ...activeColorSelect, images: files });
+							setActiveColorSelect({ ...activeColorSelect, images: files });
 						}}
 						isLoading={isLoading}
 						setIsLoading={setIsLoading}
+						onReset={rest}
 					/>
 					</Fragment>
 				)}

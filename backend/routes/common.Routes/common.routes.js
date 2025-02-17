@@ -1,5 +1,5 @@
 import express from 'express';
-import { addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getContactQuery, getContactUsPageData, getConvenienceFees, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -10,6 +10,14 @@ route.post('/create/home/carousal/multiple',isAuthenticateuser,ProtectAdminRoute
 route.get('/fetch/all/:CategoryType',getHomeBanners)
 route.get('/fetch/all',getHomeBanners)
 route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeHomeCarousal)
+
+
+
+route.post('/categoryBanners/add',isAuthenticateuser,ProtectAdminRoute,addCategoryBanners);
+route.get('/categoryBanners/all',getCategoryBanners);
+route.delete('/categoryBanners/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeCategoryBanners);
+
+
 route.get('/product/filters',FetchAllFilters);
 route.put('/website/about',isAuthenticateuser,ProtectAdminRoute,setAboutData);
 route.put('/website/convenienceFees',isAuthenticateuser,ProtectAdminRoute,patchConvenienceOptions)

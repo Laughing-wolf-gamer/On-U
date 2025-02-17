@@ -642,7 +642,12 @@ export const addItemsToBag = async (req, res) => {
         }else{
             const product = FindUserBag.orderItems.find(p => p.productId?._id === productId)
             if(product){
-                product.quantity = product.quantity + quantity
+				product.isChecked = true;  // Update isChecked status to true for existing item
+				if(product.size._id === size._id && product.color._id === color._id){
+                	product.quantity = product.quantity + quantity
+				}else{
+					FindUserBag.orderItems.push({productId,quantity,color,size});
+				}
             }else{
                 FindUserBag.orderItems.push({productId,quantity,color,size})
             }
@@ -751,7 +756,7 @@ export const getbag = async (req, res) => {
         const { userId } = req.params;
 
         // Fetch the bag with populated orderItems.productId in one query
-        const bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon').exec();
+        const bag = await Bag.findOne({userId:userId }).populate('orderItems.productId Coupon').exec();
 
         if (!bag) {
             return res.status(404).json({ success:false,message: "Bag not found" });
@@ -815,8 +820,8 @@ export const getbag = async (req, res) => {
 export const updateItemCheckedInBag = async (req, res, next) => {
 	try {
 		// Destructure the request body to get the product ID and checkedIn status
-        const { id, isChecked } = req.body;
-		console.log("updateItemCheckedInBag id: ", id, "isChecked: ", isChecked);
+        const { id,size,color } = req.body;
+		console.log("updateItemCheckedInBag id: ", id, "isChecked: ", req.body);
 		// Find the original product from the database
         const originalProductData = await ProductModel.findById(id);
         if (!originalProductData) {
@@ -830,7 +835,7 @@ export const updateItemCheckedInBag = async (req, res, next) => {
         }
 		
         // Find the specific product in the user's bag
-		const product = bag.orderItems.find(p => p.productId._id.toString() === id);
+		const product = bag.orderItems.find(p => p.productId._id.toString() === id && p.size._id.toString() === size?._id && p.color._id.toString() === color?._id);
         if (!product) {
             return res.status(400).json({ message: "Product not found in bag" });
         }
@@ -864,7 +869,7 @@ export const updateItemCheckedInBag = async (req, res, next) => {
 export const updateqtybag = async (req, res, next) => {
     try {
         // Destructure the request body to get the product ID and quantity
-        const { id, qty } = req.body;
+        const { id,size,color, qty } = req.body;
 
         // Find the original product from the database
         const originalProductData = await ProductModel.findById(id);
@@ -879,7 +884,7 @@ export const updateqtybag = async (req, res, next) => {
         }
 
         // Find the specific product in the user's bag
-        const product = bag.orderItems.find(p => p.productId._id.toString() === id);
+        const product = bag.orderItems.find(p => p.productId._id.toString() === id && p.size._id.toString() === size._id.toString() && p.color._id.toString() === color._id.toString());
         if (!product) {
             return res.status(400).json({ message: "Product not found in bag" });
         }
@@ -933,9 +938,15 @@ export const updateqtybag = async (req, res, next) => {
 
 export const deletebag = async (req, res) => {
     try {
-        const {productId} = req.body
+        const {productId,size,color} = req.body
         const bag = await Bag.findOne({userId: req.user.id});
-        bag.orderItems = bag.orderItems.filter(p => p.productId != productId)
+		console.log("Deleting Bag Data: ", productId, size, color,bag)
+		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
+		if(bagItem === -1) return res.status(400).json({message: "Product not found in bag"})
+		bag.orderItems.splice(bagItem, 1);
+		console.log("Bag after delete: ",bag)
+
+        // bag.orderItems = bag.orderItems.filter(p => p.productId.toString() !== productId && p.size._id.toString() !== size?._id && p.color?._id.toString() !== color?._id);
         if(bag.orderItems.length === 0){
             await Bag.findOneAndDelete({userId: req.user.id})
             return res.status(200).json({success:true,message:"Successfully deleted Bag"})

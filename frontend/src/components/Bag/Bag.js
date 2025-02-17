@@ -175,34 +175,34 @@ const Bag = () => {
     }, [bag,sessionBagData]);
 
 
-    const updateQty = async (e, itemId) => {
+    const updateQty = async (e, itemId,size,color) => {
         console.log("Item ID: ", itemId);
         console.log("Qty Value: ", e.target.value);
         if(isAuthentication){
-            await dispatch(getqtyupdate({ id: itemId, qty: Number(e.target.value) }));
+            await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
             dispatch(getbag({ userId: user.id }));
         }else{
-            updateBagQuantity(itemId, e.target.value)
+            updateBagQuantity(itemId,size,color, e.target.value)
         }
     };
-	const updateChecked = async (e, itemId) => {
+	const updateChecked = async (e, itemId,size,color) => {
 		console.log("Item ID: ", itemId);
 		e.stopPropagation();
 		if(isAuthentication){
-			await dispatch(itemCheckUpdate({ id: itemId }));
+			await dispatch(itemCheckUpdate({ id: itemId,size,color }));
 			dispatch(getbag({ userId: user.id }));
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
-			toggleBagItemCheck(itemId)
+			toggleBagItemCheck(itemId,size,color)
 		}
 	};
 
-    const handleDeleteBag = async (productId,bagOrderItemId) => {
+    const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
-            await dispatch(deleteBag({productId,bagOrderItemId}));
+            await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
             dispatch(getbag({ userId: user.id }));
         }else{
-            removeBagSessionStorage(productId)
+            removeBagSessionStorage(productId,size,color)
         }
     };
 

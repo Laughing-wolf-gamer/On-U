@@ -1,4 +1,5 @@
 import BannerModel from "../../model/banner.model.js";
+import CategoryBannerModel from "../../model/category.banner.model.js";
 import ContactQuery from "../../model/ContactQuery.model.js";
 import Coupon from "../../model/Coupon.model.js";
 import Option from "../../model/options.model.js";
@@ -135,7 +136,7 @@ export const addHomeCarousalMultiple = async (req, res) => {
 } */
 export const addHomeCarousal = async (req, res) => {
 	try {
-		const { url, CategoryType, Header } = req.body;
+		const { url, CategoryType, Header,name } = req.body;
 
 		// Early validation check
 		if (!url && !Header) {
@@ -302,23 +303,122 @@ export const removeHomeCarousal = async (req, res) => {
     }
 };
 
-// Filters...
+export const addCategoryBanners = async(req,res)=>{
+	try {
+		const {CategoryType,Header,url} = req.body;
+		if(!Header ||!url){
+            return res.status(400).json({ Success: false, message: "All fields are required" });
+        }
+		let banner = await CategoryBannerModel.findOne({ CategoryType });
+		// If no banner exists, create a new one; otherwise, update it
+		if (!banner) {
+			banner = new CategoryBannerModel({
+				CategoryType,
+				Header,
+				Url: [url], // Initialize URL array with the provided URL
+			});
+		} else {
+			if (Header) banner.Header = Header;
+			if (url) banner.Url.push({...url});
+		}
 
-/* export const FetchAllFilters  = async (req, res) => {
-    try {
-        const filters = await ProductModel.find({})
-        .select('category subCategory gender AllColors -_id')  // Select only the category field and exclude _id
-        console.log("All Filters: ",filters);
-        const categoryValues = filters.map(item => item.category);
-        const genderValues = filters.map(item => item.gender);
-        const subCategoryValues = filters.map(item => item.subCategory);
-        res.status(200).json({Success:true,message:"All Filters",result:{AllCategory:categoryValues || [],AllGenders:genderValues || [],AllSubCategory:subCategoryValues || []}})
+		// Save the banner to the database
+		await banner.save();
+
+		// Fetch all banners to return
+		const banners = await CategoryBannerModel.find({});
+
+		console.log("Banners: ", banners);
+
+		// Respond with success message and the updated banners
+		return res.status(201).json({
+			Success: true,
+			message: 'Home Carousal added successfully!',
+			result: banners,
+		});
+	} catch (error) {
+		console.error(`Error adding Category Banners: `, error);
+		logger.error(`Error adding Category Banners: ${error.message}`);
+		res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+	}
+}
+export const getCategoryBanners = async(req,res)=>{
+	try {
+        // Fetch all banners to return
+        const banners = await CategoryBannerModel.find({});
+
+        console.log("Banners: ", banners);
+
+        // Respond with success message and the banners
+        return res.status(200).json({
+            Success: true,
+            message: 'Home Carousal fetched successfully!',
+            result: banners,
+        });
     } catch (error) {
-        console.error("Error Fetching Filters",error);
-        res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
+        console.error(`Error fetching Category Banners: `, error);
+        logger.error(`Error fetching Category Banners: ${error.message}`);
+        res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
     }
-} */
+}
+export const removeCategoryBanners = async(req,res)=>{
+	try {
+        const { id, imageIndex } = req.params;
+		// Validate inputs early
+        if (!id || !imageIndex) {
+            return res.status(400).json({ Success: false, message: "Id and image index are required" });
+        }
 
+        // Find the banner by ID
+        const banner = await CategoryBannerModel.findById(id);
+        if (!banner) {
+            return res.status(404).json({ Success: false, message: "Banner not found" });
+        }
+
+        // Validate the image index
+        if (imageIndex < 0 || imageIndex >= banner.Url.length) {
+            return res.status(400).json({ Success: false, message: "Invalid image index" });
+        }
+
+        // Identify the URL to remove
+        const urlToRemove = banner.Url[imageIndex];
+		const isEmpty = banner.Url.length - 1 === 0
+		console.log("Url to isEmpty: ", isEmpty);
+		if (isEmpty) {
+			const bannerWithRemovedUrl = await CategoryBannerModel.findByIdAndUpdate(
+				id, 
+				{ 
+					$pull: { Url: urlToRemove },
+					$unset: { Header: "" }  // Unset the header field if the condition is met
+				},
+				{ new: true }  // Ensure the updated document is returned
+			);
+			if (!bannerWithRemovedUrl) {
+				return res.status(500).json({ Success: false, message: "Failed to remove image" });
+			}
+			console.log("Updated Banners: ", bannerWithRemovedUrl);
+			// Respond with the updated banner
+			return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: bannerWithRemovedUrl });
+		}else{
+			// Update the banner by removing the URL at the specified index
+			const updatedBanner = await CategoryBannerModel.findByIdAndUpdate(
+				id, 
+				{ $pull: { Url: urlToRemove} },
+				{ new: true }  // Ensure the updated document is returned
+			);
+			if (!updatedBanner) {
+				return res.status(500).json({ Success: false, message: "Failed to remove image" });
+			}
+
+			// Respond with the updated banner
+			return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanner });
+		}
+    } catch (error) {
+        console.error(`Error removing Category Banners: `, error);
+        logger.error(`Error removing Category Banners: ${error.message}`);
+        res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+    }
+}
 export const FetchAllFilters = async (req, res) => {
 	try {
 		// Fetch only necessary fields

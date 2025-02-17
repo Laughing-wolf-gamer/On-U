@@ -192,10 +192,28 @@ const Ppage = () => {
         if (user) {
             // console.log("Updateing wishList: ",wishlist);
             setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
-            setIsInBagList(bag?.orderItems?.some(w => w.productId?._id === product?._id));
+			const allSimmilerProductsInBag = bag?.orderItems?.filter(b => b.productId?._id === product?._id)
+			let isBag = false;
+			if(allSimmilerProductsInBag && allSimmilerProductsInBag.length > 0){
+				isBag = allSimmilerProductsInBag.isChecked;
+                // console.log("Bag Item: ", IsbagItem," Current Size: ", currentSize," Current Color: ", currentColor);
+                if(currentSize && currentColor){
+                    isBag = allSimmilerProductsInBag.some(b => b.color?._id === currentColor?._id && b.size?._id === currentSize?._id);
+                }
+			}
+            setIsInBagList(isBag);
         } else {
             setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
-            setIsInBagList(getLocalStorageBag().some(b => b.productId === product?._id));
+			const allSimmilerProductsInBag = getLocalStorageBag().filter(b => b.productId === product?._id)
+			let isBag = false;
+			if(allSimmilerProductsInBag && allSimmilerProductsInBag.length > 0){
+				isBag = allSimmilerProductsInBag.isChecked;
+				// console.log("Bag Item: ", allSimmilerProductsInBag," Current Size: ", currentSize," Current Color: ", currentColor);
+				if(currentSize && currentColor){
+					isBag = allSimmilerProductsInBag.some(b => b.color?._id === currentColor?._id && b.size?._id === currentSize?._id);
+				}
+			}
+			setIsInBagList(isBag);
         }
     };
     const addToWishList = async () => {
@@ -341,6 +359,7 @@ const Ppage = () => {
         setSelectedSize(newSize);
         setCurrentSize(newSize);
         setCurrentColor(null);
+		
     }
     const handelSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images)
@@ -401,6 +420,9 @@ const Ppage = () => {
             divElement.removeEventListener('scroll', handleScroll);
         };
     }, []);
+	useEffect(()=>{
+		updateButtonStates();
+	},[currentSize,currentColor])
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
     },[hasPurchased])
@@ -608,16 +630,31 @@ const Ppage = () => {
                                         </div>
                                     </div>
 									<div className="w-full flex flex-col space-y-3 mt-4 text-sm">
-										{
+										{/* {
 											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
 												return(
 													<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-left justify-start">
-														<h1 className="text-gray-500">• {/* Bullet symbol */}</h1>
 														<h1 className="text-gray-500">{point}</h1>
 													</div>
 												)
 											})
-										}
+										} */}
+										<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
+											<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
+												<h1 className="text-gray-500"><Clock /></h1>
+												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+											</div>
+
+											<div className="w-full flex flex-row items-center space-x-2 justify-start">
+												<h1 className="text-gray-500"><RotateCw /></h1>
+												<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+											</div>
+
+											<div className="w-full flex flex-row items-center space-x-2 justify-start">
+												<h1 className="text-gray-500"><Truck /></h1>
+												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+											</div>
+										</div>
 									</div>
                                 </div>
                             </div>
