@@ -12,6 +12,7 @@ const websiteSchema = new mongoose.Schema({
 	privacyPolicy:Object,
     ConvenienceFees:Number,
     ContactUsePageData:Object,
+	CouponBannerData:Object,
     WebsiteDisclaimers:[{
         header:String,
         body:String,

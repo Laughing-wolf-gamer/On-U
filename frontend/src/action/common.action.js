@@ -22,6 +22,9 @@ import {
 	FETCH_FAQS_SUCCESS,
 	FETCH_FAQS_FAIL,
 	FETCH_FAQS,
+	FETCH_COUPON_BANNER_REQUEST,
+	FETCH_COUPON_BANNER_SUCCESS,
+	FETCH_COUPON_BANNER_FAIL,
 } from '../const/common.const'
 import { BASE_API_URL } from '../config'
 
@@ -119,6 +122,19 @@ export const fetchAllCoupons = (query)=> async(dispatch)=>{
     } catch (error) {
         console.error("Error fetching all Coupons: ",error);
         dispatch({ type: FETCH_ALL_COUPONS_FAIL, payload: error?.response?.data?.message })
+    }
+}
+export const fetchCouponBannerData = ()=> async()=>{
+	try {
+		// dispatch({ type: FETCH_COUPON_BANNER_REQUEST })
+        const response = await axios.get(`${BASE_API_URL}/api/common/website/couponbanner/get`);
+        console.log("Coupon Banner: ",response.data);
+		return response.data?.result;
+        // dispatch({ type: FETCH_COUPON_BANNER_SUCCESS, payload: response.data.result })
+    } catch (error) {
+        console.error("Error fetching coupon banner: ",error);
+		return null;
+        // dispatch({ type: FETCH_COUPON_BANNER_FAIL, payload: error?.response?.data?.message })
     }
 }
 export const clearErrors = () => async (dispatch) => {

@@ -30,6 +30,8 @@ import { Toaster } from "react-hot-toast"
 import AdminUsers from "./pages/admin-view/AdminUsers"
 import { ToastContainer } from "react-toastify"
 import AdminFAQPage from "./pages/admin-view/AdminFAQPage"
+import AdminCategoryBanners from "./pages/admin-view/AdminCategoryBanners"
+import AdminHomeCouponBanner from "./pages/admin-view/AdminHomeCouponBanner"
 function App() {
     
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
@@ -77,12 +79,14 @@ function App() {
                     <Route path="warehouse" element={<WarehouseAdmin/>}/>
 
                     <Route path="features/home" element={<AdminHomeFeatures/>}/>
+                    <Route path="features/categoryBanners" element={<AdminCategoryBanners/>}/>
                     <Route path="features/addOptions" element={<AdminOptions/>}/>
                     <Route path="features/addressOptions" element={<AdminAddressPage/>}/>
                     <Route path="features/couponManagement" element={<AdminCouponFormPage/>}/>
 
                     <Route path="orders" element={<AdminOrders/>}/>
                     <Route path="pages/about" element={<AdminAboutPage/>}/>
+                    <Route path="pages/couponBanner" element={<AdminHomeCouponBanner/>}/>
                     <Route path="pages/contactUsManagement" element={<AdminContactPage/>}/>
                     <Route path="pages/privacyPolicy" element={<AdminPrivacyPolicyPage/>}/>
                     <Route path="pages/termsAndCond" element={<AdminTermsConditionsPage />}/>

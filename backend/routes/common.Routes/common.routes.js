@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getCouponBannerData, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -15,7 +15,7 @@ route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeH
 
 route.post('/categoryBanners/add',isAuthenticateuser,ProtectAdminRoute,addCategoryBanners);
 route.get('/categoryBanners/all',getCategoryBanners);
-route.delete('/categoryBanners/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeCategoryBanners);
+route.patch('/categoryBanners/del',isAuthenticateuser,ProtectAdminRoute,removeCategoryBanners);
 
 
 route.get('/product/filters',FetchAllFilters);
@@ -50,6 +50,9 @@ route.put('/website/disclaimer',isAuthenticateuser,ProtectAdminRoute,setWebsiteD
 route.patch('/website/disclaimer/edit/:disclaimersId',isAuthenticateuser,ProtectAdminRoute,editDisclaimers);
 route.patch('/website/disclaimer/remove/:disclaimersId',isAuthenticateuser,ProtectAdminRoute,removeWebsiteDisclaimers);
 route.get('/website/disclaimer',getWebsiteDisclaimers);
+
+route.put('/website/couponbanner/set',isAuthenticateuser,ProtectAdminRoute,setCouponBannerData);
+route.get('/website/couponbanner/get',getCouponBannerData);
 
 route.get('/options/get/all',getAllOptions)
 route.get('/options/getByType/:type', getOptions);

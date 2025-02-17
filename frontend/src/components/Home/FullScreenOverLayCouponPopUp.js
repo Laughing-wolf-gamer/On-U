@@ -1,6 +1,6 @@
 import { X } from 'lucide-react';
 import React, { Fragment, useEffect, useState } from 'react';
-import { sendGetCoupon } from '../../action/common.action';
+import { fetchCouponBannerData, sendGetCoupon } from '../../action/common.action';
 import { useDispatch } from 'react-redux';
 import popUp from '../images/popUp-image.jpg';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -12,6 +12,7 @@ const FullScreenOverLayCouponPopUp = () => {
     const [name, setName] = useState('');
     const [email, setEmail] = useState('');
     const [loadingSent, setLoadingSent] = useState(false);
+	const[bannerData,setBannerData] = useState(null);
 
     const handleGetCouponClick = async () => {
         try {
@@ -34,7 +35,17 @@ const FullScreenOverLayCouponPopUp = () => {
             setLoadingSent(false);
         }
     };
-
+	const fetchBannerData = async()=>{
+		try {
+			const response = await dispatch(fetchCouponBannerData())
+			// console.log("Response: ", response);
+			if(response){
+				setBannerData(response);
+			}
+		} catch (error) {
+			console.error("Error fetching banner data: ", error);
+		}
+	}
     const handleHateCouponClick = () => {
         closeDialog();
     };
@@ -50,7 +61,11 @@ const FullScreenOverLayCouponPopUp = () => {
             closeDialog();
         }
     };
-
+	useEffect(()=>{
+		if(isOpen){
+			fetchBannerData();
+		}
+	},[dispatch,isOpen])
     // Disable scrolling on body when dialog is open
     useEffect(() => {
         if (isOpen) {
@@ -62,7 +77,7 @@ const FullScreenOverLayCouponPopUp = () => {
             document.body.style.overflow = 'auto';
         };
     }, [isOpen]);
-
+	console.log("Banner Data: ", bannerData);
     return (
         <Fragment>
             {isOpen && (
@@ -81,9 +96,9 @@ const FullScreenOverLayCouponPopUp = () => {
                         {/* Left Column - Form */}
                         <div className="flex flex-col justify-between p-8 md:p-10 max-h-full">
                             <div className='w-full grid grid-cols-1 gap-3'>
-                                <h1 className="text-2xl font-extrabold font-serif">Grab a Coupon</h1>
+                                <h1 className="text-2xl font-extrabold font-serif">{bannerData?.header || "Grab a Coupon"}</h1>
                                 <p className="text-gray-800 flex-wrap text-inherit">
-                                    Join us to receive 20% off on your first purchase. Sign up today and get the coupon!
+                                    {bannerData?.subHeader || "Join us to receive 20% off on your first purchase. Sign up today and get the coupon!"}
                                 </p>
 
                             </div>
@@ -140,7 +155,6 @@ const FullScreenOverLayCouponPopUp = () => {
                         {/* Right Column - Image */}
                         <div className="hidden md:block relative">
                             <img
-                                loading='lazy'
                                 src={popUp}
                                 alt="coupon-image"
                                 className="h-full w-full object-cover"

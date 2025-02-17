@@ -49,6 +49,7 @@ const ImageUpload = ({currentIndex = -1,file,setFile,HeaderTitle,uploadedImageUr
         e.stopPropagation();
         const selectedFile = e.dataTransfer?.files?.[0];
         if(selectedFile) setFile(selectedFile);
+		handleImageFileChange({ target: { files: e.dataTransfer.files } });
 	}
 	const handleRemoveImage = (e) => {
 		e.preventDefault();

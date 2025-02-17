@@ -1,4 +1,4 @@
-import { BASE_URL, filterOptions, Header } from "@/config";
+import { BASE_URL, Header } from "@/config";
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -17,6 +17,7 @@ const initialState = {
     ContactUsPageData:null,
     DisclaimerData:[],
     filterOptions:null,
+	CouponBannerData:null,
 
 }
 const commonSlice = createSlice({
@@ -126,7 +127,24 @@ const commonSlice = createSlice({
         }).addCase(fetchFAQSWebstis.rejected,(state)=>{
             state.isLoading = false;
             state.faqsWebsite = [];
-        })
+        }).addCase(fetchAllCategoryNameBanners.pending,(state)=>{
+			state.isLoading = true;
+		}).addCase(fetchAllCategoryNameBanners.fulfilled,(state,action)=>{
+			state.isLoading = false;
+            state.CategoryNameBanners = action?.payload?.result;
+		}).addCase(fetchAllCategoryNameBanners.rejected,(state,action)=>{
+			state.isLoading = false;
+            state.CategoryNameBanners = [];
+        }).addCase(fetchCouponBannerData.pending,(state)=>{
+			state.isLoading = true;
+
+		}).addCase(fetchCouponBannerData.fulfilled,(state,action)=>{
+			state.isLoading = false;
+            state.CouponBannerData = action?.payload?.result;
+		}).addCase(fetchCouponBannerData.rejected,(state,action)=>{
+			state.isLoading = false;
+            state.CouponBannerData = null;
+		})
     }
 })
 
@@ -470,7 +488,7 @@ export const addCategoryNameBanner = createAsyncThunk('/common/addCategoryNameBa
 })
 export const removeCategoryBanners = createAsyncThunk('/common/removeCategoryBanners',async({id,imageIndex}) =>{
 	try {
-        const response = await axios.delete(`${BASE_URL}/api/common/categoryBanners/del/${id}/${imageIndex}`,{},Header());
+        const response = await axios.patch(`${BASE_URL}/api/common/categoryBanners/del?id=${id}&&imageIndex=${imageIndex}`,{},Header());
         console.log("Remove Category Name Banner Response: ", response.data);
         return response.data;
     } catch (error) {
@@ -478,6 +496,24 @@ export const removeCategoryBanners = createAsyncThunk('/common/removeCategoryBan
     }
 })
 
+export const setCouponBannerData = createAsyncThunk('/common/setCouponBannerData',async(data) =>{
+	try {
+        const response = await axios.put(`${BASE_URL}/api/common/website/couponbanner/set`,data,Header());
+        console.log("Coupon Banner Response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Setting Coupon Banner: `,error);
+    }
+})
+export const fetchCouponBannerData = createAsyncThunk('/common/getCouponBannerData',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/api/common/website/couponbanner/get`);
+        console.log("Coupon Banner Response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Getting Coupon Banner: `,error);
+    }
+})
 
 // export const {resetSearchResult} = searchProductSlice.actions;
 export default commonSlice.reducer;

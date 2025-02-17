@@ -303,51 +303,63 @@ export const removeHomeCarousal = async (req, res) => {
     }
 };
 
-export const addCategoryBanners = async(req,res)=>{
+export const addCategoryBanners = async (req, res) => {
 	try {
-		const {CategoryType,Header,url} = req.body;
-		if(!Header ||!url){
-            return res.status(400).json({ Success: false, message: "All fields are required" });
-        }
+		const { CategoryType, Header, url } = req.body;
+		console.log("Add Category Banners req.body", req.body);
+
+		// Validate input fields
+		if (!CategoryType || !url) {
+			return res.status(400).json({ Success: false, message: "All fields are required" });
+		}
+
+		// Check if a banner already exists for the given CategoryType
 		let banner = await CategoryBannerModel.findOne({ CategoryType });
+
 		// If no banner exists, create a new one; otherwise, update it
 		if (!banner) {
+			// No existing banner for CategoryType, create a new one
 			banner = new CategoryBannerModel({
 				CategoryType,
 				Header,
-				Url: [url], // Initialize URL array with the provided URL
+				Url: [url], // Initialize the URL array with the provided url object
 			});
 		} else {
+			// Update the existing banner with the new Header and URL
 			if (Header) banner.Header = Header;
-			if (url) banner.Url.push({...url});
+			if (url) banner.Url.push(url); // Directly push the URL object
 		}
 
 		// Save the banner to the database
 		await banner.save();
 
-		// Fetch all banners to return
-		const banners = await CategoryBannerModel.find({});
+		// Fetch the updated banner or all banners, depending on your needs
+		const banners = await CategoryBannerModel.find({ CategoryType });
 
-		console.log("Banners: ", banners);
-
-		// Respond with success message and the updated banners
+		// Respond with a success message and the updated banners
 		return res.status(201).json({
-			Success: true,
-			message: 'Home Carousal added successfully!',
-			result: banners,
+		Success: true,
+		message: 'Category Banner added/updated successfully!',
+		result: banners,
 		});
+
 	} catch (error) {
-		console.error(`Error adding Category Banners: `, error);
+		// Log the error and return a server error message
+		console.error("Error adding Category Banners:", error);
 		logger.error(`Error adding Category Banners: ${error.message}`);
-		res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+		return res.status(500).json({
+			Success: false,
+			message: `Internal Server Error: ${error.message}`,
+		});
 	}
-}
+};
+
 export const getCategoryBanners = async(req,res)=>{
 	try {
         // Fetch all banners to return
         const banners = await CategoryBannerModel.find({});
 
-        console.log("Banners: ", banners);
+        console.log("Category Banners: ", banners);
 
         // Respond with success message and the banners
         return res.status(200).json({
@@ -363,7 +375,8 @@ export const getCategoryBanners = async(req,res)=>{
 }
 export const removeCategoryBanners = async(req,res)=>{
 	try {
-        const { id, imageIndex } = req.params;
+        const { id, imageIndex } = req.query;
+		console.log("Remove Category Banners req.params", req.params);
 		// Validate inputs early
         if (!id || !imageIndex) {
             return res.status(400).json({ Success: false, message: "Id and image index are required" });
@@ -396,7 +409,12 @@ export const removeCategoryBanners = async(req,res)=>{
 			if (!bannerWithRemovedUrl) {
 				return res.status(500).json({ Success: false, message: "Failed to remove image" });
 			}
-			console.log("Updated Banners: ", bannerWithRemovedUrl);
+			console.log("Updated Category Banners: ", bannerWithRemovedUrl);
+			if(bannerWithRemovedUrl.Url.length <= 0){
+				// Remove the banner completely
+                await banner.remove();
+                return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: null });
+			}
 			// Respond with the updated banner
 			return res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: bannerWithRemovedUrl });
 		}else{
@@ -510,23 +528,6 @@ export const setAboutData = async (req, res) => {
 
         const alreadyFoundWebsiteData = await WebSiteModel.findOne({ tag: 'AboutData' });
 
-        /* // Helper function to conditionally set data only if provided
-        const updateField = (currentValue, newValue) => {
-            if (newValue != null && (!Array.isArray(newValue) ? newValue.trim() !== '' : newValue.length > 0)) {
-                return newValue;
-            }
-            return currentValue;
-        };
-
-        const aboutData = {
-            header: updateField('', header),
-            subHeader: updateField('', subHeader),
-            ourMissionDescription: updateField('', ourMissionDescription),
-            outMoto: updateField([], outMoto),
-            teamMembers: updateField([], teamMembers),
-            founderData: updateField({}, founderData),
-        }; */
-
         if (!alreadyFoundWebsiteData) {
             // No existing AboutData, create a new entry
             const newWebsiteData = new WebSiteModel({
@@ -544,14 +545,6 @@ export const setAboutData = async (req, res) => {
             });
         }
 
-        // If found, update the existing AboutData with the new values
-        /* alreadyFoundWebsiteData.AboutData = {
-            header: updateField(alreadyFoundWebsiteData.AboutData.header, header),
-            subHeader: updateField(alreadyFoundWebsiteData.AboutData.subHeader, subHeader),
-            ourMissionDescription: updateField(alreadyFoundWebsiteData.AboutData.ourMissionDescription, ourMissionDescription),
-            outMoto: updateField(alreadyFoundWebsiteData.AboutData.outMoto, outMoto),
-            teamMembers: updateField(alreadyFoundWebsiteData.AboutData.teamMembers, teamMembers),
-        }; */
 		alreadyFoundWebsiteData.AboutData = {...req.body};
 
         await alreadyFoundWebsiteData.save();
@@ -1283,5 +1276,72 @@ export const sendMailToGetCoupon = async (req,res)=>{
 	}
 }
 
+
+export const setCouponBannerData = async (req,res)=>{
+	try {
+
+		// const { header, subHeader,bannerModelUrl} = req.body;
+        console.log("About Body:", req.body);
+
+        const alreadyPresetCouponBannerData = await WebSiteModel.findOne({ tag: 'Coupon-banner' });
+
+        if (!alreadyPresetCouponBannerData) {
+            // No existing AboutData, create a new entry
+            const newWebsiteData = new WebSiteModel({
+                CouponBannerData: {...req.body},
+                tag: 'Coupon-banner',
+            });
+
+            await newWebsiteData.save();
+            console.log("New Copuon Banner Data Created: ", newWebsiteData);
+
+            return res.status(200).json({
+                Success: true,
+                message: 'Coupon Banner Data set successfully',
+                result: newWebsiteData,
+            });
+        }
+
+		alreadyPresetCouponBannerData.CouponBannerData = {...req.body};
+
+        await alreadyPresetCouponBannerData.save();
+        console.log("Updated About Data: ", alreadyPresetCouponBannerData);
+
+        res.status(200).json({
+            Success: true,
+            message: 'About Data updated successfully',
+            result: alreadyPresetCouponBannerData,
+        });
+	} catch (error) {
+		console.error("Error setting coupon banner data: ", error);
+		logger.error(`Error setting coupon banner data: ${error.message}`);
+		res.status(500).json({ success: false, message: 'Failed to set coupon banner data' });
+	}
+}
+export const getCouponBannerData = async (req,res)=>{
+	try {
+		const termsAndCondition = await WebSiteModel.findOne({ tag: 'Coupon-banner' });
+	
+		if (termsAndCondition) {
+			// Return the found terms and condition if exists
+			return res.status(200).json({
+				Success: true,
+				message: "Coupon-banner fetched successfully",
+				result: termsAndCondition.CouponBannerData,
+			});
+		}
+	
+		// If no terms and condition data found, return a friendly message
+		return res.status(200).json({
+			Success: false,
+			message: "No Coupon-bannerfound",
+			result: null,
+		});
+	} catch (error) {
+		console.error("Error getting coupon banner data: ", error);
+		logger.error(`Error getting coupon banner data: ${error.message}`);
+		res.status(500).json({ success: false, message: 'Failed to get coupon banner data' });
+	}
+}
 
   

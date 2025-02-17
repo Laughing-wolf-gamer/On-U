@@ -194,6 +194,12 @@ export const adminSideBarMenu = [
                 accessRole:['superAdmin'],
                 path: 'pages/about',
             },
+            {
+                id:'couponBanner',
+                label:'Home Coupon Banner',
+                accessRole:['superAdmin'],
+                path: 'pages/couponBanner',
+            },
         ]
         
     },
@@ -204,9 +210,15 @@ export const adminSideBarMenu = [
         dropDownView:[
             {
                 id:'adminHome',
-                label:'Admin Home Details',
+                label:'Home Banners',
                 accessRole:["admin",'superAdmin'],
                 path: 'features/home',
+            },
+            {
+                id:'categoryBanners',
+                label:'Home Category Banners',
+                accessRole:["admin",'superAdmin'],
+                path: 'features/categoryBanners',
             },
             {
                 id:'adminOptionsManagement',

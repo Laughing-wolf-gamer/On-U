@@ -14,8 +14,8 @@ const clothingItems = [
     "Cargo"
 ];
 
-const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPlaying = false }) => {
-    const activeClothingItem = useMemo(() => getRandomItem(categoriesOptions) || getRandomItem(clothingItems), [categoriesOptions]);
+const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPlaying = false,categoryName }) => {
+    // const activeClothingItem = useMemo(() => getRandomItem(categoriesOptions) || getRandomItem(clothingItems), [categoriesOptions]);
     const navigation = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
     const [isError, setIsError] = useState(false);
@@ -28,10 +28,10 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
     const handleError = useCallback(() => setIsError(true), []);
     const handleMoveToQuery = useCallback(() => {
         const queryParams = new URLSearchParams();
-        if (activeClothingItem) queryParams.set('category', activeClothingItem.toLowerCase());
+        if (categoryName) queryParams.set('category', categoryName.toLowerCase());
         const url = `/products?${queryParams.toString()}`;
         navigation(url);
-    }, [activeClothingItem, navigation]);
+    }, [categoryName, navigation]);
 
     return (
         <div onClick={handleMoveToQuery} className="relative font-kumbsan w-full h-full rounded-lg overflow-hidden cursor-pointer">
@@ -75,8 +75,8 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
                         )}
                     </>
                 )}
-                <div className="w-full text-black bg-white opacity-50 bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl">
-                    {activeClothingItem && <span>{activeClothingItem.toUpperCase()}</span>}
+                <div className="w-full text-black bg-white opacity-50 uppercase bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl">
+                    <span>{categoryName}</span>
                 </div>
             </div>
         </div>

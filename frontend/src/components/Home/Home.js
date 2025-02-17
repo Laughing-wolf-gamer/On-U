@@ -7,7 +7,7 @@ import './home.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Allproduct, getOptionsByType } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
-import { featchallbanners } from '../../action/banner.action'
+import { featchallbanners, fetchAllCategoryBanners } from '../../action/banner.action'
 import { getuser } from '../../action/useraction'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 
@@ -27,6 +27,7 @@ const Home = ({user}) => {
     // const { AllOptions} = useSelector(state => state.allOptions)
     const [categoriesOptions,setCategoryOptions] = useState([]);
     const { banners,loading:bannerLoading} = useSelector(state => state.banners)
+    const { categoryBanners,loading:CategorybannerLoading} = useSelector(state => state.categoryBanners)
     const navigation = useNavigate();
     const dispatch = useDispatch();
     const indicatorStyles: CSSProperties = {
@@ -80,6 +81,7 @@ const Home = ({user}) => {
     useEffect(()=>{
         dispatch(getuser());
         dispatch(featchallbanners());
+		dispatch(fetchAllCategoryBanners());
         dispatch(Allproduct())
         getSingleOptions();
     },[dispatch])
@@ -88,33 +90,8 @@ const Home = ({user}) => {
         // document.documentElement.scrollTo = 0;
         window.scrollTo(0,0)
     }, []);
-
-    // Initialize sections with default values
-    /* const sectionNames = [
-        'Wide Screen Section- 1', 'Wide Screen Section- 2', 'Wide Screen Section- 3',
-        'Wide Screen Section- 4', 'Wide Screen Section- 5', 'Wide Screen Section- 6',
-        'Wide Screen Section- 7', 'Wide Screen Section- 8', 'Wide Screen Section- 9',
-        'Wide Screen Section- 10', 'Wide Screen Section- 11',
-        'Small Screen Section- 1', 'Small Screen Section- 2', 'Small Screen Section- 3',
-        'Small Screen Section- 4', 'Small Screen Section- 5'
-    ];
-
-    const sections = {};
-
-    // Function to populate section data
-    const populateSection = (categoryType) => {
-        const foundCategory = banners?.find((b_cat) => b_cat?.CategoryType === categoryType);
-        return {
-            urls: foundCategory?.Url || [],
-            header: foundCategory?.Header || ""
-        };
-    };
-
-    // Populate all sections for both wide and small screens
-    sectionNames.forEach((sectionName) => {
-        sections[sectionName] = populateSection(sectionName);
-    }); */
-
+	let WideScreen_Video = {urls:[], header:''};
+	let MobileScreen_CategorySlider = {urls:[], header:''};
     let Wide_Screen_Section_1 = {urls:[], header: ""};
     let Wide_Screen_Section_2 = {urls:[],header:''};
     let Wide_Screen_Section_3 = {urls:[],header:''};
@@ -134,6 +111,13 @@ const Home = ({user}) => {
     let Small_Screen_Section_3 = {urls:[],header:''};
     let Small_Screen_Section_4 = {urls:[],header:''};
     let Small_Screen_Section_5 = {urls:[],header:''};
+
+	if(categoryBanners && categoryBanners.length > 0){
+		WideScreen_Video.urls = categoryBanners.find((b_cat)=> b_cat?.CategoryType === "WideScreen_Video")?.Url || [];
+		MobileScreen_CategorySlider.urls = categoryBanners.find((b_cat)=> b_cat?.CategoryType === "MobileScreen_CategorySlider")?.Url || [];
+		WideScreen_Video.header = categoryBanners.find((b_cat)=> b_cat?.CategoryType === "WideScreen_Video")?.Header || "";
+		MobileScreen_CategorySlider.header = categoryBanners.find((b_cat)=> b_cat?.CategoryType === "MobileScreen_CategorySlider")?.Header || "";
+	}
 
     if(banners){
         Wide_Screen_Section_1.urls = banners.find((b_cat)=> b_cat?.CategoryType === "Wide Screen Section- 1")?.Url || [];
@@ -194,7 +178,7 @@ const Home = ({user}) => {
         Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
     }
     
-    // console.log("All Options: ",AllOptions);
+    console.log("All categoryBanners ",WideScreen_Video,MobileScreen_CategorySlider);
     
 
     const [showComponent, setShowComponent] = useState(null);
@@ -233,13 +217,13 @@ const Home = ({user}) => {
                         
                         <div className="w-full justify-self-center max-w-screen-2xl h-fit flex flex-col justify-center items-center pb-7 space-y-3 px-14">
                             <h1 className='text-3xl font-bold text-center  tracking-widest text-gray-700 mb-10'>
-                                {Wide_Screen_Section_3.header}
+                                {WideScreen_Video.header}
                             </h1>
                             <div className='w-full justify-center items-center flex'>
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
                                     {
-                                        bannerLoading || !Wide_Screen_Section_3 || Wide_Screen_Section_3.urls.length <= 0 ? (
+                                        CategorybannerLoading || !WideScreen_Video || WideScreen_Video.urls.length <= 0 ? (
                                             Array(8).fill(0).map((_, index) => (
                                                 <div key={`skeleton_${index}`} className="w-[300px] h-[520px] flex flex-col justify-start items-center bg-gray-300 rounded-lg animate-pulse">
                                                     <div className="w-full h-full relative">
@@ -250,13 +234,13 @@ const Home = ({user}) => {
                                             ))
                                         ) : (
                                             // Actual content when URLs are available
-                                            Wide_Screen_Section_3.urls.slice(0, 8).map((url, index) => (
+                                            WideScreen_Video.urls.slice(0, 8).map((url, index) => (
                                                 <div
                                                     key={`Index_${index}`}
                                                     className={`h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105`}
                                                 >
                                                     {
-                                                        url && <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
+                                                        url && <GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
                                                     }
                                                     
                                                 </div>
@@ -347,7 +331,32 @@ const Home = ({user}) => {
                         </div> */}
 						<div className='bg-slate-200 px-2'>{/* Category */}
 							<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-								<DraggingScrollView images={Small_Screen_Section_2.urls} />
+								{
+									!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
+										<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+											{MobileScreen_CategorySlider.urls.map((image, index) => {
+												const handleQueryParmams = () => {
+													const queryParams = new URLSearchParams();
+													if (image.name) queryParams.set('category', image.name.toLowerCase());
+													const url = `/products?${queryParams.toString()}`;
+													navigation(url);
+												}
+												return (
+													<li key={`image_icons${index}`} onClick={handleQueryParmams} className="flex-shrink-0 w-24 px-0.5 justify-center items-center"> {/* Fixed width for images */}
+														<LazyLoadImage
+															effect="blur"
+															src={image.url || image}
+															alt={`image_icons_${index}`}
+															className="w-full h-fit min-h-[110px] object-fill" 
+														/>
+													</li>
+												)
+											})}
+										</div>
+									):(
+										<Fragment></Fragment>
+									)
+								}
 							</ul>
 						</div>
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
@@ -370,10 +379,10 @@ const Home = ({user}) => {
                         
                         <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
                             <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
-                                {Wide_Screen_Section_3.header}
+                                {WideScreen_Video.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
-                                <GridVideoBox bannerLoading={bannerLoading} Wide_Screen_Section_3 ={Wide_Screen_Section_3} categoriesOptions = {categoriesOptions} />
+                                <GridVideoBox bannerLoading={bannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
                             </div>
                         </div>
 						<div className='px-2'>
@@ -461,7 +470,7 @@ const Home = ({user}) => {
 }
 
 
-const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions }) => {
+const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) => {
     const [inView, setInView] = useState([]);
     const videoRefs = useRef([]); // This will hold the refs for each video container
   
@@ -491,7 +500,7 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                 if (ref) observer.unobserve(ref);
             });
         };
-    }, [Wide_Screen_Section_3?.urls.length]);
+    }, [WideScreen_Video?.urls.length]);
   
     return (
         <div className="grid font-kumbsan grid-cols-2 justify-center items-center gap-3 p-2">
@@ -510,14 +519,14 @@ const GridVideoBox = ({ bannerLoading, Wide_Screen_Section_3, categoriesOptions 
                 ))
             ) : (
                 // Actual content when URLs are available
-                Wide_Screen_Section_3 && Wide_Screen_Section_3.urls.length > 0 && Wide_Screen_Section_3.urls.slice(0, window.screen.width > 1024 ? 8 : 4).map((url, index) => (
+                WideScreen_Video && WideScreen_Video.urls.length > 0 && WideScreen_Video.urls.slice(0, window.screen.width > 1024 ? 8 : 4).map((url, index) => (
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
                         className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
                     >
                         {inView[index] ? (
-                            <GridImageView imageToShow={url} startPlaying = {true} categoriesOptions={categoriesOptions} />
+                            <GridImageView imageToShow={url.url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url?.name} />
                         ) : (
                             <div className="w-[120px] sm:w-[160px] md:w-[200px] lg:w-[250px] xl:w-[300px] 2xl:w-[350px] 
 								h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px] 
