@@ -155,7 +155,7 @@ const FullScreenOverLayCouponPopUp = () => {
                         {/* Right Column - Image */}
                         <div className="hidden md:block relative">
                             <img
-                                src={popUp}
+                                src={bannerData?.bannerModelUrl || popUp}
                                 alt="coupon-image"
                                 className="h-full w-full object-cover"
                             />

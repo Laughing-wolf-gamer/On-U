@@ -35,9 +35,9 @@ const Footer = () => {
 			const subcategories = options.filter((item) => item.type === 'subcategory');
 			const genders = options.filter((item) => item.isActive && item.type === 'gender');
 	
-			return genders.map((g) => ({
+			return genders.slice(0,2).map((g) => ({
 				Gender: g.value,
-				category: categories.map((c) => ({
+				category: categories.slice(0,3).map((c) => ({
 					title: c.value,
 					subcategories: subcategories.filter((s) => s.categoryId === c.id).map((s) => s.value),
 				})),
@@ -59,7 +59,7 @@ const Footer = () => {
 	useEffect(() => {
 		setProductsOptions(memoizedProductsOptions);
 	}, [memoizedProductsOptions]);
-	// console.log("memoizedProductsOptions: ",memoizedProductsOptions);
+	console.log("memoizedProductsOptions: ",memoizedProductsOptions);
     return (
         <div className="w-screen min-h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-14 py-10 max-h-fit">
