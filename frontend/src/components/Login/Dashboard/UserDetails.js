@@ -20,23 +20,24 @@ const EditableField = ({
 }) => {
 	console.log("tempValue:", tempValue);
 	return (
-		<div className="bg-gray-50 border-2 p-4 rounded-lg">
-		<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">
-			<Icon className="text-gray-500" size={20} />
-			<label className="font-semibold text-lg sm:text-base text-gray-700">{label}:</label>
-			{isEditing ? (
-				<input
-					type={name === "dob" ? "date" : "text"} // Automatically adjusts input type for dob
-					name={name}
-					className="border px-3 py-2 rounded-md w-full sm:w-80"
-					value={value}
-					onChange={onChange}
-				/>
-			) : (
-				<span className="text-lg sm:text-base text-gray-800">{value}</span>
-			)}
+		<div className="bg-gray-50 border-2 p-4 w-full rounded-lg">
+			<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">
+				<Icon className="text-gray-500" size={20} />
+				<label className="font-semibold text-lg sm:text-base text-gray-700">{label}:</label>
+				{isEditing ? (
+					<input
+						type={name === "dob" ? "date" : "text"} // Automatically adjusts input type for dob
+						name={name}
+						className="border px-3 py-2 rounded-md w-full sm:w-80"
+						value={value}
+						onChange={onChange}
+					/>
+				) : (
+					<span className="text-lg sm:text-base text-gray-800">{value}</span>
+				)}
+			</div>
 		</div>
-		</div>
+
 	);
 };
 

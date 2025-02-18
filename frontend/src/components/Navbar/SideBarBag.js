@@ -486,6 +486,15 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 											</div>
 										</div>
 									</Link>
+									<div
+										className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDeleteBag(active.ProductData._id, active._id,active.size,active.color)
+										}}
+									>
+										<Trash size={15} />
+									</div>
 								</div>
 
 									{/* Product Info */}
@@ -493,10 +502,11 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 									<h3 className="font-semibold text-lg sm:text-sm md:text-base text-gray-800">
 										{active?.ProductData?.title}
 									</h3>
-									<p className="text-xs sm:text-sm md:text-sm text-gray-600">Size: {active?.size?.label}</p>
+									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
+									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
 									{/* Price Section */}
-									<div className="flex items-center justify-start space-x-2 text-xs sm:text-sm md:text-[12px] text-blue-500 mt-1">
+									<div className="flex items-center justify-start space-x-2 text-[10px] sm:text-base md:text-lg text-red-500 mt-1">
 										{active?.ProductData?.salePrice ? (
 											<Fragment>
 												<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
@@ -538,7 +548,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 							{/* Delete Button */}
 							<Trash
 								size={20}
-								className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
+								className="text-xs sm:text-sm text-black sm:block hidden cursor-pointer hover:scale-105 mr-3"
 								onClick={() => handleDeleteBag(active.ProductData._id, active._id,active.size,active.color)}
 							/>
 						</div>
@@ -562,7 +572,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 			const validImage = getImageExtensionsFile();
 
 			return (
-				<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
+				<div key={i}  className={`flex flex-col md:px-4 lg:px-3 2xl:px-4 px-1 items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
 					{/* Product Image */}
 					<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
 						<div className="flex flex-row justify-start items-start space-x-2">
@@ -594,16 +604,26 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 									) : (
 										<p>No valid image available</p>
 									)}
+									<div
+										className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+										onClick={(e) => {
+											e.stopPropagation();
+											handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)
+										}}
+									>
+									<Trash size={15} />
+									</div>
 								</Link>
 							</div>
 
 							{/* Product Info */}
-							<div className="flex-1 space-y-1 text-left sm:text-left">
+							<div className="flex-1 space-y-1 text-left whitespace-nowrap sm:text-left">
 								<h3 className="font-semibold text-xs sm:text-sm md:text-base text-gray-800">{active?.productId?.title}</h3>
-								<p className="text-xs sm:text-sm md:text-sm text-gray-600">Size: {active?.size?.label}</p>
+								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
+								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
 								{/* Price and Discount Info */}
-								<div className="flex items-center justify-start space-x-2 text-xs sm:text-sm md:text-[12px] text-blue-500 mt-1">
+								<div className="flex items-center justify-start space-x-2 whitespace-nowrap text-[10px] sm:text-base md:text-lg text-red-400 mt-1">
 									{active?.productId?.salePrice ? (
 										<Fragment>
 											<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
@@ -647,7 +667,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 						{/* Delete Button for larger screens */}
 						<Trash
 							size={20}
-							className="text-xs sm:text-sm text-black cursor-pointer hover:scale-105"
+							className="text-black cursor-pointer sm:block hidden hover:scale-105 mr-3"
 							onClick={(e) => handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)}
 						/>
 					</div>

@@ -13,10 +13,10 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 	const sliderRef = useRef(null);
   
 	const [dragState, setDragState] = useState({
-	  isDragging: false,
-	  startX: 0,
-	  startTouchX: 0,
-	  scrollLeft: 0,
+		isDragging: false,
+		startX: 0,
+		startTouchX: 0,
+		scrollLeft: 0,
 	});
   
 	useEffect(() => {
@@ -27,13 +27,13 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
   
 	// Mouse Down, Mouse Move, Mouse Up Handlers
 	const handleMouseDown = (e) => {
-	  setDragState((prev) => ({
-		...prev,
-		isDragging: true,
-		startX: e.clientX,
-		scrollLeft: sliderRef.current.scrollLeft,
-	  }));
-	  e.preventDefault();
+		setDragState((prev) => ({
+			...prev,
+			isDragging: true,
+			startX: e.clientX,
+			scrollLeft: sliderRef.current.scrollLeft,
+		}));
+		e.preventDefault();
 	};
   
 	const handleMouseMove = (e) => {
@@ -80,18 +80,19 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 				<Fragment>
 					<button
 						onClick={() => scroll(-1)}
-						className="absolute h-[20%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
+						className="absolute sm:h-[15%] md:h-[20%] left-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
 					>
-					<ChevronLeft  />
+						<ChevronLeft />
 					</button>
-	
+
 					<button
 						onClick={() => scroll(1)}
-						className="absolute h-[20%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
+						className="absolute sm:h-[15%] md:h-[20%] right-4 rounded-md top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 z-10"
 					>
 						<ChevronRight />
 					</button>
 				</Fragment>
+
 	
 				{/* Slider Container to hide overflow items */}
 				<div className="w-full overflow-hidden">

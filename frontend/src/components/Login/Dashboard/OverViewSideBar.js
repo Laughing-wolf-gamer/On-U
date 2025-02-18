@@ -3,7 +3,7 @@ import { FaUser, FaBox, FaMapMarkedAlt } from 'react-icons/fa'; // Importing the
 
 const OverViewSideBar = ({ activeSection, setActiveSection }) => {
 	return (
-		<div className="w-full font-kumbsan bg-white shadow-md rounded-lg md:h-screen md:sticky top-0 p-4">
+		<div className="w-full font-kumbsan bg-white md:shadow-md md:h-screen md:sticky top-0 p-4">
 		<ul className="space-y-4">
 			{/* User Details Button */}
 			<li>

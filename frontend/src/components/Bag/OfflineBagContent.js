@@ -99,19 +99,20 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 	return (
 		<div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
 			<div className="flex space-x-8 text-gray-800">
-				<span className={`font-semibold text-lg ${!showPayment ? "text-gray-800" : "text-gray-400"}`}>BAG</span>
+				<span className={`font-semibold text-sm md:text-lg ${!showPayment ? "text-gray-800" : "text-gray-400"}`}>BAG</span>
 				<span className="text-gray-400">|</span>
-				<span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>ADDRESS</span>
+				<span className={`font-semibold text-sm md:text-lg ${!showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>ADDRESS</span>
 				<span className="text-gray-400">|</span>
-				<span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>PAYMENT</span>
+				<span className={`font-semibold text-sm md:text-lg ${showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>PAYMENT</span>
 			</div>
 			<div className="flex items-center space-x-3">
-				<BsShieldFillCheck className="text-blue-600 text-2xl" />
-				<span className="text-xs text-gray-600">100% SECURE</span>
+				<BsShieldFillCheck className="text-blue-600 text-xl md:text-2xl" />
+				<span className="text-xs md:text-sm text-gray-600">100% SECURE</span>
 			</div>
 		</div>
 	);
-}
+};
+
 
 // ProductListing Component
 const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteBag,setCoupon,applyCoupon,coupon  }) => {
@@ -176,7 +177,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
 
 										{/* Price and Discount Info */}
-										<div className="flex items-center justify-center sm:justify-start space-x-4 text-xs sm:text-sm lg:text-base text-blue-500 mt-2">
+										<div className="flex items-center justify-center sm:justify-start md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
 											{active?.ProductData?.salePrice ? (
 												<Fragment>
 													<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
@@ -254,7 +255,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discountedAmount, totalProductSellingPrice, convenienceFees, navigation }) => {
 	console.log("Converenece Fees: ", convenienceFees);
 	return(
-		<div className="w-full h-fit lg:w-1/3 bg-gray-100 p-8 shadow-md">
+		<div className="w-full h-fit lg:w-1/3 bg-gray-100 md:p-8 xl:p-8 2xl:p-8 p-2 shadow-md">
 			<h3 className="font-semibold text-xl text-gray-800 mb-6">ORDER DETAILS ({sessionBagData.length} items)</h3>
 			<div className="space-y-5">
 				{/* Total MRP Section */}

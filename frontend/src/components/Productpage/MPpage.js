@@ -287,18 +287,34 @@ const MPpage = () => {
             return;
         }
         try {
-            const orderData = {
-                userId: user.id,
-                productId: param.id,
-                quantity: 1,
-                color: currentColor,
-                size: currentSize,
-            };
-            const response = await dispatch(createbag(orderData));
-            if(response){
-                setIsInBagList(response);
-                navigation('/bag')
-            }
+			if(user){
+
+				const orderData = {
+					userId: user.id,
+					productId: param.id,
+					quantity: 1,
+					color: currentColor,
+					size: currentSize,
+					isChecked:true,
+				};
+				const response = await dispatch(createbag(orderData));
+				if(response){
+					setIsInBagList(response);
+					navigation('/bag')
+				}
+			}else{
+				// Add to localStorage logic
+				const orderData = {
+					productId: param.id,
+					quantity: 1,
+					color: currentColor,
+					size: currentSize,
+					ProductData: product,
+					isChecked:true,
+				};
+				setSessionStorageBagListItem(orderData, param.id);
+				navigation('/bag')
+			}
         } catch (error) {
             console.error("Error Adding to Bag: ",error);
             checkAndCreateToast("success","Error adding to Bag");
@@ -616,9 +632,9 @@ const MPpage = () => {
                                             const active = size;
                                             return(
                                                 <div key={`size_${index}_${active._id}`}>
-                                                    <div
+                                                    <button
                                                         style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all focus:outline-none duration-500 border-[1px] border-gray-400 ease-in-out 
                                                         ${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                     >
@@ -635,7 +651,7 @@ const MPpage = () => {
                                                                 </div>
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </button>
                                                 </div>
                                             )
                                         })}
@@ -648,9 +664,9 @@ const MPpage = () => {
                                             const active = color;
                                             return(
                                                 <div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
-                                                    <div
+                                                    <button
                                                         style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 border-[1px] border-gray-400 ease-in-out 
+                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 focus:outline-none border-[1px] border-gray-400 ease-in-out 
                                                         ${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
                                                         onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
                                                     >
@@ -667,7 +683,7 @@ const MPpage = () => {
                                                                 </div>
                                                             </div>
                                                         )}
-                                                    </div>
+                                                    </button>
                                                 </div>
                                             )
                                         })}

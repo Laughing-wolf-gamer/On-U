@@ -546,7 +546,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
 					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
 				>
-				<div className="flex-row flex px-6 bg-white justify-between px-5 items-center py-2  relative space-x-2 z-10">
+				<div className="flex-row flex px-6 bg-white justify-between font-kumbsan font-bold border-b items-center py-1 relative z-10">
 					{/* Sort Section */}
 					<div
 						className="text-[15px] flex justify-center space-x-3 cursor-pointer bg-white p-3"
@@ -558,6 +558,8 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
                         <span>Sort</span>
 					</div>
 					
+					{/* Separator */}
+					<span className="absolute h-[24px] border-r-[1px] border-slate-300 top-[33.33%] left-1/2 transform -translate-x-1/2"></span>
 					{/* Filter Section */}
 					<div
 						className="text-[15px] flex justify-center items-center space-x-3 cursor-pointer bg-white p-3"
@@ -569,8 +571,6 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
                         <span>Filter</span>
 					</div>
 
-					{/* Separator */}
-					<span className="absolute h-[24px] border-r-[1px] border-slate-300 top-[33.33%] left-1/2 transform -translate-x-1/2"></span>
 				</div>
 			</div>
 

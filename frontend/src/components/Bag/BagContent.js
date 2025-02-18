@@ -128,17 +128,17 @@ const BagContent = ({
 	);
 };
 const NavigationComponent = ({ showPayment, selectedAddress }) => (
-	<div className="flex font-kumbsan flex-col md:flex-row justify-between items-center mt-6 gap-8">
+	<div className="flex flex-col md:flex-row justify-between items-center mt-6 gap-8">
 		<div className="flex space-x-8 text-gray-800">
-			<span className={`font-semibold text-lg ${!showPayment ? "text-blue-600" : "text-gray-400"}`}>BAG</span>
+			<span className={`font-semibold text-sm md:text-lg ${!showPayment ? "text-gray-800" : "text-gray-400"}`}>BAG</span>
 			<span className="text-gray-400">|</span>
-			<span className={`font-semibold text-lg ${!showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>ADDRESS</span>
+			<span className={`font-semibold text-sm md:text-lg ${!showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>ADDRESS</span>
 			<span className="text-gray-400">|</span>
-			<span className={`font-semibold text-lg ${showPayment && selectedAddress ? "text-blue-600" : "text-gray-400"}`}>PAYMENT</span>
+			<span className={`font-semibold text-sm md:text-lg ${showPayment && selectedAddress ? "text-gray-800" : "text-gray-400"}`}>PAYMENT</span>
 		</div>
 		<div className="flex items-center space-x-3">
-			<BsShieldFillCheck className="text-blue-400 text-3xl" />
-			<span className="ml-2 text-[#535766] text-xs">100% SECURE</span>
+			<BsShieldFillCheck className="text-blue-600 text-xl md:text-2xl" />
+			<span className="text-xs md:text-sm text-gray-600">100% SECURE</span>
 		</div>
 	</div>
 );
@@ -186,13 +186,13 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							</Link>
 							{/* Delete Button on the Image (Mobile) */}
 							<div
-								className="absolute top-[-10px] right-[-10px] text-white bg-red-600 p-1 rounded-full cursor-pointer sm:hidden"
+								className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
 								onClick={(e) => {
 									e.stopPropagation();
 									handleDeleteBag(active.productId._id, active._id,active.size,active.color);
 								}}
 							>
-								<X size={15} />
+								<Trash size={15} />
 							</div>
 						</div>
 
@@ -202,7 +202,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							<p className="text-xs sm:text-sm text-gray-600">Size: {active?.size?.label}</p>
 
 							{/* Price and Discount Info */}
-							<div className="flex items-center space-x-4 text-xs sm:text-sm text-blue-400 mt-2">
+							<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
 								{active?.productId?.salePrice ? (
 									<>
 									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
@@ -282,7 +282,7 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 	console.log("Bag Details:", bag);
 	const navigation = useNavigate();
 	return (
-		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 p-8 shadow-md">
+		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 md:p-8 xl:p-8 2xl:p-8 p-2 shadow-md">
 			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
 				ORDER DETAILS ({bag?.orderItems.length} items)
 			</h3>

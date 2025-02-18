@@ -7,12 +7,11 @@ import { getAddress, getConvinceFees, getuser, updateAddress } from '../../actio
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
-import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getOriginalAmount, headerConfig, removeSpaces } from '../../config';
-import CouponsDisplay from './CouponDisplay';
-import { Minus, Plus, Trash, X } from 'lucide-react';
+import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
+import { Minus, Plus, Trash } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
-import { FormControl, FormHelperText } from '@mui/material';
+import { FormHelperText } from '@mui/material';
 import { fetchAddressForm } from '../../action/common.action';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import BackToTopButton from '../Home/BackToTopButton';
@@ -324,7 +323,7 @@ const CheckoutPage = () => {
 				<h1 className="text-3xl font-bold text-center mb-6">Checkout</h1>
 				<div className="grid grid-cols-1 lg:grid-cols-6 md:grid-cols-6 2xl:grid-cols-6 xl:grid-cols-6 gap-8 justify-start items-start px-4">
 					{/* Left Side: Address and Payment */}
-					<div className="col-span-4 lg:col-span-4 md:col-span-4 xl:col-span-4 2xl:col-span-4 space-y-8 md:pr-9 md:border-r-[1px]">
+					<div className="col-span-5 lg:col-span-4 md:col-span-4 xl:col-span-4 2xl:col-span-4 space-y-8 md:pr-9 md:border-r-[1px]">
 						{
 							allAddresses && <AddressAndPaymentComponent
 								totalProductSellingPrice={totalProductSellingPrice}
@@ -415,24 +414,25 @@ const AddressAndPaymentComponent = ({
 			<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto`}>
 				{/* Address Display */}
 				{user?.user && allAddresses && allAddresses?.length > 0 && (
-				allAddresses.map((addr, index) => {
-					const active = addr;
-					return (
-						<div
-							key={index}
-							className={`p-4 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
-							onClick={() => handleAddressSelection(active)}
-							>
-							{Object.entries(active).map(([key, value]) => (
-								<div key={key} className="flex justify-between mb-1">
-								<span className="font-medium text-sm">{capitalizeFirstLetterOfEachWord(key)}:</span>
-								<span className="text-sm">{value}</span>
-								</div>
-							))}
-							{selectedAddress === active && <span className="text-xs text-white mt-2 block">Selected Address</span>}
-						</div>
-					)
-				})
+					allAddresses.map((addr, index) => {
+						const active = addr;
+						return (
+							<div
+								key={index}
+								className={`p-4 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
+								onClick={() => handleAddressSelection(active)}
+								>
+								{Object.entries(active).map(([key, value]) => (
+									<div key={key} className="flex justify-between mb-1">
+										<span className="font-medium text-[12px] sm:text-base md:text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
+										<span className="text-[10px] sm:text-base md:text-lg">{value}</span>
+									</div>
+
+								))}
+								{selectedAddress === active && <span className="text-xs text-white mt-2 block">Selected Address</span>}
+							</div>
+						)
+					})
 				)}
 			</div>
 		</div>
@@ -487,23 +487,24 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 					</span>
 					</div>
 
-				{convenienceFees && <div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
-					<span>Convenience Fee</span>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
+					<span className='text-gray-800'>Convenience Fee</span>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
-						₹{convenienceFees}
+						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
 					</span>
-				</div>} 
+				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
 					<span>Total</span>
 					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button
-						disabled ={showPayment || !selectedAddress || bag?.orderItems?.filter(item=>item.isChecked).length <= 0}
+						// disabled ={showPayment || !selectedAddress || bag?.orderItems?.filter(item=>item.isChecked).length <= 0}
 						onClick={()=> {
 							if(user){
 								const checkItems = bag?.orderItems?.filter(item=>item.isChecked)
 								if(checkItems.length <= 0){
+									checkAndCreateToast("error","Please select an Atleast on Item")
 									setShowPayment(false);
 									return;
 								}
@@ -573,10 +574,10 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 								className="absolute top-2 left-2 w-5 h-5"
 							>
 								<input
-								type="checkbox"
-								className="w-full h-full cursor-pointer"
-								checked={active?.isChecked}
-								onChange={() => {}}
+									type="checkbox"
+									className="w-full h-full cursor-pointer"
+									checked={active?.isChecked}
+									onChange={() => {}}
 								/>
 							</div>
 							</div>
@@ -599,21 +600,23 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 					{/* Product Info */}
 					<div className="ml-6 flex-1 w-full">
-						<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate">{active?.productId?.title}</h3>
-						<p className="text-sm text-gray-600">Size: {active?.size?.label}</p>
+						<h3 className="font-semibold text-base sm:text-lg md:text-xl text-gray-800 truncate whitespace-nowrap">{active?.productId?.title}</h3>
+						<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
+						<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
 						{/* Price and Discount Info */}
-						<div className="flex items-center space-x-4 text-sm text-blue-400 mt-2">
-							{active?.productId?.salePrice ? (
-								<>
-								<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-								<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-								<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
-								</>
-							) : (
-								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
-							)}
+						<div className="flex items-center space-x-3 text-[10px] sm:text-base md:text-lg text-red-400 mt-2">
+						{active?.productId?.salePrice ? (
+							<>
+							<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+							<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+							<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+							</>
+						) : (
+							<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+						)}
 						</div>
+
 
 						{/* Quantity Selector */}
 						<div className="mt-4 flex w-fit items-center space-x-4 px-3 sm:px-5 shadow-md justify-between rounded-full p-2">
@@ -632,9 +635,9 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 								{/* Increase Button */}
 								<button
-								onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
-								className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
-								disabled={active?.quantity >= active?.size?.quantity}
+									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
+									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
+									disabled={active?.quantity >= active?.size?.quantity}
 								>
 								<Plus />
 								</button>

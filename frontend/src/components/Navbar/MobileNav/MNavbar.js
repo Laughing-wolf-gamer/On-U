@@ -259,9 +259,17 @@ const MNavbar = ({ user }) => {
                 <div
                     className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
-                    <div className="p-4">                    
-                        <ul>
-                            <Ripples color="#D0DDD0" className="w-full">
+                    <div className="p-4 relative">             
+                        <ul className='max-h-screen overflow-y-auto'>
+							<button 
+								onClick={(e)=>{
+									e.stopPropagation();
+									handleMenuClose();
+								}} 
+								className="absolute top-3 left-4 block sm:hidden text-black rounded-full w-8 h-8 items-center justify-center text-lg">
+								<X size={24} className='text-3xl' />
+							</button>
+                            <Ripples color="#D0DDD0" className="w-full mt-7">
                                 <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex" onClick={(e)=>{
 									e.stopPropagation();
 									if(user){

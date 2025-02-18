@@ -83,14 +83,14 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 					<div className="flex justify-between items-center">
 						{/* Account Info Section */}
 						<div>
-							<h1 className="font-semibold text-2xl text-gray-800">Account Overview</h1>
-							<p className="text-sm text-gray-600">{user?.user?.name}</p>
+						<h1 className="font-semibold text-2xl sm:text-xl md:text-2xl text-gray-800">Account Overview</h1>
+						<p className="text-sm sm:text-base md:text-sm text-gray-600">{user?.user?.name}</p>
 						</div>
 
 						{/* Logout Button */}
 						<button
-							onClick={handleLogout}
-							className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors"
+						onClick={handleLogout}
+						className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors"
 						>
 						<LogOut /> {/* Logout icon */}
 						</button>
@@ -98,21 +98,16 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 				</div>
 
 
-			<div className="flex flex-col lg:flex-row mt-4">
-				{/* Toggle Button for Small Screens */}
-				<button
-					className="lg:hidden p-4 bg-gray-300 text-gray-800 rounded-full hover:bg-gray-400"
-					onClick={() => setSidebarOpen(!sidebarOpen)}
-				>
-					<AlignJustify />
-				</button>
 
-				{/* Sidebar */}
+			<div className="flex flex-col lg:flex-row mt-4">
 				<div
-					className={`w-full lg:w-[20%] mt-4 flex flex-col justify-start p-6 rounded-lg border-r-2 bg-white ${sidebarOpen ? 'block' : 'hidden'} lg:block`}
+					className={`w-full lg:w-[20%] mt-4 flex-col justify-start p-6 rounded-lg border-r-2 bg-white`}
 				>
 					<OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
 				</div>
+				{/* <div className="md:hidden">
+				</div> */}
+
 
 				{/* Profile Details */}
 				<div className="w-full lg:w-[75%] py-4">
