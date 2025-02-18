@@ -20,6 +20,7 @@ import Footer from '../Footer/Footer'
 import GridImageView from './GridImageView'
 import { fetchWebsiteDisclaimer } from '../../action/common.action';
 import BackToTopButton from './BackToTopButton';
+import WhatsAppButton from './WhatsAppButton';
 
 
 const Home = ({user}) => {
@@ -462,9 +463,10 @@ const Home = ({user}) => {
                     </Fragment>
 
             }
-            <BackToTopButton scrollableDivRef={scrollableDivRef} />
             {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
             {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
+            <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     )
 }

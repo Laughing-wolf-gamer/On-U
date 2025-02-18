@@ -89,10 +89,10 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 
 						{/* Logout Button */}
 						<button
-						onClick={handleLogout}
-						className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors"
+							onClick={handleLogout}
+							className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors"
 						>
-						<LogOut /> {/* Logout icon */}
+						<LogOut size={20} /> {/* Logout icon */}
 						</button>
 					</div>
 				</div>
