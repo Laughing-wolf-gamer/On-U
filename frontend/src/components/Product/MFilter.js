@@ -1,6 +1,5 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react'
 import { AiOutlineFire, AiOutlineStar } from 'react-icons/ai'
-import Per from '../images/per.png'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { Allproduct as getproduct } from '../../action/productaction'
