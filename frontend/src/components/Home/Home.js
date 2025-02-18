@@ -382,7 +382,7 @@ const Home = ({user}) => {
                                 {WideScreen_Video.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
-                                <GridVideoBox bannerLoading={bannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
+                                <GridVideoBox bannerLoading={CategorybannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
                             </div>
                         </div>
 						<div className='px-2'>
