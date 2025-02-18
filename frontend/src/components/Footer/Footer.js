@@ -87,7 +87,7 @@ const Footer = () => {
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
 						<div
 							onClick={() => toggleDropdown("shop")}
-							className="w-full justify-start border-t border-b border-gray-200 flex flex-col items-center"
+							className="w-full justify-start border-t border-b py-3 border-gray-200 flex flex-col items-center"
 						>
 							<div className="w-full justify-between flex flex-row items-center">
 								<h1 className="text-lg font-bold text-gray-800">SHOP</h1>
@@ -98,7 +98,7 @@ const Footer = () => {
 
 							{openDropdown["shop"] && (
 							<ul
-								className={`text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full transition-all duration-300 ease-in-out opacity-100 transform translate-y-0 max-h-[1000px] overflow-hidden ${
+								className={`text-sm space-y-4 mt-3  justify-start items-start flex flex-col w-full transition-all duration-300 ease-in-out opacity-100 transform translate-y-0 max-h-[1000px] overflow-hidden ${
 								openDropdown["shop"] ? "opacity-100 max-h-[1000px]" : "opacity-0 max-h-0"
 								}`}
 							>
@@ -146,7 +146,7 @@ const Footer = () => {
 						</ul>
                     </div>
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
-						<div onClick={()=> toggleDropdown("information")} className="w-full justify-start border-t border-b border-gray-200 flex flex-col items-center">
+						<div onClick={()=> toggleDropdown("information")} className="w-full justify-start border-t border-b py-3 border-gray-200 flex flex-col items-center">
 							<div className="w-full justify-between flex flex-row items-center">
 								<h1 className="text-lg font-bold text-gray-800">INFO</h1> <ChevronUp className={`${openDropdown["information"] ? " rotate-180":""} transition-transform duration-300 ease-in-out`}/>
 							</div>
@@ -195,7 +195,7 @@ const Footer = () => {
 
 
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
-						<div onClick={()=> toggleDropdown("services")} className="w-full justify-start border-t border-b border-gray-200 flex flex-col items-center">
+						<div onClick={()=> toggleDropdown("services")} className="w-full justify-start border-t border-b py-3 border-gray-200 flex flex-col items-center">
 							<div className="w-full justify-between flex flex-row items-center">
 								<h1 className="text-lg font-bold text-gray-800">USEFULL LINKS</h1> <ChevronUp className={`${openDropdown["services"] ? " rotate-180":""} transition-transform duration-300 ease-in-out`} />
 							</div>

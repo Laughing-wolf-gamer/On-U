@@ -513,11 +513,11 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 									</div>
 
 									{/* Quantity Selector */}
-									<div className="mt-2 flex w-20 h-7 sm:w-28 md:w-32  items-center space-x-2 sm:space-x-3 justify-center shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
-										<div className="flex w-fit items-center space-x-3 justify-between">
+									<div className="mt-2 flex w-fit items-center space-x-2 sm:space-x-3 justify-center shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+										<div className="flex w-fit px-2 items-center space-x-3 justify-between">
 											<button
 												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id,active.size,active.color)}
-												className="h-fit w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
+												className="h-fit rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
 												<Minus className='justify-self-center' strokeWidth={1.5} />
@@ -525,7 +525,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
 											<button
 												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id,active.size,active.color)}
-												className="h-8 w-8 sm:h-9 sm:w-9 rounded-full text-black disabled:text-gray-300"
+												className="h-fit rounded-full text-black disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
 												<Plus className='justify-self-center' strokeWidth={1.5} />
@@ -617,7 +617,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 								{/* Quantity Selector */}
 								<div className="mt-2 flex w-fit items-center space-x-2 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
-									<div className="flex w-fit items-center space-x-3 justify-between">
+									<div className="flex w-fit px-2 items-center space-x-3 justify-between">
 										{/* Decrease Button */}
 										<button
 											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active?.productId._id,active?.size,active?.color)}

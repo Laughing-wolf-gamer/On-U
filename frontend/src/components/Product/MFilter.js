@@ -191,13 +191,13 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     }
     function sizearray() {
         if (product && product.length > 0) {
-        product.forEach(p => {
-            p.size.forEach(s => {
-            if(!size.includes(s.label)){
-                size.push(s.label);
-            }
-            })
-        });
+			product.forEach(p => {
+				p.size.forEach(s => {
+				if(!size.includes(s.label)){
+					size.push(s.label);
+				}
+				})
+			});
         }
     }
 

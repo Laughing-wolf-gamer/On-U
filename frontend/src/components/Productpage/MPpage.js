@@ -605,7 +605,7 @@ const MPpage = () => {
                                 <h1 className="text-green-800 font-semibold text-sm mt-1">
                                     inclusive all taxes.
                                 </h1>
-								<div className='w-full flex flex-col justify-start items-center mt-1 py-5 space-y-3 mx-auto'>
+								<div className='w-full flex flex-col justify-start items-center mt-1 space-y-3 mx-auto'>
                                     <div className='w-full flex justify-between items-center'>
                                         <h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
                                         </h3>
