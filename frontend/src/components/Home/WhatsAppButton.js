@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
 
 const WhatsAppButton = ({ scrollableDivRef }) => {
-	const phoneNumber = '919101094674'; // replace with your phone number
+	const phoneNumber = '916294053401'; // replace with your phone number
 	const message = 'Hi'; // replace with your message
 	const [scrollPosition, setScrollPosition] = useState(0);
 	
