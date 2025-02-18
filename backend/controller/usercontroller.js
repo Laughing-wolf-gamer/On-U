@@ -26,7 +26,7 @@ export const registermobile = A(async (req, res, next) => {
         const otp = Math.floor((1 + Math.random()) * 90000)
         await sendVerificationEmail(email, otp)
 		// https://avatar-placeholder.iran.liara.run/
-		const profilePic = `https://avatar.iran.liara.run/public/${gender}?${removeSpaces(name)}`
+		const profilePic = `https://avatar.iran.liara.run/public/${gender === 'men' ? "boy":'girl'}?username=${removeSpaces(name)}`
         const user = await User.create({
             name,
 			profilePic,
@@ -36,7 +36,7 @@ export const registermobile = A(async (req, res, next) => {
             otp:otp.toString(),
             role:'user',
         })
-        // console.log("New User: ",user)
+        console.log("New User: ",user)
         // logger.info("New User: " + user?.name)
         res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp,user}})
     } catch (error) {
@@ -64,12 +64,12 @@ export const loginMobileNumber = A(async(req, res, next) => {
     }else{
         email = logInData;
         user = await User.findOne({email:logInData});
-
     }
-    // console.log("Log In Data: ",phoneNumber,email);
-    // console.log("Login User: ",user);
     if(!user){
         return res.status(200).json({success:false,message: 'No User Found ',result:null})
+    }
+	if(user.verify !== 'verified'){
+		return res.status(200).json({success:false,message: 'User Not Verified',result:null})
     }
     function generateOTP() {
         return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP
@@ -167,10 +167,10 @@ export const registerUser = A(async (req, res, next) => {
 
     if (!existingUser) {
         const user = await User.create({
-        userName,
-        email,
-        password,
-        phonenumber,
+			userName,
+			email,
+			password,
+			phonenumber,
         })
     
     }
@@ -212,24 +212,32 @@ export const getuser = A(async(req, res, next)=>{
     res.status(200).json({Success:true,message: 'User is Authenticated',user});
 })
 
-export const optverify = A(async (req, res, next)=>{
-    // const {otp} = req.body
-    const{id,otp} = req.params;
-    const user = await User.findOne({phoneNumber: id})
-    console.log("OTP: ",user);
-    if (!user.otp) {
-        return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
-    }
-    if (user.otp.toString() !== otp) {
-        // return next( new Errorhandler("You entered expire or wrong OTP", 400))
-		res.status(200).json({success:false,message: 'OTP Do not Match'});
-    }
-    user.otp = null;
-    user.verify = 'verified';
-    await user.save()
-    res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user,token:sendtoken(user)});
+export const optverify = async (req, res)=>{
+    try {
+		// const {otp} = req.body
+		const{id,otp} = req.params;
+		const user = await User.findOne({phoneNumber: id})
+		console.log("OTP: ",user);
+		if (!user.otp) {
+			// return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
+			return res.status(400).json({success:false,message: 'OTP not found'});
+		}
+		if (user.otp.toString() !== otp) {
+			// return next( new Errorhandler("You entered expire or wrong OTP", 400))
+			res.status(200).json({success:false,message: 'OTP Do not Match'});
+		}
+		user.otp = null;
+		user.verify = 'verified';
+		await user.save()
+		res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user,token:sendtoken(user)});
+	} catch (error) {
+		console.error("Error getting user id",error);
+		if(!res.headersSent){
+			res.status(500).json({message: "Internal server error"});
+		}
+	}
 
-})
+}
 
 export const resendotp = async (req, res)=>{
     // console.log(req.params.id)

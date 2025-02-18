@@ -24,7 +24,8 @@ const Otpverify = () => {
         const response = await dispatch(otpverifie({ otp: otp, mobileno: user?.user?.phoneNumber }))
 		console.log("Resending Otp: ", response);
 		if(response?.success){
-			checkAndCreateToast("Verification Successfull")
+			checkAndCreateToast("success","Verification Successfull")
+			navigation('/');
 		}else{
 			checkAndCreateToast("error", 'invalid Otp')
 		}
