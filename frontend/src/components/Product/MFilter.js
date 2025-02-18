@@ -548,7 +548,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
 					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
 				>
-				<div className="flex-row flex justify-between px-5 items-center py-2  relative space-x-2 z-10">
+				<div className="flex-row flex px-6 bg-white justify-between px-5 items-center py-2  relative space-x-2 z-10">
 					{/* Sort Section */}
 					<div
 						className="text-[13px] rounded-full flex justify-center shadow-md border items-center cursor-pointer bg-white p-3"
@@ -557,6 +557,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 						aria-label="Sort items"
 					>
 						<ArrowUpDown size={18}/>
+                        <span>Sort</span>
 					</div>
 					
 					{/* Filter Section */}
@@ -567,6 +568,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 						aria-label="Filter items"
 					>
 						<Filter size={18}/>
+                        <span>Filter</span>
 					</div>
 
 					{/* Separator */}
