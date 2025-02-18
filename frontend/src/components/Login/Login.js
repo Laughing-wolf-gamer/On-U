@@ -26,7 +26,7 @@ const Login = () => {
             const{success,message,result} = reponse;
             if(success){
                 setOtpData(result); // Assuming result means OTP is sent
-                checkAndCreateToast("info","Otp sent successfully To Your Mail Id ")
+                checkAndCreateToast("success","Otp sent successfully To Your Mail Id ")
             }else{
                 checkAndCreateToast("error",message);
             }
