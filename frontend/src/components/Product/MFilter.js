@@ -551,23 +551,23 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 				<div className="flex-row flex px-6 bg-white justify-between px-5 items-center py-2  relative space-x-2 z-10">
 					{/* Sort Section */}
 					<div
-						className="text-[13px] flex justify-center border space-x-3 cursor-pointer bg-white p-3"
+						className="text-[15px] flex justify-center space-x-3 cursor-pointer bg-white p-3"
 						onClick={() => setsortvi('block')}
 						role="button"
 						aria-label="Sort items"
 					>
-						<ArrowUpDown size={18}/>
+						<ArrowUpDown size={20}/>
                         <span>Sort</span>
 					</div>
 					
 					{/* Filter Section */}
 					<div
-						className="text-[13px] flex justify-center items-center space-x-3 cursor-pointer bg-white p-3"
+						className="text-[15px] flex justify-center items-center space-x-3 cursor-pointer bg-white p-3"
 						onClick={filterdiv}
 						role="button"
 						aria-label="Filter items"
 					>
-						<Filter size={18}/>
+						<Filter size={20}/>
                         <span>Filter</span>
 					</div>
 
