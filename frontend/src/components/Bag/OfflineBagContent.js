@@ -146,7 +146,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 													className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
 												/>
 												<div onClick={(e) => {
-													updateChecked(e, active.ProductData?._id);
+													updateChecked(e, active.ProductData?._id,active.size,active.color);
 												}} className="absolute top-2 left-2 w-5 h-5">
 													<input
 														type="checkbox"
@@ -163,7 +163,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 											className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
 											onClick={(e) => {
 												e.stopPropagation();
-												handleDeleteBag(active.ProductData._id, active._id);
+												handleDeleteBag(active.ProductData._id, active._id,active.size,active.color);
 											}}
 										>
 											<Trash size={15} />
@@ -191,7 +191,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 										{/* Quantity Selector */}
 										<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 											<button
-												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id)}
+												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id,active.size,active.color)}
 												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
@@ -201,7 +201,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 											<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
 
 											<button
-												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id)}
+												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.ProductData._id,active.size,active.color)}
 												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
@@ -215,7 +215,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 							<Trash
 								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
 								onClick={(e) => {
-									handleDeleteBag(active.ProductData._id, active._id);
+									handleDeleteBag(active.ProductData._id, active._id,active.size,active.color);
 								}}
 							/>
 						</div>
