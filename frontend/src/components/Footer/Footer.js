@@ -67,7 +67,7 @@ const Footer = () => {
 					<div className="md:border-r hidden sm:block lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
 							<h1 className="text-lg font-bold mb-4 text-gray-800">SHOP</h1>
 							<ul className="text-sm space-y-4 mt-3">
-								<ul className="text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full">
+								<ul className="text-sm space-y-2 mt-3 justify-start items-start flex flex-col w-full">
 									{
 										memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((gender,index)=>{
 											// console.log("Gender Data: ",gender);

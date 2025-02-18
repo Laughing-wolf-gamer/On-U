@@ -2,7 +2,6 @@ import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllCoupons } from '../../action/common.action';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
-import ticket from '../images/ticket.png'
 // Sample coupon data
 const coupons = [
     {
@@ -79,7 +78,6 @@ const coupons = [
 
 
 const CouponsDisplay = ({user}) => {
-    console.log("Coupon Ticket: ",ticket);
     const{AllCoupons} = useSelector(state=>state.AllCoupons);
     const {checkAndCreateToast} = useSettingsContext();
     const dispatch = useDispatch();

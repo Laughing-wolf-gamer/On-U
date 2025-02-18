@@ -10,25 +10,18 @@ import { BsTag } from 'react-icons/bs';
 import Single_product from '../Product/Single_product';
 import { createbag, createwishlist, getbag, getwishlist} from '../../action/orderaction';
 import Footer from '../Footer/Footer';
-import img1 from '../images/1.webp'
-import img2 from '../images/2.webp'
-import img3 from '../images/3.webp'
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { ArrowDownCircle, Bus, Clock, Heart, RotateCw, ShoppingBag, ShoppingCart, Truck } from 'lucide-react';
+import { Clock, Heart, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
-import MShareView from './MShareView';
-import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import BackToTopButton from '../Home/BackToTopButton';
-import { IoIosCopy, IoIosRibbon, IoLogoWhatsapp } from 'react-icons/io';
-import { RiSecurePaymentFill } from "react-icons/ri";
-import { IoShieldCheckmarkSharp } from "react-icons/io5";
+import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 const reviews = [
     {
         rating: 5,
