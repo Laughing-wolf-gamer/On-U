@@ -1,9 +1,8 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import './Login.css';
 import { useDispatch } from 'react-redux';
 import { loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
-import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../action/orderaction';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
