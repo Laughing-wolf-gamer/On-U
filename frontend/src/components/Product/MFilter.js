@@ -503,7 +503,6 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         setfilter(filter === 'hidden' ? 'block' : 'hidden')
         navigation('/products')
         reloadproducts()
-        // window.location.reload();
     }
 	const [scrollPosition, setScrollPosition] = useState(0);
 	const [isScrollingUp, setIsScrollingUp] = useState(true);
@@ -516,13 +515,13 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
 				// Determine scroll direction
 				if (currentScrollTop < lastScrollTop) {
-				// Scrolling Up
-				setIsScrollingUp(true);
-				setIsVisible(true); // Show the div
+                    // Scrolling Up
+                    setIsScrollingUp(true);
+                    setIsVisible(true); // Show the div
 				} else {
-				// Scrolling Down
-				setIsScrollingUp(false);
-				setIsVisible(false); // Hide the div
+                    // Scrolling Down
+                    setIsScrollingUp(false);
+                    setIsVisible(false); // Hide the div
 				}
 
 				// Update the last scroll position
