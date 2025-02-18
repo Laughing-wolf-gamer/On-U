@@ -35,7 +35,7 @@ const BackToTopButton = ({scrollableDivRef}) => {
 		<div>
 			{/* Back to Top Button */}
 			<button
-				className={`fixed bottom-5 md:bottom-6 sm:bottom-8 lg:bottom-6 xl:bottom-6 2xl:bottom-6 z-50 right-8 p-3 bg-gray-600 text-white rounded-full shadow-lg transition-opacity duration-300 ${scrollPosition > 20 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+				className={`fixed bottom-5 md:bottom-6 sm:bottom-8 lg:bottom-6 xl:bottom-6 2xl:bottom-6 z-50 right-8 p-3 bg-black text-white rounded-full shadow-lg transition-opacity duration-300 ${scrollPosition > 20 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
 				onClick={scrollToTop}
 				aria-label="Back to top"
 			>
