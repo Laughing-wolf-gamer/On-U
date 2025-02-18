@@ -791,6 +791,7 @@ export const getFAQWebsite = async(req,res)=>{
 export const setContactUsePageData = async (req, res) => {
 	try {
 		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag:"contact-us"});
+		console.log("req.body: ",req.body);
 		if(!alreadyFoundWebsiteData){
 			const contact = new WebSiteModel({ContactUsePageData: req.body, tag: 'contact-us'});
             await contact.save();
@@ -799,8 +800,8 @@ export const setContactUsePageData = async (req, res) => {
 		}
 		alreadyFoundWebsiteData.ContactUsePageData = req.body;
 		await alreadyFoundWebsiteData.save();
+		console.log("Contact Use Page Data: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success: true, message: 'Contact Use Page Data set successfully'});
-		console.log("Contact Use Page Data: ",contact)
 	} catch (error) {
 		console.error("Internal Server Error", error);
         logger.error(`Error setting contact-us data: ${error.message}`)

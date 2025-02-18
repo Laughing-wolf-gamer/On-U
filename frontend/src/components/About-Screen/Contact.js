@@ -78,6 +78,7 @@ const Contact = () => {
     useEffect(()=>{
         fetchContactUsPageData();
     },[dispatch])
+	console.log("Conatact Data: ",formData);
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (
@@ -192,7 +193,7 @@ const Contact = () => {
                     <div className="relative w-full h-80 sm:h-96 rounded-lg overflow-hidden shadow-lg">
                     {/* Replace iframe with actual map URL */}
                     <iframe
-                        src="https://www.google.com/maps/embed?pb=...your_map_link_here..."
+                        src={formData?.mapUrl || "https://www.google.com/maps/embed?pb=...your_map_link_here..."}
                         width="100%"
                         height="100%"
                         frameBorder="2"
