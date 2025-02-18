@@ -54,12 +54,15 @@ const AdminHomeCouponBanner = () => {
                     placeholder="Enter SubHeader"
                 />
             </div>
-			<img
-				src={bannerModelUrl}
-				alt="Model Image"
-				className="h-20 w-20 object-cover rounded-full"
-				style={{ maxWidth: '100%', height: 'auto' }}
-			/>
+			<div className='w-full justify-center flex mb-4 flex-col items-center'>
+				<img
+					src={bannerModelUrl}
+					alt="Model Image"
+					className="h-20 w-20 object-cover rounded-full"
+					style={{ maxWidth: '100%', height: 'auto' }}
+				/>
+				<p>Image Size Should be: 474px x 711px</p>
+			</div>
 			<FileUploadComponent
 				maxFiles={1}
 				tag={`tag-banner-model`}
