@@ -39,7 +39,7 @@ export const SettingsProvider = ({ children }) => {
                     })
                     break;
                 case "warning":
-                    toast.warning(message,{
+                    toast.error(message,{
                         duration: 4000,
                         position: 'top-center',
                       
@@ -64,7 +64,7 @@ export const SettingsProvider = ({ children }) => {
                     })
                     break;
                 case "info":
-                    toast.info(message,{
+                    toast.success(message,{
                         duration: 4000,
                         position: 'top-center',
                       
@@ -117,7 +117,7 @@ export const SettingsProvider = ({ children }) => {
                     })
                     break;
                 default:
-                    toast.info(message,{
+                    toast.success(message,{
                         duration: 4000,
                         position: 'top-center',
                       
