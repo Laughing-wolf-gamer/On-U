@@ -6,7 +6,7 @@ import Mhome from './Msubmenu/Home'
 import { Link, useNavigate } from 'react-router-dom'
 import {logout} from '../../../action/useraction'
 import { useDispatch, useSelector} from 'react-redux'
-import {MdArrowBack} from 'react-icons/md'
+import {MdArrowBack, MdPerson} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaHeart } from 'react-icons/fa'
@@ -43,7 +43,7 @@ const MNavbar = ({ user }) => {
     const [Beauty, setBeauty] = useState(false)
     const classchange = () => setClass("block");
     const classunchange = () => setClass("hidden");
-    const handleMenuClose = () => (setMenuShow(false), navigation('/products'));
+    const handleMenuClose = () => (setMenuShow(false));
     const handleShow = () => setMenuShow(true);
     const loginunchange = () => setClass("hidden");
     const loginClose = () => setMenuShow(false);
@@ -257,17 +257,17 @@ const MNavbar = ({ user }) => {
 
                 {/* Offcanvas */}
                 <div
-                    className={`fixed top-0 right-0 w-80 h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
+                    className={`fixed top-0 right-0 w-[75vw] h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
-                    <div className="p-4 relative">             
-                        <ul className='max-h-screen overflow-y-auto'>
+                    <div className="p-4 relative max-h-screen overflow-y-auto">             
+                        <ul className=''>
 							<button 
 								onClick={(e)=>{
 									e.stopPropagation();
 									handleMenuClose();
 								}} 
 								className="absolute top-3 left-4 block sm:hidden text-black rounded-full w-8 h-8 items-center justify-center text-lg">
-								<X size={24} className='text-3xl' />
+								<X size={24} className='text-3xl justify-self-center' />
 							</button>
                             <Ripples color="#D0DDD0" className="w-full mt-7">
                                 <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex" onClick={(e)=>{
@@ -280,10 +280,19 @@ const MNavbar = ({ user }) => {
 									setMenuShow(false);
 									setClass("hidden");
 								}}>
-                                    <div className='w-10 h-10 p-2 rounded-full flex justify-center items-center bg-gray-500'>
-                                        <UserRound size={20} className=''/>
+                                    <div className='w-10 h-10 rounded-full flex justify-center items-center bg-gray-500'>
+										{
+											user?.user?.profilePic ? <img
+												src={user?.user.profilePic}
+												alt={user?.user?.name}
+												className="w-full h-full rounded-full"
+												style={{ objectFit: "cover" }}
+
+											/> : <MdPerson size={24} color='black'/>
+										}
+										
                                     </div>
-                                    <span className="float-left text-black font-bold flex items-center">
+                                    <span className="float-left text-black text-[13px] font-bold flex items-center">
                                         {user ? user?.user?.name || user?.name:"Login"}
                                     </span>
                                 </div>

@@ -546,15 +546,15 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
 					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
 				>
-				<div className="flex-row flex px-6 bg-white justify-between font-kumbsan font-bold border-b items-center py-1 relative z-10">
+				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center py-1 relative z-10">
 					{/* Sort Section */}
 					<div
-						className="text-[15px] flex justify-center space-x-3 cursor-pointer bg-white p-3"
+						className="text-[12px] flex justify-center space-x-2 cursor-pointer bg-white p-3"
 						onClick={() => setsortvi('block')}
 						role="button"
 						aria-label="Sort items"
 					>
-						<ArrowUpDown size={20}/>
+						<ArrowUpDown size={17}/>
                         <span>Sort</span>
 					</div>
 					
@@ -562,12 +562,12 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					<span className="absolute h-[24px] border-r-[1px] border-slate-300 top-[33.33%] left-1/2 transform -translate-x-1/2"></span>
 					{/* Filter Section */}
 					<div
-						className="text-[15px] flex justify-center items-center space-x-3 cursor-pointer bg-white p-3"
+						className="text-[12px] flex justify-center items-center space-x-2 cursor-pointer bg-white p-3"
 						onClick={filterdiv}
 						role="button"
 						aria-label="Filter items"
 					>
-						<Filter size={20}/>
+						<Filter size={17}/>
                         <span>Filter</span>
 					</div>
 
