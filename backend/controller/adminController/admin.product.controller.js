@@ -311,7 +311,6 @@ export const addNewProduct = async (req, res) => {
             specification,
             careInstructions,
             material,
-            gst,
             bulletPoints,
             gender,
             category,
@@ -390,7 +389,7 @@ export const addNewProduct = async (req, res) => {
             title,
             shortTitle,
             size,
-            gst,
+            // gst,
             description,
             careInstructions: careInstructions ? careInstructions : '',
             bulletPoints,
@@ -448,7 +447,6 @@ export const editProduct = async (req, res) => {
             bulletPoints,
             gender,
             category,
-            gst,
             subCategory,
             specialCategory,
             price,
@@ -467,7 +465,7 @@ export const editProduct = async (req, res) => {
         // Helper function to conditionally add fields to updateFields
         const addToUpdate = (field, value) => {
 			
-			console.log("Updating: ",field,Array.isArray(value));
+			// console.log("Updating: ",field,Array.isArray(value));
             if (value && (!Array.isArray(value) ? value.length > 0 : value.length > 0)) {
                 updateFields[field] = value;
             }
@@ -477,7 +475,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('productId', productId);
         addToUpdate('title', title);
         addToUpdate('description', description);
-        addToUpdate('gst', gst);
+        // addToUpdate('gst', gst);
         addToUpdate('specification', specification);
         addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);

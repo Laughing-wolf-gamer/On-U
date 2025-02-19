@@ -12,10 +12,7 @@ const productModelSchema = new mongoose.Schema({
         type:String,
         default:'On-U'
     },
-    gst:{
-        type:Number,
-        default:0
-    },
+    gst:Number,
     salePrice:{
         type:Number,
         default:-1
