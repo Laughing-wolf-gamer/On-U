@@ -5,7 +5,7 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import {File, X } from 'lucide-react';
 import UploadOverlay from './UploadOverlay';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 const FileUploadComponent = ({
     maxFiles = 5,

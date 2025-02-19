@@ -7,7 +7,7 @@ import axios from 'axios';
 import { Skeleton } from '../ui/skeleton';
 import { BASE_URL, Header } from '@/config';
 import UploadOverlay from './UploadOverlay';
-import toast from 'react-hot-toast';
+import { toast } from 'react-toastify';
 
 const ImageUpload = ({currentIndex = -1,file,setFile,HeaderTitle,uploadedImageUrl,setUploadedImageUrl,imageLoading,setImageLoading,isEditingMode,isCustomStyling,newStyling}) => {
 

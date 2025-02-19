@@ -28,3 +28,5 @@
 2025-02-19T15:39:24.515Z error: Error while creating new Product: gst is not defined
 2025-02-19T15:45:57.979Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
 2025-02-19T15:45:57.979Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
+2025-02-19T18:00:51.773Z error: Error Logging in user: removeSpaces is not defined
+2025-02-19T18:00:51.773Z error: Error Logging in user: removeSpaces is not defined

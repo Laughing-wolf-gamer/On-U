@@ -5,6 +5,7 @@ import { loginUser } from '@/store/auth-slice';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const AuthLogIn = () => {
     const [formData, setFormData] = useState({
@@ -15,7 +16,6 @@ const AuthLogIn = () => {
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    const { toast } = useToast();
 
     const onSubmit = async (e) => {
         e.preventDefault();
@@ -23,24 +23,19 @@ const AuthLogIn = () => {
         console.log('formData', formData);
         const res = await dispatch(loginUser(formData));
         if (res?.payload?.Success) {
-            toast({
-            title: 'LogIn Successful',
-            description: res?.payload?.message,
-            });
+            toast.success("LogIn Successful");
             setFormData({
-            email: '',
-            password: '',
-            role:'',
+				email: '',
+				password: '',
+				role:'',
             });
             navigate('/admin/dashboard');
         } else {
-            toast({
-            title: 'LogIn Un-Successful',
-            description: res?.payload?.message,
-            });
+            toast.success(`LogIn Failed! ${res?.payload?.message}`);
         }
         } catch (error) {
-        console.error(`Error Occurred While LogIn User: ${error.message}`);
+        	console.error(`Error Occurred While LogIn User: ${error.message}`);
+			toast.error('LogIn Failed Internally!`)');
         }
     };
 
@@ -49,25 +44,25 @@ const AuthLogIn = () => {
             <div className="w-full max-w-md bg-white rounded-lg shadow-lg p-8">
                 {/* Header Section */}
                 <div className="text-center mb-6">
-                <h1 className="text-3xl font-semibold text-gray-800">
-                    Log In to Your Admin Account
-                </h1>
-                <p className="mt-2 text-sm text-gray-600">
-                    Don't have an Account?{' '}
-                    <Link className="font-medium text-primary hover:underline" to="/auth/register">
-                    Register
-                    </Link>
-                </p>
+					<h1 className="text-3xl font-semibold text-gray-800">
+						Log In to Your Admin Account
+					</h1>
+					<p className="mt-2 text-sm text-gray-600">
+						Don't have an Account?{' '}
+						<Link className="font-medium text-primary hover:underline" to="/auth/register">
+							Register
+						</Link>
+					</p>
                 </div>
 
                 {/* Form Section */}
                 <CommonForm
-                formControls={loginFormControls}
-                setFormData={setFormData}
-                formData={formData}
-                handleSubmit={onSubmit}
-                buttonText="Log In"
-                isBtnValid={formData.email && formData.password}
+					formControls={loginFormControls}
+					setFormData={setFormData}
+					formData={formData}
+					handleSubmit={onSubmit}
+					buttonText="Log In"
+					isBtnValid={formData.email && formData.password}
                 />
             </div>
         </div>

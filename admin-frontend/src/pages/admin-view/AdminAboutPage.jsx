@@ -126,7 +126,7 @@ const AdminAboutPage = () => {
                     value={ourMissionDescription}
                     onChange={(e) => setOurMissionDescription(e.target.value)}
                     placeholder="Enter Our Mission Description"
-                ></textarea>
+                />
             </div>
 
             {/* Out Moto */}
@@ -221,7 +221,7 @@ const AdminAboutPage = () => {
                             className="bg-red-500 text-white px-4 py-2 rounded mt-2"
                             onClick={() => handleRemoveTeamMember(index)}
                         >
-                        Remove Team Member
+                        	Remove Team Member
                         </button>
                     </div>
                 ))}
@@ -233,19 +233,8 @@ const AdminAboutPage = () => {
                 </button>
             </div>
 			<div className="mb-8 bg-white p-4 rounded shadow">
-				<h2 className="text-xl font-semibold mb-4">Founder</h2>
+				<h2 className="text-xl font-semibold mb-4">Founder Data</h2>
 				<div className="mb-4">
-					{/* <img
-						src={founderData.image}
-						alt="Founder Image"
-						className="w-32 h-32 object-cover rounded-full mb-4"
-					/>
-					<h3 className="text-2xl font-semibold">{founderData.name}</h3>
-					<p className="text-gray-600 mb-2">{founderData.nameDescription}</p>
-					<p className="mb-4">{founderData.description}</p>
-					<p className="text-gray-600 font-medium">{founderData.details}</p>
-					<h4 className="text-xl font-semibold mt-4">{founderData.founderVision}</h4>
-					<p className="mt-2">{founderData.community}</p> */}
 					<img
 						src={founderData?.image}
 						alt="Founder Image"
@@ -255,11 +244,8 @@ const AdminAboutPage = () => {
 						maxFiles={1}
 						tag={`Founder-image`}
 						sizeTag={`founder-vision-image`}
-						onSetImageUrls={(e) => {
-							// const updatedTeamMembers = [...teamMembers];
-							// updatedTeamMembers[index].image = e[0].url;
-							// setTeamMembers(updatedTeamMembers);
-							setFounderData({...founderData, image: e[0].url });
+						onSetImageUrls={(file) => {
+							setFounderData({...founderData, image: file[0].url });
 						}}
 						isLoading = {imageLoading}
 						setIsLoading={setImageLoading}

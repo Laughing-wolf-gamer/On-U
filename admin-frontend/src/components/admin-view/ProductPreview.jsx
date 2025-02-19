@@ -13,10 +13,10 @@ import BulletPointsForm from './BulletPointsForm';
 import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
 import FileUploadComponent from './FileUploadComponent';
 import CustomSelect from './CustomSelect';
-import toast from 'react-hot-toast';
 import RatingDataView from './RatingDataView';
 import TextInputArrayCustom from './TextInputArrayCustom';
 import TextArrayView from './TextArrayView';
+import { toast } from 'react-toastify';
 const ProductPreview = ({
 	categories,
 	genders,

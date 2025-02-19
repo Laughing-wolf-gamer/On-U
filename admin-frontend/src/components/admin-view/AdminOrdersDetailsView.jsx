@@ -6,8 +6,8 @@ import CommonForm from '../common/form'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
 import { adminGetAllOrders, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
-import { useToast } from '@/hooks/use-toast'
 import { capitalizeFirstLetterOfEachWord, GetBadgeColor } from '@/config'
+import { toast } from 'react-toastify'
 const initialFormData = {
 	status:'',
 }
@@ -15,7 +15,6 @@ const AdminOrdersDetailsView = ({order}) => {
 	console.log("Order Details: ",GetBadgeColor(order?.status))
 	const [formData,setFormData] = useState(initialFormData);
 	const dispatch = useDispatch();
-	const{toast} = useToast();
 	const handleSubmitStatus = async (e)=>{
 		e.preventDefault();
         console.log(formData)
@@ -23,10 +22,7 @@ const AdminOrdersDetailsView = ({order}) => {
 		const data = await dispatch(adminUpdateUsersOrdersById({orderId:order?._id,status}))
 		console.log("Data Updated: " + data)
 		if(data?.payload?.Success){
-			toast({
-                title: "Order Status Updated Successfully",
-                description: data?.payload?.message,
-            })
+			toast.success("Order Status Updated Successfully: " + data?.payload?.message)
             setFormData(initialFormData);
 			dispatch(adminGetAllOrders())
 		}

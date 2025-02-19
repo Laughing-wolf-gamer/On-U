@@ -201,12 +201,12 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 									aria-label={`Select size ${size.label}`}
 								>
 									<select
-									value={size.label}
-									onChange={(e) => {
-										e.preventDefault();
-										changeSizeLabel(size.id, e.target.value);
-									}}
-									className="w-full h-full text-black outline-1"
+										value={size.label}
+										onChange={(e) => {
+											e.preventDefault();
+											changeSizeLabel(size.id, e.target.value);
+										}}
+										className="w-full h-full text-black outline-1"
 									>
 									<option value="">Select Size</option>
 										{sizeOptions.map((option) => (
@@ -227,10 +227,10 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 								>
 									<X className="w-4 h-4" />
 								</button>
-								</div>
+							</div>
 
-								<span className="text-gray-700 text-sm font-bold">Quantity:</span>
-								<div className="flex items-center space-x-2">
+							<span className="text-gray-700 text-sm font-bold">Quantity:</span>
+							<div className="flex items-center space-x-2">
 								<button
 									onClick={(e) => {
 										e.preventDefault();
@@ -245,7 +245,7 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 									type="number"
 									value={selectedSizeArray.find((s) => s.id === size.id)?.quantity || 0}
 									onChange={(e) => handleChangeQuantity(e, size)}
-									className="w-16 text-center text-lg border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+									className="w-16 text-center text-lg border-2 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500"
 									min="0"
 								/>
 								<button
@@ -253,26 +253,26 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 										e.preventDefault();
 										handleIncrement(size, 'increment');
 									}}
-									className="px-3 py-2 text-white bg-blue-500 rounded hover:bg-blue-600 focus:outline-none"
+									className="px-3 py-2 text-white bg-gray-500 rounded hover:bg-gray-600 focus:outline-none"
 									aria-label="Increment quantity"
 								>
 									<Plus />
 								</button>
-								</div>
+							</div>
 
-								{selectedSizeArray.length > 0 && (
-									<div className="mt-4 w-full">
-										<ColorPresetSelector
-											sizeTitle={size.label}
-											colorOptions={availableColors}
-											sizeTag={size.id}
-											OnChange={(e) => handelSetImagesByColor(size, e)}
-										/>
-									</div>
-								)}
-								{selectedSizeArray.length === 0 && (
-									<span>You need to have at least one size quantity to set colors</span>
-								)}
+							{selectedSizeArray.length > 0 && (
+								<div className="mt-4 w-full">
+									<ColorPresetSelector
+										sizeTitle={size.label}
+										colorOptions={availableColors}
+										sizeTag={size.id}
+										OnChange={(e) => handelSetImagesByColor(size, e)}
+									/>
+								</div>
+							)}
+							{selectedSizeArray.length === 0 && (
+								<span>You need to have at least one size quantity to set colors</span>
+							)}
 						
 						</div>
 					</Fragment>

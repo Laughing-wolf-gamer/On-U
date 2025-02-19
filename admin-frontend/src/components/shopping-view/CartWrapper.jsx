@@ -4,15 +4,14 @@ import { SheetContent, SheetHeader, SheetTitle } from '../ui/sheet'
 import CartItemsContent from './CartItemsContent'
 import { useDispatch, useSelector } from 'react-redux'
 import { deleteCartItems, updateToCart } from '@/store/shop/car-slice'
-import { useToast } from '@/hooks/use-toast'
 import { useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
 
 const CartWrapper = ({carItems,setOpenCartSheet}) => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const {user} = useSelector(state => state.auth);
     const{cartItems} = useSelector(state => state.shopCardSlice);
-    const {toast} = useToast();
     const handleOnCartItemDelete = async (item) => {
         await dispatch(deleteCartItems({userId:user.id,productId:item?.productId}));
     }
@@ -27,11 +26,7 @@ const CartWrapper = ({carItems,setOpenCartSheet}) => {
                 if(indexOfProduct > -1){
                     const quantity = getCartItems[indexOfProduct].quantity;
                     if(quantity + 1 > item?.totalStock){
-                        toast({
-                            title: "Product Quantity Exceeded",
-                            variant:'destructive',
-                            description: "You can't add more than available stock",
-                        });
+                        toast.success("Product Quantity Exceeded");
                         return;
                     }
                 }
@@ -40,10 +35,7 @@ const CartWrapper = ({carItems,setOpenCartSheet}) => {
         }
         const updated = await dispatch(updateToCart({userId:user.id,productId:item?.productId,quantity:amount}))
         if(updated?.payload?.Success){
-            toast({
-                title: "Cart Item Updated Successfully",
-                description: updated?.payload?.message,
-            });
+            toast.success("Cart Item Updated Successfully");
         }
     }
     const totalCarAmount = carItems &&  carItems.items && carItems.items.length > 0 ? carItems.items.reduce((sum,currentItem) => sum + (currentItem?.salePrice > 0 ? currentItem.salePrice :currentItem.price) * currentItem.quantity,0): 0;

@@ -31,7 +31,7 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
         // return next(new ErrorHandler('Unauthorized to access this route', 401))
         return res.status(401).json({success:false,message: 'Unauthorized to access this route'})
     }
-    console.log("Admin User: ",user);
+    // console.log("Admin User: ",user);
 	req.user = user;
     next()
 })

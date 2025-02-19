@@ -6,6 +6,10 @@ import OrderModel from "../../model/ordermodel.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
 import logger from "../../utilis/loggerUtils.js";
+import { removeSpaces } from "../../utilis/basicUtils.js";
+
+
+
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {name,email,password,phoneNumber,role} = req.body;
@@ -21,12 +25,15 @@ export const registerNewAdmin = async(req,res)=>{
         if(user){
             return res.status(401).json({Success:false,message: 'User already exists'});
         }
-        const hashedPassword = await bcrypt.hash(password,12);
-        user = new User({name,phoneNumber,email,password:hashedPassword,role:role});
+        const hashedPassword = await bcrypt.hash(password,10);
+		//https://avatar.iran.liara.run/public/job/[job title]/[gender]
+		const profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(name)}`
+        user = new User({name,phoneNumber,email,password:hashedPassword,profilePic:profilePic,role:role});
         await user.save();
         res.status(200).json({Success:true,message: 'User registered successfully'});
     } catch (error) {
         console.error(`Error registering user `,error);
+		logger.error(`Error registering user ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
@@ -49,6 +56,11 @@ export const logInUser = async (req,res) =>{
         if(user.role !== role){
             return res.status(401).json({Success:false,message: 'Unauthorized to access this route'});
         }
+		if(!user.profilePic){
+			user.profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(user.name)}`
+            await user.save();
+		}
+		console.log("Loging In User: ",user);
         const isPasswordCorrect = await bcrypt.compare(password,user?.password || '');
         if(!isPasswordCorrect){
             return res.status(401).json({Success:false,message: 'Incorrect Password'});
@@ -56,6 +68,7 @@ export const logInUser = async (req,res) =>{
         const token = sendtoken(user);
         res.status(200).json({Success:true,message: 'User logged in successfully',user:{
             userName:user.userName,
+			profilePic: user.profilePic,
             email:user.email,
             role: user.role,
             id: user._id,
@@ -63,6 +76,7 @@ export const logInUser = async (req,res) =>{
     } catch (error) {
         console.error(`Error Logging in user ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
+		logger.error(`Error Logging in user: ${error.message}`);
     }
 }
 export const getuser = (async(req, res, next)=>{
@@ -76,6 +90,7 @@ export const getTotalOrders = async (req,res)=>{
         res.status(200).json({Success:true,message: 'All Orders',result:orders?.length || 0});
     } catch (error) {
         console.error("Error getting all orders: ",error);
+		logger.error("Error getting all orders: "+ error.message)
     }
 }
 
@@ -250,6 +265,7 @@ export const updateImages = async(req,res)=>{
         res.status(200).json({ Success: true, message: 'Images Updated Successfully' ,result:images});
     } catch (error) {
         console.log("Error Updating Color Stock: ", error);
+		logger.error("Error Updating Images: " + error.message);
         res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 }
@@ -754,7 +770,7 @@ export const getOrdersGraphData = async (req, res) => {
 export const getTotalUsers = async (req,res)=>{
     try {
         const users = await User.find({role: 'user'});
-        console.log("Users: ",users)
+        // console.log("Users: ",users)
         res.status(200).json({Success:true,message: 'All Users',result:users?.length || -1});
     } catch (error) {
         console.error("Error getting all users: ",error);

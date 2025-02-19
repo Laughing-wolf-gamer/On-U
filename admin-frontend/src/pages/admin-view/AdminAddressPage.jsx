@@ -1,14 +1,13 @@
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
-import { fetchAddressFormData, removeAddressFormData, sendAddressFormData } from '@/store/common-slice';
+import toast from 'react-hot-toast';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { fetchAddressFormData, removeAddressFormData, sendAddressFormData } from '@/store/common-slice';
 
 const AdminAddressPage = () => {
     const{addressFormFields:AllAddressFields} = useSelector(state=>state.common);
     const dispatch = useDispatch();
-    const{toast} = useToast();
     const[addressFormFields,setAddressFormFields] = useState([])
     const[addressFormFieldsValue,setAddressFormFieldsValue] = useState('')
     const handelChangeNewField = (e)=>{
@@ -16,18 +15,18 @@ const AdminAddressPage = () => {
     }
     const handelAddNewField = async (e)=>{
         if(!addressFormFieldsValue){
-            toast({title:"Field Empty",message:"Field Cannot Be Empty",type:"error"})
+            toast.error("Field Empty",{duration:3000})
             return
         };
         if(addressFormFields.includes(addressFormFieldsValue)) {
-            toast({title:"Field Exists",message:"Field Already Exists",type:"error"})
+            toast.error("Field Exists",{duration:3000})
             return;
         };
         setAddressFormFields([...addressFormFields,addressFormFieldsValue])
         await dispatch(sendAddressFormData({addressFormFields:addressFormFieldsValue}))
         dispatch(fetchAddressFormData())
         setAddressFormFieldsValue('')
-        toast({title:"Field Added",message:"New Field Added Successfully",type:"success"})
+        toast.success("Field Added Successfully",{duration:3000})
     }
     const handelRemoveNewField = async (f)=>{
         setAddressFormFields(prev => prev.filter(field=>field !== f))
@@ -37,7 +36,7 @@ const AdminAddressPage = () => {
     useEffect(()=>{
         dispatch(fetchAddressFormData())
     },[dispatch])
-    console.log("All Address Fields: ",AllAddressFields)
+    // console.log("All Address Fields: ",AllAddressFields)
     return (
       <div className="p-6 space-y-4">
         <h2 className="text-xl font-semibold text-gray-800">Address Form</h2>

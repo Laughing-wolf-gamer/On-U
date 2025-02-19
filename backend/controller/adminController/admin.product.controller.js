@@ -608,7 +608,7 @@ export const fetchAllRatingProducts = async(req,res)=>{
     try {
         const{productId} = req.params;
         const product = await ProductModel.findById(productId);
-        console.log("allProducts: ",product);
+        // console.log("allProducts: ",product);
         if(!product) {
             return res.status(404).json({Success: false, message: "Product not found"});
         }
@@ -636,7 +636,7 @@ export const fetchAllProducts = async (req, res) => {
     try {
         const{page} = req.query;
         const allProducts = await ProductModel.find({});
-        console.log("allProducts: ",allProducts);
+        // console.log("allProducts: ",allProducts);
         const totalProducts = await ProductModel.countDocuments();
         const itemsPerPage = 10;
         const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided

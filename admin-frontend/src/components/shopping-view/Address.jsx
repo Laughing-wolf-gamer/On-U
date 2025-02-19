@@ -4,8 +4,8 @@ import CommonForm from '../common/form'
 import { addressFormControls } from '@/config'
 import { useDispatch, useSelector } from 'react-redux'
 import { addAddresses, deleteAddress, editAddress, fetchAddresses } from '@/store/shop/address-slice'
-import { useToast } from '@/hooks/use-toast'
 import AddressCard from './AddressCard'
+import toast from 'react-hot-toast'
 const initialData ={
     address:'',
     city:'',
@@ -20,7 +20,6 @@ const Address = ({setCurrentSelectedAddress,currentSelectedAddress}) => {
     const [formData,setFormData] = useState(initialData)
     const {addresses} = useSelector(state => state.shopAddress)
     const {user} = useSelector(state => state.auth);
-    const{toast} = useToast();
     const [currentEditedId,setCurrentEditedId] = useState('');
 
 
@@ -32,10 +31,7 @@ const Address = ({setCurrentSelectedAddress,currentSelectedAddress}) => {
                 const response = await dispatch(editAddress({userId:user?.id,addressId:currentEditedId,formData}))
                 console.log(response);
                 if(response.payload?.Success){
-                    toast({
-                        title: "Address Updated Successfully",
-                        description: response?.payload?.message,
-                    })
+                    toast.success("Address Updated Successfully")
                     await dispatch(fetchAddresses({userId:user?.id}))
                     setFormData(initialData)
                     setCurrentEditedId('');
@@ -43,10 +39,7 @@ const Address = ({setCurrentSelectedAddress,currentSelectedAddress}) => {
             }else{
                 const response = await dispatch(addAddresses({...formData,userId:user?.id}))
                 if(response.payload?.Success){
-                    toast({
-                        title: "Address Added Successfully",
-                        description: response?.payload?.message,
-                    })
+                    toast.success("Address Added Successfully")
                     await dispatch(fetchAddresses({userId:user?.id}))
                     setFormData(initialData)
                 }
@@ -66,10 +59,7 @@ const Address = ({setCurrentSelectedAddress,currentSelectedAddress}) => {
         try {
             const response = await dispatch(deleteAddress({userId:user?.id,addressId}))
             if(response.payload?.Success){
-                toast({
-                    title: "Address Deleted Successfully",
-                    description: response?.payload?.message,
-                })
+                toast.success("Address Deleted Successfully")
                 await dispatch(fetchAddresses({userId:user?.id}))
             }
         } catch (error) {
