@@ -229,13 +229,13 @@ const Ppage = () => {
                     item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
                     );
                     // If matching item is found, set isBag based on its 'isChecked' status
-                    if (matchingItem) {
+                    /* if (matchingItem) {
                         isBag = matchingItem.isChecked;
-                    }
-                } else {
+                    } */
+                } /* else {
                     // If no size/color is specified, check if any product is checked
                     isBag = similarProductsInBag.some(item => item.isChecked);
-                }
+                } */
             }
 
             // Set the result in the state (i.e., update whether the product is in the bag)

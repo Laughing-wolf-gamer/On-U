@@ -1,10 +1,7 @@
 import mongoose from 'mongoose'
 
 const productModelSchema = new mongoose.Schema({
-    productId:{
-        type:String,
-        required:[true,'Please enter product id'],
-    },
+    productId:String,
     brand:String,
     title:{
         type:String,
