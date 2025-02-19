@@ -386,7 +386,7 @@ export const addNewProduct = async (req, res) => {
 
         // Create new product
         const newProduct = new ProductModel({
-            productId,
+            productId:productId.toString(),
             title,
             shortTitle,
             size,
