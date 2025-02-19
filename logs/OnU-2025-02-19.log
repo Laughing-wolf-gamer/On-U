@@ -1,0 +1,28 @@
+2025-02-19T15:30:07.494Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:07.494Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:07.503Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:07.503Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:07.514Z error: Error While Fetching Terms and Conditions: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:07.514Z error: Error While Fetching Terms and Conditions: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:17.510Z error: Error fetching Category Banners: Operation `category.banners.find()` buffering timed out after 10000ms
+2025-02-19T15:30:17.510Z error: Error fetching Category Banners: Operation `category.banners.find()` buffering timed out after 10000ms
+2025-02-19T15:30:17.527Z error: Error Fetching Products: Operation `products.find()` buffering timed out after 10000ms
+2025-02-19T15:30:17.527Z error: Error Fetching Products: Operation `products.find()` buffering timed out after 10000ms
+2025-02-19T15:30:17.535Z error: Error getting coupon banner data: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:17.535Z error: Error getting coupon banner data: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:17.538Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:17.538Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:17.544Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:17.544Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-02-19T15:30:38.551Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:38.551Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:38.574Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:30:38.574Z error: Error fetching random products: Operation `products.aggregate()` buffering timed out after 10000ms
+2025-02-19T15:35:18.302Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
+2025-02-19T15:35:18.302Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
+2025-02-19T15:36:40.736Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
+2025-02-19T15:36:40.736Z error: Error while creating new Product: Cast to ObjectId failed for value "sdfasdfasdf" (type string) at path "_id" for model "product"
+2025-02-19T15:39:04.196Z error: Error while creating new Product: Cast to ObjectId failed for value "AN3444" (type string) at path "_id" for model "product"
+2025-02-19T15:39:04.196Z error: Error while creating new Product: Cast to ObjectId failed for value "AN3444" (type string) at path "_id" for model "product"
+2025-02-19T15:39:24.515Z error: Error while creating new Product: gst is not defined
+2025-02-19T15:39:24.515Z error: Error while creating new Product: gst is not defined

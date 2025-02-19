@@ -307,6 +307,7 @@ export const addNewProduct = async (req, res) => {
             title,
             shortTitle,
             size,
+			gst,
             description,
             specification,
             careInstructions,
@@ -327,6 +328,7 @@ export const addNewProduct = async (req, res) => {
         } = req.body;
         // Log incoming data for debugging
         console.log("Adding Products fields ", isFormValid(req.body));
+        console.log("Adding Products fields ",typeof productId);
 
         // Check if form data is valid
         const isValid = isFormValid(req.body)
@@ -440,6 +442,7 @@ export const editProduct = async (req, res) => {
             productId,
             title,
             size,
+			gst,
             description,
             specification,
             careInstructions,
