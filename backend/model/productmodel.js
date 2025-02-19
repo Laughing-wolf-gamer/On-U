@@ -1,7 +1,10 @@
 import mongoose from 'mongoose'
 
 const productModelSchema = new mongoose.Schema({
-    productId:String,
+    productId:{
+		type:String,
+        required:true,
+	},
     brand:String,
     title:{
         type:String,
