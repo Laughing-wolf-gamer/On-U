@@ -38,7 +38,7 @@ const WhatsAppButton = ({ scrollableDivRef }) => {
 	return (
 		<button
 			onClick={handleClick}
-			className={`fixed bottom-20 z-50 right-8 p-3 bg-black text-white rounded-full shadow-lg transition-all duration-500 hover:scale-105`}
+			className={`fixed bottom-20 z-50 right-8 p-3 bg-green-600 text-white rounded-full shadow-lg transition-all duration-500 hover:scale-105`}
 		>
 			<FaWhatsapp size={20}/>
 		</button>
