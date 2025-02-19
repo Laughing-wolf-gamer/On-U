@@ -425,7 +425,7 @@ export const addNewProduct = async (req, res) => {
     } catch (error) {
         console.error('Error while adding new product:', error);
         logger.error("Error while creating new Product: " + error.message);
-        res.status(500).json({ Success: false, message: 'Internal Server Error' });
+        res.status(500).json({ Success: false, message: 'Internal Server Error' ,reasons:error.message});
     }
 };
 

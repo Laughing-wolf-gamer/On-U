@@ -1,8 +1,8 @@
-import { ChevronDown, ChevronRight} from 'lucide-react';
+import { ChevronRight} from 'lucide-react';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Dropdown = ({ items }) => {
+const Dropdown = ({ items,GetAdminSideBarMenuIcon }) => {
     const navigate = useNavigate();
     const [isOpen, setIsOpen] = useState(false);
     const toggleItems = () => {
@@ -10,29 +10,31 @@ const Dropdown = ({ items }) => {
     };
 
     return (
-        <div className="w-full h-full gap-7 pr-3" itemType='button' onClick={() => {
+        <div className="w-full h-full gap-7 pr-3" onClick={(e) => {
+			e.preventDefault();
             toggleItems();
         }}>
             <div className="flex justify-between flex-row items-center">
+				<GetAdminSideBarMenuIcon id={items.id} />
                 <span className='text-lg font-semibold'>{items?.label || "No Label"}</span>
-                {
-                    isOpen ? <ChevronDown /> : <ChevronRight />
-                }
+                <ChevronRight className={`transition-all ${isOpen ? "rotate-90":""} duration-300 ease-ease-out-expo`}/>
             </div>
 
             {isOpen && (
-                <div className="w-full h-fit p-1 justify-start items-center">
-                    {items?.dropDownView.map((d) => (
-                        <div
-                            key={d.id}
-                            onClick={(e) => {
-                                e.preventDefault();
-                                navigate(d?.path);
-                            }}
-                            className="flex flex-row justify-start items-center p-3 rounded-md hover:bg-gray-100 cursor-pointer transition-all duration-300 ease-in-out transform hover:scale-105 active:scale-95"
-                        >
-                            <span className="font-normal text-gray-800 text-lg">{d?.label}</span>
-                        </div>
+                <div className="w-full h-fit p-1 text-black justify-start items-center">
+                    {items?.dropDownView.map((d,index) => (
+                        <button
+							key={index}
+							onClick={(e) => {
+								e.preventDefault();
+								e.stopPropagation();
+								navigate(d?.path);
+							}}
+							className={`flex flex-row justify-start  hover:rounded-md border-b w-full ${window.location.href.includes(d?.path) ? "bg-gray-500 text-gray-50" : "hover:bg-gray-500 hover:text-white"} items-center p-3 text-left rounded-md cursor-pointer transition-all duration-300 ease-in-out `}
+						>
+							<span className="font-normal text-base">{d?.label}</span>
+						</button>
+
                     ))}
                 </div>
             )}

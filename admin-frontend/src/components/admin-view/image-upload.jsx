@@ -98,32 +98,64 @@ const ImageUpload = ({currentIndex = -1,file,setFile,HeaderTitle,uploadedImageUr
         
     }
 	return (
-		<div className={`${newStyling ? newStyling : `bg-white w-full mt-4 ${isCustomStyling ? 'mx-auto':'max-w-md'}`}`}>
-			<label className='text-lg font-semibold mb-2 '>{HeaderTitle ? HeaderTitle:"Upload Image"}</label>
-			<div onDragOver={handleDragOver} onDrop={handleDrop} className={`border-2 border-dashed font-bold ${isEditingMode ? "opacity-60":''}`}>
-				<Input id = "image-upload" type = "file" className = "hidden" ref={inputRef} onChange = {handleImageFileChange} disabled = {isEditingMode}/>
-				{
-					!file ? <Label htmlFor = "image-upload" className = {`flex flex-col justify-center items-center h-32 ${isEditingMode ? "cursor-not-allowed":'cursor-pointer'}`}>
-						<UploadCloudIcon className='w-10 h-10 text-muted-foreground mb-2'/>
-						<span className='text-sm text-muted-foreground px-3 text-center'>Drag & drop or Click an Image to Upload</span>
-					</Label>:(
-                        imageLoading ? <Skeleton className={"bg-gray-100 h-10"}/>: (
-                            <div className='flex items-center justify-between'>
-                            <div className='flex items-center'>
-                                <FileIcon className='w-10 h-10 text-muted'/>
-                            </div>
-                            <p className='text-sm font-medium'>{file?.name}</p>
-                                <Button variant = "ghost" size = "icon" className = "hover:text-foreground" onClick = {handleRemoveImage}>
-                                    <XIcon className='w-4 h-4'/>
-                                    <span className='sr-only'>Remove File</span>
-                                </Button>
-                            </div>
-                        )
-                    )
-				}
+		<div
+			className={`${
+				newStyling
+				? newStyling
+				: `bg-white w-full mt-4 ${isCustomStyling ? 'mx-auto' : 'max-w-md'}`
+			}`}
+			>
+				<label className="text-lg font-semibold mb-2">
+					{HeaderTitle ? HeaderTitle : 'Upload Image'}
+				</label>
+				<div
+					onDragOver={handleDragOver}
+					onDrop={handleDrop}
+					className={`border-2 border-dashed font-bold ${isEditingMode ? 'opacity-60' : ''}`}
+				>
+					<Input
+						id="image-upload"
+						type="file"
+						className="hidden"
+						ref={inputRef}
+						onChange={handleImageFileChange}
+						disabled={isEditingMode}
+					/>
+					{!file ? (
+						<Label
+							htmlFor="image-upload"
+							className={`flex flex-col justify-center items-center h-32 ${
+							isEditingMode ? 'cursor-not-allowed' : 'cursor-pointer'
+							}`}
+						>
+							<UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+							<span className="text-sm text-muted-foreground px-3 text-center">
+							Drag & drop or Click an Image to Upload
+							</span>
+						</Label>
+					) : imageLoading ? (
+						<Skeleton className={'bg-gray-100 h-10'} />
+					) : (
+						<div className="flex items-center justify-between">
+							<div className="flex items-center">
+							<FileIcon className="w-10 h-10 text-muted" />
+							</div>
+							<p className="text-sm font-medium">{file?.name}</p>
+							<Button
+							variant="ghost"
+							size="icon"
+							className="hover:text-foreground"
+							onClick={handleRemoveImage}
+							>
+							<XIcon className="w-4 h-4" />
+							<span className="sr-only">Remove File</span>
+							</Button>
+						</div>
+					)}
+				</div>
+				<UploadOverlay isUploading={imageLoading} />
 			</div>
-            <UploadOverlay isUploading={imageLoading}/>
-		</div>
+
 	)
 }
 

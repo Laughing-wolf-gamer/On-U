@@ -22,35 +22,36 @@ const Header = () => {
     const navigation = useNavigate();
     return (
         <div className="w-full bg-white p-5 flex justify-between items-center shadow-md">
-        <h1 className="text-2xl font-bold text-gray-700">On-U Dashboard</h1>
-        <div className="flex items-center space-x-4">
-            <button className="text-gray-700">Notifications</button>
-            <button onClick={() => navigation('/admin/profile')} className="text-gray-700">Profile</button>
-        </div>
+			<h1 className="text-2xl font-bold text-gray-700">On-U Dashboard</h1>
+			<div className="flex items-center space-x-4">
+				<button className="text-gray-700">Notifications</button>
+				<button onClick={() => navigation('/admin/profile')} className="text-gray-700">Profile</button>
+			</div>
         </div>
     );
 };
 
-const StatsCard = ({ title, value, icon, onChange ,isActive}) => {
-    return (
-        <div
-            onClick={(e) => {
-                if (onChange) {
-                    onChange(title, value);
-                }
-            }}
-            className={`${isActive ? "bg-gray-200":"bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-full sm:w-96 md:w-80 mb-4`}
-        >
-        <div className="hover:scale-110 transition-transform duration-300">
-            <h3 className="text-gray-500 text-base">{title}</h3>
-            <h2 className="text-3xl font-bold">{value}</h2>
-        </div>
-        <div className="bg-gray-200 p-4 rounded-full">
-            {icon}
-        </div>
-        </div>
-    );
+const StatsCard = ({ title, value, icon, onChange, isActive }) => {
+	return (
+		<div
+		onClick={(e) => {
+			if (onChange) {
+			onChange(title, value);
+			}
+		}}
+		className={`${isActive ? "bg-gray-200" : "bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-fit mb-4 transition-all duration-300`}
+		>
+			<div className="hover:scale-105 transition-transform duration-300">
+				<h3 className="text-gray-500 text-sm sm:text-base">{title}</h3>
+				<h2 className="text-2xl sm:text-3xl font-bold">{value}</h2>
+			</div>
+			<div className="bg-gray-200 p-4 rounded-full">
+				{icon}
+			</div>
+		</div>
+	);
 };
+
 
 const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
     console.log("Data: ",data);
@@ -286,114 +287,125 @@ const AdminDashboard = ({ user }) => {
         <Fragment>
         {isLoading ? <LoadingSpinner/>:<Fragment>
                 <div className="flex flex-col h-full w-full">
-                    <div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
-                    <Header />
-                    <div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg">
-                        <StatsCard
-                        isActive={currentGraphData.title === "Total Orders"}
-                        onChange={(title, value) => {
-                            setStats({ title, value });
-                            setGraphData({ title, value: OrdersGraphData });
-                            handleFilterChange("THIS MONTH",OrdersGraphData)
-                        }}
-                        title="Total Orders"
-                        value={TotalOrders}
-                        
-                        icon={<ShoppingBasket className="text-3xl text-blue-600" />}
-                        />
-                        <StatsCard
-                        isActive={currentGraphData.title === "Total Customers"}
-                        onChange={(title, value) => {
-                            setStats({ title, value });
-                            setGraphData({ title, value: CustomerGraphData });
-                            handleFilterChange("THIS MONTH",CustomerGraphData)
-                        }}
-                        title="Total Customers"
-                        value={TotalCustomers}
-                        icon={<User className="text-3xl text-yellow-600" />}
-                        />
-                        <StatsCard
-                        isActive={currentGraphData.title === "Max Delivered Orders"}
-                        onChange={(title, value) => {
-                            setStats({ title, value });
-                            setGraphData({ title, value: OrderDeliverData });
-                            handleFilterChange("THIS MONTH",OrderDeliverData)
-                        }}
-                        title="Max Delivered Orders"
-                        value={MaxDeliveredOrders}
-                        icon={<PackageCheck className="text-3xl text-pink-500" />}
-                        />
-                        <StatsCard
-                        isActive={currentGraphData.title === "Total Products"}
-                        onChange={(title, value) => {
-                            setStats({ title, value });
-                        }}
-                        title="Total Products"
-                        value={TotalProducts}
-                        icon={<BoxIcon className="text-3xl text-orange-600" />}
-                        />
-                        <StatsCard
-                        title="Total Revenue"
-                        value={`₹${convertAmount(randomRevenue)}`}
-                        icon={<IndianRupee className="text-3xl text-green-600" />}
-                        />
-                        
-                    </div>
-                    </div>
+					<div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
+						<Header />
+						<div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg w-full">
+						<StatsCard
+							isActive={currentGraphData.title === "Total Orders"}
+							onChange={(title, value) => {
+							setStats({ title, value });
+							setGraphData({ title, value: OrdersGraphData });
+							handleFilterChange("THIS MONTH", OrdersGraphData);
+							}}
+							title="Total Orders"
+							value={TotalOrders}
+							icon={<ShoppingBasket className="text-3xl text-blue-600" />}
+							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+						/>
+						<StatsCard
+							isActive={currentGraphData.title === "Total Customers"}
+							onChange={(title, value) => {
+							setStats({ title, value });
+							setGraphData({ title, value: CustomerGraphData });
+							handleFilterChange("THIS MONTH", CustomerGraphData);
+							}}
+							title="Total Customers"
+							value={TotalCustomers}
+							icon={<User className="text-3xl text-yellow-600" />}
+							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+						/>
+						<StatsCard
+							isActive={currentGraphData.title === "Max Delivered Orders"}
+							onChange={(title, value) => {
+							setStats({ title, value });
+							setGraphData({ title, value: OrderDeliverData });
+							handleFilterChange("THIS MONTH", OrderDeliverData);
+							}}
+							title="Max Delivered Orders"
+							value={MaxDeliveredOrders}
+							icon={<PackageCheck className="text-3xl text-pink-500" />}
+							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+						/>
+						<StatsCard
+							isActive={currentGraphData.title === "Total Products"}
+							onChange={(title, value) => {
+							setStats({ title, value });
+							}}
+							title="Total Products"
+							value={TotalProducts}
+							icon={<BoxIcon className="text-3xl text-orange-600" />}
+							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+						/>
+						<StatsCard
+							title="Total Revenue"
+							value={`₹${convertAmount(randomRevenue)}`}
+							icon={<IndianRupee className="text-3xl text-green-600" />}
+							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+						/>
+						</div>
+					</div>
 
-                    <div className="flex-1 p-10">
-                    <h2 className="text-xl font-semibold text-gray-700 mb-4">{currentGraphData?.title} Growth Over Time</h2>
-                    <div className="bg-white p-5 rounded-lg shadow-md">
-                        <div className="flex justify-between items-center mb-4">
-                        <span className="text-lg font-medium">Select Date Range</span>
-                        <select
-                            value={dateLabel}
-                            onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
-                            className="px-4 py-2 border rounded-md"
-                        >
-                            <option value="TODAY">Today</option>
-                            <option value="YESTERDAY">Yesterday</option>
-                            <option value="LAST 7 DAYS">Last 7 Days</option>
-                            <option value="THIS MONTH">This Month</option>
-                            <option value="CUSTOM">Custom</option>
-                        </select>
-                        </div>
-                        <div className="text-sm text-gray-600">
-                        <p>Start Date: {startDate}</p>
-                        <p>End Date: {endDate}</p>
-                        </div>
-                        <div className="mb-4">
-                        <div className="flex gap-3">
-                            <input
-                            type="date"
-                            value={startDate}
-                            onChange={(e) => {
-                                setStartDate(e.target.value)
-                                newStartDate = e.target.value;
-                                handleSetCustomStartDate(currentGraphData?.value || [])
-                            }}
-                            className="px-4 py-2 border rounded-md"
-                            />
-                            <input
-                            type="date"
-                            value={endDate}
-                            onChange={(e) => {
-                                setEndDate(e.target.value)
-                                newEndDate = e.target.value;
-                                handleSetCustomStartDate(currentGraphData?.value || [])
-                            }}
-                            min={startDate}
-                            className="px-4 py-2 border rounded-md"
-                            />
-                        </div>
-                        </div>
-                        <div className="h-fit mx-auto">
-                        <CustomerBarChart data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData} filter={'Monthly'} title={currentGraphData.title} dateStart={startDate} dateEnd={endDate}/>
+					<div className="flex-1 p-5 sm:p-8 md:p-10">
+						<h2 className="text-xl sm:text-2xl md:text-3xl font-semibold text-gray-700 mb-4">
+						{currentGraphData?.title} Growth Over Time
+						</h2>
+						<div className="bg-white p-5 rounded-lg shadow-md">
+						<div className="flex justify-between items-center mb-4">
+							<span className="text-base sm:text-lg font-medium">Select Date Range</span>
+							<select
+							value={dateLabel}
+							onChange={(e) => handleFilterChange(e.target.value, currentGraphData?.value || [])}
+							className="px-4 py-2 border rounded-md"
+							>
+							<option value="TODAY">Today</option>
+							<option value="YESTERDAY">Yesterday</option>
+							<option value="LAST 7 DAYS">Last 7 Days</option>
+							<option value="THIS MONTH">This Month</option>
+							<option value="CUSTOM">Custom</option>
+							</select>
+						</div>
+						<div className="text-sm text-gray-600 mb-4">
+							<p>Start Date: {startDate}</p>
+							<p>End Date: {endDate}</p>
+						</div>
+						<div className="mb-4">
+							<div className="flex gap-3">
+							<input
+								type="date"
+								value={startDate}
+								onChange={(e) => {
+								setStartDate(e.target.value);
+								newStartDate = e.target.value;
+								handleSetCustomStartDate(currentGraphData?.value || []);
+								}}
+								className="px-4 py-2 border rounded-md w-full sm:w-1/2"
+							/>
+							<input
+								type="date"
+								value={endDate}
+								onChange={(e) => {
+								setEndDate(e.target.value);
+								newEndDate = e.target.value;
+								handleSetCustomStartDate(currentGraphData?.value || []);
+								}}
+								min={startDate}
+								className="px-4 py-2 border rounded-md w-full sm:w-1/2"
+							/>
+							</div>
+						</div>
+						<div className="h-fit mx-auto">
+							<CustomerBarChart
+							data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData}
+							filter={'Monthly'}
+							title={currentGraphData.title}
+							dateStart={startDate}
+							dateEnd={endDate}
+							/>
+						</div>
+						</div>
+					</div>
+					</div>
 
-                        </div>
-                    </div>
-                    </div>
-                </div>
                 <TopSellingProductsTable products={TopSellingProducts} />
                 <AllRecentOrders allOrders={RecentOrders}/>
             </Fragment>

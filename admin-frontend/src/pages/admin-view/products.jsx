@@ -341,7 +341,6 @@ const AdminProducts = () => {
     }, [dispatch]);
 
     const handleFilterChange = (name,value) => {
-        console.log("Filter Change: ", name,value);
         // const { name, value } = e;
         setFilters((prevFilters) => ({
             ...prevFilters,
@@ -350,15 +349,24 @@ const AdminProducts = () => {
     };
 
     const filteredProducts = productsPagination.filter((product) => {
-        if (!filters.category && !filters.subCategory && !filters.gender && !filters.color && !filters.size && !filters.specialCategory) return true;
+		if (!filters.category && !filters.subCategory && !filters.gender && !filters.color && !filters.size && !filters.specialCategory) return true;
 
-        const categoryMatch = filters.category ? product.category.toLowerCase() === filters.category.toLowerCase() : true;
-        const specialCategoryMatch = filters.specialCategory ? product.specialCategory.toLowerCase() === filters.specialCategory.toLowerCase() : true;
-        const subCategoryMatch = filters.subCategory ? product.subCategory.toLowerCase() === filters.subCategory.toLowerCase() : true;
-        const genderMatch = filters.gender ? product.gender.toLowerCase() === filters.gender.toLowerCase() : true;
+		const categoryMatch = filters.category 
+			? product.category && product.category.toLowerCase() === filters.category.toLowerCase() 
+			: true;
+		const specialCategoryMatch = filters.specialCategory 
+			? product.specialCategory && product.specialCategory.toLowerCase() === filters.specialCategory.toLowerCase() 
+			: true;
+		const subCategoryMatch = filters.subCategory 
+			? product.subCategory && product.subCategory.toLowerCase() === filters.subCategory.toLowerCase() 
+			: true;
+		const genderMatch = filters.gender 
+			? product.gender && product.gender.toLowerCase() === filters.gender.toLowerCase() 
+			: true;
 
-        return categoryMatch && subCategoryMatch && genderMatch && specialCategoryMatch;
-    });
+		return categoryMatch && subCategoryMatch && genderMatch && specialCategoryMatch;
+	});
+
     const sortedProducts = filteredProducts.sort((a, b) => {
         // Sorting by Date
         if (filters.sort === 'newest') {
@@ -387,123 +395,126 @@ const AdminProducts = () => {
     return (
         
         <Fragment>
-            {
-                productLoading || isLoading ? <LoadingOverlay isLoading={productLoading || isLoading} />:<div>
-                    <div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
-                        <div className='w-full flex flex-wrap justify-center space-x-2 py-3 items-end'>
-                            {/* Category Dropdown */}
-                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
-								<Label className="text-sm font-semibold">Category</Label>
-								<Select
-									id="categoryFilter"
-									name="category"
-									value={filters.category}
-									onValueChange={(e) => handleFilterChange("category", e)}
-									className="border border-gray-300 p-2 rounded w-full md:w-auto"
-								>
-									<SelectTrigger className="w-full border border-gray-300 rounded-md">
-									<SelectValue placeholder={filters.category || "All Category"} />
-									</SelectTrigger>
-									<SelectContent>
-									<SelectItem value="default">Default</SelectItem>
-									{categories.map((category, i) => (
-										<SelectItem key={i} value={category.value}>{category.value}</SelectItem>
-									))}
-									</SelectContent>
-								</Select>
-                            </div>
+           {
+				productLoading || isLoading ? (
+					<LoadingOverlay isLoading={productLoading || isLoading} />
+				) : (
+					<div>
+						<div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
+							<div className="w-full flex flex-wrap justify-center space-x-2 py-3 items-end">
+								{/* Category Dropdown */}
+								<div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
+									<Label className="text-sm font-semibold">Category</Label>
+									<Select
+										id="categoryFilter"
+										name="category"
+										value={filters.category}
+										onValueChange={(e) => handleFilterChange("category", e)}
+										className="border border-gray-300 p-2 rounded w-full md:w-auto"
+									>
+										<SelectTrigger className="w-full border border-gray-300 rounded-md">
+											<SelectValue placeholder={filters.category || "All Category"} />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="default">Default</SelectItem>
+											{categories.map((category, i) => (
+												<SelectItem key={i} value={category.value}>{category.value}</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 
-                            {/* Special Category Dropdown */}
-                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
-								<Label className="text-sm font-semibold">Special Category</Label>
-								<Select
-									id="specialCategory"
-									name="specialCategory"
-									value={filters.specialCategory}
-									onValueChange={(e) => handleFilterChange("specialCategory", e)}
-									className="border border-gray-300 p-2 rounded w-full md:w-auto"
-								>
-									<SelectTrigger className="w-full border border-gray-300 rounded-md">
-									<SelectValue placeholder={filters.specialCategory || "All Special Category"} />
-									</SelectTrigger>
-									<SelectContent>
-									<SelectItem value="default">Default</SelectItem>
-									{specialCategory.map((special, i) => (
-										<SelectItem key={i} value={special.id}>{special.label}</SelectItem>
-									))}
-									</SelectContent>
-								</Select>
-                            </div>
+								{/* Special Category Dropdown */}
+								<div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
+									<Label className="text-sm font-semibold">Special Category</Label>
+									<Select
+										id="specialCategory"
+										name="specialCategory"
+										value={filters.specialCategory}
+										onValueChange={(e) => handleFilterChange("specialCategory", e)}
+										className="border border-gray-300 p-2 rounded w-full md:w-auto"
+									>
+										<SelectTrigger className="w-full border border-gray-300 rounded-md">
+											<SelectValue placeholder={filters.specialCategory || "All Special Category"} />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="default">Default</SelectItem>
+											{specialCategory.map((special, i) => (
+												<SelectItem key={i} value={special.id}>{special.label}</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 
-                            {/* Sub-Category Dropdown */}
-                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
-								<Label className="text-sm font-semibold">Sub-Category</Label>
-								<Select
-									id="subCategoryFilter"
-									name="subCategory"
-									value={filters.subCategory}
-									onValueChange={(e) => handleFilterChange("subCategory", e)}
-									className="border border-gray-300 p-2 rounded w-full md:w-auto"
-								>
-									<SelectTrigger className="w-full border border-gray-300 rounded-md">
-									<SelectValue placeholder={filters.subCategory || "All Sub-Category"} />
-									</SelectTrigger>
-									<SelectContent>
-									<SelectItem value="default">Default</SelectItem>
-									{subcategories.map((subCategory, i) => (
-										<SelectItem key={i} value={subCategory.value}>{subCategory.value}</SelectItem>
-									))}
-									</SelectContent>
-								</Select>
-                            </div>
+								{/* Sub-Category Dropdown */}
+								<div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
+									<Label className="text-sm font-semibold">Sub-Category</Label>
+									<Select
+										id="subCategoryFilter"
+										name="subCategory"
+										value={filters.subCategory}
+										onValueChange={(e) => handleFilterChange("subCategory", e)}
+										className="border border-gray-300 p-2 rounded w-full md:w-auto"
+									>
+										<SelectTrigger className="w-full border border-gray-300 rounded-md">
+											<SelectValue placeholder={filters.subCategory || "All Sub-Category"} />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="default">Default</SelectItem>
+											{subcategories.map((subCategory, i) => (
+												<SelectItem key={i} value={subCategory.value}>{subCategory.value}</SelectItem>
+											))}
+										</SelectContent>
+									</Select>
+								</div>
 
-                            {/* Sorting Dropdown */}
-                            <div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
-								<Label className="text-sm font-semibold">Sort</Label>
-								<Select
-									id="sortFilter"
-									name="sort"
-									value={filters.sort}
-									onValueChange={(e) => handleFilterChange("sort", e)}
-									className="border border-gray-300 p-2 rounded w-full md:w-auto"
-								>
-									<SelectTrigger className="w-full border border-gray-300 rounded-md">
-									<SelectValue placeholder={filters.sort || "Default"} />
-									</SelectTrigger>
-									<SelectContent>
-									<SelectItem value="default">Default</SelectItem>
-									<SelectItem value="newest">Newest First</SelectItem>
-									<SelectItem value="oldest">Oldest First</SelectItem>
-									<SelectItem value="priceLowToHigh">Price Low to High</SelectItem>
-									<SelectItem value="priceHighToLow">Price High to Low</SelectItem>
-									</SelectContent>
-								</Select>
-                            </div>
+								{/* Sorting Dropdown */}
+								<div className="flex items-center space-x-3 mb-3 sm:w-full md:w-auto w-full sm:px-2">
+									<Label className="text-sm font-semibold">Sort</Label>
+									<Select
+										id="sortFilter"
+										name="sort"
+										value={filters.sort}
+										onValueChange={(e) => handleFilterChange("sort", e)}
+										className="border border-gray-300 p-2 rounded w-full md:w-auto"
+									>
+										<SelectTrigger className="w-full border border-gray-300 rounded-md">
+											<SelectValue placeholder={filters.sort || "Default"} />
+										</SelectTrigger>
+										<SelectContent>
+											<SelectItem value="default">Default</SelectItem>
+											<SelectItem value="newest">Newest First</SelectItem>
+											<SelectItem value="oldest">Oldest First</SelectItem>
+											<SelectItem value="priceLowToHigh">Price Low to High</SelectItem>
+											<SelectItem value="priceHighToLow">Price High to Low</SelectItem>
+										</SelectContent>
+									</Select>
+								</div>
 
-                            {/* Add New Product Button */}
-                            <div className="w-full sm:w-auto flex justify-center sm:px-2">
-                            <Button onClick={() => setOpenCreateProduct(true)} className="sm:w-full md:w-auto">
-                                Add Product
-                            </Button>
-                            </div>
-                        </div>
+								{/* Add New Product Button */}
+								<div className="w-full sm:w-auto flex justify-center sm:px-2">
+									<Button onClick={() => setOpenCreateProduct(true)} className="sm:w-full md:w-auto">
+										Add Product
+									</Button>
+								</div>
+							</div>
+						</div>
+
+						{/* Product List */}
+						<PaginatedProductList
+							sortedProducts={sortedProducts}
+							totalProducts={totalProducts}
+							maxAmountPerPage={maxAmountPerPage}
+							currentPage={currentPage}
+							setCurrentPage={setCurrentPage}
+							setCurrentPageNo={setCurrentPageNo}
+							togglePopUp={togglePopUp}
+							setCurrentPreviewProduct={setCurrentPreviewProduct}
+						/>
 					</div>
+				)
+			}
 
-                    <div>
-                    </div>
-					<PaginatedProductList 
-						sortedProducts={sortedProducts} 
-						totalProducts={totalProducts} 
-						maxAmountPerPage={maxAmountPerPage} 
-						currentPage={currentPage}
-						setCurrentPage={setCurrentPage}
-						setCurrentPageNo={setCurrentPageNo}
-						togglePopUp={togglePopUp}
-						setCurrentPreviewProduct={setCurrentPreviewProduct}
-					
-					/>
-                </div>
-            }
 			{currentPreviewProductId && (
 				<ProductPreview
 					genders={genders}
@@ -558,67 +569,67 @@ const PaginatedProductList = ({
 	const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
 
 	return (
-	<div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
-		<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
-			Total Products: {totalProducts}
-		</h1>
-		<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
-			{currentPageProducts.length > 0 ? (
-			currentPageProducts.map((product, i) => (
-				<AdminProductTile
-				key={`products_${i}`}
-				togglePopUp={togglePopUp}
-				setOpenProductPreview={setCurrentPreviewProduct}
-				product={product}
-				/>
-			))
-			) : (
-			<p className="col-span-full text-center text-gray-500">No Products found for the selected filter.</p>
-			)}
-		</ul>
+		<div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
+			<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
+				Total Products: {totalProducts}
+			</h1>
+			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
+				{currentPageProducts.length > 0 ? (
+					currentPageProducts.map((product, i) => (
+						<AdminProductTile
+							key={`products_${i}`}
+							togglePopUp={togglePopUp}
+							setOpenProductPreview={setCurrentPreviewProduct}
+							product={product}
+						/>
+					))
+				) : (
+					<p className="col-span-full text-center text-gray-500">No Products found for the selected filter.</p>
+				)}
+			</ul>
 
-		<div className="font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center w-full justify-center space-y-3 sm:space-y-0 sm:space-x-3 mt-6">
+			<div className="font1 border-t-[0.5px] border-gray-700 py-4 relative flex flex-col sm:flex-row items-center w-full justify-center space-y-3 sm:space-y-0 sm:space-x-3 mt-6">
 			{/* Pagination Info */}
 			<span className="text-sm text-gray-500 sm:absolute sm:left-0 sm:text-base">
-			Page {currentPage} of {totalPages}
+				Page {currentPage} of {totalPages}
 			</span>
 
 			{/* Previous Button */}
 			{currentPage === 1 ? (
-			""
-			) : (
-			<button
-				className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
-				onClick={() => {
-				setCurrentPage(currentPage - 1);
-				setCurrentPageNo(currentPage - 1);
-				}}
-			>
-				<ChevronLeft />
-				<h1>Previous</h1>
-			</button>
-			)}
+				""
+				) : (
+					<button
+						className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
+						onClick={() => {
+						setCurrentPage(currentPage - 1);
+						setCurrentPageNo(currentPage - 1);
+						}}
+					>
+						<ChevronLeft />
+						<h1>Previous</h1>
+					</button>
+				)}
 
-			{/* Next Button */}
-			{currentPage === totalPages ? (
-			""
-			) : (
-			<button
-				className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
-				onClick={() => {
-				setCurrentPage(currentPage + 1);
-				setCurrentPageNo(currentPage + 1);
-				}}
-			>
-				<h1>Next</h1>
-				<ChevronRight />
-			</button>
-			)}
-		</div>
+				{/* Next Button */}
+				{currentPage === totalPages ? (
+				""
+				) : (
+					<button
+						className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
+						onClick={() => {
+						setCurrentPage(currentPage + 1);
+						setCurrentPageNo(currentPage + 1);
+						}}
+					>
+						<h1>Next</h1>
+						<ChevronRight />
+					</button>
+				)}
+			</div>
 		</div>
 
 	);
-  };
+};
   
 
 const LoadingOverlay = ({ isLoading }) => {

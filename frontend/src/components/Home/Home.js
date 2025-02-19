@@ -93,6 +93,7 @@ const Home = ({user}) => {
     }, []);
 	let WideScreen_Video = {urls:[], header:''};
 	let MobileScreen_CategorySlider = {urls:[], header:''};
+
     let Wide_Screen_Section_1 = {urls:[], header: ""};
     let Wide_Screen_Section_2 = {urls:[],header:''};
     let Wide_Screen_Section_3 = {urls:[],header:''};
@@ -108,7 +109,7 @@ const Home = ({user}) => {
 
     // mobile
     let Small_Screen_Section_1 = {urls:[],header:''};
-    let Small_Screen_Section_2 = {urls:[],header:''};
+    // let Small_Screen_Section_2 = {urls:[],header:''};
     let Small_Screen_Section_3 = {urls:[],header:''};
     let Small_Screen_Section_4 = {urls:[],header:''};
     let Small_Screen_Section_5 = {urls:[],header:''};
@@ -166,8 +167,8 @@ const Home = ({user}) => {
         Small_Screen_Section_1.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Url || []
         Small_Screen_Section_1.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Header || ""
 
-        Small_Screen_Section_2.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Url || []
-        Small_Screen_Section_2.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Header || ""
+        /* Small_Screen_Section_2.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Url || []
+        Small_Screen_Section_2.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Header || "" */
 
         Small_Screen_Section_3.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Url || []
         Small_Screen_Section_3.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Header || ""

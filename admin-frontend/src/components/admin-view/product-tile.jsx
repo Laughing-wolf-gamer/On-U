@@ -29,9 +29,13 @@ const AdminProductTile = ({
         <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
             <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
+				
                 {selectedSizeColorImageArray[0] && <MemoizedMedia
                     mediaUrl={selectedSizeColorImageArray[0].url}
                     altText={product?.title}
+					isStockLow = {isStockLow}
+					isStockLowCritical = {isStockLowCritical}
+					totalStock = {product?.totalStock}
                 />}
             </div>
 
@@ -64,20 +68,7 @@ const AdminProductTile = ({
 				</div>
 
 				{/* Stock Amount Low Indicator */}
-				{isStockLow && !isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white">
-							Stock Low ({product?.totalStock} left)
-						</Badge>
-					</div>
-				)}
-				{isStockLow && isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white">
-							Stock Critical ({product?.totalStock} left)
-						</Badge>
-					</div>
-				)}
+				
 
 				{/* View More / Less Button */}
 				<div className="w-full h-fit justify-center items-center flex">
@@ -98,8 +89,7 @@ const AdminProductTile = ({
 };
 
 // Memoized Media Component
-const MemoizedMedia = memo(({ mediaUrl, altText }) => {
-    console.log("Media URL:", mediaUrl);
+const MemoizedMedia = memo(({ mediaUrl, altText,isStockLow,isStockLowCritical,totalStock }) => {
     const mediaRef = useRef(null);
 
     // Check if the URL corresponds to a video
@@ -109,37 +99,69 @@ const MemoizedMedia = memo(({ mediaUrl, altText }) => {
 
     if (isVideo) {
         return (
-            <video
-                src={mediaUrl}
-                loop = {true}
-                muted={true}
-                autoPlay={false}
-                ref={mediaRef}
-                className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
-                loading="lazy"
-                style={{ opacity: 0 }}
-                onLoadedData={() => {
-                    mediaRef.current.style.opacity = 1;
-                }}
-                controls
-            >
-                <source data-src={mediaUrl} />
-                Your browser does not support the video tag.
-            </video>
+			<div className=' relative'>
+				{isStockLow && !isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 absolute animate-pulse text-white top-0 right-2">
+							Stock Low ({totalStock} left)
+						</Badge>
+					</div>
+				)}
+				{isStockLow && isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white absolute top-0 animate-pulse right-2">
+							Stock Critical ({totalStock} left)
+						</Badge>
+					</div>
+				)}
+				<video
+					src={mediaUrl}
+					loop = {true}
+					muted={true}
+					autoPlay={false}
+					ref={mediaRef}
+					className="w-full h-full object-cover rounded-lg transition-transform duration-300"
+					loading="lazy"
+					style={{ opacity: 0 }}
+					onLoadedData={() => {
+						mediaRef.current.style.opacity = 1;
+					}}
+					controls
+				>
+					<source data-src={mediaUrl} />
+					Your browser does not support the video tag.
+				</video>
+			</div>
         );
     } else {
         return (
-            <img
-                ref={mediaRef}
-                data-src={mediaUrl}
-                alt={altText}
-                className="w-full h-full object-cover rounded-lg transition-transform duration-300 hover:scale-110"
-                loading="lazy"
-                style={{ opacity: 0 }}
-                onLoad={() => {
-                    mediaRef.current.style.opacity = 1;
-                }}
-            />
+			<div className='relative w-full h-full'>
+				{isStockLow && !isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white animate-pulse absolute top-0 right-2">
+							Stock Low ({totalStock} left)
+						</Badge>
+					</div>
+				)}
+				{isStockLow && isStockLowCritical && (
+					<div className="mb-4">
+						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white animate-pulse absolute top-0 right-2">
+							Stock Critical ({totalStock} left)
+						</Badge>
+					</div>
+				)}
+				<img
+					ref={mediaRef}
+					data-src={mediaUrl}
+					alt={altText}
+					className="w-full h-full object-cover rounded-lg transition-transform duration-300"
+					loading="lazy"
+					style={{ opacity: 0 }}
+					onLoad={() => {
+						mediaRef.current.style.opacity = 1;
+					}}
+				/>
+			</div>
         );
     }
 });
