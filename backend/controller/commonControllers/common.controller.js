@@ -586,7 +586,7 @@ export const setAboutData = async (req, res) => {
 export const setTermsAndConditionWebsite = async (req, res) => {
 	try {
 		const termsAndConditionData = req.body;
-		console.log("Terms and Condition Data received: ", termsAndConditionData);
+		// console.log("Terms and Condition Data received: ", termsAndConditionData);
 	
 		// Check if the "Terms and Condition" data already exists
 		let websiteData = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
