@@ -6,7 +6,7 @@ import { fetchTermsAndCondition } from '../../action/common.action';
 const WhatsAppButton = ({ scrollableDivRef }) => {
 	const{ termsAndCondition } = useSelector(state => state.TermsAndConditions);
 	const dispatch = useDispatch();
-	const [phoneNumber,setPhoneNumber] = useState('916294053401'); // replace with your phone number
+	const [phoneNumber,setPhoneNumber] = useState('919326727797'); // replace with your phone number
 	const message = 'Hi'; // replace with your message
 	const [scrollPosition, setScrollPosition] = useState(0);
 	
