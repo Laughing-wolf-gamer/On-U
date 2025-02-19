@@ -640,9 +640,9 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 							{
 								gender && gender.map((e,i) =>
 
-									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
+									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-white font${e.replace(/ /g, "")} relative`}
+										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 text-gray-800 tick${e.replace(/ /g, "")}`}></span>
+									<span className={`text-sm text-gray-700`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
 
 								)
 							}

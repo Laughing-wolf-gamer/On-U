@@ -10,8 +10,8 @@
 }
 
 .tickcolor{
-    border-color: #4a3944!important;
-    border-width: 1px!important;
+    border-color: #000000!important;
+    border-width: 2px!important;
 
 }
 
@@ -26,7 +26,7 @@
 	left: 4px;
 	width: 8px;
 	height: 5px;
-	border-color: #bfc0c6;
+	border-color: #ffffff;
 	border-style: none none solid solid;
 	border-width: 1px;
 	transform: rotate(-45deg);

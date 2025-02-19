@@ -18,16 +18,27 @@ import { Label } from "@/components/ui/label";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-const Header = () => {
+const Header = ({user}) => {
     const navigation = useNavigate();
     return (
-        <div className="w-full bg-white p-5 flex justify-between items-center shadow-md">
-			<h1 className="text-2xl font-bold text-gray-700">On-U Dashboard</h1>
-			<div className="flex items-center space-x-4">
-				<button className="text-gray-700">Notifications</button>
-				<button onClick={() => navigation('/admin/profile')} className="text-gray-700">Profile</button>
-			</div>
-        </div>
+        <div className="w-full bg-white p-6 flex justify-between items-center shadow-lg rounded-md">
+			<h1 className="text-3xl font-semibold text-gray-800">On-U Dashboard</h1>
+			<button onClick={() => navigation('/admin/profile')} className="flex justify-between items-center space-x-6">
+				<img
+					src={user?.profilePic}
+					alt="User Profile"
+                    className="w-12 h-12 rounded-full bg-gray-400 object-cover"
+					style={{ filter: `drop-shadow(0 0 5px ${hexToRgba('#000', 0.2)})`,objectFit: "cover" }}
+				/>
+				<span
+					
+					className="text-lg font-medium text-gray-700 hover:text-gray-900 transition-all duration-200"
+				>
+					Profile
+				</span>
+			</button>
+		</div>
+
     );
 };
 
@@ -36,7 +47,7 @@ const StatsCard = ({ title, value, icon, onChange, isActive }) => {
 		<div
 		onClick={(e) => {
 			if (onChange) {
-			onChange(title, value);
+				onChange(title, value);
 			}
 		}}
 		className={`${isActive ? "bg-gray-200" : "bg-white"} p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-fit mb-4 transition-all duration-300`}
@@ -288,7 +299,7 @@ const AdminDashboard = ({ user }) => {
         {isLoading ? <LoadingSpinner/>:<Fragment>
                 <div className="flex flex-col h-full w-full">
 					<div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
-						<Header />
+						<Header user={user} />
 						<div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg w-full">
 						<StatsCard
 							isActive={currentGraphData.title === "Total Orders"}

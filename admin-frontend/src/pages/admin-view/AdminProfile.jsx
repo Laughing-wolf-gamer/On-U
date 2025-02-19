@@ -43,13 +43,13 @@ const ProfileDetails = ({ admin }) => {
 // ProfileActions Component
 const ProfileActions = ({ onEdit, onLogout }) => {
     return (
-        <div className="mt-10 flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
-            <button
+        <div className="mt-10 w-full flex flex-col md:flex-row space-y-6 md:space-y-0 md:space-x-8">
+            {/* <button
                 onClick={onEdit}
                 className="flex items-center bg-primary text-white py-4 px-8 rounded-lg shadow-lg hover:bg-primary-dark transition-all w-full md:w-auto"
             >
                 <EditIcon className="mr-4" /> Edit Profile
-            </button>
+            </button> */}
             <button
                 onClick={onLogout}
                 className="flex items-center bg-gray-200 text-black py-4 px-8 rounded-lg shadow-lg hover:bg-danger-dark transition-all w-full md:w-auto"
@@ -173,7 +173,7 @@ const AdminProfile = ({ user }) => {
 
     return (
         <div className="h-screen w-full flex justify-center items-center">
-            <div className="w-full max-w-4xl p-12 bg-white shadow-xl rounded-3xl border-2 border-gray-200">
+            <div className="w-full h-full p-12 bg-white rounded-3xl border-2 border-gray-200">
                 <ProfileHeader admin={user} />
                 <ProfileDetails admin={user} />
                 <ProfileActions onEdit={handleEdit} onLogout={handleLogOut} />

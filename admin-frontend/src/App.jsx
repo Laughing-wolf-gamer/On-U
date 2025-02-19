@@ -74,7 +74,7 @@ function App() {
                 }>
                     <Route path="profile" element={<AdminProfile user = {user}/>}/>
                     <Route path="dashboard" element={<AdminDashboard user={user}/>}/>
-                    <Route path="users" element={<AdminUsers/>}/>
+                    <Route path="customers" element={<AdminUsers/>}/>
                     {isAuthenticated && user && <Route path="products" element={<AdminProducts/>}/>}
                     <Route path="contactQuery" element={<AdminContactQueryViewPage/>}/>
                     <Route path="warehouse" element={<WarehouseAdmin/>}/>

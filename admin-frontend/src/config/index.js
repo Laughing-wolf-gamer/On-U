@@ -133,10 +133,10 @@ export const adminSideBarMenu = [
         
     },
     {
-        id: 'user',
-        label: 'Users',
+        id: 'customers',
+        label: 'Customers',
         accessRole:['superAdmin'],
-        path: '/admin/users',
+        path: '/admin/customers',
         
     },
     {

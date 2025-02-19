@@ -11,7 +11,7 @@ import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaHeart } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { UserRound, X } from 'lucide-react'
+import { ChevronDown, ChevronRight, UserRound, X } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import SideBarBag from '../SideBarBag'
@@ -269,7 +269,7 @@ const MNavbar = ({ user }) => {
 								className="absolute top-3 left-4 block sm:hidden text-black rounded-full w-8 h-8 items-center justify-center text-lg">
 								<X size={24} className='text-3xl justify-self-center' />
 							</button>
-                            <Ripples color="#D0DDD0" className="w-full mt-7">
+                            <Ripples color="#2C3930" className="w-full mt-7">
                                 <div className=" px-5 justify-start items-center space-x-4 flex-row py-4 relative w-full flex" onClick={(e)=>{
 									e.stopPropagation();
 									if(user){
@@ -298,7 +298,7 @@ const MNavbar = ({ user }) => {
                                 </div>
                             </Ripples>
 
-                            <Ripples color="#D0DDD0" className="w-full">
+                            <Ripples color="#2C3930" className="w-full">
                                 <div
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -312,15 +312,16 @@ const MNavbar = ({ user }) => {
                                 </div>
                             </Ripples>
 
-                            <Ripples color="#D0DDD0" className="w-full">
+                            <Ripples color="#2C3930" className="w-full">
                                 <li
-                                    className="text-black  pl-5 py-4 w-full flex flex-row justify-start items-center"
+                                    className="text-black px-5 py-4 w-full flex flex-row justify-between items-center"
                                     onClick={() => {
                                         setWomen(!Women);
                                         setMenu2(Menu2 === "hidden" ? "block" : "hidden");
                                     }}
                                 >
                                     <span className="">Shop</span>
+                                    <ChevronRight size={20} className={` duration-300 transition-all ease-ease-out-expo ${Menu2 === "block"? "rotate-90" : ""}`} />
                                 </li>
                             </Ripples>
 

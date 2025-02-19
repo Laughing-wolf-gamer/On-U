@@ -11,7 +11,7 @@ const GetAdminSideBarMenuIcon = ({ id }) => {
     switch (id) {
         case "dashboard":
 			return <MdDashboard size={24} />
-        case "user":
+        case "customers":
 			return <FaUsers size={24}/>
 		case 'query':
 			return <MdQueryStats size={24}/>

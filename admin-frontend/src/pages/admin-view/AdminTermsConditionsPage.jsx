@@ -1,5 +1,6 @@
 import { fetchTermsAndCondition, setTermsAndCondition } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
+import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 const AdminTermsConditionsPage = () => {
@@ -37,6 +38,7 @@ const AdminTermsConditionsPage = () => {
 		dispatch(fetchTermsAndCondition());
         // Handle form submission logic, for example an API call to save data.
         console.log("Form Data Submitted:", formData);
+		toast.success("Your terms and conditions have been updated");
     };
 
     useEffect(() => {

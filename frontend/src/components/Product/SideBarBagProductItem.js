@@ -1,9 +1,7 @@
 import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
+import { capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import AutoSlidingCarousel from './AutoSlidingCarousel';
 
 const SideBarBagProductItem = memo(({pro , user}) => {
     const { updateRecentlyViewProducts } = useSessionStorage();
@@ -82,15 +80,7 @@ const SideBarBagProductItem = memo(({pro , user}) => {
                     className="w-full h-full object-cover rounded-md hover:scale-105 transition-all duration-500 ease-in-out"
                     style={{ maxWidth: '100%', maxHeight: '100%' }}
                 />}
-				{/* <AutoSlidingCarousel
-					pro={pro}
-					user={user}
-					wishlist={[]}
-					showWishList = {false}
-				/> */}
             </div>
-			{/* <ImageSlideshow imageArray={imageArray}/> */}
-
             {/* Product Details Section */}
             <div className="flex-col flex justify-between items-start gap-2 mt-1 px-2">
 				<p className="text-[10px] sm:text-[12px] md:text-[14px] lg:text-[16px] text-gray-800 font-semibold truncate">

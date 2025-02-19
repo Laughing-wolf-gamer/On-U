@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { FaWhatsapp } from 'react-icons/fa';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchTermsAndCondition } from '../../action/common.action';
 
 const WhatsAppButton = ({ scrollableDivRef }) => {
-	const phoneNumber = '916294053401'; // replace with your phone number
+	const{ termsAndCondition } = useSelector(state => state.TermsAndConditions);
+	const dispatch = useDispatch();
+	const [phoneNumber,setPhoneNumber] = useState('916294053401'); // replace with your phone number
 	const message = 'Hi'; // replace with your message
 	const [scrollPosition, setScrollPosition] = useState(0);
 	
@@ -29,6 +33,14 @@ const WhatsAppButton = ({ scrollableDivRef }) => {
 			divElement.removeEventListener('scroll', handleScroll);
 		};
 	}, []);
+	useEffect(()=>{
+		if(termsAndCondition){
+			setPhoneNumber(termsAndCondition?.phoneNumber);
+		}
+	},[termsAndCondition])
+	useEffect(()=>{
+		dispatch(fetchTermsAndCondition());
+	},[])
 	
 	const handleClick = () => {
 		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
