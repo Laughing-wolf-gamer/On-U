@@ -619,8 +619,8 @@ const MPpage = () => {
                                         </Fragment>
                                     )}
                                 </h1>
-                                <h1 className="text-green-800 font-semibold text-sm mt-1">
-                                    inclusive all taxes.
+                                <h1 className="text-green-600 font-semibold text-sm mt-1">
+                                    Inclusive All Taxes.
                                 </h1>
 								<div className='w-full flex flex-col justify-start items-center mt-1 space-y-3 mx-auto'>
                                     <div className='w-full flex justify-between items-center'>
