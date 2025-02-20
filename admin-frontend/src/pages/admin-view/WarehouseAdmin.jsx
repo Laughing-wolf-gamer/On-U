@@ -13,9 +13,7 @@ const defaultData = {
 	address:'',
 	address_2:'',
 	city:'',
-	state:'',
 	country: '',
-	state: '',
 	address: '',
 }
 const WarehouseAdmin = () => {

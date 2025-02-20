@@ -371,14 +371,14 @@ export const addNewProduct = async (req, res) => {
             // const discountAmount = price - salePrice;
             // const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
             DiscountedPercentage = calculateDiscountPercentage(price,salePrice);
-        } else {
-            /* const currentProduct = await ProductModel.findById(productId);
+        } /* else {
+            const currentProduct = await ProductModel.findById(productId);
             const p = currentProduct.price;
             const sp = currentProduct.salePrice;
             const discountAmount = p - sp;
             const discountPercentage = ((discountAmount / p) * 100).toFixed(0);
-            DiscountedPercentage = calculateDiscountPercentage(p,sp); */
-        }
+            DiscountedPercentage = calculateDiscountPercentage(p,sp);
+        } */
 
         // Apply GST to price and salePrice
         // const priceWithGST = price + (price * gst / 100);
