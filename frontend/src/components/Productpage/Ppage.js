@@ -689,9 +689,6 @@ const Ppage = () => {
                         {
                             product && <ProductDetails product={product} setRatingData={setRatingData} ratingData={ratingData} isPostingReview={isPostingReview} PostRating={PostRating} />
                         }
-                        
-                        {/* {similar && similar.length > 0 && (
-                        )} */}
                     </div>
                 :
                 <Loader />
