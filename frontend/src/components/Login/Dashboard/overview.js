@@ -10,6 +10,7 @@ import { FaExclamationTriangle, FaUser, FaUserAltSlash } from 'react-icons/fa'; 
 import BackToTopButton from '../../Home/BackToTopButton';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
+import WhatsAppButton from '../../Home/WhatsAppButton';
 const NotLoggedInModal = () => {
 	const navigate = useNavigate();
 
@@ -125,6 +126,7 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 		{/* Footer */}
 		<Footer />
 		<BackToTopButton scrollableDivRef={scrollableDivRef} />
+		<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
 		</div>
 	);
 };

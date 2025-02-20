@@ -1,6 +1,5 @@
 import { ChevronUp } from 'lucide-react';
-import React, { useState, useEffect, useRef } from 'react';
-import WhatsAppButton from './WhatsAppButton';
+import React, { useState, useEffect } from 'react';
 
 const BackToTopButton = ({scrollableDivRef}) => {
 	const [scrollPosition, setScrollPosition] = useState(0);

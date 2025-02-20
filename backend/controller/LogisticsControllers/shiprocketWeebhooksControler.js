@@ -32,14 +32,32 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
 
 export const createNewWareHouse = async(req,res)=>{
     try {
-        const{_id,pincode,country,state,address} = req.body;
+        const{
+			_id,
+			pickup_location,
+			name,
+			email,
+			phone,
+			country,
+			state,
+			pin_code,
+			address,
+			address_2,
+			city,
+		} = req.body;
         console.log("Warehouse: ",req.body);
         if(_id){
             const updateFields = {};
-            if(pincode)updateFields.pincode = pincode;
+            if(pickup_location) updateFields.pickup_location = pickup_location;
+            if(pin_code) updateFields.pin_code = pin_code;
+            if(name)updateFields.name = name;
+            if(email)updateFields.email = email;
+            if(phone)updateFields.phone = phone;
             if(country)updateFields.country = country
             if(state)updateFields.state = state
             if(address)updateFields.address = address
+            if(address_2)updateFields.address_2 = address_2
+            if(city)updateFields.city = city
             console.log(`Ware House with ID ${_id} already exists`);
             if(Object.keys(updateFields).length > 0){
                 const UpdateProduct = await WareHouseModel.findByIdAndUpdate(_id,updateFields,{new:true});
@@ -51,10 +69,18 @@ export const createNewWareHouse = async(req,res)=>{
             }
         }
         const newWareHouse = new WareHouseModel({
-            pincode,
-            country,
-            state,
-            address
+            pickup_location,
+			name,
+			email,
+			phone,
+			pin_code,
+			country,
+			state,
+			address,
+			address_2,
+			city,
+			state,
+			country,
         })
         if(!newWareHouse){
             console.error("Error creating new Ware House");
@@ -129,12 +155,13 @@ export const checkAvailability = async (req,res)=>{
             return res.status(400).json({Success: false, message: 'Pincode is required'});
         }
         const weight = product.weight;
-        const available = await checkShipmentAvailability(pincode,weight);
+        /* 
         if(!available){
             return res.status(200).json({Success: false, message: 'Delivery not available'});
         }
-        return res.status(200).json({Success: true, message: 'Pincode availability', result: available});
-        /* if(available === null || available.length === 0){
+        return res.status(200).json({Success: true, message: 'Pincode availability', result: available}); */
+		const available = await checkShipmentAvailability(Number(pincode),weight);
+        if(available === null || available?.length === 0){
             console.error("Error checking availability");
             return res.status(500).json({Success: false, message: 'Error checking availability'});
         }
@@ -149,7 +176,7 @@ export const checkAvailability = async (req,res)=>{
                 return fastest;
             }, partnersDelivering[0]); // Start with the first element
             return res.status(200).json({Success: true, message: 'Pincode availability', result: fastestDelivery});
-        } */
+        }
         res.status(200).json({Success: false, message: 'Delivery not available'});
     } catch (error) {
         console.error("Error: ", error);

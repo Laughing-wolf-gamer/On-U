@@ -15,6 +15,7 @@ import ProductCardSkeleton from './ProductCardSkeleton';
 import { ChevronRight } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
 import Loader from '../Loader/Loader';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const maxAmountPerPage = 20;
 const Allproductpage = ({user}) => {
@@ -211,6 +212,7 @@ const Allproductpage = ({user}) => {
             {(window.screen.width < 1024 && product) && <MFilter scrollableDivRef = {scrollableDivRef} product={product} handleSortChange={handleSortChange} />}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
 };

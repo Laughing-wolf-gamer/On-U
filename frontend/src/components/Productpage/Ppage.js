@@ -10,7 +10,7 @@ import Single_product from '../Product/Single_product'
 import {getuser} from '../../action/useraction'
 import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
-import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getRandomItem} from '../../config'
+import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag} from '../../config'
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
@@ -20,9 +20,9 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
 import toast from 'react-hot-toast'
 import StarRatingInput from './StarRatingInput'
-import ShareView from './ShareView'
 import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
+import WhatsAppButton from '../Home/WhatsAppButton'
 
 const reviews = [
     {
@@ -707,6 +707,7 @@ const Ppage = () => {
             }
             <Footer/>
 			<BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     )
 }

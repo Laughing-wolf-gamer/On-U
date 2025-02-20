@@ -216,16 +216,13 @@ export const deletewish = ({deletingProductId}) => async (dispatch) => {
 export const create_order = (orderdata) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_CREATE_ORDER })
-        // const token = sessionStorage.getItem('token');
         console.log("Order Data: ",orderdata);
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/orders/create_order`, orderdata, headerConfig())
         console.log("Order Data: ",data)
         dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.result})
 
     } catch (error) {
-
         dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
-
     }
 }
 export const createPaymentOrder = (orderdata) => async (dispatch) => {

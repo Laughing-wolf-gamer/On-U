@@ -15,6 +15,7 @@ import { FormHelperText } from '@mui/material';
 import { fetchAddressForm } from '../../action/common.action';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import BackToTopButton from '../Home/BackToTopButton';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -394,6 +395,7 @@ const CheckoutPage = () => {
 			)}
 			<Footer/>
 			<BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
 		</div>
 	);
 };

@@ -42,11 +42,11 @@ const Address = () => {
         dispatch(getbag({ userId: user?.id }));
         setAddressDetails({
             name: user?.name,
-            phonenumber: user?.phonenumber,
+            phonenumber: user?.phoneNumber,
             pincode: user?.address?.pincode,
             address1: user?.address?.address1,
             address2: user?.address?.address2,
-            citystate: user?.address?.citystate
+            citystate: user?.address?.state
         });
         }
     }, [dispatch, user, isAuthentication, checkAndCreateToast, navigation]);

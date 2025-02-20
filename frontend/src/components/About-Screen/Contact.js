@@ -8,6 +8,7 @@ import { useToast } from "../../Contaxt/ToastProvider";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 import BackToTopButton from "../Home/BackToTopButton";
+import WhatsAppButton from "../Home/WhatsAppButton";
 
 const Contact = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
@@ -208,6 +209,7 @@ const Contact = () => {
             )}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
   

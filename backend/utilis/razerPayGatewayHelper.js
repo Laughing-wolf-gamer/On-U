@@ -5,6 +5,7 @@ import ProductModel from "../model/productmodel.js";
 import Bag from "../model/bag.js";
 import { generateOrderForShipment } from "../controller/LogisticsControllers/shiprocketLogisticController.js";
 import { sendOrderPlacedMail } from "../controller/emailController.js";
+import WebSiteModel from "../model/websiteData.model.js";
 
 export const instance = new Razorpay({
     key_id: process.env.RAZER_PG_ID,
@@ -70,17 +71,44 @@ export const paymentVerification = async (req, res) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
-		const addressString = Object.values(selectedAddress).join(", ");
-        const orderData = new OrderModel({
+		try {
+			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
+				order_id: randomOrderShipRocketId,
+				userId: id,
+				razorpay_order_id:razorpay_order_id,
+				ConveenianceFees: alreadyFoundWebsiteData?.ConvenienceFees || 0,
+				orderItems:orderDetails.filter((item) => item.isChecked),
+				address: selectedAddress,
+				TotalAmount:totalAmount,
+				paymentMode:"prepaid",
+				status: 'Confirmed',
+			},randomOrderShipRocketId)
+			console.log("Shipment Data: ",createdShipRocketOrder);
+		} catch (error) {
+			console.error("Error while creating shipRocket order: ", error);
+		}
+        /* const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: id,
             razorpay_order_id:razorpay_order_id,
             orderItems: orderDetails,
             address: addressString,
             TotalAmount: totalAmount,
-            paymentMode: 'Pre-paid',
+            paymentMode: 'prepaid',
             paymentStatus:"Paid",
-            status: 'Order Confirmed',
+            status: 'Confirmed',
+        }); */
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
+		const orderData = new OrderModel({
+            order_id: randomOrderShipRocketId,
+            userId: id,
+			razorpay_order_id:razorpay_order_id,
+			ConveenianceFees: alreadyFoundWebsiteData?.ConvenienceFees || 0,
+            orderItems:orderDetails.filter((item) => item.isChecked),
+            address: selectedAddress,
+            TotalAmount:totalAmount,
+            paymentMode:"prepaid",
+            status: 'Confirmed',
         });
 
         await orderData.save();

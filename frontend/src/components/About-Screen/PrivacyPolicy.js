@@ -4,6 +4,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchPrivacyAndPolicy } from '../../action/common.action';
 import Loader from '../Loader/Loader';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const PrivacyPolicy = () => {
 	const{privacyPolicy,loading} = useSelector(state => state.PrivacyPolicy);
@@ -128,6 +129,7 @@ const PrivacyPolicy = () => {
 			</div>):(<Loader/>)}
 			<Footer/>
 			<BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
 		</div>
 	);
 };

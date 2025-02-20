@@ -2,12 +2,13 @@ import React, { useState } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import { useLocationContext } from "../../Contaxt/LocationContext";
+import { useSettingsContext } from "../../Contaxt/SettingsContext";
 
 const PincodeChecker = ({productId}) => {
     const{pincode,position,isPermissionGranted} = useLocationContext();
-    const [customPincode, setCustomPincode] = useState("");
+    const [customPincode, setCustomPincode] = useState(pincode);
     const [message, setMessage] = useState("");
-
+	const {checkAndCreateToast} = useSettingsContext();
     const handleInputChange = (e) => {
         setCustomPincode(e.target.value);
     };
@@ -16,20 +17,24 @@ const PincodeChecker = ({productId}) => {
         e.preventDefault();
 
         try {
-            const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${pincode}&productId=${productId}`,);
-
+			let currentPincode = pincode;
+			if(customPincode) currentPincode = customPincode;
+			if(!currentPincode){
+				checkAndCreateToast('error','Please enter a valid pincode');
+				return;
+			}
+            const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${currentPincode}&productId=${productId}`);
             if (response.data.result) {
-                console.log("Delivery is available!",response.data.result);
+                console.log("Delivery is available! ",response.data.result);
                 const result = response.data.result;
                 setMessage(`Delivery is available for this pincode Within ${result?.edd} days`);
             } else {
                 setMessage("Sorry, delivery is not available for this pincode.");
             }
         } catch (error) {
-            setMessage("An error occurred while checking delivery.");
+            setMessage("Pincode not found!, Please try different PinCode and try again");
         }
     };
-    console.log("Position: ",position,"Pincode: ",pincode);
     return (
         <div className="pl-3 font-kumbsan max-w-sm p-2 bg-white h-fit">
             <h3 className="text-sm md:text-xl font-semibold text-left mb-4">Pincode</h3>

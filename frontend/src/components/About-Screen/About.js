@@ -47,7 +47,7 @@ const About = () => {
 					
                     {/* Header Section */}
                     <header className="text-center mb-12">
-                        <h1 className="text-4xl font-extrabold text-gray-700 sm:text-5xl md:text-6xl">
+                        <h1 className="text-3xl font-extrabold text-gray-700 sm:text-5xl md:text-6xl">
                             Welcome to <span className="text-slate-600 hover:animate-bounce">{extractSpecificWord(aboutData?.header) || "ON-U"}</span>
                         </h1>
                         <p className="mt-4 text-lg text-gray-700 sm:text-xl md:text-2xl">
@@ -160,7 +160,7 @@ const FounderSection = ({ founderData }) => {
 	};
 
 	return (
-		<section className="bg-white font-kumbsan max-w-screen-2xl mx-auto py-12 px-6 lg:px-24">
+		<section className="bg-white font-kumbsan max-w-screen-2xl mx-auto py-12 px-1 lg:px-24">
 			{/* Founder Information Section */}
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{/* Founder Image */}
@@ -168,44 +168,44 @@ const FounderSection = ({ founderData }) => {
 					<img
 						src={founderData?.image}
 						alt="Founder"
-						className="w-full h-full object-cover rounded-lg shadow-md translation-x-0 transition-y-0 duration-300 ease-in-out transition-transform hover:scale-110 cursor-pointer"
+						className="w-full h-full object-cover rounded-lg shadow-md transition-transform duration-300 ease-in-out hover:scale-110 cursor-pointer"
 					/>
-				</div>
+					</div>
 
-				{/* Tabs and Information */}
-				<div className="w-full justify-start items-start bg-neutral-50">
+					{/* Tabs and Information */}
+					<div className="w-full justify-start items-start bg-neutral-50">
 					{/* Header Section */}
 					<div className="flex font-bold justify-between mb-4 items-center px-2">
-						<h1 className="text-4xl">{founderData.designation}</h1>
+						<h1 className="text-3xl sm:text-4xl md:text-5xl">{founderData.designation}</h1>
 					</div>
 
 					{/* Tabs Section */}
 					<div className="mb-4">
-						<div className="flex justify-between items-center space-x-2">
-							<button
-								className={`px-4 py-2 transition-colors duration-500 ease-in-out border-b-orange-400 ${activeTab === 'introduction' ? 'border-b text-gray-700' : 'text-gray-800'}`}
-								onClick={() => setActiveTab('introduction')}
-							>
-								Introduction
-							</button>
-							<button
-								className={`px-4 py-2 transition-all duration-300 ease-in-out border-b-orange-400 ${activeTab === 'founderVision' ? 'border-b text-gray-700' : 'text-gray-800'}`}
-								onClick={() => setActiveTab('founderVision')}
-							>
-								Vision
-							</button>
-							<button
-								className={`px-4 py-2 transition-all duration-300 ease-in-out border-b-orange-400 ${activeTab === 'goals' ? 'border-b text-gray-700' : 'text-gray-800'}`}
-								onClick={() => setActiveTab('goals')}
-							>
-								Goals
-							</button>
-							<button
-								className={`px-4 py-2 transition-all duration-300 ease-in-out border-b-orange-400 ${activeTab === 'promises' ? 'border-b text-gray-700' : 'text-gray-800'}`}
-								onClick={() => setActiveTab('promises')}
-							>
-								Promises
-							</button>
+						<div className="flex justify-between items-center space-x-2 max-w-screen-sm overflow-x-auto">
+						<button
+							className={`px-4 py-2 text-xs sm:text-base transition-colors duration-500 ease-in-out border-b-4 ${activeTab === 'introduction' ? 'border-b-orange-400 text-gray-700' : 'text-gray-800'}`}
+							onClick={() => setActiveTab('introduction')}
+						>
+							Introduction
+						</button>
+						<button
+							className={`px-4 py-2 text-xs sm:text-base transition-all duration-300 ease-in-out border-b-4 ${activeTab === 'founderVision' ? 'border-b-orange-400 text-gray-700' : 'text-gray-800'}`}
+							onClick={() => setActiveTab('founderVision')}
+						>
+							Vision
+						</button>
+						<button
+							className={`px-4 py-2 text-xs sm:text-base transition-all duration-300 ease-in-out border-b-4 ${activeTab === 'goals' ? 'border-b-orange-400 text-gray-700' : 'text-gray-800'}`}
+							onClick={() => setActiveTab('goals')}
+						>
+							Goals
+						</button>
+						<button
+							className={`px-4 py-2 text-xs sm:text-base transition-all duration-300 ease-in-out border-b-4 ${activeTab === 'promises' ? 'border-b-orange-400 text-gray-700' : 'text-gray-800'}`}
+							onClick={() => setActiveTab('promises')}
+						>
+							Promises
+						</button>
 						</div>
 					</div>
 
@@ -213,56 +213,70 @@ const FounderSection = ({ founderData }) => {
 					<div className="mt-6 justify-start overflow-hidden items-center">
 						{/* Founder Tab */}
 						{activeTab === 'introduction' && (
-							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
-								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
-									{isExpanded ? founderData.introduction: founderData.introduction.slice(0, 300) + '...'}
-								</p>
-								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
-									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-								</button>
-							</div>
+						<div className="text-left px-2 flex flex-col justify-start items-start space-y-2">
+							<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px]">
+							{isExpanded ? founderData.introduction : founderData.introduction.slice(0, 300) + '...'}
+							</p>
+							<button
+							onClick={toggleShowMore}
+							className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white"
+							>
+							<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+							</button>
+						</div>
 						)}
 
 						{/* Founder Vision Tab */}
 						{activeTab === 'founderVision' && (
-							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
-								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
-									<span className="block mt-2 max-h-[200px] overflow-y-auto">
-										{isExpanded? founderData.founderVision : founderData.founderVision.slice(0, 300) + '...'}
-									</span>
-								</p>
-								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
-									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-								</button>
-							</div>
+						<div className="text-left px-2 flex flex-col justify-start items-start space-y-2">
+							<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px]">
+							<span className="block mt-2 max-h-[200px] overflow-y-auto">
+								{isExpanded ? founderData.founderVision : founderData.founderVision.slice(0, 300) + '...'}
+							</span>
+							</p>
+							<button
+							onClick={toggleShowMore}
+							className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white"
+							>
+							<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+							</button>
+						</div>
 						)}
 
-						{/* Community Tab */}
+						{/* Goals Tab */}
 						{activeTab === 'goals' && (
-							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
-								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
-									{isExpanded ?  founderData.goals : founderData.goals.slice(0, 300) + '...'}
-								</p>
-								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
-									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-								</button>
-							</div>
+						<div className="text-left px-2 flex flex-col justify-start items-start space-y-2">
+							<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px]">
+							{isExpanded ? founderData.goals : founderData.goals.slice(0, 300) + '...'}
+							</p>
+							<button
+							onClick={toggleShowMore}
+							className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white"
+							>
+							<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+							</button>
+						</div>
 						)}
+
+						{/* Promises Tab */}
 						{activeTab === 'promises' && (
-							<div className="text-left px-2 flex flex-col justify-start  items-start space-y-2">
-								<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px] ">
-									{isExpanded ?  founderData.promises : founderData.promises.slice(0, 300) + '...'}
-								</p>
-								<button onClick={toggleShowMore} className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white">
-									<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
-								</button>
-							</div>
+						<div className="text-left px-2 flex flex-col justify-start items-start space-y-2">
+							<p className="text-gray-700 max-h-[200px] overflow-y-auto min-h-[200px]">
+							{isExpanded ? founderData.promises : founderData.promises.slice(0, 300) + '...'}
+							</p>
+							<button
+							onClick={toggleShowMore}
+							className="mt-4 rounded-full bg-black hover:bg-gray-50 hover:border-gray-900 hover:border hover:text-black p-2 px-4 text-center font-medium text-white"
+							>
+							<span>{isExpanded ? 'Show Less' : 'Show More'}</span>
+							</button>
+						</div>
 						)}
 					</div>
 				</div>
-
 			</div>
-		</section>
+			</section>
+
 	);
 };
 

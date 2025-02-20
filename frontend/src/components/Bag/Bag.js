@@ -15,6 +15,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import BagContent from './BagContent';
 import OfflineBagContent from './OfflineBagContent';
 import BackToTopButton from '../Home/BackToTopButton';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 
 const Bag = () => {
@@ -377,6 +378,7 @@ const Bag = () => {
             )}
             <Footer/>
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
 };

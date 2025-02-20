@@ -168,7 +168,8 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
         if (paymentMethod) {
             if (paymentMethod === "COD") {
                 setIsPaymentStart(true);
-				const filterdOrderDetails = bag.orderItems.filter(item => item.productId.isChecked);
+				const filterdOrderDetails = bag?.orderItems?.filter(item => !item.productId.isChecked);
+				console.log("Filtered Order Details: ",filterdOrderDetails);
 				if(filterdOrderDetails.length === 0){
                     checkAndCreateToast("error","Please select products to proceed with COD");
                     setIsPaymentStart(false);

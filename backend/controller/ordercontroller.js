@@ -10,6 +10,7 @@ import { sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
+import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 
 export const createPaymentOrder = async (req, res, next) => {
     try {
@@ -135,12 +136,13 @@ export const createorder = async (req, res, next) => {
         if (!req.user) {
             return res.status(400).json({ success: false, message: "No User Found" });
         }
-		// console.log("Req user: ",req.user);
+		console.log("Req user: ",req.user);
 		// const activeUser = req.user.user;
         // Destructure and validate the required fields from the body
         const { orderItems, Address, bagId, TotalAmount, paymentMode,ConvenienceFees, status } = req.body;
-		// console.log("Order Data: ",req.body);
-        if (!orderItems || !Address || !bagId || !TotalAmount || !ConvenienceFees || !paymentMode || !status) {
+		console.log("Order Data: ",req.body);
+		// return res.status(200).json({ success: true, message: "Order Created Successfully"});
+        if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
             return res.status(400).json({ success: false, message: "Please Provide All the Data" });
         }
 
@@ -148,54 +150,39 @@ export const createorder = async (req, res, next) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
-		const addressString = Object.values(Address).join(", ");
+		// const addressString = Object.values(Address).join(", ");
         // Create a new order entry
-        const orderData = new OrderModel({
+        
+		// console.log("Order Data: ",orderItems.filter((item) => item?.productId?.isChecked));
+		try {
+			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
+				order_id: randomOrderShipRocketId,
+				userId: req.user.id,
+				ConveenianceFees: ConvenienceFees || 0,
+				orderItems:orderItems.filter((item) => item.isChecked),
+				address: Address,
+				TotalAmount,
+				paymentMode,
+				pincode:Address.pincode,
+				status: 'Confirmed',
+			},randomOrderShipRocketId)
+			console.log("Shipment Data: ",createdShipRocketOrder);
+		} catch (error) {
+			console.error("Error while creating shipRocket order: ", error);
+		}
+		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
-			ConveenianceFees: ConvenienceFees,
+			ConveenianceFees: ConvenienceFees || 0,
             orderItems:orderItems.filter((item) => item.isChecked),
-            address: addressString,
+            address: Address,
             TotalAmount,
             paymentMode,
-            status: 'Processing',
+            status: 'Confirmed',
         });
-		/*
-			order_id
-			waybill
-			package_type
-			payment_mode
-			consignee
-			seller_details
-			warehouse_details
-			fragile_shipment
-			gst_details
-			products
-			country
-			pickup_location 
-		*/
-		/* const{success,data} = createDelivaryOneShipment({
-				order_id: randomOrderShipRocketId,
-				consignee_name: activeUser?.name,
-				phone: activeUser.phoneNumber,
-				address: addressString,
-				pin: Address.pincode,
-				payment_mode: "COD",
-				shipment_cost:2000,
-				warehouse_name: "warehouse 1",
-				seller_gst_tin: "GST12345",
-				hsn_code: "123456",
-				invoice_reference: "INV123456",
-				country: "IN",
-				waybill: "EWB123456789" 
-			});
-		if(!success){
-			console.log("Data: NOt Accurate: ",data);
-			return;
-		} */
 
-        // Save the order data to the database
         await orderData.save();
+        
 
         // Perform the item removal asynchronously (parallelize them)
         const removingAmountPromises = orderItems.map(item => 

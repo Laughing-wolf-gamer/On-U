@@ -556,9 +556,9 @@ export const GetBadgeColor = (status)=>{
     switch(status){
         case 'Processing':
             return 'bg-orange-600 text-white hover:bg-orange-800';
-        case'Order Confirmed':
+        case'Confirmed':
             return 'bg-yellow-600 text-white hover:bg-yellow-800';
-        case 'Order Shipped':
+        case 'Shipped':
             return 'bg-blue-600 text-white hover:bg-blue-800';
         case 'Out for Delivery':
             return 'bg-pink-600 text-white hover:bg-pink-800';

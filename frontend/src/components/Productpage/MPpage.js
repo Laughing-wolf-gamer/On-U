@@ -22,6 +22,7 @@ import StarRatingInput from './StarRatingInput';
 import SizeChartModal from './SizeChartModal';
 import BackToTopButton from '../Home/BackToTopButton';
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
+import WhatsAppButton from '../Home/WhatsAppButton';
 const reviews = [
     {
         rating: 5,
@@ -898,6 +899,7 @@ const MPpage = () => {
                     <Loader />
                 )}
 				<BackToTopButton scrollableDivRef={scrollContainerRef} />
+				<WhatsAppButton scrollableDivRef={scrollContainerRef}/>
             </div>
         </Fragment>
     );

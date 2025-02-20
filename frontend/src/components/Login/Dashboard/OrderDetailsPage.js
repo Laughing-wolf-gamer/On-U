@@ -8,6 +8,7 @@ import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../../co
 import Footer from '../../Footer/Footer';
 import BackToTopButton from '../../Home/BackToTopButton';
 import { ChevronLeft } from 'lucide-react';
+import WhatsAppButton from '../../Home/WhatsAppButton';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -162,6 +163,7 @@ const OrderDetailsPage = ({ user }) => {
             )}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
 };

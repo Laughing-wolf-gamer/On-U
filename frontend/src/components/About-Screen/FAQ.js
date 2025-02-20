@@ -5,6 +5,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchFAQ } from '../../action/common.action';
 import Loader from '../Loader/Loader';
+import WhatsAppButton from '../Home/WhatsAppButton';
 // Example FAQ Data
 
 const FAQ = () => {
@@ -72,6 +73,7 @@ const FAQ = () => {
 		</div>
 		<Footer/>
 		<BackToTopButton scrollableDivRef={scrollableDivRef} />
+		<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
 		</div>
 	);
 };

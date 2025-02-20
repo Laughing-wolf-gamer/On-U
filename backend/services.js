@@ -12,11 +12,11 @@ process.on('uncaughtException', (err)=>{
 const PORT = process.env.PORT || 8004;
 const server = App.listen(process.env.PORT, ()=>{
     console.log(`Server on http://localhost:${PORT}`)
-    /* try {
-        // getAuthToken();
+    try {
+        getAuthToken();
     } catch (error) {
         console.error("Error getting ShipRocket auth token: ",error);
-    } */
+    }
 })
 
 connectdatabse()

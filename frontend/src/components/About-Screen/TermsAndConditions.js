@@ -4,6 +4,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchTermsAndCondition } from '../../action/common.action';
 import Loader from '../Loader/Loader';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const TermsAndConditions = () => {
 	const{ termsAndCondition,loading } = useSelector(state => state.TermsAndConditions);
@@ -132,6 +133,7 @@ const TermsAndConditions = () => {
 		}
 		<Footer/>
 		<BackToTopButton scrollableDivRef={scrollableDivRef} />
+		<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
 		</div>
 	);
 };
