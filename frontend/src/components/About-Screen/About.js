@@ -5,6 +5,7 @@ import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import LoadingOverlay from '../../utils/LoadingOverLay';
 import BackToTopButton from '../Home/BackToTopButton';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const About = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
@@ -146,6 +147,7 @@ const About = () => {
             )}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
+            <WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
 };
