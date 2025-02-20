@@ -334,13 +334,14 @@ export const addNewProduct = async (req, res) => {
         const isValid = isFormValid(req.body)
 		
         if (!isValid || !isValid.isValid) {
-            return res.status(201).json({ Success: false, message: "All fields are required", reasons: `Missing Fields: ${getStringFromObject(isFormValid(req.body))}` });
+            // return res.status(201).json({ Success: false, message: "All fields are required", reasons:  });
+			throw new Error(`Missing Fields: ${getStringFromObject(isFormValid(req.body))}`);
         }
 
         // Handle colors
         const AllColors = [];
         size.forEach(s => {
-            if (s.colors) {
+            if (s.colors && s.colors.length > 0) {
                 s.colors.forEach(c => {
 					if(c.images && c.images.length > 0){
 						const colorsImageArray = c.images.filter(c => c !== "");
@@ -427,7 +428,7 @@ export const addNewProduct = async (req, res) => {
     } catch (error) {
         console.error('Error while adding new product:', error);
         logger.error("Error while creating new Product: " + error.message);
-        res.status(500).json({ Success: false, message: 'Internal Server Error' ,reasons:error.message});
+        res.status(201).json({ Success: false, message: 'Internal Server Error' ,reasons:error.message})
     }
 };
 
