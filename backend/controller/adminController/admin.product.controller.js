@@ -342,9 +342,11 @@ export const addNewProduct = async (req, res) => {
         size.forEach(s => {
             if (s.colors) {
                 s.colors.forEach(c => {
-                    const colorsImageArray = c.images.filter(c => c !== "");
-                    c.images = colorsImageArray;
-                    AllColors.push(c);
+					if(c.images && c.images.length > 0){
+						const colorsImageArray = c.images.filter(c => c !== "");
+						c.images = colorsImageArray;
+						AllColors.push(c);
+					}
                 });
             }
         });
