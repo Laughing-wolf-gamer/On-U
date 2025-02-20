@@ -22,17 +22,7 @@ const authSlice = createSlice({
         }
 	},
     extraReducers:(builder)=>{
-        builder.addCase(registerUser.pending,(state)=>{
-            state.isLoading = true;
-        }).addCase(registerUser.fulfilled,(state,action)=>{
-            state.isLoading = false;
-            state.isAuthenticated = false;
-            state.user = null;
-        }).addCase(registerUser.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.isAuthenticated = false;
-            state.user = null;
-        }).addCase(loginUser.pending,(state)=>{
+        builder.addCase(loginUser.pending,(state)=>{
             state.isLoading = true;
         }).addCase(loginUser.fulfilled,(state,action)=>{
             state.isLoading = false;
@@ -68,7 +58,6 @@ const authSlice = createSlice({
 export const registerUser = createAsyncThunk('/auth/register',
     async(formData)=>{
         try {
-            console.log(formData);
             const response = await axios.post(`${BASE_URL}/admin/auth/register`,formData,{
                 withCredentials:true,
             });
@@ -80,6 +69,17 @@ export const registerUser = createAsyncThunk('/auth/register',
         }
     }
 )
+export const authverifyOtp = createAsyncThunk('/auth/verifyOtp',async({otp,email})=>{
+	try {
+        const response = await axios.post(`${BASE_URL}/admin/auth/adminOtpCheck`,{otp,email},{
+            withCredentials:true,
+        });
+        console.log('Verify OTP Response: ',response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+})
 export const loginUser = createAsyncThunk('/auth/login',
     async(formData)=>{
         try {

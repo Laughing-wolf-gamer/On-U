@@ -791,7 +791,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     />
                                     <div
                                         style={{ backgroundColor: e.label }}
-                                        className="w-10 h-7 border border-slate-400 rounded"
+                                        className="w-7 h-7 border border-slate-400 rounded"
                                     ></div>
                                     <label className="flex flex-row whitespace-nowrap space-x-2 text-left text-sm">
                                         <span className="font-semibold">

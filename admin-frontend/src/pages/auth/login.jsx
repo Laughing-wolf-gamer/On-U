@@ -31,7 +31,7 @@ const AuthLogIn = () => {
             });
             navigate('/admin/dashboard');
         } else {
-            toast.success(`LogIn Failed! ${res?.payload?.message}`);
+            toast.error(`LogIn Failed! ${res?.payload?.message}`);
         }
         } catch (error) {
         	console.error(`Error Occurred While LogIn User: ${error.message}`);

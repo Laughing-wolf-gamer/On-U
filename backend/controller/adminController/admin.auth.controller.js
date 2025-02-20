@@ -7,12 +7,13 @@ import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
 import logger from "../../utilis/loggerUtils.js";
 import { removeSpaces } from "../../utilis/basicUtils.js";
+import { sendVerificationEmail } from "../emailController.js";
 
 
 
 export const registerNewAdmin = async(req,res)=>{
     try {
-        const {name,email,password,phoneNumber,role} = req.body;
+        const {userName,email,password,phoneNumber,role} = req.body;
         // console.log("Authenticating with: ",name,email,password,phoneNumber)
         if(role){
             if(role !== 'admin' && role !== 'superAdmin'){
@@ -21,21 +22,49 @@ export const registerNewAdmin = async(req,res)=>{
         }else{
             return res.status(401).json({Success:false,message: 'Please enter a valid role'});
         }
-        let user = await User.findOne({email: email});
-        if(user){
-            return res.status(401).json({Success:false,message: 'User already exists'});
-        }
+		const otp = Math.floor((1 + Math.random()) * 90000)
+		await sendVerificationEmail("onuclothing2@gmail.com", otp)
         const hashedPassword = await bcrypt.hash(password,10);
 		//https://avatar.iran.liara.run/public/job/[job title]/[gender]
-		const profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(name)}`
-        user = new User({name,phoneNumber,email,password:hashedPassword,profilePic:profilePic,role:role});
+		const profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(userName)}`
+        let user = await User.findOne({email: email});
+        if(user){
+			user.otp = otp;
+			await user.save();
+            // return res.status(401).json({Success:false,message: 'User already exists'});
+			return res.status(200).json({Success:true,message: 'User registered successfully',otp:otp,email:email});
+        }
+		
+        user = new User({name:userName,phoneNumber,email,password:hashedPassword,profilePic:profilePic,otp:otp,role:role});
         await user.save();
-        res.status(200).json({Success:true,message: 'User registered successfully'});
+        res.status(200).json({Success:true,message: 'User registered successfully',otp:otp,email:email});
     } catch (error) {
         console.error(`Error registering user `,error);
 		logger.error(`Error registering user ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
+}
+export const adminRegisterOtpCheck = async (req,res)=>{
+	try {
+		const{email,otp} = req.body;
+		const user = await User.findOne({email: email});
+		if(!user){
+            return res.status(404).json({Success:false,message: 'User not found'});
+        }
+		console.log("Authenticating with: ",email,otp,user)
+		if(user.otp.toString() !== otp.toString()){
+            return res.status(401).json({Success:false,message: 'Incorrect OTP'});
+        }
+		user.otp = null
+		user.verify = 'verified';
+		await user.save();
+		const token = sendtoken(user);
+		res.status(200).json({Success:true,message: 'OTP Verified Successfully',result:user,token:token});
+	} catch (error) {
+		console.error(`Error admin registering otp check `,error);
+		logger.error(`Error admin registering otp check ${error.message}`);
+		res.status(500).json({Success:false,message: 'Internal Server Error'});
+	}
 }
 export const logInUser = async (req,res) =>{
     try {

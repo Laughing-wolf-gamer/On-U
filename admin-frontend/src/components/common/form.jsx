@@ -12,20 +12,20 @@ import AllColorsWithImages from '../admin-view/AllColorsWithImages';
 const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonText, isBtnValid }) => {
     // Function to render form controls based on their type
     function renderInputControllersByType(controlItems) {
-		console.log("controlItems",controlItems)
+		// console.log("controlItems",controlItems)
         const value = formData[controlItems.name] || '';
         switch (controlItems.componentType) {
         case 'text':
             return (
                 <Input
-				name={controlItems.name}
-				placeholder={controlItems.placeholder}
-				id={controlItems.name}
-				type={controlItems.type}
-				value={value}
-				onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
-				className={`px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full`}
-            />
+					name={controlItems.name}
+					placeholder={controlItems.placeholder}
+					id={controlItems.name}
+					type={controlItems.type}
+					value={value}
+					onChange={(e) => setFormData({ ...formData, [controlItems.name]: e.target.value })}
+					className={`px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full`}
+				/>
             
             );
         case 'select':
@@ -118,7 +118,7 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
         </div>
             <Button
                 disabled={!isBtnValid}
-                className="mt-4 w-full py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 disabled:bg-gray-400"
+                className="mt-4 w-full py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50 disabled:bg-gray-100"
             >
                 {buttonText || 'Submit'}
             </Button>

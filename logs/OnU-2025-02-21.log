@@ -1,0 +1,8 @@
+2025-02-20T20:12:25.442Z error: Error registering user sendVerificationEmail is not defined
+2025-02-20T20:12:25.442Z error: Error registering user sendVerificationEmail is not defined
+2025-02-20T20:12:50.730Z error: Error registering user Cannot read properties of undefined (reading 'replace')
+2025-02-20T20:12:50.730Z error: Error registering user Cannot read properties of undefined (reading 'replace')
+2025-02-20T20:42:40.736Z error: Error registering user user validation failed: email: Please enter valid Email ID 
+2025-02-20T20:42:40.736Z error: Error registering user user validation failed: email: Please enter valid Email ID 
+2025-02-20T21:25:18.008Z error: Error admin registering otp check Cannot read properties of null (reading 'toString')
+2025-02-20T21:25:18.008Z error: Error admin registering otp check Cannot read properties of null (reading 'toString')

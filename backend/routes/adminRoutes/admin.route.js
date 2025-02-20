@@ -1,12 +1,13 @@
 import express from 'express';
 import { addCustomProductsRating, addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, removeCoupon, removeCustomProductsRating, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
-import { addNewColorToSize, addNewSizeToProduct, fetchAllCustomerUsers, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getRecentOrders, getTopSellingProducts, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, removingCustomer, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
+import { addNewColorToSize, addNewSizeToProduct, adminRegisterOtpCheck, fetchAllCustomerUsers, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getRecentOrders, getTopSellingProducts, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, removingCustomer, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 
 const route = express.Router();
 route.post('/auth/register',registerNewAdmin)
+route.post('/auth/adminOtpCheck',adminRegisterOtpCheck)
 route.post('/auth/login',logInUser)
 
 

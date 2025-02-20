@@ -1,60 +1,221 @@
-import CommonForm from '@/components/common/form'
-import { registerFormControls } from '@/config'
-import { useToast } from '@/hooks/use-toast'
-import { registerUser } from '@/store/auth-slice'
+import CustomSelect from '@/components/admin-view/CustomSelect'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
+import { authverifyOtp, registerUser } from '@/store/auth-slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
+import { toast } from 'react-toastify'
+
+const registerFormControls = [
+    {
+        name: 'userName',
+        label: 'User Name',
+        placeHolder: 'Enter your User Name',
+        componentType: 'input',
+        type: 'text',
+        required: true,
+        disabled: false,
+    },
+    {
+        name: 'email',
+        label: 'Email',
+        placeHolder: 'Enter your Email Address',
+        componentType: 'input',
+        type: 'email',
+        required: true,
+        disabled: false,
+    },
+    {
+        name: 'phoneNumber',
+        label: 'Phone Number',
+        placeHolder: 'Enter your Phone Number',
+        componentType: 'input',
+        type: 'phone',
+        required: true,
+        disabled: false,
+    },
+    {
+        name: 'password',
+        label: 'Password',
+        placeHolder: 'Enter your password',
+        componentType: 'input',
+        type: 'password',
+        required: true,
+        disabled: false,
+    },
+    {
+        name: 'role',
+        label: 'Role',
+        placeHolder: 'Set Role Type',
+        componentType: 'select',
+        required: true,
+        disabled: false,
+        options: [
+            { id: 'superAdmin', label: 'Super Admin' },
+            { id: 'admin', label: 'Admin' },
+        ],
+    },
+]
 
 const AuthRegister = () => {
+    const [isLoading, setIsLoading] = useState(false)
     const [formData, setFormData] = useState({
-        userName:'',
-        email:'',
-        password:'',
-        role:''
+        userName: '',
+        email: '',
+        password: '',
+        role: '',
     })
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
-    const {toast} = useToast();
+    
+    const [checkOtp, setCheckOtp] = useState(false)
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const onSubmit = async (e) => {
-        e.preventDefault();
+        e.preventDefault()
+        setIsLoading(true)
         try {
-            const res = await dispatch(registerUser(formData));
-            if(res?.payload?.Success){
-                toast({
-                    title: "Registered Successful",
-                    description: res?.payload?.message,
-                })
-                setFormData({
-                    userName:'',
-                    email:'',
-                    password:'',
-                    role:''
-                })
-                navigate('/auth/login');
-            }else{
-                toast({
-                    title: "Registered Un-Successful",
-                    description: res?.payload?.message,
-                })
+            const res = await dispatch(registerUser(formData))
+            if (res?.payload?.Success) {
+                toast.success('Sent OTP to registered Email. Please verify it.')
+                setCheckOtp(true)
+            } else {
+                setCheckOtp(false)
             }
         } catch (error) {
-            console.error(`Error Occurred While Registering User: ${error.message}`);
+            toast.error('Error registering User')
+        } finally {
+            setIsLoading(false)
         }
     }
-	return (
-		<div className='mx-auto w-full max-w-md space-y-6'>
+
+    const verifyOtp = async (otp) => {
+        setIsLoading(true)
+        try {
+            if (!otp) {
+                toast.error('Please enter OTP')
+                return
+            }
+            const res = await dispatch(authverifyOtp({ otp, email: formData.email }))
+            // Handle OTP verification response here
+			console.log("OTP verified: ", res?.payload);
+			if(res?.payload?.Success){
+				toast.success("Registration Successful")
+                navigate('/auth/login')
+			}else{
+				toast.error("Failed to register")
+                setFormData({...formData, password: '' })
+                navigate('/auth/register')
+			}
+        } catch (error) {
+            toast.error('Invalid OTP')
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
+    return (
+        <div className='mx-auto w-full max-w-md space-y-6 h-fit shadow-lg p-3 rounded-md'>
             <div className='text-center'>
                 <h1 className='text-3xl font-bold tracking-tight text-foreground'>
                     Create a New Account
                 </h1>
                 <p className='mt-2'>
                     Already have an Account? 
-                    <Link className='font-medium ml-2 text-primary hover:underline' to= "/auth/login"> LogIn</Link>
+                    <Link className='font-medium ml-2 text-primary hover:underline' to="/auth/login"> LogIn</Link>
                 </p>
             </div>
-            <CommonForm formControls={registerFormControls} setFormData={setFormData} formData={formData} handleSubmit={onSubmit} buttonText={"Register"} isBtnValid={true}/>
+            <form onSubmit={onSubmit} className="space-y-6 ">
+                <div className="flex flex-col gap-6">
+                    {registerFormControls.map((controlItem, index) => (
+                        <div key={index}>
+                            <Label>
+                                {controlItem.label}
+                                {controlItem.required && !formData[controlItem.name] && (
+                                    <span className="text-red-500 text-[12px] font-light">*</span>
+                                )}
+                            </Label>
+                            {controlItem.componentType === "select" ? (
+                                <CustomSelect
+                                    controlItems={controlItem}
+                                    setChangeData={(e) => {
+                                        setFormData({ ...formData, [controlItem.name]: e })
+                                    }}
+                                />
+                            ) : (
+                                <div>
+                                    {/* Check if the control is for OTP */}
+									<Input
+										disabled={checkOtp}
+										value={formData[controlItem.name]}
+										onChange={(e) => setFormData({ ...formData, [controlItem.name]: e.target.value })}
+										name={controlItem.name}
+										placeholder={controlItem.placeHolder}
+										id={controlItem.name}
+										type={controlItem.type}
+										className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full"
+										required={controlItem.required}
+									/>
+                                </div>
+                            )}
+                        </div>
+                    ))}
+                </div>
+            </form>
+            <Button
+                disabled={isLoading}
+                onClick={(e) => {
+					onSubmit(e)
+                }}
+                className="mt-4 w-full py-2 bg-primary text-white font-semibold rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+            >
+                {isLoading ? (
+                    <div className="w-6 h-6 border-4 border-t-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+                ) : (
+                    <span>{checkOtp ? "Verify OTP" : "Submit"}</span>
+                )}
+            </Button>
+			{checkOtp &&  <OptInputView isLoading = {isLoading} onSubmiOtp = {(otp)=>{
+				verifyOtp(otp)
+			}}/>}
         </div>
+    )
+}
+const OptInputView = ({isLoading ,onSubmiOtp}) => {
+	const [otp, setOtp] = useState(null)
+	const handleChangeOtp = (e) => {
+		e.preventDefault();
+		onSubmiOtp(otp);
+	}
+	return(
+		<div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
+            <div className="bg-white min-h-[200px] flex flex-col space-y-5 p-6 rounded-lg shadow-lg w-96">
+				<Label>Enter Otp</Label>
+				<Input
+					value={otp}
+					onChange={(e) => {
+						console.log("otp updated: ", e.target.value)
+						setOtp(e.target.value)
+					}}
+					name={'otp'}
+					placeholder={'Enter OTP'}
+					id={'otp'}
+					type="number"
+					className="px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-primary w-full"
+				/>
+				<Button
+					onClick={handleChangeOtp}
+					className="mt-4 w-full py-2 bg-primary text-white font-semibold border border-gray-700 rounded-md hover:bg-primary-dark focus:outline-none focus:ring-2 focus:ring-primary focus:ring-opacity-50"
+				>
+					{isLoading ? (
+						<div className="w-6 h-6 border-4 border-t-4 border-gray-200 border-t-black rounded-full animate-spin"></div>
+					) : (
+						<span>Verify</span>
+					)}
+				</Button>
+			</div>
+		</div>
 	)
 }
 

@@ -502,8 +502,8 @@ const Ppage = () => {
                                             </Fragment>
                                         )}
                                     </h1>
-                                    <h1 className='text-green-700 font-semibold text-sm mt-1'>
-                                        inclusive all taxes.
+                                    <h1 className='text-green-500 font-semibold text-sm mt-1'>
+                                        Inclusive All Taxes.
                                     </h1>
                                 </div>
 								{/* Size and Color Selection */}
