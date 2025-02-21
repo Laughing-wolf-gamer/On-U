@@ -1056,7 +1056,7 @@ const ReviewInputView = ({setRatingData,ratingData,isPostingReview,PostRating})=
                                 className='bg-gray-500 text-white px-4 py-2 rounded-md'
                             >
                                 {
-                                    isPostingReview? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div> : 'Submit Review'
+                                    isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-700 rounded-full animate-spin"></div> : 'Submit Review'
                                 }
                             </button>
                         </div>
@@ -1191,7 +1191,7 @@ const ProductReviews = ({ reviews }) => {
             <div className="mt-4">
                 <button 
                     onClick={handleToggleReviews} 
-                    className="text-blue-500 font-semibold"
+                    className="text-gray-500 font-semibold"
                 >
                     {showMore ? 'View Less' : 'View More'}
                 </button>
@@ -1202,7 +1202,7 @@ const ProductReviews = ({ reviews }) => {
 };
 
 
-const LeftImageContent = ({
+/* const LeftImageContent = ({
     selectedSize_color_Image_Array,
     Addclass,
     setSelectedImage,
@@ -1229,7 +1229,7 @@ const LeftImageContent = ({
     return (
         <div className="w-full min-h-fit max-w-fit px-2 flex flex-row justify-start items-start">
             <div className="flex flex-col pr-6 justify-center items-center h-full min-w-fit">
-                <div className="flex flex-col mr-3 w-[70px] gap-8"> {/* Reduced the width of the container */}
+                <div className="flex flex-col mr-3 w-[70px] gap-8"> 
                     {selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
                             const isVideo = isVideoFile(file); // Use the extracted function
@@ -1304,6 +1304,6 @@ const LeftImageContent = ({
         </div>
     );
     
-};
+}; */
 
 export default Ppage
