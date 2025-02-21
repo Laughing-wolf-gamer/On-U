@@ -334,7 +334,6 @@ export const addNewProduct = async (req, res) => {
         const isValid = isFormValid(req.body)
 		
         if (!isValid || !isValid.isValid) {
-            // return res.status(201).json({ Success: false, message: "All fields are required", reasons:  });
 			throw new Error(`Missing Fields: ${getStringFromObject(isFormValid(req.body))}`);
         }
 

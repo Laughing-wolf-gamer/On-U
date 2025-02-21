@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { fetchOptionsByType } from "@/store/common-slice";
 import { useDispatch } from "react-redux";
 
-const ColorPresetsCreator = ({OnChange}) => {
+const ColorPresetsCreator = () => {
 	const dispatch = useDispatch();
 	const [colorOptions, setColorOptions] = useState([]);
 	

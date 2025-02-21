@@ -25,10 +25,10 @@ export const getAuthToken = async (email,password) => {
 		if(token !== null){
 			return token;
 		}
-		return null;
+		return '';
     } catch (error) {
         console.error('Error fetching auth token:', error);
-        return null;
+        return '';
     }
 };
 

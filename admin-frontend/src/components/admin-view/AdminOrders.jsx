@@ -6,10 +6,11 @@ import AdminOrdersDetailsView from './AdminOrdersDetailsView'
 import { useDispatch, useSelector } from 'react-redux'
 import { adminGetAllOrders, adminGetUsersOrdersById, loginLogistics, resetOrderDetails } from '@/store/admin/order-slice'
 import { Badge } from '../ui/badge'
-import { GetBadgeColor } from '@/config'
+import { BASE_URL, GetBadgeColor, Header } from '@/config'
 import { Copy, TruckIcon } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Input } from '../ui/input'
+import axios from 'axios'
 
 const AdminOrderLayout = () => {
     const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
@@ -240,17 +241,22 @@ const AdminOrderLayout = () => {
     )
 }
 const LogisticsLoginView = ({OnLoginComplete})=>{
-	const dispatch = useDispatch();
 	const[logisticsLoginForm,setLogisticsLoginForm] = useState({email: '', password: ''});
 	const handleLogisticsTokenChange = async(e) => {
 		e.preventDefault();
-		const logisticsToken = await dispatch(loginLogistics(logisticsLoginForm));
-		if(logisticsToken){
-			console.log("Logistics Token: ", logisticsToken);
-			OnLoginComplete(loginLogistics?.payload?.result);
-			toast.success("Logged In ", {autoClose: 300} );
-		}else{
-			toast.error("Invalid Email or Password");
+		try {
+			// const response = await axios.post(`${BASE_URL}/api/logistic/login`,logisticsLoginForm,Header())
+			const response = await axios.post(`${BASE_URL}/api/logistic/login`,logisticsLoginForm,Header())
+			if(response){
+				console.log("Logistics Login Response: ", response?.data?.result);
+				OnLoginComplete(response?.data?.result);
+				toast.success("Logged In Success" );
+			}else{
+				toast.error("Invalid Email or Password");
+			}
+		} catch (error) {
+			console.error ("Error logging in logistics: ", error);
+			toast.error("Error logging in logistics");
 		}
 	}
 	return(

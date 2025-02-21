@@ -96,7 +96,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 			}
 		}
 		OnChange(selectedColorArray);
-		console.log("Color Images Image Urls:  ",selectedColorArray);
+		// console.log("Color Images Image Urls:  ",selectedColorArray);
 		
 	},[selectedColorArray,setSelectedColorArray,optionsArray]);
 	
@@ -111,7 +111,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 			)
 		);
 	};
-	console.log("colorOptions: ",colorOptions)
+	// console.log("colorOptions: ",colorOptions)
 
 	return (
 		<div className="p-6 bg-white rounded-lg shadow-md">
@@ -121,12 +121,12 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 					<p className="text-gray-700 font-medium">Selected Colors:</p>
 					<div className="flex gap-2 mt-2">
 						{selectedColorArray.map((color, index) => (
-						<span
-							key={index}
-							className="w-6 h-6 rounded-full border border-gray-300"
-							style={{ backgroundColor: color?.label }}
-							aria-label={`Selected color ${color.label}`}
-						/>
+							<span
+								key={index}
+								className="w-6 h-6 rounded-full border border-gray-300"
+								style={{ backgroundColor: color?.label }}
+								aria-label={`Selected color ${color.label}`}
+							/>
 						))}
 					</div>
 				</div>

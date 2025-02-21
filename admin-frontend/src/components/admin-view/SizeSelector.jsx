@@ -145,7 +145,7 @@ const SizeSelector = ({ sizeType, OnChange }) => {
 		e.preventDefault();
 		setShowMore((prev) => [...prev, { id: optionsArray.length, value: false }]);
 		setOptionsArray([
-			...optionsArray,
+		...optionsArray,
 			{ id: optionsArray.length + 1, label: `New Size`, quantity: 1 },
 		]);
 	};
