@@ -150,6 +150,7 @@ export const createorder = async (req, res, next) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
+        const randomShipmentId = generateRandomId();
 		// const addressString = Object.values(Address).join(", ");
         // Create a new order entry
         
@@ -165,7 +166,7 @@ export const createorder = async (req, res, next) => {
 				paymentMode,
 				pincode:Address.pincode,
 				status: 'Confirmed',
-			},randomOrderShipRocketId)
+			},randomOrderShipRocketId,randomShipmentId)
 			console.log("Shipment Data: ",createdShipRocketOrder);
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
@@ -173,6 +174,7 @@ export const createorder = async (req, res, next) => {
 		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
+			shipment_id: randomShipmentId,
 			ConveenianceFees: ConvenienceFees || 0,
             orderItems:orderItems.filter((item) => item.isChecked),
             address: Address,
@@ -668,13 +670,13 @@ const getItemsData = async (bag) => {
 			// Await the database query
 			const productData = await ProductModel.findById(productId?._id || productId);
 			console.log("Deconstruct Product data: ", productData)
-			const { salePrice, price ,gst } = productData;
-			const priceWithoutGst = getOriginalAmount(gst,price)
+			const { salePrice, price  } = productData;
+			/* const priceWithoutGst = getOriginalAmount(gst,price)
 			let salePriceWithouGst = 0;
 			if(salePrice){
-				salePriceWithouGst = getOriginalAmount(gst,salePrice);
+				// salePriceWithouGst = getOriginalAmount(gst,salePrice);
 			}
-
+ */
 			// Calculate item totals
 			const productSellingPrice = salePrice || price;
 			const itemTotalPrice = (salePrice && salePrice > 0 ? salePrice : price) * quantity;
@@ -685,7 +687,7 @@ const getItemsData = async (bag) => {
 				const discount = price - salePrice;
 				totalDiscount += discount * quantity;
 			}
-			totalGst += gst;
+			// totalGst += gst;
 
 			// Add to the product selling price
 			totalProductSellingPrice += (productSellingPrice * quantity);

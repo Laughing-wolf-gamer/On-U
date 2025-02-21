@@ -42,7 +42,7 @@ export const logoutAuthToken = async ()=>{
     }
 }
 
-export const generateOrderForShipment = async(userId,shipmentData,randomOrderId) =>{
+export const generateOrderForShipment = async(userId,shipmentData,randomOrderId,randomShipmentId) =>{
     if(!token) await getAuthToken();
     try {
 		console.log("User Id: ", userId);
@@ -81,6 +81,7 @@ export const generateOrderForShipment = async(userId,shipmentData,randomOrderId)
         }
         const orderDetails = {
             order_id: randomOrderId, // Unique order ID, ensure this is generated dynamically
+			shipment_id: randomShipmentId, // Unique shipment ID, ensure this is generated dynamically
             order_date: formatDate(new Date()), // The date when the order is placed (in YYYY-MM-DD HH:mm format)
             pickup_location: "warehouse", // The city from where the order is to be picked up
             billing_customer_name: shipmentData.address.Firstname, // Customer's name

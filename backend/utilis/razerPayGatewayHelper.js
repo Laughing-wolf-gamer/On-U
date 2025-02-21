@@ -71,6 +71,7 @@ export const paymentVerification = async (req, res) => {
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 
         const randomOrderShipRocketId = generateRandomId();
+		const randomShipmentId = generateRandomId();
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
@@ -82,7 +83,7 @@ export const paymentVerification = async (req, res) => {
 				TotalAmount:totalAmount,
 				paymentMode:"prepaid",
 				status: 'Confirmed',
-			},randomOrderShipRocketId)
+			},randomOrderShipRocketId,randomShipmentId)
 			console.log("Shipment Data: ",createdShipRocketOrder);
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
@@ -102,6 +103,7 @@ export const paymentVerification = async (req, res) => {
 		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: id,
+			shipment_id:randomShipmentId,
 			razorpay_order_id:razorpay_order_id,
 			ConveenianceFees: alreadyFoundWebsiteData?.ConvenienceFees || 0,
             orderItems:orderDetails.filter((item) => item.isChecked),

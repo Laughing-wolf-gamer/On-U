@@ -28,6 +28,8 @@ import { FunctionProvider } from "./Contaxt/FunctionContext.js";
 import { Toaster } from 'react-hot-toast';
 import CheckoutPage from "./components/Bag/NewCheckoutPage.js";
 import NotFoundPage from "./NotFoundPage.js";
+import PaymentSuccess from "./components/Bag/PaymentSuccess.js";
+import PaymentFailed from "./components/Bag/PaymentFailed.js";
 
 
 
@@ -87,6 +89,8 @@ function App() {
 				<Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
 				<Route path='/bag' element={<Bag user={user}/>}/>
 				<Route path='/bag/checkout' element={<CheckoutPage/>}/>
+				<Route path='/bag/checkout/success' element={<PaymentSuccess/>}/>
+				<Route path='/bag/checkout/failure' element={<PaymentFailed/>}/>
 				{user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
 				<Route path='/address/bag' element={<Address user={user}/>}/>
 				<Route path='/about' element={<About />}/>

@@ -185,10 +185,18 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                     Address: selectedAddress,
                     status: 'Order Confirmed'
                 };
-                await dispatch(create_order(orderData));
-                navigation('/bag')
-                closePopup();
-                setIsPaymentStart(false);
+                const response = await dispatch(create_order(orderData));
+				if(response?.success){
+					navigation('/bag/checkout/success')
+					closePopup();
+					setIsPaymentStart(false);
+				}else{
+					checkAndCreateToast("error",response?.message);
+					setIsPaymentStart(false);
+					closePopup();
+					navigation('/bag/checkout/failure')
+				}
+
             } else {
                 handleRazerPayPayment();
             }

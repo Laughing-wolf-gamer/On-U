@@ -11,7 +11,24 @@ import { Copy, TruckIcon } from 'lucide-react'
 import { toast } from 'react-toastify'
 import { Input } from '../ui/input'
 import axios from 'axios'
-
+const orderStatus = [
+	{id:'Confirmed', label:'Confirmed'},
+	{id:'Processing', label:'Processing'},
+	{id:'Shipped', label:'Shipped'},
+	{id:'Delivered',label:"Delivered"},
+	{id:'Canceled',label:"Canceled"},
+	{id:'Delivered',label:"Delivered"},
+	{id:'RTO Initiated',label:"RTO Initiated"},
+	{id:'Lost',label:"Lost"},
+	{id:'Pickup Error',label:"Pickup Error"},
+	{id:'RTO Acknowledged',label:"RTO Acknowledged"},
+	{id:'Pickup Rescheduled',label:"Pickup Rescheduled"},
+	{id:'Cancellation Requested',label:"Cancellation Requested"},
+	{id:'Out For Delivery',label:"Out For Delivery"},
+	{id:'In Transit',label:"In Transit"},
+	{id:'Out For Pickup',label:"Out For Pickup"},
+	{id:'Pickup Exception',label:"Pickup Exception"},
+]
 const AdminOrderLayout = () => {
     const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
 	const[openLoginDialogue, setOpenLoginDialogue] = useState(false);
@@ -113,11 +130,11 @@ const AdminOrderLayout = () => {
                         onChange={(e) => setStatusFilter(e.target.value)}
                     >
                         <option value="">Filter Status (All)</option>
-                        <option value="Processing">Processing</option>
-                        <option value="Order Confirmed">Order Confirmed</option>
-                        <option value="Order Shipped">Order Shipped</option>
-                        <option value="Out for Delivery">Out for Delivery</option>
-                        <option value="Delivered">Delivered</option>
+						{
+							orderStatus.map((status) => (
+                                <option key={status.id} value={status.id}>{status.label}</option>
+                            ))
+						}
                         {/* Add more options based on available statuses */}
                     </select>
                 </div>
