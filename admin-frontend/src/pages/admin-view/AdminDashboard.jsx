@@ -1,4 +1,4 @@
-import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData } from "@/store/admin/status-slice";
+import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData, getWalletBalance } from "@/store/admin/status-slice";
 import { BoxIcon, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -210,7 +210,7 @@ const getDateRange = (preset) => {
 };
 const AdminDashboard = ({ user }) => {
     const{startDate:defaulStart, endDate:defaultEnd} = getDateRange("THIS MONTH");
-    const { isLoading, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
+    const { isLoading,walletBalance, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
     const dispatch = useDispatch();
     const [stats, setStats] = useState({ title: "Total Customers", value: TotalCustomers });
     const [currentGraphData, setGraphData] = useState({ title: "Total Orders", value: [] });
@@ -275,6 +275,7 @@ const AdminDashboard = ({ user }) => {
         dispatch(fetchAllProductsCount());
         dispatch(fetchAllOrdersCount());
         dispatch(fetchMaxDeliveredOrders());
+		dispatch(getWalletBalance());
         dispatch(fetchRecentOrders());
         dispatch(fetchTopSellingProducts());
         // console.log("Fetching all customers: ",startDate,endDate);
@@ -349,7 +350,7 @@ const AdminDashboard = ({ user }) => {
 						/>
 						<StatsCard
 							title="Total Revenue"
-							value={`₹${convertAmount(randomRevenue)}`}
+							value={`₹${walletBalance}`}
 							icon={<IndianRupee className="text-3xl text-green-600" />}
 							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 						/>

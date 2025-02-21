@@ -89,7 +89,7 @@ export const generateOrderForShipment = async(userId,shipmentData,randomOrderId)
             billing_city: shipmentData.address.address2, // Customer's billing address line 2 (city)
             billing_pincode: shipmentData.address.pincode, // Billing address postal code
             billing_state: shipmentData.address.state, // State for the billing address
-            billing_country: "India", // Country for the billing address
+            billing_country: shipmentData.address.country, // Country for the billing address
             billing_phone: shipmentData.address.phoneNumber, // Customer's phone number
             billing_alternate_phone: userData?.phoneNumber,
             shipping_is_billing: true, // Set to true if shipping address is same as billing address
@@ -205,4 +205,21 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
         // console.dir(error, { depth: null});
         console.error("Error Checking Pincode.: ",error)
     }
+}
+
+export const GetWalletBalance = async(req,res)=>{
+	try {
+		if(!token) await getAuthToken();
+        const walletResponse = await axios.get(`${SHIPROCKET_API_URL}/account/details/wallet-balance`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+		console.log("Wallet: ",walletResponse.data?.data?.balance_amount);
+		const balance = walletResponse.data?.data?.balance_amount;
+		res.status(200).json({success: true,message:"Succefully Get Wallet Balance", result: balance || 0});
+	} catch (error) {
+		console.error("Error getting Wallet Balance.: ",error)
+		res.status(500).json({success: false,message:"Error Getting Wallet Balance"});
+	}
 }

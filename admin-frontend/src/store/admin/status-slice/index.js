@@ -11,6 +11,7 @@ const adminStatusSlice = createSlice({
         TotalCustomers:0,
         TotalProducts:0,
         TotalOrders:0,
+		walletBalance:-1,
         MaxDeliveredOrders:0,
         CustomerGraphData:[],
         OrdersGraphData:[],
@@ -79,7 +80,6 @@ const adminStatusSlice = createSlice({
         }).addCase(fetchMaxDeliveredOrders.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.MaxDeliveredOrders = action?.payload?.result;
-            // console.log("Max Delivered Orders ",action?.payload?.result);
         }).addCase(fetchMaxDeliveredOrders.rejected,(state)=>{
             state.isLoading = false;
             state.MaxDeliveredOrders = 0
@@ -99,7 +99,14 @@ const adminStatusSlice = createSlice({
         }).addCase(fetchRecentOrders.rejected,(state)=>{
             state.isLoading = false;
             state.RecentOrders = [];
-        })
+        }).addCase(getWalletBalance.pending ,(state)=>{
+			state.isLoading = true;
+		}).addCase(getWalletBalance.fulfilled,(state,action)=>{
+			state.isLoading = false;
+            state.walletBalance = action?.payload?.result;
+		}).addCase(getWalletBalance.rejected,(state,action)=>{
+			state.isLoading = false;
+		})
     }
 })
 export const getOrderGraphData = createAsyncThunk('/admin/stats/getOrderGraphData',async ({startDate,endDate,period})=>{
@@ -190,5 +197,12 @@ export const fetchMaxDeliveredOrders = createAsyncThunk('/admin/stats/getMaxDeli
         console.error("Error Fetching all Products",error);
     }
 })
-
+export const getWalletBalance = createAsyncThunk('/admin/wallet/getBalance',async ()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/admin/stats/getWalletBalance`,Header());
+        return response.data;
+    } catch (error) {
+        console.error("Error Fetching Wallet Balance",error);
+    }
+})
 export default adminStatusSlice.reducer;

@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 const ordersSchema = new mongoose.Schema({
     order_id:{type:String},
+    shipment_id:{type:String},
     userId:{
         type:mongoose.Schema.Types.ObjectId,
         ref:"user",

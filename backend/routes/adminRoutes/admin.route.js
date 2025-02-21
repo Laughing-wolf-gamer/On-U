@@ -4,6 +4,7 @@ import { addNewColorToSize, addNewSizeToProduct, adminRegisterOtpCheck, fetchAll
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
+import { GetWalletBalance } from '../../controller/LogisticsControllers/shiprocketLogisticController.js';
 
 const route = express.Router();
 route.post('/auth/register',registerNewAdmin)
@@ -42,6 +43,8 @@ route.get('/stats/getOrderDeliveredGraphData',isAuthenticateuser,ProtectAdminRou
 route.get('/stats/getOrderGraphData',isAuthenticateuser,ProtectAdminRoute,getOrdersGraphData);
 route.get('/stats/getAllProductsCount',isAuthenticateuser,ProtectAdminRoute,getAllProducts);
 route.get('/stats/getTotalOrdersLength',isAuthenticateuser,ProtectAdminRoute,getTotalOrders);
+
+route.get('/stats/getWalletBalance',isAuthenticateuser,ProtectAdminRoute,GetWalletBalance);
 
 
 route.get('/stats/getTotalStock',isAuthenticateuser,ProtectAdminRoute,getProductTotalStocks);
