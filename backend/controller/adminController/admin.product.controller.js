@@ -406,7 +406,7 @@ export const addNewProduct = async (req, res) => {
             subCategory,
             specialCategory: specialCategory,
             price: price, // Price after applying GST
-            salePrice: salePrice, // SalePrice after applying GST (if applicable)
+            salePrice: salePrice !== null && salePrice > 0 ? salePrice : 0, // SalePrice after applying GST (if applicable)
             DiscountedPercentage: DiscountedPercentage,
             totalStock,
             AllColors: AllColors,
