@@ -1,2 +1,0 @@
-2025-02-16T11:58:40.503Z error: Error removing banner: Plan executor error during findAndModify :: caused by :: Cannot apply $pull to a non-array value
-2025-02-16T11:58:40.503Z error: Error removing banner: Plan executor error during findAndModify :: caused by :: Cannot apply $pull to a non-array value

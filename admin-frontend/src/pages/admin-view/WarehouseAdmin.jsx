@@ -1,7 +1,10 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { createNewWareHouse, deleteWareHouse, fetchAllWareHouses } from '@/store/admin/order-slice';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const defaultData = {
 	pickup_location: '',
@@ -33,6 +36,8 @@ const WarehouseAdmin = () => {
     });
 
     const handleChange = (e) => {
+		e.preventDefault();
+		
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
@@ -42,11 +47,27 @@ const WarehouseAdmin = () => {
 
     const handleAddWarehouse = async () => {
         // const newWarehouse = { ...formData, id: warehouses.length + 1 };
+		if(!formData.name ||!formData.email ||!formData.phone ||!formData.pin_code ||!formData.state ||!formData.address ||!formData.city ||!formData.country ){
+			toast.error('All fields are required');
+			return;
+		}
+		if(!checkValidAddressLine(formData.address)){
+			toast.error('Address should start with House/Flat/Road no.');
+			return;
+		}
         await dispatch(createNewWareHouse({...formData}))
         dispatch(fetchAllWareHouses());
         // setFormData(defaultData);
     };
-
+	const checkValidAddressLine = (currentValue) => {
+		const checkAddressLineRegex = /(?:Flat\s*no|Road\s*no)/;
+		if(!checkAddressLineRegex.test(currentValue)){
+			/* currentValue = currentValue.replace(checkAddressLineRegex, '');
+			setFormData({...formData, [e.target.name]: currentValue }); */
+			return false;
+		}
+		return true;
+	}
     const handleDeleteWarehouse = async (id) => {
         console.log('DeleteWarehouse', id);
         // const updatedWarehouses = warehouses.filter((warehouse) => warehouse._id!== id);
@@ -79,6 +100,7 @@ const WarehouseAdmin = () => {
 
     // Filter and sort warehouses
     console.log("states: ",states)
+	
     return (
         <div className="w-full mx-auto p-6 bg-white shadow-lg rounded-lg">
 			<h2 className="text-2xl font-semibold mb-4 text-center">Warehouse Admin Page</h2>
@@ -119,93 +141,134 @@ const WarehouseAdmin = () => {
 
 			{/* Warehouse Form */}
 			<div className="mb-6 space-y-4">
-				<input
-					type="text"
-					name="pickup_location"
-					value={formData.pickup_location}
-					onChange={handleChange}
-					placeholder="pickup_location"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="pin_code"
-					value={formData.pin_code}
-					onChange={handleChange}
-					placeholder="pin_code"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="name"
-					value={formData.name}
-					onChange={handleChange}
-					placeholder="name"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="email"
-					name="email"
-					value={formData.email}
-					onChange={handleChange}
-					placeholder="email"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="phone"
-					name="phone"
-					value={formData.phone}
-					onChange={handleChange}
-					placeholder="Phone Number"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="country"
-					value={formData.country}
-					onChange={handleChange}
-					placeholder="Country"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="state"
-					value={formData.state}
-					onChange={handleChange}
-					placeholder="State"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="city"
-					value={formData.city}
-					onChange={handleChange}
-					placeholder="city"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="address"
-					value={formData.address}
-					onChange={handleChange}
-					placeholder="Address"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<input
-					type="text"
-					name="address_2"
-					value={formData.address_2}
-					onChange={handleChange}
-					placeholder="address_2"
-					className="w-full p-2 border border-gray-300 rounded-md"
-				/>
-				<button
+				<div>
+					<Label htmlFor="pickup_location" className="block text-sm font-semibold text-gray-700">Pickup Location</Label>
+					<Input
+						type="text"
+						name="pickup_location"
+						value={formData.pickup_location}
+						onChange={handleChange}
+						placeholder="Pickup Location"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="pin_code" className="block text-sm font-semibold text-gray-700">Pin Code</Label>
+					<Input
+						type="text"
+						name="pin_code"
+						value={formData.pin_code}
+						onChange={handleChange}
+						placeholder="Pin Code"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="name" className="block text-sm font-semibold text-gray-700">Name</Label>
+					<Input
+						type="text"
+						name="name"
+						value={formData.name}
+						onChange={handleChange}
+						placeholder="Name"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email</Label>
+					<Input
+						type="email"
+						name="email"
+						value={formData.email}
+						onChange={handleChange}
+						placeholder="Email"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="phone" className="block text-sm font-semibold text-gray-700">Phone Number</Label>
+					<Input
+						type="phone"
+						name="phone"
+						value={formData.phone}
+						onChange={handleChange}
+						placeholder="Phone Number"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="country" className="block text-sm font-semibold text-gray-700">Country</Label>
+					<Input
+						type="text"
+						name="country"
+						value={formData.country}
+						onChange={handleChange}
+						placeholder="Country"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="state" className="block text-sm font-semibold text-gray-700">State</Label>
+					<Input
+						type="text"
+						name="state"
+						value={formData.state}
+						onChange={handleChange}
+						placeholder="State"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="city" className="block text-sm font-semibold text-gray-700">City</Label>
+					<Input
+						type="text"
+						name="city"
+						value={formData.city}
+						onChange={handleChange}
+						placeholder="City"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="address" className="block text-sm font-semibold text-gray-700">Address (Flat No./ Street No.)</Label>
+					<Input
+						type="text"
+						name="address"
+						value={formData.address}
+						onChange={handleChange}
+						placeholder="Example = Flat no 101, Some Road."
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<div>
+					<Label htmlFor="address_2" className="block text-sm font-semibold text-gray-700">Address Line 2</Label>
+					<Input
+						type="text"
+						name="address_2"
+						value={formData.address_2}
+						onChange={handleChange}
+						placeholder="Address Line 2"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+
+				<Button
 					onClick={handleAddWarehouse}
-					className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600"
+					className="w-full text-white p-2 rounded-md"
 				>
 					Add Warehouse
-				</button>
+				</Button>
 			</div>
+
 
 			{/* Warehouse List Table */}
 			<div className="tabs-container grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 2xl:grid-cols-2 p-4 gap-6 overflow-x-auto">

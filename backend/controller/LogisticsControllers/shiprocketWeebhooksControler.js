@@ -1,7 +1,7 @@
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
-import { checkShipmentAvailability, getAuthToken } from "./shiprocketLogisticController.js";
+import { addNewPicketUpLocation, checkShipmentAvailability, getAuthToken } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
     try {
@@ -87,6 +87,20 @@ export const createNewWareHouse = async(req,res)=>{
             return res.status(400).json({Success:false, message: 'Error creating new Ware House'});
         }
         await newWareHouse.save();
+		await addNewPicketUpLocation({
+			pickup_location,
+			name,
+			email,
+			phone,
+			pin_code,
+			country,
+			state,
+			address,
+			address_2,
+			city,
+			state,
+			country,
+		})
         res.status(201).json({Success: true, message: 'New Ware House created successfully', result: newWareHouse});
     } catch (error) {
         console.error("Error Creating Ware House: ",error);

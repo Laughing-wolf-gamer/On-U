@@ -170,7 +170,7 @@ export const addNewPicketUpLocation = async(locationData)=>{
             },
         });
         
-        return res?.data?.data;
+        console.log("Created PickeUp Location Response: ",res?.data);
     } catch (error) {
         console.dir(error, { depth: null});
     }
