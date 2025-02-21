@@ -37,6 +37,7 @@ export const createOrder = async (req, res) => {
 export const paymentVerification = async (req, res) => {
     try {
         const { id } = req.user;
+		console.log("Checking Payment: ",req.body);
         if (!id) {
             return res.status(401).json({
                 success: false,
@@ -54,12 +55,17 @@ export const paymentVerification = async (req, res) => {
             .digest('hex');
 
         if (expectedSignature !== razorpay_signature) {
+			console.error("Payment Signature Mismatch");
             return res.status(400).json({
                 success: false,
                 message: 'Payment not authenticated',
             });
         }
-
+		const proccessingProducts = orderDetails.filter((item) => item?.isChecked);
+		console.log("Order Data: ",proccessingProducts);
+		if(!proccessingProducts || proccessingProducts.length <= 0){
+			return res.status(400).json({ success: false, message: "Please select at least one product" });
+		}
         const bagData = await Bag.findById(bagId).populate('orderItems.productId');
         if (!bagData) {
             return res.status(404).json({ success: false, message: 'Bag not found' });
@@ -72,13 +78,14 @@ export const paymentVerification = async (req, res) => {
 
         const randomOrderShipRocketId = generateRandomId();
 		const randomShipmentId = generateRandomId();
+		const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
 				userId: id,
 				razorpay_order_id:razorpay_order_id,
-				ConveenianceFees: alreadyFoundWebsiteData?.ConvenienceFees || 0,
-				orderItems:orderDetails.filter((item) => item.isChecked),
+				ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
+				orderItems:proccessingProducts,
 				address: selectedAddress,
 				TotalAmount:totalAmount,
 				paymentMode:"prepaid",
@@ -88,25 +95,13 @@ export const paymentVerification = async (req, res) => {
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
 		}
-        /* const orderData = new OrderModel({
-            order_id: randomOrderShipRocketId,
-            userId: id,
-            razorpay_order_id:razorpay_order_id,
-            orderItems: orderDetails,
-            address: addressString,
-            TotalAmount: totalAmount,
-            paymentMode: 'prepaid',
-            paymentStatus:"Paid",
-            status: 'Confirmed',
-        }); */
-		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
 		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: id,
 			shipment_id:randomShipmentId,
 			razorpay_order_id:razorpay_order_id,
-			ConveenianceFees: alreadyFoundWebsiteData?.ConvenienceFees || 0,
-            orderItems:orderDetails.filter((item) => item.isChecked),
+			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
+            orderItems:proccessingProducts,
             address: selectedAddress,
             TotalAmount:totalAmount,
             paymentMode:"prepaid",
@@ -116,10 +111,10 @@ export const paymentVerification = async (req, res) => {
         await orderData.save();
 
         // Process product quantity updates concurrently
-        const removingAmountPromise = orderDetails.map(async (item) => {
+        const removingAmountPromise = proccessingProducts.map(async (item) => {
             try {
-                // console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
-                await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
+                console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
+                await removeProduct(item?.productId?._id, item?.color?.label, item?.size, item?.quantity);
             } catch (err) {
                 console.error(`Error removing product: ${item?.productId?._id}`, err);
             }
@@ -128,7 +123,21 @@ export const paymentVerification = async (req, res) => {
         await Promise.all(removingAmountPromise);
 
         // Delete the bag after order creation
-        await Bag.findByIdAndDelete(bagId);
+		const activeBag = await Bag.findById(bagId);
+        if(activeBag){
+			proccessingProducts.map((item) => {
+				// const isInRemovingItems = activeBag.orderItems.find((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+				const findIndex = activeBag.orderItems.findIndex((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+				if(findIndex !== -1){
+					activeBag.orderItems.splice(findIndex,1);
+				}
+			})
+			if(activeBag.orderItems.length <= 0){
+				await Bag.findByIdAndDelete(bagId);
+			}else{
+				await activeBag.save();
+			}
+        }
 
         // Send confirmation email
         await sendOrderPlacedMail(id, orderData);

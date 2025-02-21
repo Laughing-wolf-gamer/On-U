@@ -238,12 +238,12 @@ const Bag = () => {
     }, [dispatch,deleteBagResult, user, isAuthentication]);
 
     
-    const verifyAnyOrdersPayment = async()=>{
+    /* const verifyAnyOrdersPayment = async()=>{
         if(!sessionStorage.getItem("checkoutData")) return;
+		const data = JSON.parse(sessionStorage.getItem("checkoutData"))
         try {
-            const data = JSON.parse(sessionStorage.getItem("checkoutData"))
+            console.log("Verifying Order Response: ",data);
             const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
-            console.log("Verifying Order Response: ",response.data);
             sessionStorage.removeItem("checkoutData")
             if(response?.data.success){
                 checkAndCreateToast("success","Payment Successful");
@@ -259,7 +259,7 @@ const Bag = () => {
         } catch (error) {
             console.error(`Error Verifying order: `,error);
         }
-    }
+    } */
     const handleConvenienceFeesChange = async () => {
         try {
             const fees = await dispatch(getConvinceFees())
@@ -269,7 +269,7 @@ const Bag = () => {
         }
     };
     useEffect(()=> {
-        verifyAnyOrdersPayment();
+        // verifyAnyOrdersPayment();
         handleConvenienceFeesChange();
     },[dispatch])
     useEffect(()=>{

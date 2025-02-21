@@ -132,10 +132,10 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                         bagId: bag?._id,
                         selectedAddress: selectedAddress,
                         totalAmount,
-                        orderDetails: bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity })),
+                        orderDetails: bag.orderItems.map((item) => ({ productId: item.productId, color: item.color, size: item.size.label, quantity: item.quantity ,isChecked:item?.isChecked})),
                     }));
                     checkAndCreateToast("success","RazerPay Payment Success");
-                    window.open(`${BASE_CLIENT_URL}/bag`, "_self");
+                    window.open(`${BASE_CLIENT_URL}/bag/checkout/pending`, "_self");
                 },
                 prefill: {
                     name: user?.user?.name,
@@ -158,6 +158,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
         } catch (error) {
             console.error("Payment Failed", error);
             checkAndCreateToast("error",error.message);
+			window.open(`${BASE_CLIENT_URL}/bag/checkout/failure`, "_self");
         }finally{
             setIsPaymentStart(false);
         }

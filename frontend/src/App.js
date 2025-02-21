@@ -30,6 +30,7 @@ import CheckoutPage from "./components/Bag/NewCheckoutPage.js";
 import NotFoundPage from "./NotFoundPage.js";
 import PaymentSuccess from "./components/Bag/PaymentSuccess.js";
 import PaymentFailed from "./components/Bag/PaymentFailed.js";
+import PaymentPending from "./components/Bag/PaymentPending.js";
 
 
 
@@ -91,6 +92,7 @@ function App() {
 				<Route path='/bag/checkout' element={<CheckoutPage/>}/>
 				<Route path='/bag/checkout/success' element={<PaymentSuccess/>}/>
 				<Route path='/bag/checkout/failure' element={<PaymentFailed/>}/>
+				<Route path='/bag/checkout/pending' element={<PaymentPending/>}/>
 				{user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
 				<Route path='/address/bag' element={<Address user={user}/>}/>
 				<Route path='/about' element={<About />}/>

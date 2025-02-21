@@ -58,7 +58,7 @@ export const verifyPayment = async (req, res, next) => {
         if (!paymentStatus || paymentStatus.length === 0) {
             return res.status(404).json({ success: false, message: "Payment not found" });
         }
-
+		const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
         // Check if the payment status is "SUCCESS"
         if (paymentStatus[0].payment_status === "SUCCESS") {
             const bagData = await Bag.findById(bagId).populate('orderItems.productId');
@@ -72,7 +72,7 @@ export const verifyPayment = async (req, res, next) => {
                     userId: req.user.id,
                     orderItems: orderDetails,
                     address: addressString,
-					ConveenianceFees: bagData.ConvenienceFees,
+					ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
                     TotalAmount: totalAmount,
                     paymentMode: paymentStatus[0].payment_group,
                     status: 'Order Confirmed',
@@ -87,7 +87,7 @@ export const verifyPayment = async (req, res, next) => {
                         console.log(`Removing Product: ${item.productId._id}, Color: ${item.color.label}, Size: ${item.size}, Quantity: ${item.quantity}`);
                         await removeProduct(item.productId._id, item.color.label, item.size, item.quantity);
                     } catch (err) {
-                        console.error(`Error removing product: ${item.productId._id}`, err);
+                        console.error(`Error removing product: ${item?.productId?._id}`, err);
                     }
                 });
 
@@ -145,6 +145,11 @@ export const createorder = async (req, res, next) => {
         if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
             return res.status(400).json({ success: false, message: "Please Provide All the Data" });
         }
+		const proccessingProducts = orderItems.filter((item) => item?.isChecked);
+		console.log("Order Data: ",proccessingProducts);
+		if(!proccessingProducts || proccessingProducts.length <= 0){
+			return res.status(400).json({ success: false, message: "Please select at least one product" });
+		}
 
         // Helper function to generate a random order ID
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
@@ -153,14 +158,14 @@ export const createorder = async (req, res, next) => {
         const randomShipmentId = generateRandomId();
 		// const addressString = Object.values(Address).join(", ");
         // Create a new order entry
-        
-		// console.log("Order Data: ",orderItems.filter((item) => item?.productId?.isChecked));
+        const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
+		
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
 				userId: req.user.id,
-				ConveenianceFees: ConvenienceFees || 0,
-				orderItems:orderItems.filter((item) => item.isChecked),
+				ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
+				orderItems:proccessingProducts,
 				address: Address,
 				TotalAmount,
 				paymentMode,
@@ -175,8 +180,8 @@ export const createorder = async (req, res, next) => {
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
 			shipment_id: randomShipmentId,
-			ConveenianceFees: ConvenienceFees || 0,
-            orderItems:orderItems.filter((item) => item.isChecked),
+			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
+            orderItems:proccessingProducts,
             address: Address,
             TotalAmount,
             paymentMode,
@@ -187,17 +192,37 @@ export const createorder = async (req, res, next) => {
         
 
         // Perform the item removal asynchronously (parallelize them)
-        const removingAmountPromises = orderItems.map(item => 
-            removeProduct(item.productId._id, item.color.label, item.size, item.quantity).catch(err => {
-                console.error(`Error removing product: ${item?.productId?._id}`, err);
-            })
+		
+        const removingAmountPromises = proccessingProducts.map(async (item) =>{
+				try {
+					console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
+					await removeProduct(item.productId?._id, item?.color?.label, item?.size, item?.quantity)
+				} catch (error) {
+					console.error(`Error removing product: ${item?.productId?._id}`, error);	
+				}
+			}
+            
         );
 
         // Wait for all removal operations to complete
         await Promise.all(removingAmountPromises);
-
+		const activeBag = await Bag.findById(bagId);
+		if(activeBag){
+			proccessingProducts.map((item) => {
+				// const isInRemovingItems = activeBag.orderItems.find((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+				const findIndex = activeBag.orderItems.findIndex((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+				if(findIndex !== -1){
+					activeBag.orderItems.splice(findIndex,1);
+				}
+			})
+			if(activeBag.orderItems.length <= 0){
+				await Bag.findByIdAndDelete(bagId);
+			}else{
+				await activeBag.save();
+			}
+        }
         // Handle bag removal if applicable
-        await Bag.findByIdAndDelete(bagId);
+        // await Bag.findByIdAndDelete(bagId);
 
         // Send order confirmation email
         await sendOrderPlacedMail(req.user.id, orderData);
