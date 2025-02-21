@@ -11,7 +11,6 @@ route.post('/auth/adminOtpCheck',adminRegisterOtpCheck)
 route.post('/auth/login',logInUser)
 
 
-
 route.get('/auth/check-auth',isAuthenticateuser,ProtectAdminRoute,getuser)
 route.post('/product/add',ProtectAdminRoute,addNewProduct);
 

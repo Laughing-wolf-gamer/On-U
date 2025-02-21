@@ -91,8 +91,8 @@ const AdminOrdersDetailsView = ({order}) => {
 							componentType:'select',
 							options:[
 								{id:'Processing', label:'Processing'},
-								{id:'Order Confirmed', label:'Order Confirmed'},
-								{id:'Order Shipped',label:"Order Shipped"},
+								{id:'Confirmed', label:'Confirmed'},
+								{id:'Shipped',label:"Shipped"},
 								{id:'Out for Delivery',label:"Out for Delivery"},
 								{id:'Delivered',label:"Delivered"},
 								{id:'Candled',label:"Candled"},

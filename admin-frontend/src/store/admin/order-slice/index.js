@@ -54,7 +54,15 @@ const adminOrderSlice = createSlice({
         })
     }
 })
-
+export const loginLogistics = createAsyncThunk('/logistic/warehouse/getAllWareHouses',async(logisticsLoginForm)=>{
+	try {
+		// http://localhost:8004/api/logistic/weebook/updateOrderStatus
+        const response = await axios.post(`${BASE_URL}/api/logistic/login`,logisticsLoginForm,Header());
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching warehouses: `,error);
+    }
+})
 
 export const adminGetAllOrders = createAsyncThunk('/orders/adminGetAllOrders',async()=>{
     try {

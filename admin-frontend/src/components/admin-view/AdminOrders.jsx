@@ -1,16 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table'
-import { Dialog } from '../ui/dialog'
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog'
 import AdminOrdersDetailsView from './AdminOrdersDetailsView'
 import { useDispatch, useSelector } from 'react-redux'
-import { adminGetAllOrders, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice'
+import { adminGetAllOrders, adminGetUsersOrdersById, loginLogistics, resetOrderDetails } from '@/store/admin/order-slice'
 import { Badge } from '../ui/badge'
 import { GetBadgeColor } from '@/config'
+import { Copy, TruckIcon } from 'lucide-react'
+import { toast } from 'react-toastify'
+import { Input } from '../ui/input'
 
 const AdminOrderLayout = () => {
     const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
+	const[openLoginDialogue, setOpenLoginDialogue] = useState(false);
+	const [logisticsTokken, setLogisticsToken] = useState('');
     const [sortOrder, setSortOrder] = useState('latest');  // 'latest' or 'oldest'
     const [statusFilter, setStatusFilter] = useState('');  // To filter orders by status
     const [minOrders, setMinOrders] = useState(0);  // Minimum number of orders to show
@@ -33,6 +37,9 @@ const AdminOrderLayout = () => {
             setOpenDetailsDialogue(true);
         }
     }, [orderDetails])
+	const OnLoginComplete = (data)=>{
+		setLogisticsToken(data);
+	}
 
     // Sort orders based on the selected sortOrder
     const sortedOrderList = [...orderList].sort((a, b) => {
@@ -59,9 +66,34 @@ const AdminOrderLayout = () => {
 
     return (
         <Card className="w-full sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-full mx-auto">
-            <CardHeader>
-                <CardTitle className="text-center">All Orders</CardTitle>
-            </CardHeader>
+            <CardHeader className="text-center p-4 relative">
+				<CardTitle className="text-2xl font-semibold mb-4">All Orders</CardTitle>
+				<div className='absolute right-3 space-x-4 flex flex-row justify-between'>
+					<Button
+						onClick={() => setOpenLoginDialogue(true)}
+						variant="outline"
+						className="flex items-center  justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+					>
+						<TruckIcon />
+						<span>Login to view logistics</span>
+					</Button>
+					{
+						logisticsTokken && <Button
+							onClick={() => {
+								navigator.clipboard.writeText(logisticsTokken);
+								toast.success("Logistics Tokken copied to clipboard!");
+							}}
+							variant="outline"
+							className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+						>
+							<Copy />
+							<span>{logisticsTokken.slice(0,50)}....</span>
+						</Button>
+					}
+					
+				</div>
+			</CardHeader>
+
             <CardContent>
                 {/* Sorting and Filter Dropdown */}
                 <div className="mb-4 text-center space-x-4">
@@ -199,7 +231,58 @@ const AdminOrderLayout = () => {
             }}>
                 <AdminOrdersDetailsView order={orderDetails} user={user} />
             </Dialog>
+			<Dialog open={openLoginDialogue} onOpenChange={() => {
+				setOpenLoginDialogue(false);
+			}}>
+				<LogisticsLoginView OnLoginComplete={OnLoginComplete} />
+			</Dialog>
         </Card>
+    )
+}
+const LogisticsLoginView = ({OnLoginComplete})=>{
+	const dispatch = useDispatch();
+	const[logisticsLoginForm,setLogisticsLoginForm] = useState({email: '', password: ''});
+	const handleLogisticsTokenChange = async(e) => {
+		e.preventDefault();
+		const logisticsToken = await dispatch(loginLogistics(logisticsLoginForm));
+		if(logisticsToken){
+			console.log("Logistics Token: ", logisticsToken);
+			OnLoginComplete(loginLogistics?.payload?.result);
+			toast.success("Logged In ", {autoClose: 300} );
+		}else{
+			toast.error("Invalid Email or Password");
+		}
+	}
+	return(
+        <DialogContent className="sm:max-w-[600px] h-fit p-8 bg-white rounded-lg shadow-lg">
+			<DialogTitle className="text-2xl font-semibold mb-6 text-gray-800 text-center">Generate Shiprockt Logistics API Token</DialogTitle>
+			<p className="text-gray-700 text-lg">Note: After Every 10 days Please enter your email and password to Re-login Shiprocket logistics user.</p>
+			<form onSubmit={handleLogisticsTokenChange} className="flex flex-col space-y-4">
+				<Input
+					value={logisticsLoginForm?.email}
+					onChange={(e)=> setLogisticsLoginForm({...logisticsLoginForm, email: e.target.value})}
+					type="email"
+					placeholder="Email"
+					required
+					className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+				/>
+				<Input
+					value={loginLogistics?.password}
+					onChange={(e)=> setLogisticsLoginForm({...logisticsLoginForm, password: e.target.value})}
+					type="password"
+					placeholder="Password"
+					required
+					className="p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+				/>
+				<Button
+					type="submit"
+					className="py-3 bg-black text-white font-semibold rounded-md hover:bg-gray-800 transition duration-200 ease-in-out"
+				>
+					Login
+				</Button>
+			</form>
+		</DialogContent>
+
     )
 }
 

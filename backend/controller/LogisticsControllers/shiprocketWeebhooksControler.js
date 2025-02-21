@@ -1,11 +1,11 @@
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
-import { checkShipmentAvailability } from "./shiprocketLogisticController.js";
+import { checkShipmentAvailability, getAuthToken } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
     try {
-        console.log("Receving Data: ",req.body);
+        console.log("Shiprocket order Status Update Receving Data: ",req.body);
         const { order_id, current_status } = req.body;
         // console.log(`Order ID: ${order_id}, Status: ${current_status}`);
         const dbOrder = await OrderModel.findOne({ShipRocketOrderId:order_id});
@@ -140,6 +140,24 @@ export const removeWareHouseById = async(req,res)=>{
     }
 }
 
+export const loginLogistics = async (req,res)=>{
+	try {
+		const{email, password} = req.body;
+		if(!email ||!password){
+            console.error("Email and password are required");
+            return res.status(400).json({Success: false, message: 'Email and password are required'});
+        }
+        const resposse = await getAuthToken(email,password);
+		if(!resposse){
+            console.error("Error getting ShipRocket auth token: ",resposse);
+            return res.status(500).json({Success: false, message: 'Error getting ShipRocket auth token'});
+        }
+		console.log("ShipRocket auth token: ",resposse);
+		res.status(200).json({Success: true, message: 'Logged in successfully', result: resposse});
+    } catch (error) {
+        console.error("Error getting ShipRocket auth token: ",error);
+    }
+}
 
 export const checkAvailability = async (req,res)=>{
     try {

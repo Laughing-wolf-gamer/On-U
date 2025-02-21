@@ -1,8 +1,6 @@
 import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
-import qs from 'querystring'
-import { generateOrderId, generateWaybill } from '../../utilis/basicUtils.js';
 
 dotenv.config();
 
@@ -13,19 +11,23 @@ const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
 let token = '';
 
-export const getAuthToken = async () => {
+export const getAuthToken = async (email,password) => {
     try {
         // console.log("ShipApi URL: ", SHIPROCKET_API_URL, SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD);
 
         const response = await axios.post(`${SHIPROCKET_API_URL}/auth/login`, {
-            email: SHIPROCKET_EMAIL,
-            password: SHIPROCKET_PASSWORD
+            email: email || SHIPROCKET_EMAIL,
+            password: password || SHIPROCKET_PASSWORD
         });
 
         token = response?.data?.token; // Store the token
         console.log('Connected to Shiprocket');
+		if(token !== null){
+			return token;
+		}
+		return null;
     } catch (error) {
-        console.error('Error fetching auth token:', error.message);
+        console.error('Error fetching auth token:', error);
         return null;
     }
 };

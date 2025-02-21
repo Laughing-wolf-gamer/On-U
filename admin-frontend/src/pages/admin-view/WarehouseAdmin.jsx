@@ -14,7 +14,6 @@ const defaultData = {
 	address_2:'',
 	city:'',
 	country: '',
-	address: '',
 }
 const WarehouseAdmin = () => {
     const{Warehouses} = useSelector(state => state.adminOrder);
@@ -33,13 +32,6 @@ const WarehouseAdmin = () => {
         state: '',
     });
 
-    // Example options for countries and states (you can customize this)
-    /* const countries = ['India', 'USA', 'Canada'];
-    const states = {
-        India: ['Delhi', 'Mumbai', 'Kolkata'],
-        USA: ['New York', 'California', 'Texas'],
-        Canada: ['Ontario', 'Quebec', 'British Columbia'],
-    }; */
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };

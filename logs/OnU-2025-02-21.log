@@ -6,3 +6,9 @@
 2025-02-20T20:42:40.736Z error: Error registering user user validation failed: email: Please enter valid Email ID 
 2025-02-20T21:25:18.008Z error: Error admin registering otp check Cannot read properties of null (reading 'toString')
 2025-02-20T21:25:18.008Z error: Error admin registering otp check Cannot read properties of null (reading 'toString')
+2025-02-21T15:10:27.725Z error: Error Logging in user: "httpOnly" is not allowed in "options"
+2025-02-21T15:10:27.725Z error: Error Logging in user: "httpOnly" is not allowed in "options"
+2025-02-21T15:10:57.297Z error: Error Logging in user: "httpOnly" is not allowed in "options"
+2025-02-21T15:10:57.297Z error: Error Logging in user: "httpOnly" is not allowed in "options"
+2025-02-21T15:11:35.644Z error: Error Logging in user: "secure" is not allowed in "options"
+2025-02-21T15:11:35.644Z error: Error Logging in user: "secure" is not allowed in "options"

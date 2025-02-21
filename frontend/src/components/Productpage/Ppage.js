@@ -103,7 +103,7 @@ const Ppage = () => {
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading:productLoading, similar } = useSelector(state => state.Sproduct)
-    const {loading: userloading, user, isAuthentication} = useSelector(state => state.user)
+    const {user} = useSelector(state => state.user)
     const {error:warning} = useSelector(state => state.wishlist)
     
     
@@ -323,8 +323,9 @@ const Ppage = () => {
 
 
     const checkFetchedIsPurchased = async ()=>{
-        console.log("Checking: ",product);
+        // console.log("Checking: ",product);
         const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
+		console.log("Did Purchased: ", didPurchased);
         setHasPurchased(didPurchased?.success || false);
     }
 

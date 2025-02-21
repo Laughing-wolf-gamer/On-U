@@ -347,6 +347,8 @@ export const addNewProduct = async (req, res) => {
 						const colorsImageArray = c.images.filter(c => c !== "");
 						c.images = colorsImageArray;
 						AllColors.push(c);
+					}else{
+						throw new Error(`Missing Images for Color: ${c?.name}`);
 					}
                 });
             }
@@ -358,7 +360,7 @@ export const addNewProduct = async (req, res) => {
             let sizeStock = 0;
             if (s.colors) {
                 s.colors.forEach(c => {
-                    sizeStock += c.quantity;
+                    sizeStock += c?.quantity;
                 });
             }
             totalStock += sizeStock;
@@ -385,8 +387,8 @@ export const addNewProduct = async (req, res) => {
         // const salePriceWithGST = salePrice && salePrice > 0 ? salePrice + (salePrice * gst / 100) : null;
         // priceWithGST = gst / (1 - (100 / (100 + gst)));
         //originalPrice * (1 + (gstPercent / 100));
-        const priceWithGST = calculateGst(price,gst);
-        const salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
+        /* const priceWithGST = calculateGst(price,gst);
+        const salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null; */
 
         // Create new product
         const newProduct = new ProductModel({

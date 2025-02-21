@@ -21,8 +21,6 @@ const sendtoken = (user) =>{
         role:user.role,
         user:user,        
     },SECRET_KEY,{
-        httpOnly:process.env.NODE_ENV ==== 'development',
-        secure:process.env.NODE_ENV === 'development',
         algorithm: 'HS512',
         expiresIn: 7 * 24 * 60 * 60 * 1000, // 7 days in milliseconds
         noTimestamp: true,

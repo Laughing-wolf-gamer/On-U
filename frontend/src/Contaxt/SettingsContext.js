@@ -11,19 +11,19 @@ export const SettingsProvider = ({ children }) => {
     const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         const style = {
-            border: '1px solid #713200'
+            border: '1px solid #713200',
             padding: '16px',
             color: '#713200',
-        },
-        const icon = "👌"
+        }
+        const icon = "👌";
         const iconTheme = {
             primary: '#000',
             secondary: '#fff',
-        }
+        };
         const ariaProps = {
             role: 'status',
             'aria-live': 'polite',
-        }
+        };
         const removeDelay = 1000;
         const appearDuratin = 4000;
         const position = 'top-center'
