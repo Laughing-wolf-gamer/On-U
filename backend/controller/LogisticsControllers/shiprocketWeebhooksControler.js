@@ -1,6 +1,7 @@
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
+import logger from "../../utilis/loggerUtils.js";
 import { addNewPicketUpLocation, checkShipmentAvailability, getAuthToken } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
@@ -9,14 +10,13 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
         const { order_id, current_status } = req.body;
         // console.log(`Order ID: ${order_id}, Status: ${current_status}`);
         const dbOrder = await OrderModel.findOne({ShipRocketOrderId:order_id});
-        if(!dbOrder){
+        if(dbOrder){
             console.error(`No order found with ShipRocket Order ID: ${order_id}`);
-            return res.status(404).json({Success:false, message: 'No order found'});
+			// Update the order status in the database
+			dbOrder.status = current_status;
+			await dbOrder.save();
+			console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
         }
-        // Update the order status in the database
-        dbOrder.status = current_status;
-        await dbOrder.save();
-        console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
         // Send a webhook to ShipRocket to notify about the status change
         // sendWebhookToShipRocket(dbOrder);
 
@@ -27,6 +27,7 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
         res.status(200).send('Webhook received');
     } catch (error) {
         console.error("Error updating order status: ",error);
+		logger.error(`Error occured during updating order status ${error.message}`);
     }
 }
 

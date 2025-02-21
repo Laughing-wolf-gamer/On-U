@@ -76,7 +76,7 @@ const AdminOrderLayout = () => {
 						className="flex items-center  justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
 					>
 						<TruckIcon />
-						<span>Login to view logistics</span>
+						<span>Get ShipRocket API Tokken</span>
 					</Button>
 					{
 						logisticsTokken && <Button
@@ -88,7 +88,7 @@ const AdminOrderLayout = () => {
 							className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
 						>
 							<Copy />
-							<span>{logisticsTokken.slice(0,50)}....</span>
+							<span>{logisticsTokken.slice(0,20)}....</span>
 						</Button>
 					}
 					
