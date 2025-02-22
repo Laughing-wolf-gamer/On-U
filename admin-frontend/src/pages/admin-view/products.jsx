@@ -10,10 +10,8 @@ import { fetchAllOptions } from '@/store/common-slice';
 import {  ChevronLeft, ChevronRight, X } from 'lucide-react';
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Box from '@mui/material/Box';
-import Skeleton from '@mui/material/Skeleton';
-import { toast } from 'react-toastify';
 import LoadingView from './LoadingView';
+import { useSettingsContext } from '@/Context/SettingsContext';
 
 const maxAmountPerPage = 10;
 
@@ -132,6 +130,7 @@ const initialFormData = {
 };
 
 const AdminProducts = () => {
+	const{checkAndCreateToast} = useSettingsContext();
     const [categories, setCategories] = useState([]);
     const [subcategories, setSubcategories] = useState([]);
     const [colors, setColors] = useState([]);
@@ -176,6 +175,7 @@ const AdminProducts = () => {
             dispatch(fetchAllOptions());
         } catch (error) {
             console.error("Error Fetching All Filters Category: ", error);
+			checkAndCreateToast('error', 'Failed to fetch filters category');
         } finally {
             setIsLoading(false);
         }
@@ -185,18 +185,18 @@ const AdminProducts = () => {
         try {
         const data = await dispatch(delProducts(productId));
         if (data?.payload?.Success) {
-            toast("Product Deleted Success")
+            checkAndCreateToast("success","Product Deleted Success")
             dispatch(fetchAllProducts({pageNo:currentPage}));
         }
         } catch (error) {
             console.error(`Failed to delete ${productId} `, error);
-            toast(`Failed to Delete Product id: ${productId}, Internal Error`)
+            checkAndCreateToast("error"`Failed to Delete Product id: ${productId}, Internal Error`)
         }
     };
     const updateEditedItems = async (productId,editedData) => {
         try {
             if(!productId){
-                toast("No Product Id")
+                checkAndCreateToast("error","No Product Id")
                 return;
             }
             console.log(`Updated ${productId}`, editedData)
@@ -208,11 +208,11 @@ const AdminProducts = () => {
                 setFormData(initialFormData);
                 setCurrentEditingId(null);
                 dispatch(fetchAllProducts({pageNo:currentPage}));
-                toast("Product Updated Success")
+                checkAndCreateToast("success","Product Updated Success")
             }
         } catch (error) {
             console.error(`Failed to Update Product: ${error.message}`);
-            toast.error(`Failed to Update Product: ${error.message}`)
+            checkAndCreateToast("error",`Failed to Update Product: ${error.message}`)
         }
     }
     const onSubmit = async (e) => {
@@ -222,17 +222,16 @@ const AdminProducts = () => {
                 console.log("Form Validation: ",isFormValid());
                 const data = await dispatch(addNewProduct({ ...formData }));
                 if (!data?.payload?.Success) {
-                    // toast.error(`Error: ${data?.payload?.message}`);
                     throw new Error(`Missing Fields ${data?.payload?.reasons}`);
                 }
                 setOpenCreateProduct(false);
                 setUploadedImageUrls([]);
                 setFormData(initialFormData);
                 dispatch(fetchAllProducts({pageNo:currentPage}));
-                toast.success("Product Added Success")
+                checkAndCreateToast("success","Product Added Success")
             } catch (error) {
                 console.error(`Failed to Add New Product: ${error.message}`);
-                toast.info(error.message)
+                checkAndCreateToast("error",error.message)
             }
         
         } 

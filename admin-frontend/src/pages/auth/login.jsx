@@ -1,6 +1,6 @@
 import CommonForm from '@/components/common/form';
 import { loginFormControls } from '@/config';
-import { useToast } from '@/hooks/use-toast';
+import { useSettingsContext } from '@/Context/SettingsContext';
 import { loginUser } from '@/store/auth-slice';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -13,6 +13,7 @@ const AuthLogIn = () => {
         password: '',
         role:'admin'
     });
+	const{checkAndCreateToast} = useSettingsContext();
 
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -23,7 +24,7 @@ const AuthLogIn = () => {
         console.log('formData', formData);
         const res = await dispatch(loginUser(formData));
         if (res?.payload?.Success) {
-            toast.success("LogIn Successful");
+            checkAndCreateToast("success","LogIn Successful");
             setFormData({
 				email: '',
 				password: '',
@@ -35,7 +36,7 @@ const AuthLogIn = () => {
         }
         } catch (error) {
         	console.error(`Error Occurred While LogIn User: ${error.message}`);
-			toast.error('LogIn Failed Internally!`)');
+			checkAndCreateToast("error",'LogIn Failed Internally!`)');
         }
     };
 

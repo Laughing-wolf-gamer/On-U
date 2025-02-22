@@ -2,11 +2,11 @@ import CustomSelect from '@/components/admin-view/CustomSelect'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { useSettingsContext } from '@/Context/SettingsContext'
 import { authverifyOtp, registerUser } from '@/store/auth-slice'
 import React, { useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
-import { toast } from 'react-toastify'
 
 const registerFormControls = [
     {
@@ -67,7 +67,7 @@ const AuthRegister = () => {
         password: '',
         role: '',
     })
-    
+    const {checkAndCreateToast} = useSettingsContext();
     const [checkOtp, setCheckOtp] = useState(false)
     const dispatch = useDispatch()
     const navigate = useNavigate()
@@ -78,13 +78,13 @@ const AuthRegister = () => {
         try {
             const res = await dispatch(registerUser(formData))
             if (res?.payload?.Success) {
-                toast.success('Sent OTP to registered Email. Please verify it.')
+                checkAndCreateToast("success",'Sent OTP to registered Email. Please verify it.')
                 setCheckOtp(true)
             } else {
                 setCheckOtp(false)
             }
         } catch (error) {
-            toast.error('Error registering User')
+            checkAndCreateToast("error",'Error registering User')
         } finally {
             setIsLoading(false)
         }
@@ -94,22 +94,22 @@ const AuthRegister = () => {
         setIsLoading(true)
         try {
             if (!otp) {
-                toast.error('Please enter OTP')
+                checkAndCreateToast("error",'Please enter OTP')
                 return
             }
             const res = await dispatch(authverifyOtp({ otp, email: formData.email }))
             // Handle OTP verification response here
 			console.log("OTP verified: ", res?.payload);
 			if(res?.payload?.Success){
-				toast.success("Registration Successful")
+				checkAndCreateToast("success","Registration Successful")
                 navigate('/auth/login')
 			}else{
-				toast.error("Failed to register")
+				checkAndCreateToast("error","Failed to register")
                 setFormData({...formData, password: '' })
                 navigate('/auth/register')
 			}
         } catch (error) {
-            toast.error('Invalid OTP')
+            checkAndCreateToast("error",'Invalid OTP')
         } finally {
             setIsLoading(false)
         }
