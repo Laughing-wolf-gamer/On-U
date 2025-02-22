@@ -29,7 +29,7 @@ const OrderItem = ({ item }) => {
                 </Link>
                 <div className="flex-1">
                     <h3 className="text-xl font-semibold text-gray-800 truncate">
-						{item?.productId?.title?.length > 20 ? `${capitalizeFirstLetterOfEachWord(item?.productId?.title.slice(0,50))}` : capitalizeFirstLetterOfEachWord(item?.productId?.title)} 
+						{capitalizeFirstLetterOfEachWord(item?.productId?.title)}
 					</h3>
 					
                     <div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
