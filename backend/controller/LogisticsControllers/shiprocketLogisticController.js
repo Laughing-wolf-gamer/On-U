@@ -265,7 +265,7 @@ export const addNewPicketUpLocation = async(locationData)=>{
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
 		const pickup_locations =  await getPickUpLocation();
-		console.log("Response Picketup Location",pickup_locations);
+		// console.log("Response Picketup Location",pickup_locations);
         if(!token) await getAuthToken();
         const picketUp_pin = pickup_locations[0]?.pin_code; // Assuming the first pickup location is the closest one
         const shipmentData = {

@@ -195,6 +195,7 @@ const SideBarBag = ({OnChangeing}) => {
         }else{
             removeBagSessionStorage(productId,size,color)
         }
+		checkAndCreateToast("success",'Item removed from BAG');
     };
 
     useEffect(() => {
@@ -326,15 +327,23 @@ const SideBarBag = ({OnChangeing}) => {
 				<div className="flex flex-col overflow-hidden items-center w-full">
 					<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
 					{RandomProductLoading ? (
-						<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2">
-							<ProductCardSkeleton />
-						</ul>
+						<Fragment>
+						{
+							Array(10).fill(null).map((_, index) => (
+								<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2">
+									<li>
+										<ProductCardSkeleton />
+									</li>
+								</ul>
+							))
+						}
+						</Fragment>
 					) : (
 						<Fragment>
 							{randomProducts && randomProducts.length > 0 && (
 								<ul className="grid grid-cols-1 w-full max-h-screen px-2 overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
 									{randomProducts.map((pro, index) => (
-										<SideBarBagProductItem pro={pro} user={user} key={index} />
+										<SideBarBagProductItem pro={pro} user={user} key={index} refreshTwice = {true} />
 									))}
 								</ul>
 							)}
@@ -349,9 +358,9 @@ const SideBarBag = ({OnChangeing}) => {
 				<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-xl text-gray-800 text-left w-full mb-3">
 				{
 					isAuthentication && bag && bag?.orderItems && bag?.orderItems?.length > 0 ? (
-						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span><span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span>items</span>
+						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span><span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span> items</span>
 					):(
-						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span> <span className='text-gray-600 text-sm'>{`(${sessionBagData.length} items )`}</span></span>
+						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span> <span className='text-gray-600 text-sm'>{`(${sessionBagData.length})`}</span> items</span>
 					)
 				}
 				</h1>
@@ -589,10 +598,10 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 											{/* Checkbox positioned at the top-right corner */}
 											<div onClick={(e)=>{
 												updateChecked(e, active?.productId?._id,active?.size,active?.color);
-											}} className={`absolute top-1 left-1 w-5 h-5 ${bagLoading ? "pointer-events-none":"cursor-pointer"}`}>
+											}} className={`absolute top-1 left-1 w-5 cursor-pointerbg-black h-5 ${bagLoading ? "pointer-events-none":""}`}>
 												<input
 													type="checkbox"
-													className="w-full h-full"
+													className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
 													checked={active?.isChecked} // Set checkbox checked if it's selected in the URL
 													onChange={(e) => {
 														// updateChecked(e, active.productId?._id);
@@ -623,7 +632,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
 								{/* Price and Discount Info */}
-								<div className="flex items-center justify-start space-x-2 whitespace-nowrap text-[10px] sm:text-base md:text-lg text-red-400 mt-1">
+								<div className="flex items-center justify-start space-x-2 whitespace-nowrap text-[10px] sm:text-base md:text-lg text-red-600 mt-1">
 									{active?.productId?.salePrice ? (
 										<Fragment>
 											<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>

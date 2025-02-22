@@ -1,10 +1,16 @@
 import { fetchOptionsByType } from '@/store/common-slice';
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux';
 import FileUploadComponent from './FileUploadComponent';
 import { X } from 'lucide-react';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
+import { Button } from '../ui/button';
+import { Badge } from '../ui/badge';
+import { Label } from '../ui/label';
+import { useSettingsContext } from '@/Context/SettingsContext';
 
 const AllColorsWithImages = ({OnChangeColorsActive}) => {
+	const{checkAndCreateToast} = useSettingsContext();
 	const dispatch = useDispatch();
 	const [allColors, setAllColors] = useState([]);
 	const [isLoading, setIsLoading] = useState(false);
@@ -29,17 +35,24 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	};
 	const handelSetActiveColorSelect = (color) => {
 		if(activeColorSelect) {
-			setActiveColorSelect({...activeColorSelect,id:color.id, label: color.label, name: color.name});
+			setActiveColorSelect({...activeColorSelect,id:color.id, label: color.label, name: color.name,images:color.images || []});
 		}else{
-			setActiveColorSelect(color);
+			setActiveColorSelect({...color,images:[]});
 		}
 	}
 	// Add the selected color to the array
 	const updateSelectedColorArray = (e) => {
 		e.preventDefault();
+		if(isLoading || !activeColorSelect || activeColorSelect?.images?.length === 0){
+			checkAndCreateToast("error","Please select an image for the color.");
+			return;
+		}
 		if(activeColorSelect){
 			const alreadyPresent = allColors.find((s) => s.id === activeColorSelect?.id);
 			if(!alreadyPresent) {
+				if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
+
+				}
 				if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
 					setAllColors([...allColors, activeColorSelect]);
 					setActiveColorSelect(null);
@@ -67,37 +80,43 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 		<div className="p-3 w-full bg-white">
 			{/* Total Colors Count */}
 			<div className="flex items-center text-center text-xl font-bold justify-center">
-				<span>All Colors: {allColors.length}</span>
+				<Badge className={"font-bold text-white text-center text-lg"}>All Colors: {allColors.length}</Badge>
 			</div>
-			{allColors.length > 0 && (
-				<div className="flex gap-2 w-full mt-2">
-					<div className="mt-6 mb-5 w-full">
-						<div className="flex flex-wrap gap-2 mt-2 justify-start">
-							{allColors.map((color, index) => (
-								<div key={index} className="relative w-20 w- h-12">
-									{/* Color Preview */}
-									<div
-										className="w-full justify-center p-3 flex items-center h-full rounded-full border border-gray-300"
-										style={{ backgroundColor: color?.label }}
-									>
-										{/* <span className='text-xl font-semibold text-center'>{color?.name}</span> */}
-									</div>
+			<div className="max-w-[400px] my-4 overflow-x-auto flex flex-row space-x-4">
+				{allColors.map((color, index) => {
+					const active = color;
+					return(
+						(
+							<div key={index} className="relative min-w-56 h-fit border-2 rounded-md border-black shadow-md">
+								<div  className='w-full h-full p-1 py-3 space-y-3'>
 
-									{/* Remove Button */}
-									<button
-										className="absolute top-0 right-0 text-red-500 text-xs font-semibold bg-white rounded-full p-1 hover:bg-gray-200"
-										onClick={() => removeColorFromAllColors(color.id)} // Call function to remove color
-										aria-label={`Remove color ${color.label}`}
-										title={color?.images?.length > 0 ? color?.images?.length : "No Images Uploaded"}
-									>
-										<X/>
-									</button>
+									{/* Color Preview */}
+									<div className='w-full flex flex-wrap flex-row gap-2'>
+										<Badge className='text-sm font-semibold text-center'>Model Image: {active?.images.length}</Badge>
+										<Badge className='text-sm font-semibold text-center'>Name: {active?.name}</Badge>
+										<Badge className='text-sm font-semibold text-center'>HEX Code: {active?.label}</Badge>
+									</div>
+									<div
+										className="w-full justify-center p-3 flex border border-gray-950 shadow-md items-center h-full rounded-md"
+										style={{ backgroundColor: active?.label }}
+									></div>
 								</div>
-							))}
-						</div>
-					</div>
-				</div>
-			)}
+
+								{/* Remove Button */}
+								<X
+									className="absolute top-0 right-0 p-1 text-white text-xs font-semibold bg-black hover:bg-red-600 px-1 cursor-pointer transition-all duration-200 hover:rounded-lg ease-ease-out-expo hover:scale-105"
+									onClick={(e) => {
+										e.preventDefault();
+										removeColorFromAllColors(active.id)
+									}} // Call function to remove color
+									aria-label={`Remove color ${active.label}`}
+									title={active?.images?.length > 0 ? active?.images?.length : "No Images Uploaded"}
+								/>
+							</div>
+						)
+					)
+				})}
+			</div>
 			<div className="flex gap-6 mt-6 flex-col">
 				<div className="w-full flex flex-col items-center justify-center space-y-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow">
 				 <div className="flex w-full items-center justify-start gap-4 px-4 relative">
@@ -108,91 +127,77 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 							backgroundColor: activeColorSelect?.label || "#ffffff",
 						}}
 					/>
-
-					{/* Color Picker Dropdown */}
-					<div
-						className={`w-full h-10 py-1 relative flex items-center justify-center overflow-hidden rounded-full focus:outline-none transition-all transform duration-300 ease-in-out 
-						bg-[${activeColorSelect?.label}] text-white scale-110 shadow-lg hover:scale-105 hover:shadow-2xl`}
-						aria-label={`Select color ${activeColorSelect?.id}`}
+					<Select
+						value={activeColorSelect?.label}
+						onValueChange={(e) => {
+							const selectedOption = colorOptions.find(option => option.label === e);
+							if (selectedOption) {
+								console.log("Color Selected: ", selectedOption);
+								handelSetActiveColorSelect(selectedOption);
+							} else {
+								setActiveColorSelect(null);
+							}
+						}}
+						className="w-full h-full text-black font-semibold bg-transparent m-2 rounded-full focus:ring-2 focus:ring-gray-500 transition-all duration-200 ease-in-out"
 					>
-						<select
-							disabled={isLoading}
-							value={activeColorSelect?.label}
-							onChange={(e) => {
-								// e.preventDefault();
-								const selectedOption = colorOptions.find(option => option.label === e.target.value);
-								if (selectedOption) {
-									console.log("Color Selected: ", selectedOption);
-									handelSetActiveColorSelect(selectedOption);
-								} else {
-									setActiveColorSelect(null);
-								}
-							}}
-							className="w-full h-full text-black font-semibold bg-transparent m-2 rounded-full focus:ring-2 focus:ring-blue-500 transition-all duration-200 ease-in-out"
-						>
-							<option value="">None</option>
-							{colorOptions.map((option) => (
-								<option
-									key={option.id}
+						<SelectTrigger className="w-full border rounded-md">
+							<SelectValue placeholder = {"Create new Color"}/>
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="none">
+								<p className='text-black'>None</p>
+							</SelectItem>
+							{colorOptions.map((option,index) => (
+								<SelectItem
+									key={option.id || index}
+									
 									value={option.label}
-									className="w-full flex items-center gap-4 p-2 cursor-pointer bg-transparent"
-								>
-								{/* Color Circle */}
-								<div
-									className="w-6 h-6 rounded-full border-2 border-gray-300 shadow-md transition-transform duration-300 ease-in-out"
 									style={{
-									backgroundColor: option.label, // Set background color to the hex value
+										backgroundColor: option.label, // Set background color to the hex value
 									}}
-								/>
-								
-								{/* Color Label */}
-								<span
-									className="ml-2 text-sm font-semibold"
-									style={{
-									color: option.label === '#ffffff' ? 'black' : 'white', // Adjust text color based on background color
-									}}
+									className="w-full border-2 flex text-black my-2 font-bold font-sans items-center gap-4 p-2 cursor-pointer bg-transparent"
 								>
 									{option?.name || option?.label}
-								</span>
-								</option>
+									
+								</SelectItem>
 							))}
-							</select>
-
-					</div>
+						</SelectContent>
+					</Select>
 				</div>
 
 				{/* Image Upload for Selected Color */}
 				{activeColorSelect && (
-					<Fragment>
-					<span className="font-base text-gray-700">Add Images For Color <span className='font-medium text-black'>{activeColorSelect?.name || activeColorSelect?.label}</span> </span>
-					<FileUploadComponent
-						maxFiles={8}
-						tag={activeColorSelect.id}
-						sizeTag={'allColors'}
-						onSetImageUrls={(files) => {
-						console.log('Image Urls: ', files);
-							setActiveColorSelect({ ...activeColorSelect, images: files });
-						}}
-						isLoading={isLoading}
-						setIsLoading={setIsLoading}
-						onReset={rest}
-					/>
-					</Fragment>
+					<div className='w-full justify-between items-center flex flex-col space-y-3'>
+						<Label className="font-base text-gray-700">Add Images For Color <Label className='font-medium text-black'>{activeColorSelect?.name || activeColorSelect?.label} <Label className = {"text-red-800 text-lg"}>*</Label></Label> </Label>
+						<FileUploadComponent
+							onRemovingImages={(index)=>{
+								console.log('Removing Images: ', index);
+                                setActiveColorSelect({ ...activeColorSelect, images: activeColorSelect.images.filter((_, i) => i!== index) });
+							}}
+							maxFiles={8}
+							tag={activeColorSelect.id}
+							sizeTag={'allColors'}
+							onSetImageUrls={(files) => {
+							console.log('Image Urls: ', files);
+								setActiveColorSelect({ ...activeColorSelect, images: files });
+							}}
+							isLoading={isLoading}
+							setIsLoading={setIsLoading}
+							onReset={rest}
+						/>
+					</div>
 				)}
 
 				{/* Add Color Button */}
 				{activeColorSelect && (
-					<div className="mt-6 flex justify-center items-center space-y-3 flex-col">
-					<span className="text-left text-sm font-thin hover:text-gray-500 hover:underline underline-offset-4 cursor-pointer">
-						Required
-					</span>
-					<button
-						disabled={isLoading}
-						className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none"
-						onClick={updateSelectedColorArray}
-					>
-						Add Color
-					</button>
+					<div className="mt-6 flex w-full justify-center items-center space-y-3 flex-col">
+						<Button
+							disabled={isLoading || !activeColorSelect || activeColorSelect?.images?.length === 0}
+							className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:ring-2 focus:ring-gray-300 focus:outline-none"
+							onClick={updateSelectedColorArray}
+						>
+							Add Color {activeColorSelect?.images?.length > 0? `(${activeColorSelect?.images?.length})` : ""}
+						</Button>
 					</div>
 				)}
 				</div>

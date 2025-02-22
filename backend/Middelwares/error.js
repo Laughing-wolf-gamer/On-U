@@ -5,7 +5,7 @@ export default(err, req, res, next)=>{
     err.message = err.message || "Internal Server Error";
 
     if(err.name === 'casterror'){
-        const message = `resource not found .invalid ${err.path}`;
+        const message = `resource not found .invalid ${err?.path}`;
         err = new ErrorHandler (message, 400)
     }
 

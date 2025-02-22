@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { toast } from "react-toastify";
 import { editDisclaimerData, fetchWebsiteDisclaimer, removeDisclaimerData, setDisclaimerData } from "@/store/common-slice";
 import FileUploadComponent from "./FileUploadComponent";
+import { useSettingsContext } from "@/Context/SettingsContext";
 
 const DisclaimerManager = () => {
+	const {checkAndCreateToast} = useSettingsContext();
     const [reset, setIsReset] = useState(false);
     const { DisclaimerData } = useSelector(state => state.common);
     const [editingId, setEditingId] = useState(null);
@@ -31,14 +32,14 @@ const DisclaimerManager = () => {
 
     // Consolidated success and error handler
     const handleSuccess = (message) => {
-        toast.success(message);
+        checkAndCreateToast("success",message);
         dispatch(fetchWebsiteDisclaimer());
         setIsReset(true);
         setTimeout(() => setIsReset(false), 400);
     };
 
     const handleError = (message) => {
-        toast.error(message);
+        checkAndCreateToast("error",message);
     };
 
     // Create or update disclaimer

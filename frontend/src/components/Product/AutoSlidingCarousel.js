@@ -1,41 +1,16 @@
-import React, { useState, useEffect, useRef, useMemo, Fragment } from "react";
-import { LazyLoadImage } from "react-lazy-load-image-component";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 import { Heart } from "lucide-react";
 import { createwishlist, getwishlist } from "../../action/orderaction";
 import { useDispatch } from "react-redux";
-import toast from "react-hot-toast";
-import { useToast } from "../../Contaxt/ToastProvider";
 import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
+import { useSettingsContext } from "../../Contaxt/SettingsContext";
 
 const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
     const { sessionData,sessionBagData, setWishListProductInfo } = useSessionStorage();
     const [isInWishList, setIsInWishList] = useState(false);
-    const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type, message) => {
-        console.log("check Toast: ", type, message, activeToast);
-        if (activeToast !== message) {
-            switch (type) {
-                case "error":
-                toast.error(message);
-                break;
-                case "warning":
-                toast.warning(message);
-                break;
-                case "info":
-                toast.info(message);
-                break;
-                case "success":
-                toast.success(message);
-                break;
-                default:
-                toast.info(message);
-                break;
-            }
-            showToast(message);
-        }
-    };
+	const {checkAndCreateToast} = useSettingsContext();
 
 
     const [imageArray,setImageArray] = useState([]);
@@ -225,6 +200,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                                         width="100%"
                                         alt="product"
                                         onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
+										onContextMenu={(e) => e.preventDefault()}  // Disable right-click
                                     />
                                 </div>
                             )}

@@ -85,7 +85,7 @@ function App() {
                     <Route path="features/addressOptions" element={<AdminAddressPage/>}/>
                     <Route path="features/couponManagement" element={<AdminCouponFormPage/>}/>
                     <Route path="features/couponBanner" element={<AdminHomeCouponBanner/>}/>
-                    <Route path="features/homeDisclaimers" element={<DisclaimerManager/>}/>
+                    <Route path="features/disclaimers" element={<DisclaimerManager/>}/>
 
                     <Route path="orders" element={<AdminOrders/>}/>
                     <Route path="pages/about" element={<AdminAboutPage/>}/>

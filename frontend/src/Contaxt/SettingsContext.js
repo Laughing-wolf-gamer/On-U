@@ -11,11 +11,10 @@ export const SettingsProvider = ({ children }) => {
     const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
         const style = {
-            border: '1px solid #713200',
+            border: '1px solid #fff',
             padding: '16px',
             color: '#713200',
         }
-        const icon = "👌";
         const iconTheme = {
             primary: '#000',
             secondary: '#fff',
@@ -24,20 +23,19 @@ export const SettingsProvider = ({ children }) => {
             role: 'status',
             'aria-live': 'polite',
         };
-        const removeDelay = 1000;
-        const appearDuratin = 4000;
+        const removeDelay = 500;
+        const appearDuratin = 1000;
         const position = 'top-center'
         // console.log("check Toast: ",type, message,activeToast);
         if(!activeToast){
             switch(type){
-                case "error":
-                    toast.error(message,{
+                case "success":
+                    toast.success(message,{
                         duration: appearDuratin,
                         position: position,
                       
                         // Styling
-                        style,
-                        className: '',
+                        style: style,
                                             
                         // Change colors of success/error/loading icon
                         iconTheme: iconTheme,
@@ -49,57 +47,21 @@ export const SettingsProvider = ({ children }) => {
                         removeDelay: removeDelay,
                     })
                     break;
-                case "success":
-                    toast.success(message,{
-                        duration: 4000,
-                        position: 'top-center',
-                      
-                        // Styling
-                        style: {},
-                        className: '',
-                                            
-                        // Change colors of success/error/loading icon
-                        iconTheme: {
-                            primary: '#000',
-                            secondary: '#fff',
-                        },
-                      
-                        // Aria
-                        ariaProps: {
-                            role: 'status',
-                            'aria-live': 'polite',
-                        },
-                      
-                        // Additional Configuration
-                        removeDelay: 500,
-                    })
-                    break;
                 default:
-                    toast.success(message,{
-                        duration: 4000,
-                        position: 'top-center',
+                    toast.error(message,{
+                        duration: appearDuratin,
+                        position: position,
                       
                         // Styling
-                        style: {},
-                        className: '',
-                      
-                        // Custom Icon
-                        icon: '👏',
-                      
+                        style: style,
                         // Change colors of success/error/loading icon
-                        iconTheme: {
-                            primary: '#000',
-                            secondary: '#fff',
-                        },
+                        iconTheme: iconTheme,
                       
                         // Aria
-                        ariaProps: {
-                            role: 'status',
-                            'aria-live': 'polite',
-                        },
+                        ariaProps: ariaProps,
                       
                         // Additional Configuration
-                        removeDelay: 500,
+                        removeDelay: removeDelay,
                     })
                 break;
             }
@@ -121,7 +83,7 @@ export const SettingsProvider = ({ children }) => {
             const handleKeyPress = (event) => {
                 if (event.key === 'F12' || (event.ctrlKey && event.shiftKey && event.key === 'I')) {
                     event.preventDefault();
-                    checkAndCreateToast("info",'Opening Developer Tools is not allowed!');
+                    checkAndCreateToast("error",'Opening Developer Tools is not allowed!');
                 }
             };
             

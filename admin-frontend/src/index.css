@@ -117,3 +117,15 @@
     @apply bg-background text-foreground;
   }
 }
+@keyframes loadingBar {
+    0% {
+        width: 0;
+    }
+    100% {
+        width: 100%;
+    }
+}
+
+.animate-loading-bar {
+    animation: loadingBar 2s infinite linear;
+}

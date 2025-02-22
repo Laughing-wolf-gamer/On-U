@@ -93,7 +93,7 @@ function App() {
 				<Route path='/bag/checkout/success' element={<PaymentSuccess/>}/>
 				<Route path='/bag/checkout/failure' element={<PaymentFailed/>}/>
 				<Route path='/bag/checkout/pending' element={<PaymentPending/>}/>
-				{user && <Route path="/order/details/:id" element = {<OrderDetailsPage user={user}/>}/>}
+				{user && <Route path="/order/details" element = {<OrderDetailsPage user={user}/>}/>}
 				<Route path='/address/bag' element={<Address user={user}/>}/>
 				<Route path='/about' element={<About />}/>
 				<Route path='/contact' element={<Contact />}/>

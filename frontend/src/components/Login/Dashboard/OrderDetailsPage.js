@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useParams, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { fetchOrderById } from '../../../action/orderaction';
 import DeliveryStatus from './DeliveryStatus';
 import Loader from '../../Loader/Loader';
@@ -56,30 +56,33 @@ const AddressSection = ({ address, userName }) => (
         <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
         <div className="bg-gray-100 p-6 rounded-md shadow-md">
             <p className="font-bold">{userName}</p>
-            <p>{address}</p>
+            <p>{Object.values(address).join(", ")}</p>
         </div>
     </div>
 );
 
 const OrderDetailsPage = ({ user }) => {
+	const location = useLocation();
     const scrollableDivRef = useRef(null);
     const navigate = useNavigate(); // useNavigate hook to navigate back
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
     const [orderItems, setOrderItems] = useState([]);
     const dispatch = useDispatch();
-    const { id } = useParams();
+	const {id} = location.state;
 
     useEffect(() => {
         if (id) {
-            dispatch(fetchOrderById(id));
-        }
-    }, [dispatch, id]);
+            dispatch(fetchOrderById(id)
+		);
+	}
+    }, [dispatch, location]);
 
     useEffect(() => {
         if (orderbyid) {
             setOrderItems(orderbyid.orderItems);
         }
     }, [orderbyid]);
+	console.log("Location Data: ", location.state)
 
     // Back button handler
     const handleBackButtonClick = () => {
@@ -148,12 +151,13 @@ const OrderDetailsPage = ({ user }) => {
                         </div>
 
                         {/* Sidebar - Order Summary */}
-                        <div className="col-span-12 lg:col-span-4 bg-gray-100 p-6 rounded-lg space-y-6">
+                        <div className="col-span-12 lg:col-span-4 bg-gray-100 p-6 rounded-lg space-y-6 font1">
                             <h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
                             <div className="bg-white p-6 rounded-md shadow-md space-y-4">
-                                <p className="font-semibold text-gray-800">Total Items: {orderbyid?.orderItems?.length}</p>
-                                <p className="font-semibold text-gray-800">Total Amount: ₹ {formattedSalePrice(orderbyid?.TotalAmount)}</p>
-                                <p className="font-semibold text-gray-800">Shipping: ₹ {formattedSalePrice(orderbyid?.ConveenianceFees)}</p>
+                                <p className="font-semibold text-gray-800">Total Items: <span className='text-base text-gray-600 font-normal'>{orderbyid?.orderItems?.length}</span></p>
+                                <p className="font-semibold text-gray-800">Total Amount: <span className='text-base text-gray-600 font-normal'>₹{formattedSalePrice(orderbyid?.TotalAmount)}</span></p>
+								
+                                <p className="font-semibold text-gray-800">Shipping: <span className='text-base text-gray-600 font-normal'>{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</span>  </p>
                             </div>
                         </div>
                     </div>

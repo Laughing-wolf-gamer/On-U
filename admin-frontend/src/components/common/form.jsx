@@ -95,8 +95,8 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
             );
         }
     }
-    const validated = formControls.map(v => v.required && !formData[v.name])
-    console.log("Bullet Points Data:  ",formData["bulletPoints"])
+    // const validated = formControls.map(v => v.required && !formData[v.name])
+    // console.log("Bullet Points Data:  ",formData["bulletPoints"])
     return (
         <form onSubmit={(e) => handleSubmit(e)} className="space-y-6">
         <div className="flex flex-col gap-6">

@@ -1,7 +1,7 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { ChevronUp, Edit, Eye, FilePenLine, FileWarning, Minus, MinusCircleIcon, Plus, PlusCircleIcon, X } from 'lucide-react';
+import { Edit, Eye, FilePenLine, ImageUpIcon, Loader, Minus, MinusCircleIcon, Plus, PlusCircleIcon, X } from 'lucide-react';
 import axios from 'axios';
 import { addProductsFromElement, BASE_URL, formattedSalePrice, Header } from '@/config';
 import SizeSelector from './SizeSelector';
@@ -14,9 +14,9 @@ import ConfirmDeletePopup from '@/pages/admin-view/ConfirmDeletePopup';
 import FileUploadComponent from './FileUploadComponent';
 import CustomSelect from './CustomSelect';
 import RatingDataView from './RatingDataView';
-import TextInputArrayCustom from './TextInputArrayCustom';
-import TextArrayView from './TextArrayView';
-import { toast } from 'react-toastify';
+import { Label } from '../ui/label';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
+import { useSettingsContext } from '@/Context/SettingsContext';
 const ProductPreview = ({
 	categories,
 	genders,
@@ -28,6 +28,7 @@ const ProductPreview = ({
 	UpdateEditedData,
 	setCurrentPreviewProduct,
   }) => {
+	const{checkAndCreateToast} = useSettingsContext();
     const [isRatingModalOpen, setRatingIsModalOpen] = useState(false);
     const [productRatings, setProductsRatings] = useState([]);
 
@@ -44,6 +45,7 @@ const ProductPreview = ({
             setProductData(response?.payload?.result || null);
         } catch (error) {
             console.error("Error Fetching Product Data: ", error);
+			checkAndCreateToast("error","Failed to fetch product data!");
         }
     };
     const addRatingForProduct = async(ratingData)=>{
@@ -52,12 +54,12 @@ const ProductPreview = ({
             if(!ratingData) return;
             const response = await axios.post(`${BASE_URL}/admin/product/add-rating`, {productId: productDataId, ratingData},Header());
             console.log("Rating Added: ", response.data);
-            toast.success("Rating added successfully!");
+            checkAndCreateToast("success","Rating added successfully!");
             setRatingIsModalOpen(false);
             fetchProductData();
         } catch (error) {
             console.error("Error Adding Rating: ", error);
-            toast.error("Failed to add rating!");
+            checkAndCreateToast("error","Failed to add rating!");
         }
     }
     const removeRatingForProduct = async(ratingDataId)=>{
@@ -66,12 +68,12 @@ const ProductPreview = ({
             if(!ratingDataId) return;
             const response = await axios.patch(`${BASE_URL}/admin/product/remove-rating`, {productId: productDataId, ratingId:ratingDataId},Header());
             console.log("Rating Added: ", response.data);
-            toast.success("Rating Removed successfully!");
+            checkAndCreateToast("success","Rating Removed successfully!");
             setRatingIsModalOpen(false);
             fetchProductData();
         } catch (error) {
             console.error("Error Removing Rating: ", error);
-            toast.error("Failed to removing rating!");
+            checkAndCreateToast("error","Failed to removing rating!");
         }
     }
 
@@ -154,7 +156,7 @@ const ProductPreview = ({
                     <div className="col-span-10 p-6 bg-white rounded-lg shadow-lg">
                         <div className="mb-6 space-y-4">
                             <div className="flex justify-between items-center border-b pb-4">
-                                <h3 className="font-semibold text-gray-700 text-lg">Descriptions:</h3>
+                                <h3 className="font-semibold text-gray-700 text-lg mr-3">Descriptions:</h3>
                                 {isEditing ? (
                                     <textarea
                                         type="text"
@@ -165,7 +167,7 @@ const ProductPreview = ({
                                         className="text-lg w-2/3 font-medium text-gray-600 border-2"
                                     />
                                 ) : (
-                                    <p className="text-lg font-medium text-gray-600">
+                                    <p className="text-lg text-right font-medium text-gray-600">
                                         {productData?.description}
                                     </p>
                                 )}
@@ -251,10 +253,13 @@ const ProductPreview = ({
                                     </p>
                                 )}
                             </div>
-							<div onClick={()=>{
-								setRatingIsModalOpen(true);
-							}} className="flex justify-between items-center border-b pb-4">
-                                <h3 className="font-semibold cursor-pointer text-gray-700 text-lg">Average Rating:</h3>
+							<div className="flex justify-between items-center border-b pb-4">
+								<div className='space-x-3 justify-between flex flex-row'>
+                                	<h3 className="font-semibold text-gray-700 text-lg">Average Rating: </h3>
+									<Edit onClick={()=>{
+										setRatingIsModalOpen(true);
+									}} className='cursor-pointer'/>
+								</div>
                                 <p className="text-lg font-medium text-red-600">
 									{productData?.averageRating}
 								</p>
@@ -398,10 +403,10 @@ const ProductPreview = ({
                             </div>
                             
                         </div>
-						{/* Description and Bullet Points */}
+						{/* Bullet Points */}
                         <div className="mb-6 space-y-4">
                             {
-                                isEditing ? <BulletPointsForm onChange={(e)=>{
+                                isEditing ? <BulletPointsForm defaultPoinst={productData?.bulletPoints} onChange={(e)=>{
                                     // console.log("Editing Bullet Points: ",e);
                                     setProductData({
                                         ...productData,
@@ -416,7 +421,7 @@ const ProductPreview = ({
                                 )
                             }
                         </div>
-						<div className="mb-6 space-y-4">
+						{/* <div className="mb-6 space-y-4">
                             {
                                 isEditing ? <TextInputArrayCustom defualt={productData?.delivaryPoints} onChange={(e)=>{
                                     // console.log("Editing Bullet Points: ",e);
@@ -432,7 +437,7 @@ const ProductPreview = ({
                                     </>
                                 )
                             }
-                        </div>
+                        </div> */}
                         {/* Edit and Delete Buttons */}
                         <div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
                             <Button
@@ -444,7 +449,6 @@ const ProductPreview = ({
                                         setIsEditing(!isEditing); // Toggle editing state
                                         if(setCurrentPreviewProduct){
                                             setCurrentPreviewProduct(null);
-
                                         }
                                 }}
                             >
@@ -467,7 +471,7 @@ const ProductPreview = ({
                                     setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
                                 }}
                             >
-                            Remove Product
+                            	Remove Product
                             </Button>
                         </div>
                         
@@ -484,22 +488,24 @@ const ProductPreview = ({
                 }
                 setIsConfirmDeleteWindow(false);
             }}/>
-            <RatingDataView 
-                isOpen={isRatingModalOpen} 
-                onClose={()=>{
-                    setRatingIsModalOpen(false);
-                }} 
-                ratings={productData?.Rating || []} 
-                onDeleteRating={(ratingDataId)=>{
-                    removeRatingForProduct(ratingDataId)
-                }}
-                addNewRating={(data)=>{
-                    // console.log("New Rating: ", data);
-                    // OnRating(productId, data);
-                    addRatingForProduct(data);
-                }}
-            
-            />
+			<Dialog open = {isRatingModalOpen} onOpenChange={()=> setRatingIsModalOpen(false)}>
+				<RatingDataView 
+					isOpen={isRatingModalOpen} 
+					onClose={()=>{
+						setRatingIsModalOpen(false)
+					}} 
+					ratings={productData?.Rating || []} 
+					onDeleteRating={(ratingDataId)=>{
+						removeRatingForProduct(ratingDataId)
+					}}
+					addNewRating={(data)=>{
+						// console.log("New Rating: ", data);
+						// OnRating(productId, data);
+						addRatingForProduct(data);
+					}}
+				
+				/>
+			</Dialog>
         </div>
     );
 	if(!showPopUp){
@@ -509,6 +515,7 @@ const ProductPreview = ({
 };
   
 const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
+	const{checkAndCreateToast} = useSettingsContext();
 	const[isFileUploadPopUpOpen,setIsFileUploadPopUpOpen] = useState(false);
 	const[activeSelectedSize,setActiveSelectedSize] = useState(null);
 	const[activeSelectedColor,setActiveSelectedColor] = useState(null);
@@ -525,6 +532,8 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const [updatingColors, setUpdatingColors] = useState([]);
 	const [selectedColorImages, setSelectedColorImages] = useState([]);
 	const [colorOptions, setColorOptions] = useState([]);
+	const[colorInputQuantiy, setColorInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
+	const[sizeInputQuantiy, setSizeInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
 
 
 	// State for size quantities
@@ -539,7 +548,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	);
 
 	// Toast for displaying messages
-	// const { toast } = useToast();
 	const dispatch = useDispatch();
 
 	// Fetch color options on component mount
@@ -597,10 +605,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				updatedAmount: change,
 			}, Header());
 			console.log(`${type} Quantity Updated:`, response.data);
-			toast.success("Quantity Updated Successfully");
-			// toast({ title: "Quantity Updated", message: "Quantity Updated Successfully", type: "success" });
+			checkAndCreateToast("success","Quantity Updated Successfully");
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);
+			checkAndCreateToast("success",`Error Updating ${type} Quantity `)
 		}finally{
 			OnRefresh();
 			setIsLoading(false);
@@ -619,11 +627,11 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			}, Header());
 			console.log(`Quantity Updated:`, response.data);
 			setUpdatingColors([]);
-			toast.success("New Color Added Successfully");
+			checkAndCreateToast("success","New Color Added Successfully");
 			// toast({ title: "New Color Added", message: "New Color Added Successfully", type: "success" });
 		} catch (error) {
 			console.log(`Error Updating Quantity:`, error.message);
-			toast.error(error.message);
+			checkAndCreateToast("error",error.message);
 			// toast({ title: "Error Updating Quantity", message: error.message, type: "error" });
 		}finally{
 			setIsLoading(false);
@@ -649,10 +657,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setNewSize(null);
 			setToggleEditColorsColor(null);
 			setToggleAddNewSize(false);
-			toast.success("New Size Added Successfully");
+			checkAndCreateToast("success","New Size Added Successfully");
 		} catch (error) {
 			console.log(`Error Updating Quantity:`, error);
-			toast.error(error.message);
+			checkAndCreateToast("error",error.message);
 		}finally{
 			OnRefresh();
 			setIsLoading(false);
@@ -675,10 +683,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				updatedAmount: change,
 			}, Header());
 			console.log(`${type} Quantity Updated:`, response.data);
-			toast.success("Quantity Updated Successfully");
+			checkAndCreateToast("success","Quantity Updated Successfully");
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);
-			toast.error(error.message);
+			checkAndCreateToast("error",error.message);
 		}finally{
 			OnRefresh();
 			setIsLoading(false);
@@ -700,11 +708,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			},Header());
 			console.log(`Color Removed:`, response.data);
 			// toast("Color Removed Successfully","success");
-			toast.success("Color Removed Successfully");
+			checkAndCreateToast("success","Color Removed Successfully");
 		} catch (error) {
 			console.log(`Error Removing Color:`, error);
-			toast.error("Error Removing Color");
-			// toast({title:"Error Removing Color",message:error.message,type:"error"});
+			checkAndCreateToast("error","Error Removing Color");
 		}finally{
 			setIsLoading(false);
 			OnRefresh();
@@ -726,10 +733,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			},Header());
 			console.log(`Size Removed: `, response.data);
 			// toast("Size Removed Successfully","success");
-			toast.success("Size Removed Successfully");
+			checkAndCreateToast("success","Size Removed Successfully");
 		} catch (error) {
 			console.log(`Error Removing Size:`, error);
-			toast.error("Error Removing Size");
+			checkAndCreateToast("error","Error Removing Size");
 			// toast({title:"Error Removing Size",message:error.message,type:"error"});
 		}finally{
 			setIsLoading(false);
@@ -755,7 +762,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const renderLowQuantityIndicator = (quantity) => {
 		if (isLowQuantity(quantity)) {
 			return (
-				<span className="text-red-500 ml-2 hover:animate-bounce" title="Low Quantity">
+				<span className="text-red-500 ml-2 animate-bounce" title="Low Quantity">
 					⚠️
 				</span>
 			);
@@ -776,10 +783,10 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			const updatedImages = response?.data?.result
 			setActiveImageColorSize(sizeId);
 			setSelectedColorImages(updatedImages);
-			toast.success("Image Updated Successfully");
+			checkAndCreateToast("success","Image Updated Successfully");
 			// toast("Image Updated Successfully","success");
 		} catch (error) {
-			toast.error("Image Updated Failed");
+			checkAndCreateToast("error","Image Updated Failed");
 			console.error("Error updating: ",error);
 			// toast("Image Updated Failed","error");
 		}finally{
@@ -793,7 +800,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	}
 	// console.log("Selected Color Images: ",activeImageColorSize);
 
-	const memoizedColorImages = useMemo(() => {
+	/* const memoizedColorImages = useMemo(() => {
 		return selectedColorImages.map((item, index) => {
 			const isVideo = item?.url?.includes('video');
 			return (
@@ -819,7 +826,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				</div>
 			);
 		});
-	  }, [selectedColorImages]); // Memoize only when selectedColorImages change
+	  }, [selectedColorImages]); // Memoize only when selectedColorImages change */
 	return (
 		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> {/* Make the container a column layout */}
 			<div className="flex justify-center items-center gap-4">
@@ -830,15 +837,15 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				>
 					{/* Toggle between the Plus and Minus icon based on the state */}
 					{toggleAddNewSize ? (
-						<>
+						<Fragment>
 							<MinusCircleIcon className="h-5 w-5" />
 							<span className="text-sm">Hide New Size</span> {/* Optional text for additional context */}
-						</>
+						</Fragment>
 					) : (
-						<>
+						<Fragment>
 							<PlusCircleIcon className="h-5 w-5" />
 							<span className="text-sm">New Size</span> {/* Optional text for additional context */}
-						</>
+						</Fragment>
 					)}
 				</Button>
 			</div>
@@ -866,7 +873,8 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			{SizesArray && SizesArray.length > 0 && SizesArray.map((size, i) => (
 				
 				<div key={i} className="border p-4 rounded-md shadow-md w-full relative flex flex-col gap-4"> {/* Flex layout for size box */}
-					<h2 className="text-xl font-semibold">Size: {size.label} {renderLowQuantityIndicator(sizeQuantities[size._id])}</h2>
+					<h2 className="text-xl font-semibold">Size: {size.label} {renderLowQuantityIndicator(sizeQuantities[size._id])}
+					</h2>
 					<p className="text-sm text-gray-500">Quantity: {sizeQuantities[size._id]}</p>
 					<div className='flex justify-end items-center gap-4'>
 						<Button
@@ -917,21 +925,21 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					</div>
 					{/* Size Quantity Control */}
 					<div className="flex items-center gap-2 mt-4 border justify-between border-gray-500 shadow-md rounded-md p-4 relative">
-						<h1 className='font-extrabold text-center text-gray-600'><span className='space-x-4 text-sm font-semibold'>{size.label}</span> Quantity</h1>
-						<div className='w-fit h-fit p-1 space-x-6'>
+						<Label className='font-extrabold text-center text-gray-600'>{size.label}</Label>
+						<div className='w-fit h-fit space-x-6'>
 
 							<Button
-								disabled={isLoading}
+								disabled={isLoading || sizeQuantities[size._id] <= 0}
 								onClick={() => handleSizeQuantityChange(size._id, -1)}
-								className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
+								className=" p-2 rounded-full"
 							>
 								<Minus />
 							</Button>
-							<span className="text-lg text-gray-700 font-extrabold">{sizeQuantities[size._id]}</span>
+							<Label className="text-lg text-gray-700 font-extrabold">Qty: {sizeQuantities[size._id]}</Label>
 							<Button
 								disabled={isLoading}
 								onClick={() => handleSizeQuantityChange(size._id, 1)}
-								className="bg-gray-300 p-2 rounded-full hover:bg-gray-400"
+								className=" p-2 rounded-full"
 							>
 								<Plus />
 							</Button>
@@ -951,94 +959,101 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					
 	
 					{/* Color Options */}
-					<div className="flex gap-4 mt-4 flex-wrap">
-						{size && size.colors && size.colors.length > 0 && size.colors.map((color, index) => (
-							<div
-								key={index}
-								className="flex relative items-center justify-between gap-2 bg-gray-200 p-3 rounded-md shadow-md cursor-pointer flex-wrap"
-								onClick={() => {
-									setActiveImageColorSize(size._id);
-									handleColorClick(color?.images || [])
-								}}
-							>
+					<div className="flex gap-4 mt-4 max-w-full overflow-x-auto justify-start items-start">
+						{size && size.colors && size.colors.length > 0 && size.colors.map((color, index) => {
+							const activeColor = color;
+							return(
 								<div
-									className="w-10 h-10 rounded-full border-2"
-									style={{ backgroundColor: color.label }}
+									key={index}
+									className="relative flex flex-col items-center min-h-[100px] min-w-[260px] cursor-pointer justify-center border border-black gap-3 bg-neutral-50 p-4 rounded-md shadow-md"
+									
 								>
-								</div>
-									<span className="text-sm text-black font-extrabold">
-										{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${color._id}`])}
-									</span>
-								<span className="text-sm text-black font-extrabold">{color.label}</span>
+									<div className='flex justify-center space-x-2 items-center'>
+										<div
+											className="w-10 h-10 rounded-full border-2"
+											style={{ backgroundColor: activeColor.label }}
+										/>
+										<Label className="text-sm text-gray-700 font-extrabold whitespace-nowrap">{activeColor?.name}</Label>
+									</div>
 
-								{/* Color Quantity Control */}
-								<div className="flex items-center gap-2 w-fit px-7">
+									<Label className="text-lg absolute top-0 left-0 text-black animate-bounce font-extrabold">
+										{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${activeColor._id}`])}
+									</Label>
+									<button onClick={(e) => {
+										e.preventDefault();
+										setActiveImageColorSize(size._id);
+										handleColorClick(activeColor?.images || []);
+									}}  className="text-lg absolute top-3 left-10 text-black font-extrabold">
+										<Eye/>
+									</button>
+
+									{/* Color Quantity Control */}
+									<div className="flex items-center px-3 min-w-fit justify-between border border-gray-600 rounded-lg space-x-4">
+										<Button
+											disabled={isLoading || sizeQuantities[`${size._id}-${activeColor._id}`] <= 0}
+											onClick={(e) => {
+												e.stopPropagation();
+												e.preventDefault();
+												handleColorQuantityChange(size._id, activeColor._id, -1);
+											}}
+											className="bg-black p-2 rounded-full "
+										>
+											<Minus />
+										</Button>
+										<Label className="text-lg text-gray-700 font-extrabold whitespace-nowrap">Qty: {sizeQuantities[`${size._id}-${activeColor._id}`]}</Label>
+										<Button
+											disabled={isLoading}
+											onClick={(e) => {
+												e.stopPropagation();
+												handleColorQuantityChange(size._id, activeColor._id, 1);
+											}}
+											className="bg-black p-2 rounded-full"
+										>
+											<Plus />
+										</Button>
+
+										{/* File Upload Button with Icon */}
+										<div className="p-2">
+											<Button onClick={(e) => {
+												e.stopPropagation();
+												setActiveSelectedColor(activeColor._id);
+												setActiveSelectedSize(size._id);
+												setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+												setSelectedColorImages([]);
+											}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
+												<ImageUpIcon />
+											</Button>
+										</div>
+									</div>
+
+									{/* Remove Color Button */}
 									<Button
 										disabled={isLoading}
-										onClick={(e) => {
-											e.stopPropagation();
-											handleColorQuantityChange(size._id, color._id, -1)
+										onClick={() => {
+											setColorDeletingData({sizeId: size._id, colorId: color._id});
+											setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 										}}
-										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
+										className="text-white w-6 h-6 px-2 absolute top-2 right-2 bg-black p-2 rounded-full"
 									>
-										<Minus />
-									</Button>
-									<span className="text-gray-800 font-extrabold">{sizeQuantities[`${size._id}-${color._id}`]}</span>
-									<Button
-										disabled={isLoading}
-										onClick={(e) => {
-											e.stopPropagation();
-											handleColorQuantityChange(size._id, color._id, 1)
-										}}
-										className="bg-gray-600 p-2 rounded-full hover:bg-gray-800"
-									>
-										<Plus />
+										<X />
 									</Button>
 								</div>
-
-								{/* Remove Color Button */}
-								<Button
-									disabled={isLoading}
-									onClick={() => {
-										setColorDeletingData({sizeId: size._id, colorId: color._id})
-										setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-									}}
-									className="text-white w-6 h-6 px-2 absolute top-0 right-0 bg-black p-2 rounded-full"
-								>
-									<X />
-								</Button>
-
-								{/* File Upload Button with Icon */}
-								<div className="bottom-0 left-0 p-2">
-									<Button onClick = {()=> {
-										setActiveSelectedColor(color._id);
-										setActiveSelectedSize(size._id)
-										setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-                                        setSelectedColorImages([]);
-									}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
-										<FilePenLine />
-									</Button>
-								</div>
-							</div>
-						))}
+							);
+						})}
 					</div>
-					{activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0 && (
-						<div className="mt-4">
-							<ChevronUp className='cursor-pointer' size={30} onClick={()=> {
-								setActiveImageColorSize(null);
-								setSelectedColorImages([]);
-							}}/>
-							<div className="flex gap-4 mt-2">
-								{memoizedColorImages}
-							</div>
-						</div>
-					)}
+					<Dialog open = {activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0} onOpenChange={()=>{
+						setActiveImageColorSize(null);
+						setSelectedColorImages([]);
+					}}>
+						<ImagesPreview selectedColorImages={selectedColorImages}/>
+					</Dialog>
 				</div>
 			))}
 			<ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={()=> {
 				setIsConfirmDeleteWindow(false)
 				setColorDeletingData(null);
 				setSizeDeletingData(null);
+				setSelectedColorImages([]);
 			}} onConfirm={()=>{
 				if(colorDeletingData){
 					handelRemoveColor(colorDeletingData.sizeId, colorDeletingData.colorId);
@@ -1047,59 +1062,130 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 					handelRemoveSize(sizeDeletingData.sizeId);
 				}
 				setIsConfirmDeleteWindow(false);
+				setSelectedColorImages([]);
 			}}/>
-			<FileUploadPopUpWindow sizeId={activeSelectedSize} colorId={activeSelectedColor} isOpen={isFileUploadPopUpOpen} onCancel={()=> {
+			<Dialog open = {isFileUploadPopUpOpen} onOpenChange={()=>{
 				setActiveSelectedColor(null);
 				setActiveSelectedSize(null);
 				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-			}}
-			onConfirm = {(imageArray)=>{
-				updateImageImageBuyColorId(activeSelectedColor,activeSelectedSize,imageArray)
-				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-			}} />
+			}}>
+				<FileUploadPopUpWindow sizeId={activeSelectedSize} colorId={activeSelectedColor} isOpen={isFileUploadPopUpOpen} 
+				onConfirm = {(imageArray)=>{
+					updateImageImageBuyColorId(activeSelectedColor,activeSelectedSize,imageArray)
+					setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+				}} />
+			</Dialog>
 			
 		</div>
 	);
 	
 };
-const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onCancel, onConfirm }) => {
+const ImagesPreview = ({ selectedColorImages }) => {
+  	// Initialize loading states for each image/video item
+	const [loadingStates, setLoadingStates] = useState(
+		new Array(selectedColorImages.length).fill(true) // true means loading initially
+	);
+
+	// This function will update the loading state for a specific index
+	const handleLoad = (index) => {
+		setLoadingStates((prevStates) => {
+			const newStates = [...prevStates];
+			newStates[index] = false; // Mark as loaded
+			return newStates;
+		});
+	};
+
+	const handleVideoCanPlay = (index) => {
+		setLoadingStates((prevStates) => {
+			const newStates = [...prevStates];
+			newStates[index] = false; // Mark video as loaded
+			return newStates;
+		});
+	};
+
+	const memoizedColorImages = useMemo(() => {
+		return selectedColorImages.map((item, index) => {
+		const isVideo = item?.url?.includes('video');
+		const isLoading = loadingStates[index]; // Get the loading state for this item
+
+		return (
+			<div key={index} className="w-full h-44 relative">
+				{/* Show spinner if the image/video is loading */}
+				{isLoading && (
+					<div className='w-full h-full absolute inset-0 z-10 justify-center bg-gray-100 animate-pulse flex items-center'>
+						<div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
+					</div>
+				)}
+
+				{/* Image or Video Component */}
+				{isVideo ? (
+					<video
+						className="w-full h-full object-cover rounded-md border"
+						controls
+						src={item?.url}
+						alt={`Color Video ${index + 1}`}
+						onCanPlay={() => handleVideoCanPlay(index)} // Video on load event
+						loading="lazy" // Lazy load videos
+					>
+					Your browser does not support the video tag.
+					</video>
+				) : (
+					<img
+						src={item?.url}
+						alt={`Color Image ${index + 1}`}
+						className="w-full h-full object-cover rounded-md border"
+						onLoad={() => handleLoad(index)} // Image on load event
+						loading="lazy" // Lazy load images
+					/>
+				)}
+			</div>
+		);
+		});
+	}, [selectedColorImages, loadingStates]); // Dependency on selectedColorImages and loadingStates
+
+	return (
+		<DialogContent>
+			<DialogTitle>Images Preview</DialogTitle>
+			<div className="grid grid-cols-4 gap-4">
+				{memoizedColorImages}
+			</div>
+		</DialogContent>
+	);
+};
+const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onConfirm }) => {
 	const[isLoading,setIsLoading] = useState(false);
 	const [imageArray,setImageArray] = useState([]);
 	if (!isOpen) return null;
 	return (
-		<div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-			<div className="bg-white p-6 rounded-lg shadow-lg w-96">
-				<div className="justify-end space-y-4 flex flex-col">
-					<FileUploadComponent
-						maxFiles={8}
-						tag={colorId}
-						sizeTag={sizeId}
-						onSetImageUrls={(e) => {
-							setImageArray(e);
-						}}
-						isLoading = {isLoading}
-						setIsLoading={setIsLoading}
-					/>
-					<Button
-						disabled={isLoading}
-						onClick={(e)=>{
-							onConfirm(imageArray);
-						}}
-						className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 focus:outline-none"
-					>
-						Confirm
-					</Button>
-					<Button
-						disabled={isLoading}
-						onClick={onCancel}
-						className="bg-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-400 focus:outline-none"
-					>
-						Cancel
-					</Button>
-					
-				</div>
+		<DialogContent>
+			<DialogTitle>Upload Images New Images (Max : 8)</DialogTitle>
+			<div className="justify-between space-y-4 flex flex-col">
+				<FileUploadComponent
+
+					onRemovingImages = {(index)=>{
+						setImageArray(imageArray.filter((_, i) => i !== index));
+					}}
+					maxFiles={8}
+					tag={colorId}
+					sizeTag={sizeId}
+					onSetImageUrls={(e) => {
+						setImageArray(e);
+					}}
+					isLoading = {isLoading}
+					setIsLoading={setIsLoading}
+				/>
+				<Button
+					disabled={isLoading || imageArray.length === 0}
+					onClick={(e)=>{
+						onConfirm(imageArray);
+					}}
+					className="text-white px-4 py-2 rounded-lg hover:bg-gray-800 focus:outline-none"
+				>
+					{isLoading? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-black rounded-full animate-spin"></div>: <span>Upload ({imageArray.length})</span>}
+				</Button>
+				
 			</div>
-		</div>
+		</DialogContent>
 	);
 };
 

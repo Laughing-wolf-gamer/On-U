@@ -3,9 +3,9 @@ import Footer from '../Footer/Footer';
 import { BASE_API_URL, extractSpecificWord } from '../../config';
 import axios from 'axios';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import LoadingOverlay from '../../utils/LoadingOverLay';
 import BackToTopButton from '../Home/BackToTopButton';
 import WhatsAppButton from '../Home/WhatsAppButton';
+import Loader from '../Loader/Loader';
 
 const About = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
@@ -143,7 +143,7 @@ const About = () => {
                     </section>
                 </div>
             ) : (
-                <LoadingOverlay isLoading={isLoading} />
+                <Loader isLoading={isLoading} />
             )}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />

@@ -1,36 +1,26 @@
+import { Loader } from "lucide-react";
+
 const UploadOverlay = ({ isUploading }) => {
     if (!isUploading) return null; // Only render the overlay if uploading is true
   
     return (
         <div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-md shadow-lg text-center">
-                <div className="animate-pulse text-xl text-gray-700 font-semibold">
-                    <p className="w-full justify-self-center text-center">Uploading images, please wait...</p>
-                    <div className="mt-4">
-                        <svg
-                            className="w-12 h-12 text-blue-600 animate-spin"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            stroke="currentColor"
-                        >
-                            <circle
-                            className="opacity-25"
-                            cx="12"
-                            cy="12"
-                            r="10"
-                            strokeWidth="4"
-                            ></circle>
-                            <path
-                            className="opacity-75"
-                            fill="currentColor"
-                            d="M4 12a8 8 0 1 1 16 0A8 8 0 1 1 4 12z"
-                            ></path>
-                        </svg>
-                    </div>
-                </div>
-            </div>
-        </div>
+			<div className="bg-white p-6 rounded-md shadow-lg text-center">
+				<div className="animate-pulse w-full justify-cente flex flex-col items-center text-xl text-gray-700 font-semibold">
+					<p className="w-full text-center">Uploading images, Hold your Breath</p>
+					<div className="mt-4">
+						<Loader size={60} className="text-gray-600 animate-spin" />
+					</div>
+				</div>
+				<div className="mt-6 relative w-full h-2 bg-gray-300 rounded-full overflow-hidden">
+					{/* Shimmering loading bar */}
+					<div className="animate-loading-bar absolute top-0 left-0 h-full bg-blue-600"></div>
+					
+					{/* Shine effect */}
+					<div className="shine-effect absolute top-0 left-0 w-full h-full bg-gradient-to-r from-transparent to-white opacity-30 animate-shine"></div>
+				</div>
+			</div>
+		</div>
     );
 };
 

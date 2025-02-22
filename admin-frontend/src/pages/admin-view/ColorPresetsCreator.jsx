@@ -27,7 +27,7 @@ const ColorPresetsCreator = () => {
 			<div className="mt-6 flex justify-center items-center space-y-3 flex-col">
 				<button
 					disabled={isLoading}
-					className="px-6 py-3 bg-blue-500 text-white rounded-lg hover:bg-blue-600 focus:ring-2 focus:ring-blue-300 focus:outline-none"
+					className="px-6 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-600 focus:ring-2 focus:ring-gray-300 focus:outline-none"
 					onClick={(e) => {
 					}}
 				>

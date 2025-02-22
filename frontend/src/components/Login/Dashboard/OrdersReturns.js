@@ -45,7 +45,7 @@ const OrdersReturns = () => {
 
     const handleViewDetails = (order) => {
         setSelectedOrder(order);
-        navigation(`/order/details/${order._id}`);
+        navigation(`/order/details`,{state:{id:order._id}});
     };
 
     const handleCloseModal = () => {

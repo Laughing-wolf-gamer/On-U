@@ -44,6 +44,7 @@ const ImageZoom = ({ imageSrc, zoomSize = 80 }) => {
                 onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}
                 onMouseLeave={handleMouseLeave}
+				onContextMenu={(e) => e.preventDefault()}  // Disable right-click
             />
 
             {/* Zoom Square */}

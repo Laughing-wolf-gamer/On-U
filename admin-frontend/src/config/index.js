@@ -231,7 +231,7 @@ export const adminSideBarMenu = [
                 id:'disclaimerBanners',
                 label:'Home Disclaimer Banner Feautres',
                 accessRole:['superAdmin'],
-                path: 'features/homeDisclaimers',
+                path: 'features/disclaimers',
             },
 			{
                 id:'productsOptionsManagement',
@@ -749,3 +749,4 @@ export const formattedSalePrice = (price)=>{
     return price ? Math.round(price) : "0";
 }
 export const BASE_URL = import.meta.env.VITE_BASE_LOCAL_API
+export const inProduction = import.meta.env.VITE_NODE_ENV === 'production' ? true : false;

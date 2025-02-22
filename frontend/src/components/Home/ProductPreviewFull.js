@@ -98,13 +98,12 @@ const ProductPreviewFull = ({ product ,user}) => {
                                     
                                     <div className="w-full justify-start gap-y-1 items-center flex flex-row space-x-2">
                                         {/* Sale Price */}
-                                        <div className="text-xs md:text-sm font-light md:font-medium font-kumbsan text-slate-700">
-                                            {p.salePrice && p.salePrice > 0 && (
-                                                <span className="text-sm md:text-base font-bold text-gray-900">
-                                                    ₹{formattedSalePrice(p.salePrice)}
-                                                </span>
-                                            )}
-                                        </div>
+										{p.salePrice > 0 && <div className="text-xs md:text-sm font-light md:font-medium font-kumbsan text-slate-700">
+											<span className="text-sm md:text-base font-bold text-gray-900">
+												₹{formattedSalePrice(p.salePrice)}
+											</span>
+                                        </div>}
+                                        
                                         {/* Regular Price */}
                                         <div className="text-xs md:text-lg font-light md:font-medium font-kumbsan text-slate-700 hover:animate-bounce">
                                             {p.salePrice && p.salePrice > 0 ? (
@@ -112,7 +111,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                                     ₹{formattedSalePrice(p.price)}
                                                 </span>
                                             ) : (
-                                                <span className="text-xs md:text-sm font-normal md:font-medium font-kumbsan">
+                                                <span className="text-xs md:text-lg font-normal md:font-bold font-kumbsan">
                                                     ₹{formattedSalePrice(p.price)}
                                                 </span>
                                             )}
@@ -120,13 +119,14 @@ const ProductPreviewFull = ({ product ,user}) => {
                                     </div>
 
                                     {/* Discount Percentage for small screens */}
-                                    <div className='block md:hidden font-light md:font-semiBold font-kumbsan text-slate-700'>
-                                        {p.salePrice && p.salePrice > 0 && (
-                                            <span className="text-xs font-light text-orange-400">
-                                            ({calculateDiscountPercentage(p.price, p.salePrice)}% OFF)
-                                            </span>
-                                        )}
-                                    </div>
+									{p.salePrice > 0 && (
+										<div className='block md:hidden font-light md:font-semiBold font-kumbsan text-slate-700'>
+											<span className="text-xs font-light text-orange-400">
+												({calculateDiscountPercentage(p.price, p.salePrice)}% OFF)
+											</span>
+										</div>
+									)}
+                                    
 
                                     {/* Color Options */}
                                     {p.AllColors && p.AllColors.length > 0 && (

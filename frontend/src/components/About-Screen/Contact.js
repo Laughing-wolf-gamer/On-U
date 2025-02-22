@@ -3,12 +3,12 @@ import Footer from "../Footer/Footer";
 import { useDispatch } from "react-redux";
 import axios from "axios";
 import { BASE_API_URL } from "../../config";
-import LoadingOverlay from "../../utils/LoadingOverLay";
 import { useToast } from "../../Contaxt/ToastProvider";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 import BackToTopButton from "../Home/BackToTopButton";
 import WhatsAppButton from "../Home/WhatsAppButton";
+import Loader from "../Loader/Loader";
 
 const Contact = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
@@ -83,7 +83,7 @@ const Contact = () => {
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (
-                <LoadingOverlay isLoading={sendingMessageLoading} />
+                <Loader/>
             ) : (
                 <div className="bg-gray-50 py-16 px-6 lg:px-24">
         

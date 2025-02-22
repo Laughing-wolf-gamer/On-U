@@ -23,6 +23,7 @@ import StarRatingInput from './StarRatingInput'
 import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 import WhatsAppButton from '../Home/WhatsAppButton'
+import styled from '@emotion/styled'
 
 const reviews = [
     {
@@ -430,6 +431,12 @@ const Ppage = () => {
             setSelectedImage(currentColor.images[0]);
         }
     },[selectedSize])
+	useEffect(() => {
+		dispatch(singleProduct(param.id));
+		if (scrollableDivRef.current) {
+			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+		}
+	}, [dispatch, param]);
 
 
     useEffect(() => {
@@ -693,7 +700,7 @@ const Ppage = () => {
                     <div className='w-full flex justify-center items-center'>
                         <ul className='grid grid-cols-2 xl:grid-cols-6 lg:grid-cols-6 gap-12'>
                             {similar.map((pro, index) => (
-                                <Single_product key={index} pro={pro} user={user} refreshTwice ={true} />
+                                <Single_product key={index} pro={pro} user={user} />
                             ))}
                         </ul>
                     </div>
@@ -769,6 +776,7 @@ const AverageRatingView = ({ ratings }) => {
         </Fragment>
     );
 };
+
 
 const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,PostRating,hasPurchased}) => {
     // State to manage selected tab
@@ -980,6 +988,7 @@ const NewLeftSideImageContent = ({
                                                 src={file?.url}
                                                 className='w-full h-full object-cover hover:scale-110'
                                                 alt="productImage"
+												onContextMenu={(e) => e.preventDefault()}  // Disable right-click
                                             />
                                         )
                                     }

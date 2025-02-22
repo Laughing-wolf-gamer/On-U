@@ -47,7 +47,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
             <span className="text-[10px] md:text-[14px] sm:text-base font-medium text-black">
                 ₹{formattedSalePrice(salePrice || price)}
             </span>
-            {salePrice && (
+            {salePrice > 0 && (
                 <div className="w-full justify-start space-x-1 sm:space-x-3 md:space-x-3 lg:space-x-3 xl:space-x-3 2xl:space-x-3 flex flex-row items-center">
                     <span className="text-[10px] sm:text-base font-medium text-slate-400 line-through">
                         ₹{Math.round(formattedSalePrice(price))}

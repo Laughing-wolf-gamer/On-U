@@ -3,7 +3,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 
-const SideBarBagProductItem = memo(({pro , user}) => {
+const SideBarBagProductItem = memo(({pro , user,refreshTwice = false}) => {
     const { updateRecentlyViewProducts } = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -35,6 +35,9 @@ const SideBarBagProductItem = memo(({pro , user}) => {
     const handleNavigation = () => {
         navigation(`/products/${pro._id}`);
         updateRecentlyViewProducts(pro);
+		if(refreshTwice){
+            // window.location.reload();
+        }
     };
 
     const renderPrice = () => (
@@ -45,7 +48,7 @@ const SideBarBagProductItem = memo(({pro , user}) => {
 			>
 				₹{formattedSalePrice(salePrice || price)}
 			</span>
-			{salePrice && (
+			{salePrice > 0 && (
 				<span
 					className="text-[10px] sm:text-[12px] md:text-[16px] font-normal text-slate-400 line-through
 					hover:translate-y-1 transition-all duration-300 ease-in-out"

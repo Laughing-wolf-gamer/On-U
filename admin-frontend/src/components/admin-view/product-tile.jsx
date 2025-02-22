@@ -116,6 +116,7 @@ const MemoizedMedia = memo(({ mediaUrl, altText,isStockLow,isStockLowCritical,to
 				)}
 				<video
 					src={mediaUrl}
+
 					loop = {true}
 					muted={true}
 					autoPlay={false}
@@ -127,6 +128,8 @@ const MemoizedMedia = memo(({ mediaUrl, altText,isStockLow,isStockLowCritical,to
 						mediaRef.current.style.opacity = 1;
 					}}
 					controls
+					controlsList="nodownload nofullscreen nopictureinpicture"
+					onContextMenu={(e) => e.preventDefault()}  // Disable right-click
 				>
 					<source data-src={mediaUrl} />
 					Your browser does not support the video tag.
@@ -160,6 +163,8 @@ const MemoizedMedia = memo(({ mediaUrl, altText,isStockLow,isStockLowCritical,to
 					onLoad={() => {
 						mediaRef.current.style.opacity = 1;
 					}}
+					
+					onContextMenu={(e) => e.preventDefault()}  // Disable right-click
 				/>
 			</div>
         );

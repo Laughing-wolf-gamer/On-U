@@ -273,7 +273,7 @@ export const fetchOrderById = (id) => async (dispatch) => {
         console.log("Order: ",data);
         dispatch({ type: SUCCESS_GET_ORDER, payload: data.result})
     } catch (error) {
-        dispatch({ type: FAIL_GET_ORDER, payload: error.response.data.message })
+        dispatch({ type: FAIL_GET_ORDER, payload: error?.response?.data?.message })
     }
 }
 

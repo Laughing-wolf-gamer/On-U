@@ -5,7 +5,8 @@ import { Button } from '../ui/button';
 import { Label } from '../ui/label';
 import {File, X } from 'lucide-react';
 import UploadOverlay from './UploadOverlay';
-import { toast } from 'react-toastify';
+import { Badge } from '../ui/badge';
+import { useSettingsContext } from '@/Context/SettingsContext';
 
 const FileUploadComponent = ({
     maxFiles = 5,
@@ -15,7 +16,9 @@ const FileUploadComponent = ({
     isLoading,
     setIsLoading,
     onReset,
+	onRemovingImages,
 }) => {
+	const {checkAndCreateToast} = useSettingsContext();
     const [files, setFiles] = useState([]); // Array of selected files
     const [loadingStates, setLoadingStates] = useState([]); // Loading state per file
     const inputRef = useRef(null);
@@ -61,7 +64,7 @@ const FileUploadComponent = ({
             const res = await axios.post(`${BASE_URL}/admin/upload-image-all`, formData, Header());
             const urls = res.data?.results || [];
             updateUploadedFileUrls(urls);
-            toast.success("Files uploaded successfully");
+            checkAndCreateToast("success","Files uploaded successfully");
         } catch (error) {
             // Check if the error is a response error (status codes outside 2xx range)
             if (error.response) {
@@ -69,15 +72,15 @@ const FileUploadComponent = ({
                 console.log('Error Status Code:', error.response.status);
                 console.log('Error Data:', error.response.data); // The JSON error message from the server
                 console.log('Error Headers:', error.response.headers);
-                toast.error("Error uploading files: " + error.response.data.message);
+                checkAndCreateToast("error","Error uploading files: " + error.response.data.message);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log('No response received:', error.request);
-                toast.error("No response received while uploading files");
+                checkAndCreateToast("error","No response received while uploading files");
             } else {
                 // Something happened in setting up the request that triggered an error
                 console.log('Error Message:', error.message);
-                toast.error("Error uploading files: ", error.message);
+                checkAndCreateToast("error","Error uploading files: ", error.message);
             }
             console.error('Error while uploading files:', error);
             updateUploadedFileUrls([]);
@@ -105,6 +108,9 @@ const FileUploadComponent = ({
         const newLoadingStates = [...loadingStates];
         newLoadingStates.splice(index, 1); // Remove loading state for the file
         setLoadingStates(newLoadingStates);
+		if(onRemovingImages){
+			onRemovingImages(index);
+		}
     };
 
     // Drag and drop handlers
@@ -146,10 +152,10 @@ const FileUploadComponent = ({
     }, [onReset]);
 
     return (
-        <div className="flex flex-col items-center">
-            <span className="mb-4">
+        <div className="flex flex-col items-center min-w-full">
+            <Label className="mb-4">
                 Files: {files.filter((file) => file !== '').length} / {maxFiles}
-            </span>
+            </Label>
            <div
 				ref={dropzoneRef}
 				className="w-full h-32 border-2 justify-center items-center flex flex-col border-dashed border-gray-400 rounded-md p-4 text-center cursor-pointer transition-colors duration-300 hover:bg-gray-100"
@@ -172,17 +178,17 @@ const FileUploadComponent = ({
                     onClick = {(event)=> event.stopPropagation()}
 					disabled={files.length >= maxFiles}
 				/>
-				<label
+				<div
 					// htmlFor={`file-upload-${tag}-${sizeTag}`}
 					className="flex flex-col justify-center cursor-pointer hover:scale-105 transition-all duration-500 ease-ease-in-out-expo items-center"
 				>
-					<span className="mb-2 text-lg font-semibold">Drag & Drop or Click to Upload</span>
+					<Label className="mb-2 text-lg font-semibold">Drag & Drop or Click to Upload</Label>
 					<File className="w-10 h-10 text-gray-500" />
-				</label>
+				</div>
 			</div>
 
 
-            {isLoading && <span>Please wait while the files are uploading...</span>}
+            {isLoading && <Badge>Please wait while the files are uploading...</Badge>}
 
             <div className="mt-4 w-full h-full justify-start items-center flex flex-col">
                 {files.map((file, index) => (

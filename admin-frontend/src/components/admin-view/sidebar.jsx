@@ -47,7 +47,7 @@ const MenuItems = ({ setOpen, user }) => {
                 <div key={item.id} className="flex cursor-pointer max-h-screen overflow-y-auto border-b-4 items-center gap-2 rounded-md py-2 transition-all duration-300 ease-in-out">
                     {/* Check if the item has a dropdown */}
                     {item?.dropDownView && accessibleDropDownMenu.length > 0 ? (
-                        <div className="flex w-full items-center space-x-2 justify-between">
+                        <div className="flex w-full items-center gap-4 justify-between">
 							{/* <GetAdminSideBarMenuIcon id={item.id} /> */}
                             <Dropdown items={item} GetAdminSideBarMenuIcon = {GetAdminSideBarMenuIcon}/>
                         </div>

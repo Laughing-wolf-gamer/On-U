@@ -15,6 +15,7 @@ import xl_icon from '../../assets/xl_icon.png';
 import pdf_icon from '../../assets/pdf_icon.png';
 import csv_icon from '../../assets/csv_icon.png';
 import { Label } from "@/components/ui/label";
+import LoadingView from "./LoadingView";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -297,7 +298,7 @@ const AdminDashboard = ({ user }) => {
     console.log("Top Selling Products Data: ", TopSellingProducts);
     return (
         <Fragment>
-        {isLoading ? <LoadingSpinner/>:<Fragment>
+        {isLoading ? <LoadingView/>:<Fragment>
                 <div className="flex flex-col h-full w-full">
 					<div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
 						<Header user={user} />
@@ -426,17 +427,6 @@ const AdminDashboard = ({ user }) => {
     );
 };
 
-const LoadingSpinner = () => {
-    return (
-        <div className="fixed inset-0 bg-slate-700 bg-opacity-100 flex justify-center items-center z-50">
-            <div className="flex flex-col justify-center items-center">
-                <div className="border-t-4 border-b-4 border-white w-16 h-16 rounded-full animate-spin">
-                    
-                </div>
-            </div>
-        </div>
-    )
-}
 const TopSellingProductsTable = ({products}) => {
 
     return (

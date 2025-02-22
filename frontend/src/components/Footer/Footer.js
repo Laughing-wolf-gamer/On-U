@@ -184,10 +184,10 @@ const Footer = () => {
                             <Link to="/contact">
                                 <li className="hover:underline text-gray-600">Contact Us</li>
                             </Link>
-                            <Link to="/tc">
+                            <Link to="/tc" target="_blank">
                                 <li className="hover:underline text-gray-600">Terms And Conditions</li>
                             </Link>
-                            <Link to="/privacyPolicy">
+                            <Link to="/privacyPolicy" target="_blank">
                                 <li className="hover:underline text-gray-600">Privacy Policy</li>
                             </Link>
                         </ul>
@@ -214,10 +214,10 @@ const Footer = () => {
 									<Link to="/contact">
 										<li className="hover:underline text-gray-600">Contact Us</li>
 									</Link>
-									<Link to="/tc">
+									<Link to="/tc" target="_blank">
 										<li className="hover:underline text-gray-600">Terms And Conditions</li>
 									</Link>
-									<Link to="/privacyPolicy">
+									<Link to="/privacyPolicy" target="_blank">
 										<li className="hover:underline text-gray-600">Privacy Policy</li>
 									</Link>
 									</ul>

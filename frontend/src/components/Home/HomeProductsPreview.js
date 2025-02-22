@@ -7,6 +7,7 @@ import { createwishlist, getwishlist } from '../../action/orderaction';
 import { useToast } from '../../Contaxt/ToastProvider';
 import toast from 'react-hot-toast';
 import ShareView from '../Productpage/ShareView';
+import { calculateDiscountPercentage } from '../../config';
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
@@ -176,13 +177,11 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 
             {/* Skeleton for Discount Badge */}
             <div className="md:block hidden">
-                {!product || amount === 0 ? (
-                    <div className="absolute right-0 top-4 transform z-20 w-fit h-8 p-3 justify-center items-center flex bg-gray-300 animate-pulse rounded-tl-lg rounded-bl-lg"></div> // Skeleton discount badge
-                ) : (
+                {product && product.salePrice > 0 && (
                     <div
                         className={`absolute right-0 top-4 transform z-20 w-fit rounded-tl-lg rounded-bl-lg h-8 p-3 justify-center items-center flex text-white bg-gray-800 text-center font-kumbsan font-normal md:font-semibold transition-all duration-300 ease-in-out ${isHovered ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-[30px]'}`}
                     >
-                        <span className="font-semibold text-center text-[10px] md:text-xs">{amount}% OFF</span>
+                        <span className="font-semibold text-center text-[10px] md:text-xs">{calculateDiscountPercentage(product.price,product.salePrice)}% OFF</span>
                     </div>
                 )}
             </div>

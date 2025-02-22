@@ -1,35 +1,23 @@
 import { Trash } from 'lucide-react';
 import React, { useRef, useState } from 'react';
+import { DialogContent, DialogTitle } from '../ui/dialog';
 
 const RatingDataView = ({ isOpen, onClose, ratings, onDeleteRating,addNewRating }) => {
     if (!isOpen) return null; // Don't render if the modal is not open
     console.log("ratings Data: ",ratings);
     return (
-        <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50">
-            <div className="bg-white p-6 rounded-lg w-[800px]">
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-xl font-semibold">All Ratings</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700">
-                        X
-                    </button>
-                </div>
-                
-                {/* Ratings List */}
-                <div className='w-full flex flex-col justify-start items-start'>
-                    <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
-                    <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
-                        {ratings && ratings.length > 0 && <ProductReviews reviews={ratings} onRemoveRating={onDeleteRating}/>}
-                        
-                    </div>
-                </div>
-                <StarRatingInput onChangeValue={(ratingData)=>{
-                    console.log("Rating Setting: ",ratingData)
-                    if(addNewRating){
-                        addNewRating(ratingData);
-                    }
-                }}/>
-            </div>
-        </div>
+        <DialogContent >
+			<DialogTitle>All Ratings</DialogTitle>
+			<div className="flex flex-row space-y-4 bg-gray-100">
+				{ratings && ratings.length > 0 && <ProductReviews reviews={ratings} onRemoveRating={onDeleteRating}/>}
+			</div>
+			<StarRatingInput onChangeValue={(ratingData)=>{
+				console.log("Rating Setting: ",ratingData)
+				if(addNewRating){
+					addNewRating(ratingData);
+				}
+			}}/>
+        </DialogContent>
     );
 };
 const ProductReviews = ({ reviews, onRemoveRating }) => {
@@ -98,7 +86,7 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
     return (
         <div
             ref={containerRef}
-            className="overflow-y-auto w-[800px] max-h-[300px] relative px-1 cursor-grab"
+            className="overflow-y-auto  min-w-full max-h-[300px] min-h-max relative px-1 cursor-grab"
             style={{ userSelect: 'none' }} // Disable text selection during drag
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -120,10 +108,10 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
                                         <span key={i} className="star text-black">★</span>
                                     ))}
                                     {[...Array(5 - randomStars)].map((_, i) => (
-                                        <span key={i} className="star text-gray-300">★</span>
+                                        <span key={i} className="star text-gray-700">★</span>
                                     ))}
                                 </div>
-                                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+                                <span className="ml-2 text-sm text-gray-700">{randomStars} Stars</span>
                             </div>
                             <p className="text-gray-700 mt-2">{review.comment}</p>
                         </div>

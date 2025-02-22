@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import Box from '@mui/material/Box';
 import Skeleton from '@mui/material/Skeleton';
 import { toast } from 'react-toastify';
+import LoadingView from './LoadingView';
 
 const maxAmountPerPage = 10;
 
@@ -397,7 +398,7 @@ const AdminProducts = () => {
         <Fragment>
            {
 				productLoading || isLoading ? (
-					<LoadingOverlay isLoading={productLoading || isLoading} />
+					<LoadingView isLoading={productLoading || isLoading} />
 				) : (
 					<div>
 						<div className="mb-5 flex justify-between items-center px-6 flex-row flex-wrap">
@@ -630,28 +631,5 @@ const PaginatedProductList = ({
 
 	);
 };
-  
 
-const LoadingOverlay = ({ isLoading }) => {
-    if (!isLoading) return null;
-
-    return (
-        <div className="flex flex-col items-center justify-center h-screen w-full mx-auto">
-            <Box sx={{ width: 300 }}>
-                <Skeleton />
-                <Skeleton animation="wave" />
-                <Skeleton animation={false} />
-            </Box>
-        </div>
-    );
-};
-const SkeletonLoader = () => (
-    <div className="relative h-40 bg-gray-300 animate-pulse rounded-lg mb-4">
-        <div className="absolute top-0 left-0 w-full h-full bg-black opacity-40"></div>
-    </div>
-);
-
-const SkeletonText = ({ width = 'w-32' }) => (
-    <div className={`${width} bg-gray-300 animate-pulse h-5`}></div>
-);
 export default AdminProducts;
