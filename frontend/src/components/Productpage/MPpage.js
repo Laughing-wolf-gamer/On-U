@@ -640,18 +640,22 @@ const MPpage = () => {
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                     >
                                                         {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 z-[2px] bg-gray-700 bg-opacity-40'></div>
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 z-[2px] bg-gray-700 bg-opacity-40'>
+																<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                                    Out of Stock
+                                                                </div>
+															</div>
                                                         }
                                                         <button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
                                                             <span className='text-base font-medium'>{active.label}</span>
                                                         </button>
-                                                        {active?.quantity <= 0 && (
+                                                        {/* {active?.quantity <= 0 && (
                                                             <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
                                                                 <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
                                                                     <span>Out of Stock</span>
                                                                 </div>
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </button>
                                                 </div>
                                             )
@@ -672,18 +676,22 @@ const MPpage = () => {
                                                         onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
                                                     >
                                                         {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>
+																<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+                                                                    Out of Stock
+                                                                </div>
+															</div>
                                                         }
                                                         <button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
                                                             <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
                                                         </button>
-                                                        {active?.quantity <= 0 && (
+                                                        {/* {active?.quantity <= 0 && (
                                                             <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
                                                                 <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
                                                                     <span>Out of Stock</span>
                                                                 </div>
                                                             </div>
-                                                        )}
+                                                        )} */}
                                                     </button>
                                                 </div>
                                             )

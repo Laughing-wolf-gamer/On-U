@@ -12,7 +12,6 @@ const initialFormData = {
 	status:'',
 }
 const AdminOrdersDetailsView = ({order}) => {
-	console.log("Order Details: ",GetBadgeColor(order?.status))
 	const [formData,setFormData] = useState(initialFormData);
 	const dispatch = useDispatch();
 	const handleSubmitStatus = async (e)=>{
@@ -83,7 +82,7 @@ const AdminOrdersDetailsView = ({order}) => {
 				</div>
 				<Separator/>
 
-				<div>
+				{/* <div>
 					<CommonForm formControls={[
 						{
 							label:"Status",
@@ -114,7 +113,7 @@ const AdminOrdersDetailsView = ({order}) => {
 						handleSubmit={handleSubmitStatus}
 						isBtnValid={true}
 					/>
-				</div>
+				</div> */}
 			</div>
 		</DialogContent>
 	)

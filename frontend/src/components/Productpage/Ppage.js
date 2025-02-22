@@ -526,22 +526,18 @@ const Ppage = () => {
                                                         onClick={() => { handleSetNewImageArray(active); }}
                                                         title={active.quantity >= 0 ? "In Stock " + active?.quantity || active?.label: "out of stock"}
                                                     >
-                                                    {
-                                                        active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[2px] bg-opacity-40'></div>
-                                                    }
-                                                    <button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
-                                                        <span className='m-2'>
-                                                            {active.label}
-                                                        </span>
-                                                    </button>
-                                                    {/* Out of Stock Label */}
-                                                    {active?.quantity <= 0 && (
-                                                        <div className="absolute bottom-[-10px] z-[3px] w-fit flex justify-center items-center pb-1">
-                                                            <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
-                                                                <span>Out of Stock</span>
-                                                            </div>
-                                                        </div>
-                                                    )}
+														{
+															active.quantity <= 0 && <div className='w-full h-full place-self-center flex flex-col justify-self-center justify-end items-center rounded-full absolute inset-0 bg-gray-700 z-[2px] bg-opacity-40'>
+																<div className="text-white w-auto justify-center text-[10px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																	<span>No Stock</span>
+																</div>
+															</div>
+														}
+														<button className="w-full h-full rounded-full flex items-center text-base font-extrabold justify-center">
+															<span className='m-2'>
+																{active.label}
+															</span>
+														</button>
                                                     </div>
 
                                                 </div>
@@ -565,7 +561,12 @@ const Ppage = () => {
                                                             onClick={(e) => {setCurrentColor(active); handelSetColorImages(active);}}
                                                         >
                                                             {
-                                                                active.quantity <= 0 && <div className='w-full h-full place-self-center justify-self-center rounded-full absolute inset-0 bg-gray-700 z-10 bg-opacity-40'></div>
+                                                                active.quantity <= 0 && <div className='w-full h-full place-self-center flex flex-col justify-self-center justify-end items-center rounded-full absolute inset-0 bg-gray-600 z-[5] bg-opacity-70'>
+																	<div className="text-white w-auto justify-center text-[10px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																		<span>No Stock</span>
+																	</div>
+																
+																</div>
                                                             }
                                                             <button
                                                                 disabled={active.quantity <= 0}
@@ -577,14 +578,6 @@ const Ppage = () => {
                                                             >
                                                                 <div style={{ backgroundColor: active?.label || active._id }} className="w-full h-full rounded-full"></div>
                                                             </button>
-                                                            {/* Out of Stock Label */}
-                                                            {active?.quantity <= 0 && (
-                                                                <div className="absolute bottom-[-18px] z-[3px] w-fit flex justify-center items-center pb-1">
-                                                                    <div className="text-white justify-center flex text-[7px] bg-red-600 rounded-lg shadow-lg px-1 py-1 whitespace-nowrap">
-                                                                        <span>Out of Stock</span>
-                                                                    </div>
-                                                                </div>
-                                                            )}
                                                         </div>
                                                     </div>
                                                 )

@@ -706,7 +706,7 @@ export const getOrderById = async(req,res)=>{
         const{orderId} = req.params;
         const order = await OrderModel.findById(orderId);
         if(!order){
-            return res.status(200).json({Success:true,message:"NO Orders Found Yet",order:[]})
+            return res.status(200).json({Success:true,message:"NO Orders Found Yet",order:{}})
         }
         res.status(200).json({Success:true,message:'Fetched All Orders',result:order})
     } catch (error) {
