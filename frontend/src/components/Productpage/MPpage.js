@@ -608,7 +608,7 @@ const MPpage = () => {
                                     <span className="mr-4 font-bold">
                                         ₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                     </span>
-                                    {product?.salePrice && product?.salePrice > 0 && (
+                                    {product?.salePrice > 0 && (
                                         <Fragment>
                                             <span className="line-through mr-4 text-slate-500 font-light">
                                                 ₹ {formattedSalePrice(product?.price)}

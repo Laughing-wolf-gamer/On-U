@@ -503,7 +503,7 @@ const Ppage = () => {
                                         <span className="mr-4 font-bold">
                                             ₹ {formattedSalePrice(product?.salePrice > 0 ? product?.salePrice : product?.price)}
                                         </span>
-                                        {product?.salePrice && product?.salePrice > 0 && (
+                                        {product?.salePrice > 0 && (
                                             <Fragment>
                                                 <span className="line-through mr-4 font-extralight text-slate-500">₹ {formattedSalePrice(product?.price)}</span>
                                                 <span className="text-gray-700">{calculateDiscountPercentage(product.price, product.salePrice)} % OFF</span>
