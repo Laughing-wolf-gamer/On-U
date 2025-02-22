@@ -115,7 +115,7 @@ productModelSchema.pre('save', function (next) {
     }
 
     // Logging the updated product (use this)
-    console.log("Updated Product: ", this);
+    // console.log("Updated Product: ", this);
 
     next();  // Proceed to save
 });

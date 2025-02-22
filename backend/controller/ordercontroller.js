@@ -172,7 +172,7 @@ export const createorder = async (req, res, next) => {
 				pincode:Address.pincode,
 				status: 'Confirmed',
 			},randomOrderShipRocketId,randomShipmentId)
-			console.log("Shipment Data: ",createdShipRocketOrder);
+			// console.log("Shipment Data: ",createdShipRocketOrder);
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
 		}
@@ -180,6 +180,7 @@ export const createorder = async (req, res, next) => {
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
 			shipment_id: randomShipmentId,
+			channel_id:'6217390',
 			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
             orderItems:proccessingProducts,
             address: Address,
@@ -195,7 +196,7 @@ export const createorder = async (req, res, next) => {
 		
         const removingAmountPromises = proccessingProducts.map(async (item) =>{
 				try {
-					console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
+					// console.log('All Order Items:', item.productId._id, item.color.label, item.size, item.quantity);
 					await removeProduct(item.productId?._id, item?.color?.label, item?.size, item?.quantity)
 				} catch (error) {
 					console.error(`Error removing product: ${item?.productId?._id}`, error);	
@@ -260,7 +261,7 @@ const removeProduct = async(productId,color,size,quantity) => {
         }
         const colorReducedAmount = activeColor.quantity - quantity
         const sizeReducedAmount = activeSize.quantity - quantity
-        console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
+        // console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
         activeColor.quantity = colorReducedAmount;
         activeSize.quantity = sizeReducedAmount;
         const AllColors = []
@@ -286,7 +287,7 @@ const removeProduct = async(productId,color,size,quantity) => {
             if(totalStock > 0) product.totalStock = totalStock;
         };
         await product.save();
-        console.log("Product Updated: ",product);
+        // console.log("Product Updated: ",product);
     } catch (error) {
         console.error("Error Removing Product: ",error)
     }

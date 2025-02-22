@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const PaymentPending = () => {
-	const dispatch = useDispatch();
+	/* const dispatch = useDispatch();
 	const navigate = useNavigate();
 	const {checkAndCreateToast} = useSettingsContext();
 	const { user, isAuthentication } = useSelector(state => state.user);
@@ -43,7 +43,7 @@ const PaymentPending = () => {
 		if(user){
 			verifyAnyOrdersPayment();
 		}
-	},[user])
+	},[user]) */
 	return (
 		<div className="bg-gradient-to-tl from-gray-800 to-black min-h-screen flex items-center justify-center">
 			<div className="bg-white p-10 rounded-xl shadow-2xl max-w-lg text-center w-full sm:w-auto">

@@ -10,10 +10,15 @@ const wareHouseSchema = new mongoose.Schema({
     country:{type:String,required:true},
     state:{type:String,required:true},
     address:{type:String,required:true},
-	address_2:{type:String,required:false},
+	address_2:{type:String,default:''},
 	city:{type:String, required:true},
 	state:{type:String, required:true},
-	country:{type:String, required:true},
+	country:{type:String, required:true,default:'In'},
+	lat:{type:String, default:''},
+	long:{type:String, default:''},
+	address_type:{type:String, default:''},
+	vendor_name:{type:String,default:''},
+	gstin:{type:String,default:''},
 }, { timestamps: true });
 
 const WareHouseModel = mongoose.model('wareHouse', wareHouseSchema);

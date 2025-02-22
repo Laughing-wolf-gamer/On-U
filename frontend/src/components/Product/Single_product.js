@@ -94,7 +94,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     
             {/* Product Details Section */}
             <div className="relative pb-3 flex-col flex justify-between items-start gap-2 p-1">
-                <p className=" text-[12px] sm:text-lg md:text-xl px-2 text-gray-800 font-semibold truncate">{productTitle.slice(0,10)}</p>
+                <p className=" text-[12px] sm:text-lg md:text-xl px-2 text-gray-800 font-semibold truncate">{productTitle}</p>
                 <p className="text-[10px] sm:text-sm md:text-base overflow-hidden px-2 text-left text-ellipsis h-fit whitespace-nowrap text-slate-500">{productSubCategory}</p>
                 {renderPrice()}
             </div>

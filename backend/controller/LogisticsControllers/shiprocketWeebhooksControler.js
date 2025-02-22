@@ -17,13 +17,6 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
 			await dbOrder.save();
 			console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
         }
-        // Send a webhook to ShipRocket to notify about the status change
-        // sendWebhookToShipRocket(dbOrder);
-
-        // Send email to the customer about the order status change
-        // sendEmailToCustomer(dbOrder);
-
-        // Return a success response to ShipRocket
         res.status(200).send('Webhook received');
     } catch (error) {
         console.error("Error updating order status: ",error);
@@ -45,6 +38,11 @@ export const createNewWareHouse = async(req,res)=>{
 			address,
 			address_2,
 			city,
+			lat,
+			long,
+			address_type,
+			vendor_name,
+			gstin,
 		} = req.body;
         console.log("Warehouse: ",req.body);
         if(_id){
@@ -59,6 +57,11 @@ export const createNewWareHouse = async(req,res)=>{
             if(address)updateFields.address = address
             if(address_2)updateFields.address_2 = address_2
             if(city)updateFields.city = city
+            if(lat)updateFields.lat = lat;
+            if(long)updateFields.long = long;
+            if(address_type)address_type.long = address_type;
+            if(vendor_name)address_type.vendor_name = vendor_name;
+            if(gstin)address_type.gstin = gstin;
             console.log(`Ware House with ID ${_id} already exists`);
             if(Object.keys(updateFields).length > 0){
                 const UpdateProduct = await WareHouseModel.findByIdAndUpdate(_id,updateFields,{new:true});
@@ -82,6 +85,11 @@ export const createNewWareHouse = async(req,res)=>{
 			city,
 			state,
 			country,
+			lat,
+			long,
+			address_type,
+			vendor_name,
+			gstin,
         })
         if(!newWareHouse){
             console.error("Error creating new Ware House");
@@ -101,6 +109,11 @@ export const createNewWareHouse = async(req,res)=>{
 			city,
 			state,
 			country,
+			lat,
+			long,
+			address_type,
+			vendor_name,
+			gstin,
 		})
         res.status(201).json({Success: true, message: 'New Ware House created successfully', result: newWareHouse});
     } catch (error) {

@@ -17,6 +17,12 @@ const defaultData = {
 	address_2:'',
 	city:'',
 	country: '',
+	lat:'',
+	long:'',
+	address_type:'',
+	vendor_name:'',
+	gstin:'',
+
 }
 const WarehouseAdmin = () => {
     const{Warehouses} = useSelector(state => state.adminOrder);
@@ -142,7 +148,7 @@ const WarehouseAdmin = () => {
 			{/* Warehouse Form */}
 			<div className="mb-6 space-y-4">
 				<div>
-					<Label htmlFor="pickup_location" className="block text-sm font-semibold text-gray-700">Pickup Location</Label>
+					<Label htmlFor="pickup_location" className="block text-sm font-semibold text-gray-700">Pickup Location <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="pickup_location"
@@ -154,7 +160,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="pin_code" className="block text-sm font-semibold text-gray-700">Pin Code</Label>
+					<Label htmlFor="pin_code" className="block text-sm font-semibold text-gray-700">Pin Code <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="pin_code"
@@ -166,7 +172,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="name" className="block text-sm font-semibold text-gray-700">Name</Label>
+					<Label htmlFor="name" className="block text-sm font-semibold text-gray-700">Name <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="name"
@@ -178,7 +184,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email</Label>
+					<Label htmlFor="email" className="block text-sm font-semibold text-gray-700">Email <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="email"
 						name="email"
@@ -190,7 +196,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="phone" className="block text-sm font-semibold text-gray-700">Phone Number</Label>
+					<Label htmlFor="phone" className="block text-sm font-semibold text-gray-700">Phone Number <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="phone"
 						name="phone"
@@ -202,7 +208,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="country" className="block text-sm font-semibold text-gray-700">Country</Label>
+					<Label htmlFor="country" className="block text-sm font-semibold text-gray-700">Country <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="country"
@@ -214,7 +220,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="state" className="block text-sm font-semibold text-gray-700">State</Label>
+					<Label htmlFor="state" className="block text-sm font-semibold text-gray-700">State <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="state"
@@ -226,7 +232,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="city" className="block text-sm font-semibold text-gray-700">City</Label>
+					<Label htmlFor="city" className="block text-sm font-semibold text-gray-700">City <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="city"
@@ -238,7 +244,7 @@ const WarehouseAdmin = () => {
 				</div>
 
 				<div>
-					<Label htmlFor="address" className="block text-sm font-semibold text-gray-700">Address (Flat No./ Street No.)</Label>
+					<Label htmlFor="address" className="block text-sm font-semibold text-gray-700">Address (Flat No./ Street No.) <span className='text-red-500'>*</span> </Label>
 					<Input
 						type="text"
 						name="address"
@@ -257,6 +263,61 @@ const WarehouseAdmin = () => {
 						value={formData.address_2}
 						onChange={handleChange}
 						placeholder="Address Line 2"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="address_type" className="block text-sm font-semibold text-gray-700">Address Type</Label>
+					<Input
+						type="text"
+						name="address_type"
+						value={formData.address_type}
+						onChange={handleChange}
+						placeholder="Address Type"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="lat" className="block text-sm font-semibold text-gray-700">Latitude <span className='text-red-500'>*</span> </Label>
+					<Input
+						type="text"
+						name="lat"
+						value={formData.lat}
+						onChange={handleChange}
+						placeholder="Latitude"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="long" className="block text-sm font-semibold text-gray-700">Longitude <span className='text-red-500'>*</span> </Label>
+					<Input
+						type="text"
+						name="long"
+						value={formData.long}
+						onChange={handleChange}
+						placeholder="Longitude"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="vendor_name" className="block text-sm font-semibold text-gray-700">Vendor Name</Label>
+					<Input
+						type="text"
+						name="vendor_name"
+						value={formData.vendor_name}
+						onChange={handleChange}
+						placeholder="Vendor Name"
+						className="w-full p-2 border border-gray-300 rounded-md"
+					/>
+				</div>
+				<div>
+					<Label htmlFor="gstin" className="block text-sm font-semibold text-gray-700">GSTIN</Label>
+					<Input
+						type="text"
+						name="gstin"
+						value={formData.gstin}
+						onChange={handleChange}
+						placeholder="GSTIN No."
 						className="w-full p-2 border border-gray-300 rounded-md"
 					/>
 				</div>
@@ -318,6 +379,10 @@ const WarehouseAdmin = () => {
 									{action?.address_2}
 								</div>
 								<div className="info-item">
+									<strong>Address Type: </strong>
+									{action?.address_type}
+								</div>
+								<div className="info-item">
 									<strong>City: </strong>
 									{action?.city}
 								</div>
@@ -328,6 +393,22 @@ const WarehouseAdmin = () => {
 								<div className="info-item">
 									<strong>Country: </strong>
 									{action?.country}
+								</div>
+								<div className="info-item">
+									<strong>Latitude: </strong>
+									{action?.lat}
+								</div>
+								<div className="info-item">
+									<strong>Longitude: </strong>
+									{action?.long}
+								</div>
+								<div className="info-item">
+									<strong>Vendor Name: </strong>
+									{action?.vendor_name}
+								</div>
+								<div className="info-item">
+									<strong>GSTIN: </strong>
+									{action?.gstin}
 								</div>
 							</div>
 

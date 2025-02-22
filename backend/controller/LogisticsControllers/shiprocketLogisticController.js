@@ -1,6 +1,7 @@
 import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
+import { getBestCourierPartners } from '../../utilis/basicUtils.js';
 
 dotenv.config();
 
@@ -41,87 +42,171 @@ export const logoutAuthToken = async ()=>{
         console.error('Error logging out auth token:', error.message);
     }
 }
+const generateAwb = async(awbData)=>{
+	if (!token) await getAuthToken();
+	try {
+		console.log("Check AWB ",awbData);
+		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/assign/awb`,awbData,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+		// console.dir(response?.data,{depth:null});
+		return response?.data?.data;
+	} catch (error) {
+		console.error('Error Creating AWB:', error);
+		// console.dir(error,{depth:null});
+		return null;
+	}
+}
+const getAllServicalibiltyties = async (servicesData) => {
+	if (!token) await getAuthToken();
+	try {
+		// console.log("Check Serviciablity ",servicesData);
+		const response = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+			params: servicesData,  // Use `params` for query parameters in GET requests
+        })
+		// console.dir(response?.data,{depth:null});
+		return response?.data?.data;
+	} catch (error) {
+		console.error('Error fetching all serviceabilityties:', error);
+		// console.dir(error,{depth:null});
+		return null;
+	}
+}
+const generateOrderPicketUpRequest =async(orderData)=>{
+	if (!token) await getAuthToken();
+	try {
+		console.log("Generating Picket Up Request for Shipment: ",orderData);
+		const {shipment_id} = orderData;
+		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/pickup`, {shipment_id:[shipment_id]},{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+		
+	} catch (error) {
+		console.error('Error generating order picket up request:', error);
+	}
+}
 
-export const generateOrderForShipment = async(userId,shipmentData,randomOrderId,randomShipmentId) =>{
-    if(!token) await getAuthToken();
+export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
+    if (!token) await getAuthToken();
+
     try {
-		console.log("User Id: ", userId);
+        console.log("User Id: ", userId);
+
+        // Fetch user data
         const userData = await User.findById(userId);
-        if(!userData){
+        if (!userData) {
             console.error("User not found");
             return null;
         }
-		const subTotal = shipmentData.orderItems.reduce((total, item) => total + (item.productId.price * item.quantity), 0);
-		const totalOrderWeight = shipmentData.orderItems.reduce((total, item) => total + (item.productId.weight * item.quantity), 0);
-		const totalOrderHeight = shipmentData.orderItems.reduce((total, item) => total + (item.productId.height * item.quantity), 0);
-		const totalOrderLength = shipmentData.orderItems.reduce((total, item) => total + (item.productId.length * item.quantity), 0);
-		const totalOrderWidth = shipmentData.orderItems.reduce((total, item) => total + (item.productId.width * item.quantity), 0);
-		const totalBredth = shipmentData.orderItems.reduce((total, item) => total + (item.productId.breadth * item.quantity), 0);
-        const orderItems = shipmentData.orderItems.map(item =>{
-            console.log("item: ",item);
-            return{
-                name:item.productId.title,
-                sku: item.productId._id, // The unique identifier for the product
-                selling_price:item.productId.salePrice || item.productId.price,
-                units: item.quantity,
-                discount: 0,
-                tax: 0,
-                hsn: '1234'
-            }
-        })
-        
-        function formatDate(date) {
+
+        // Helper function to calculate totals for order items
+        const calculateTotal = (key) => {
+            return shipmentData.orderItems.reduce((total, item) => total + (item.productId[key] * item.quantity), 0);
+        };
+
+        // Calculate various totals
+        const subTotal = calculateTotal('price');
+        const totalOrderWeight = calculateTotal('weight');
+        const totalOrderHeight = calculateTotal('height');
+        const totalOrderLength = calculateTotal('length');
+        const totalBredth = calculateTotal('breadth');
+
+        // Map order items to required format
+        const orderItems = shipmentData.orderItems.map(item => ({
+            name: item.productId.title,
+            sku: item.productId._id,
+            selling_price: item.productId.salePrice || item.productId.price,
+            units: item.quantity,
+            discount: 0,
+            tax: 0,
+            hsn: '1234'
+        }));
+
+        // Helper function to format date
+        const formatDate = (date) => {
             const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed, so add 1
+            const month = String(date.getMonth() + 1).padStart(2, '0');
             const day = String(date.getDate()).padStart(2, '0');
             const hours = String(date.getHours()).padStart(2, '0');
             const minutes = String(date.getMinutes()).padStart(2, '0');
-            
             return `${year}-${month}-${day} ${hours}:${minutes}`;
-        }
-        const orderDetails = {
-            order_id: randomOrderId, // Unique order ID, ensure this is generated dynamically
-			shipment_id: randomShipmentId, // Unique shipment ID, ensure this is generated dynamically
-            order_date: formatDate(new Date()), // The date when the order is placed (in YYYY-MM-DD HH:mm format)
-            pickup_location: "warehouse", // The city from where the order is to be picked up
-            billing_customer_name: shipmentData.address.Firstname, // Customer's name
-            billing_last_name:shipmentData.address.Lastname,
-            billing_address: shipmentData.address.address1, // Customer's billing address line 1
-            billing_city: shipmentData.address.address2, // Customer's billing address line 2 (city)
-            billing_pincode: shipmentData.address.pincode, // Billing address postal code
-            billing_state: shipmentData.address.state, // State for the billing address
-            billing_country: shipmentData.address.country, // Country for the billing address
-            billing_phone: shipmentData.address.phoneNumber, // Customer's phone number
-            billing_alternate_phone: userData?.phoneNumber,
-            shipping_is_billing: true, // Set to true if shipping address is same as billing address
-            order_items: orderItems, // Array of items in the order (This needs to be defined)
-            payment_method: shipmentData.paymentMode, // Payment method (can be 'Prepaid' or 'Cash on Delivery')
-            sub_total: subTotal, // Sub-total amount for the order (without taxes and shipping charges)
-            length: totalOrderLength, // Package dimensions (length)
-            breadth: totalBredth, // Package dimensions (breadth)
-            height: totalOrderHeight, // Package dimensions (height)
-            weight: totalOrderWeight, // Package weight in kilograms
         };
+		const pickup_locations = await getPickUpLocation();
+		/*
+			pickup_postcode
+			delivery_postcode 
+			weight
+			cod
+			order_id
+		*/
+		console.log("Response Picketup Location",pickup_locations);
+		const activePickUpLocatin = pickup_locations[0];
+		const allAvailableCourior = await getAllServicalibiltyties({
+			pickup_postcode:activePickUpLocatin?.pin_code,
+			delivery_postcode:shipmentData.address.pincode, 
+			order_id:response?.data?.order_id,
+		});
+		const getBestCourir = getBestCourierPartners(allAvailableCourior?.available_courier_companies)
+		console.log("Best Courier: ",getBestCourir[0]);
+		// const activePickupLocation = pickup_locations.find(location => location.is_active);
+        // Prepare the order details
+        const orderDetails = {
+            order_id: randomOrderId,
+            shipment_id: randomShipmentId,
+            order_date: formatDate(new Date()),
+            pickup_location: activePickUpLocatin?.pickup_location,
+            billing_customer_name: shipmentData.address.Firstname,
+            billing_last_name: shipmentData.address.Lastname,
+            billing_address: shipmentData.address.address1,
+            billing_city: shipmentData.address.address2,
+            billing_pincode: shipmentData.address.pincode,
+            billing_state: shipmentData.address.state,
+			units:orderItems.length,
+            billing_country: 'In',
+            billing_phone: shipmentData.address.phoneNumber,
+            billing_alternate_phone: userData?.phoneNumber,
+            shipping_is_billing: true,
+            order_items: orderItems,
+            payment_method: shipmentData.paymentMode,
+            sub_total: subTotal,
+            length: totalOrderLength,
+            breadth: totalBredth,
+            height: totalOrderHeight,
+            weight: totalOrderWeight,
+			is_insurance_opt:true,
+			is_document:1,
+			shipping_method:"HL"
+        };
+
+        // console.log("ShipRocket Order data: ", orderDetails);
+
+        // Send the request to ShipRocket API
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`, orderDetails, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        console.log("Shipment Created Response: ",response.data);
+		
+		await generateAwb({
+			shipment_id:response?.data?.shipment_id,
+		});
+		// const createPicketUpResponse = await generateOrderPicketUpRequest(response?.data);
         
-        
-        
-        
-        console.log("ShipRocket Order data: ",orderDetails)
-        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`,orderDetails,
-            {
-                headers: {
-                    Authorization: `Bearer ${token}`,
-                },
-            }
-        );
-        console.dir(response.data,{depth:null});
         return response.data;
+
     } catch (error) {
-        // console.dir('Error creating order:', error);
-        console.dir(error, { depth: null});
+        console.error("Error creating order:", error);
         return null;
     }
-}
+};
 export const getAllShipRocketOrder = async()=>{
     if(!token) await getAuthToken();
     try {
