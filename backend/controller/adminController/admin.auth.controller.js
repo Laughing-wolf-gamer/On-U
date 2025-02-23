@@ -809,28 +809,41 @@ export const getTotalUsers = async (req,res)=>{
 }
 export const fetchAllCustomerUsers = async (req, res) => {
     try {
-        const { page = 1, pageSize = 10,keywoards = 'clear'} = req.query; // Set default values if not provided
-		const filter = {role:'user'}; // Default filter for users with 'user' role
-		if (keywoards && keywoards !== 'clear') {
-            const escapeRegex = (string) => string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
-            const regx = new RegExp(escapeRegex(keywoards), 'i');
-            const keywordFilter = {
-                $or: [
-                    { name: regx },
-                    { email: regx },
-                    { phoneNumber: regx },
-                    { category: regx },
-                    { gender: regx },
-                ]
-            };
+        const { page = 1, pageSize = 10, keywoards = 'clear' } = req.query; // Set default values if not provided
+
+		const filter = { role: 'user' }; // Default filter for users with 'user' role
+
+		if (keywoards !== '') {
+			// Escape special characters in the search term
+			const escapeRegex = (string) => string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+			
+			// Create a case-insensitive regular expression for the keyword
+			const regx = new RegExp(escapeRegex(keywoards), 'i');
+
+			// Set up the keyword filter for different fields (case-insensitive)
+			const keywordFilter = {
+				$or: [
+					{ name: regx },
+					{ email: regx },
+					{ phoneNumber: regx },
+					{ category: regx },
+					{ gender: regx },
+				]
+			};
+
+			// If the keyword is a number (for phone number search), add an additional check
 			if (!isNaN(keywoards)) {
-                keywordFilter.$or.push(
-                    { phoneNumber: parseFloat(keywoards) },
-                );
-            }
-            Object.assign(filter, keywordFilter);
-        }
-		console.log("User Page Query: ",filter, page, pageSize);
+				keywordFilter.$or.push(
+					{ phoneNumber: parseFloat(keywoards) }, // Case insensitive numeric match (if the phoneNumber is numeric)
+				);
+			}
+
+			// Merge the keyword filter into the base filter object
+			Object.assign(filter, keywordFilter);
+		}
+
+		console.log("User Page Query: ", filter, page, pageSize);
+
         const skip = (page - 1) * pageSize; // Calculate the number of records to skip
         const limit = parseInt(pageSize); // Parse pageSize to an integer for limiting
 

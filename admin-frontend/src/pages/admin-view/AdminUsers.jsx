@@ -53,7 +53,15 @@ const UserTable = () => {
 	}
 	const handleSetActiveKeywords = (e) => {
 		e.preventDefault();
-        setActiveKeywords(inputKeyWoards);
+		if(inputKeyWoards.trim() === ''){
+			
+			return;
+		}
+		if(inputKeyWoards.toLowerCase() === 'clear'){
+			setActiveKeywords('');
+		}else{
+			setActiveKeywords(inputKeyWoards);
+		}
     };
 	
     useEffect(() => {
