@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { DialogContent, DialogTitle } from '../ui/dialog';
 
 const CustomerDetailsSingle = ({ user }) => {
     console.log("Selected Customer: ", user);
@@ -10,7 +11,7 @@ const CustomerDetailsSingle = ({ user }) => {
     };
 
     const getItemsAmount = (item) => {
-        const totalPrice = item?.productId.salePrice || item?.productId.price;
+        const totalPrice = item?.productId?.salePrice || item?.productId?.price;
         const sellingPrice = totalPrice * item?.productId?.quantity;
         return sellingPrice;
     };
@@ -63,22 +64,22 @@ const CustomerDetailsSingle = ({ user }) => {
     };
 
     return (
-        <div className="w-full mx-auto h-fit p-6 bg-white shadow-lg rounded-lg">
+        <DialogContent className="w-full mx-auto h-fit p-6 bg-white shadow-lg max-h-[90%] overflow-y-auto rounded-lg">
             {/* User Info Section */}
-            <h2 className="text-2xl font-bold mb-6 text-center">User Details</h2>
+            <DialogTitle className="text-2xl font-bold mb-6 text-center">User Details</DialogTitle>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="space-y-2">
-                    <p><strong>Name:</strong> {user.name}</p>
-                    <p><strong>Email:</strong> {user.email}</p>
-                    <p><strong>Phone:</strong> {user.phoneNumber}</p>
-                    <p><strong>Gender:</strong> {user.gender}</p>
-                    <p><strong>DOB:</strong> {user.DOB}</p>
-                    <p><strong>Role:</strong> {user.role}</p>
-                    <p><strong>Created At:</strong> {user.createdAt}</p>
+                    <p><strong>Name:</strong> {user?.name}</p>
+                    <p><strong>Email:</strong> {user?.email}</p>
+                    <p><strong>Phone:</strong> {user?.phoneNumber}</p>
+                    <p><strong>Gender:</strong> {user?.gender}</p>
+                    <p><strong>DOB:</strong> {user?.DOB}</p>
+                    <p><strong>Role:</strong> {user?.role}</p>
+                    <p><strong>Created At:</strong> {user?.createdAt}</p>
                 </div>
                 <div className="space-y-2">
                     <p><strong>Address:</strong> {user?.address?.length}</p>
-                    <p><strong>Total Purchases:</strong> {user.totalPurchases}</p>
+                    <p><strong>Total Purchases:</strong> {user?.totalPurchases}</p>
                 </div>
             </div>
 
@@ -116,7 +117,7 @@ const CustomerDetailsSingle = ({ user }) => {
                         </div>
                         <div className=''>
                             <div className="h-60 overflow-y-auto">
-                                {renderCart(user.cart)}
+                                {renderCart(user?.cart)}
                             </div>
                         </div>
                     </div>
@@ -132,7 +133,7 @@ const CustomerDetailsSingle = ({ user }) => {
                         </div>
                         <div className=''>
                             <div className="h-60 overflow-y-auto">
-                                {renderOrders(user.orders.slice(0, 5))}
+                                {renderOrders(user?.orders.slice(0, 5))}
                             </div>
                         </div>
                     </div>
@@ -147,13 +148,13 @@ const CustomerDetailsSingle = ({ user }) => {
                         </div>
                         <div className=''>
                             <div className="max-h-96 overflow-y-auto">
-                                {renderWishList(user.wishList)}
+                                {renderWishList(user?.wishList)}
                             </div>
                         </div>
                     </div>
                 )}
             </div>
-        </div>
+        </DialogContent>
     );
 };
 

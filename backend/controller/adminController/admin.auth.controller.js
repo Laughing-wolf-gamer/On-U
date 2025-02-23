@@ -809,8 +809,38 @@ export const getTotalUsers = async (req,res)=>{
 }
 export const fetchAllCustomerUsers = async (req, res) => {
     try {
-        // Fetch all users with the 'user' role
-        const users = await User.find({ role: 'user' });
+        const { page = 1, pageSize = 10,keywoards = 'clear'} = req.query; // Set default values if not provided
+		const filter = {role:'user'}; // Default filter for users with 'user' role
+		if (keywoards && keywoards !== 'clear') {
+            const escapeRegex = (string) => string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+            const regx = new RegExp(escapeRegex(keywoards), 'i');
+            const keywordFilter = {
+                $or: [
+                    { name: regx },
+                    { email: regx },
+                    { phoneNumber: regx },
+                    { category: regx },
+                    { gender: regx },
+                ]
+            };
+			if (!isNaN(keywoards)) {
+                keywordFilter.$or.push(
+                    { phoneNumber: parseFloat(keywoards) },
+                );
+            }
+            Object.assign(filter, keywordFilter);
+        }
+		console.log("User Page Query: ",filter, page, pageSize);
+        const skip = (page - 1) * pageSize; // Calculate the number of records to skip
+        const limit = parseInt(pageSize); // Parse pageSize to an integer for limiting
+
+        // Fetch all users with the 'user' role and paginate
+        const users = await User.find(filter)
+            .skip(skip)
+            .limit(limit);
+
+        // Fetch the total number of users for pagination metadata
+        const totalUsers = await User.countDocuments(filter);
 
         // Fetch the cart details for each user
         const allCarForUser = await Promise.all(
@@ -821,11 +851,11 @@ export const fetchAllCustomerUsers = async (req, res) => {
                     email: u.email,
                     phoneNumber: u.phoneNumber,
                     address: u.addresses,
-                    gender:u.gender,
-                    DOB:u.DOB,
+                    gender: u.gender,
+                    DOB: u.DOB,
                     createdAt: u.createdAt,
                     role: u.role,
-                    totalPurchases:0,
+                    totalPurchases: 0,
                     cart: [],
                     orders: [],
                     wishList: [],
@@ -833,32 +863,34 @@ export const fetchAllCustomerUsers = async (req, res) => {
                 try {
                     // Fetch the cart items for each user and populate the product details
                     const cart = await Bag.findOne({ userId: u._id }).populate("orderItems.productId");
-                    // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(cart);
-                    const orders = await OrderModel.find({userId: u._id});
-                    const wishList = await WhishList.findOne({userId: u._id.toString()}).populate("orderItems.productId");
-                    // console.log("Found wishList:",u.name,u._id,wishList?.orderItems);
+                    const orders = await OrderModel.find({ userId: u._id });
+                    const wishList = await WhishList.findOne({ userId: u._id.toString() }).populate("orderItems.productId");
+
                     // Calculate the total amount spent by the user
-                    // You can modify the user object by appending the cart data to it
-                    const totalAmount = orders.reduce((accumulator, order) => {
-                        return accumulator + order.TotalAmount;
-                    }, 0);
+                    const totalAmount = orders.reduce((accumulator, order) => accumulator + order.TotalAmount, 0);
                     userNew.totalPurchases = orders.length > 0 ? totalAmount : 0;
-                    userNew.cart = cart?.orderItems || []; // Attach cart data to the user object
-                    userNew.orders = orders; // Attach order data to the user object
-                    userNew.wishList = wishList?.orderItems || []; // Attach wish list data to the
+                    userNew.cart = cart?.orderItems || [];
+                    userNew.orders = orders;
+                    userNew.wishList = wishList?.orderItems || [];
                 } catch (error) {
                     console.error(`Error getting cart for user ${u._id}:`, error);
                     logger.error(`Error getting cart for user ${u._id}: ` + error.message);
                 }
-                return userNew; // Return the user object even if there is an error fetching cart
+                return userNew;
             })
         );
-        // console.log("All Customer Dat: ",allCarForUser);
-        // Respond with the modified user objects including cart data
+
+        // Respond with the paginated user data and additional metadata
         res.status(200).json({
             Success: true,
             message: 'All Customer Users with their Cart Data',
             result: allCarForUser || [],
+            pagination: {
+                totalUsers, // Total number of users
+                totalPages: Math.ceil(totalUsers / pageSize), // Calculate total pages
+                currentPage: parseInt(page), // Current page number
+                pageSize: parseInt(pageSize), // Number of items per page
+            },
         });
     } catch (error) {
         console.error("Error getting all customer users: ", error);
@@ -866,6 +898,7 @@ export const fetchAllCustomerUsers = async (req, res) => {
         res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };
+
 export const removingCustomer = async(req,res)=>{
     try {
         const {removingCustomerArray} = req.body;

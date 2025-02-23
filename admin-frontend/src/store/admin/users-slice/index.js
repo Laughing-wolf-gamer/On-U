@@ -8,6 +8,7 @@ const adminCustomerSlice = createSlice({
     name:"adminAllUsers",
     initialState:{
         isLoading:false,
+		pagination:null,
         AllUser:[]
     },
     reducers:{},
@@ -17,16 +18,18 @@ const adminCustomerSlice = createSlice({
         }).addCase(getAllCustomerWithDetails.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.AllUser = action?.payload.result;
+            state.pagination = action?.payload.pagination;
             console.log(action?.payload?.data);
-        }).addCase(getAllCustomerWithDetails.rejected,(state,action)=>{
+        }).addCase(getAllCustomerWithDetails.rejected,(state)=>{
             state.isLoading = false;
             state.AllUser = [];
+            state.pagination = null;
         })
     }
 })
-export const getAllCustomerWithDetails = createAsyncThunk('/users/getAllUsersWithDetails',async ()=>{
+export const getAllCustomerWithDetails = createAsyncThunk('/users/getAllUsersWithDetails',async (query)=>{
     try {
-        const response = await axios.get(`${BASE_URL}/admin/customer/all`,Header());
+        const response = await axios.get(`${BASE_URL}/admin/customer/all${query}`,Header());
         return response.data;
     } catch (error) {
         console.error(error);
