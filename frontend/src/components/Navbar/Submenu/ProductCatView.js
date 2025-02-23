@@ -54,39 +54,37 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 	// console.log("memoizedProductsOptions: ",memoizedProductsOptions);
 	if(!memoizedProductsOptions || memoizedProductsOptions.length <= 0) return null;
 	return (
-		<Fragment>
-			<div className={`w-[100%] font-kumbsan h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
-			{transitions((styles, item) =>
-				item && (
-					<animated.div style={styles}>
-						<div
-							className={`container absolute right-20 top-[-30px] min-w-[600px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-neutral-100`}
-							onMouseEnter={() => parentCallback('block', true)}
-							onMouseLeave={() => parentCallback('hidden', false)}
-						>
-						<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
-							{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((genderCurrent,index) => {
-								const categories = getGenderCategories(genderCurrent);
-								return (
-									categories.length > 0 && (
-										<div key={index} className="h-fit">
-											<CategorySection
-												title={genderCurrent.Gender}
-												categories={categories}
-												parentCallback={parentCallback}
-												handelSetQuery={handelSetQuery}
-											/>
-										</div>
-									)
-								);
-							})}
-						</div>
-						</div>
-					</animated.div>
-				)
-			)}
-			</div>
-		</Fragment>
+		<div className={`w-[100%] font-kumbsan h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10 font1`}>
+		{transitions((styles, item) =>
+			item && (
+				<animated.div style={styles}>
+					<div
+						className={`container absolute right-20 top-[-30px] min-w-[600px] w-fit mx-auto h-[480px] ${CMenu} Mmenu bg-neutral-100`}
+						onMouseEnter={() => parentCallback('block', true)}
+						onMouseLeave={() => parentCallback('hidden', false)}
+					>
+					<div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 min-w-fit px-8 py-4 gap-5 cursor-pointer">
+						{memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((genderCurrent,index) => {
+							const categories = getGenderCategories(genderCurrent);
+							return (
+								categories.length > 0 && (
+									<div key={index} className="h-fit">
+										<CategorySection
+											title={genderCurrent.Gender}
+											categories={categories}
+											parentCallback={parentCallback}
+											handelSetQuery={handelSetQuery}
+										/>
+									</div>
+								)
+							);
+						})}
+					</div>
+					</div>
+				</animated.div>
+			)
+		)}
+		</div>
 	);
   };
   

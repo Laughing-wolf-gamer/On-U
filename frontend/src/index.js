@@ -10,6 +10,7 @@ import { ToastProvider } from './Contaxt/ToastProvider';
 import { SessionStorageProvider } from './Contaxt/SessionStorageContext';
 import { LocationContextProvider } from './Contaxt/LocationContext';
 import { SettingsProvider } from './Contaxt/SettingsContext';
+import { LocalStorageContextProvider } from './Contaxt/LocalStorageContext';
 
 const option = {
   timeout: 2000,
@@ -25,11 +26,13 @@ ReactDOM.render(
         <React.StrictMode >
             <ToastProvider>
               <SessionStorageProvider>
-                <LocationContextProvider>
-                    <SettingsProvider>
-                        <App />
-                    </SettingsProvider>
-                </LocationContextProvider>
+				<LocalStorageContextProvider>
+					<LocationContextProvider>
+						<SettingsProvider>
+							<App />
+						</SettingsProvider>
+					</LocationContextProvider>
+				</LocalStorageContextProvider>
               </SessionStorageProvider>
             </ToastProvider>
         </React.StrictMode>

@@ -79,7 +79,7 @@ const Contact = () => {
     useEffect(()=>{
         fetchContactUsPageData();
     },[dispatch])
-	console.log("Conatact Data: ",formData);
+	// console.log("Conatact Data: ",formData);
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (

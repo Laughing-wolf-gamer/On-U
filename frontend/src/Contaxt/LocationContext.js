@@ -17,15 +17,60 @@ export const LocationContextProvider = ({ children }) => {
     const [pincode, setPincode] = useState(null);  // State to store the pincode
     const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type,message) => {
-        console.log("check Toast: ",type, message,activeToast);
-        if(activeToast !== message){
+        const style = {
+            border: '1px solid #fff',
+            padding: '16px',
+            color: '#713200',
+        }
+        const iconTheme = {
+            primary: '#000',
+            secondary: '#fff',
+        };
+        const ariaProps = {
+            role: 'status',
+            'aria-live': 'polite',
+        };
+        const removeDelay = 500;
+        const appearDuratin = 1000;
+        const position = 'top-center'
+        // console.log("check Toast: ",type, message,activeToast);
+        if(!activeToast){
             switch(type){
-                default:
-                    toast.error(message)
-                    break;
                 case "success":
-                    toast.success(message)
+                    toast.success(message,{
+                        duration: appearDuratin,
+                        position: position,
+                      
+                        // Styling
+                        style: style,
+                                            
+                        // Change colors of success/error/loading icon
+                        iconTheme: iconTheme,
+                      
+                        // Aria
+                        ariaProps: ariaProps,
+                      
+                        // Additional Configuration
+                        removeDelay: removeDelay,
+                    })
                     break;
+                default:
+                    toast.error(message,{
+                        duration: appearDuratin,
+                        position: position,
+                      
+                        // Styling
+                        style: style,
+                        // Change colors of success/error/loading icon
+                        iconTheme: iconTheme,
+                      
+                        // Aria
+                        ariaProps: ariaProps,
+                      
+                        // Additional Configuration
+                        removeDelay: removeDelay,
+                    })
+                break;
             }
             showToast(message);
         }
@@ -47,7 +92,7 @@ export const LocationContextProvider = ({ children }) => {
                         setIsPermissionGranted(false); // Mark permission as denied
                         checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
                     } else {
-                        checkAndCreateToast("error","Please enable location services.");
+                        // checkAndCreateToast("error","Please enable location services.");
                     }
                     console.log("GeoLocation Error: ",err);
                 },

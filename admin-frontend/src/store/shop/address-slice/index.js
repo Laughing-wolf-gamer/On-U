@@ -26,26 +26,7 @@ const addressSlice = createSlice({
         }).addCase(fetchAddresses.rejected,(state,action)=>{
             state.isLoading = false;
             state.addresses = [];
-            console.error(action.error);
-        })/* .addCase(editAddress.pending, (state) => {
-            state.isLoading = true;
-        }).addCase(editAddress.fulfilled,(state,action)=>{
-            state.isLoading = false;
-            state.addresses = action?.payload?.result || [];
-        }).addCase(editAddress.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.addresses = [];
-            console.error(action.error);
-        }).addCase(deleteAddress.pending, (state) => {
-            state.isLoading = true;
-        }).addCase(deleteAddress.fulfilled,(state,action)=>{
-            state.isLoading = false;
-            state.addresses = action?.payload?.result || [];
-        }).addCase(deleteAddress.rejected,(state,action)=>{
-            state.isLoading = false;
-            state.addresses = [];
-            console.error(action.error);
-        }); */
+        })
     }
 })
 

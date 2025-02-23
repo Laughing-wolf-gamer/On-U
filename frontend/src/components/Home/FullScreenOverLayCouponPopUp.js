@@ -77,7 +77,7 @@ const FullScreenOverLayCouponPopUp = () => {
             document.body.style.overflow = 'auto';
         };
     }, [isOpen]);
-	console.log("Banner Data: ", bannerData);
+	// console.log("Banner Data: ", bannerData);
     return (
         <Fragment>
             {isOpen && (

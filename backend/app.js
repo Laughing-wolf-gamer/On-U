@@ -56,8 +56,8 @@ app.get('/', (req, res) => {
 app.use('/admin', adminRoute);
 app.use('/api/common', commonRoute);
 app.use('/api/auth', User);
-app.use('/api/shop', Product);
-app.use('/api/shop', Order);
+app.use('/api/shop/products', Product);
+app.use('/api/shop/order_bag_wishList', Order);
 app.use('/api/payment', paymentRoutes);
 app.use('/api/payment/razerypay', razorPayRoute);
 app.use('/api/logistic', shipRocketHookRoute);

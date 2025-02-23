@@ -3,25 +3,25 @@ import mongoose from "mongoose";
 // Schema for the options (category, subcategory, color, size, gender)
 const optionSchema = new mongoose.Schema({
     name:{
-      type:String,
-      default:null,
-      trim: true,
-      match: /^[a-zA-Z\s]+$/,
-      minlength: 3,
+		type:String,
+		default:null,
+		trim: true,
+		match: /^[a-zA-Z\s]+$/,
+		minlength: 3,
     },
     type: {
-      type: String,
-      required: true,
-      enum: ['category', 'subcategory', 'color', 'clothingSize', 'gender'],
+		type: String,
+		required: true,
+		enum: ['category', 'subcategory', 'color', 'clothingSize', 'gender'],
     },
     value: {
-      type: String,
-      required: true,
-      unique: true,
+		type: String,
+		required: true,
+		unique: true,
     },
     isActive: {
-      type: Boolean,
-      default: true,
+		type: Boolean,
+		default: true,
     }
 }, { timestamps: true });
 

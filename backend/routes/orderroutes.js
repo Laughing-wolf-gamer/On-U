@@ -23,9 +23,9 @@ import {
 
 const route = express.Router();
 
-route.post('/orders/create_order',isAuthenticateuser, createorder)
+route.post('/create_order',isAuthenticateuser, createorder)
 route.post('/orders/create_cashFreeOrder',isAuthenticateuser,createPaymentOrder)
-route.get('/orders/get_order/:orderId',isAuthenticateuser, getOrderById)
+route.get('/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)
 
 
@@ -48,7 +48,7 @@ route.put('/bag/applyCoupon/:bagId',isAuthenticateuser,applyCouponToBag);
 
 route.patch('/bag/removeCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
 
-route.get('/bag/:userId',isAuthenticateuser, getbag)
+route.get('/bag/getBagByUserId/:userId',isAuthenticateuser, getbag)
 route.put('/bag/update_bag',isAuthenticateuser, updateqtybag)
 route.put('/bag/update_bagItemChecked',isAuthenticateuser, updateItemCheckedInBag)
 route.put('/bag/removeBagItem',isAuthenticateuser, deletebag)

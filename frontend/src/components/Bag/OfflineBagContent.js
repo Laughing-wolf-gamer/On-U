@@ -121,18 +121,12 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 			<div className="flex-1 space-y-6 max-h-[400px] overflow-y-auto">
 				{sessionBagData.map((item, i) => {
 					const active = item;
-					const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-					const isValidImage = (url) => {
-						return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+					const isVideo = (url) => {
+						const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
+						return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
 					};
-					const getImageExtensionsFile = () => {
-						
-						// Find the first valid image URL based on extensions
-						return active?.color?.images.find((image) => 
-							image.url && isValidImage(image.url)
-						);
-					};
-					const validImage = getImageExtensionsFile();
+					const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
+					const validImage = imagesOnly[0]?.url;
 					return(
 						<div key={i} className="relative flex flex-row w-full items-center justify-between border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
 							<div className="relative flex-row flex border-2 rounded-lg flex-shrink-0 w-20 sm:w-36 h-28 sm:h-36">
@@ -142,7 +136,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 										<Link to={`/products/${active?.ProductData?._id}`} className="block bg-black w-full h-full">
 											<div className="relative w-full h-full">
 												<img
-													src={validImage?.url}
+													src={validImage}
 													alt={active?.ProductData?.shortTitle}
 													className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
 												/>
@@ -152,8 +146,8 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 													<input
 														type="checkbox"
 														className="w-full h-full cursor-pointer"
-														checked={active?.isChecked} // Set checkbox checked if it's selected in the URL
-														onChange={(e) => {}}
+														defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+														// onChange={(e) => {}}
 													/>
 												</div>
 											</div>

@@ -59,7 +59,7 @@ const Footer = () => {
 	useEffect(() => {
 		setProductsOptions(memoizedProductsOptions);
 	}, [memoizedProductsOptions]);
-	console.log("memoizedProductsOptions: ",memoizedProductsOptions);
+	// console.log("memoizedProductsOptions: ",memoizedProductsOptions);
     return (
         <div className="w-screen min-h-fit border-t-[1px] border-t-gray-300 bg-white font-kumbsan">
             <div className="w-full max-w-screen-2xl justify-self-center p-10 2xl:p-14 md:p-14 xl:p-14 py-10 max-h-fit">
@@ -72,12 +72,15 @@ const Footer = () => {
 										memoizedProductsOptions && memoizedProductsOptions.length > 0 && memoizedProductsOptions.map((gender,index)=>{
 											// console.log("Gender Data: ",gender);
 											return(
-												<Fragment>
-													<h3 key={index} className="hover:underline text-gray-600 font-bold">{gender?.Gender}</h3>
+												<div onClick={(e) => {
+													e.stopPropagation();
+													handelSetQuery(gender?.Gender,'')
+												}} key={index}>
+													<h3 key={index} className="hover:underline cursor-pointer text-gray-600 font-bold">{gender?.Gender}</h3>
 													{
-														gender?.category && gender?.category.length > 0 && gender?.category.map((category,subCatIndex)=><li key={subCatIndex} onClick={()=> handelSetQuery(gender?.Gender,category?.title)} className="hover:underline text-gray-600">{category?.title}</li>)
+														gender?.category && gender?.category.length > 0 && gender?.category.map((category,subCatIndex)=><li key={subCatIndex} onClick={()=> handelSetQuery(gender?.Gender,category?.title)} className="hover:underline cursor-pointer text-gray-600">{category?.title}</li>)
 													}
-												</Fragment>
+												</div>
 											)
 										})
 									}
@@ -98,7 +101,7 @@ const Footer = () => {
 
 							{openDropdown["shop"] && (
 							<ul
-								className={`text-sm space-y-4 mt-3  justify-start items-start flex flex-col w-full transition-all duration-300 ease-in-out opacity-100 transform translate-y-0 max-h-[1000px] overflow-hidden ${
+								className={`text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full transition-all duration-300 ease-in-out opacity-100 transform translate-y-0 max-h-[1000px] overflow-hidden ${
 								openDropdown["shop"] ? "opacity-100 max-h-[1000px]" : "opacity-0 max-h-0"
 								}`}
 							>
@@ -106,24 +109,27 @@ const Footer = () => {
 									memoizedProductsOptions.length > 0 &&
 									memoizedProductsOptions.map((gender, index) => {
 										return (
-										<Fragment key={index}>
-											<h3 className="hover:underline text-gray-600 font-bold">
-											{gender?.Gender}
+										<div onClick={(e) => {
+											e.stopPropagation();
+											handelSetQuery(gender?.Gender,'')
+										}} key={index}>
+											<h3 className="hover:underline cursor-pointer text-gray-600 font-bold">
+												{gender?.Gender}
 											</h3>
 											{gender?.category &&
 											gender?.category.length > 0 &&
 											gender?.category.map((category, subCatIndex) => (
 												<li
-												key={subCatIndex}
-												onClick={() =>
-													handelSetQuery(gender?.Gender, category?.title)
-												}
-												className="hover:underline text-gray-600"
+													key={subCatIndex}
+													onClick={() =>
+														handelSetQuery(gender?.Gender, category?.title)
+													}
+													className="hover:underline cursor-pointer text-gray-600"
 												>
-												{category?.title}
+													{category?.title}
 												</li>
 											))}
-										</Fragment>
+										</div>
 										);
 									})}
 							</ul>

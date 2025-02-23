@@ -16,6 +16,8 @@ import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import SideBarBag from '../SideBarBag'
 import { IoBagRemoveSharp, IoMenu, IoSearch } from 'react-icons/io5'
+import MKeywoardSerach from './MKeywoardSerach'
+import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
 
 
 const MNavbar = ({ user }) => {
@@ -56,14 +58,15 @@ const MNavbar = ({ user }) => {
 
     const [serdiv, setserdiv] = useState('hidden')
     const [state, setstate] = useState("")
+	const{saveSearchKeywoards} = useLocalStorage();
 
     function searchenter(e) {
-       
         if (e.keyCode == 13) {
             if (state.trim()) {
                 navigation(`/products?keyword=${state}`)
                 dispatch(Allproduct())
                 setserdiv('hidden')
+				saveSearchKeywoards(state);
             } else {
                 navigation('/products')
                 setserdiv('hidden')
@@ -73,15 +76,16 @@ const MNavbar = ({ user }) => {
      
     }
 
-    function searchenters() {
-        if (state.trim()) {
-            navigation(`/products?keyword=${state}`)
-            dispatch(Allproduct())
-            setserdiv('hidden')
+    function searchenters(activeSearch) {
+        if (activeSearch.trim()) {
+            navigation(`/products?keyword=${activeSearch}`)
+			saveSearchKeywoards(activeSearch);
         } else {
-            navigation('/products')
-            setserdiv('hidden')
+            navigation(`/products?keyword=${state}`)
+			saveSearchKeywoards(state);
         }
+		dispatch(Allproduct())
+		setserdiv('hidden')
     }
     useEffect(()=>{
         if(user){
@@ -96,64 +100,6 @@ const MNavbar = ({ user }) => {
         setBagCount(sessionBagData.length);
     }, [sessionData,sessionBagData]);
     
-    // Set up transition to animate translateX and opacity
-    /* const transitions = useTransition(show, {
-
-        from: { transform: "translateX(0)" },
-        enter: { transform: "translateX(75vw)" },
-        leave: { transform: "translateX(0vw)" },
-        delay: 5000,
-
-    })
-
-    const touchstart = (e) => {
-        let startX = e.changedTouches[0].clientX;
-        let startY = e.changedTouches[0].clientY;
-        setstartX(startX);
-        setstartY(startY);
-        setIsSwiping(true);
-    };
-
-    const touchmove = (e) => {
-        if (!isSwiping) return;
-
-        const xm = e.changedTouches[0].clientX;
-        const ym = e.changedTouches[0].clientY;
-        const el = document.getElementById('offcanvas');
-        const total = el.clientWidth;
-        const position = xm - total;
-
-        let x = startX - xm;
-        let y = startY - ym;
-
-        if (x >= 0 && y >= 0) {  // Swiping left and down (opening)
-            if (x > 20) {
-                if (position < 0) {
-                    el.style.transform = `translateX(${position}px)`;  // Smooth swipe translation
-                } else {
-                    el.style.transform = `translateX(0px)`;
-                }
-            }
-        }
-    };
-
-    const touchend = (e) => {
-        if (isSwiping) {
-            const el = document.getElementById('offcanvas');
-            const threshold = 100; // If swipe distance exceeds this, open the offcanvas
-
-            const finalPosition = parseInt(el.style.transform.replace('translateX(', '').replace('px)', ''), 10);
-
-            if (Math.abs(finalPosition) > threshold) {
-                // If swiped enough to trigger, set show to true or false based on swipe direction
-                setShow(true);
-            } else {
-                // Otherwise, close the offcanvas
-                setShow(false);
-            }
-            setIsSwiping(false); // Reset swipe state
-        }
-    }; */
     return (
         <Fragment>
             <div className='MNavbar hidden font-kumbsan sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-10' >
@@ -199,15 +145,22 @@ const MNavbar = ({ user }) => {
                     </div>
                     
                 </div>
-                <div className={`${serdiv} z-20 absolute w-full h-full top-0 bg-white`}>
-                    <div className='grid grid-cols-12 py-3 px-[6px]'>
+                <div className={`${serdiv} z-20 absolute w-full h-full  top-0 bg-white`}>
+                    {/* <div className='grid grid-cols-12 py-3 px-[6px]'>
                         <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=> setserdiv('hidden')}><MdArrowBack color='black'/></div>
                         <div className="col-span-10">
                         <input type="text" placeholder='Search for products' 
                             className='msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
                         </div>
                         <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='black' strokeWidth={.9} className='text-2xl text-black' /></div>
-                    </div>
+                    </div> */}
+					<MKeywoardSerach
+						setserdiv = {setserdiv}
+						state={state}
+						setstate={setstate}
+						searchenter = {searchenter}
+						searchenters = {searchenters}
+					/>
                 </div>
                 </div>
             </div>

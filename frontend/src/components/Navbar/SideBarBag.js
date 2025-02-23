@@ -330,8 +330,8 @@ const SideBarBag = ({OnChangeing}) => {
 						<Fragment>
 						{
 							Array(10).fill(null).map((_, index) => (
-								<ul className="grid grid-cols-1 w-full max-h-screen overflow-y-auto py-2">
-									<li>
+								<ul key={index} className="grid grid-cols-1 gap-3 w-full max-h-screen overflow-y-auto py-2">
+									<li className='min-h-[500px]'>
 										<ProductCardSkeleton />
 									</li>
 								</ul>
@@ -468,7 +468,6 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 			{sessionBagData.map((item, i) => {
 				const active = item;
 				const validImage = getImageExtensionsFile(active?.color);
-				console.log("Updated Checked", active);
 				return (
 					<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= sessionBagData.length - 1 ? "border-b":""} py-3 space-y-4 sm:space-x-4 sm:space-y-0`}>
 						{/* Product Item */}
@@ -489,7 +488,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 												<input
 													type="checkbox"
 													className="w-full h-full cursor-pointer"
-													checked={active.isChecked} // Set checkbox checked if it's selected in the URL
+													defaultChecked={active.isChecked} // Set checkbox checked if it's selected in the URL
 													// onChange={(e) => {}}
 												/>
 											</div>
@@ -602,11 +601,11 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 												<input
 													type="checkbox"
 													className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
-													checked={active?.isChecked} // Set checkbox checked if it's selected in the URL
-													onChange={(e) => {
-														// updateChecked(e, active.productId?._id);
-														// console.log("")
-													}} // We can add the change handler if needed, or leave empty
+													defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+													// onChange={(e) => {
+													// 	// updateChecked(e, active.productId?._id);
+													// 	// console.log("")
+													// }} // We can add the change handler if needed, or leave empty
 												/>
 											</div>
 										</div>

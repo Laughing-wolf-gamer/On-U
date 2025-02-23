@@ -28,7 +28,7 @@ const FAQ = () => {
 	useEffect(()=>{
 		dispatch(fetchFAQ())
 	},[dispatch])
-	console.log("FAQ Options: ",faqs);
+	// console.log("FAQ Options: ",faqs);
 
 	return (
 		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">

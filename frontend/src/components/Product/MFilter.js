@@ -542,11 +542,11 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     return (
         <Fragment>
 			<div
-				className={`hidden font-kumbsan uppercase mobilevisible fixed z-10 top-12 transition-all duration-300 
+				className={`hidden font-kumbsan uppercase mobilevisible fixed top-12 transition-all duration-300 
 					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
 					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
 				>
-				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center py-1 relative z-10">
+				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center py-1 ">
 					{/* Sort Section */}
 					<div
 						className="text-[12px] flex justify-center space-x-2 cursor-pointer bg-white p-3"
@@ -753,9 +753,9 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					<div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
 					onClick={() => (setMMainlink( MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
 					,filterdiv(), reloadproducts() )}>
-					<Link to={MMainlink}>
-						APPLY
-					</Link>
+						<Link to={MMainlink}>
+							APPLY
+						</Link>
 
 					</div>
 					<span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>

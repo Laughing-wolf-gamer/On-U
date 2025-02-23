@@ -24,7 +24,7 @@ export const Allproduct = (e=1) => async (dispatch) => {
         console.log("URL: " ,url)
         let link = url.includes('?') ? `?${url.split("?")[1]}&width=${window.screen.width}&page=${e}` : `?width=${window.screen.width}&page=${e}`
         //let link1 = link ? link +=  `&width=${window.screen.width}`;
-        const res = await axios.get(`${BASE_API_URL}/api/shop/products${link}`)
+        const res = await axios.get(`${BASE_API_URL}/api/shop/products/all${link}`)
         // console.log("products: ", res.data);
         const data = res.data;
         dispatch({ type: SUCCESS_PRODUCTS, payload: data?.products, pro:data?.pro, length:data?.length })
@@ -51,7 +51,7 @@ export const singleProduct = (id) => async (dispatch) => {
         dispatch({ type: REQUEST_SINGLE_PRODUCTS })
 
         // const { data } = await axios.get(`/api/v1/products/${id}`)
-        const res = await axios.get(`${BASE_API_URL}/api/shop/products/get/${id}`)
+        const res = await axios.get(`${BASE_API_URL}/api/shop/products/getById/${id}`)
         const data = res?.data;
         console.log("Single Product: ", res);
         dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data?.product || [], similar: data?.similar_product || []})
@@ -90,7 +90,7 @@ export const getOptionsByType = ({type}) => async () => {
 export const postRating = ({productId,ratingData})=> async()=>{
     try {
         console.log("Post Rating: ",productId,ratingData)
-        const res = await axios.put(`${BASE_API_URL}/api/shop/rating/${productId}`,ratingData,headerConfig());
+        const res = await axios.put(`${BASE_API_URL}/api/shop/products/rating/${productId}`,ratingData,headerConfig());
         return res.data;
     } catch (error) {
         console.error("Failed to post: ",error);
@@ -100,7 +100,7 @@ export const postRating = ({productId,ratingData})=> async()=>{
 export const checkPurchasesProductToRate = ({productId}) => async()=>{
     try {
 
-        const res = await axios.get(`${BASE_API_URL}/api/shop/rating/checkPurchases/${productId}`,headerConfig());
+        const res = await axios.get(`${BASE_API_URL}/api/shop/products/rating/checkPurchases/${productId}`,headerConfig());
         console.log("Check: ",res.data)
         return res.data;
     } catch (error) {

@@ -4,6 +4,7 @@ import { IoIosArrowForward, IoIosArrowDown } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../../../action/productaction';
+import Loader from '../../../Loader/Loader';
 
 const MProductsBar = ({ showProducts, onClose }) => {
 	const { options } = useSelector((state) => state.AllOptions);
@@ -71,9 +72,9 @@ const MProductsBar = ({ showProducts, onClose }) => {
 
 	// If options are not loaded yet, return a loading state or nothing
 	if (!options) {
-		return <div>Loading...</div>; // You can replace this with a spinner or any other loading indicator
+		return <Loader/>; // You can replace this with a spinner or any other loading indicator
 	}
-	console.log("productsOptions: ",productsOptions);
+	// console.log("productsOptions: ",productsOptions);
 	return (
 		<div className={`ml-2 font-kumbsan w-full ${showProducts}`}>
 		{productsOptions.length > 0 &&

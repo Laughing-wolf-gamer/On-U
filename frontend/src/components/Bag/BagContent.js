@@ -147,12 +147,18 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 		<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5">
 			{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
 				const active = item;
-				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-				const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+				// const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+				// const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 
-				const getImageExtensionsFile = () => active?.color?.images.find((image) => image.url && isValidImage(image.url));
+				// const getImageExtensionsFile = () => active?.color?.images.find((image) => image.url && isValidImage(image.url));
 
-				const validImage = getImageExtensionsFile();
+				// const validImage = getImageExtensionsFile();
+				const isVideo = (url) => {
+					const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
+					return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
+				};
+				const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
+				const validImage = imagesOnly[0]?.url;
 
 				return (
 					<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
@@ -162,7 +168,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							{validImage ? (
 								<div className="relative w-full h-full">
 									<img
-										src={validImage?.url}
+										src={validImage}
 										alt={active?.productId?.title}
 										className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 									/>
@@ -175,8 +181,8 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 										<input
 											type="checkbox"
 											className="w-full h-full cursor-pointer"
-											checked={active?.isChecked}
-											onChange={(e) => {}}
+											defaultChecked={active?.isChecked}
+											// onChange={(e) => {}}
 										/>
 									</div>
 								</div>

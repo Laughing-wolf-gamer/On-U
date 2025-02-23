@@ -174,12 +174,12 @@ const Allproductpage = ({user}) => {
                                     <Pagination
                                         activePage={currentPage}
                                         itemsCountPerPage={maxAmountPerPage}
-                                        totalItemsCount={length}
+                                        totalItemsCount={length || 0}
                                         onChange={setCurrentPageNo}
-                                        nextPageText={false}
-                                        prevPageText={false}
-                                        firstPageText={false}
-                                        lastPageText={false}
+                                        nextPageText={''}
+                                        prevPageText={''}
+                                        firstPageText={''}
+                                        lastPageText={''}
                                         itemClassFirst="hidden"
                                         itemClassPrev="hidden"
                                         itemClassNext="hidden"

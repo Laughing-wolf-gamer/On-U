@@ -559,7 +559,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     
 
     return (
-        <Fragment>
+        <div>
             <div className='space-y-4 uppercase font-kumbsan ml-4'>
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
@@ -582,8 +582,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={e}
                                     id={`cat_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {capitalizeFirstLetterOfEachWord(e)} 
@@ -616,8 +616,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={e}
                                     id={`cat_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e} 
@@ -650,8 +649,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={e}
                                     id={`id_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm uppercase ml-2 mr-4 mb-2'>
                                     {e} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
@@ -681,8 +680,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={e}
                                     id={`cat_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {e} 
@@ -714,8 +713,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={e}
                                     id={`cat_${e}`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {capitalizeFirstLetterOfEachWord(e)} 
@@ -748,7 +746,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={amount}
                                     id={`cat_${amount}`}
                                     className="mb-2 accent-gray-500"
-                                    checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
+                                    defaultChecked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
                                     // No need for onChange handler since radio buttons will handle state automatically
                                 />
                                 <label className=" text-sm ml-2 mr-4 mb-2">
@@ -776,7 +774,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                             const isChecked = selectedColors.includes(e.label); // Check if current color is selected
 
                             return (
-                                <li key={i} className="flex items-center w-full space-x-4 p-2">
+                                <li key={i} className="flex items-center w-full md:space-x-2 sm:space-x-2 xl:space-x-2 2xl:space-x-2 lg:space-x-3 p-2">
                                     <input
                                         type="checkbox"
                                         name="color"
@@ -784,14 +782,14 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         id={`id_${i}`}
                                         className="accent-gray-500"
                                         checked={isChecked} // Set checkbox checked if color is selected in the URL
-                                        onClick={(event) => {
+                                        onChange={(event) => {
                                             event.preventDefault();
                                             colorfun(e.label); // This will update the URL with the selected color
                                         }}
                                     />
                                     <div
                                         style={{ backgroundColor: e.label }}
-                                        className="w-7 h-7 border border-slate-400 rounded"
+                                        className="w-7 h-7 border border-slate-400 rounded-md"
                                     ></div>
                                     <label className="flex flex-row whitespace-nowrap space-x-2 text-left text-sm">
                                         <span className="font-semibold">
@@ -848,8 +846,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     value={'true'}
                                     id={`On_sale`}
                                     className='mb-2 accent-gray-500'
-                                    checked={isChecked} // Set checkbox checked based on URL parameter
-                                    onChange={() => {}} // No need to handle change here; onClick will update URL
+                                    defaultChecked={isChecked} // Set checkbox checked based on URL parameter
                                 />
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     On Sale
@@ -870,7 +867,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 				</button>
 
             </div>
-        </Fragment>
+        </div>
     );
 };
 
@@ -969,115 +966,7 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
     );
 };
 
-/* const saleAmountFilter = ({ result, spARRAY, sparraynew ,dispatchFetchAllProduct}) => {
-    const [selectedPriceRange, setSelectedPriceRange] = useState({
-        price1: false,
-        price2: false,
-        price3: false,
-    });
-  
-    useEffect(() => {
-        // Get the price parameters from the URL
-        const url = new URL(window.location.href);
-        const maxPrice = url.searchParams.get('discountAmount[$lte]');
-        
-        // Check which price range matches the URL's 'discountAmount[$lte]'
-        setSelectedPriceRange({
-            price1: maxPrice && maxPrice >= Math.min(...result[0]) && maxPrice <= Math.max(...result[0]),
-            price2: maxPrice && maxPrice >= Math.min(...result[1]) && maxPrice <= Math.max(...result[1]),
-            price3: maxPrice && maxPrice >= Math.min(...result[2]) && maxPrice <= Math.max(...result[2]),
-        });
-    }, [result]); // Run this whenever the 'result' changes (which is likely to happen when data is fetched or updated)
-  
-    const price1fun = (maxPrice) => {
-        // Set the URL search parameter
-        const url = new URL(window.location.href);
-        url.searchParams.set('discountAmount[$lte]', maxPrice);
-        window.history.replaceState(null, "", url.toString());
-    
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        }
-    };
-  
-    const price2fun = (minPrice, maxPrice) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('discountAmount[$lte]', maxPrice);
-        window.history.replaceState(null, "", url.toString());
-    
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        }
-    };
-  
-    const price3fun = (minPrice) => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('discountAmount[$lte]', minPrice);
-        window.history.replaceState(null, "", url.toString());
-    
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        }
-    };
-  
-    return (
-        <ul className={`pl-8 border-b-[1px] border-slate-200 py-4 overflow-hidden relative`}>
-            <h1 className=" text-base font-semibold mb-2">PRICE</h1>
-    
-            <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price1`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price1fun(Math.max(...result[0]))}
-                    checked={selectedPriceRange.price1}
-                    id={`id${Math.max(...result[0]) + 1}`}
-                />
-                    <label className=" text-sm ml-2 mr-4 mb-2">
-                        Rs. {Math.floor(Math.min(...result[0]))} to Rs. {Math.floor(Math.max(...result[0]))}{' '}
-                        <span className="text-xs font-serif font-normal text-slate-400">
-                            ({spARRAY.filter((f) => f <= Math.max(...result[0])).length})
-                        </span>
-                    </label>
-                </li>
-        
-                <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price2`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price2fun(Math.min(...result[1]), Math.max(...result[1]))}
-                    checked={selectedPriceRange.price2}
-                    id={`id${Math.max(...result[1]) + 1}`}
-                />
-                <label className=" text-sm ml-2 mr-4 mb-2">
-                    Rs. {Math.floor(Math.min(...result[1]))} to Rs. {Math.floor(Math.max(...result[1]))}{' '}
-                    <span className="text-xs font-serif font-normal text-slate-400">({sparraynew()})</span>
-                </label>
-                </li>
-        
-                <li className="items-center">
-                <input
-                    type="checkbox"
-                    name="color"
-                    value={`price3`}
-                    className="mb-2 accent-pink-500"
-                    onClick={() => price3fun(Math.min(...result[2]))}
-                    checked={selectedPriceRange.price3}
-                    id={`id${Math.min(...result[2]) + 1}`}
-                />
-                <label className=" text-sm ml-2 mr-4 mb-2">
-                    Rs. {Math.floor(Math.min(...result[2]))} to Rs. {Math.floor(Math.max(...result[2]))}{' '}
-                    <span className="text-xs font-serif font-normal text-slate-400">
-                    ({spARRAY.filter((f) => f >= Math.min(...result[2])).length})
-                    </span>
-                </label>
-            </li>
-        </ul>
-    );
-}; */
+
   
 
 export default FilterView;

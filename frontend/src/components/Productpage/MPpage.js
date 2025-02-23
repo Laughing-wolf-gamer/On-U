@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Clock, Heart, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Clock, Heart, RotateCw, ShoppingBag, ShoppingCart, TruckIcon } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -825,7 +825,7 @@ const MPpage = () => {
 									</div>
 
 									<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-										<h1 className="text-gray-500"><Clock /></h1>
+										<h1 className="text-gray-500"><TruckIcon /></h1>
 										<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
 									</div>
 								</div>

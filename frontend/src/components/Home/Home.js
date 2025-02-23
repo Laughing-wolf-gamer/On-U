@@ -304,8 +304,8 @@ const Home = ({user}) => {
                                     ) : (
                                         // Skeleton Loader for the Carousel Items
                                         Array(8).fill(0).map((_, index) => (
-                                            <div className='w-full p-1 animate-pulse'>
-												<div key={index} className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] bg-gray-300 animate-pulse rounded-lg" />
+                                            <div key={index} className='w-full p-1 animate-pulse'>
+												<div  className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] bg-gray-300 animate-pulse rounded-lg" />
 											</div>
                                         ))
                                     )}

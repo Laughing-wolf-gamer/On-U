@@ -17,6 +17,7 @@ import RatingDataView from './RatingDataView';
 import { Label } from '../ui/label';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import { useSettingsContext } from '@/Context/SettingsContext';
+import { Input } from '../ui/input';
 const ProductPreview = ({
 	categories,
 	genders,
@@ -532,6 +533,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const [updatingColors, setUpdatingColors] = useState([]);
 	const [selectedColorImages, setSelectedColorImages] = useState([]);
 	const [colorOptions, setColorOptions] = useState([]);
+
 	const[colorInputQuantiy, setColorInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
 	const[sizeInputQuantiy, setSizeInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
 
@@ -1001,6 +1003,21 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 											<Minus />
 										</Button>
 										<Label className="text-lg text-gray-700 font-extrabold whitespace-nowrap">Qty: {sizeQuantities[`${size._id}-${activeColor._id}`]}</Label>
+										{/* <form onSubmit={()=>{
+											e.preventDefault();
+											if(sizeInputQuantiy.quantity < 0 || sizeInputQuantiy.quantity > sizeQuantities[`${size._id}-${activeColor._id}`]) return;
+											handleColorQuantityChange(sizeInputQuantiy.sizeId, sizeInputQuantiy.colorId, sizeInputQuantiy?.quantity);
+											setSizeInputQuantiy({sizeId: null, colorId: null, quantity: null});
+										}}>
+											<Input
+												type="number"
+												min="0"
+												value={sizeQuantities[`${size._id}-${activeColor._id}`] || 0}
+												onChange={(e) => {
+													setSizeInputQuantiy({sizeId: size._id, colorId: activeColor._id, quantity: parseInt(e.target.value)});
+												}}
+											/>
+										</form> */}
 										<Button
 											disabled={isLoading}
 											onClick={(e) => {

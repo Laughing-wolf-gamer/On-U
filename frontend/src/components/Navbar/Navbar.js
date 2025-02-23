@@ -15,7 +15,6 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
 import { IoBagRemoveSharp, IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
-import Loader from '../Loader/Loader.js'
 
 
 const Navbar = ({user}) => {
@@ -94,7 +93,6 @@ const Navbar = ({user}) => {
         setIsSearchVisible(!isSearchVisible);
     };
     const fetchAllWishList = ()=>{
-        console.log('State in Nav Bar');
         setTimeout(() => {
             dispatch(getwishlist())
         }, 900);
@@ -113,7 +111,6 @@ const Navbar = ({user}) => {
         setWishListCount(sessionData.length);
         setBagCount(sessionBagData.length);
     }, [sessionData,sessionBagData]);
-    console.log("Navbar Options: ", options)
     return (
         <Fragment>
             <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
@@ -155,10 +152,11 @@ const Navbar = ({user}) => {
                             </li>
                         </Link>
                         <div className="flex flex-row w-full h-14 space-x-5 mb-5 mx-4">
-                        {isSearchVisible && <Search toggleSearchBar = {()=>{
-							setIsSearchVisible(false);
-						}} />}
-                            <button onClick={toggleSearchBar} className="text-slate-800 hover:border hover:animate-vibrateScale border-opacity-90 rounded-lg flex flex-col w-12 justify-center items-center">
+							{isSearchVisible && <Search toggleSearchBar = {()=>{
+								setIsSearchVisible(false);
+							}} />
+						}
+                            <button onClick={toggleSearchBar} className={`text-black border-opacity-90 transition-all duration-300 ease-ease-out-expo ${isSearchVisible ? "z-30 bg-white border-gray-700 border hover:scale-105":"hover:border hover:animate-vibrateScale"} rounded-lg flex flex-col w-12 justify-center items-center`}>
                                 <IoSearch strokeWidth={.5} size={25}/>
                             </button>
                         </div>

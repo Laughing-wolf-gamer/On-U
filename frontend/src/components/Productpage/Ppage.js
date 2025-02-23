@@ -494,7 +494,7 @@ const Ppage = () => {
                                     <h1 className='text-xl text-[#808080e8] font-light'>
                                         {capitalizeFirstLetterOfEachWord(product?.gender)}
                                     </h1>
-                                    <AverageRatingView ratings={reviews} />
+                                    <AverageRatingView ratings={product?.Rating} />
                                 </div>
 
                                 {/* Price and Discount */}
@@ -862,10 +862,8 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                                 <div className='w-full flex flex-col justify-start items-start'>
                                     <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
                                     <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
-                                        {product && product.Rating && product.Rating.length > 0 ? (
+                                        {product && product.Rating && product.Rating.length > 0 && (
                                             <ProductReviews reviews={product.Rating} />
-                                        ) : (
-                                            <ProductReviews reviews={reviews} />
                                         )}
                                     </div>
                                 </div>

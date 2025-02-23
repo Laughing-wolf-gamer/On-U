@@ -216,9 +216,17 @@ export const getallproducts = async (req, res) => {
         const totalProducts = await ProductModel.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / itemsPerPage);
         console.log("Total Products:", totalProducts, ", Pages:", totalPages);
-
+		const isRandomQueryRequest = req.query.keyword && req.query?.keyword === 'random' || req.query?.keyword === "Random";
+		let productsPagination;
+		if (isRandomQueryRequest) {
+			// Shuffle the allProducts array
+			const shuffledProducts = allProducts.sort(() => Math.random() - 0.5);
+			// Paginate the shuffled products
+			productsPagination = shuffledProducts.slice(skip, skip + itemsPerPage);
+		}else{
+        	productsPagination = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
+		}
         // Fetch products with pagination
-        const productsPagination = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
 
         return res.status(200).json({
             products: allProducts,

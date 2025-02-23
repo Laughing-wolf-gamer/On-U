@@ -11,10 +11,10 @@ import { sendCouponMail } from "../emailController.js";
 export const getHomeBanners = async (req,res)=>{
 	try {
 		const banners = await BannerModel.find({});
-		// console.log("Banners: ",banners)
 		return res.status(200).json({Success: true,message:"Successfully Fetched Banners", result:banners || []});
 	} catch (error) {
 		console.error(`Error getting Banners: `,error);
+		logger.error(`Error getting Banners: ${error.message}` )
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
@@ -79,61 +79,6 @@ export const addHomeCarousalMultiple = async (req, res) => {
     }
 };
 
-/* export const addHomeCarousalMultiple = async(req,res)=>{
-	try {
-		const{images,CategoryType,Header} = req.body;
-		const ImageFiltered = images.map(img => img.url)
-		console.log("Add Home Carousal Multiple req.body",images.map(img => img.url));
-		if(!images ||!images.length) return res.status(400).json({Success: false, message: "At least one image is required"});
-		let banner = await BannerModel.findOne({CategoryType: CategoryType});
-		if(!banner){
-			banner = new BannerModel({CategoryType: CategoryType, Header: Header, Url: [...ImageFiltered]});
-		}else{
-			if(Header){
-                banner.Header = Header;
-            }
-            if(ImageFiltered && ImageFiltered.length > 0){
-                banner.Url.push(...ImageFiltered);
-            }
-
-		}
-		await banner.save();
-		const banners = await BannerModel.find({});
-		console.log("Banners: ",banners)
-		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
-	} catch (error) {
-		console.error(`Error getting`,error);
-        logger.error("Error getting: " + error.message);
-		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
-	}
-} */
-
-/* export const addHomeCarousal = async (req, res) => {
-	try {
-		const{url,CategoryType,Header} = req.body;
-		console.log("Add Home Carousal req.body",req.body);
-		if(!url && !Header) return res.status(400).json({Success: false, message: "URL is required"});
-		let banner = await BannerModel.findOne({CategoryType: CategoryType});
-		if(!banner){
-			banner = new BannerModel({CategoryType: CategoryType,Header:Header,Url: [url]});
-		}else{
-			if(Header){
-				banner.Header = Header;
-			}
-			if(url){
-				banner.Url.push(url);
-			}
-		}
-		await banner.save();
-		const banners = await BannerModel.find({});
-		console.log("Banners: ",banners)
-		res.status(201).json({Success: true, message: 'Home Carousal added successfully!', result: banners});
-	} catch (error) {
-		console.error(`Error adding Banners: `,error);
-        logger.error("Error adding Banners: " + error.message);
-		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
-	}
-} */
 export const addHomeCarousal = async (req, res) => {
 	try {
 		const { url, CategoryType, Header,name } = req.body;
@@ -188,55 +133,6 @@ export const addHomeCarousal = async (req, res) => {
 	}
 };
 	
-/* export const removeHomeCarousal = async (req, res) => {
-    try {
-        const { id, imageIndex } = req.params;
-    
-        // Validate the input
-        if (!id || !imageIndex) {
-            return res.status(200).json({ Success: false, message: "Id and image index are required" });
-        }
-    
-        // Find the banner by ID
-        const banner = await BannerModel.findById(id);
-        if (!banner) {
-            return res.status(202).json({ Success: false, message: "Banner not found" });
-        }
-    
-        console.log("Deleting Banner: ", id, imageIndex);
-        console.log("Total Banner Length: ", banner.Url.length);
-    
-        // Validate the image index
-        if (banner.Url.length <= imageIndex || imageIndex < 0) {
-            return res.status(202).json({ Success: false, message: "Invalid image index" });
-        }
-    
-        // Identify the URL to remove
-        const urlToRemove = banner.Url[imageIndex];
-        console.log("Url to remove: ", urlToRemove);
-    
-        // Update the banner by removing the URL at the specified index
-        const updatedBanners = await BannerModel.findByIdAndUpdate(
-            id,  // The ID of the document to update
-            { $pull: { Url: urlToRemove } },  // Remove the URL from the "Url" array
-            { new: true }  // Ensure the updated document is returned
-        );
-    
-        // Handle case when the URL couldn't be removed for any reason
-        if (!updatedBanners) {
-            return res.status(404).json({ Success: false, message: "Banner update failed, URL not found" });
-        }
-    
-        console.log("Updated Banners: ", updatedBanners.Url);
-    
-        // Respond with the updated banner
-        res.status(200).json({ Success: true, message: 'Home Carousal image removed successfully!', result: updatedBanners });
-    } catch (error) {
-        console.error(`Error removing banner: `, error);
-        logger.error("Error removing banner: " + error.message);
-        res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
-    }
-}; */
 
 export const removeHomeCarousal = async (req, res) => {
     try {
@@ -338,9 +234,9 @@ export const addCategoryBanners = async (req, res) => {
 
 		// Respond with a success message and the updated banners
 		return res.status(201).json({
-		Success: true,
-		message: 'Category Banner added/updated successfully!',
-		result: banners,
+			Success: true,
+			message: 'Category Banner added/updated successfully!',
+			result: banners,
 		});
 
 	} catch (error) {
@@ -358,14 +254,11 @@ export const getCategoryBanners = async(req,res)=>{
 	try {
         // Fetch all banners to return
         const banners = await CategoryBannerModel.find({});
-
-        console.log("Category Banners: ", banners);
-
         // Respond with success message and the banners
         return res.status(200).json({
             Success: true,
             message: 'Home Carousal fetched successfully!',
-            result: banners,
+            result: banners || [],
         });
     } catch (error) {
         console.error(`Error fetching Category Banners: `, error);
@@ -466,94 +359,23 @@ export const FetchAllFilters = async (req, res) => {
 		res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
 	}
 };
-	
-
-/* export const setAboutData = async (req, res) => {
-    try {
-        const { header, subHeader, ourMissionDescription, outMoto, teamMembers } = req.body;
-        console.log("About Body:", req.body);
-
-        const alreadyFoundWebsiteData = await WebSiteModel.findOne({ tag: 'AboutData' });
-
-        // Helper function to conditionally set data only if provided
-        const updateField = (field, newValue) => {
-            if (newValue !== undefined && newValue !== null && (typeof newValue === 'string' ? newValue.trim() !== '' : newValue.length > 0)) {
-                return newValue;
-            }
-            return field;
-        };
-
-        // If no existing AboutData is found, create a new one
-        if (!alreadyFoundWebsiteData) {
-            const about = new WebSiteModel({
-                AboutData: {
-                    header: updateField('', header),
-                    subHeader: updateField('', subHeader),
-                    ourMissionDescription: updateField('', ourMissionDescription),
-                    outMoto: updateField([], outMoto),
-                    teamMembers: updateField([], teamMembers),
-                },
-                tag: 'AboutData',
-            });
-
-            await about.save();
-            console.log("New About Data: ", about);
-            return res.status(200).json({ Success: true, message: 'About Data set successfully', result:about});
-        }
-
-        // Update existing AboutData with new values if provided
-        alreadyFoundWebsiteData.AboutData = {
-            header: updateField(alreadyFoundWebsiteData.header, header),
-            subHeader: updateField(alreadyFoundWebsiteData.subHeader, subHeader),
-            ourMissionDescription: updateField(alreadyFoundWebsiteData.ourMissionDescription, ourMissionDescription),
-            outMoto: updateField(alreadyFoundWebsiteData.outMoto, outMoto),
-            teamMembers: updateField(alreadyFoundWebsiteData.teamMembers, teamMembers),
-        };
-
-        await alreadyFoundWebsiteData.save();
-        console.log("Already Found About Data: ", alreadyFoundWebsiteData);
-
-        res.status(200).json({ Success: true, message: 'About Data set successfully' ,result:alreadyFoundWebsiteData});
-    } catch (error) {
-        console.error(`Error setting about data `, error);
-        logger.error(`Error setting about data: ${error.message}`);
-        res.status(500).json({ Success: false, message: `Internal Server Error ${error.message}` });
-    }
-}; */
 
 export const setAboutData = async (req, res) => {
     try {
-        const { header, subHeader, ourMissionDescription, outMoto, teamMembers,founderData } = req.body;
-        console.log("About Body:", req.body);
+        const aboutData = req.body;
 
-        const alreadyFoundWebsiteData = await WebSiteModel.findOne({ tag: 'AboutData' });
+        // Using findOneAndUpdate with upsert: true to either update or create the document
+        const result = await WebSiteModel.findOneAndUpdate(
+            { tag: 'AboutData' }, // Query to find the document
+            { AboutData: aboutData }, // Update the AboutData field
+            { new: true, upsert: true } // `new: true` returns the updated document, `upsert: true` creates if not found
+        );
 
-        if (!alreadyFoundWebsiteData) {
-            // No existing AboutData, create a new entry
-            const newWebsiteData = new WebSiteModel({
-                AboutData: {...req.body},
-                tag: 'AboutData',
-            });
-
-            await newWebsiteData.save();
-            console.log("New About Data Created: ", newWebsiteData);
-
-            return res.status(200).json({
-                Success: true,
-                message: 'About Data set successfully',
-                result: newWebsiteData,
-            });
-        }
-
-		alreadyFoundWebsiteData.AboutData = {...req.body};
-
-        await alreadyFoundWebsiteData.save();
-        console.log("Updated About Data: ", alreadyFoundWebsiteData);
-
+        // Return the response with appropriate success message
         res.status(200).json({
             Success: true,
-            message: 'About Data updated successfully',
-            result: alreadyFoundWebsiteData,
+            message: result.isNew ? 'About Data set successfully' : 'About Data updated successfully',
+            result: result,
         });
     } catch (error) {
         console.error("Error setting about data:", error.message);
@@ -565,73 +387,43 @@ export const setAboutData = async (req, res) => {
     }
 };
 
-/* export const setTermsAndConditionWebsite = async(req,res)=>{
-	try {
-		console.log("terms and Condition Data",req.body);
-		const alreadyPresetTermsAndCondition = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
-		if(alreadyPresetTermsAndCondition){
-			alreadyPresetTermsAndCondition.termsAndCondition = req.body;
-			await alreadyPresetTermsAndCondition.save();
-			return res.status(200).json({Success:true,message:"Succeffully Termns and Condition"})
-		}
-		const termsAndConditionSet = new WebSiteModel({termsAndCondition: req.body, tag: 'terms-and-condition'});
-		await termsAndConditionSet.save();
-		console.log("New Terms and Condition: ",termsAndConditionSet)
-		res.status(200).json({Success:true,message:"Succeffully Termns and Condition"})
-	} catch (error) {
-		res.status(500).json({Success:false,message:"Internal server Error"})
-	}
-} */
+
 
 export const setTermsAndConditionWebsite = async (req, res) => {
 	try {
 		const termsAndConditionData = req.body;
-		// console.log("Terms and Condition Data received: ", termsAndConditionData);
-	
-		// Check if the "Terms and Condition" data already exists
-		let websiteData = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
-	
+
+		// Attempt to find and update or create the document in one operation
+		const websiteData = await WebSiteModel.findOneAndUpdate(
+			{ tag: 'terms-and-condition' },  // Find the document with the tag 'terms-and-condition'
+			{ termsAndCondition: termsAndConditionData },  // Update the terms and condition
+			{ new: true, upsert: true }  // `new: true` returns the updated document, `upsert: true` creates if not found
+		);
+
 		if (websiteData) {
-		// If the document exists, update the terms and condition
-		websiteData.termsAndCondition = termsAndConditionData;
-		await websiteData.save();
-		return res.status(200).json({ Success: true, message: "Terms and Conditions updated successfully." });
+			// If document exists or was created, return success response
+			res.status(200).json({
+				Success: true,
+				message: websiteData.isNew ? "Terms and Conditions set successfully." : "Terms and Conditions updated successfully.",
+			});
+		} else {
+			// This code shouldn't normally be reached due to upsert, but you can handle an unexpected case
+			res.status(500).json({
+				Success: false,
+				message: "Unexpected error occurred.",
+			});
 		}
-	
-		// If the document does not exist, create a new entry
-		const newTermsAndCondition = new WebSiteModel({
-		termsAndCondition: termsAndConditionData,
-		tag: 'terms-and-condition',
-		});
-	
-		await newTermsAndCondition.save();
-		console.log("New Terms and Condition created: ", newTermsAndCondition);
-	
-		res.status(200).json({ Success: true, message: "Terms and Conditions set successfully." });
-	
+
 	} catch (error) {
 		console.error("Error setting Terms and Conditions:", error.message);
 		res.status(500).json({
-		Success: false,
-		message: `Internal Server Error: ${error.message}`,
+			Success: false,
+			message: `Internal Server Error: ${error.message}`,
 		});
 	}
 };
 
-/* export const getTermsAndConditionWebsite = async(req,res)=>{
-	try {
-		const termsAndCondition = await WebSiteModel.findOne({ tag: 'terms-and-condition' });
-		console.log("termsAndCondition: ",termsAndCondition);
-		if(termsAndCondition){
-            res.status(200).json({Success:true,message:"Terms and Condition",result:termsAndCondition.termsAndCondition})
-        }else{
-            res.status(200).json({Success:false,message:"No Terms and Condition found",result:null})
-        }
-	} catch (error) {
-		console.error("Error while getting terms and condition: ",error);
-		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
-	}
-} */
+
 
 export const getTermsAndConditionWebsite = async (req, res) => {
 	try {
@@ -668,72 +460,52 @@ export const getTermsAndConditionWebsite = async (req, res) => {
 	  
 
 
-/* export const setPrivacyPolicyWebsite = async(req,res)=>{
-	try {
-		// console.log("Privacy and Policy Data",req.body);
-		const alreadyprivacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
-		if(alreadyprivacyPolicy){
-			alreadyprivacyPolicy.privacyPolicy = req.body;
-			await alreadyprivacyPolicy.save();
-			return res.status(200).json({Success:true,message:"Succeffully Termns and Condition"})
-		}
-		const privacyPolicySet = new WebSiteModel({privacyPolicy: req.body, tag: 'privacy-policy'});
-		await privacyPolicySet.save();
-		console.log("New Terms and Condition: ",privacyPolicy)
-		res.status(200).json({Success:true,message:"Succeffully set Privacy And Policy"})
-	} catch (error) {
-		res.status(500).json({Success:false,message:"Internal server Error"})
-	}
-} */
 export const setPrivacyPolicyWebsite = async (req, res) => {
 	try {
-		// Search for existing privacy policy document
-		const existingPrivacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
-	
-		// If the document already exists, update it
-		if (existingPrivacyPolicy) {
-			existingPrivacyPolicy.privacyPolicy = req.body;
-			await existingPrivacyPolicy.save();
-			return res.status(200).json({
+		// Attempt to find and update or create the document in one operation
+		const privacyPolicyData = req.body;
+
+		const websiteData = await WebSiteModel.findOneAndUpdate(
+			{ tag: 'privacy-policy' },  // Find the document with the tag 'privacy-policy'
+			{ privacyPolicy: privacyPolicyData },  // Update the privacy policy
+			{ new: true, upsert: true }  // `new: true` returns the updated document, `upsert: true` creates if not found
+		);
+
+		if (websiteData) {
+			// Respond with the appropriate success message
+			res.status(200).json({
 				Success: true,
-				message: "Successfully updated Privacy Policy"
+				message: websiteData.isNew 
+				? "Successfully set Privacy Policy"
+				: "Successfully updated Privacy Policy",
 			});
+		} else {
+			// This code shouldn't be reached due to upsert, but you can handle an unexpected case
+			/* res.status(500).json({
+				Success: false,
+				message: "Unexpected error occurred.",
+			}); */
+			throw new Error("Unexpected error occurred while updating Privacy Policy.");
 		}
-	
-		// If no document exists, create a new one
-		const newPrivacyPolicy = new WebSiteModel({
-			privacyPolicy: req.body,
-			tag: 'privacy-policy'
-		});
-		await newPrivacyPolicy.save();
-	
-		// Log success for newly created Privacy Policy
-		console.log("New Privacy Policy set: ", newPrivacyPolicy);
-	
-		return res.status(200).json({
-			Success: true,
-			message: "Successfully set Privacy Policy"
-		});
+
 	} catch (error) {
 		// Log error details for debugging purposes
 		console.error("Error setting Privacy Policy: ", error.message);
-	
-		return res.status(500).json({
+		logger.error(`Error setting Privacy Policy: ${error.message}`);
+		res.status(500).json({
 			Success: false,
-			message: `Internal Server Error: ${error.message}`
+			message: `Internal Server Error: ${error.message}`,
 		});
 	}
 };
+
 	  
 export const getPrivacyPolicyWebsite = async(req,res)=>{
 	try {
 		const privacyPolicy = await WebSiteModel.findOne({ tag: 'privacy-policy' });
 		// console.log("termsAndCondition: ",privacyPolicy);
-		if(privacyPolicy){
-            res.status(200).json({Success:true,message:"Privacy Policy found Succeffully",result:privacyPolicy.privacyPolicy})
-        }else{
-            res.status(200).json({Success:false,message:'privacy poliicy not found',result:null})
-        }
+		const result = privacyPolicy? privacyPolicy.privacyPolicy : null; 
+		res.status(200).json({Success:true,message:"Privacy Policy found Succeffully!",result:result})
 	} catch (error) {
 		console.error("Error while getting Privacy and Policy: ",error);
 		logger.error("Error while getting Privacy and Policy" + error.message);
@@ -742,30 +514,36 @@ export const getPrivacyPolicyWebsite = async(req,res)=>{
 }
 export const setFAQWebsite = async (req, res) => {
 	try {
-		const {faqData} = req.body;
-		console.log("FAQ Array: ",faqData);
-		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'faq'});
-		if(!alreadyFoundWebsiteData){
-			const faq = new WebSiteModel({faqArray: [faqData], tag: 'faq'});
-            await faq.save();
-            console.log("FAQ Array: ",faq)
-            return res.status(200).json({Success:true,message:"Succefully Set FAQ"});
-		}
-		alreadyFoundWebsiteData.faqArray.push({...faqData});
-		await alreadyFoundWebsiteData.save();
-		res.status(200).json({Success: true, message: 'FAQ set successfully'});
+		const { faqData } = req.body;
+		
+		// Using findOneAndUpdate with upsert and $push for better performance
+		const result = await WebSiteModel.findOneAndUpdate(
+			{ tag: 'faq' },
+			{ $push: { faqArray: faqData } },  // Efficiently append to the faqArray
+			{ new: true, upsert: true }  // `new: true` returns the updated document, `upsert: true` creates it if not found
+		);
+		
+		res.status(200).json({
+			Success: true,
+			message: result.isNew ? "Successfully set FAQ" : "FAQ updated successfully",
+		});
+
 	} catch (error) {
-		console.error("Error while setting FAQ: ",error);
+		console.error("Error while setting FAQ: ", error);
 		logger.error(`Error while setting FAQ: ${error.message}`);
-		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
+		res.status(500).json({
+			Success: false,
+			message: `Internal Server Error: ${error.message}`,
+		});
 	}
-}
+};
+
 export const removeFAQById = async(req,res)=>{
 	try {
         const {faqId} = req.query;
-        console.log("FAQ ID: ",faqId);
-        const alreadyFoundWebsiteData = await WebSiteModel.findOneAndUpdate({tag: 'faq'}, {$pull: {faqArray: {_id:faqId}}}, {new: true});
-        console.log("Updated FAQ Array: ",alreadyFoundWebsiteData)
+        // console.log("FAQ ID: ",faqId);
+        await WebSiteModel.findOneAndUpdate({tag: 'faq'}, {$pull: {faqArray: {_id:faqId}}}, {new: true});
+        // console.log("Updated FAQ Array: ",alreadyFoundWebsiteData)
         res.status(200).json({Success: true, message: 'FAQ removed successfully'});
     } catch (error) {
         console.error("Error while removing FAQ: ",error);
@@ -776,7 +554,7 @@ export const removeFAQById = async(req,res)=>{
 export const getFAQWebsite = async(req,res)=>{
 	try {
         const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'faq'});
-        console.log("FAQ Array: ",alreadyFoundWebsiteData)
+        // console.log("FAQ Array: ",alreadyFoundWebsiteData)
 		if(!alreadyFoundWebsiteData){
 			return res.status(200).json({Success:false, message:"No FAQ found",result: []});
 		}
@@ -800,7 +578,7 @@ export const setContactUsePageData = async (req, res) => {
 		}
 		alreadyFoundWebsiteData.ContactUsePageData = req.body;
 		await alreadyFoundWebsiteData.save();
-		console.log("Contact Use Page Data: ",alreadyFoundWebsiteData)
+		// console.log("Contact Use Page Data: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success: true, message: 'Contact Use Page Data set successfully'});
 	} catch (error) {
 		console.error("Internal Server Error", error);
@@ -852,7 +630,7 @@ export const createContactQuery = async(req,res)=>{
 export const getConvenienceFees = async(req,res)=>{
 	try {
 		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
-		console.log("Convenience Fees: ",alreadyFoundWebsiteData)
+		// console.log("Convenience Fees: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success:true,message:"Convenience Fees",result: alreadyFoundWebsiteData?.ConvenienceFees || 0});
 	} catch (error) {
 		console.error(`Error getting`,error);
@@ -860,29 +638,6 @@ export const getConvenienceFees = async(req,res)=>{
         res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
-/* export const patchConvenienceOptions = async(req,res)=>{
-	try {
-		const {convenienceFees} = req.body;
-		console.log("Convenience: ",req.body);
-		if(!convenienceFees){
-			return res.status(400).json({Success: false, message: "Convenience Fees are required"});
-		}
-		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
-		if(!alreadyFoundWebsiteData){
-            const newConvenienceFees = new WebSiteModel({tag: 'ConvenienceFees',ConvenienceFees:convenienceFees});
-			await newConvenienceFees.save();
-			console.log("Convenience Fees: ",newConvenienceFees)
-            res.status(200).json({Success:true,message: 'Convenience Fees Patched successfully',result: newConvenienceFees?.ConvenienceFees || 0});
-        }
-		alreadyFoundWebsiteData.ConvenienceFees = Number(convenienceFees);
-		await alreadyFoundWebsiteData.save();
-		// console.log("Convenience Fees: ",alreadyFoundWebsiteData)
-		res.status(200).json({Success:true,message: 'Convenience Fees Patched successfully',result: alreadyFoundWebsiteData?.ConvenienceFees || 0});
-	} catch (error) {
-		console.error("Error Patching Options: ",error);
-		res.status(500).json({Success:false,message: 'Internal Server Error'});
-	}
-} */
 export const patchConvenienceOptions = async (req, res) => {
 	try {
 		const { convenienceFees } = req.body;
@@ -917,13 +672,14 @@ export const patchConvenienceOptions = async (req, res) => {
 		await websiteData.save();
 	
 		return res.status(200).json({
-		Success: true,
-		message: 'Convenience Fees updated successfully',
-		result: websiteData.ConvenienceFees,
+			Success: true,
+			message: 'Convenience Fees updated successfully',
+			result: websiteData.ConvenienceFees || 0,
 		});
 	
 	} catch (error) {
 		console.error("Error Patching Convenience Fees: ", error.message); // Only log error message for clarity
+		logger.error(`Error Patching Convenience Fees: ${error.message}`); // Log error message for clarity
 		res.status(500).json({ Success: false, message: 'Internal Server Error' });
 	}
 };
@@ -941,7 +697,7 @@ export const removeAddressFormField = async(req,res)=>{
 		}
 		alreadyFoundWebsiteData.Address.splice(index,1);
 		await alreadyFoundWebsiteData.save();
-		console.log("Address Data: ",alreadyFoundWebsiteData)
+		// console.log("Address Data: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success:true,message: 'Address Data removed successfully',result: alreadyFoundWebsiteData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
@@ -955,15 +711,16 @@ export const setAddressField = async(req,res)=>{
 		if(!alreadyFoundWebsiteData){
 			const about = new WebSiteModel({Address: [addressFormFields],tag: 'Address'});
 			await about.save();
-			console.log("Address Data: ",about)
+			// console.log("Address Data: ",about)
 			return res.status(200).json({Success:true,message: 'Address Data set successfully'});
 		}
 		alreadyFoundWebsiteData.Address.push(addressFormFields);
 		await alreadyFoundWebsiteData.save();
-		console.log("Address Data: ",alreadyFoundWebsiteData)
+		// console.log("Address Data: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success:true,message: 'Address Data set successfully',result: alreadyFoundWebsiteData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
+		logger.error(`Error setting about data ${error.message}`);
 		res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
 	}
 }
@@ -983,6 +740,7 @@ export const setWebsiteDisclaimers = async(req,res)=>{
         res.status(200).json({Success:true,message: 'Website Disclaimers set successfully',result: alreadyFoundWebsiteData?.WebsiteDisclaimers || []});
     } catch (error) {
         console.error(`Error setting about data `,error);
+		logger.error(`Error setting about data ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
@@ -999,10 +757,11 @@ export const editDisclaimers = async(req,res)=>{
         }
         alreadyFoundWebsiteData.WebsiteDisclaimers[index] = disclaimers;
         await alreadyFoundWebsiteData.save();
-        console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
-        
+        // console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
+        res.status(200).json({Success:true,message: 'Website Disclaimers updated successfully',result: alreadyFoundWebsiteData?.WebsiteDisclaimers || []});
     } catch (error) {
         console.error(`Error setting about data`,error);
+		logger.error(`Error setting about data ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
@@ -1019,10 +778,11 @@ export const removeWebsiteDisclaimers = async(req,res)=>{
         }
         alreadyFoundWebsiteData.WebsiteDisclaimers.splice(index,1);
         await alreadyFoundWebsiteData.save();
-        console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
+        // console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
         
     } catch (error) {
         console.error(`Error setting about data`,error);
+		logger.error(`Error setting about data ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
@@ -1032,10 +792,11 @@ export const getWebsiteDisclaimers = async(req,res)=>{
         if(!aboutData){
             return res.status(404).json({Success:false, message: 'Website Disclaimers not found'});
         }
-        console.log("All Website Disclaimers: ",aboutData)
+        // console.log("All Website Disclaimers: ",aboutData)
         res.status(200).json({Success:true,message: 'Website Disclaimers Found',result: aboutData.WebsiteDisclaimers || []});
     } catch (error) {
         console.error(`Error getting website disclaimers:`,error);
+		logger.error(`Error getting website disclaimers ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
@@ -1052,10 +813,11 @@ export const getAddressField = async(req,res)=>{
 export const getAboutData = async(req,res)=>{
 	try {
 	  const aboutData = await WebSiteModel.findOne({tag:'AboutData'});
-	  console.log("Client About Data: ",aboutData)
+	//   console.log("Client About Data: ",aboutData)
 	  res.status(200).json({Success:true,message: 'About Data Found',aboutData: aboutData?.AboutData || {}});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
+		logger.error(`Error setting about data ${error.message}`);
 		res.status(500).json({Success:false,message: 'Internal Server Error'});
 	}
 }

@@ -186,7 +186,7 @@ export const extractSpecificWord = (inputString) => {
 };
 export const headerConfig = ()=>{
     const token = sessionStorage.getItem("token");
-    console.log("Header Token: ",token);
+    // console.log("Header Token: ",token);
     const headers = {
         withCredentials:true,
         headers: {

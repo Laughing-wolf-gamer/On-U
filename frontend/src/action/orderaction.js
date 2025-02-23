@@ -37,7 +37,7 @@ import { BASE_API_URL, headerConfig } from '../config'
 export const createwishlist = ({productId}) => async (dispatch) => {
     try {
         // dispatch({ type: REQUEST_CREATE_WISHLIST })
-        const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist`,{productId}, headerConfig());
+        const res = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_wishlist`,{productId}, headerConfig());
         // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res?.data?.success})
         return res?.data?.success;
     } catch (error) {
@@ -47,7 +47,7 @@ export const createwishlist = ({productId}) => async (dispatch) => {
 }
 export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
     try {
-        const res = await axios.post(`${BASE_API_URL}/api/shop/create_wishlist_array`,{productIdArray}, headerConfig());
+        const res = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_wishlist_array`,{productIdArray}, headerConfig());
         console.log("Wishlist created: ",res?.data);
         return res?.data;
         // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
@@ -61,7 +61,7 @@ export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
 export const getwishlist = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_WISHLIST })
-        const { data } = await axios.get(`${BASE_API_URL}/api/shop/get_wishlist`,headerConfig())
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/get_wishlist`,headerConfig())
         dispatch({ type: SUCCESS_GET_WISHLIST, payload: data.wishlist})
     } catch (error) {
         dispatch({ type: FAIL_GET_WISHLIST, payload: error?.response?.data?.message })
@@ -95,7 +95,7 @@ export const createbag = (option) => async (dispatch) => {
         // console.log(token);
         // console.log(option)
         // dispatch({ type: REQUEST_CREATE_BAG })
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/bag/create_bag`,option, {
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, {
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -115,7 +115,7 @@ export const createbag = (option) => async (dispatch) => {
 export const applyCouponToBag = ({bagId,couponCode}) => async()=>{
     try {
         // console.log("applyCoupon: ", bagId, couponCode);
-        const res = await axios.put(`${BASE_API_URL}/api/shop/bag/applyCoupon/${bagId}`,{couponCode},headerConfig())
+        const res = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/applyCoupon/${bagId}`,{couponCode},headerConfig())
         console.log("applyCoupon: ", res.data);
         return res.data;
     } catch (error) {
@@ -126,7 +126,7 @@ export const applyCouponToBag = ({bagId,couponCode}) => async()=>{
 export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
     try {
         console.log("remove Coupon: ", bagId, couponCode);
-        const res = await axios.patch(`${BASE_API_URL}/api/shop/bag/removeCoupon/${bagId}`,{couponCode},headerConfig())
+        const res = await axios.patch(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/removeCoupon/${bagId}`,{couponCode},headerConfig())
         console.log("Remove Coupon: ", res.data);
         return res.data;
     } catch (error) {
@@ -141,7 +141,7 @@ export const getbag = ({userId}) => async (dispatch) => {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
         // console.log("Asking Bag: ",userId);
-        const res = await axios.get(`${BASE_API_URL}/api/shop/bag/${userId}`,{
+        const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId/${userId}`,{
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -161,7 +161,7 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
         const token = sessionStorage.getItem('token');
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/bag/update_bag`,qtydata, {
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bag`,qtydata, {
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -181,7 +181,7 @@ export const itemCheckUpdate = (checkedData) => async () => {
         // const token = sessionStorage.getItem('token');
 		
         console.log("Update Bag: ",checkedData)
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/bag/update_bagItemChecked`,checkedData, headerConfig());
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bagItemChecked`,checkedData, headerConfig());
 		return data.success;
         // dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
@@ -194,7 +194,7 @@ export const deleteBag = (deletingProductData) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
-        const res = await axios.put(`${BASE_API_URL}/api/shop/bag/removeBagItem`,deletingProductData,headerConfig());
+        const res = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/removeBagItem`,deletingProductData,headerConfig());
         console.log("Delete Bag: ",res)
         dispatch({ type: REQUEST_DELETE_BAG, payload: res?.data?.success || false})
     } catch (error) {
@@ -206,7 +206,7 @@ export const deletewish = ({deletingProductId}) => async (dispatch) => {
     try {
         console.log("Deleting WishList...",deletingProductId)
         dispatch({ type: SUCCESS_DELETE_WISH })
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/delete_wishlist`,{deletingProductId}, headerConfig());
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/delete_wishlist`,{deletingProductId}, headerConfig());
         dispatch({ type: REQUEST_DELETE_WISH, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_WISH, payload: error.response.data.message })
@@ -217,7 +217,7 @@ export const create_order = (orderdata) => async (dispatch) => {
     try {
         // dispatch({ type: REQUEST_CREATE_ORDER })
         console.log("Order Data: ",orderdata);
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/orders/create_order`, orderdata, headerConfig())
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_order`, orderdata, headerConfig())
         console.log("Order Data: ",data)
 		return data;
         // dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.result})
@@ -257,7 +257,7 @@ export const verifyingOrder = (orderdata) => async (dispatch) => {
 export const fetchAllOrders = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_ALL_ORDER })
-        const { data } = await axios.get(`${BASE_API_URL}/api/shop/orders/all`, headerConfig())
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/orders/all`, headerConfig())
         console.log("Orders: ",data);
         dispatch({ type: SUCCESS_GET_ALL_ORDER, payload: data.result})
     } catch (error) {
@@ -269,7 +269,7 @@ export const fetchOrderById = (id) => async (dispatch) => {
         // console.log("Fetch Order:  ",headerConfig());
         
         dispatch({ type: REQUEST_GET_ORDER })
-        const { data } = await axios.get(`${BASE_API_URL}/api/shop/orders/get_order/${id}`, headerConfig())
+        const { data } = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/get_order/${id}`, headerConfig())
         console.log("Order: ",data);
         dispatch({ type: SUCCESS_GET_ORDER, payload: data.result})
     } catch (error) {

@@ -77,12 +77,7 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false}) => {
         >
             {/* Product Image */}
             <div className="w-full h-[70%] bg-gray-100 flex justify-center items-center overflow-hidden">
-                {<img
-                    src={imageArray[0].url}
-                    alt='imgaeArray'
-                    className="w-full h-full object-cover rounded-md hover:scale-105 transition-all duration-500 ease-in-out"
-                    style={{ maxWidth: '100%', maxHeight: '100%' }}
-                />}
+                <MediaDisplay imageArray={imageArray}/>
             </div>
             {/* Product Details Section */}
             <div className="flex-col flex justify-between items-start gap-2 mt-1 px-2">
@@ -99,6 +94,35 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false}) => {
         </div>
     );
 });
+
+const MediaDisplay = ({ imageArray }) => {
+	const isImage = (url) => {
+		const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+		return imageExtensions.some(ext => url.toLowerCase().endsWith(ext));
+	};
+
+	// Helper function to determine if the file is a video
+	const isVideo = (url) => {
+		const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
+		return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
+	};
+	const imageUrls = imageArray.filter(image => !isVideo(image.url));
+    const mediaUrl = imageUrls[0]?.url;
+
+    if (!mediaUrl) {
+        return <p>No media available</p>;
+    }
+
+    // Determine the file type and render accordingly
+    return (
+		<img
+			src={mediaUrl}
+			alt="imageArray"
+			className="w-full h-full object-cover rounded-md hover:scale-105 transition-all duration-500 ease-in-out"
+			style={{ maxWidth: '100%', maxHeight: '100%' }}
+		/>
+    );
+};
 const ImageSlideshow = ({ imageArray }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isBlurred, setIsBlurred] = useState(true); // Track the blur state
