@@ -37,15 +37,6 @@ export const sendVerificationEmail = async (email, otp) => {
         sendingEmailSuccess = false;
     }
     return sendingEmailSuccess;
-
-    /* transporter.sendMail(mailOptions, (error, info) => {
-        if (error) {
-            // Handle error: you could return a response here in an API
-            console.error("Error sending email: ", error.message);
-        } else {
-            console.log('Verification email sent successfully:', info);
-        }
-    }); */
 };
 
 export const sendCouponMail = async (fullName, toEmail, couponCode) => {
@@ -160,7 +151,54 @@ export const sendUpdateOrderStatus = async(userId, orderData) => {
     
     return sendingEmailSuccess;
 }
+export const sendMainifestMail = async (userId,manifestLink) => {
+	let sendingEmailSuccess = false;
+    try {
+        const userData = await User.findById(userId);
+        if (!userData) {
+            throw new Error("User not found");
+        }
 
+        // Initialize the base message
+        let message = `Dear ${userData.name},\n\n`;
+
+        // Final message and thank you note
+        message += `
+            Thank you for shopping with us! We will notify you of any further updates.
+            Best regards,
+            On-U
+        `;
+
+        // Set up the email options
+        const mailOptions = {
+            from: process.env.ADMIN_EMAIL,
+            to: userData.email,
+            subject: `Your Order Manifest`,
+            text: message,
+			html: `
+			<p>${message}</p>
+			<p>Click the link below to download your manifest:</p>
+			<a href="${manifestLink}" download="order_manifest">Download Manifest</a>
+			`
+        };
+        
+        try {
+            // Send the email
+            const info = await sendMailAsync(mailOptions);
+            console.log('Email sent successfully:', info);
+            sendingEmailSuccess = true;
+        } catch (error) {
+            console.error('Error sending email:', error.message);
+            sendingEmailSuccess = false;
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        sendingEmailSuccess = false;
+    }
+    
+    return sendingEmailSuccess;
+}
 
 export const sendOrderPlacedMail = async (userId,orderData)=>{
     let sendingEmailSuccess = false;
@@ -180,11 +218,11 @@ export const sendOrderPlacedMail = async (userId,orderData)=>{
 
         orderData.orderItems.forEach(item => {
             message += `
-                Product: ${item.productId.title}
-                Size: ${item.size}
-                Quantity: ${item.quantity}
-                Status:${orderData.status}
-                `;
+				Product: ${item.productId.title}
+				Size: ${item.size}
+				Quantity: ${item.quantity}
+				Status:${orderData.status}
+			`;
         });
 
         message += `
@@ -214,5 +252,32 @@ export const sendOrderPlacedMail = async (userId,orderData)=>{
         console.error("Error sending message: ", error);
         sendingEmailSuccess = false;
     }
+    return sendingEmailSuccess;
+}
+
+export const sendCustomMail = async(toEmail, subject, text) => {
+	let sendingEmailSuccess = false;
+    try {
+        const mailOptions = {
+            from: process.env.ADMIN_EMAIL,
+            to: toEmail,
+            subject: subject,
+            text: text,
+        };
+        
+        try {
+            const info = await sendMailAsync(mailOptions);
+            console.log('Email sent successfully:', info);
+            sendingEmailSuccess = true;
+        } catch (error) {
+            console.error('Error sending email:', error.message);
+            sendingEmailSuccess = false;
+        }
+
+    } catch (error) {
+        console.error("Error:", error);
+        sendingEmailSuccess = false;
+    }
+    
     return sendingEmailSuccess;
 }

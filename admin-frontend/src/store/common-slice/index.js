@@ -358,6 +358,15 @@ export const getContactUsPageData = createAsyncThunk('/common/getContactUsPageDa
         console.error(`Error Fetching Contact Us Page Data: `,error);
     }
 })
+export const sendContactUsPageQuery = createAsyncThunk('/common/contact-us-query',async(data) =>{
+	try {
+        const response = await axios.post(`${BASE_URL}/api/common/website/contact-us-query/mail`,data,Header());
+        console.log('Contact Use Query Response: ', response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Sending Contact Us Query Data: `,error);
+    }
+})
 
 export const setConvenienceFees = createAsyncThunk('/common/setConvenienceFees',async({convenienceFees})=>{
     try {

@@ -4,7 +4,7 @@ import OrderModel from "../model/ordermodel.js";
 import ProductModel from "../model/productmodel.js";
 import Bag from "../model/bag.js";
 import { generateOrderForShipment } from "../controller/LogisticsControllers/shiprocketLogisticController.js";
-import { sendOrderPlacedMail } from "../controller/emailController.js";
+import { sendMainifestMail, sendOrderPlacedMail } from "../controller/emailController.js";
 import WebSiteModel from "../model/websiteData.model.js";
 
 export const instance = new Razorpay({
@@ -79,6 +79,7 @@ export const paymentVerification = async (req, res) => {
         const randomOrderShipRocketId = generateRandomId();
 		const randomShipmentId = generateRandomId();
 		const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
+		let manifest = null;
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
@@ -92,6 +93,7 @@ export const paymentVerification = async (req, res) => {
 				status: 'Confirmed',
 			},randomOrderShipRocketId,randomShipmentId)
 			console.log("Shipment Data: ",createdShipRocketOrder);
+			manifest = createdShipRocketOrder?.manifest
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
 		}
@@ -106,10 +108,19 @@ export const paymentVerification = async (req, res) => {
             TotalAmount:totalAmount,
             paymentMode:"prepaid",
             status: 'Confirmed',
+			manifest:manifest,
         });
 
         await orderData.save();
-
+		if(manifest){
+			if(manifest?.is_invoice_created){
+				try {
+					const sentInvoiceTouser = await sendMainifestMail(id,manifest?.invoice_url);
+				} catch (error) {
+					console.error(`Error while sending invoice: ${error}`);
+				}
+			}
+		}
         // Process product quantity updates concurrently
         const removingAmountPromise = proccessingProducts.map(async (item) => {
             try {

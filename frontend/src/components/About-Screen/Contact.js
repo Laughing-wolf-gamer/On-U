@@ -45,6 +45,8 @@ const Contact = () => {
             if(res){
                 if(res.data.Success){
                     checkAndCreateToast("success","Message sent! We will get back to you shortly.");
+					setSendingFormData({})
+					setSendingMessage('')
                 }
             }else{
                 checkAndCreateToast("error","Failed to send message. Please try again later.");
@@ -55,8 +57,13 @@ const Contact = () => {
         }finally{
             setSendingMessageLoading(false);
             setSendingFormData({});
+			setSendingMessage('')
+			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         }
     }
+	useEffect(()=>{
+		scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+	},[dispatch])
 
     const handleChange = (data) => {
 
@@ -73,9 +80,6 @@ const Contact = () => {
         // Handle form submission (e.g., send to a server or display a success message)
         sendContactQuery();
     };
-    useEffect(()=>{
-        window.scrollTo(0,0)
-    },[])
     useEffect(()=>{
         fetchContactUsPageData();
     },[dispatch])

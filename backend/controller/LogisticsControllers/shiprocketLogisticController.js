@@ -87,9 +87,25 @@ const generateOrderPicketUpRequest =async(orderData)=>{
                 Authorization: `Bearer ${token}`,
             },
         })
+		console.log("Generated Picket Up Request for Shipment: ",response.data);
 		
 	} catch (error) {
 		console.error('Error generating order picket up request:', error);
+	}
+}
+
+export const generateManifest = async (orderData) => {
+	try {
+		const{order_id} = orderData;
+		const response = await axios.post(`${SHIPROCKET_API_URL}/orders/print/invoice`, {ids:[order_id]},{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+		console.log("Manifest: ",response.data);
+		return response.data;
+	} catch (error) {
+		console.error("Error generating manifest:", error);
 	}
 }
 
@@ -108,7 +124,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 
         // Helper function to calculate totals for order items
         const calculateTotal = (key) => {
-            return shipmentData.orderItems.reduce((total, item) => total + (item.productId[key] * item.quantity), 0);
+            return shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
         };
 
         // Calculate various totals
@@ -117,17 +133,18 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         const totalOrderHeight = calculateTotal('height');
         const totalOrderLength = calculateTotal('length');
         const totalBredth = calculateTotal('breadth');
-
         // Map order items to required format
+		const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
         const orderItems = shipmentData.orderItems.map(item => ({
-            name: item.productId.title,
-            sku: item.productId._id,
+            name: item?.productId?.title,
+            sku: item?.productId?._id,
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
-            discount: 0,
+            discount: item?.productId?.DiscountedPercentage,
             tax: 0,
-            hsn: '1234'
+            hsn: generateRandomId().toString()
         }));
+		console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
 
         // Helper function to format date
         const formatDate = (date) => {
@@ -146,22 +163,66 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 			cod
 			order_id
 		*/
-		console.log("Response Picketup Location",pickup_locations);
-		const activePickUpLocatin = pickup_locations[0];
-		const allAvailableCourior = await getAllServicalibiltyties({
-			pickup_postcode:activePickUpLocatin?.pin_code,
-			delivery_postcode:shipmentData.address.pincode, 
-			order_id:response?.data?.order_id,
-		});
-		const getBestCourir = getBestCourierPartners(allAvailableCourior?.available_courier_companies)
-		console.log("Best Courier: ",getBestCourir[0]);
+		
 		// const activePickupLocation = pickup_locations.find(location => location.is_active);
         // Prepare the order details
+		/* 
+		"order_id": "2344444",
+		"order_date": "2025-02-24",
+		"pickup_location": "someCity",
+		"channel_id": "6282866",
+		"reseller_name": "Best Seller Inc.",
+		"company_name": "On-U",
+		"billing_customer_name": "John",
+		"billing_last_name": "Doe",
+		"billing_address": "1234 Elm Street",
+		"billing_address_2": "Apt 56B",
+		"billing_isd_code": "+91",
+		"billing_city": "Kolkata",
+		"billing_pincode": "70054",
+		"billing_state": "West Bengal",
+		"billing_country": "In",
+		"billing_email": "john.doe@example.com",
+		"billing_phone": "9101094674",
+		"billing_alternate_phone": "9101094674",
+		"shipping_is_billing": true,
+		"order_items": [
+			{
+				"name": "Blue T-shirt",
+				"sku": "TSHIRT-BLU-123",
+				"units": "2",
+				"selling_price": "19.99",
+				"discount": "5.00",
+				"hsn": "610999999"
+			},
+			{
+				"name": "Red Sneakers",
+				"sku": "SNEAKER-RED-456",
+				"units": "1",
+				"selling_price": "49.99",
+				"discount": "10.00",
+				"hsn": "6403999999"
+			}
+		],
+		"payment_method": "prepaid",
+		"sub_total": "90.98",
+		"length": "30",
+		"breadth": "20",
+		"height": "15",
+		"weight": "1.2",
+		"order_type": "NON ESSENTIALS" */
+		// console.log("Response Picketup Location",pickup_locations);
+		const activePickUpLocation = pickup_locations[0];
         const orderDetails = {
             order_id: randomOrderId,
             shipment_id: randomShipmentId,
             order_date: formatDate(new Date()),
-            pickup_location: activePickUpLocatin?.pickup_location,
+            pickup_location: activePickUpLocation?.pickup_location,
+			reseller_name: "On-U",
+			company_name: "On-U",
+			channel_id:'6282866',
+			category:"Clothes",
+			billing_isd_code: "+91",
             billing_customer_name: shipmentData.address.Firstname,
             billing_last_name: shipmentData.address.Lastname,
             billing_address: shipmentData.address.address1,
@@ -173,19 +234,18 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             billing_phone: shipmentData.address.phoneNumber,
             billing_alternate_phone: userData?.phoneNumber,
             shipping_is_billing: true,
-            order_items: orderItems,
-            payment_method: shipmentData.paymentMode,
+            order_items: [...orderItems],
+            payment_method: shipmentData?.paymentMode,
             sub_total: subTotal,
             length: totalOrderLength,
             breadth: totalBredth,
             height: totalOrderHeight,
-            weight: totalOrderWeight,
-			is_insurance_opt:true,
-			is_document:1,
-			shipping_method:"HL"
+            weight: totalOrderWeight / 1000,
+			order_type:'NON ESSENTIALS',
+			hsn: '441122',
         };
 
-        // console.log("ShipRocket Order data: ", orderDetails);
+        console.log("ShipRocket Order data: ", orderDetails);
 
         // Send the request to ShipRocket API
         const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`, orderDetails, {
@@ -193,14 +253,26 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
                 Authorization: `Bearer ${token}`,
             },
         });
+		
         console.log("Shipment Created Response: ",response.data);
+		const allAvailableCourior = await getAllServicalibiltyties({
+			pickup_postcode:activePickUpLocation?.pin_code,
+			delivery_postcode:shipmentData.address.pincode, 
+			order_id:response?.data?.order_id,
+		});
+		const getBestCourir = getBestCourierPartners(allAvailableCourior?.available_courier_companies)
+		console.log("Best Courier: ",getBestCourir[0]);
 		
 		await generateAwb({
 			shipment_id:response?.data?.shipment_id,
+			courier_id:'',
+			status:'',
 		});
 		// const createPicketUpResponse = await generateOrderPicketUpRequest(response?.data);
-        
-        return response.data;
+        console.log("Response: ", response.data);
+		const manifest = await generateManifest(response.data);
+		console.log("Manifest: ", manifest);
+        return {data:response.data,manifest};
 
     } catch (error) {
         console.error("Error creating order:", error);
@@ -290,6 +362,24 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     } catch (error) {
         // console.dir(error, { depth: null});
         console.error("Error Checking Pincode.: ",error)
+    }
+}
+export const getShipmentTrackingStatus = async(shipmentId)=>{
+	if(!token) await getAuthToken();
+    try {
+        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track/shipment/${shipmentId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        // console.log(res?.data);
+        // console.dir(res.data,{ depth: null})
+		const returningTrackingData = res.data[shipmentId]?.tracking_data;
+        return returningTrackingData;
+    } catch (error) {
+        // console.dir(error, { depth: null});
+        console.error("Error Checking Shipment Status.: ",error)
     }
 }
 

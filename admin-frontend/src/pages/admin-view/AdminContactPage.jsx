@@ -158,28 +158,28 @@ const AdminContactPage = () => {
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Form Field </h2>
                 <input
-                type="text"
-                className="w-full p-2 border rounded mb-2"
-                value={newField}
-                onChange={(e)=> setNewField(e.target.value)}
-                placeholder="Form Field Name"
+					type="text"
+					className="w-full p-2 border rounded mb-2"
+					value={newField}
+					onChange={(e)=> setNewField(e.target.value)}
+					placeholder="Form Field Name"
                 />
                 <button
-                className="bg-gray-900 text-white px-6 py-3 rounded"
-                onClick={handelAddNewField}
+					className="bg-gray-900 text-white px-6 py-3 rounded"
+					onClick={handelAddNewField}
                 >
                 Add New Field
                 </button>
                 {formDataForContactUs.map((fieldName, index) => (
-                <div key={index} className="mb-4 justify-between items-center flex flex-row">
-                    <h1>{fieldName.fieldName}</h1>
-        =            <button
-                    className="bg-red-500 text-white px-4 py-2 rounded mt-2"
-                    onClick={() => handelRemoveField(fieldName.fieldName)}
-                    >
-                    Remove Field
-                    </button>
-                </div>
+					<div key={index} className="mb-4 justify-between items-center flex flex-row">
+						<h1>{fieldName.fieldName}</h1>
+			=            <button
+							className="bg-red-500 text-white px-4 py-2 rounded mt-2"
+							onClick={() => handelRemoveField(fieldName.fieldName)}
+						>
+						Remove Field
+						</button>
+					</div>
                 ))}
             </div>
 

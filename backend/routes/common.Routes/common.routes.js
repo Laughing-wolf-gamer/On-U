@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getCouponBannerData, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getCouponBannerData, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -26,6 +26,7 @@ route.get('/website/convenienceFees',getConvenienceFees)
 
 route.put('/website/contact-us',isAuthenticateuser,ProtectAdminRoute,setContactUsePageData)
 route.get('/website/contact-us',getContactUsPageData)
+route.post('/website/contact-us-query/mail',sendContactQueryMail)
 
 // t&c
 route.put('/website/terms-and-condition',isAuthenticateuser,ProtectAdminRoute,setTermsAndConditionWebsite)

@@ -12,6 +12,7 @@ import newStyled from '@emotion/styled';
 import { Slider } from '@mui/material';
 import LogisticsLoginView from './LogisticsLoginView';
 import LoadingView from '@/pages/admin-view/LoadingView';
+import { getStatusDescription } from '@/config';
 
 const orderStatus = [
   { id: 'Confirmed', label: 'Confirmed' },
@@ -97,7 +98,7 @@ const AdminOrderLayout = () => {
 	const filteredOrderList = useMemo(() => {
 		return sortedOrderList.filter((order) => {
 		if (filters.statusFilter === '') return true;
-		return order?.status === filters.statusFilter;
+			return order?.status === filters.statusFilter;
 		});
 	}, [sortedOrderList, filters.statusFilter]);
 
@@ -123,15 +124,15 @@ const AdminOrderLayout = () => {
 				</Button>
 				{logisticsToken && (
 					<Button
-					onClick={() => {
-						navigator.clipboard.writeText(logisticsToken);
-						toast.success('Logistics Token copied to clipboard!');
-					}}
-					variant="outline"
-					className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+						onClick={() => {
+							navigator.clipboard.writeText(logisticsToken);
+							toast.success('Logistics Token copied to clipboard!');
+						}}
+						variant="outline"
+						className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
 					>
 					<Copy />
-					<span>{logisticsToken.slice(0, 20)}....</span>
+						<span>{logisticsToken.slice(0, 20)}....</span>
 					</Button>
 				)}
 				</div>
@@ -171,6 +172,12 @@ const AdminOrderLayout = () => {
 										<span className="font-semibold text-sm">Order Status:</span>
 										<span className="text-sm">
 											<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Shipment Status:</span>
+										<span className="text-sm">
+											<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
 										</span>
 									</div>
 									<div className="flex justify-between">
@@ -218,8 +225,8 @@ const OrderFilter = ({ filters, setFilters, orderStatus,filteredOrderList }) => 
 			onChange={(e) => setFilters({ ...filters, statusFilter: e.target.value })}
 		>
 		<option value="">Filter Status (All)</option>
-			{orderStatus.map((status) => (
-				<option key={status.id} value={status.id}>{status.label}</option>
+			{orderStatus.map((status,index) => (
+				<option key={`${index}-${status.id}`} value={status.id}>{status.label}</option>
 			))}
 		</select>
 		{/* Slider for displaying number of orders */}
@@ -240,22 +247,30 @@ const OrderFilter = ({ filters, setFilters, orderStatus,filteredOrderList }) => 
 );
 
 const OrderTable = ({ orders, handleFetchOrderDetails }) => (
-	<div className="grid grid-cols-5 gap-4 p-4 bg-gray-100 font-semibold text-sm sm:text-base">
+	<div className="grid grid-cols-7 gap-2 p-3 bg-gray-100 font-semibold text-sm sm:text-base">
 		<div>Order Id</div>
 		<div>Order Date</div>
+		<div>Payment Method</div>
 		<div>Order Status</div>
-		<div>Order Total Amount</div>
+		<div>Shipment Status Code</div>
+		<div>Total Amount</div>
 		<div className="text-center">Details</div>
 	</div>
 );
 const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
-	<div className="grid grid-cols-5 gap-4 p-4">
+	<Fragment>
 		{orders.map((order) => (
-			<Fragment key={order?._id}>
-				<div className="text-sm sm:text-base">{order?._id}</div>
-				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleString()}</div>
+			<div key={order?._id} className="grid grid-cols-7 gap-2 p-3">
+				<div className="text-sm sm:text-sm">{order?._id}</div>
+				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleDateString()}</div>
+				<div className="text-sm sm:text-base">
+					<Badge className={`justify-center items-center py-1 px-3 text-white bg-green-500`}>{order?.paymentMode}</Badge>
+				</div>
 				<div className="text-sm sm:text-base">
 					<Badge className={`justify-center items-center py-1 px-3 text-white`}>{order?.status}</Badge>
+				</div>
+				<div className="text-sm sm:text-base">
+					<Badge className={`justify-center items-center py-1 px-3 text-white bg-red-500`}>{getStatusDescription(order?.shipment_status)}</Badge>
 				</div>
 				<div className="text-sm sm:text-base">₹ {order?.TotalAmount}</div>
 				<div className="text-sm sm:text-base text-center">
@@ -263,9 +278,9 @@ const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
 						View Details
 					</Button>
 				</div>
-			</Fragment>
+			</div>
 		))}
-	</div>
+	</Fragment>
 )
 
 export default AdminOrderLayout;

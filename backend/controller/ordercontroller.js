@@ -6,7 +6,7 @@ import ProductModel from '../model/productmodel.js'
 import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
 import Coupon from '../model/Coupon.model.js'
 import WebSiteModel from '../model/websiteData.model.js'
-import { sendOrderPlacedMail } from './emailController.js'
+import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
@@ -160,22 +160,19 @@ export const createorder = async (req, res, next) => {
         // Create a new order entry
         const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
 		
-		try {
-			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
-				order_id: randomOrderShipRocketId,
-				userId: req.user.id,
-				ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
-				orderItems:proccessingProducts,
-				address: Address,
-				TotalAmount,
-				paymentMode,
-				pincode:Address.pincode,
-				status: 'Confirmed',
-			},randomOrderShipRocketId,randomShipmentId)
-			// console.log("Shipment Data: ",createdShipRocketOrder);
-		} catch (error) {
-			console.error("Error while creating shipRocket order: ", error);
-		}
+		const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
+			order_id: randomOrderShipRocketId,
+			userId: req.user.id,
+			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
+			orderItems:proccessingProducts,
+			address: Address,
+			TotalAmount,
+			paymentMode,
+			pincode:Address.pincode,
+			status: 'Confirmed',
+		},randomOrderShipRocketId,randomShipmentId)
+		const manifest = createdShipRocketOrder?.manifest;
+		console.log("Shipment manifest: ",manifest);
 		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
@@ -187,10 +184,15 @@ export const createorder = async (req, res, next) => {
             TotalAmount,
             paymentMode,
             status: 'Confirmed',
+			manifest:manifest,
         });
 
         await orderData.save();
-        
+        if(createdShipRocketOrder?.manifest){
+			if(createdShipRocketOrder?.manifest?.is_invoice_created){
+				const sentInvoiceTouser = await sendMainifestMail(req.user.id,createdShipRocketOrder?.manifest?.invoice_url);
+			}
+		}
 
         // Perform the item removal asynchronously (parallelize them)
 		

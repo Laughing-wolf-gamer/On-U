@@ -17,6 +17,11 @@ import * as XLSX from 'xlsx';
 import xl_icon from '../../assets/xl_icon.png';
 import pdf_icon from '../../assets/pdf_icon.png';
 import csv_icon from '../../assets/csv_icon.png';
+import CustomSelect from '@/components/admin-view/CustomSelect';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { sendContactUsPageQuery } from '@/store/common-slice';
 
 
 const mockQueries = [
@@ -330,36 +335,33 @@ const AdminContactQueryViewPage = () => {
                 setOpenDetailsDialogue(false);
                 // dispatch(resetContactQueryDetails());
             }}>
-                <AdminQueryDetailsView query={selectedQueryDetails}/>
+                {selectedQueryDetails && <AdminQueryDetailsView query={selectedQueryDetails}/>}
             </Dialog>
         </Card>
     );
 };
-const initialFormData = {
-	Status:'',
-}
 const AdminQueryDetailsView = ({query}) => {
-    if(query === null) return null;
 
+	const initialFormData = {
+		queryId:query?._id,
+		email:'',
+		Subject:'',
+		status:'',
+		resolvedMessage:'',
+	}
     // Helper function to get badge color based on status
-    console.log("Order Details: ",GetBadgeColor(query?.Status))
+    // console.log("Order Details: ",GetBadgeColor(query?.Status))
     const [formData,setFormData] = useState(initialFormData);
-    console.log("Query Details: ",query)
+    // console.log("Query Details: ",query)
 	const dispatch = useDispatch();
 	const handleSubmitStatus = async (e)=>{
 		e.preventDefault();
-        /* console.log(formData)
-		const {status} = formData;
-		const data = await dispatch(adminUpdateUsersOrdersById({orderId:order?._id,status}))
-		console.log("Data Updated: " + data)
+		console.log("Data Updated: ", {...formData,email:query?.QueryDetails?.Email})
+		const data = await dispatch(sendContactUsPageQuery({...formData,queryId:query._id,email:query?.QueryDetails?.Email}))
 		if(data?.payload?.Success){
-			toast({
-                title: "Order Status Updated Successfully",
-                description: data?.payload?.message,
-            })
             setFormData(initialFormData);
-			dispatch(adminGetAllOrders())
-		} */
+			// dispatch(adminGetAllOrders())
+		}
 	}
 	return (
 		<DialogContent className = "sm:max-w-[600px] h-[500px] overflow-y-auto">
@@ -371,8 +373,12 @@ const AdminQueryDetailsView = ({query}) => {
 						<Label>{query?._id}</Label>
 					</div>
 					<div className='flex mt-2 items-center justify-between'>
-						<p className='font-medium'>Query Date & Time</p>
+						<p className='font-medium'>Query Created Date & Time</p>
 						<Label>{new Date(query?.createdAt).toLocaleString()}</Label>
+					</div>
+					<div className='flex mt-2 items-center justify-between'>
+						<p className='font-medium'>Query Last Responded Date & Time</p>
+						<Label>{new Date(query?.updatedAt).toLocaleString()}</Label>
 					</div>
 					<div className='flex mt-2 items-center justify-between'>
 						<p className='font-medium'>Query Status</p>
@@ -429,8 +435,48 @@ const AdminQueryDetailsView = ({query}) => {
 				</div>
 				<Separator/>
 
-				<div>
-					<CommonForm formControls={[
+				<div className='flex flex-col space-y-3 justify-center w-full items-center'>
+					<Select onValueChange={(value)=>{
+						setFormData({...formData, status: value});
+					}} value={formData.status}>
+						<SelectTrigger className="w-full border border-gray-300 rounded-md">
+							<SelectValue placeholder={"Select an option"} />
+						</SelectTrigger>
+						<SelectContent>
+							{[
+								{id:'Pending', label:'Pending'},
+								{id:'Responded', label:'Responded'},
+							].map((option) => (
+									<SelectItem key={option.id} value={option.id}>
+										{option.label}
+									</SelectItem>
+								))}
+						</SelectContent>
+					</Select>
+					<div className=' w-full justify-start items-start flex flex-col space-y-2'>
+						<Label>Subject</Label>
+						<Input
+                            value = {formData.Subject}
+							onChange = {(e) => setFormData({...formData, Subject: e.target.value})}
+                            type="text"
+                            label="Subject"
+                            placeholder="Enter subject"
+						/>
+					</div>
+					<div className=' w-full justify-start items-start flex flex-col space-y-2'>
+						<Label>Subject</Label>
+						<Textarea
+							value = {formData?.resolvedMessage}
+							type="text"
+							row = "8"
+							label="Resolve Message"
+							placeholder="Enter resolve message"
+							className = {"border border-gray-900"}
+							onChange={(e) => setFormData({...formData,resolvedMessage:e.target.value})}
+						/>
+					</div>
+					<Button onClick={handleSubmitStatus} className="btn btn-primary mt-2 w-full">Send Resolve Email</Button>
+					{/* <CommonForm formControls={[
 						{
 							label:"Status",
 							name:'status',
@@ -447,7 +493,7 @@ const AdminQueryDetailsView = ({query}) => {
 						buttonText={"Update Query Status"}
 						handleSubmit={handleSubmitStatus}
 						isBtnValid={true}
-					/>
+					/> */}
 				</div>
 			</div>
 		</DialogContent>

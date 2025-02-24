@@ -4,7 +4,8 @@ import logger from "../../utilis/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
-import { calculateDiscountPercentage, calculateGst, getStringFromObject } from "../../utilis/basicUtils.js";
+import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
+import { getShipmentTrackingStatus } from "../LogisticsControllers/shiprocketLogisticController.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -740,14 +741,37 @@ export const updateOrderStatus = async(req,res)=>{
     }
 }
 
-export const getallOrders = async(req,res)=>{
+export const getallOrders = async (req, res) => {
     try {
         const allOrders = await OrderModel.find({});
-        res.status(200).json({Success:true,message:"All Orders",result:allOrders || []});
+
+        // Check if there are no orders found
+        if (!allOrders || allOrders.length === 0) {
+            return res.status(200).json({ Success: true, message: "No Orders Found Yet", result: [] });
+        }
+
+        // Fetch order status for each order and update the order with the new status
+        const orderStatus = await Promise.all(allOrders.map(async (order) => {
+            const status = await getShipmentTrackingStatus(order?.shipment_id);
+			// console.log("Shipment Tracking Status: ",order?.shipment_id, status);
+			const statusSimplified = getStatusDescription(status?.shipment_status);
+            return {
+				...order.toObject(),
+				current_status:statusSimplified || order?.current_status,
+				shipment_status:status?.shipment_status,
+				scans:status?.shipment_track,
+			};
+        }));
+		console.log("order Status Updated: ", orderStatus);
+
+        // Send the updated orders with current status
+        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] });
+
     } catch (error) {
-        console.error("Error Getting All Orders ",error);
+        console.error("Error Getting All Orders", error);
         logger.error("Error Getting All Orders: " + error.message);
-        res.status(500).json({Success:false,message:"Internal Server Error"});
+        res.status(500).json({ Success: false, message: "Internal Server Error" });
     }
-}
+};
+
 

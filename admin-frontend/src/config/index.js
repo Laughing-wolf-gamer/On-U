@@ -612,7 +612,7 @@ export function getStatusDescription(statusNumber) {
 		83: 'Searching for Rider'
 	};
 
-	return statusMap[statusNumber] || 'Unknown Status';
+	return statusMap[statusNumber] || 'Processing';
 }
 
 

@@ -90,7 +90,7 @@ export const LocationContextProvider = ({ children }) => {
                     // Handle error (e.g., user denied permission)
                     if (err.code === err.PERMISSION_DENIED) {
                         setIsPermissionGranted(false); // Mark permission as denied
-                        checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
+                        // checkAndCreateToast("error","Unable to retrieve location. Please enable location services.");
                     } else {
                         // checkAndCreateToast("error","Please enable location services.");
                     }

@@ -6,7 +6,7 @@ import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
 import WebSiteModel from "../../model/websiteData.model.js";
 import logger from "../../utilis/loggerUtils.js";
-import { sendCouponMail } from "../emailController.js";
+import { sendCouponMail, sendCustomMail } from "../emailController.js";
 
 export const getHomeBanners = async (req,res)=>{
 	try {
@@ -583,6 +583,22 @@ export const setContactUsePageData = async (req, res) => {
 	} catch (error) {
 		console.error("Internal Server Error", error);
         logger.error(`Error setting contact-us data: ${error.message}`)
+		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
+	}
+}
+export const sendContactQueryMail = async (req, res) => {
+	try {
+		const {queryId,email,Subject,status,resolvedMessage} = req.body;
+		const queryToUpdate = await ContactQuery.findByIdAndUpdate(queryId, {Status:status,QueryReslovedMessage:resolvedMessage}, {new: true});
+		if(!queryToUpdate) return res.status(404).json({Success: false, message: 'Contact Query Not Found'});
+
+		const sendCustomeMail = await sendCustomMail(email,Subject,`Response Status: ${status}\nResloved Message: ${resolvedMessage}`);
+		console.log("sendCustomeMail: ",sendCustomeMail);
+		if(!sendCustomeMail) return res.status(500).json({Success: false, message: 'Failed to send Contact Query Email'});
+		res.status(200).json({Success: true, message: 'Contact Query Sent Successfully'});
+	} catch (error) {
+		console.error("Contact Query Sent Error", error);
+		logger.error(`Error sending contact query mail: ${error.message}`)
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }

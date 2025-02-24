@@ -24,6 +24,9 @@ const ordersSchema = new mongoose.Schema({
     current_timestamp:{type:String,},
     courier_name:{type:String,default:""},
     scans:[{type:Object,default:[]}],
+	etd:{type:String,default:''},
+	shipment_status:{type:Number,default:0},
+	manifest:Object,
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)
