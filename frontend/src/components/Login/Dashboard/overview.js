@@ -47,7 +47,6 @@ const NotLoggedInModal = () => {
 	);
 };
 const Overview = ({ user ,loading,isAuthentication}) => {
-	console.log("user: ",user);
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const [activeSection, setActiveSection] = useState('User-Details');
@@ -56,15 +55,6 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
-	// If no user, show warning
-	/* useEffect(() => {
-		if(!loading && !isAuthentication){
-			if (!user ) {
-				navigate('/Login');
-			}
-		}
-	}, [user, navigate]); */
 
 	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
@@ -84,8 +74,8 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 					<div className="flex justify-between items-center">
 						{/* Account Info Section */}
 						<div>
-						<h1 className="font-semibold text-2xl sm:text-xl md:text-2xl text-gray-800">Account Overview</h1>
-						<p className="text-sm sm:text-base md:text-sm text-gray-600">{user?.user?.name}</p>
+							<h1 className="font-semibold text-2xl sm:text-xl md:text-2xl text-gray-800">Account Overview</h1>
+							<p className="text-sm sm:text-base md:text-sm text-gray-600">{user?.user?.name}</p>
 						</div>
 
 						{/* Logout Button */}
@@ -106,9 +96,6 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 				>
 					<OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
 				</div>
-				{/* <div className="md:hidden">
-				</div> */}
-
 
 				{/* Profile Details */}
 				<div className="w-full lg:w-[75%] py-4">

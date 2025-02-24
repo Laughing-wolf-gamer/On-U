@@ -9,7 +9,7 @@ export const FunctionProvider = ({ children }) => {
   const [state, setState] = useState('Initial State');
 
   const callFunction = (data) => {
-    console.log('Function called with:', data);
+    // console.log('Function called with:', data);
     setState(data);
   };
 
