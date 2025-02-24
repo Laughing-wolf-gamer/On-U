@@ -133,14 +133,15 @@ export const getallproducts = async (req, res) => {
         if (req.query.specialCategory) {
             filter.specialCategory = { $in: ensureArray(req.query.specialCategory) };
         }
-
+		const isSpecialKeyWoards = req.query.keyword && hasSpecialkeyWoards(req.query.keyword);
         // Keyword search filter
-        if (req.query.keyword) {
+        if (req.query.keyword && !isSpecialKeyWoards) {
             const escapeRegex = (string) => string.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
             const regx = new RegExp(escapeRegex(req.query.keyword), 'i');
             const keywordFilter = {
                 $or: [
                     { title: regx },
+                    { shortTitle: regx },
                     { description: regx },
                     { category: regx },
                     { subCategory: regx },
@@ -148,6 +149,7 @@ export const getallproducts = async (req, res) => {
                     { material: regx },
                     { specification: regx },
                     { gender: regx },
+                    { careInstructions: regx },
                 ]
             };
 
@@ -155,10 +157,21 @@ export const getallproducts = async (req, res) => {
             if (!isNaN(req.query.keyword)) {
                 keywordFilter.$or.push(
                     { price: parseFloat(req.query.keyword) },
-                    { salePrice: parseFloat(req.query.keyword) }
+                    { salePrice: parseFloat(req.query.keyword) },
+                    { DiscountedPercentage: parseFloat(req.query.keyword) },
                 );
             }
-
+			keywordFilter.$or.push({
+				size: {
+					$elemMatch: {
+						colors: {
+							$elemMatch: {
+								name: regx
+							}
+						}
+					}
+				}
+			});
             Object.assign(filter, keywordFilter);
         }
 
@@ -215,17 +228,49 @@ export const getallproducts = async (req, res) => {
 
         const totalProducts = await ProductModel.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / itemsPerPage);
-        console.log("Total Products:", totalProducts, ", Pages:", totalPages);
-		const isRandomQueryRequest = req.query.keyword && req.query?.keyword === 'random' || req.query?.keyword === "Random";
-		let productsPagination;
-		if (isRandomQueryRequest) {
-			// Shuffle the allProducts array
-			const shuffledProducts = allProducts.sort(() => Math.random() - 0.5);
-			// Paginate the shuffled products
-			productsPagination = shuffledProducts.slice(skip, skip + itemsPerPage);
+        console.dir(filter,{ depth: null });
+		
+		const currentPageproducts = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
+		let productsPagination = currentPageproducts;
+		if (isSpecialKeyWoards) {
+			switch (req.query.keyword.toLowerCase()) {
+				case 'random':
+					// Shuffle the allProducts array
+					const shuffledProducts = currentPageproducts.sort(() => Math.random() - 0.5);
+					productsPagination = shuffledProducts.length > 0 ? shuffledProducts : currentPageproducts;
+					
+					// Paginate the shuffled products
+					// productsPagination = shuffledProducts.slice(skip, skip + itemsPerPage);
+					break;
+				case 'exclusive30':
+					const latest30Products = getTopSellingProducts(currentPageproducts);
+					if(latest30Products.length > 0){
+						productsPagination = latest30Products;
+					}else{
+						productsPagination = currentPageproducts;
+					}
+				break;
+				case 'highstock':
+					const highStock = currentPageproducts.sort((a,b)=> b.totalStock - a.totalStock);
+					if(highStock.length > 0){
+						productsPagination = highStock;
+					}else{
+						productsPagination = currentPageproducts;
+					}
+					break;
+				case 'lowstock':
+					const lowStock = currentPageproducts.sort((a,b)=> a.totalStock - b.totalStock);
+					if(lowStock.length > 0){
+						productsPagination = lowStock;
+					}else{
+						productsPagination = currentPageproducts;
+					}
+					break;
+			}
 		}else{
-        	productsPagination = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
+        	productsPagination = currentPageproducts
 		}
+		console.log("Shuffled Products:", currentPageproducts);
         // Fetch products with pagination
 
         return res.status(200).json({
@@ -249,7 +294,58 @@ export const getallproducts = async (req, res) => {
         });
     }
 }
+const getTopSellingProducts = async (filteredProducts) => {
+	// Step 1: Find all orders with status 'Delivered'
+	const orders = await OrderModel.find({ status: 'Delivered' }).select('orderItems');
 
+	// Step 2: Create a map to store frequency of productIds
+	const productCountMap = {};
+
+	// Loop through all orders and their orderItems to count productId frequency
+	orders.forEach(order => {
+		order.orderItems.forEach(item => {
+		const productId = item.productId._id; // Assuming productId is an object with _id
+		if (productId) {
+			productCountMap[productId] = (productCountMap[productId] || 0) + 1;
+		}
+		});
+	});
+
+	// Step 3: Convert productCountMap into an array of { productId, count }
+	const productCountArray = Object.entries(productCountMap).map(([productId, count]) => ({
+		productId,
+		count,
+	}));
+
+	// Step 4: Sort by count in descending order to get the most sold products first
+	productCountArray.sort((a, b) => b.count - a.count);
+
+	// Step 5: Get top-selling productIds (for example, top 5 products)
+	const topSellingProductIds = productCountArray.slice(0, 5).map(item => item.productId);
+
+	// Step 6: Query the Products collection to get the details of the top-selling products
+	const topSellingProducts = await ProductModel.find({
+		_id: { $in: topSellingProductIds }
+	});
+
+	// Step 7: Filter the `filteredProducts` array to return only the top-selling products
+	const topSellingProductsInFiltered = filteredProducts.filter(product =>
+		topSellingProductIds.includes(product._id.toString())
+	);
+
+	return topSellingProductsInFiltered;
+};
+
+const hasSpecialkeyWoards = (keyword)=>{
+	switch(keyword.toLowerCase()){
+		case 'random':
+		case 'exclusive30':
+		case 'highstock':
+		case 'lowstock':
+		    return true;
+	}
+	return false;
+}
 
 export const getRandomProducts = async (req, res)=>{
     const { category } = req.body;  // Get category from request body

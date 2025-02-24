@@ -271,6 +271,7 @@ export const BASE_API_URL = process.env.REACT_APP_API_URL;
 // new Updated...
 export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
 export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
+export const SECREAT_KEY = process.env.REACT_APP_SECREAT_KEY;
 
 export const footWearSizeChartData = [
   { size: '6', footLength: '9.25"', ukSize: '5', eurSize: '38' },

@@ -546,7 +546,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 					${isScrollingUp ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-[-100%] pointer-events-none'} 
 					${isVisible ? 'opacity-100' : 'opacity-0 pointer-events-none'} w-full`}
 				>
-				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center py-1 ">
+				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center mt-2">
 					{/* Sort Section */}
 					<div
 						className="text-[12px] flex justify-center space-x-2 cursor-pointer bg-white p-3"

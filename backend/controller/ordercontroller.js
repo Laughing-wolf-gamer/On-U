@@ -286,6 +286,7 @@ const removeProduct = async(productId,color,size,quantity) => {
             })
             if(totalStock > 0) product.totalStock = totalStock;
         };
+		product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
         await product.save();
         // console.log("Product Updated: ",product);
     } catch (error) {
@@ -361,7 +362,6 @@ export const createwishlist = async (req, res, next) => {
             productId: mongoose.Types.ObjectId(productId),  // Ensure productId is cast to ObjectId
         }]})
         await previousWishList.save();
-        // previousWishList = await WhishList.findOne({userId:id}).populate('orderItems.productId')
         res.status(200).json({success:true,message: "Product added to wishlist"})
     } catch (error) {
         console.error("Error creating wishlist: ",error);
@@ -467,55 +467,6 @@ export const removeCouponToBag = async(req,res)=>{
 
 }
 
-/* export const addItemsArrayToBag = async(req,res)=>{
-    try {
-        console.log("Bag Array: ",req.body);
-        if(!req.user){
-            return res.status(400).json({message: "User Not Logged In"})
-        }
-        const userId = req.user.id;
-        if(!userId){
-            return res.status(400).json({message: "User Not Logged In"})
-        }
-        const convenienceFees = await WebSiteModel.findOne({tag:'ConvenienceFees'});
-        const FindUserBag = await Bag.findOne({userId}).populate('orderItems.productId');
-        if(!FindUserBag){
-            const bag = new Bag({userId,ConvenienceFees:convenienceFees?.ConvenienceFees || 0,orderItems:req.body.map(p => ({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size}))})
-            const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
-            if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
-            if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
-            if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-            if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
-            await bag.save();
-
-        }else{
-            const emittingResponse = req.body.map(async (p)=>{
-                const product = FindUserBag.orderItems.find(p => p.productId._id.toString() == p.productId)
-                if(product){
-                    if(product.quantity !== p.quantity){
-                        product.quantity = product.quantity + p.quantity
-                    }
-                }else{
-                    FindUserBag.orderItems.push({productId:p.productId,quantity:p.quantity,color:p.color,size:p.size})
-                }
-                const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(FindUserBag);
-
-                if(totalProductSellingPrice && totalProductSellingPrice !== 0) FindUserBag.totalProductSellingPrice = totalProductSellingPrice;
-                if(totalSP && totalSP !== 0) FindUserBag.totalSP = totalSP;
-                if(totalDiscount && totalDiscount !== 0) FindUserBag.totalDiscount = totalDiscount;
-                if(totalMRP && totalMRP !== 0) FindUserBag.totalMRP = totalMRP;
-            })
-            await Promise.all(emittingResponse)
-            await FindUserBag.save()
-        }
-        // const bag = await Bag.findOne({userId}).populate('orderItems.productId orderItems.color orderItems.size orderItems.quantity')
-        console.log("User Bag: ",FindUserBag);
-        res.status(200).json({success:true,message: "Items added to bag"})
-    } catch (error) {
-        console.error("Failed to add items array: ",error);
-        res.status(500).json({success:false,message:"Internal server error",});
-    }
-} */
 export const addItemsArrayToBag = async (req, res) => {
     try {
         // console.log("Bag Array: ", req.body);

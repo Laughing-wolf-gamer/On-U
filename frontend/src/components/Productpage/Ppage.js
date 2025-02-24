@@ -984,6 +984,7 @@ const NewLeftSideImageContent = ({
                                         ) : (
                                             <img
                                                 src={file?.url}
+												loading='lazy'
                                                 className='w-full h-full object-cover hover:scale-110'
                                                 alt="productImage"
 												onContextMenu={(e) => e.preventDefault()}  // Disable right-click

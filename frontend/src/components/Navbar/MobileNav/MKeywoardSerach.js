@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { FiSearch } from 'react-icons/fi'
 import { MdArrowBack } from 'react-icons/md'
 import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
@@ -22,6 +22,15 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 		searchenters(activeSearch)
 	}
 	console.log("filterSearchs",filterSearchs);
+	const inputRef = useRef(null);
+	
+	// Focus the input when it is mounted or whenever you want to trigger focus
+	useEffect(() => {
+		// Check if the input is in view and focus it
+		if (inputRef.current) {
+			inputRef.current.focus();
+		}
+	}, []);
   return (
 		<div>
 			<div
@@ -39,10 +48,11 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 					</div>
 					<div className="col-span-10">
 						<input
+							ref={inputRef}
 							type="text"
 							value={state}
 							placeholder='Search for products'
-							className='msearch caret-[#ff2459] w-full h-full'
+							className='msearch caret-[#000000] w-full h-full'
 							onChange={(e) => setstate(e.target.value)}
 							onKeyUp={applySerach}
 						/>

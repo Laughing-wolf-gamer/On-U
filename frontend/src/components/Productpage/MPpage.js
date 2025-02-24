@@ -564,7 +564,6 @@ const MPpage = () => {
                                                     muted={true}
                                                     controls={false}
                                                     playing = {true}
-                                                    loading="lazy"
                                                     width="100%"
                                                     height="100%"
                                                 />
@@ -578,7 +577,6 @@ const MPpage = () => {
                                                     effect="blur"
                                                     src={im.url}
                                                     alt={`product_${i}`}
-                                                    loading="lazy"
                                                     className="w-full h-full object-contain"
 													onContextMenu={(e) => e.preventDefault()}  // Disable right-click
                                                 />

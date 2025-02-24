@@ -72,9 +72,10 @@ const OrderDetailsPage = ({ user }) => {
 
     useEffect(() => {
         if (id) {
-            dispatch(fetchOrderById(id)
-		);
-	}
+            dispatch(fetchOrderById(id))
+		}else{
+			navigate(-1);
+		}
     }, [dispatch, location]);
 
     useEffect(() => {

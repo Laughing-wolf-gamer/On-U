@@ -1,6 +1,6 @@
-/* import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext } from 'react';
 import CryptoJS from 'crypto-js';
-import { ENCRYPTION_KEY } from '@/constants';
+import { SECREAT_KEY } from '../config';
 
 const EncryptionDecryption = createContext();
 
@@ -9,7 +9,7 @@ export const useEncryptionDecryptionContext = ()=> useContext(EncryptionDecrypti
 
 
 export const EncryptionDecryptionProvider = ({children})=>{
-    const key = ENCRYPTION_KEY
+    const key = SECREAT_KEY
     const encrypt = (data) => {
         return CryptoJS.AES.encrypt(data, key).toString();
     };
@@ -25,4 +25,4 @@ export const EncryptionDecryptionProvider = ({children})=>{
             {children}
         </EncryptionDecryption.Provider>
     )
-} */
+}

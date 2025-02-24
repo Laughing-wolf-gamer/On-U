@@ -37,9 +37,9 @@ const ImageZoom = ({ imageSrc, zoomSize = 80 }) => {
     return (
         <div className="relative h-full w-full bg-gray-200 overflow-hidden">
             <img
-                loading="lazy"
                 src={imageSrc}
                 alt="Zoomable"
+				loading='lazy'
                 className="w-full h-full object-cover"
                 onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}

@@ -11,6 +11,7 @@ import { SessionStorageProvider } from './Contaxt/SessionStorageContext';
 import { LocationContextProvider } from './Contaxt/LocationContext';
 import { SettingsProvider } from './Contaxt/SettingsContext';
 import { LocalStorageContextProvider } from './Contaxt/LocalStorageContext';
+import { EncryptionDecryptionProvider } from './Contaxt/EncryptionContext';
 
 const option = {
   timeout: 2000,
@@ -29,7 +30,9 @@ ReactDOM.render(
 				<LocalStorageContextProvider>
 					<LocationContextProvider>
 						<SettingsProvider>
-							<App />
+							<EncryptionDecryptionProvider>
+								<App />
+							</EncryptionDecryptionProvider>
 						</SettingsProvider>
 					</LocationContextProvider>
 				</LocalStorageContextProvider>

@@ -19,6 +19,7 @@
     "caniuse-lite": "^1.0.30001689",
     "color-name-list": "^11.2.0",
     "color-namer": "^1.4.0",
+    "crypto-js": "^4.2.0",
     "dotenv": "^16.4.7",
     "e-commerce": "file:..",
     "element-class": "^0.2.2",

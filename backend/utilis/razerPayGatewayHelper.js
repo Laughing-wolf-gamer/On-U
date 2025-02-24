@@ -208,7 +208,7 @@ const removeProduct = async (productId, color, size, quantity) => {
 
         product.AllColors = AllColors;
         product.totalStock = totalStock > 0 ? totalStock : undefined;
-
+		product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
         // Save the updated product
         await product.save();
         console.log("Product Updated:", product);
