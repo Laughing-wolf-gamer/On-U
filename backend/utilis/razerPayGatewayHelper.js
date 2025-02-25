@@ -80,6 +80,7 @@ export const paymentVerification = async (req, res) => {
 		const randomShipmentId = generateRandomId();
 		const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
 		let manifest = null;
+		let warehouse_name = null;
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
@@ -94,6 +95,7 @@ export const paymentVerification = async (req, res) => {
 			},randomOrderShipRocketId,randomShipmentId)
 			console.log("Shipment Data: ",createdShipRocketOrder);
 			manifest = createdShipRocketOrder?.manifest
+			warehouse_name = createdShipRocketOrder?.warehouse_name || null;
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
 		}
@@ -101,6 +103,7 @@ export const paymentVerification = async (req, res) => {
             order_id: randomOrderShipRocketId,
             userId: id,
 			shipment_id:randomShipmentId,
+			picketUpLoactionWareHouseName: warehouse_name,
 			razorpay_order_id:razorpay_order_id,
 			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
             orderItems:proccessingProducts,

@@ -41,7 +41,7 @@ const SavedAddresses = () => {
 
     const renderAddress = (i, address) => {
         return (
-            <div key={i} className="mb-4 font-kumbsan relative p-6 border transition-color border-gray-300 rounded-lg shadow-sm bg-gray-200 hover:bg-gray-300 duration-300">
+            <div key={i} className="mb-4 font-kumbsan relative p-6 border transition-color border-gray-300 rounded-lg shadow-sm bg-gray-50 hover:bg-gray-100 duration-300">
                 {/* Centered "X" button */}
                 <button
                     className="absolute top-2 right-2 flex justify-center items-center bg-red-500 text-white rounded-full w-8 h-8 text-lg font-semibold hover:bg-red-600 transition-colors duration-300"
@@ -89,7 +89,7 @@ const SavedAddresses = () => {
             {/* Button to open the "Add Address" popup */}
             <button
                 onClick={handleOpenPopup}
-                className="mt-6 py-2 px-6 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300 flex items-center"
+                className="mt-6 py-2 px-6 bg-blue-600 hover:bg-blue-700 duration-300 flex items-center bg-gradient-to-r from-gray-700 to-black text-white rounded-md shadow-md hover:shadow-xl transition-all disabled:bg-gray-300"
             >
                 <Plus className="mr-2" size={16} /> {/* Add Icon */}
                 Add Address

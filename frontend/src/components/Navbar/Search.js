@@ -68,7 +68,7 @@ const Search = ({ toggleSearchBar }) => {
 
 			{/* Search Recommendations */}
 			<div
-				className="w-[600px] font-kumbsan h-[240px] bg-gray-300 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-100"
+				className="w-[600px] font-kumbsan h-[240px] bg-gray-300 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
 				style={{ maxHeight: "200px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 			>
 				<ul className="p-2">

@@ -274,6 +274,26 @@ export const fetchOrderById = (id) => async (dispatch) => {
         dispatch({ type: FAIL_GET_ORDER, payload: error?.response?.data?.message })
     }
 }
+export const sendOrderReturn = ({orderId}) => async () => {
+	try {
+		const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/returnOrder`,{orderId}, headerConfig());
+		console.log("Return Order: ",data);
+		return data?.success;
+	} catch (error) {
+		console.error("Error Creating Order Return: ",error);
+		return false;
+	}
+}
+export const sendExchangeRequest = ({orderId}) => async () => {
+	try {
+        const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/exchangeRequest`,{orderId}, headerConfig());
+        console.log("Exchange Request: ",data);
+        return data?.success;
+    } catch (error) {
+        console.error("Error Creating Exchange Request: ",error);
+        return false;
+    }
+}
 
 export const clearErrors = () => async (dispatch) => {
     dispatch({

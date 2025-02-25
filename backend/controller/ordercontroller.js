@@ -10,7 +10,7 @@ import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
-import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
+import { generateOrderForShipment, generateOrderRetrunShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 export const createPaymentOrder = async (req, res, next) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -171,11 +171,12 @@ export const createorder = async (req, res, next) => {
 			pincode:Address.pincode,
 			status: 'Confirmed',
 		},randomOrderShipRocketId,randomShipmentId)
-		const manifest = createdShipRocketOrder?.manifest;
-		console.log("Shipment manifest: ",manifest);
+		const {manifest,warehouse_name} = createdShipRocketOrder;
+		console.log("Shipment After Order Create Data: ",createdShipRocketOrder);
 		const orderData = new OrderModel({
             order_id: randomOrderShipRocketId,
             userId: req.user.id,
+			picketUpLoactionWareHouseName: warehouse_name || null,
 			shipment_id: randomShipmentId,
 			channel_id:'6217390',
 			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
@@ -1346,3 +1347,37 @@ export const deletewish = async (req, res) => {
         res.status(500).json({ success: false, message: "An error occurred while deleting wishlist item", error: error.message });
     }
 };
+
+
+export const returnOrder = async (req, res) => {
+	try {
+		const { orderId } = req.body;
+        console.log("Returning Order: ", orderId);
+		const order = await OrderModel.findById(orderId);
+		const returnSuccess = await generateOrderRetrunShipment(order,req.user.id);
+		console.log("Return Order Success: ", returnSuccess);
+		if(returnSuccess) {
+			order.status = returnSuccess.status;
+			order.IsReturning = true;
+            await order.save();
+            return res.status(200).json({ success: true, message: "Successfully returned order" });
+		}
+		res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
+
+	} catch (error) {
+		console.error("Error Occured during returning order ", error.message);
+		logger.error("Error occured during returning order", error.message);
+		res.status(500).json({success:false,message: "Internal Server Error" });
+	}
+}
+export const exchangeOrder = async(req, res) => {
+	try {
+		const { orderId,reasonToExchange } = req.body;
+		console.log("Exchanging Order: ", orderId);
+		res.status(200).json({ success: true, message: "Successfully received order exchange request"});
+	} catch (error) {
+		console.error("Error Occured during exchanging order ", error.message);
+		logger.error("Error occured during exchanging order", error.message);
+		res.status(500).json({success:false,message: "Internal Server Error" });
+	}
+}

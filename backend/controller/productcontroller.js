@@ -270,7 +270,7 @@ export const getallproducts = async (req, res) => {
 		}else{
         	productsPagination = currentPageproducts
 		}
-		console.log("Shuffled Products:", currentPageproducts);
+		// console.log("Shuffled Products:", currentPageproducts);
         // Fetch products with pagination
 
         return res.status(200).json({

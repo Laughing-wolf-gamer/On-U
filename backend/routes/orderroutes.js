@@ -17,7 +17,9 @@ import {
     removeCouponToBag, 
     addItemsArrayToBag, 
     addItemsArrayToWishList, 
-	updateItemCheckedInBag
+	updateItemCheckedInBag,
+	returnOrder,
+	exchangeOrder
 } from "../controller/ordercontroller.js";
 
 
@@ -27,6 +29,8 @@ route.post('/create_order',isAuthenticateuser, createorder)
 route.post('/orders/create_cashFreeOrder',isAuthenticateuser,createPaymentOrder)
 route.get('/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)
+route.post('/order/returnOrder',isAuthenticateuser,returnOrder);
+route.post('/order/exchangeRequest',isAuthenticateuser,exchangeOrder);
 
 
 

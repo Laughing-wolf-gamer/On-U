@@ -13,6 +13,7 @@ const ordersSchema = new mongoose.Schema({
         required:true,
     }],
     razorpay_order_id:{type:String},
+	picketUpLoactionWareHouseName:{type:Object,default:null},
     paymentId:{type:String},
     TotalAmount:{type:Number,required:true},
     address:{type:Object,required:true},
@@ -27,6 +28,8 @@ const ordersSchema = new mongoose.Schema({
 	etd:{type:String,default:''},
 	shipment_status:{type:Number,default:0},
 	manifest:Object,
+	IsReturning:{type:Boolean,default:false},
+	IsInExcnage:{type:Boolean,default:false},
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

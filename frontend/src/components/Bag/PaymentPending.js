@@ -45,8 +45,8 @@ const PaymentPending = () => {
 		}
 	},[user])
 	return (
-		<div className="bg-gradient-to-tl from-gray-800 to-black min-h-screen flex items-center justify-center">
-			<div className="bg-white p-10 rounded-xl shadow-2xl max-w-lg text-center w-full sm:w-auto">
+		<div className="min-h-screen flex items-center justify-center">
+			<div className="bg-gray-50 p-10 rounded-xl shadow-2xl max-w-lg text-center w-full sm:w-auto">
 				<div className="flex justify-center mb-6">
 					<Loader size={60} className="text-gray-600 animate-spin" />
 				</div>
