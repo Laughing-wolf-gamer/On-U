@@ -52,8 +52,8 @@ const Search = ({ toggleSearchBar }) => {
 					ref={inputRef}
 					type="text"
 					placeholder="Search for products, brands and more"
-					className="rounded-xl w-full h-full pl-4 text-gray-800 placeholder-black focus-visible: outline-none border-2 border-solid border-gray-800 focus:border-slate-500 bg-neutral-50"
-					style={{ backgroundColor: "#E5E5E5E5",opacity: 0.8 }}
+					className="rounded-xl w-full h-full pl-4 text-black placeholder-gray-600 focus-visible: outline-none border-2 border-solid border-gray-800 focus:border-slate-500"
+					style={{ backgroundColor:"white" }}
 					onChange={(e) => setState(e.target.value)} // Update input state
 				/>
 			</form>
@@ -68,15 +68,15 @@ const Search = ({ toggleSearchBar }) => {
 
 			{/* Search Recommendations */}
 			<div
-				className="w-[600px] font-kumbsan h-[240px] bg-gray-50 fixed border border-gray-500 rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-200"
+				className="w-[600px] font-kumbsan h-[240px] bg-gray-600 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-500"
 				style={{ maxHeight: "200px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 			>
 				<ul className="p-2">
-					<label className="text-sm font-bold text-gray-600">Recent Searches:</label>
+					<label className="text-base font-bold text-white">Recent Searches:</label>
 					{filterSearchs.map((search, index) => (
 						<li
 							key={index}
-							className="cursor-pointer relative min-w-fit py-2 justify-between items-start flex-col flex p-2 hover:bg-gray-100"
+							className="cursor-pointer relative min-w-fit py-2 justify-between items-start flex-col flex p-2 peer-hover:bg-gray-300"
 							onClick={(e) => {
 								e.stopPropagation();
 								setState(search); // Set the clicked recommendation in input
@@ -84,16 +84,16 @@ const Search = ({ toggleSearchBar }) => {
 							}}
 						>
 							<div className='w-full justify-between flex items-center'>
-								<span className=' text-sm text-gray-500' >{search}</span>
+								<span className=' text-sm text-white' >{search}</span>
 								<div onClick={(e)=>{
 									e.preventDefault();
 									e.stopPropagation();
 									removeKeyWoards(search)	
-								}} className=' text-sm text-gray-500' >
+								}} className=' text-sm text-white' >
 									<X/>
 								</div>
 							</div>
-							<div className="w-full h-[0.1px] bg-gray-500 bg-opacity-20" />
+							<div className="w-full h-[0.1px] bg-white bg-opacity-20" />
 						</li>
 					))}
 				</ul>

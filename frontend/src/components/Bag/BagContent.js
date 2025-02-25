@@ -144,7 +144,7 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 );
 const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
 	<div className="flex-1 space-y-6 max-h-[700px]">
-		<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5">
+		<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
 			{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
 				const active = item;
 				// const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
@@ -303,7 +303,7 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 				</div> */}
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
-					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>
+					{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>} 
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Coupon</span>
@@ -320,7 +320,7 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 								</button>
 								{/* Discount Info */}
 								<span className="text-xs sm:text-sm text-gray-500">
-									{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+									{`Saved: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
 								</span>
 							</div>
 						) : (

@@ -418,12 +418,20 @@ export const applyCouponToBag = async(req,res)=>{
         }
         bag.Coupon = coupon._id;
         // coupon.Status = "Inactive";
-        
-        await Promise.all([
-            coupon.save(),
-            bag.save()
-        ])
-        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);  
+		await Promise.all([
+			coupon.save(),
+			bag.save(),
+		])
+		const updatedBag = await Bag.findById(bagId).populate("Coupon");
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(updatedBag);
+        console.log("Bag with Coupon After Coupon Applied: ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst);
+		updatedBag.totalProductSellingPrice = totalProductSellingPrice;
+		updatedBag.totalSP = totalSP;
+		updatedBag.totalDiscount = totalDiscount;
+		updatedBag.totalMRP = totalMRP;
+		await updatedBag.save();
+		// updatedBag.totalGst = totalGst;
+		
         res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst}})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
@@ -460,7 +468,14 @@ export const removeCouponToBag = async(req,res)=>{
             coupon.save(),
             bag.save()
         ])
-        // const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(bag);
+		const updatedBag = await Bag.findById(bagId).populate("Coupon");
+        const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP } = await getItemsData(updatedBag);
+		console.log("Bag with Coupon After Coupon Removed: ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+		updatedBag.totalProductSellingPrice = totalProductSellingPrice;
+		updatedBag.totalSP = totalSP;
+		updatedBag.totalDiscount = totalDiscount;
+		updatedBag.totalMRP = totalMRP;
+		await updatedBag.save();
         res.status(200).json({success:true,message: "Coupon Removed Successfully"})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
@@ -788,7 +803,7 @@ export const addItemsToBag = async (req, res) => {
         }
 
         // Fetch existing user bag
-        let bag = await Bag.findOne({ userId }).populate('orderItems.productId');
+        let bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon');
 
         // If no bag exists, create one
         if (!bag) {
@@ -853,7 +868,7 @@ export const addItemsToBag = async (req, res) => {
 };
     
 /* const getItemsData = async (bag) => {
-    console.log("getItemsData Bag Items: ",bag.orderItems)
+    console.log("getItemsData Bag Items: ",bag)
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0, totalGst = 0;
 
@@ -899,7 +914,7 @@ export const addItemsToBag = async (req, res) => {
     if (bag.Coupon) {
         const coupon = bag.Coupon;
         const { CouponType, Discount, MinOrderAmount } = coupon;
-
+		console.log("Coupon Details: ", CouponType, Discount, MinOrderAmount)
         // const applyCouponDiscount = () => {
         //     if (CouponType === "Percentage") {
         //         totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
@@ -914,6 +929,7 @@ export const addItemsToBag = async (req, res) => {
                 return discountedAmount; // Return the original price if discount is invalid.
             }
         
+			console.log("Coupon Discount: ", Discount, totalProductSellingPrice)
             if (CouponType === "Percentage") {
                 // Ensure totalProductSellingPrice is positive
                 if (discountedAmount > 0) {
@@ -936,10 +952,10 @@ export const addItemsToBag = async (req, res) => {
         // Apply coupon discount only if applicable
         if (MinOrderAmount > 0) {
             if (totalProductSellingPrice >= MinOrderAmount) {
-                totalProductSellingPrice = applyCouponDiscount();
+                applyCouponDiscount();
             }
         } else {
-            totalProductSellingPrice = applyCouponDiscount();
+            applyCouponDiscount();
         }
 
         // Apply free shipping discount
@@ -951,6 +967,7 @@ export const addItemsToBag = async (req, res) => {
         // Optionally, if convenience fee is applied once:
         totalProductSellingPrice += bag?.ConvenienceFees || 0;
     }
+	console.log("Total Product Selling Price: ", totalProductSellingPrice,totalSP, totalDiscount, totalMRP, totalGst)
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
 }; */
 const getItemsData = async (bag) => {
@@ -1003,34 +1020,40 @@ const getItemsData = async (bag) => {
             }
         }
     }
+	let couponDiscountedAmount = 0;
 
-    // Coupon logic
-    const applyCouponDiscount = () => {
-        let discountedAmount = totalProductSellingPrice;
+	// Coupon logic
+	const applyCouponDiscount = () => {
+		let discountedAmount = totalProductSellingPrice;
 
-        if (typeof bag.Coupon?.Discount !== 'number' || bag.Coupon.Discount < 0) {
-            console.error('Invalid discount value.');
-            return discountedAmount; // Return the original price if discount is invalid.
-        }
+		if (typeof bag.Coupon?.Discount !== 'number' || bag.Coupon.Discount < 0) {
+			console.error('Invalid discount value.');
+			return discountedAmount; // Return the original price if discount is invalid.
+		}
 
-        const { CouponType, Discount } = bag.Coupon;
+		const { CouponType, Discount } = bag.Coupon;
 
-        if (CouponType === "Percentage") {
-            // Ensure totalProductSellingPrice is positive
-            if (discountedAmount > 0) {
-                discountedAmount -= discountedAmount * (Discount / 100);
-            }
-        } else {
-            // Ensure discount does not exceed the total price
-            if (discountedAmount > Discount) {
-                discountedAmount -= Discount;
-            } else {
-                discountedAmount = 0; // Avoid negative prices
-            }
-        }
+		if (CouponType === "Percentage") {
+			// Ensure totalProductSellingPrice is positive
+			if (discountedAmount > 0) {
+				const discountAmount = discountedAmount * (Discount / 100);
+				discountedAmount -= discountAmount;
+				couponDiscountedAmount += discountAmount; // Add to couponDiscountedAmount
+			}
+		} else {
+			// Ensure discount does not exceed the total price
+			if (discountedAmount > Discount) {
+				discountedAmount -= Discount;
+				couponDiscountedAmount += Discount; // Add to couponDiscountedAmount
+			} else {
+				couponDiscountedAmount += discountedAmount; // Apply the full amount if it's less than the discount
+				discountedAmount = 0; // Avoid negative prices
+			}
+		}
 
-        return discountedAmount;
-    };
+		return discountedAmount;
+	};
+
 
     // Apply coupon discount only if applicable
     if (bag.Coupon) {
@@ -1047,13 +1070,15 @@ const getItemsData = async (bag) => {
         if (FreeShipping && bag.ConvenienceFees > 0) {
             totalProductSellingPrice -= bag.ConvenienceFees; // Remove convenience fees if free shipping is applied
         }
+		
     }
 
     // Apply convenience fee if no free shipping is provided
     if (bag?.ConvenienceFees > 0 && !bag?.Coupon?.FreeShipping) {
         totalProductSellingPrice += bag.ConvenienceFees;
     }
-
+	totalDiscount += couponDiscountedAmount;
+	console.log("Total Product Selling Price: ", totalProductSellingPrice,totalMRP, totalSP, totalDiscount);
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst };
 };
 
@@ -1081,7 +1106,7 @@ export const getbag = async (req, res) => {
         
         // Fetch all products from the bag's orderItems at once (reduce redundant DB calls)
         const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString());// returns an array;
-        console.log("Bag Items: ", productIds);
+        // console.log("Bag Items: ", productIds);
         const products = await ProductModel.find({ _id: { $in: productIds } });
 
         // Create a map for fast lookup of product sizes
@@ -1107,7 +1132,7 @@ export const getbag = async (req, res) => {
                 continue;
             }
 
-            console.log("Bag Order Items size Quantity: ", o?.size?.quantity);
+            // console.log("Bag Order Items size Quantity: ", o?.size?.quantity);
 
             // Update the size quantity if it doesn't match the original
             if (o?.size?.quantity !== originalProductSize?.quantity) {
@@ -1115,7 +1140,7 @@ export const getbag = async (req, res) => {
                 o.size.quantity = originalProductSize.quantity;
             }
 
-            console.log("Original Product Size Quantity: ", originalProductSize.quantity);
+            // console.log("Original Product Size Quantity: ", originalProductSize.quantity);
         }
 
         // Save the updated bag

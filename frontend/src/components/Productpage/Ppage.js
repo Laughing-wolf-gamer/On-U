@@ -227,16 +227,16 @@ const Ppage = () => {
                 // If current size and color are provided, check for matching items with the size and color
                 if (currentSize && currentColor) {
                     const matchingItem = similarProductsInBag.find(item => 
-                    item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
+                    	item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
                     );
                     // If matching item is found, set isBag based on its 'isChecked' status
-                    /* if (matchingItem) {
+                    if (matchingItem) {
                         isBag = matchingItem.isChecked;
-                    } */
-                } /* else {
+                    }
+                } else {
                     // If no size/color is specified, check if any product is checked
                     isBag = similarProductsInBag.some(item => item.isChecked);
-                } */
+                }
             }
 
             // Set the result in the state (i.e., update whether the product is in the bag)
@@ -463,6 +463,7 @@ const Ppage = () => {
     },[hasPurchased])
     // console.log("isIn Bag / is In Wishlist",isInBagList,isInWishList,user);
     // console.log("current Scroll Amount: ",scrollPosition);
+	console.log("Selected Color: ", currentColor);
     
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
@@ -489,7 +490,7 @@ const Ppage = () => {
                                 {/* Product Title and Gender */}
                                 <div className='pt-1'>
                                     <h1 className='text-2xl font-semibold text-slate-800'>
-                                        {capitalizeFirstLetterOfEachWord(product?.title)}
+                                        {currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
                                     </h1>
                                     <h1 className='text-xl text-[#808080e8] font-light'>
                                         {capitalizeFirstLetterOfEachWord(product?.gender)}

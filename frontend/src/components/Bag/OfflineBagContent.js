@@ -118,7 +118,7 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteBag,setCoupon,applyCoupon,coupon  }) => {
 	return (
 		<div className="flex-1 space-y-6 max-h-[700px]">
-			<div className="flex-1 space-y-6 max-h-[400px] overflow-y-auto">
+			<div className="flex-1 space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
 				{sessionBagData.map((item, i) => {
 					const active = item;
 					const isVideo = (url) => {

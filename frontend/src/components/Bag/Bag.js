@@ -95,35 +95,66 @@ const Bag = () => {
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
                 totalProductSellingPrice += (bag?.ConvenienceFees || 0);
-        
+				let couponDiscountedAmount = 0;
+
+				// Coupon logic
+				const applyCouponDiscount = () => {
+					let discountedAmount = totalProductSellingPrice;
+
+					if (typeof bag.Coupon?.Discount !== 'number' || bag.Coupon.Discount < 0) {
+						console.error('Invalid discount value.');
+						return discountedAmount; // Return the original price if discount is invalid.
+					}
+
+					const { CouponType, Discount } = bag.Coupon;
+
+					if (CouponType === "Percentage") {
+						// Ensure totalProductSellingPrice is positive
+						if (discountedAmount > 0) {
+							const discountAmount = discountedAmount * (Discount / 100);
+							discountedAmount -= discountAmount;
+							couponDiscountedAmount += discountAmount; // Add to couponDiscountedAmount
+						}
+					} else {
+						// Ensure discount does not exceed the total price
+						if (discountedAmount > Discount) {
+							discountedAmount -= Discount;
+							couponDiscountedAmount += Discount; // Add to couponDiscountedAmount
+						} else {
+							couponDiscountedAmount += discountedAmount; // Apply the full amount if it's less than the discount
+							discountedAmount = 0; // Avoid negative prices
+						}
+					}
+
+					return discountedAmount;
+				};
                 // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
                 if (bag.Coupon) {
                     const coupon = bag.Coupon;
                     const { CouponType, Discount, MinOrderAmount } = coupon;
         
-                    const applyCouponDiscount = () => {
+                    /* const applyCouponDiscount = () => {
                         if (CouponType === "Percentage") {
                             totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
                         } else {
                             totalProductSellingPrice -= Discount;
                         }
                     };
-        
+         */
                     // Apply coupon discount only if applicable
-                    if (MinOrderAmount > 0) {
-                        if (totalProductSellingPrice >= MinOrderAmount) {
-                            applyCouponDiscount();
-                        }
-                    } else {
-                        applyCouponDiscount();
-                    }
+                    if (MinOrderAmount > 0 && totalProductSellingPrice >= MinOrderAmount) {
+							totalProductSellingPrice = applyCouponDiscount();
+						} else if (MinOrderAmount <= 0) {
+							totalProductSellingPrice = applyCouponDiscount();
+						}
         
                     // Apply free shipping discount (only if coupon is valid)
-                    if (bag.Coupon.FreeShipping && totalProductSellingPrice >= MinOrderAmount) {
-                        totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if coupon applies free shipping
-                    }
                 }
-        
+				if (bag?.ConvenienceFees > 0 && !bag?.Coupon?.FreeShipping) {
+					totalProductSellingPrice += bag.ConvenienceFees;
+				}
+				totalDiscount += couponDiscountedAmount;
+                // Add convenience fees to the total product selling price (only once, not for each item)
                 // Set the final values for the product selling price, discount, and MRP
                 setTotalProductSellingPrice(totalProductSellingPrice);
                 setDiscountAmount(totalDiscount);
@@ -292,7 +323,7 @@ const Bag = () => {
             },400)
         }
     };
-    // console.log("GST Amount: ",allgst)
+    // console.log("Bag Content ",bag);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">

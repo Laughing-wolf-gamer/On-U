@@ -594,7 +594,7 @@ const MPpage = () => {
                         <div className="bg-white p-4">
                             <div className="border-b border-gray-300 pb-6 pt-4">
                                 <h1 className=" text-xl font-semibold text-slate-800">
-                                    {capitalizeFirstLetterOfEachWord(product?.title)}
+                                    {currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
                                 </h1>
                                 <h1 className="text-xl text-gray-500 font-light">
                                     {capitalizeFirstLetterOfEachWord(product?.gender)}

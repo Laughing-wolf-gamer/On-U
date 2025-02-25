@@ -8,7 +8,7 @@ import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
 import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
-import { Minus, Plus, Trash } from 'lucide-react';
+import { Minus, Plus, Trash, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
 import { FormHelperText } from '@mui/material';
@@ -461,7 +461,7 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 				</div> */}
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
-					<span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>
+					{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>}
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Coupon</span>
@@ -473,12 +473,12 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 									className="flex items-center space-x-1 text-xs sm:text-sm"
 									onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
 								>
-									<Trash size={20} />
+									<X size={20} />
 									<span>{bag?.Coupon?.CouponCode}</span>
 								</button>
 								{/* Discount Information */}
 								<span className="text-xs sm:text-sm text-gray-500 mt-1">
-								{`Discount: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+								{`Saved: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
 								</span>
 							</div>
 						) : (

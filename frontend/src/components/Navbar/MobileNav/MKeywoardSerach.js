@@ -64,11 +64,11 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 
 				{/* Search Recommendations */}
 				<div
-				className="w-full font-kumbsan h-[240px] bg-white fixed top-[48px] z-40 border-b border-r border-l border-gray-500 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-200"
+				className="w-full font-kumbsan h-[240px] bg-gray-600 fixed top-[48px] z-40 border-b border-r border-l border-white scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-500"
 				style={{ maxHeight: "300px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 				>
 				<ul className="p-2">
-					<label className="text-sm font-bold text-gray-600">Recent Searches:</label>
+					<label className="text-base font-bold text-white">Recent Searches:</label>
 					{filterSearchs.map((search, index) => (
 						<div
 							key={index}
@@ -80,19 +80,19 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 							}}
 						>
 							<div className='w-full justify-between flex items-center'>
-							<span className=' text-sm text-gray-500'>{search}</span>
+							<span className=' text-sm text-white'>{search}</span>
 							<div
 								onClick={(e) => {
 									e.preventDefault();
 									e.stopPropagation();
 									removeKeyWoards(search);
 								}}
-								className=' text-sm text-gray-500'
+								className=' text-sm text-white'
 							>
 								<X />
 							</div>
 							</div>
-							<div className="w-full h-[0.5px] bg-gray-500 bg-opacity-20 my-1" />
+							<div className="w-full h-[0.5px] bg-white bg-opacity-20 my-1" />
 						</div>
 					))}
 				</ul>
