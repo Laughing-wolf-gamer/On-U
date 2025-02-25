@@ -100,7 +100,7 @@ const MProductsBar = ({ showProducts, onClose }) => {
 							{product.category.map((category, i) => (
 								<div key={i} className="space-y-2">
 									<Ripples
-										className="text-black font-thin px-5 py-4 relative w-full flex"
+										className="text-black font-normal px-5 py-4 relative w-full flex"
 										onClick={() => toggleCategory(product.Gender, category.title)}
 									>
 									{category.title}
