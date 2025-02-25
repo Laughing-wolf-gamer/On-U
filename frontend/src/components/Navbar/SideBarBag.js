@@ -344,7 +344,7 @@ const SideBarBag = ({OnChangeing}) => {
 				</h1>
 				{
 					isAuthentication && user ? (
-						<ul className={`w-full flex flex-col flex-grow ${bag && bag?.orderItems && bag?.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(95vh-195px)] min-h-[calc(90vh-190px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
+						<ul className={`w-full flex flex-col flex-grow ${bag && bag?.orderItems && bag?.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(90vh-190px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
 							{
 								<ProductListingComponent
 									bag={bag}
@@ -486,8 +486,8 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 
 									{/* Product Info */}
 								<div className="flex-1 space-y-1 text-left sm:text-left">
-									<h3 className="font-semibold text-lg sm:text-sm md:text-base text-gray-800">
-										{active?.ProductData?.title}
+									<h3 className="font-semibold space-x-2 text-lg sm:text-sm md:text-base text-gray-800">
+										<span>{active?.color?.name}</span> <span>{active?.ProductData?.title}</span>
 									</h3>
 									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
 									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
@@ -605,7 +605,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 							{/* Product Info */}
 							<div className="flex-1 space-y-1 text-left whitespace-nowrap sm:text-left">
-								<h3 className="font-semibold text-xs sm:text-sm md:text-base text-gray-800">{active?.productId?.title}</h3>
+								<h3 className="font-semibold text-xs sm:text-sm md:text-base text-gray-800"><span>{active?.color?.name}</span> <span>{active?.productId?.title}</span></h3>
 								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
 								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 

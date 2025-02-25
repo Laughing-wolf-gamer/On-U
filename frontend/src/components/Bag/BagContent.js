@@ -204,8 +204,9 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 						{/* Product Info */}
 						<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
-							<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate">{active?.productId?.title}</h3>
+							<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate space-x-1"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
 							<p className="text-xs sm:text-sm text-gray-600">Size: {active?.size?.label}</p>
+							<p className="text-xs sm:text-sm text-gray-600">Color: {active?.color?.name}</p>
 
 							{/* Price and Discount Info */}
 							<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">

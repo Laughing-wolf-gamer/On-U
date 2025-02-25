@@ -64,15 +64,15 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 
 				{/* Search Recommendations */}
 				<div
-				className="w-full font-kumbsan h-[240px] bg-gray-600 fixed top-[48px] z-40 border-b border-r border-l border-white scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-500"
+				className="w-full font-kumbsan h-[240px] bg-gray-300 fixed top-[48px] z-40 border-b border-r border-l border-white scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
 				style={{ maxHeight: "300px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 				>
 				<ul className="p-2">
-					<label className="text-base font-bold text-white">Recent Searches:</label>
+					<label className="text-base font-semibold text-gray-800">Recent Searches:</label>
 					{filterSearchs.map((search, index) => (
 						<div
 							key={index}
-							className="cursor-pointer relative min-w-fit py-2 flex flex-col justify-between items-start p-2 hover:bg-gray-100"
+							className="cursor-pointer font-bold relative min-w-fit py-2 flex flex-col justify-between items-start p-2 hover:bg-gray-100"
 							onClick={(e) => {
 								e.stopPropagation();
 								setstate(search); // Set the clicked recommendation in input
@@ -80,19 +80,19 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 							}}
 						>
 							<div className='w-full justify-between flex items-center'>
-							<span className=' text-sm text-white'>{search}</span>
+							<span className=' text-sm text-gray-700'>{search}</span>
 							<div
 								onClick={(e) => {
 									e.preventDefault();
 									e.stopPropagation();
 									removeKeyWoards(search);
 								}}
-								className=' text-sm text-white'
+								className=' text-sm text-gray-700'
 							>
 								<X />
 							</div>
 							</div>
-							<div className="w-full h-[0.5px] bg-white bg-opacity-20 my-1" />
+							<div className="w-full h-[0.5px] bg-gray-700 bg-opacity-20 my-1" />
 						</div>
 					))}
 				</ul>

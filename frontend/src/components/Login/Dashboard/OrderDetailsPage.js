@@ -36,8 +36,8 @@ const OrderItem = ({ item }) => {
                         <span className="font-semibold">Color:</span>
                         <span
                             className="w-5 h-5 border-2 rounded-full"
-                            style={{ backgroundColor: item.color.label }}
-                            title={`Color: ${item.color.label}`}
+                            style={{backgroundColor:item?.color?.name}}
+                            title={`Color: ${item?.color?.name}`}
                         />
                     </div>
                     <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
@@ -54,9 +54,17 @@ const OrderItem = ({ item }) => {
 const AddressSection = ({ address, userName }) => (
     <div className="mb-6">
         <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
-        <div className="bg-gray-100 p-6 rounded-md shadow-md">
-            <p className="font-bold">{userName}</p>
-            <p>{Object.values(address).join(", ")}</p>
+        <div className="py-2 w-full">
+            <p>
+			{
+				Object.entries(address).map(([key, value])=>(
+					<div key={key} className="flex justify-between mb-1">
+						<span className="font-medium text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
+						<span className="font-normal text-base">{value}</span>
+					</div>
+				))
+			}
+			</p>
         </div>
     </div>
 );
@@ -116,7 +124,7 @@ const OrderDetailsPage = ({ user }) => {
                             )}
 
                             {/* Address Section */}
-                            {orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
+                            
 
                             {/* Order Items Section */}
                             <div className="space-y-4">
@@ -154,11 +162,22 @@ const OrderDetailsPage = ({ user }) => {
                         {/* Sidebar - Order Summary */}
                         <div className="col-span-12 lg:col-span-4 bg-gray-100 p-6 rounded-lg space-y-6 font1">
                             <h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
-                            <div className="bg-white p-6 rounded-md shadow-md space-y-4">
-                                <p className="font-semibold text-gray-800">Total Items: <span className='text-base text-gray-600 font-normal'>{orderbyid?.orderItems?.length}</span></p>
-                                <p className="font-semibold text-gray-800">Total Amount: <span className='text-base text-gray-600 font-normal'>₹{formattedSalePrice(orderbyid?.TotalAmount)}</span></p>
+                            <div className="bg-white p-6 justify-between flex flex-col rounded-md shadow-md space-y-4">
+								{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
+								<h2 className="text-xl font-semibold text-gray-800">Details</h2>
+								<div className='justify-between flex items-center w-full'>
+                                	<p className="font-semibold text-gray-800">Total Items:</p>
+									<span className='text-base text-gray-600 font-normal'>{orderbyid?.orderItems?.length}</span>
+								</div>
+								<div className='justify-between items-center flex w-full'>
+                                	<p className="font-semibold text-gray-800">Total Amount:</p>
+									<span className='text-base text-gray-600 font-normal'>₹{formattedSalePrice(orderbyid?.TotalAmount)}</span>
+								</div>
+								<div className='justify-between items-center flex w-full'>
+                                	<p className="font-semibold text-gray-800">Shipping:</p>
+									<span className='text-base text-gray-600 font-normal'>{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</span>
+								</div>
 								
-                                <p className="font-semibold text-gray-800">Shipping: <span className='text-base text-gray-600 font-normal'>{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</span>  </p>
                             </div>
                         </div>
                     </div>

@@ -167,8 +167,11 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 
 									{/* Product Details */}
 									<div className="flex-1 space-y-2 text-left whitespace-nowrap sm:text-left px-2">
-										<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800">{active?.ProductData?.title}</h3>
+										<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800 space-x-2">
+											<span>{active?.color?.name}</span> <span>{active?.ProductData?.title}</span>
+										</h3>
 										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
+										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Color: {active?.color?.name}</p>
 
 										{/* Price and Discount Info */}
 										<div className="flex items-center justify-center sm:justify-start md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">

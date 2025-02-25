@@ -68,11 +68,11 @@ const Search = ({ toggleSearchBar }) => {
 
 			{/* Search Recommendations */}
 			<div
-				className="w-[600px] font-kumbsan h-[240px] bg-gray-600 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-100 scrollbar-track-gray-500"
+				className="w-[600px] font-kumbsan h-[240px] bg-gray-300 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-100"
 				style={{ maxHeight: "200px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 			>
 				<ul className="p-2">
-					<label className="text-base font-bold text-white">Recent Searches:</label>
+					<label className="text-base font-bold text-gray-800">Recent Searches:</label>
 					{filterSearchs.map((search, index) => (
 						<li
 							key={index}
@@ -84,16 +84,16 @@ const Search = ({ toggleSearchBar }) => {
 							}}
 						>
 							<div className='w-full justify-between flex items-center'>
-								<span className=' text-sm text-white' >{search}</span>
+								<span className=' text-sm text-gray-700' >{search}</span>
 								<div onClick={(e)=>{
 									e.preventDefault();
 									e.stopPropagation();
 									removeKeyWoards(search)	
-								}} className=' text-sm text-white' >
+								}} className=' text-sm text-gray-700' >
 									<X/>
 								</div>
 							</div>
-							<div className="w-full h-[0.1px] bg-white bg-opacity-20" />
+							<div className="w-full h-[0.1px] bg-gray-700 bg-opacity-20" />
 						</li>
 					))}
 				</ul>
