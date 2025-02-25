@@ -11,7 +11,6 @@ import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
 import { generateOrderForShipment } from './LogisticsControllers/shiprocketLogisticController.js'
-
 export const createPaymentOrder = async (req, res, next) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -30,11 +29,12 @@ export const createPaymentOrder = async (req, res, next) => {
 
     } catch (error) {
         console.error("Error creating Order:", error);
+        logger.error(`Error creating Order: ${error.message}`)
         res.status(500).json({ success: false, message: "Internal server Error" });
     }
 }
 
-export const verifyPayment = async (req, res, next) => {
+export const verifyPayment = async (req, res) => {
     try {
         // Check for user existence
         if (!req.user) {
@@ -333,7 +333,7 @@ export const getOrderById = async (req, res, next) => {
     }
 }
 
-export const createwishlist = async (req, res, next) => {
+export const createwishlist = async (req, res) => {
     try {
         const id = req.user.id;
         const{productId} = req.body;
@@ -367,7 +367,7 @@ export const createwishlist = async (req, res, next) => {
         res.status(200).json({success:true,message: "Product added to wishlist"})
     } catch (error) {
         console.error("Error creating wishlist: ",error);
-        res.status(500).json({message: "Internal server error"});
+        res.status(500).json({success:false,message: "Internal server error"});
     }
 }
 
@@ -469,7 +469,7 @@ export const removeCouponToBag = async(req,res)=>{
 
 }
 
-export const addItemsArrayToBag = async (req, res) => {
+/* export const addItemsArrayToBag = async (req, res) => {
     try {
         // console.log("Bag Array: ", req.body);
 
@@ -547,12 +547,101 @@ const updateBagTotals = (bag, totals) => {
     if (totalDiscount) bag.totalDiscount = totalDiscount;
     if (totalMRP) bag.totalMRP = totalMRP;
     if (totalGst) bag.totalGst = totalGst;
+}; */
+export const addItemsArrayToBag = async (req, res) => {
+    try {
+        // Check if the user is logged in
+        if (!req.user || !req.user.id) {
+            return res.status(400).json({ message: "User Not Logged In" });
+        }
+
+        const userId = req.user.id;
+        const { body: bagItems } = req;
+
+        // Check if bagItems exists and is an array
+        if (!Array.isArray(bagItems) || bagItems.length === 0) {
+            return res.status(400).json({ message: "No items provided" });
+        }
+
+        // Fetch ConvenienceFees from the database
+        const convenienceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+
+        // Find the user's existing bag
+        let userBag = await Bag.findOne({ userId }).populate('orderItems.productId');
+
+        // Prepare the update to the bag
+        const updatedItems = [];
+
+        // Process each item in the bag
+        for (const item of bagItems) {
+            const { productId, quantity, color, size, isChecked } = item;
+
+            // Check if the item is already in the user's bag
+            const existingItemIndex = userBag?.orderItems.findIndex(
+                (existingItem) => existingItem.productId._id.toString() === productId
+            );
+
+            if (existingItemIndex !== -1) {
+                // If item exists, update quantity
+                userBag.orderItems[existingItemIndex].quantity += quantity;
+            } else {
+                // Otherwise, add the new item to the bag
+                updatedItems.push({ productId, quantity, color, size, isChecked });
+            }
+        }
+
+        // If the user already has a bag, update the items
+        if (userBag) {
+            userBag.orderItems.push(...updatedItems);
+            // Recalculate and update bag totals
+            const totals = await getItemsData(userBag);
+            updateBagTotals(userBag, totals);
+
+            await userBag.save();
+        } else {
+            // If no existing bag, create a new one with the items
+            const newBag = new Bag({
+                userId,
+                ConvenienceFees: convenienceFees?.ConvenienceFees || 0,
+                orderItems: bagItems.map(item => ({
+                    productId: item.productId,
+                    quantity: item.quantity,
+                    color: item.color,
+                    size: item.size,
+                    isChecked: item.isChecked,
+                })),
+            });
+
+            // Recalculate and update bag totals
+            const totals = await getItemsData(newBag);
+            updateBagTotals(newBag, totals);
+
+            // Save the new bag
+            await newBag.save();
+        }
+
+        res.status(200).json({ success: true, message: "Items added to bag" });
+    } catch (error) {
+        console.error("Failed to add items to bag: ", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
 };
+
+// Helper function to update bag totals
+const updateBagTotals = (bag, totals) => {
+    const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = totals;
+    if (totalProductSellingPrice) bag.totalProductSellingPrice = totalProductSellingPrice;
+    if (totalSP) bag.totalSP = totalSP;
+    if (totalDiscount) bag.totalDiscount = totalDiscount;
+    if (totalMRP) bag.totalMRP = totalMRP;
+    if (totalGst) bag.totalGst = totalGst;
+};
+
     
 
 
 
-export const addItemsArrayToWishList = async(req,res)=>{
+/* export const addItemsArrayToWishList = async(req,res)=>{
     try {
         const userId = req.user.id;
         const{productIdArray} = req.body;
@@ -584,9 +673,60 @@ export const addItemsArrayToWishList = async(req,res)=>{
         console.error("Failed to add items array: ",error);
         res.status(500).json({success:false,message:"Internal server error",});
     }
-}
+} */
+export const addItemsArrayToWishList = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { productIdArray } = req.body;
 
-export const addItemsToBag = async (req, res) => {
+        // Check if productIdArray exists
+        if (!productIdArray || !productIdArray.length) {
+            return res.status(400).json({ success: false, message: "Product Array Not Found" });
+        }
+
+        // Get the product IDs from the array
+        const allProductIds = productIdArray.map(p => mongoose.Types.ObjectId(p.productId._id));
+        console.log("Product IDs to add:", allProductIds);
+
+        // Find the user's wishlist
+        let previousWishList = await WhishList.findOne({ userId });
+
+        // If wishlist exists, update it
+        if (previousWishList) {
+            // Get the existing product IDs in the wishlist to check for duplicates
+            const existingProductIds = previousWishList.orderItems.map(item => item.productId.toString());
+
+            // Filter out the products that are already in the wishlist
+            const newProducts = allProductIds.filter(productId => !existingProductIds.includes(productId.toString()));
+
+            if (newProducts.length > 0) {
+                // Add new products to the wishlist
+                previousWishList.orderItems.push(...newProducts.map(productId => ({ productId })));
+
+                // Save the updated wishlist
+                await previousWishList.save();
+            }
+
+            return res.status(200).json({ success: true, message: "Items added to Wish List" });
+        }
+
+        // If wishlist doesn't exist, create a new one with the products
+        const newWishList = new WhishList({
+            userId,
+            orderItems: allProductIds.map(productId => ({ productId }))
+        });
+
+        await newWishList.save();
+        res.status(200).json({ success: true, message: "Items added to Wish List" });
+        
+    } catch (error) {
+        console.error("Failed to add items to wishlist:", error);
+        res.status(500).json({ success: false, message: "Internal server error" });
+    }
+};
+    
+
+/* export const addItemsToBag = async (req, res) => {
     try {
         console.log("Bag Body",req.body)
         const {userId,productId,quantity,color,size} = req.body
@@ -636,8 +776,83 @@ export const addItemsToBag = async (req, res) => {
         res.status(500).json({success:false,message: "Internal Server Error"})
     }
 
-}
-const getItemsData = async (bag) => {
+} */
+export const addItemsToBag = async (req, res) => {
+    try {
+        console.log("Bag Body", req.body);
+        const { userId, productId, quantity, color, size } = req.body;
+
+        // Validation
+        if (!userId || !productId || !quantity || !color || !size) {
+            return res.status(400).json({ message: "Please provide all the required fields" });
+        }
+
+        // Fetch existing user bag
+        let bag = await Bag.findOne({ userId }).populate('orderItems.productId');
+
+        // If no bag exists, create one
+        if (!bag) {
+            const convenienceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+            const newBag = new Bag({
+                userId,
+                ConvenienceFees: convenienceFees?.ConvenienceFees || 0,
+                orderItems: [{ productId, quantity, color, size, isChecked: true }]
+            });
+            console.log("Creating New Bag: ", newBag);
+
+            // Get item data and update the bag
+            const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = await getItemsData(newBag);
+            newBag.totalProductSellingPrice = totalProductSellingPrice || 0;
+            newBag.totalSP = totalSP || 0;
+            newBag.totalDiscount = totalDiscount || 0;
+            newBag.totalMRP = totalMRP || 0;
+            newBag.totalGst = totalGst || 0;
+
+            await newBag.save();
+            return res.status(200).json({ success: true, message: "Successfully added Items to Bag", bag: newBag });
+        }
+
+        // Update existing bag
+        const existingProduct = bag.orderItems.find(p => p.productId?._id.toString() === productId.toString());
+
+        if (existingProduct) {
+            existingProduct.isChecked = true; // Ensure product is marked as checked
+
+            if (existingProduct.size._id.toString() === size._id.toString() && existingProduct.color._id.toString() === color._id.toString()) {
+                // Update quantity if size and color match
+                existingProduct.quantity += quantity;
+            } else {
+                // Add new variant (color/size) if they are different
+                bag.orderItems.push({ productId, quantity, color, size });
+            }
+        } else {
+            // Add new product if not already in the bag
+            bag.orderItems.push({ productId, quantity, color, size });
+        }
+
+        // Recalculate the bag totals
+        const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = await getItemsData(bag);
+
+        // Update the bag with recalculated totals
+        bag.totalProductSellingPrice = totalProductSellingPrice || 0;
+        bag.totalSP = totalSP || 0;
+        bag.totalDiscount = totalDiscount || 0;
+        bag.totalMRP = totalMRP || 0;
+        bag.totalGst = totalGst || 0;
+
+        await bag.save();
+
+        // Return the updated bag data
+        const updatedBag = await Bag.findOne({ userId }).populate('orderItems.productId');
+        return res.status(200).json({ success: true, message: "Successfully added Items to Bag", bag: updatedBag });
+
+    } catch (error) {
+        console.error("Error occurred during creating/updating bag: ", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+};
+    
+/* const getItemsData = async (bag) => {
     console.log("getItemsData Bag Items: ",bag.orderItems)
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0, totalGst = 0;
@@ -647,15 +862,19 @@ const getItemsData = async (bag) => {
         const { productId, quantity,isChecked } = item;
 		if(isChecked){
 			// Await the database query
-			const productData = await ProductModel.findById(productId?._id || productId);
+            let idOfProduct = productId?._id;
+            if(!idOfProduct){
+                idOfProduct = productId;
+            }
+			const productData = await ProductModel.findById(idOfProduct);
 			console.log("Deconstruct Product data: ", productData)
-			const { salePrice, price  } = productData;
-			/* const priceWithoutGst = getOriginalAmount(gst,price)
-			let salePriceWithouGst = 0;
-			if(salePrice){
-				// salePriceWithouGst = getOriginalAmount(gst,salePrice);
-			}
- */
+			const { salePrice, price } = productData;
+			// const priceWithoutGst = getOriginalAmount(gst,price)
+			// let salePriceWithouGst = 0;
+			// if(salePrice){
+			// 	// salePriceWithouGst = getOriginalAmount(gst,salePrice);
+			// }
+
 			// Calculate item totals
 			const productSellingPrice = salePrice || price;
 			const itemTotalPrice = (salePrice && salePrice > 0 ? salePrice : price) * quantity;
@@ -681,34 +900,163 @@ const getItemsData = async (bag) => {
         const coupon = bag.Coupon;
         const { CouponType, Discount, MinOrderAmount } = coupon;
 
+        // const applyCouponDiscount = () => {
+        //     if (CouponType === "Percentage") {
+        //         totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
+        //     } else {
+        //         totalProductSellingPrice -= Discount;
+        //     }
+        // };
         const applyCouponDiscount = () => {
-            if (CouponType === "Percentage") {
-                totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
-            } else {
-                totalProductSellingPrice -= Discount;
+            let discountedAmount = totalProductSellingPrice;
+            if (typeof Discount !== 'number' || Discount < 0) {
+                console.error('Invalid discount value.');
+                return discountedAmount; // Return the original price if discount is invalid.
             }
+        
+            if (CouponType === "Percentage") {
+                // Ensure totalProductSellingPrice is positive
+                if (discountedAmount > 0) {
+                    discountedAmount -= discountedAmount * (Discount / 100);
+                }
+            } else {
+                // Ensure discount does not exceed the total price
+                if (discountedAmount > Discount) {
+                    discountedAmount -= Discount;
+                } else {
+                    discountedAmount = 0; // Avoid negative prices
+                }
+            }
+        
+            // Return updated total price after applying discount
+            return discountedAmount;
         };
+        
 
         // Apply coupon discount only if applicable
         if (MinOrderAmount > 0) {
             if (totalProductSellingPrice >= MinOrderAmount) {
-                applyCouponDiscount();
+                totalProductSellingPrice = applyCouponDiscount();
             }
         } else {
-            applyCouponDiscount();
+            totalProductSellingPrice = applyCouponDiscount();
         }
 
         // Apply free shipping discount
-        if (bag.Coupon.FreeShipping) {
-            totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if no minimum order amount
+        if (bag.Coupon.FreeShipping && bag.ConvenienceFees > 0) {
+            totalProductSellingPrice -= bag.ConvenienceFees; // Remove convenience fees if no minimum order amount
+        }
+    }
+    if(bag?.ConvenienceFees > 0 && !bag.Coupon.FreeShipping){
+        // Optionally, if convenience fee is applied once:
+        totalProductSellingPrice += bag?.ConvenienceFees || 0;
+    }
+    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
+}; */
+const getItemsData = async (bag) => {
+    console.log("getItemsData Bag Items: ", bag.orderItems);
+    
+    let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
+    let totalMRP = 0, totalGst = 0;  // If GST is needed, implement it
+
+    // Ensure orderItems is valid and an array
+    if (!Array.isArray(bag.orderItems)) {
+        console.error("Invalid order items data.");
+        return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst };
+    }
+
+    // Use for...of to handle async properly
+    for (const item of bag.orderItems) {
+        const { productId, quantity, isChecked } = item;
+        if (isChecked) {
+            let idOfProduct = productId?._id || productId; // Ensure fallback for productId
+            try {
+                // Await the database query
+                const productData = await ProductModel.findById(idOfProduct);
+                if (!productData) {
+                    console.error("Product not found for productId:", idOfProduct);
+                    continue; // Skip this item if product is not found
+                }
+
+                console.log("Deconstruct Product data: ", productData);
+                const { salePrice, price } = productData;
+
+                // Calculate item totals
+                const productSellingPrice = salePrice || price;
+                const itemTotalPrice = productSellingPrice * quantity;
+                totalSP += itemTotalPrice;
+
+                // Calculate discount if both salePrice and price are valid
+                if (salePrice && price && price > 0) {
+                    const discount = price - salePrice;
+                    totalDiscount += discount * quantity;
+                }
+
+                // Add to the product selling price
+                totalProductSellingPrice += (productSellingPrice * quantity);
+
+                // Add to MRP
+                totalMRP += price * quantity;
+
+            } catch (error) {
+                console.error("Error fetching product data for productId:", idOfProduct, error);
+            }
         }
     }
 
-    // Optionally, if convenience fee is applied once:
-    totalProductSellingPrice += bag?.ConvenienceFees || 0;
+    // Coupon logic
+    const applyCouponDiscount = () => {
+        let discountedAmount = totalProductSellingPrice;
 
-    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
+        if (typeof bag.Coupon?.Discount !== 'number' || bag.Coupon.Discount < 0) {
+            console.error('Invalid discount value.');
+            return discountedAmount; // Return the original price if discount is invalid.
+        }
+
+        const { CouponType, Discount } = bag.Coupon;
+
+        if (CouponType === "Percentage") {
+            // Ensure totalProductSellingPrice is positive
+            if (discountedAmount > 0) {
+                discountedAmount -= discountedAmount * (Discount / 100);
+            }
+        } else {
+            // Ensure discount does not exceed the total price
+            if (discountedAmount > Discount) {
+                discountedAmount -= Discount;
+            } else {
+                discountedAmount = 0; // Avoid negative prices
+            }
+        }
+
+        return discountedAmount;
+    };
+
+    // Apply coupon discount only if applicable
+    if (bag.Coupon) {
+        const { CouponType, Discount, MinOrderAmount, FreeShipping } = bag.Coupon;
+
+        // Check if order meets the minimum requirement for the coupon
+        if (MinOrderAmount > 0 && totalProductSellingPrice >= MinOrderAmount) {
+            totalProductSellingPrice = applyCouponDiscount();
+        } else if (MinOrderAmount <= 0) {
+            totalProductSellingPrice = applyCouponDiscount();
+        }
+
+        // Apply free shipping discount if applicable
+        if (FreeShipping && bag.ConvenienceFees > 0) {
+            totalProductSellingPrice -= bag.ConvenienceFees; // Remove convenience fees if free shipping is applied
+        }
+    }
+
+    // Apply convenience fee if no free shipping is provided
+    if (bag?.ConvenienceFees > 0 && !bag?.Coupon?.FreeShipping) {
+        totalProductSellingPrice += bag.ConvenienceFees;
+    }
+
+    return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst };
 };
+
 
 function calculateTotalAmount(products) {
     // console.log("Total Bag Orders: ",products);
