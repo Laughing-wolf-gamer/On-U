@@ -64,11 +64,11 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 
 				{/* Search Recommendations */}
 				<div
-				className="w-full font-kumbsan h-[240px] bg-white fixed top-[48px] z-40 border-b border-r border-l border-gray-500"
+				className="w-full font-kumbsan h-[240px] bg-white fixed top-[48px] z-40 border-b border-r border-l border-gray-500 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-200"
 				style={{ maxHeight: "300px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 				>
 				<ul className="p-2">
-					<label className="text-sm font-bold text-gray-600">Popular Searches:</label>
+					<label className="text-sm font-bold text-gray-600">Recent Searches:</label>
 					{filterSearchs.map((search, index) => (
 						<div
 							key={index}
