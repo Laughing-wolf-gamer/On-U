@@ -71,7 +71,7 @@ export const addItemArrayBag = (options) => async()=>{
     // console.log("Bag Items Array",options)
     try {
         const token = sessionStorage.getItem('token');
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/bag/addItemArrayBag`,options, {
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/addItemArrayBag`,options, {
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,
@@ -81,11 +81,9 @@ export const addItemArrayBag = (options) => async()=>{
         // console.log("successfully: ",data);
         // dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
         return data;
-
     } catch (error) {
         return error?.response?.data?.success;
         // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
-
     }
 }
 export const createbag = (option) => async (dispatch) => {

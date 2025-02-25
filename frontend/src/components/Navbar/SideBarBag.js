@@ -220,28 +220,6 @@ const SideBarBag = ({OnChangeing}) => {
 			OnChangeing();
 		}
 	}
-    /* const verifyAnyOrdersPayment = async()=>{
-        if(!sessionStorage.getItem("checkoutData")) return;
-        try {
-            const data = JSON.parse(sessionStorage.getItem("checkoutData"))
-            const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
-            console.log("Verifying Order Response: ",response.data);
-            sessionStorage.removeItem("checkoutData")
-            if(response?.data.success){
-                checkAndCreateToast("success","Payment Successful");
-                if(user){
-                    setTimeout(() => {
-                        dispatch(getbag({ userId: user.id }));
-                    }, 1000);
-                }
-            }else{
-                checkAndCreateToast("error","Payment Failed");
-            }
-            
-        } catch (error) {
-            console.error(`Error Verifying order: `,error);
-        }
-    } */
 	const HandleTryCheckOut = ()=>{
 		if (isAuthentication) {
 			if(!bag){
