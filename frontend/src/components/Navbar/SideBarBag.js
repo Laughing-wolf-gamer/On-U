@@ -411,13 +411,14 @@ const SideBarBag = ({OnChangeing}) => {
 
 						{/* Continue Shopping */}
 						<div
+							type="button"
 							onClick={(e) => {
 								e.stopPropagation();
 								navigation('/products');
 								window.scrollTo(0, 0);
 								handleOnChange();
 							}}
-							className="w-full text-black mt-4 py-1 hover:underline text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
+							className="w-full cursor-pointer text-black mt-4 py-1 hover:underline text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
 						>
 							Continue Shoppping
 						</div>
