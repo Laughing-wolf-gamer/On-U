@@ -130,7 +130,7 @@ const ProductPreviewFull = ({ product ,user}) => {
 
                                     {/* Color Options */}
                                     {p.AllColors && p.AllColors.length > 0 && (
-                                        <div className="mt-2 flex space-x-2">
+                                        <div className="mt-2 flex space-x-2 flex-wrap">
                                             {p.AllColors
 												.slice(0, 7)
 												.filter((value, index, self) => 

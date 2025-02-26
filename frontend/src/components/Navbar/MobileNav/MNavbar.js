@@ -177,7 +177,7 @@ const MNavbar = ({ user }) => {
 
                 {/* Offcanvas */}
                 <div
-                    className={`fixed top-0 right-0 w-[75vw] h-full bg-white shadow-lg z-[60] border border-gray-700 border-opacity-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
+                    className={`fixed top-0 right-0 w-[75vw] h-screen bg-white shadow-lg z-[60] border border-gray-700 border-opacity-50 transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
                     <div className="py-3 sm:relative">                    
 						{/* X Button at Top Left */}
@@ -210,7 +210,7 @@ const MNavbar = ({ user }) => {
 
                 {/* Offcanvas */}
                 <div
-                    className={`fixed top-0 right-0 w-[75vw] h-full bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
+                    className={`fixed top-0 right-0 w-[75vw] h-screen bg-white shadow-lg z-50 transform transition-all duration-500 ease-in-out ${showMenuView ? 'translate-x-0' : 'translate-x-full'}`}
                 >
                     <div className="p-4 relative max-h-screen overflow-y-auto">             
                         <ul className=''>
