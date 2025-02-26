@@ -130,7 +130,7 @@ const ProductPreviewFull = ({ product ,user}) => {
 
                                     {/* Color Options */}
                                     {p.AllColors && p.AllColors.length > 0 && (
-                                        <div className="mt-2 flex space-x-2 flex-wrap">
+                                        <div className="mt-1 w-full flex flex-wrap gap-2 justify-start items-start ">
                                             {p.AllColors
 												.slice(0, 7)
 												.filter((value, index, self) => 
@@ -142,7 +142,7 @@ const ProductPreviewFull = ({ product ,user}) => {
 													<div
 														onClick={() => handleColorChange(p._id, color.images)} // Update color for this product
 														key={colorIndex}
-														className={`w-4 h-4 md:w-6 md:h-6 shadow-md rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out`}
+														className={`w-2 h-2 md:w-4 md:h-4 shadow-md rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out`}
 														style={{
 															backgroundColor: color.label, // Assuming color is a hex or RGB string
 														}}
