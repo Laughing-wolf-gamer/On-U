@@ -142,11 +142,12 @@ const ProductPreviewFull = ({ product ,user}) => {
 													<div
 														onClick={() => handleColorChange(p._id, color.images)} // Update color for this product
 														key={colorIndex}
+														type = "button"
 														className={`w-2 h-2 md:w-4 md:h-4 shadow-md rounded-full hover:outline outline-offset-2 outline-gray-900 hover:shadow-md hover:-translate-y-1 transform duration-300 ease-out`}
 														style={{
 															backgroundColor: color.label, // Assuming color is a hex or RGB string
 														}}
-													/>
+													></div>
 											))}
 
                                         </div>

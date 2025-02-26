@@ -336,9 +336,25 @@ const SideBarBag = ({OnChangeing}) => {
 				<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-xl text-gray-800 text-left w-full mb-3">
 				{
 					isAuthentication && bag && bag?.orderItems && bag?.orderItems?.length > 0 ? (
-						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span><span className='text-gray-600 text-sm'>{`(${bag.orderItems.length})`}</span> items</span>
+						<span className='text-center flex justify-start items-center space-x-2'>
+							<span>
+								Cart
+							</span>
+							<span className='text-gray-600 text-base'>
+								{`[${bag.orderItems.length}]`}
+							</span>
+							<span>
+								items
+							</span>
+						</span>
 					):(
-						<span className='text-center flex justify-start items-center space-x-1'><span>Cart</span> <span className='text-gray-600 text-sm'>{`(${sessionBagData.length})`}</span> items</span>
+						<span className='text-center flex justify-start items-center space-x-2'>
+							<span>Cart</span> 
+							<span className='text-gray-600 text-base'>
+								{`[${sessionBagData.length}]`}
+							</span> 
+							<span>items</span>
+						</span>
 					)
 				}
 				</h1>
@@ -486,8 +502,8 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 
 									{/* Product Info */}
 								<div className="flex-1 space-y-1 text-left sm:text-left">
-									<h3 className="font-semibold space-x-2 text-lg sm:text-sm md:text-base text-gray-800">
-										<span>{active?.color?.name}</span> <span>{active?.ProductData?.title}</span>
+									<h3 className="font-semibold space-x-1 text-lg sm:text-sm md:text-base text-gray-800">
+										<span>{active?.color?.name}</span><span>{active?.ProductData?.title}</span>
 									</h3>
 									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
 									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
@@ -605,7 +621,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 							{/* Product Info */}
 							<div className="flex-1 space-y-1 text-left whitespace-nowrap sm:text-left">
-								<h3 className="font-semibold text-xs sm:text-sm md:text-base text-gray-800"><span>{active?.color?.name}</span> <span>{active?.productId?.title}</span></h3>
+								<h3 className="font-semibold space-x-1 text-xs sm:text-sm md:text-base text-gray-800"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
 								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
 								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
