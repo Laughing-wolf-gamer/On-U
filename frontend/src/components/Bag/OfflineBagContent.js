@@ -128,7 +128,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 					const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
 					const validImage = imagesOnly[0]?.url;
 					return(
-						<div key={i} className="relative flex flex-row w-full items-center justify-between border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+						<div key={i} className="relative flex flex-row w-full items-center justify-between border-b py-6 space-y-2 sm:space-y-0 sm:space-x-6">
 							<div className="relative flex-row flex border-2 rounded-lg flex-shrink-0 w-20 sm:w-36 h-28 sm:h-36">
 								<div className='w-fit flex flex-row justify-start items-start space-x-4'>
 									{/* Product Image */}
@@ -166,15 +166,15 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 									</div>
 
 									{/* Product Details */}
-									<div className="flex-1 space-y-2 text-left whitespace-nowrap sm:text-left px-2">
-										<h3 className="font-semibold text-sm sm:text-lg lg:text-xl text-gray-800 space-x-2">
+									<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
+										<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate space-x-1">
 											<span>{active?.color?.name}</span> <span>{active?.ProductData?.title}</span>
 										</h3>
 										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Size: {active?.size?.label}</p>
 										<p className="text-xs sm:text-sm lg:text-base text-gray-600">Color: {active?.color?.name}</p>
 
 										{/* Price and Discount Info */}
-										<div className="flex items-center justify-center sm:justify-start md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
+										<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
 											{active?.ProductData?.salePrice ? (
 												<Fragment>
 													<span>₹{Math.round(formattedSalePrice(active?.ProductData?.salePrice))}</span>
@@ -187,13 +187,13 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 										</div>
 
 										{/* Quantity Selector */}
-										<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
+										<div className="mt-2 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 											<button
 												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.ProductData._id,active.size,active.color)}
 												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity <= 1}
 											>
-												<Minus className=' justify-self-center' strokeWidth={3} />
+												<Minus />
 											</button>
 
 											<span className="text-sm sm:text-base lg:text-lg">{active?.quantity}</span>
@@ -203,7 +203,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 												className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
 												disabled={active?.quantity >= active?.size?.quantity}
 											>
-												<Plus className=' justify-self-center' strokeWidth={3} />
+												<Plus />
 											</button>
 										</div>
 									</div>
@@ -211,7 +211,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 							</div>
 							{/* Delete Button (Large Screens) */}
 							<Trash
-								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden sm:mt-0"
 								onClick={(e) => {
 									handleDeleteBag(active.ProductData._id, active._id,active.size,active.color);
 								}}
