@@ -361,7 +361,7 @@ const AdminDashboard = ({ user }) => {
 								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 							/>
 							<StatsCard
-								title="Total Revenue"
+								title="Shiprocket Wallet Balance"
 								value={`₹${walletBalance}`}
 								icon={<IndianRupee className="text-3xl text-green-600" />}
 								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
@@ -398,9 +398,9 @@ const AdminDashboard = ({ user }) => {
 								type="date"
 								value={startDate}
 								onChange={(e) => {
-								setStartDate(e.target.value);
-								newStartDate = e.target.value;
-								handleSetCustomStartDate(currentGraphData?.value || []);
+									setStartDate(e.target.value);
+									newStartDate = e.target.value;
+									handleSetCustomStartDate(currentGraphData?.value || []);
 								}}
 								className="px-4 py-2 border rounded-md w-full sm:w-1/2"
 							/>
@@ -408,9 +408,9 @@ const AdminDashboard = ({ user }) => {
 								type="date"
 								value={endDate}
 								onChange={(e) => {
-								setEndDate(e.target.value);
-								newEndDate = e.target.value;
-								handleSetCustomStartDate(currentGraphData?.value || []);
+									setEndDate(e.target.value);
+									newEndDate = e.target.value;
+									handleSetCustomStartDate(currentGraphData?.value || []);
 								}}
 								min={startDate}
 								className="px-4 py-2 border rounded-md w-full sm:w-1/2"
@@ -419,11 +419,11 @@ const AdminDashboard = ({ user }) => {
 						</div>
 						<div className="h-fit mx-auto">
 							<CustomerBarChart
-							data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData}
-							filter={'Monthly'}
-							title={currentGraphData.title}
-							dateStart={startDate}
-							dateEnd={endDate}
+								data={filterDateRange.length > 0 ? filterDateRange : CustomerGraphData}
+								filter={'Monthly'}
+								title={currentGraphData.title}
+								dateStart={startDate}
+								dateEnd={endDate}
 							/>
 						</div>
 						</div>
