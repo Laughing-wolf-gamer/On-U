@@ -486,7 +486,7 @@ export const removeCouponToBag = async(req,res)=>{
 
 }
 
-/* export const addItemsArrayToBag = async (req, res) => {
+export const addItemsArrayToBag = async (req, res) => {
     try {
         // console.log("Bag Array: ", req.body);
 
@@ -564,8 +564,8 @@ const updateBagTotals = (bag, totals) => {
     if (totalDiscount) bag.totalDiscount = totalDiscount;
     if (totalMRP) bag.totalMRP = totalMRP;
     if (totalGst) bag.totalGst = totalGst;
-}; */
-export const addItemsArrayToBag = async (req, res) => {
+};
+/* export const addItemsArrayToBag = async (req, res) => {
     try {
         // Check if the user is logged in
         if (!req.user || !req.user.id) {
@@ -585,6 +585,7 @@ export const addItemsArrayToBag = async (req, res) => {
 
         // Find the user's existing bag
         let userBag = await Bag.findOne({ userId }).populate('orderItems.productId');
+		console.log("User Bags: ",userBag);
 
         // Prepare the update to the bag
         const updatedItems = [];
@@ -642,17 +643,17 @@ export const addItemsArrayToBag = async (req, res) => {
         console.error("Failed to add items to bag: ", error);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
-};
+}; */
 
 // Helper function to update bag totals
-const updateBagTotals = (bag, totals) => {
+/* const updateBagTotals = (bag, totals) => {
     const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = totals;
     if (totalProductSellingPrice) bag.totalProductSellingPrice = totalProductSellingPrice;
     if (totalSP) bag.totalSP = totalSP;
     if (totalDiscount) bag.totalDiscount = totalDiscount;
     if (totalMRP) bag.totalMRP = totalMRP;
     if (totalGst) bag.totalGst = totalGst;
-};
+}; */
 
     
 
