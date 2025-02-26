@@ -36,30 +36,36 @@ const BagContent = ({
 	buttonPressed,
 	handleAddressSelection
 }) => {
+	
 	const dispatch = useDispatch();
 	const [coupon, setCoupon] = useState(null);
 	const [discount, setDiscount] = useState(0);
+	const[applyingCoupon,setIsApplyingCoupon] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
 	// Apply coupon discount
 	const applyCoupon = async (e) => {
 		e.preventDefault();
 		if (bag && coupon) {
+			setIsApplyingCoupon(true);
 			await dispatch(applyCouponToBag({ bagId: bag._id, couponCode: coupon }));
 			checkAndCreateToast("success","Coupon Applied");
 			setCoupon(null);
+			setIsApplyingCoupon(false);
 			// closePopup();
 			// dispatch(getbag({ userId: user.id }));
 			window.location.reload();
 		} else {
-			checkAndCreateToast("info","Please select a coupon and apply it before proceeding with payment");
+			checkAndCreateToast("info","No Coupon Applied!");
 		}
 	};
 	const removeCoupon = async (e, code) => {
 		// e.preventDefault();
 		if (bag ) {
+			setIsApplyingCoupon(true);
 			await dispatch(removeCouponFromBag({ bagId: bag._id, couponCode: code }));
 			checkAndCreateToast("success","Coupon Removed");
 			setCoupon(null);
+			setIsApplyingCoupon(false);
 			// dispatch(getbag({ userId: user.id }));
 			window.location.reload();
 		}
@@ -83,6 +89,7 @@ const BagContent = ({
 							user={user}
 							setCoupon={setCoupon}
 							coupon={coupon}
+							applyingCoupon = {applyingCoupon}
 						/>
 			
 						{/* Price Details */}
@@ -95,6 +102,7 @@ const BagContent = ({
 							convenienceFees={convenienceFees} 
 							totalProductSellingPrice={totalProductSellingPrice}
 							removeCoupon = {removeCoupon}
+							
 						/>
 					</div>
 				</Fragment>
@@ -142,7 +150,7 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 		</div>
 	</div>
 );
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon }) => (
+const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,applyingCoupon }) => (
 	<div className="flex-1 space-y-6 max-h-[700px]">
 		<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
 			{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
@@ -274,19 +282,20 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 				{/* Apply Coupon Button */}
 				<button
 					onClick={applyCoupon}
-					className="w-full sm:w-[20%] h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
+					className="w-full sm:w-[20%] items-center flex justify-center flex-row h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
 				>
-					<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>
+					{applyingCoupon ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> :<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>}
+					
 				</button>
 			</div>
 		</div>
 		{/* Display Coupons */}
-		<CouponsDisplay user={user} />
+		<CouponsDisplay user={user} bag={bag}/>
 	</div>
 );
 
 const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon }) => {
-	console.log("Bag Details:", bag);
+	console.log("Bag totalDiscount:", bag?.totalDiscount);
 	const navigation = useNavigate();
 	return (
 		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 md:p-8 xl:p-8 2xl:p-8 p-2 shadow-md">

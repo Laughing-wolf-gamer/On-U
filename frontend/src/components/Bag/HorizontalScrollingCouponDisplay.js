@@ -5,7 +5,7 @@ import { fetchAllCoupons } from '../../action/common.action';
 import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
+const HorizontalScrollingCouponDisplay = ({ user, showArrows,bag }) => {
 	const { AllCoupons, isLoading } = useSelector((state) => state.AllCoupons);
 	const { checkAndCreateToast } = useSettingsContext();
 	const dispatch = useDispatch();
@@ -124,7 +124,7 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 										key={`q_banners_${index}`}
 										className="min-h-full transform transition-transform duration-300 ease-in-out hover:scale-105"
 									>
-										<CouponCard coupon={coupon} checkAndCreateToast={checkAndCreateToast} />
+										<CouponCard user = {user} bag = {bag} coupon={coupon} checkAndCreateToast={checkAndCreateToast} />
 									</div>
 								))
 							)}
@@ -137,7 +137,30 @@ const HorizontalScrollingCouponDisplay = ({ user, showArrows }) => {
 
 
   
-const CouponCard = ({ coupon, checkAndCreateToast }) => {
+const CouponCard = ({ coupon, checkAndCreateToast,bag,user }) => {
+	const tryCopyCode = (e)=>{
+		e.preventDefault();
+		if(!user){
+			checkAndCreateToast("error", "Please login to copy Coupon code!");
+            return;
+		}
+		if(bag.Coupon){
+			checkAndCreateToast("error", "Coupon Already Applied!");
+            return;
+		}
+		const {CouponType, Discount, MinOrderAmount, FreeShipping} = coupon;
+		console.log("Bag Coupon: ",coupon);
+		const{totalProductSellingPrice} = bag;
+		if(MinOrderAmount > 0){
+			if(totalProductSellingPrice < MinOrderAmount){
+				checkAndCreateToast("error", `You need to purchase at least ${MinOrderAmount} to avail this coupon!`);
+                return;
+			}
+		}
+
+		navigator.clipboard.writeText(coupon?.CouponCode);
+		checkAndCreateToast("success", "Coupon Code copied to clipboard!");
+	}
 	return (
 		<div className="flex-shrink-0 w-64 font-kumbsan h-full justify-center flex flex-col bg-white p-1 transform transition-all duration-500 hover:shadow-md border-dashed border-[2px] border-gray-900 border-opacity-60 hover:bg-gray-100 hover:border-gray-500">
 			<div className="flex items-center justify-between mb-4">
@@ -166,10 +189,7 @@ const CouponCard = ({ coupon, checkAndCreateToast }) => {
 				{coupon?.CouponCode}
 				</span>
 				<button
-				onClick={() => {
-					navigator.clipboard.writeText(coupon?.CouponCode);
-					checkAndCreateToast("success", "Coupon Code copied to clipboard!");
-				}}
+				onClick={tryCopyCode}
 				className="bg-black text-white py-2 px-5 text-xs sm:text-xs md:text-sm transition-all ease-in-out duration-500 hover:bg-white hover:text-gray-800 hover:border-[1px] border-gray-900 rounded-full whitespace-nowrap"
 				>
 				<span>Copy Code</span>

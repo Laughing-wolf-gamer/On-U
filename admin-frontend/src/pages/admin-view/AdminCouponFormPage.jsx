@@ -1,12 +1,15 @@
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { createNewCoupon, deleteCoupon, editCoupon, fetchAllCoupons } from '@/store/admin/product-slice';
 import { fetchAllOptions } from '@/store/common-slice';
 import { X } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 const AdminCouponFormPage = () => {
     const { Coupons } = useSelector(state => state.adminProducts);
     const { AllOptions } = useSelector(state => state.common);
@@ -98,7 +101,7 @@ const AdminCouponFormPage = () => {
         setCustomerLogin(coupon?.CustomerLogin);
         setFreeShipping(coupon?.FreeShipping);
         setCategory(coupon?.Category);
-        setValidDate(coupon?.ValidDate);
+        setValidDate(coupon.ValidDate);
         setStatus(coupon?.Status);
         setModalCoupon(coupon);
         setIsModalOpen(true)
@@ -108,6 +111,7 @@ const AdminCouponFormPage = () => {
         dispatch(fetchAllCoupons());
         dispatch(fetchAllOptions());
     }, [dispatch]);
+	console.log("validDate: ",validDate)
     useEffect(() => {
         let sortedCoupons = [...Coupons];
 
@@ -145,37 +149,44 @@ const AdminCouponFormPage = () => {
     return (
         <div className="container mx-auto p-4">
             <h2 className="text-2xl font-bold mb-4 text-center">All Coupons</h2>
-            <div className='w-full justify-between flex flex-row items-center'>
-                <div className="text-center mb-4">
-                    <select
-                        value={sortOption}
-                        onChange={(e) => setSortOption(e.target.value)}
-                        className="w-full sm:w-auto bg-gray-500 text-white py-2 px-4 rounded-md"
-                    >
-                        <option value="latest">Latest</option>
-                        <option value="oldest">Oldest</option>
-                        <option value="discountLowToHigh">Discount: Low to High</option>
-                        <option value="discountHighToLow">Discount: High to Low</option>
-                    </select>
-                </div>
+            <div className='w-full justify-between space-x-5 flex flex-row items-center'>
+				<Select
+					value={sortOption}
+					onValueChange={(value) => setSortOption(value)}
+					className="w-fit  bg-black text-white py-2 px-4 rounded-md"
+				>
+					<SelectTrigger className="w-full border border-gray-300 rounded-md">
+						<SelectValue className="text-black" placeholder = {"Sort"}/>
+					</SelectTrigger>
+					<SelectContent>
+						<SelectItem value="latest">Latest</SelectItem>
+						<SelectItem value="oldest">Oldest</SelectItem>
+						<SelectItem value="discountLowToHigh">Discount: Low to High</SelectItem>
+						<SelectItem value="discountHighToLow">Discount: High to Low</SelectItem>
+					</SelectContent>
+				</Select>
                 {/* Button to trigger modal */}
-                <div className="text-center mb-4">
-                    <button 
-                        onClick={() => setIsModalOpen(true)} 
-                        className="w-full sm:w-auto bg-blue-500 text-white py-2 px-4 rounded-md mb-4"
-                    >
-                        Create Coupon
-                    </button>
-                </div>
-                <select 
-                    className="border border-gray-300 px-4 py-2 rounded-md"
+				
+                <Select 
+                    className="w-fit bg-black text-white py-2 px-4 rounded-md"
                     value={statusFilter}
-                    onChange={(e) => setStatusFilter(e.target.value)}
+                    onValueChange={(value) => setStatusFilter(value)}
                 >
-                    <option value="">Filter Status (All)</option>
-                    <option value="Inactive">In Active</option>
-                    <option value="Active">Active</option>
-                </select>
+					<SelectTrigger className="w-full border border-gray-300 rounded-md">
+							<SelectValue className="text-black" placeholder = {"Filter"}/>
+						</SelectTrigger>
+						<SelectContent>
+							<SelectItem value="none">Filter Status (All)</SelectItem>
+							<SelectItem value="Inactive">In Active</SelectItem>
+							<SelectItem value="Active">Active</SelectItem>
+						</SelectContent>
+                </Select>
+				<button 
+					onClick={() => setIsModalOpen(true)} 
+					className="w-fit bg-black whitespace-nowrap text-white py-2 px-4 rounded-md mb-4"
+				>
+					Create Coupon
+				</button>
 
             </div>
             
@@ -189,11 +200,12 @@ const AdminCouponFormPage = () => {
             {!isNoCoupons && (
                 <div className="hidden sm:block">
                     {/* Table Header */}
-                    <div className="grid grid-cols-7 gap-4 p-4 bg-gray-100 font-semibold text-sm sm:text-base">
+                    <div className="grid grid-cols-7 text-center gap-4 p-4 bg-gray-100 font-semibold text-sm sm:text-base">
                         <div>Coupon Name</div>
                         <div>Coupon Code</div>
                         <div>Coupon Status</div>
                         <div>Coupon Type</div>
+                        <div>Discount Amount</div>
                         <div className="text-center">Details</div>
                         <div className="text-center">Coupon Remove</div>
                     </div>
@@ -202,7 +214,7 @@ const AdminCouponFormPage = () => {
                     <div className="divide-y divide-gray-200">
                         {
                             filteredOrderList && filteredOrderList && filteredOrderList.length > 0 && filteredOrderList.map((coupon) => (
-                                <div key={coupon?._id} className="grid grid-cols-7 gap-4 p-4 hover:bg-gray-100">
+                                <div key={coupon?._id} className="grid text-center grid-cols-7 gap-4 p-4 hover:bg-gray-100">
                                     <div className="text-sm sm:text-base">{coupon?.CouponName}</div>
                                     <div className="text-sm sm:text-base">{coupon?.CouponCode}</div>
                                     <div className="text-sm sm:text-base">
@@ -210,7 +222,8 @@ const AdminCouponFormPage = () => {
                                             {coupon.Status}
                                         </Badge>
                                     </div>
-                                    <div className="text-sm sm:text-base">{coupon?.CouponType === "Price" && <span>₹</span>}{coupon?.Discount}{coupon?.CouponType === "Percentage" && <span>%</span>} </div>
+                                    <div className="text-sm sm:text-base">{coupon?.CouponType}</div>
+                                    <div className="text-sm sm:text-base">{coupon?.Discount} </div>
                                     <div className="text-sm sm:text-base text-center">
                                         <Button onClick={() => openEditModal(coupon)} className="btn btn-primary text-xs sm:text-sm">
                                             View Details
@@ -268,115 +281,142 @@ const AdminCouponFormPage = () => {
                         ))
                     }
                 </div>
+				<Dialog open={isModalOpen} onOpenChange={() => setIsModalOpen(false)}>
+					<DialogContent className="max-h-[70vh] overflow-y-auto p-4">
+						<DialogTitle>
+						Coupon Details:
+						</DialogTitle>
+						<div className="bg-white p-6 rounded-lg shadow-lg w-full">
+						<h2 className="text-xl font-bold mb-4 text-center">{modalCoupon ? "Edit Coupon" : "Create Coupon"}</h2>
+						<form className="space-y-4">
+							<input
+								type="text"
+								placeholder="Coupon Name"
+								value={couponName}
+								onChange={(e) => setCouponName(e.target.value)}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+								required
+							/>
+							<textarea
+								type="text"
+								placeholder="Coupon Description"
+								value={couponDescription}
+								onChange={(e) => setCouponDescription(e.target.value)}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+								rows="6"
+							/>
+							<input
+								type="text"
+								placeholder="Coupon Code"
+								value={couponCode}
+								onChange={(e) => setCouponCode(e.target.value)}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+								required
+							/>
+
+							<Select
+								value={couponType}
+								onValueChange={(value) => {
+									console.log("Coupon Type: " + value); // Log the selected value
+									setCouponType(value); // Update your state
+								}}
+								id="coupon-type"
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+							>
+								<SelectTrigger className="w-full border border-gray-300 rounded-md">
+									<SelectValue className="text-black" placeholder="Select Coupon Type" />
+								</SelectTrigger>
+								<SelectContent>
+									{['Percentage', 'Price'].map((value, index) => (
+										<SelectItem key={index} value={value}>
+											{value}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+
+							<input
+								type="number"
+								placeholder="Discount"
+								value={discount}
+								onChange={(e) => setDiscount(e.target.value)}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+							/>
+							<input
+							type="number"
+							placeholder="Min Coupon Amount"
+							value={minOrderAmount}
+							onChange={(e) => setMinOrderAmount(e.target.value)}
+							className="w-full px-4 py-2 border border-gray-300 rounded-md"
+							/>
+							<label className="flex items-center justify-start">
+							<input
+								type="checkbox"
+								checked={customerLogin}
+								onChange={() => setCustomerLogin(!customerLogin)}
+								className="mr-2"
+							/>
+							Customer Login Required
+							</label>
+							<label className="flex items-center justify-start">
+							<input
+								type="checkbox"
+								checked={freeShipping}
+								onChange={() => setFreeShipping(!freeShipping)}
+								className="mr-2"
+							/>
+							Free Shipping
+							</label>
+							<Select
+								value={category}
+								onValueChange={(value) => setCategory(value)}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+								id = {"category"}
+							>
+								<SelectTrigger className="w-full border border-gray-300 rounded-md">
+									<SelectValue className="text-black" placeholder = {"Select Category"}/>
+								</SelectTrigger>
+								<SelectContent>
+								<SelectItem value={'none'}>Default</SelectItem>
+									{allCategories && allCategories.length > 0 && allCategories.map((cat) => (
+										<SelectItem key={cat.value} value={cat.value}>{cat.value}</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
+
+							<DatePicker
+								selected={validDate}
+								onChange={(date) => setValidDate(date)}
+								dateFormat="yyyy-MM-dd"
+								placeholderText="Select a date"
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+							/>
+							<Select
+								value={status}
+								onValueChange={(value) => setStatus(value)}
+								id = {"status"}
+								className="w-full px-4 py-2 border border-gray-300 rounded-md"
+							>
+								<SelectTrigger className="w-full border border-gray-300 rounded-md">
+									<SelectValue className="text-black" placeholder = {"Select Status"}/>
+								</SelectTrigger>
+								<SelectContent>
+									<SelectItem value="Active">Active</SelectItem>
+									<SelectItem value="Inactive">Inactive</SelectItem>
+								</SelectContent>
+							</Select>
+
+							<div className="flex justify-between">
+								<Button onClick={handleSubmit} type="submit" className="text-white px-6 py-2 rounded-md">
+									{modalCoupon ? 'Update' : 'Create'}
+								</Button>
+							</div>
+						</form>
+						</div>
+					</DialogContent>
+					</Dialog>
 
             {/* Create Coupon Modal */}
-            {isModalOpen && (
-                <div className="fixed inset-0 bg-gray-800 bg-opacity-50 flex justify-center items-center">
-                    <div className="bg-white p-6 rounded-lg shadow-lg w-full sm:w-96 max-h-full overflow-y-auto">
-                    <h2 className="text-xl font-bold mb-4 text-center">{modalCoupon ? "Edit Coupon" : "Create Coupon"}</h2>
-                    <form className="space-y-4">
-                        <input
-                            type="text"
-                            placeholder="Coupon Name"
-                            value={couponName}
-                            onChange={(e) => setCouponName(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                            required
-                        />
-                        <textarea
-                        type="text"
-                        placeholder="Coupon Description"
-                        value={couponDescription}
-                        onChange={(e) => setCouponDescription(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        rows="6"
-                        />
-                        <input
-                        type="text"
-                        placeholder="Coupon Code"
-                        value={couponCode}
-                        onChange={(e) => setCouponCode(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        required
-                        />
-                        <select
-                        value={couponType}
-                        onChange={(e) => setCouponType(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        >
-                        <option value="Percentage">Percentage</option>
-                        <option value="Price">Price</option>
-                        </select>
-                        <input
-                        type="number"
-                        placeholder="Discount"
-                        value={discount}
-                        onChange={(e) => setDiscount(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        />
-                        <input
-                        type="number"
-                        placeholder="Min Coupon Amount"
-                        value={minOrderAmount}
-                        onChange={(e) => setMinOrderAmount(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        />
-                        <label className="flex items-center justify-start">
-                        <input
-                            type="checkbox"
-                            checked={customerLogin}
-                            onChange={() => setCustomerLogin(!customerLogin)}
-                            className="mr-2"
-                        />
-                        Customer Login Required
-                        </label>
-                        <label className="flex items-center justify-start">
-                        <input
-                            type="checkbox"
-                            checked={freeShipping}
-                            onChange={() => setFreeShipping(!freeShipping)}
-                            className="mr-2"
-                        />
-                        Free Shipping
-                        </label>
-                        <select
-                            value={category}
-                            onChange={(e) => setCategory(e.target.value)}
-                            className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        >
-                            <option value={'none'}>Default</option>
-                            {allCategories && allCategories.length > 0 && allCategories.map((cat) => (
-                                <option key={cat.value} value={cat.value}>{cat.value}</option>
-                            ))}
-                        </select>
-
-                        <input
-                        type="date"
-                        value={validDate}
-                        onChange={(e) => setValidDate(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        />
-                        <select
-                        value={status}
-                        onChange={(e) => setStatus(e.target.value)}
-                        className="w-full px-4 py-2 border border-gray-300 rounded-md"
-                        >
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                        </select>
-
-                        <div className="flex justify-between">
-                        <Button onClick={(e) => handleSubmit()} type="submit" className="bg-blue-500 text-white px-6 py-2 rounded-md">
-                            {modalCoupon ? 'Update' : 'Create'}
-                        </Button>
-                        <Button onClick={() => setIsModalOpen(false)} className="bg-gray-300 text-black px-6 py-2 rounded-md">
-                            Cancel
-                        </Button>
-                        </div>
-                    </form>
-                    </div>
-                </div>
-                )}
 
         </div>
     );

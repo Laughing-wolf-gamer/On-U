@@ -2,18 +2,14 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { getAddress, getConvinceFees, getuser } from '../../action/useraction';
 import { deleteBag, getbag, getqtyupdate, itemCheckUpdate } from '../../action/orderaction';
 import { getRandomArrayOfProducts } from '../../action/productaction';
-import CouponsDisplay from '../Bag/CouponDisplay';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
-import SingleProduct from '../Product/Single_product';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
-import Loader from '../Loader/Loader';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)

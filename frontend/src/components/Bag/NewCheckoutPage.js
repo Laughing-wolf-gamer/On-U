@@ -304,7 +304,7 @@ const CheckoutPage = () => {
 			// dispatch(getbag({ userId: user.id }));
 			window.location.reload();
 		} else {
-			checkAndCreateToast("info","Please select a coupon and apply it before proceeding with payment");
+			checkAndCreateToast("info","No Coupon Applied!");
 		}
 	};
 	const removeCoupon = async (e, code) => {
@@ -681,7 +681,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 		</div>
 
 		{/* Display Coupons */}
-		<HorizontalScrollingCouponDisplay user={user} />
+		<HorizontalScrollingCouponDisplay user={user} bag={bag} />
 	</div>
 
 );

@@ -431,6 +431,7 @@ export const applyCouponToBag = async(req,res)=>{
 		updatedBag.totalDiscount = totalDiscount;
 		updatedBag.totalMRP = totalMRP;
 		await updatedBag.save();
+		console.log("Updated Coupon After Coupon Applied: ",updatedBag)
 		// updatedBag.totalGst = totalGst;
 		
         res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst}})
@@ -1036,8 +1037,9 @@ const getItemsData = async (bag) => {
 
 		if (CouponType === "Percentage") {
 			// Ensure totalProductSellingPrice is positive
-			if (discountedAmount > 0) {
+			if (totalProductSellingPrice > 0) {
 				const discountAmount = discountedAmount * (Discount / 100);
+				console.log("discountedAmount = ", discountAmount)
 				discountedAmount -= discountAmount;
 				couponDiscountedAmount += discountAmount; // Add to couponDiscountedAmount
 			}
@@ -1051,6 +1053,7 @@ const getItemsData = async (bag) => {
 				discountedAmount = 0; // Avoid negative prices
 			}
 		}
+		
 
 		return discountedAmount;
 	};
@@ -1078,7 +1081,9 @@ const getItemsData = async (bag) => {
     if (bag?.ConvenienceFees > 0 && !bag?.Coupon?.FreeShipping) {
         totalProductSellingPrice += bag.ConvenienceFees;
     }
+	
 	totalDiscount += couponDiscountedAmount;
+	console.log("Coupon Discount:",couponDiscountedAmount,bag.Coupon);
 	console.log("Total Product Selling Price: ", totalProductSellingPrice,totalMRP, totalSP, totalDiscount);
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst };
 };
@@ -1254,7 +1259,7 @@ export const updateqtybag = async (req, res, next) => {
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
-        console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+        console.log("Update Bag Qunatity New Data ",bag.TotalBagAmount);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
         if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
         if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;

@@ -23,7 +23,6 @@ import StarRatingInput from './StarRatingInput'
 import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 import WhatsAppButton from '../Home/WhatsAppButton'
-import styled from '@emotion/styled'
 
 const reviews = [
     {
@@ -883,7 +882,7 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                                         <h3 className="text-xl font-semibold text-gray-800 mb-4">All Reviews</h3>
                                         <div className="flex w-[90%] flex-row space-y-4 overflow-y-auto">
                                             {product && product.Rating && product.Rating.length > 0 ? (
-                                                <ProductReviews reviews={/* product.Rating */ reviews} />
+                                                <ProductReviews reviews={product.Rating} />
                                             ) : (
                                                 <ProductReviews reviews={reviews} />
                                             )}
