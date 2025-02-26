@@ -121,7 +121,7 @@ const Navbar = ({user}) => {
                             <li className='w-max flex items-stretch'>
                                 
                                 <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
-                                    <Link to='/'> <h1 className='text-4xl py-1 ml-2 font-extrabold font-kumbsan text-center text-gray-800'>On U</h1></Link>
+                                    <Link to='/'> <h1 className='text-[35px] py-1 ml-2 font-extrabold font-kumbsan text-center text-gray-800'>On U</h1></Link>
                                 </div>
                                 
                             </li>
