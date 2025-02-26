@@ -191,7 +191,7 @@ const CouponCard = ({ coupon, checkAndCreateToast,bag,user }) => {
 				<button
 					disabled = {bag?.Coupon != null}
 					onClick={tryCopyCode}
-					className="bg-black text-white py-2 px-5 text-xs sm:text-xs md:text-sm transition-all ease-in-out duration-500 hover:bg-white hover:text-gray-800 hover:border-[1px] border-gray-900 rounded-full whitespace-nowrap"
+					className="bg-black text-white disabled:bg-gray-300 disabled:text-black py-2 px-5 text-xs sm:text-xs md:text-sm transition-all ease-in-out duration-500 hover:bg-white hover:text-gray-800 hover:border-[1px] border-gray-900 rounded-full whitespace-nowrap"
 				>
 				<span>Copy Code</span>
 				</button>
