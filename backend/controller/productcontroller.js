@@ -230,7 +230,7 @@ export const getallproducts = async (req, res) => {
 		}
         const allProducts = await ProductModel.find({});
         // Paginate products
-        const itemsPerPage = 20;
+        const itemsPerPage = 50;
         const currentPage = parseInt(req.query.page, 10) || 1; // Default to page 1 if not provided
         const skip = (currentPage - 1) * itemsPerPage;
 

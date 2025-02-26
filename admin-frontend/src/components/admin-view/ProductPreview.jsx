@@ -99,17 +99,14 @@ const ProductPreview = ({
     const renderPopUpContent = () => (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
 		
-            <div className="bg-white rounded-lg p-5 py-12 max-w-4xl w-full h-[94%] overflow-y-auto relative">
-				<X
-					onClick={(e) => {
-						e.preventDefault();
-						togglePopUp();
-						if (setCurrentPreviewProduct) {
-							setCurrentPreviewProduct(null);
-						}
-					}}
-					className="absolute top-2 right-2 w-10 h-10 font-semibold text-gray-500 hover:text-gray-700 cursor-pointer"
-				/>
+        </div>
+    );
+	if(!showPopUp){
+		return null;
+	}
+    return <DialogContent className = "h-screen mx-auto min-w-[50vw] max-w-[70vw]">
+		<DialogTitle>Product Details</DialogTitle>
+            <div className="bg-white rounded-lg p-1 w-full h-full overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                     <div className="relative flex flex-col gap-2">
 						<span>ProductId: {productData?.productId}</span>
@@ -422,24 +419,6 @@ const ProductPreview = ({
                                 )
                             }
                         </div>
-						{/* <div className="mb-6 space-y-4">
-                            {
-                                isEditing ? <TextInputArrayCustom defualt={productData?.delivaryPoints} onChange={(e)=>{
-                                    // console.log("Editing Bullet Points: ",e);
-                                    setProductData({
-                                        ...productData,
-                                        ["delivaryPoints"]: e,
-                                    });
-                                }}/>:(
-                                    <>
-                                        {productData?.delivaryPoints && productData?.delivaryPoints.length > 0 && (
-                                            <TextArrayView points={productData?.delivaryPoints} />
-                                        )}
-                                    </>
-                                )
-                            }
-                        </div> */}
-                        {/* Edit and Delete Buttons */}
                         <div className="flex justify-between w-full py-4 space-x-5 px-6 mt-8">
                             <Button
                                 className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition duration-300"
@@ -507,12 +486,7 @@ const ProductPreview = ({
 				
 				/>
 			</Dialog>
-        </div>
-    );
-	if(!showPopUp){
-		return null;
-	}
-    return <div className="container mx-auto w-screen p-6">{renderPopUpContent()}</div>;
+	</DialogContent>;
 };
   
 const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
@@ -800,300 +774,260 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			}
 		}
 	}
-	// console.log("Selected Color Images: ",activeImageColorSize);
 
-	/* const memoizedColorImages = useMemo(() => {
-		return selectedColorImages.map((item, index) => {
-			const isVideo = item?.url?.includes('video');
-			return (
-				<div key={index} className="w-24 h-24">
-					{isVideo ? (
-						<video
-							className="w-full h-full object-contain rounded-md border"
-							controls
-							src={item?.url}
-							alt={`Color Video ${index + 1}`}
-							loading="lazy" // Lazy load videos
-						>
-						Your browser does not support the video tag.
-						</video>
-					) : (
-						<img
-							src={item?.url}
-							alt={`Color Image ${index + 1}`}
-							className="w-full h-full object-contain rounded-md border"
-							loading="lazy" // Lazy load images
-						/>
-					)}
-				</div>
-			);
-		});
-	  }, [selectedColorImages]); // Memoize only when selectedColorImages change */
 	return (
-		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> {/* Make the container a column layout */}
+		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> 
+			{/* Container for the button to toggle New Size */}
 			<div className="flex justify-center items-center gap-4">
 				<Button
-					disabled={isLoading}
-					onClick={() => setToggleAddNewSize(!toggleAddNewSize)}
-					className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md flex items-center gap-2"
+				disabled={isLoading}
+				onClick={() => setToggleAddNewSize(!toggleAddNewSize)}
+				className="bg-gray-600 hover:bg-gray-500 text-white p-2 rounded-md flex items-center gap-2"
 				>
-					{/* Toggle between the Plus and Minus icon based on the state */}
-					{toggleAddNewSize ? (
-						<Fragment>
-							<MinusCircleIcon className="h-5 w-5" />
-							<span className="text-sm">Hide New Size</span> {/* Optional text for additional context */}
-						</Fragment>
-					) : (
-						<Fragment>
-							<PlusCircleIcon className="h-5 w-5" />
-							<span className="text-sm">New Size</span> {/* Optional text for additional context */}
-						</Fragment>
-					)}
+				{/* Toggle between the Plus and Minus icon based on the state */}
+				{toggleAddNewSize ? (
+					<Fragment>
+					<MinusCircleIcon className="h-5 w-5" />
+					<span className="text-sm">Hide New Size</span> {/* Optional text for additional context */}
+					</Fragment>
+				) : (
+					<Fragment>
+					<PlusCircleIcon className="h-5 w-5" />
+					<span className="text-sm">New Size</span> {/* Optional text for additional context */}
+					</Fragment>
+				)}
 				</Button>
 			</div>
-			{
-				toggleAddNewSize && <SizeSelector 
-					sizeType={"clothingSize"} 
-					OnChange={(e) => {
-						setNewSize(e.length > 0 ? e : null);
-					}} 
-				/>
-			}
+
+			{/* Conditionally render Size Selector */}
+			{toggleAddNewSize && <SizeSelector 
+				sizeType={"clothingSize"} 
+				OnChange={(e) => { setNewSize(e.length > 0 ? e : null); }} 
+			/>}
+
+			{/* New Size Button */}
 			{toggleAddNewSize && newSize && (
 				<Button 
-					disabled={!newSize} 
-					onClick={() => {
-
-						handleAddNewSize(newSize);
-					}}
-					className="bg-green-500 hover:bg-green-400 text-white p-2 rounded-md"
+				disabled={!newSize} 
+				onClick={() => handleAddNewSize(newSize)}
+				className="bg-green-500 hover:bg-green-400 text-white p-2 rounded-md"
 				>
-					Update New Size
+				Update New Size
 				</Button>
 			)}
+
 			{/* Loop through Sizes */}
 			{SizesArray && SizesArray.length > 0 && SizesArray.map((size, i) => (
-				
-				<div key={i} className="border p-4 rounded-md shadow-md w-full relative flex flex-col gap-4"> {/* Flex layout for size box */}
-					<h2 className="text-xl font-semibold">Size: {size.label} {renderLowQuantityIndicator(sizeQuantities[size._id])}
-					</h2>
-					<p className="text-sm text-gray-500">Quantity: {sizeQuantities[size._id]}</p>
-					<div className='flex justify-end items-center gap-4'>
-						<Button
-							disabled={isLoading}
-							onClick={() => {
-								if(toggleEditColor){
-									setToggleEditColorsColor(null);
-								}else{
-									setToggleEditColorsColor(size?._id)
-								}
-							}}
-							className={`bg-black hover:bg-gray-700 p-2 rounded-md`}
+				<div key={i} className="border p-4 rounded-md shadow-md w-full relative flex flex-col gap-4">
+
+				{/* Size Info */}
+				<h2 className="text-xl font-semibold">Size: {size.label} {renderLowQuantityIndicator(sizeQuantities[size._id])}</h2>
+				<p className="text-sm text-gray-500">Quantity: {sizeQuantities[size._id]}</p>
+
+				{/* Color Edit Button */}
+				<div className="flex justify-end items-center gap-4">
+					<Button
+					disabled={isLoading}
+					onClick={() => {
+						if(toggleEditColor) {
+						setToggleEditColorsColor(null);
+						} else {
+						setToggleEditColorsColor(size?._id);
+						}
+					}}
+					className={`bg-black hover:bg-gray-700 p-2 rounded-md`}
+					>
+					Color<Edit size={20} />
+					</Button>
+				</div>
+
+				{/* Color Preset Section */}
+				<div className={`flex justify-center flex-col my-7 space-y-9 items-center ${toggleEditColor && toggleEditColor === size._id ? 'block' : 'hidden'}`}>
+					<ColorPresetSelector
+					colorOptions={colorOptions}
+					sizeTag={size._id}
+					sizeTitle={size.label}
+					editingMode={true}
+					OnChange={(e) => {
+						setUpdatingColors({ sizeId: size._id, colors: e });
+					}}
+					/>
+					
+					{updatingColors && updatingColors.sizeId === size._id && (
+					<div className={`flex justify-center items-center gap-4 ${updatingColors?.colors?.length > 0 ? 'block' : 'hidden'}`}>
+						<Button 
+						disabled={updatingColors === null} 
+						onClick={() => {
+							handleAddNewColor(updatingColors.sizeId, updatingColors.colors);
+						}}
+						className={`bg-green-500 text-white p-2 rounded-md ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'}`}
 						>
-							Color<Edit size={20} />
+						Update
 						</Button>
 					</div>
-					
-					
-					<div className={`flex justify-center flex-col my-7 space-y-9 items-center ${toggleEditColor && toggleEditColor === size._id ? 'block' : 'hidden'}`}>
-						<ColorPresetSelector
-							colorOptions={colorOptions}
-							sizeTag={size._id}
-							sizeTitle={size.label}
-							editingMode = {true}
-							OnChange={(e) => {
-								setUpdatingColors({ sizeId: size._id, colors: e });
-							}}
-							
-						/>
-						
-						{
-							updatingColors && updatingColors.sizeId === size._id && (
-								<div className={`flex justify-center items-center gap-4 ${updatingColors?.colors?.length > 0 ? 'block' : 'hidden'}`}>
+					)}
+				</div>
 
-									<Button 
-										disabled={updatingColors === null} 
-										onClick={() => {
-											handleAddNewColor(updatingColors.sizeId, updatingColors.colors);
-										}}
-										className={`bg-green-500 text-white p-2 rounded-md ${isLoading ? 'cursor-not-allowed' : 'cursor-pointer'} `}
-									>
-										Update
-									</Button>
-								</div>
-							)
-						}
-						
+				{/* Size Quantity Control */}
+				<div className="flex items-center gap-2 mt-4 border justify-between border-gray-500 shadow-md rounded-md p-4 relative">
+					<Label className='font-extrabold text-center text-gray-600'>{size.label}</Label>
+					<div className='w-fit h-fit space-x-6'>
+					<Button
+						disabled={isLoading || sizeQuantities[size._id] <= 0}
+						onClick={() => handleSizeQuantityChange(size._id, -1)}
+						className="p-2 rounded-full"
+					>
+						<Minus />
+					</Button>
+					<Label className="text-lg text-gray-700 font-extrabold">Qty: {sizeQuantities[size._id]}</Label>
+					<Button
+						disabled={isLoading}
+						onClick={() => handleSizeQuantityChange(size._id, 1)}
+						className="p-2 rounded-full"
+					>
+						<Plus />
+					</Button>
 					</div>
-					{/* Size Quantity Control */}
-					<div className="flex items-center gap-2 mt-4 border justify-between border-gray-500 shadow-md rounded-md p-4 relative">
-						<Label className='font-extrabold text-center text-gray-600'>{size.label}</Label>
-						<div className='w-fit h-fit space-x-6'>
+				</div>
 
-							<Button
-								disabled={isLoading || sizeQuantities[size._id] <= 0}
-								onClick={() => handleSizeQuantityChange(size._id, -1)}
-								className=" p-2 rounded-full"
-							>
-								<Minus />
-							</Button>
-							<Label className="text-lg text-gray-700 font-extrabold">Qty: {sizeQuantities[size._id]}</Label>
-							<Button
-								disabled={isLoading}
-								onClick={() => handleSizeQuantityChange(size._id, 1)}
-								className=" p-2 rounded-full"
-							>
-								<Plus />
+				{/* Remove Size Button */}
+				<Button 
+					disabled={isLoading} 
+					onClick={() => {
+					setSizeDeletingData({sizeId: size._id});
+					setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+					}} 
+					className="absolute top-2 right-6 text-white p-2 rounded-full bg-red-700"
+				>
+					Remove Size: {size.label}
+				</Button>
+
+				{/* Color Options */}
+				<div className="flex gap-4 mt-4 max-w-full overflow-x-auto justify-start items-start">
+					{size && size.colors && size.colors.length > 0 && size.colors.map((color, index) => (
+					<div
+						key={index}
+						className="relative flex flex-col items-center min-h-[100px] min-w-[260px] cursor-pointer justify-center border border-black gap-3 bg-neutral-50 p-4 rounded-md shadow-md"
+					>
+						<div className='flex justify-center space-x-2 items-center'>
+						<div
+							className="w-10 h-10 rounded-full border-2"
+							style={{ backgroundColor: color.label }}
+						/>
+						<Label className="text-sm text-gray-700 font-extrabold whitespace-nowrap">{color?.name}</Label>
+						</div>
+						<Label className="text-lg absolute top-0 left-0 text-black animate-bounce font-extrabold">
+						{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${color._id}`])}
+						</Label>
+						<button onClick={(e) => {
+						e.preventDefault();
+						setActiveImageColorSize(size._id);
+						handleColorClick(color?.images || []);
+						}} className="text-lg absolute top-3 left-10 text-black font-extrabold">
+						<Eye />
+						</button>
+
+						{/* Color Quantity Control */}
+						<div className="flex items-center px-3 min-w-fit justify-between border border-gray-600 rounded-lg space-x-4">
+						<Button
+							disabled={isLoading || sizeQuantities[`${size._id}-${color._id}`] <= 0}
+							onClick={(e) => {
+							e.stopPropagation();
+							e.preventDefault();
+							handleColorQuantityChange(size._id, color._id, -1);
+							}}
+							className="bg-black p-2 rounded-full"
+						>
+							<Minus />
+						</Button>
+						<Label className="text-lg text-gray-700 font-extrabold whitespace-nowrap">
+							Qty: {sizeQuantities[`${size._id}-${color._id}`]}
+						</Label>
+						<Button
+							disabled={isLoading}
+							onClick={(e) => {
+							e.stopPropagation();
+							handleColorQuantityChange(size._id, color._id, 1);
+							}}
+							className="bg-black p-2 rounded-full"
+						>
+							<Plus />
+						</Button>
+
+						{/* File Upload Button with Icon */}
+						<div className="p-2">
+							<Button onClick={(e) => {
+							e.stopPropagation();
+							setActiveSelectedColor(color._id);
+							setActiveSelectedSize(size._id);
+							setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+							setSelectedColorImages([]);
+							}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
+							<ImageUpIcon />
 							</Button>
 						</div>
-					</div>
-					{/* Remove Size Button */}
-					<Button 
-						disabled={isLoading} 
+						</div>
+
+						{/* Remove Color Button */}
+						<Button
+						disabled={isLoading}
 						onClick={() => {
-							setSizeDeletingData({sizeId:size._id});
+							setColorDeletingData({sizeId: size._id, colorId: color._id});
 							setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-						}} 
-						className="absolute top-2 right-6 text-white p-2 rounded-full bg-red-700"
-					>
-						Remove Size: {size.label}
-					</Button>
-					
-	
-					{/* Color Options */}
-					<div className="flex gap-4 mt-4 max-w-full overflow-x-auto justify-start items-start">
-						{size && size.colors && size.colors.length > 0 && size.colors.map((color, index) => {
-							const activeColor = color;
-							return(
-								<div
-									key={index}
-									className="relative flex flex-col items-center min-h-[100px] min-w-[260px] cursor-pointer justify-center border border-black gap-3 bg-neutral-50 p-4 rounded-md shadow-md"
-									
-								>
-									<div className='flex justify-center space-x-2 items-center'>
-										<div
-											className="w-10 h-10 rounded-full border-2"
-											style={{ backgroundColor: activeColor.label }}
-										/>
-										<Label className="text-sm text-gray-700 font-extrabold whitespace-nowrap">{activeColor?.name}</Label>
-									</div>
-
-									<Label className="text-lg absolute top-0 left-0 text-black animate-bounce font-extrabold">
-										{renderLowQuantityIndicator(sizeQuantities[`${size._id}-${activeColor._id}`])}
-									</Label>
-									<button onClick={(e) => {
-										e.preventDefault();
-										setActiveImageColorSize(size._id);
-										handleColorClick(activeColor?.images || []);
-									}}  className="text-lg absolute top-3 left-10 text-black font-extrabold">
-										<Eye/>
-									</button>
-
-									{/* Color Quantity Control */}
-									<div className="flex items-center px-3 min-w-fit justify-between border border-gray-600 rounded-lg space-x-4">
-										<Button
-											disabled={isLoading || sizeQuantities[`${size._id}-${activeColor._id}`] <= 0}
-											onClick={(e) => {
-												e.stopPropagation();
-												e.preventDefault();
-												handleColorQuantityChange(size._id, activeColor._id, -1);
-											}}
-											className="bg-black p-2 rounded-full "
-										>
-											<Minus />
-										</Button>
-										<Label className="text-lg text-gray-700 font-extrabold whitespace-nowrap">Qty: {sizeQuantities[`${size._id}-${activeColor._id}`]}</Label>
-										{/* <form onSubmit={()=>{
-											e.preventDefault();
-											if(sizeInputQuantiy.quantity < 0 || sizeInputQuantiy.quantity > sizeQuantities[`${size._id}-${activeColor._id}`]) return;
-											handleColorQuantityChange(sizeInputQuantiy.sizeId, sizeInputQuantiy.colorId, sizeInputQuantiy?.quantity);
-											setSizeInputQuantiy({sizeId: null, colorId: null, quantity: null});
-										}}>
-											<Input
-												type="number"
-												min="0"
-												value={sizeQuantities[`${size._id}-${activeColor._id}`] || 0}
-												onChange={(e) => {
-													setSizeInputQuantiy({sizeId: size._id, colorId: activeColor._id, quantity: parseInt(e.target.value)});
-												}}
-											/>
-										</form> */}
-										<Button
-											disabled={isLoading}
-											onClick={(e) => {
-												e.stopPropagation();
-												handleColorQuantityChange(size._id, activeColor._id, 1);
-											}}
-											className="bg-black p-2 rounded-full"
-										>
-											<Plus />
-										</Button>
-
-										{/* File Upload Button with Icon */}
-										<div className="p-2">
-											<Button onClick={(e) => {
-												e.stopPropagation();
-												setActiveSelectedColor(activeColor._id);
-												setActiveSelectedSize(size._id);
-												setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-												setSelectedColorImages([]);
-											}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
-												<ImageUpIcon />
-											</Button>
-										</div>
-									</div>
-
-									{/* Remove Color Button */}
-									<Button
-										disabled={isLoading}
-										onClick={() => {
-											setColorDeletingData({sizeId: size._id, colorId: color._id});
-											setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-										}}
-										className="text-white w-6 h-6 px-2 absolute top-2 right-2 bg-black p-2 rounded-full"
-									>
-										<X />
-									</Button>
-								</div>
-							);
-						})}
+						}}
+						className="text-white w-6 h-6 px-2 absolute top-2 right-2 bg-black p-2 rounded-full"
+						>
+						<X />
+						</Button>
 					</div>
-					<Dialog open = {activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0} onOpenChange={()=>{
-						setActiveImageColorSize(null);
-						setSelectedColorImages([]);
-					}}>
-						<ImagesPreview selectedColorImages={selectedColorImages}/>
-					</Dialog>
+					))}
+				</div>
+
+				{/* Image Preview Dialog */}
+				<Dialog open={activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0} onOpenChange={() => {
+					setActiveImageColorSize(null);
+					setSelectedColorImages([]);
+				}}>
+					<ImagesPreview selectedColorImages={selectedColorImages} />
+				</Dialog>
 				</div>
 			))}
-			<ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={()=> {
-				setIsConfirmDeleteWindow(false)
+
+			{/* Confirm Delete Popup */}
+			<ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={() => {
+				setIsConfirmDeleteWindow(false);
 				setColorDeletingData(null);
 				setSizeDeletingData(null);
 				setSelectedColorImages([]);
-			}} onConfirm={()=>{
-				if(colorDeletingData){
-					handelRemoveColor(colorDeletingData.sizeId, colorDeletingData.colorId);
+			}} onConfirm={() => {
+				if (colorDeletingData) {
+				handelRemoveColor(colorDeletingData.sizeId, colorDeletingData.colorId);
 				}
-				if(sizeDeletingData){
-					handelRemoveSize(sizeDeletingData.sizeId);
+				if (sizeDeletingData) {
+				handelRemoveSize(sizeDeletingData.sizeId);
 				}
 				setIsConfirmDeleteWindow(false);
 				setSelectedColorImages([]);
-			}}/>
-			<Dialog open = {isFileUploadPopUpOpen} onOpenChange={()=>{
+			}} />
+
+			{/* File Upload Pop-Up Window */}
+			<Dialog open={isFileUploadPopUpOpen} onOpenChange={() => {
 				setActiveSelectedColor(null);
 				setActiveSelectedSize(null);
 				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
 			}}>
-				<FileUploadPopUpWindow sizeId={activeSelectedSize} colorId={activeSelectedColor} isOpen={isFileUploadPopUpOpen} 
-				onConfirm = {(imageArray)=>{
-					updateImageImageBuyColorId(activeSelectedColor,activeSelectedSize,imageArray)
+				<FileUploadPopUpWindow 
+				sizeId={activeSelectedSize} 
+				colorId={activeSelectedColor} 
+				isOpen={isFileUploadPopUpOpen} 
+				onConfirm={(imageArray) => {
+					updateImageImageBuyColorId(activeSelectedColor, activeSelectedSize, imageArray);
 					setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-				}} />
+				}} 
+				/>
 			</Dialog>
-			
-		</div>
+			</div>
+
 	);
 	
 };

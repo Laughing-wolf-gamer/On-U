@@ -6,7 +6,7 @@ const RatingDataView = ({ isOpen, onClose, ratings, onDeleteRating,addNewRating 
     if (!isOpen) return null; // Don't render if the modal is not open
     console.log("ratings Data: ",ratings);
     return (
-        <DialogContent >
+        <DialogContent>
 			<DialogTitle>All Ratings</DialogTitle>
 			<div className="flex flex-row space-y-4 bg-gray-100">
 				{ratings && ratings.length > 0 && <ProductReviews reviews={ratings} onRemoveRating={onDeleteRating}/>}

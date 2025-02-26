@@ -46,16 +46,6 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
         }
     };
 
-    // Effect hook to initialize carousel and cleanup on unmount
-    /* useEffect(() => {
-        // startAutoSliding(); // Start auto sliding when the component mounts
-
-        return () => {
-            if (timerRef.current) {
-                clearInterval(timerRef.current); // Cleanup interval on unmount
-            }
-        };
-    }, []); // Empty dependency array means this runs only once when the component mounts */
     useEffect(() => {
         // Check if the user is logged in
         if(wishlist){
@@ -214,21 +204,22 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
 
             {/* Navigation Dots */}
             {showWishList && (
-                <div
-                    className="absolute top-3 left-2 min-w-max focus:outline-none transition duration-300 ease-out hover:-translate-y-0.5"
-                    onClick={addToWishList}
-                >
-                    {isInWishList ? (
-                        <div className="text-red-500 animate-shine p-1 rounded-full">
-                            <Heart fill="red" className="text-red-500" />
-                        </div>
-                    ) : (
-                        <div className="transition duration-300 ease-out focus:translate-y-2 hover:translate-y-1">
-                            <Heart fill="white" className="text-white" />
-                        </div>
-                    )}
-                </div>
-            )}
+				<div
+					className="absolute top-3 left-2 min-w-max focus:outline-none transition duration-300 ease-out hover:scale-110 transform hover:translate-y-1"
+					onClick={addToWishList}
+				>
+					{isInWishList ? (
+						<div className="text-red-500 animate-shine p-1 rounded-full">
+							<Heart fill="red" className="text-red-500 animate-pulse duration-500" />
+						</div>
+					) : (
+						<div className="transition-all duration-300 ease-out hover:scale-110 hover:translate-y-2">
+							<Heart fill="white" className="text-white" />
+						</div>
+					)}
+				</div>
+			)}
+
         </div>
     );
 };

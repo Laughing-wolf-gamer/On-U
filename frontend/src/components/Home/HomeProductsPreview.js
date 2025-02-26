@@ -154,7 +154,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                 ${isHovered ? 'opacity-100 translate-y-0 shadow' : 'opacity-0 translate-y-4'}`}
             >
                 {!product ? (
-                    <div className="w-full h-10 bg-gray-300 animate-pulse rounded-md"></div> // Skeleton button
+                    <div className="w-full h-10 bg-gray-300 animate-shine rounded-md"></div> // Skeleton button
                 ) : (
                     <>
                         <div className="w-full h-8 md:h-10 flex items-center justify-center">

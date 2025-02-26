@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
-import { IoIosArrowDown, IoIosArrowDropright } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
@@ -11,13 +10,12 @@ import MFilter from './MFilter';
 import Footer from '../Footer/Footer';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
-import ProductCardSkeleton from './ProductCardSkeleton';
 import { ChevronRight } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
 import Loader from '../Loader/Loader';
 import WhatsAppButton from '../Home/WhatsAppButton';
 
-const maxAmountPerPage = 20;
+const maxAmountPerPage = 50;
 const Allproductpage = ({user}) => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();

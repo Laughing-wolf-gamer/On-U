@@ -643,7 +643,7 @@ export const fetchAllProducts = async (req, res) => {
         const allProducts = await ProductModel.find({});
         // console.log("allProducts: ",allProducts);
         const totalProducts = await ProductModel.countDocuments();
-        const itemsPerPage = 10;
+        const itemsPerPage = 50;
         const currentPage = parseInt(page, 10) || 1; // Default to page 1 if not provided
 
         // Calculate the number of items to skip

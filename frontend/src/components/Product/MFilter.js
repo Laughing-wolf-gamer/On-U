@@ -134,8 +134,8 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     function categoriesarray() {
         if (product && product.length > 0) {
             product.forEach(p => {
+				category.push(p.category)
                 if(!category.includes(p.category)){
-                    category.push(p.category)
                 }
             });
         }
@@ -153,9 +153,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
                         discountedPercentageAmount.push(discountPercentage)
                     } */
                     const amount = Math.floor(p.DiscountedPercentage);
-                    if(!discountedPercentageAmount.includes(amount)){
-                        discountedPercentageAmount.push(amount)
-                    }
+					discountedPercentageAmount.push(amount)
                 }
             });
         }
@@ -164,9 +162,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 if(p.salePrice && p.salePrice > 0){
-                    if(!onSale.includes(p.salePrice)){
-                        onSale.push(p.salePrice)
-                    }
+					onSale.push(p.salePrice)
                 }
             });
         }
@@ -175,17 +171,15 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         console.log("Product: ",product);
         if (product && product.length > 0) {
             product.forEach(p => {
-                if(!subcategory.includes(p.subCategory)){
-                    subcategory.push(p.subCategory)
-                }
+				subcategory.push(p.subCategory)
             });
         }
     }
     function specialCategoriesarray() {
         if (product && product.length > 0) {
             product.forEach(p => {
-                if(!specialCategory.includes(p.specialCategory) && p.specialCategory !== "none" && p.specialCategory !== undefined){
-                specialCategory.push(p.specialCategory)
+                if( p.specialCategory !== "none" && p.specialCategory !== undefined){
+                	specialCategory.push(p.specialCategory)
                 }
             });
         }
@@ -194,9 +188,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         if (product && product.length > 0) {
 			product.forEach(p => {
 				p.size.forEach(s => {
-				if(!size.includes(s.label)){
 					size.push(s.label);
-				}
 				})
 			});
         }
@@ -205,8 +197,8 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     function genderarray() {
         if (product && product.length > 0) {
             product.forEach(p => {
+				gender.push(p.gender)
                 if(!gender.includes(p.gender)){
-                    gender.push(p.gender)
                 }
             });
         }
@@ -216,10 +208,10 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 p.AllColors.forEach(c => {
-                    const alreadyExists = color.some(item => item.label === c.label);
+					color.push(c);
+                    /* const alreadyExists = color.some(item => item.label === c.label);
                     if (!alreadyExists){
-                        color.push(c);
-                    }
+                    } */
                 });
             });
         }
@@ -255,9 +247,12 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     let Categorynewarray = [...new Set(category)];
     let specialCategoryNewArray = [...new Set(specialCategory)];
+    let discountedPercentageAmountNewArray = [...new Set(discountedPercentageAmount)];
     let subCategoryNewArray = [...new Set(subcategory)];
     let gendernewarray = [...new Set(gender)];
-    let colornewarray = [...new Set(color)];
+    let colornewarray = [
+    	...new Map(color.map(item => [item.label, item])).values()
+	];
     let sizenewArray = [...new Set(size)]
     let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
 
@@ -638,20 +633,29 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 						<h1 className={`filter4 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(4), addclass3(4))}>Size</h1>
 						<h1 className={`filter5 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(5), addclass3(5))}>Price</h1>
 						<h1 className={`filter6 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(6), addclass3(6))}>Color</h1>
-						<h1 className={`filter7 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
-						<h1 className={`filter8 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
-						<h1 className={`filter9 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
+						{
+							specialCategoryNewArray && specialCategoryNewArray.length > 0 && (
+								<h1 className={`filter7 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(7), addclass3(7))}>Special Category</h1>
+							)
+						}
+						{discountedPercentageAmountNewArray && discountedPercentageAmountNewArray.length > 0 && (
+							<h1 className={`filter8 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(8), addclass3(8))}>Discount</h1>
+						)}
+						
+						{onSale.length > 0 && (
+							<h1 className={`filter9 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(9), addclass3(9))}>On Sale</h1>
+						)}
 					</div>
 
 					<div className='col-span-8 '>
 
 						<ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
 							{
-								gender && gender.map((e,i) =>
+								gendernewarray && gendernewarray.map((e,i) =>
 
 									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-white font${e.replace(/ /g, "")} relative`}
 										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 text-gray-800 tick${e.replace(/ /g, "")}`}></span>
-									<span className={`text-sm text-gray-700`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{gender.filter((f) => f === e).length}</span></li>
+									<span className={`text-sm text-gray-700`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs text-gray-700`}>{gender.filter((f) => f === e).length}</span></li>
 
 								)
 							}
@@ -674,14 +678,14 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
 									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
 									onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subCategoryNewArray.filter((f) => f === e).length}</span></li>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subcategory.filter((f) => f === e).length}</span></li>
 
 								)
 							}
 						</ul>
 						<ul className={`hidden overflow-scroll h-[86%] ulco ul4`}>
 							{
-								size && size.map((e,i) =>
+								sizenewArray && sizenewArray.map((e,i) =>
 
 									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
 									onClick={() => (sizefun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
@@ -719,7 +723,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 										<div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }}>
 
 										</div>
-									<span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f === e).length}</span></li>
+									<span className={`text-sm`}>{e?.name}</span> <span className={`absolute right-6 text-xs`}>{color.filter((f) => f.label === e.label).length}</span></li>
 
 								)
 							}
@@ -731,22 +735,26 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
 									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.replace(/ /g, "")} relative`}
 									onClick={() => (specialCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
-									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{specialCategoryNewArray.filter((f) => f === e).length}</span></li>
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{specialCategory.filter((f) => f === e).length}</span></li>
 
 								)
 							}
 						</ul>
-						<ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
-							{
-								discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((e,i) =>
+						{
+							discountedPercentageAmountNewArray && discountedPercentageAmountNewArray.length > 0 && (
+								<ul className={`hidden overflow-scroll h-[86%] ulco ul8`}>
+									{
+										discountedPercentageAmountNewArray.sort((a,b)=> a - b).map((e,i) =>
 
-									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.toString()} relative`}
-									onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
-									<span className={`text-sm`}>Up to {e}% OFF</span> <span className={`absolute right-6 text-xs`}>{discountedPercentageAmount.filter((f) => f === e).length}</span></li>
+											<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px]  text-slate-700 font${e.toString()} relative`}
+											onClick={() => (discountedAmountfun(e), addclass1Discounted(e), addclass2Discounted(e))} ><span className={`rightdiv mr-4 tick${e.toString()}`}></span>
+											<span className={`text-sm`}>Up to {e} % OFF</span> <span className={`absolute right-6 text-xs`}>{discountedPercentageAmount.filter((f) => f === e).length}</span></li>
 
-								)
-							}
-						</ul>
+										)
+									}
+								</ul>
+							)
+						}
 						<ul className={`hidden overflow-scroll h-[86%] ulco ul9`}>
 							<li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
 								onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>

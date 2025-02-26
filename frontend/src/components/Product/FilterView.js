@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../action/productaction';
 import { Slider } from '@mui/material';
 import styled from '@emotion/styled';
+import { ChevronUp } from 'lucide-react';
 
 const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const [category, setCategory] = useState('');
@@ -16,7 +17,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const{options} = useSelector(state => state.AllOptions);
 
     const dispatch = useDispatch();
-    const [colorul, setcolorul] = useState('max-h-72');
+    const [colorul, setcolorul] = useState('max-h-80');
     const [colorulbtn, setcolorulbtn] = useState('block');
   
     let AllProductsCategory = [];
@@ -34,8 +35,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const categoriesarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
+				AllProductsCategory.push(p.category)
 				if(!AllProductsCategory.includes(p.category)){
-					AllProductsCategory.push(p.category)
 				}
 			});
         }
@@ -44,8 +45,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 if(p.salePrice && p.salePrice > 0){
+					onSale.push(p.salePrice)
                     if(!onSale.includes(p.salePrice)){
-                        onSale.push(p.salePrice)
                     }
                 }
             });
@@ -64,8 +65,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         discountedPercentageAmount.push(discountPercentage)
                     } */
                     const amount = Math.floor(p.DiscountedPercentage);
+					discountedPercentageAmount.push(amount)
                     if(!discountedPercentageAmount.includes(amount)){
-                        discountedPercentageAmount.push(amount)
                     }
                 }
             });
@@ -74,8 +75,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const specialCategoryArray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
+				specialCategory.push(p.specialCategory)
                 if(p.specialCategory !== "none" && p.specialCategory !== undefined){
-                    specialCategory.push(p.specialCategory)
                 }
             });
         }
@@ -83,8 +84,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const subcategoryarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
+				AllProductsSubcategory.push(p.subCategory)
 				if(!AllProductsSubcategory.includes(p.subCategory)){
-					AllProductsSubcategory.push(p.subCategory)
 				}
 			});
         }
@@ -94,8 +95,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     const genderarray = () => {
         if (product && product.length > 0) {
             product.forEach(p => {
+				AllProductsGender.push(p.gender)
 				if(!AllProductsGender.includes(p.gender)){
-					AllProductsGender.push(p.gender)
 				}
 			});
         }
@@ -105,9 +106,9 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
             product.forEach(p => {
                 if(p){
                     p.size.forEach(s => {
-                        if(!size.includes(s.label)){
-                            size.push(s.label);
-                        }
+						size.push(s.label);
+                        /* if(!size.includes(s.label)){
+                        } */
                     })
                 }
             });
@@ -118,10 +119,10 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 p.AllColors.forEach(c =>{
-                    const alreadyExists = AllProductsColor.some(item => item.label === c.label);
+					AllProductsColor.push(c);
+                    /* const alreadyExists = AllProductsColor.some(item => item.label === c.label);
                     if (!alreadyExists){
-                        AllProductsColor.push(c);
-                    }
+                    } */
                 })
             });
         }
@@ -160,10 +161,14 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     
     // Remove duplicates and sort price array
     let Categorynewarray = [...new Set(AllProductsCategory)];
+    let sizenewarray = [...new Set(size)];
     let gendernewarray = [...new Set(AllProductsGender)];
-    let colornewarray = [...new Set(AllProductsColor)];
+    let colornewarray = [
+		...new Map(AllProductsColor.map(item => [item.label, item])).values()
+	];
     let subcategorynewarray = [...new Set(AllProductsSubcategory)];
     let specialCategorynewarray = [...new Set(specialCategory)];
+    let discountedPercentageAmountnewarray = [...new Set(discountedPercentageAmount)];
     let sp = [...new Set(spARRAY.sort((a, b) => a - b))];
     
     const setPriceFilter= ()=>{
@@ -555,12 +560,18 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
     }
-    // console.log("All AllProductsCategory: ",AllProductsCategory);
+    console.log("All specialCategorynewarray: ",specialCategorynewarray);
     
 
     return (
         <div>
             <div className='space-y-4 uppercase font-kumbsan ml-4'>
+				<button
+					className='bg-slate-900 text-white text-sm font-bold h-10 mx-auto text-center mt-5 flex justify-center items-end w-[50%]'
+					onClick={clearAllFilters}
+				>
+					Clear All Filter
+				</button>
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
                     <h1 className=' text-base font-semibold mb-2'>GENDER</h1>
@@ -662,7 +673,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 {/* Size Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>SIZE</h1>
-                    {size && size.length > 0 && size.map((e, i) => {
+                    {sizenewarray && sizenewarray.length > 0 && sizenewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
                         const params = new URLSearchParams(window.location.search);
                         const selectedCategories = params.getAll('size'); // Get all categories from URL
@@ -701,7 +712,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const selectedCategories = params.getAll('specialCategory'); // Get all categories from URL
 
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
-
+						console.log("Filter Amount: ",specialCategorynewarray);
                         return (
                             <div key={i} onClick={(event) => {
                                 event.preventDefault();
@@ -718,55 +729,58 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                 <label className=' text-sm ml-2 mr-4 mb-2'>
                                     {capitalizeFirstLetterOfEachWord(e)} 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
-                                        ({specialCategorynewarray.filter((f) => f === e).length})
+                                        ({specialCategory.filter((f) => f === e).length})
                                     </span>
                                 </label>
                             </div>
                         );
                     })}
                 </ul>
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className=' text-base font-semibold mb-2'>DISCOUNT</h1>
-                    {discountedPercentageAmount && discountedPercentageAmount.length > 0 && discountedPercentageAmount.sort((a,b)=> a - b).map((amount, i) => {
-                        // Get the 'discountedAmount' value from the URL
-                        const params = new URLSearchParams(window.location.search);
-                        const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL
-                        // console.log("Current amount: " + currentAmount);
-                        // Determine if the current radio button should be checked based on the URL parameter
-                        const isChecked = Number(currentAmount) === amount;
+				{discountedPercentageAmountnewarray && discountedPercentageAmountnewarray.length > 0 && (
+					<ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+						<h1 className=' text-base font-semibold mb-2'>DISCOUNT</h1>
+						{discountedPercentageAmountnewarray.sort((a,b)=> a - b).map((amount, i) => {
+							// Get the 'discountedAmount' value from the URL
+							const params = new URLSearchParams(window.location.search);
+							const currentAmount = params.get('discountedAmount'); // This will return the current discountedAmount in the URL
+							// console.log("Current amount: " + currentAmount);
+							// Determine if the current radio button should be checked based on the URL parameter
+							const isChecked = Number(currentAmount) === amount;
 
-                        return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                discountedAmountFun(amount); // This will update the URL with the selected amount
-                            }}>
-                                <input
-                                    type="radio" // Ensure it's a radio input
-                                    name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
-                                    value={amount}
-                                    id={`cat_${amount}`}
-                                    className="mb-2 accent-gray-500"
-                                    defaultChecked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
-                                    // No need for onChange handler since radio buttons will handle state automatically
-                                />
-                                <label className=" text-sm ml-2 mr-4 mb-2">
-                                    UpTo {amount} %
-                                    <span className="text-xs font-kumbsan font-normal text-slate-400"> 
-                                        ({discountedPercentageAmount.filter((f) => f === amount).length})
-                                    </span>
-                                </label>
-                            </div>
-                        );
-                    })}
+							return (
+								<div key={i} onClick={(event) => {
+									event.preventDefault();
+									discountedAmountFun(amount); // This will update the URL with the selected amount
+								}}>
+									<input
+										type="radio" // Ensure it's a radio input
+										name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
+										value={amount}
+										id={`cat_${amount}`}
+										className="mb-2 accent-gray-500"
+										defaultChecked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
+										// No need for onChange handler since radio buttons will handle state automatically
+									/>
+									<label className=" text-sm ml-2 mr-4 mb-2">
+										UpTo {amount} %
+										<span className="text-xs font-kumbsan font-normal text-slate-400"> 
+											({discountedPercentageAmount.filter((f) => f === amount).length})
+										</span>
+									</label>
+								</div>
+							);
+						})}
 
-                </ul>
+					</ul>
+				)}
+                
 
                 <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
                 {/* Color Filter */}
                 <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative scrollbar-thin scrollbar-track-gray-400 scrollbar-thumb-gray-700`}>
                     <h1 className=" text-base font-semibold mb-2">COLOR</h1>
-                    {AllProductsColor && AllProductsColor.length > 0 && 
-                        AllProductsColor.slice(0, colorul === 'max-h-max' ? AllProductsColor.length : 5).map((e, i) => {
+                    {colornewarray && colornewarray.length > 0 && 
+                        colornewarray.slice(0, colorul === 'max-h-max' ? colornewarray.length : 5).map((e, i) => {
                             // Check if the current color 'e.label' exists in the URL parameters
                             const params = new URLSearchParams(window.location.search);
                             const selectedColors = params.getAll('color'); // Get all color values from URL
@@ -795,9 +809,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         <span className="font-semibold">
                                             {e.name && (
                                                 <span>
-                                                    {e?.name.length > 20
-                                                    ? `${capitalizeFirstLetterOfEachWord(e?.name.slice(0, 20))}`
-                                                    : capitalizeFirstLetterOfEachWord(e?.name)}
+                                                    {capitalizeFirstLetterOfEachWord(e?.name)}
                                                 </span>
                                             )}
                                         </span>
@@ -811,60 +823,64 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     }
 
                     {/* Show "+ More" button if the number of colors exceeds 5 */}
-                    {AllProductsColor.length > 5 && colorul !== 'max-h-max' && (
+                    {colornewarray.length > 5 && (
                         <div className="flex justify-center mt-5">
                             <button 
-                                className={` text-gray-600 ${colorulbtn}`} 
+                                className={`text-white bg-black rounded-md px-5 py-1 space-x-2 flex flex-row justify-start items-center ${colorulbtn}`} 
                                 onClick={() => {
-                                    setcolorul('max-h-max');
-                                    setcolorulbtn('hidden');
+									// Toggle between showing "+ More" and "- Less" button
+									const expandedType = colorul === 'max-h-80' ? "max-h-max":'max-h-80';
+                                    setcolorul(expandedType);
+                                    // setcolorulbtn('hidden');
                                 }}>
-                                + More
+								<ChevronUp className={`w-5 h-5 ${colorul === 'max-h-80' ? "rotate-180":''}`}/>
+								<span>
+                                	{colorul === 'max-h-80'? 'More' : 'Less'} Colors
+								</span>
                             </button>
                         </div>
                     )}
                 </ul>
+				{
+					onSale && onSale.length > 0 && (
+						<ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
+							<h1 className=' text-base font-semibold mb-2'>On Sale</h1>
+							{[1].map((_, i) => {
+								// Get the URL search parameters
+								const params = new URLSearchParams(window.location.search);
+								const selectedOnSale = params.getAll('onSale'); // Get all 'onSale' values from URL
+								
+								// Check if the URL contains 'onSale=true'
+								const isChecked = selectedOnSale.includes('true');
 
-                <ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
-                    <h1 className=' text-base font-semibold mb-2'>On Sale</h1>
-                    {onSale && onSale.length > 0 && [1].map((_, i) => {
-                        // Get the URL search parameters
-                        const params = new URLSearchParams(window.location.search);
-                        const selectedOnSale = params.getAll('onSale'); // Get all 'onSale' values from URL
-                        
-                        // Check if the URL contains 'onSale=true'
-                        const isChecked = selectedOnSale.includes('true');
+								return (
+									<div key={i} onClick={(event) => {
+										event.preventDefault();
+										onSaleFun(); // This will update the URL with the selected sale status
+									}}>
+										<input
+											type="checkbox"
+											name="OnSale"
+											value={'true'}
+											id={`On_sale`}
+											className='mb-2 accent-gray-500'
+											defaultChecked={isChecked} // Set checkbox checked based on URL parameter
+										/>
+										<label className=' text-sm ml-2 mr-4 mb-2'>
+											On Sale
+											<span className='text-xs font-kumbsan font-normal text-slate-400'>
+												({onSale.length})
+											</span>
+										</label>
+									</div>
+								)
+							})}
+						</ul>
 
-                        return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                onSaleFun(); // This will update the URL with the selected sale status
-                            }}>
-                                <input
-                                    type="checkbox"
-                                    name="OnSale"
-                                    value={'true'}
-                                    id={`On_sale`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked based on URL parameter
-                                />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    On Sale
-                                    <span className='text-xs font-kumbsan font-normal text-slate-400'>
-                                        ({onSale.length})
-                                    </span>
-                                </label>
-                            </div>
-                        )
-                    })}
-                </ul>
+					)
+				}
 
-                <button
-					className='bg-slate-900 text-white text-sm font-bold h-10 mx-auto text-center mt-5 flex justify-center items-center w-[50%]'
-					onClick={clearAllFilters}
-				>
-					Clear All Filter
-				</button>
+                
 
             </div>
         </div>
