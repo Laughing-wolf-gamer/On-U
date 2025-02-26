@@ -2,7 +2,7 @@ import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMax
 import { BoxIcon, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from 'chart.js';
 import { hexToRgba } from "@/config";
@@ -61,6 +61,17 @@ const StatsCard = ({ title, value, icon, onChange, isActive }) => {
 				{icon}
 			</div>
 		</div>
+	);
+};
+const PageLinkCard = ({ title,pageLocation }) => {
+	return (
+		<Link to={pageLocation}
+			className={`bg-gray-50 p-6 cursor-pointer rounded-lg gap-8 shadow-md flex items-center justify-between w-fit mb-4 transition-all duration-300`}
+		>
+			<div className="hover:scale-105 transition-transform duration-300">
+				<h3 className="text-gray-500 text-sm sm:text-base">{title}</h3>
+			</div>
+		</Link>
 	);
 };
 
@@ -303,58 +314,58 @@ const AdminDashboard = ({ user }) => {
 					<div className="flex flex-wrap justify-start items-center h-fit min-w-fit p-5">
 						<Header user={user} />
 						<div className="flex flex-wrap gap-3 justify-start items-center mt-8 p-5 rounded-lg w-full">
-						<StatsCard
-							isActive={currentGraphData.title === "Total Orders"}
-							onChange={(title, value) => {
-							setStats({ title, value });
-							setGraphData({ title, value: OrdersGraphData });
-							handleFilterChange("THIS MONTH", OrdersGraphData);
-							}}
-							title="Total Orders"
-							value={TotalOrders}
-							icon={<ShoppingBasket className="text-3xl text-blue-600" />}
-							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-						/>
-						<StatsCard
-							isActive={currentGraphData.title === "Total Customers"}
-							onChange={(title, value) => {
-							setStats({ title, value });
-							setGraphData({ title, value: CustomerGraphData });
-							handleFilterChange("THIS MONTH", CustomerGraphData);
-							}}
-							title="Total Customers"
-							value={TotalCustomers}
-							icon={<User className="text-3xl text-yellow-600" />}
-							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-						/>
-						<StatsCard
-							isActive={currentGraphData.title === "Max Delivered Orders"}
-							onChange={(title, value) => {
-							setStats({ title, value });
-							setGraphData({ title, value: OrderDeliverData });
-							handleFilterChange("THIS MONTH", OrderDeliverData);
-							}}
-							title="Max Delivered Orders"
-							value={MaxDeliveredOrders}
-							icon={<PackageCheck className="text-3xl text-pink-500" />}
-							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-						/>
-						<StatsCard
-							isActive={currentGraphData.title === "Total Products"}
-							onChange={(title, value) => {
-							setStats({ title, value });
-							}}
-							title="Total Products"
-							value={TotalProducts}
-							icon={<BoxIcon className="text-3xl text-orange-600" />}
-							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-						/>
-						<StatsCard
-							title="Total Revenue"
-							value={`₹${walletBalance}`}
-							icon={<IndianRupee className="text-3xl text-green-600" />}
-							className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-						/>
+							<StatsCard
+								isActive={currentGraphData.title === "Total Orders"}
+								onChange={(title, value) => {
+								setStats({ title, value });
+								setGraphData({ title, value: OrdersGraphData });
+								handleFilterChange("THIS MONTH", OrdersGraphData);
+								}}
+								title="Total Orders"
+								value={TotalOrders}
+								icon={<ShoppingBasket className="text-3xl text-blue-600" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
+							<StatsCard
+								isActive={currentGraphData.title === "Total Customers"}
+								onChange={(title, value) => {
+								setStats({ title, value });
+								setGraphData({ title, value: CustomerGraphData });
+								handleFilterChange("THIS MONTH", CustomerGraphData);
+								}}
+								title="Total Customers"
+								value={TotalCustomers}
+								icon={<User className="text-3xl text-yellow-600" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
+							<StatsCard
+								isActive={currentGraphData.title === "Max Delivered Orders"}
+								onChange={(title, value) => {
+								setStats({ title, value });
+								setGraphData({ title, value: OrderDeliverData });
+								handleFilterChange("THIS MONTH", OrderDeliverData);
+								}}
+								title="Max Delivered Orders"
+								value={MaxDeliveredOrders}
+								icon={<PackageCheck className="text-3xl text-pink-500" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
+							<StatsCard
+								isActive={currentGraphData.title === "Total Products"}
+								onChange={(title, value) => {
+								setStats({ title, value });
+								}}
+								title="Total Products"
+								value={TotalProducts}
+								icon={<BoxIcon className="text-3xl text-orange-600" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
+							<StatsCard
+								title="Total Revenue"
+								value={`₹${walletBalance}`}
+								icon={<IndianRupee className="text-3xl text-green-600" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
 						</div>
 					</div>
 

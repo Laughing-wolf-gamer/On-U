@@ -566,12 +566,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     return (
         <div>
             <div className='space-y-4 uppercase font-kumbsan ml-4'>
-				<button
-					className='bg-slate-900 text-white text-sm font-bold h-10 mx-auto text-center mt-5 flex justify-center items-end w-[50%]'
-					onClick={clearAllFilters}
-				>
-					Clear All Filter
-				</button>
+				
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
                     <h1 className=' text-base font-semibold mb-2'>GENDER</h1>
@@ -826,7 +821,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     {colornewarray.length > 5 && (
                         <div className="flex justify-center mt-5">
                             <button 
-                                className={`text-white bg-black rounded-md px-5 py-1 space-x-2 flex flex-row justify-start items-center ${colorulbtn}`} 
+                                className={`text-gray-800 text-base font-medium rounded-md px-5 py-1 space-x-2 flex flex-row justify-start items-center ${colorulbtn}`} 
                                 onClick={() => {
 									// Toggle between showing "+ More" and "- Less" button
 									const expandedType = colorul === 'max-h-80' ? "max-h-max":'max-h-80';
@@ -879,6 +874,12 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
 					)
 				}
+				<button
+					className='bg-slate-900 text-white text-sm my-auto py-2 font-bold mx-auto text-center flex justify-center items-end min-w-[80%]'
+					onClick={clearAllFilters}
+				>
+					Clear All Filter
+				</button>
 
                 
 

@@ -38,8 +38,6 @@ function App() {
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
     const dispatch = useDispatch();
     useEffect(()=>{
-        // const token = sessionStorage.getItem('token');
-        // console.log(token);
         dispatch(checkAuth());
     },[dispatch])
     if(isLoading) return (
