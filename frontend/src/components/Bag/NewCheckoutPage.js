@@ -379,7 +379,7 @@ const CheckoutPage = () => {
 			</div>
 			{user && showPayment && selectedAddress && bag && (
 				<PaymentProcessingPage
-					discountAmount = {discountedAmount}
+					discountAmount = {bag?.totalDiscount || discountedAmount}
 					selectedAddress={selectedAddress}
 					user={user}
 					bag={bag}
