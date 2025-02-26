@@ -248,6 +248,12 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("popularity"), setSortValue('Popularity'))}>
                         <span className=" text-gray-800">Popularity</span>
                     </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("a-z"), setSortValue('A-Z'))}>
+                        <span className=" text-gray-800">A-Z</span>
+                    </div>
+                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("z-a"), setSortValue('Z-A'))}>
+                        <span className=" text-gray-800">Z-A</span>
+                    </div>
                     <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
                         <span className=" text-gray-800">Better Discount</span>
                     </div>

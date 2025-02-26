@@ -8,23 +8,19 @@ import WhatsAppButton from '../Home/WhatsAppButton';
 
 const PrivacyPolicy = () => {
 	const{privacyPolicy,loading} = useSelector(state => state.PrivacyPolicy);
+	const scrollableDivRef = useRef(null);
 	const dispatch = useDispatch();
+	
 	useEffect(()=>{
 		dispatch(fetchPrivacyAndPolicy());
 	},[])
-	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 	useEffect(()=>{
-		window.scrollTo(0,0)
+		scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 	},[])
 	// console.log("Privacy Policy: ", privacyPolicy);
 	return (
 		<div ref={scrollableDivRef} className="w-screen h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 			<div className="relative h-32 flex flex-col justify-center items-center rounded-md">
-				{/* <img
-					src="https://indiater.com/wp-content/uploads/2019/10/free-modern-fashion-cover-banner-design-psd-template.jpg"
-					alt="banner"
-					className="w-full h-full object-cover rounded-lg"
-				/> */}
 				<div className="bg-black absolute inset-0 flex justify-center items-center">
 					<h1 className="text-3xl sm:text-2xl md:text-4xl font-extrabold text-center text-white">
 						Privacy Policy
@@ -32,7 +28,7 @@ const PrivacyPolicy = () => {
 				</div>
 			</div>
 			{!loading ? (<div className="bg-white rounded-lg p-8 space-y-8 w-screen mr-4">
-				<p className="text-lg text-gray-700 mb-4">
+				<p className="text-lg text-gray-700 uppercase mb-4">
 					<strong>Effective Date:</strong> {privacyPolicy?.effectiveDate}
 				</p>
 

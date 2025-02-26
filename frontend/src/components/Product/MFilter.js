@@ -9,7 +9,8 @@ import { capitalizeFirstLetterOfEachWord } from '../../config'
 import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
 import { BsSortDown, BsSortUp } from 'react-icons/bs'
-import { ArrowDown01, ArrowDown10, ArrowUpDown, BadgePercent, Filter, SortAsc } from 'lucide-react'
+import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZA, ArrowUpDown, BadgePercent, Filter, SortAsc } from 'lucide-react'
+import { FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa'
 
 
 const CustomSlider = styled(Slider)({
@@ -587,6 +588,14 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("popularity"), setsortvi('hidden'))}>
 					<AiOutlineStar className='text-xl mr-2' />
 					<span>Popularity</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("a-z"), setsortvi('hidden'))}>
+					<FaSortAlphaDown strokeWidth={1.5} className='text-gray-800'/>
+					<span>A-Z</span>
+				</div>
+				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("z-a"), setsortvi('hidden'))}>
+					<FaSortAlphaDownAlt strokeWidth={1.5} className='text-gray-800'/>
+					<span>Z-A</span>
 				</div>
 				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
 					<BadgePercent size={20} strokeWidth={1.5} /> <span>Better Discount</span>

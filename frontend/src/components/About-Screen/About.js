@@ -11,7 +11,7 @@ const About = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const [aboutData, setAboutData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    const founderData = {
+    /* const founderData = {
 		image: "https://th.bing.com/th?id=OIP.rVHb8aGuPiS7hU7mOGBIvAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2",
 		name: "John Doe",
 		designation: "CEO & Founder of Our Company",
@@ -20,7 +20,7 @@ const About = () => {
 		founderVision: "Our vision is to bring unique, sustainable, and exceptional products from all around the world, offering them to a global community of individuals who share a love for creativity, craftsmanship, and quality. We aim to foster a world where sustainability is at the core of all products, ensuring that each item we offer contributes positively to the environment and the lives of our customers. By collaborating with artisans and creators from diverse cultures, we believe we can provide a platform for the celebration of culture, creativity, and conscious living.",
 		goals: "On-U’s community is built around sharing knowledge, sustainability, and a passion for exceptional, one-of-a-kind products. We are not just a marketplace, but a space for individuals who are passionate about contributing to positive change. Our members are thought leaders, innovators, and people who believe in the power of connection and conscious consumption. By joining the On-U community, you become part of a global movement that values creativity, sustainability, and high-quality craftsmanship. We are committed to providing a platform where like-minded individuals can share experiences, ideas, and collaborate on building a better, more sustainable future.",
 		promises: "On-U’s community is built around sharing knowledge, sustainability, and a passion for exceptional, one-of-a-kind products. We are not just a marketplace, but a space for individuals who are passionate about contributing to positive change. Our members are thought leaders, innovators, and people who believe in the power of connection and conscious consumption. By joining the On-U community, you become part of a global movement that values creativity, sustainability, and high-quality craftsmanship. We are committed to providing a platform where like-minded individuals can share experiences, ideas, and collaborate on building a better, more sustainable future."
-	}
+	} */
 
     const fetchPageAboutData = async () => {
         setIsLoading(true);
@@ -31,11 +31,12 @@ const About = () => {
             setAboutData(null);
         } finally {
             setIsLoading(false);
+			
         }
     };
 
     useEffect(() => {
-        window.scrollTo(0, 0);
+        scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         fetchPageAboutData();
     }, []);
     // console.log("About Data:,",aboutData);
@@ -43,10 +44,10 @@ const About = () => {
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
-                <div className="bg-white py-12 px-6 lg:px-24">
+                <div className="bg-white py-12 px-6 lg:px-24 w-full max-w-screen-2xl justify-self-center">
 					
                     {/* Header Section */}
-                    <header className="text-center mb-12">
+                    <header className="text-center mb-8">
                         <h1 className="text-3xl font-extrabold text-gray-700 sm:text-5xl md:text-6xl">
                             Welcome to <span className="text-slate-600 hover:animate-bounce">{extractSpecificWord(aboutData?.header) || "ON-U"}</span>
                         </h1>
@@ -60,10 +61,10 @@ const About = () => {
 					
 
                     {/* Mission Statement Section */}
-                    <section className="mb-16">
-                        <div className="max-w-5xl mx-auto text-center">
+                    <section className="py-5 w-full">
+                        <div className="w-full mx-auto text-center">
                             <h2 className="text-3xl font-semibold text-slate-900">Our Mission</h2>
-                            <p className="mt-4 text-xl text-gray-800 md:text-2xl">
+                            <p className="mt-4 text-xl w-full text-gray-800 md:text-2xl">
                                 {aboutData ? aboutData.ourMissionDescription: "Our mission is to provide high-quality, sustainable products that enhance our customers' lives."}
                             </p>
                         </div>
@@ -71,46 +72,28 @@ const About = () => {
 					
 
                     {/* Values Section */}
-                    <section className="py-10 mb-8">
-                        <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
-                            {aboutData && aboutData.outMoto.length > 0 ? aboutData.outMoto.map((moto, index) => (
-                                <div key={`moto-${index}`} className="text-center bg-gray-700 p-6 rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-125">
+                    <section className="py-10 mb-8 h-fit w-full font-kumbsan">
+                        <div className="w-full p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
+                            {aboutData && aboutData.outMoto.length > 0 && aboutData.outMoto.map((moto, index) => (
+                                <div key={`moto-${index}`} className="text-center py-5 space-y-3 bg-gray-700 p-6 min-h-[200px] max-h-[200px] overflow-y-auto rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-125">
                                     <i className="fas fa-cogs text-4xl mb-4"></i>
                                     <h3 className="text-2xl font-semibold text-white">{moto?.title || "Quality"}</h3>
-                                    <p className="mt-4 text-white">{moto?.description || "We prioritize providing high-quality products that meet our customers' expectations and needs."}</p>
+                                    <p className=" text-white">{moto?.description || "We prioritize providing high-quality products that meet our customers' expectations and needs."}</p>
                                 </div>
-                            )) : (
-                                <>
-                                    {/* Default Values */}
-                                    <div className="text-center bg-slate-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                        <i className="fas fa-cogs text-4xl text-pink-500 mb-4"></i>
-                                        <h3 className="text-2xl font-semibold text-gray-800">Quality</h3>
-                                        <p className="mt-4 text-black">We prioritize providing high-quality products that meet our customers' expectations and needs.</p>
-                                    </div>
-                                    <div className="text-center bg-slate-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                        <i className="fas fa-leaf text-4xl text-pink-500 mb-4"></i>
-                                        <h3 className="text-2xl font-semibold text-gray-800">Sustainability</h3>
-                                        <p className="mt-4 text-black">Our commitment to sustainability ensures that we actively minimize our environmental impact.</p>
-                                    </div>
-                                    <div className="text-center bg-slate-200 p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300">
-                                        <i className="fas fa-users text-4xl text-pink-500 mb-4"></i>
-                                        <h3 className="text-2xl font-semibold text-gray-800">Customer Satisfaction</h3>
-                                        <p className="mt-4 text-gray-600">Our customers come first. We provide excellent customer support and ensure an exceptional shopping experience.</p>
-                                    </div>
-                                </>
-                            )}
+                            ))}
                         </div>
                     </section>
 
                     {/* Team Section */}
-                    <section className="mb-24">
-                        <h2 className="text-4xl font-semibold text-center text-slate-700 mb-12">Meet Our Team</h2>
+                    <section className="w-full flex flex-col justify-center items-center">
+                        <h2 className="text-4xl font-semibold text-center text-slate-700 mb-5">Meet Our Team</h2>
                         <div className="flex flex-wrap justify-center gap-8">
-                            {aboutData && aboutData.teamMembers.length > 0 ? aboutData.teamMembers.map((member, index) => (
+                            {aboutData && aboutData.teamMembers.length > 0 && aboutData.teamMembers.map((member, index) => (
                                 <div key={`team-${index}`} className="relative text-center flex flex-col bg-slate-300 p-10 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
                                     <LazyLoadImage
-                                        src={member.image || "https://www.insightstate.com/wp-content/uploads/2024/02/positive-traits-of-a-person.jpg.webp"}
+                                        src={member.image}
                                         alt={`Team_Member_${index+1}`}
+										loading='lazy'
                                         className="w-64 h-64 mx-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-125"
                                     />
                                     <div className="absolute inset-0 top-1/2 h-14 bg-slate-300 bg-opacity-50 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300 z-20">
@@ -120,34 +103,16 @@ const About = () => {
                                         </div>
                                     </div>
                                 </div>
-                            )) : (
-                                <>
-                                    {/* Default Team Member 1 */}
-                                    <div className="relative text-center flex flex-col bg-slate-300 p-10 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
-                                        <img
-                                            src="https://www.insightstate.com/wp-content/uploads/2024/02/positive-traits-of-a-person.jpg.webp"
-                                            alt="Team Member 1"
-                                            className="w-64 h-64 mx-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-125"
-                                        />
-                                        <div className="absolute inset-0 top-1/2 h-14 bg-slate-300 bg-opacity-50 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300 z-20">
-                                            <div>
-                                                <h3 className="text-xl font-semibold text-slate-100">Michael Brown</h3>
-                                                <p className="text-slate-50">Product Manager</p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    {/* Add more team members if needed */}
-                                </>
-                            )}
+                            ))}
                         </div>
                     </section>
                 </div>
             ) : (
                 <Loader isLoading={isLoading} />
             )}
-            <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
             <WhatsAppButton scrollableDivRef={scrollableDivRef}/>
+            <Footer />
         </div>
     );
 };

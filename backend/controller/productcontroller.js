@@ -44,6 +44,14 @@ export const getallproducts = async (req, res) => {
                     // Assuming you want to sort by a custom popularity field
                     sort.averageRating = -1;  // Descending order for most popular
                     break;
+                case "a-z":
+                    // Assuming you want to sort by a custom popularity field
+                    sort.title = 1;  // Descending order for most popular
+                    break;
+                case "z-a":
+                    // Assuming you want to sort by a custom popularity field
+                    sort.title = -1;  // Descending order for most popular
+                    break;
             
                 case "discount":
                     // Assuming you have a discount field, you can sort based on that

@@ -493,422 +493,418 @@ const MPpage = () => {
         };
     }, []);
     return (
-        <Fragment>
-            
-            <div ref={scrollContainerRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
-
-                {loading === false ? (
-                    <div>
-                        {
-                            scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-30 hidden`}>
-                                <div className='grid grid-cols-12 w-full bg-white border-t-[0.5px] border-slate-200 relative z-10'>
-                                    <div className="col-span-2 flex justify-center items-center p-1">
-                                        <button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                            {
-                                                loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
-                                                    {isInWishList ? 
-                                                        (
-                                                            <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                                <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
-                                                            </div>
-                                                        ) : (
-                                                            <Heart size={30}/>
-                                                        )
-                                                    }
-                                                </Fragment>
-                                            }
-                                            
-                                        </button>
-                                    </div>
-                                    <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-white bg-black text-white" onClick={addToBag}>
-                                            {
-                                                bagLoading? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-500 rounded-full animate-spin "></div>:<Fragment>
-                                                    <ShoppingCart className='mr-4' />
-                                                    <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
-                                                </Fragment>
-                                            }
-                                            
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        }
-                        <Carousel
-                            ref={carouselRef}
-                            showThumbs={false}
-                            showStatus={false}
-                            showArrows={false}
-                            showIndicators={true}
-                            swipeable={true}
-                            emulateTouch
-                            infiniteLoop
-                            preventMovementUntilSwipeScrollTolerance
-                            renderIndicator={(onClickHandler, isSelected, index, label) =>
-                                indicator(onClickHandler, isSelected, index, label)
-                            }
-                        >
-                            {selectedSizeColorImageArray &&
-                                selectedSizeColorImageArray.length > 0 &&
-                                selectedSizeColorImageArray.map((im, i) => (
-                                    <div key={i}>
-                                        {im.url ? (
-                                        // Check if the file is a video (based on file extension)
-                                        im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
-                                            <div className="relative">
-												{/* <MShareView/> */}
-                                                <ReactPlayer
-                                                    className="w-full h-full object-contain"
-                                                    url={im.url}
-                                                    loop={true}
-                                                    muted={true}
-                                                    controls={false}
-                                                    playing = {true}
-                                                    width="100%"
-                                                    height="100%"
-                                                />
-                                                {/* <div className="h-[30px] bg-white"></div> */}
-                                            </div>
-                                        ) : (
-                                            // Render image using LazyLoadImage
-                                            <div className="relative">
-												
-                                                <LazyLoadImage
-                                                    effect="blur"
-                                                    src={im.url}
-                                                    alt={`product_${i}`}
-                                                    className="w-full h-full object-contain"
-													onContextMenu={(e) => e.preventDefault()}  // Disable right-click
-                                                />
-                                                {/* <div className="h-[30px] bg-white"></div> */}
-												{/* <MShareView/> */}
-                                            </div>
-                                        )
-                                        ) : (
-                                            // Fallback if there's no URL, display a fallback message or content
-                                            <div>No media found</div>
-                                        )}
-                                    </div>
-                                ))}
-                        </Carousel>
-                        <div className="bg-white p-4">
-                            <div className="border-b border-gray-300 pb-6 pt-4">
-                                <h1 className=" text-xl font-semibold text-slate-800">
-                                    {currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
-                                </h1>
-                                <h1 className="text-xl text-gray-500 font-light">
-                                    {capitalizeFirstLetterOfEachWord(product?.gender)}
-                                </h1>
-                            </div>
-                            
-                            <div className="border-b border-gray-600 pb-2 pt-2 bg-white">
-                                <h1 className=" text-lg font-semibold text-slate-800">
-                                    <span className="mr-4 font-bold">
-                                        ₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
-                                    </span>
-                                    {product?.salePrice > 0 && (
-                                        <Fragment>
-                                            <span className="line-through mr-4 text-slate-500 font-light">
-                                                ₹ {formattedSalePrice(product?.price)}
-                                            </span>
-                                            <span className="text-gray-700">
-                                                {calculateDiscountPercentage(product.price,product.salePrice)} % OFF
-                                                {/* ( {Math.round((product.salePrice / product.price) * 100 - 100)}% OFF) */}
-                                            </span>
-                                        </Fragment>
-                                    )}
-                                </h1>
-                                <h1 className="text-green-600 font-semibold text-sm mt-1">
-                                    Inclusive All Taxes.
-                                </h1>
-								<div className='w-full flex flex-col justify-start items-center mt-1 space-y-3 mx-auto'>
-                                    <div className='w-full flex justify-between items-center'>
-                                        <h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
-                                        </h3>
-                                        <SizeChartModal sizeChartData={clothingSizeChartData} />
-                                    </div>
-                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
-                                        {product && product.size && product.size.length > 0 && product.size.map((size, index) => {
-                                            const active = size;
-                                            return(
-                                                <div key={`size_${index}_${active._id}`}>
-                                                    <button
-                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all focus:outline-none duration-500 border-[1px] border-gray-400 ease-in-out 
-                                                        ${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
-                                                        onClick={() => { handleSetNewImageArray(active); }}
-                                                    >
-                                                        {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 z-[2px] bg-gray-700 bg-opacity-40'>
-																<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                                    Out of Stock
-                                                                </div>
-															</div>
-                                                        }
-                                                        <button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
-                                                            <span className='text-base font-medium'>{active.label}</span>
-                                                        </button>
-                                                        {/* {active?.quantity <= 0 && (
-                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
-                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                                    <span>Out of Stock</span>
-                                                                </div>
-                                                            </div>
-                                                        )} */}
-                                                    </button>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                                <div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
-                                    <div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
-                                    <div className="w-full flex flex-wrap gap-4 justify-start items-start">
-                                        {selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
-                                            const active = color;
-                                            return(
-                                                <div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
-                                                    <button
-                                                        style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-                                                        className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 focus:outline-none border-[1px] border-gray-400 ease-in-out 
-                                                        ${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
-                                                        onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
-                                                    >
-                                                        {
-                                                            active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>
-																<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                                    Out of Stock
-                                                                </div>
-															</div>
-                                                        }
-                                                        <button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
-                                                            <div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
-                                                        </button>
-                                                        {/* {active?.quantity <= 0 && (
-                                                            <div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
-                                                                <div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-                                                                    <span>Out of Stock</span>
-                                                                </div>
-                                                            </div>
-                                                        )} */}
-                                                    </button>
-                                                </div>
-                                            )
-                                        })}
-                                    </div>
-                                </div>
-                                
-                            </div>
-                            <PincodeChecker productId={product?._id}/>
-                            <div className='mt-2 pt-4 bg-white px-4'>
-                                <h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
-                            </div>
-                            <div className='mt-2 pb-4 pt-4 bg-white px-4'>
-                                {
-                                    product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
-                                        <Fragment>
-                                            <h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
-                                            <span className='mt-4'>
-                                                <li className='list-disc mt-2'>{e.body}</li>
-                                            </span>
-                                        </Fragment>
-                                    )
-                                }
-                            </div>
-                            {/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
-                            	<div className='col-span-12 md:col-span-3'>
-									<div className='absolute bg-[#0db7af]  px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
-									<Bus/>
+		<div ref={scrollContainerRef} className="w-screen max-w-screen-2xl font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
+			{loading === false ? (
+				<div>
+					{
+						scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-30 hidden`}>
+							<div className='grid grid-cols-12 w-full bg-white border-t-[0.5px] border-slate-200 relative z-10'>
+								<div className="col-span-2 flex justify-center items-center p-1">
+									<button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+										{
+											loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+												{isInWishList ? 
+													(
+														<div className="text-red-500 animate-shine p-1 rounded-full">
+															<Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
+														</div>
+													) : (
+														<Heart size={30}/>
+													)
+												}
+											</Fragment>
+										}
+										
+									</button>
 								</div>
-								<div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
-									<h1 className='text-sm  font-semibold'>RETURN WITH IN 45 DAYS</h1>
+								<div className="col-span-10 text-lg flex justify-center text-center p-1" >
+									<button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-white bg-black text-white" onClick={addToBag}>
+										{
+											bagLoading? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-500 rounded-full animate-spin "></div>:<Fragment>
+												<ShoppingCart className='mr-4' />
+												<span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+											</Fragment>
+										}
+										
+									</button>
 								</div>
-                            </div>
-
-                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
-								<div className="col-span-1 text-center text-xs text-slate-700">
-									<IoShieldCheckmarkSharp color='black' size={75} className='w-[75px] mx-auto'/>
-									Genuine Products
+							</div>
+						</div>
+					}
+					<Carousel
+						ref={carouselRef}
+						showThumbs={false}
+						showStatus={false}
+						showArrows={false}
+						showIndicators={true}
+						swipeable={true}
+						emulateTouch
+						infiniteLoop
+						preventMovementUntilSwipeScrollTolerance
+						renderIndicator={(onClickHandler, isSelected, index, label) =>
+							indicator(onClickHandler, isSelected, index, label)
+						}
+					>
+						{selectedSizeColorImageArray &&
+							selectedSizeColorImageArray.length > 0 &&
+							selectedSizeColorImageArray.map((im, i) => (
+								<div key={i}>
+									{im.url ? (
+									// Check if the file is a video (based on file extension)
+									im.url.endsWith(".mp4") || im.url.endsWith(".mov") || im.url.endsWith(".avi") ? (
+										<div className="relative">
+											{/* <MShareView/> */}
+											<ReactPlayer
+												className="w-full h-full object-contain"
+												url={im.url}
+												loop={true}
+												muted={true}
+												controls={false}
+												playing = {true}
+												width="100%"
+												height="100%"
+											/>
+											{/* <div className="h-[30px] bg-white"></div> */}
+										</div>
+									) : (
+										// Render image using LazyLoadImage
+										<div className="relative">
+											
+											<LazyLoadImage
+												effect="blur"
+												src={im.url}
+												alt={`product_${i}`}
+												className="w-full h-full object-contain"
+												onContextMenu={(e) => e.preventDefault()}  // Disable right-click
+											/>
+											{/* <div className="h-[30px] bg-white"></div> */}
+											{/* <MShareView/> */}
+										</div>
+									)
+									) : (
+										// Fallback if there's no URL, display a fallback message or content
+										<div>No media found</div>
+									)}
 								</div>
-								<div className="col-span-1 text-center text-xs text-slate-700">
-									<IoIosRibbon color='black' size={75} className='w-[75px] mx-auto'/>
-									7 step Quality Check
+							))}
+					</Carousel>
+					<div className="bg-white p-4">
+						<div className="border-b border-gray-300 pb-6 pt-4">
+							<h1 className=" text-xl font-semibold text-slate-800">
+								{currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
+							</h1>
+							<h1 className="text-xl text-gray-500 font-light">
+								{capitalizeFirstLetterOfEachWord(product?.gender)}
+							</h1>
+						</div>
+						
+						<div className="border-b border-gray-600 pb-2 pt-2 bg-white">
+							<h1 className=" text-lg font-semibold text-slate-800">
+								<span className="mr-4 font-bold">
+									₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
+								</span>
+								{product?.salePrice > 0 && (
+									<Fragment>
+										<span className="line-through mr-4 text-slate-500 font-light">
+											₹ {formattedSalePrice(product?.price)}
+										</span>
+										<span className="text-gray-700">
+											{calculateDiscountPercentage(product.price,product.salePrice)} % OFF
+											{/* ( {Math.round((product.salePrice / product.price) * 100 - 100)}% OFF) */}
+										</span>
+									</Fragment>
+								)}
+							</h1>
+							<h1 className="text-green-600 font-semibold text-sm mt-1">
+								Inclusive All Taxes.
+							</h1>
+							<div className='w-full flex flex-col justify-start items-center mt-1 space-y-3 mx-auto'>
+								<div className='w-full flex justify-between items-center'>
+									<h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
+									</h3>
+									<SizeChartModal sizeChartData={clothingSizeChartData} />
 								</div>
-								<div className="col-span-1 text-center text-xs text-slate-700">
-									<RiSecurePaymentFill color='black' size={75} className='w-[75px] mx-auto'  />
-									Secure Payments
-								</div>
-                            </div> */}
-
-                            <div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
-                            <h1 className=' flex items-center mt-2 font-semibold'>More Information</h1>
-                            <li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>
-                            <li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || ""}</span></li>
-                            </div>
-
-                            <div className='h-full w-full justify-center items-center flex flex-col space-y-5'>
-                                <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}>
-                                    <ShoppingBag className='mr-4' /><span>BUY NOW</span>
-                                </button>
-                            </div>
-
-                            <div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
-                                <div className={`grid grid-cols-12 w-full  relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
-                                    <div className="col-span-2 flex justify-center items-center p-1">
-                                        <button className="bg-gray-50 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-                                            {
-                                                loadingWishList ? <Fragment>
-                                                    <div className="w-full h-full border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
-                                                </Fragment>:(
-                                                    <Fragment>
-                                                    {
-                                                        isInWishList ? <div className="text-red-500 animate-shine p-1 rounded-full">
-                                                            <Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
-                                                        </div>: <Heart size={30}/>
-                                                    }
-                                                    </Fragment>    
-                                                )
-                                            }
-                                        </button>
-                                    </div>
-                                    <div className="col-span-10 text-lg flex justify-center text-center p-1" >
-                                        <button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
-                                            {
-                                                bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
-                                                    <ShoppingCart className='mr-4' size={30}/>
-                                                    <span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
-                                                </Fragment>
-                                            }
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className='w-full flex mt-4'>
-                                <div className='w-fit space-x-2 justify-center flex flex-row items-center'>
-                                    <h1 className="text-gray-500 transition duration-300 text-xl">Share: </h1>
-                                    <div
-										onClick={() => HandleOnShareTypeButtonClick("whatsApp")}
-                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-600 transition duration-300 text-xl"
-                                    >
-                                        <IoLogoWhatsapp />
-                                    </div>
-                                    <div
-										onClick={() => HandleOnShareTypeButtonClick("copyUrl")}
-                                        className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
-                                    >
-                                    	<IoIosCopy />
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="w-full flex flex-col space-y-4 mt-4">
-								{/* {
-									product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
+								<div className="w-full flex flex-wrap gap-4 justify-start items-start">
+									{product && product.size && product.size.length > 0 && product.size.map((size, index) => {
+										const active = size;
 										return(
-											<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-												<h1 className="text-gray-500">• </h1>
-												<h1 className="text-gray-500">{point}</h1>
+											<div key={`size_${index}_${active._id}`}>
+												<button
+													style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
+													className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all focus:outline-none duration-500 border-[1px] border-gray-400 ease-in-out 
+													${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
+													onClick={() => { handleSetNewImageArray(active); }}
+												>
+													{
+														active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 z-[2px] bg-gray-700 bg-opacity-40'>
+															<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																Out of Stock
+															</div>
+														</div>
+													}
+													<button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
+														<span className='text-base font-medium'>{active.label}</span>
+													</button>
+													{/* {active?.quantity <= 0 && (
+														<div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
+															<div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																<span>Out of Stock</span>
+															</div>
+														</div>
+													)} */}
+												</button>
 											</div>
 										)
-									})
-								} */}
-								<div className="w-full flex flex-col space-y-4 mt-4">
-									<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-										<h1 className="text-gray-500"><Clock /></h1>
-										<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-									</div>
+									})}
+								</div>
+							</div>
+							<div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
+								<div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
+								<div className="w-full flex flex-wrap gap-4 justify-start items-start">
+									{selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
+										const active = color;
+										return(
+											<div key={`color_${index}_${active._id}`} className='w-fit h-fit'>
+												<button
+													style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
+													className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 focus:outline-none border-[1px] border-gray-400 ease-in-out 
+													${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
+													onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
+												>
+													{
+														active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>
+															<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																Out of Stock
+															</div>
+														</div>
+													}
+													<button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
+														<div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
+													</button>
+													{/* {active?.quantity <= 0 && (
+														<div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
+															<div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
+																<span>Out of Stock</span>
+															</div>
+														</div>
+													)} */}
+												</button>
+											</div>
+										)
+									})}
+								</div>
+							</div>
+							
+						</div>
+						<PincodeChecker productId={product?._id}/>
+						<div className='mt-2 pt-4 bg-white px-4'>
+							<h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
+						</div>
+						<div className='mt-2 pb-4 pt-4 bg-white px-4'>
+							{
+								product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
+									<Fragment>
+										<h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
+										<span className='mt-4'>
+											<li className='list-disc mt-2'>{e.body}</li>
+										</span>
+									</Fragment>
+								)
+							}
+						</div>
+						{/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
+							<div className='col-span-12 md:col-span-3'>
+								<div className='absolute bg-[#0db7af]  px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
+								<Bus/>
+							</div>
+							<div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
+								<h1 className='text-sm  font-semibold'>RETURN WITH IN 45 DAYS</h1>
+							</div>
+						</div>
 
-									<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-										<h1 className="text-gray-500"><RotateCw /></h1>
-										<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-									</div>
+						<div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
+							<div className="col-span-1 text-center text-xs text-slate-700">
+								<IoShieldCheckmarkSharp color='black' size={75} className='w-[75px] mx-auto'/>
+								Genuine Products
+							</div>
+							<div className="col-span-1 text-center text-xs text-slate-700">
+								<IoIosRibbon color='black' size={75} className='w-[75px] mx-auto'/>
+								7 step Quality Check
+							</div>
+							<div className="col-span-1 text-center text-xs text-slate-700">
+								<RiSecurePaymentFill color='black' size={75} className='w-[75px] mx-auto'  />
+								Secure Payments
+							</div>
+						</div> */}
 
-									<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-										<h1 className="text-gray-500"><TruckIcon /></h1>
-										<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+						<div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
+						<h1 className=' flex items-center mt-2 font-semibold'>More Information</h1>
+						<li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>
+						<li className='list-none mt-2'>Seller:&nbsp;<span className='text-[#1e1e1e] font-bold'>{capitalizeFirstLetterOfEachWord(product?.brand).toUpperCase() || ""}</span></li>
+						</div>
+
+						<div className='h-full w-full justify-center items-center flex flex-col space-y-5'>
+							<button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center bg-gray-900 text-white rounded-md" onClick={handleBuyNow}>
+								<ShoppingBag className='mr-4' /><span>BUY NOW</span>
+							</button>
+						</div>
+
+						<div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
+							<div className={`grid grid-cols-12 w-full  relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
+								<div className="col-span-2 flex justify-center items-center p-1">
+									<button className="bg-gray-50 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
+										{
+											loadingWishList ? <Fragment>
+												<div className="w-full h-full border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>
+											</Fragment>:(
+												<Fragment>
+												{
+													isInWishList ? <div className="text-red-500 animate-shine p-1 rounded-full">
+														<Heart size={30} strokeWidth={0} fill="red" className="text-red-500" />
+													</div>: <Heart size={30}/>
+												}
+												</Fragment>    
+											)
+										}
+									</button>
+								</div>
+								<div className="col-span-10 text-lg flex justify-center text-center p-1" >
+									<button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
+										{
+											bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+												<ShoppingCart className='mr-4' size={30}/>
+												<span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
+											</Fragment>
+										}
+									</button>
+								</div>
+							</div>
+						</div>
+						<div className='w-full flex mt-4'>
+							<div className='w-fit space-x-2 justify-center flex flex-row items-center'>
+								<h1 className="text-gray-500 transition duration-300 text-xl">Share: </h1>
+								<div
+									onClick={() => HandleOnShareTypeButtonClick("whatsApp")}
+									className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-blue-600 transition duration-300 text-xl"
+								>
+									<IoLogoWhatsapp />
+								</div>
+								<div
+									onClick={() => HandleOnShareTypeButtonClick("copyUrl")}
+									className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
+								>
+									<IoIosCopy />
+								</div>
+							</div>
+						</div>
+						<div className="w-full flex flex-col space-y-4 mt-4">
+							{/* {
+								product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
+									return(
+										<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+											<h1 className="text-gray-500">• </h1>
+											<h1 className="text-gray-500">{point}</h1>
+										</div>
+									)
+								})
+							} */}
+							<div className="w-full flex flex-col space-y-4 mt-4">
+								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+									<h1 className="text-gray-500"><Clock /></h1>
+									<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+								</div>
+
+								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+									<h1 className="text-gray-500"><RotateCw /></h1>
+									<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
+								</div>
+
+								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+									<h1 className="text-gray-500"><TruckIcon /></h1>
+									<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+								</div>
+							</div>
+						</div>
+
+						<div className='w-full px-4 md:px-2'>
+							{/* Reviews Section */}
+							<div className='reviews-section'>
+								<h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
+								<div className='reviews-list mt-4 overflow-y-auto h-72'>
+									<div className='reviews-list mt-4 overflow-y-auto'>
+										{product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
 									</div>
 								</div>
-                            </div>
+								{hasPurchased && <Fragment>
+									{/* Review Input Section */}
+									<div className='w-full flex flex-col justify-start items-center'>
+										<div className='mt-6 w-full max-w-3xl'>
+											<h4 className='text-xl md:text-lg font-semibold text-center md:text-left'>Write a Review</h4>
 
-                            <div className='w-full px-4 md:px-2'>
-                                {/* Reviews Section */}
-                                <div className='reviews-section'>
-                                    <h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
-                                    <div className='reviews-list mt-4 overflow-y-auto h-72'>
-                                        <div className='reviews-list mt-4 overflow-y-auto'>
-                                            {product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
-                                        </div>
-                                    </div>
-                                    {hasPurchased && <Fragment>
-                                        {/* Review Input Section */}
-                                        <div className='w-full flex flex-col justify-start items-center'>
-                                            <div className='mt-6 w-full max-w-3xl'>
-                                                <h4 className='text-xl md:text-lg font-semibold text-center md:text-left'>Write a Review</h4>
+											<form className='mt-4'>
+												{/* Review Text Input */}
+												<div className='mb-4'>
+													<label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
+													<textarea
+														onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
+														id='reviewText'
+														name='reviewText'
+														rows='4'
+														placeholder='Write your review here...'
+														className='mt-2 p-3 w-full border border-gray-300 rounded-md'
+													/>
+												</div>
 
-                                                <form className='mt-4'>
-                                                    {/* Review Text Input */}
-                                                    <div className='mb-4'>
-                                                        <label htmlFor='reviewText' className='block text-sm font-semibold text-gray-700'>Review Text:</label>
-                                                        <textarea
-                                                            onChange={(e) => setRatingData({...ratingData,comment:e.target.value})}
-                                                            id='reviewText'
-                                                            name='reviewText'
-                                                            rows='4'
-                                                            placeholder='Write your review here...'
-                                                            className='mt-2 p-3 w-full border border-gray-300 rounded-md'
-                                                        />
-                                                    </div>
+												{/* Star Rating Input */}
+												<div className='mb-4'>
+													<StarRatingInput onChangeValue={(value) =>{
+														setRatingData({...ratingData,rating:value})
+													}}/>
+												</div>
 
-                                                    {/* Star Rating Input */}
-                                                    <div className='mb-4'>
-                                                        <StarRatingInput onChangeValue={(value) =>{
-                                                            setRatingData({...ratingData,rating:value})
-                                                        }}/>
-                                                    </div>
-
-                                                    {/* Submit Button */}
-                                                    <div className='flex justify-start'>
-                                                        <button
-                                                            disabled = {isPostingReview}
-                                                            onClick={PostRating}
-                                                            className='bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors'
-                                                        >
-                                                            {
-                                                                isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>Submit Review</span>
-                                                            }
-                                                        </button>
-                                                    </div>
-                                                </form>
-                                            </div>
-                                        </div>
-                                    </Fragment>}
-                                </div>
-                                </div>
-                                {
-                                    similar && similar.length > 0 && <div className="mt-2 mb-7 pb-6 pt-4 relative bg-white px-4">
-                                        <div className='w-full justify-center items-center flex px-1 py-2'>
-                                            <h1 className=" flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
-                                        </div>
-                                        <div className="overflow-x-auto">
-                                            <ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-                                            {similar.map((pro) => (
-                                                    <li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-                                                        <Single_product pro={pro}/>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </div>
-                                    </div>
-                                }
-                        </div>
-                        <Footer />
-                    </div>
-                ) : (
-                    <Loader />
-                )}
-				<BackToTopButton scrollableDivRef={scrollContainerRef} />
-				<WhatsAppButton scrollableDivRef={scrollContainerRef}/>
-            </div>
-        </Fragment>
+												{/* Submit Button */}
+												<div className='flex justify-start'>
+													<button
+														disabled = {isPostingReview}
+														onClick={PostRating}
+														className='bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors'
+													>
+														{
+															isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>Submit Review</span>
+														}
+													</button>
+												</div>
+											</form>
+										</div>
+									</div>
+								</Fragment>}
+							</div>
+							</div>
+							{
+								similar && similar.length > 0 && <div className="mt-2 mb-7 pb-6 pt-4 relative bg-white px-4">
+									<div className='w-full justify-center items-center flex px-1 py-2'>
+										<h1 className=" flex text-center mt-4 font-semibold">SIMILAR PRODUCTS</h1>
+									</div>
+									<div className="overflow-x-auto">
+										<ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
+										{similar.map((pro) => (
+												<li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
+													<Single_product pro={pro}/>
+												</li>
+											))}
+										</ul>
+									</div>
+								</div>
+							}
+					</div>
+					<Footer />
+				</div>
+			) : (
+				<Loader />
+			)}
+			<BackToTopButton scrollableDivRef={scrollContainerRef} />
+			<WhatsAppButton scrollableDivRef={scrollContainerRef}/>
+		</div>
     );
 };
 /* const CustomSlider = styled(Slider)({

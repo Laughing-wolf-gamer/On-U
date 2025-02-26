@@ -13,13 +13,11 @@ import Loader from "../Loader/Loader";
 const Contact = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
-    const{pincode,position} = useLocationContext();
     const {checkAndCreateToast} = useSettingsContext();
     const [formData, setFormData] = useState({});
     const[sendingFormData,setSendingFormData] = useState({});
     const [sendingMessage,setSendingMessage] = useState('');
     const[sendingMessageLoading,setSendingMessageLoading] = useState(false);
-    const { activeToast, showToast } = useToast();
     // State for form handling
     const fetchContactUsPageData = async () => {
         setSendingMessageLoading(true);
@@ -89,7 +87,7 @@ const Contact = () => {
             {sendingMessageLoading ? (
                 <Loader/>
             ) : (
-                <div className="bg-gray-50 py-16 px-6 lg:px-24">
+                <div className="bg-gray-50 py-16 px-6 max-w-screen-2xl justify-self-center lg:px-24">
         
                 {/* Header Section */}
                 <header className="text-center mb-12">
