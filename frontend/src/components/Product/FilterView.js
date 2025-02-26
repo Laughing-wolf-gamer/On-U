@@ -821,7 +821,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                     {colornewarray.length > 5 && (
                         <div className="flex justify-center mt-5">
                             <button 
-                                className={`text-gray-800 text-base font-medium rounded-md px-5 py-1 space-x-2 flex flex-row justify-start items-center ${colorulbtn}`} 
+                                className={`text-gray-800 text-base font-medium hover:underline rounded-md px-5 py-1 space-x-2 flex flex-row justify-start items-center ${colorulbtn}`} 
                                 onClick={() => {
 									// Toggle between showing "+ More" and "- Less" button
 									const expandedType = colorul === 'max-h-80' ? "max-h-max":'max-h-80';

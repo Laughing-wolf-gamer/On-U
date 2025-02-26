@@ -57,7 +57,7 @@ const StatsCard = ({ title, value, icon, onChange, isActive }) => {
 				<h3 className="text-gray-500 text-sm sm:text-base">{title}</h3>
 				<h2 className="text-2xl sm:text-3xl font-bold">{value}</h2>
 			</div>
-			<div className="bg-gray-200 p-4 rounded-full">
+			<div className={`${isActive ? "bg-white" : "bg-gray-200"} p-4 rounded-full`}>
 				{icon}
 			</div>
 		</div>
@@ -363,7 +363,7 @@ const AdminDashboard = ({ user }) => {
 							<StatsCard
 								title="Shiprocket Wallet Balance"
 								value={`₹${walletBalance}`}
-								icon={<IndianRupee className="text-3xl text-green-600" />}
+								icon={<IndianRupee strokeWidth={3} className="text-3xl font-bold text-green-600" />}
 								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 							/>
 						</div>
