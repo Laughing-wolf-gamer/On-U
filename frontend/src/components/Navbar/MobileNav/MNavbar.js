@@ -18,7 +18,7 @@ import SideBarBag from '../SideBarBag'
 import { IoBagRemoveSharp, IoMenu, IoSearch } from 'react-icons/io5'
 import MKeywoardSerach from './MKeywoardSerach'
 import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
-
+import bagCartIcon from '../../images/shopping-cart.png'
 
 const MNavbar = ({ user }) => {
     const[currentWishListCount,setWishListCount] = useState(0);
@@ -107,7 +107,7 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row justify-center items-center'>
-                            <IoMenu color='black' className='text-3xl ' onClick={() => (handleShow(), classchange())} />
+                            <IoMenu color='black' className='text-4xl ' onClick={() => (handleShow(), classchange())} />
                             <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
                         </div>
 
@@ -125,7 +125,14 @@ const MNavbar = ({ user }) => {
                                 )}
                                 <button onClick={()=> {
 									setBagShow(!showbagView)
-								}}><IoBagRemoveSharp size={26} color='black'/></button>
+								}}>
+									{/* <IoBagRemoveSharp size={26} color='black'/> */}
+									<img
+										src={bagCartIcon}
+										alt='bag-icon'
+										className='w-7 h-7'
+									/>
+								</button>
                             </div>
                             <div className='float-right relative m-2 pb-0.5'>
                                 {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (

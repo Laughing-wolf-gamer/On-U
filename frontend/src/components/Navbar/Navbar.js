@@ -15,6 +15,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
 import { IoBagRemoveSharp, IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
+import bagCartIcon from '../images/shopping-cart.png'
 
 
 const Navbar = ({user}) => {
@@ -120,7 +121,7 @@ const Navbar = ({user}) => {
                             <li className='w-max flex items-stretch'>
                                 
                                 <div className='w-auto justify-between items-center h-auto flex-row flex rounded-t'>
-                                    <Link to='/'> <h1 className='text-3xl py-1 ml-2 font-extrabold font-kumbsan text-center text-gray-800'>On U</h1></Link>
+                                    <Link to='/'> <h1 className='text-4xl py-1 ml-2 font-extrabold font-kumbsan text-center text-gray-800'>On U</h1></Link>
                                 </div>
                                 
                             </li>
@@ -204,7 +205,12 @@ const Navbar = ({user}) => {
 										setIsSearchVisible(false);
 										setBagShow(true)
 									}}>
-                                        <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/>
+										<img
+											src={bagCartIcon}
+											alt='bag-icon'
+											className='w-full h-full justify-self-center text-slate-800'
+										/>
+                                        {/* <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/> */}
                                     </div>
                                 </div>
                             </li>

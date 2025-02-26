@@ -154,7 +154,7 @@ const CouponCard = ({ coupon ,checkAndCreateToast,user,bag}) => {
             <div className="flex items-center justify-between">
                 <span className="text-sm sm:text-sm font-bold text-gray-900">{coupon?.CouponCode}</span>
                 <button
-					disabled = {bag.Coupon != null}
+					disabled = {bag?.Coupon != null}
                     onClick={tryCopyCode}
                     className="bg-black text-white disabled:bg-gray-300 disabled:text-black py-2 px-5 text-xs sm:text-xs md:text-sm transition-all ease-in-out duration-500 hover:bg-white hover:text-gray-800 hover:border-[1px] border-gray-900 rounded-full whitespace-nowrap"
                 >
