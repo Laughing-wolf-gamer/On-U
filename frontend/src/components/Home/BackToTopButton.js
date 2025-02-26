@@ -34,14 +34,16 @@ const BackToTopButton = ({scrollableDivRef}) => {
 		<div>
 			{/* Back to Top Button */}
 			<button
-				className={`fixed bottom-16 md:bottom-6 sm:bottom-20 lg:bottom-6 xl:bottom-6 2xl:bottom-6 z-50 right-8 p-3 bg-black text-white rounded-full shadow-lg transition-opacity duration-300 ${scrollPosition > 20 ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
-				onClick={scrollToTop}
-				aria-label="Back to top"
+			className={`fixed z-50 right-8 2xl:right-20 p-3 bg-black text-white rounded-full shadow-lg transition-opacity duration-300 ${scrollPosition > 20 ? 'opacity-100' : 'opacity-0 pointer-events-none'}
+				bottom-16 sm:bottom-20 md:bottom-6 lg:bottom-6 xl:bottom-6 2xl:bottom-10`}
+			onClick={scrollToTop}
+			aria-label="Back to top"
 			>
-				<ChevronUp size={20}/>
+			<ChevronUp size={20} />
 			</button>
 		</div>
-  	);
+	);
+
 };
 
 export default BackToTopButton;

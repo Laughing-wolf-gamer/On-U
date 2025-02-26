@@ -464,9 +464,10 @@ const Home = ({user}) => {
                     </Fragment>
 
             }
+            
             {/* {showComponent === 'dialog' && <FullScreenOverlayDialog products={product}/>} */}
             {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
-            <BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<BackToTopButton scrollableDivRef={scrollableDivRef} />
 			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     )

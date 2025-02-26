@@ -75,7 +75,7 @@ const About = () => {
                     <section className="py-10 mb-8 h-fit w-full font-kumbsan">
                         <div className="w-full p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-12">
                             {aboutData && aboutData.outMoto.length > 0 && aboutData.outMoto.map((moto, index) => (
-                                <div key={`moto-${index}`} className="text-center py-5 space-y-3 bg-gray-700 p-6 min-h-[200px] max-h-[200px] overflow-y-auto rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-125">
+                                <div key={`moto-${index}`} className="text-center py-5 space-y-3 bg-gray-700 p-6 min-h-[200px] max-h-[200px] overflow-y-auto rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 ease-out hover:scale-105">
                                     <i className="fas fa-cogs text-4xl mb-4"></i>
                                     <h3 className="text-2xl font-semibold text-white">{moto?.title || "Quality"}</h3>
                                     <p className=" text-white">{moto?.description || "We prioritize providing high-quality products that meet our customers' expectations and needs."}</p>
