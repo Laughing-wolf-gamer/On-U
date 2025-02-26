@@ -291,7 +291,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                     </p>
                     <p className="flex justify-between text-sm">
                         <span className="font-semibold">Saved:</span>
-                        <span>{formattedSalePrice(discountAmount)}</span>
+                        <span>{formattedSalePrice(bag?.totalDiscount)}</span>
                     </p>
                     <p className="flex justify-between text-lg font-semibold text-gray-800">
                         <span>Total Amount:</span>

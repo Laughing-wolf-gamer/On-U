@@ -122,6 +122,7 @@ const BagContent = ({
 					selectedAddress={selectedAddress}
 					user={user}
 					bag={bag}
+					discountAmount = {bag?.totalDiscount || discountedAmount}
 					totalAmount={totalProductSellingPrice}
 					originalsAmount={totalSellingPrice}
 					closePopup={() => {
