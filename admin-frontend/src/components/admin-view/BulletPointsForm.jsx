@@ -14,7 +14,7 @@ const BulletPointsForm = ({ onChange,defaultPoinst = [] }) => {
 		setBulletPoints(updatedPoints);
 		const filletedData = bulletPoints.filter(b => b.header !== '' && b.body !== "");
 		if (onChange) {
-		onChange(filletedData);
+			onChange(filletedData);
 		}
 	};
 
@@ -22,83 +22,80 @@ const BulletPointsForm = ({ onChange,defaultPoinst = [] }) => {
 		setBulletPoints([...bulletPoints, { header: "", body: "" }]);
 		const filletedData = bulletPoints.filter(b => b.header !== '' && b.body !== "");
 		if (onChange) {
-		onChange(filletedData);
+			onChange(filletedData);
 		}
 	};
 
 	const removeBulletPoint = (index) => {
 		const updatedPoints = bulletPoints.filter((_, i) => i !== index);
 		setBulletPoints(updatedPoints);
-		const filletedData = bulletPoints.filter(b => b.header !== '' && b.body !== "");
+		const filletedData = updatedPoints.filter(b => b.header !== '' && b.body !== "");
 		if (onChange) {
-		onChange(filletedData);
+			onChange(filletedData);
 		}
 	};
 
 	return (
-		<form className="w-full h-auto justify-start items-center flex flex-col gap-y-9">
+		<form className="w-full h-auto flex flex-col gap-y-9 items-center px-4 py-8">
+			{/* Bullet Points Section */}
 			{bulletPoints && bulletPoints.length > 0 && bulletPoints.map((point, index) => (
-				<div key={index} style={{ marginBottom: "10px" }} className="justify-center items-center grid grid-cols-2 gap-2 relative border border-gray-700">
-					<div className="justify-center items-center max-w-full p-2 h-auto">
-						<div className="flex gap-5 flex-col justify-between items-start">
-							<span className="text-center font-bold">
-								Header:
-								{point?.header === "" && (
-									<Label className="text-red-500 text-xl">*</Label> // Display star if header is empty
-								)}
-							</span>
-							<div className="flex items-center space-x-2">
-								<Textarea
-									type="text"
-									rows="5"
-									value={point?.header}
-									onChange={(e) =>
-										handleInputChange(index, "header", e.target.value)
-									}
-									placeholder="Enter header"
-									required
-									className="border focus:border-gray-900 border-black p-2 rounded-md"
-								/>
-							</div>
-						</div>
-					</div>
-					<div className="justify-center items-center max-w-full h-auto">
-						<div className="flex gap-5 flex-col justify-between items-start">
-							<span className="text-center font-bold">
-								Body:
-								{point?.body === "" && (
-									<Label className="text-red-500 text-xl">*</Label> // Display star if header is empty
-								)}
-							</span>
-							<Textarea
-								value={point?.body}
-								onChange={(e) =>
-									handleInputChange(index, "body", e.target.value)
-								}
-								placeholder="Enter body"
-								rows="6"
-								required
-								className="border p-2 focus:border-gray-900 border-black rounded-md"
-							/>
-						</div>
-					</div>
-					<Button
-						type="button"
-						className="w-4 h-5 absolute top-0 right-0 justify-center items-center flex-row flex"
-						onClick={() => removeBulletPoint(index)}
-					>
-						<XIcon />
-					</Button>
+				<div key={index} className="relative w-full grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-gray-300 rounded-lg shadow-sm">
+				<div className="flex flex-col gap-3">
+					{/* Header Input */}
+					<span className="font-semibold text-lg">Header:
+					{point?.header === "" && (
+						<span className="text-red-500 text-xl ml-1">*</span> // Star for missing header
+					)}
+					</span>
+					<Textarea
+					type="text"
+					rows="5"
+					value={point?.header}
+					onChange={(e) => handleInputChange(index, "header", e.target.value)}
+					placeholder="Enter header"
+					required
+					className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
+					/>
+				</div>
+
+				<div className="flex flex-col gap-3">
+					{/* Body Input */}
+					<span className="font-semibold text-lg">Body:
+					{point?.body === "" && (
+						<span className="text-red-500 text-xl ml-1">*</span> // Star for missing body
+					)}
+					</span>
+					<Textarea
+					value={point?.body}
+					onChange={(e) => handleInputChange(index, "body", e.target.value)}
+					placeholder="Enter body"
+					rows="6"
+					required
+					className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
+					/>
+				</div>
+
+				{/* Remove Button */}
+				<Button
+					type="button"
+					className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+					onClick={() => removeBulletPoint(index)}
+				>
+					<XIcon className="w-5 h-5" />
+				</Button>
 				</div>
 			))}
+
+			{/* Add New Bullet Point Button */}
 			<Button
 				type="button"
-				className="bg-slate-800 font-bold justify-center items-center w-full space-x-8 h-auto p-2"
+				className="mt-4 bg-gray-600 font-bold text-white py-3 px-6 rounded-lg shadow-md hover:bg-gray-700 transition duration-300"
 				onClick={addBulletPoint}
 			>
-				Add New Bullet Point <Plus strokeWidth={5}/>
+				Add New Bullet Point <Plus className="ml-2" strokeWidth={5} />
 			</Button>
-		</form>
+			</form>
+
 	);
 };
 

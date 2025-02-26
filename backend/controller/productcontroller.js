@@ -496,7 +496,7 @@ export const setRating = async (req, res) => {
         const averageRating = totalRating / product.Rating.length;
 
         // Set the averageRating field
-        product.averageRating = averageRating;
+        product.averageRating = Math.round(averageRating);
 
         // Save the updated product with the new average rating
         await product.save();

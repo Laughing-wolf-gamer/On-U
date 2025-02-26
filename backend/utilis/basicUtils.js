@@ -74,6 +74,32 @@ export function getStatusDescription(statusNumber) {
   return statusMap[statusNumber] || 'Processing';
 }
 
+// Utility method to find slangs in a comment
+export const findSlangsInComment = (comment) => {
+	const SLANGS = [
+		"crap",
+		"sucks",
+		"lame",
+		"horrible",
+		"terrible",
+		"awful",
+		"shit",
+		"badass",
+		"freaking",
+		"hella",
+		"screwed",
+		"idiot",
+		"loser",
+		"bullshit",
+		"broke"
+	];
+    // Convert comment to lowercase for case-insensitive comparison
+    const lowerCaseComment = comment.toLowerCase();
+
+    // Filter and return all slangs found in the comment
+    return SLANGS.filter(slang => lowerCaseComment.includes(slang));
+};
+
 export function getBestCourierPartners(available_courier_companies) {
 	// Filter out couriers with missing or zero values for important attributes
 	const filteredCouriers = available_courier_companies.filter(courier => {

@@ -91,6 +91,7 @@ const productModelSchema = new mongoose.Schema({
     length:Number,
     weight:Number,
     breadth:Number,
+	averageRating:Number,
 	TotalSoldAmount:{type:Number,default:0},
 },{timestamps:true})
 productModelSchema.pre('save', function (next) {

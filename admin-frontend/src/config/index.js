@@ -745,6 +745,30 @@ export function hexToRgba(hex, alpha = 1) {
     // Return the RGBA value with the provided alpha
     return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
+export const findSlangsInComment = (comment) => {
+	const SLANGS = [
+		"crap",
+		"sucks",
+		"lame",
+		"horrible",
+		"terrible",
+		"awful",
+		"shit",
+		"badass",
+		"freaking",
+		"hella",
+		"screwed",
+		"idiot",
+		"loser",
+		"bullshit",
+		"broke"
+	];
+    // Convert comment to lowercase for case-insensitive comparison
+    const lowerCaseComment = comment.toLowerCase();
+
+    // Filter and return all slangs found in the comment
+    return SLANGS.includes(lowerCaseComment);
+};
 export const formattedSalePrice = (price)=>{
     return price ? Math.round(price) : "0";
 }

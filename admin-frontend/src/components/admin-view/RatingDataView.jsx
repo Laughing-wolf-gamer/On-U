@@ -1,13 +1,16 @@
 import { Trash } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 import { DialogContent, DialogTitle } from '../ui/dialog';
-
+import { useSettingsContext } from '@/Context/SettingsContext';
+import { Button } from '../ui/button';
+import { findSlangsInComment } from '@/config';
+import { IoMdAlert } from "react-icons/io";
 const RatingDataView = ({ isOpen, onClose, ratings, onDeleteRating,addNewRating }) => {
     if (!isOpen) return null; // Don't render if the modal is not open
     console.log("ratings Data: ",ratings);
     return (
         <DialogContent>
-			<DialogTitle>All Ratings</DialogTitle>
+			<DialogTitle>Total Ratings: <span>{ratings?.length}</span> </DialogTitle>
 			<div className="flex flex-row space-y-4 bg-gray-100">
 				{ratings && ratings.length > 0 && <ProductReviews reviews={ratings} onRemoveRating={onDeleteRating}/>}
 			</div>
@@ -86,7 +89,7 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
     return (
         <div
             ref={containerRef}
-            className="overflow-y-auto  min-w-full max-h-[300px] min-h-max relative px-1 cursor-grab"
+            className="min-w-full max-h-[260px] overflow-y-auto relative px-1 cursor-grab"
             style={{ userSelect: 'none' }} // Disable text selection during drag
             onTouchStart={handleTouchStart}
             onTouchMove={handleTouchMove}
@@ -97,8 +100,9 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
             onMouseLeave={handleMouseLeave}
         >
             {/* Display only the first 3 reviews or more based on showMore */}
-            {reviews.slice(0, 4).map((review, index) => {
+            {reviews.map((review, index) => {
                 const randomStars = review.rating;
+				const isSlange = findSlangsInComment(review.comment)
                 return (
                     <div key={index} className="review-item mb-4 flex justify-between items-start">
                         <div className="flex-1">
@@ -111,10 +115,12 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
                                         <span key={i} className="star text-gray-700">★</span>
                                     ))}
                                 </div>
+								
                                 <span className="ml-2 text-sm text-gray-700">{randomStars} Stars</span>
                             </div>
                             <p className="text-gray-700 mt-2">{review.comment}</p>
                         </div>
+						{ isSlange ? <IoMdAlert size={20} color='Red'/>:null}
                         <Trash 
                             className="text-gray-500 hover:text-gray-700 cursor-pointer" 
                             onClick={(e) => {
@@ -127,55 +133,12 @@ const ProductReviews = ({ reviews, onRemoveRating }) => {
                     </div>
                 );
             })}
-
-            {/* If showMore is true, display all reviews */}
-            {showMore &&
-                reviews.slice(4).map((review, index) => {
-                    const randomStars = review.rating;
-                    return (
-                        <div key={index} className="review-item mb-4 flex justify-between items-start">
-                            <div className="flex-1">
-                                <div className="flex items-center">
-                                    <div className="stars">
-                                        {[...Array(randomStars)].map((_, i) => (
-                                            <span key={i} className="star text-black">★</span>
-                                        ))}
-                                        {[...Array(5 - randomStars)].map((_, i) => (
-                                            <span key={i} className="star text-gray-300">★</span>
-                                        ))}
-                                    </div>
-                                    <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
-                                </div>
-                                <p className="text-gray-700 mt-2">{review.comment}</p>
-                            </div>
-                            <Trash 
-                                className="text-gray-500 hover:text-gray-700 cursor-pointer" 
-                                onClick={(e) => {
-                                    e.stopPropagation(); // Prevent the event from bubbling up
-                                    if (onRemoveRating) {
-                                        onRemoveRating(review._id);
-                                    }
-                                }}
-                            />
-                        </div>
-                    );
-                })
-            }
-
-            {/* View More / View Less Button */}
-            <div className="mt-4">
-                <button 
-                    onClick={handleToggleReviews} 
-                    className="text-gray-500 font-semibold"
-                >
-                    {showMore ? 'View Less' : 'View More'}
-                </button>
-            </div>
         </div>
     );
 };
 
 const StarRatingInput = ({onChangeValue}) => {
+	const{checkAndCreateToast} = useSettingsContext();
     const [ratingData, setRatingData] = useState({comment:'',rating:1});
 
     const handleStarClick = (value) => {
@@ -186,6 +149,14 @@ const StarRatingInput = ({onChangeValue}) => {
     }
     const handleSubmitRating = (e) => {
         e.preventDefault();
+		if(ratingData.comment.trim() === '' || ratingData.rating < 1){
+			checkAndCreateToast('error', 'Please enter a valid review and select a rating');
+			return;
+		}
+		/* if(findSlangsInComment(ratingData.comment)){
+			checkAndCreateToast('warning', 'Your review contains slang. Please review and correct it.',3000);
+			return;
+		} */
         onChangeValue(ratingData);
         setRatingData({comment:'',rating:1});
     }
@@ -217,12 +188,13 @@ const StarRatingInput = ({onChangeValue}) => {
                 placeholder='Write your review here...'
                 className='mt-2 p-2 w-full border border-gray-300 rounded-md'
             />
-            <button
+            <Button
+				// disabled={ratingData.comment.trim() === '' || ratingData.rating === 1}
                 onClick={handleSubmitRating}
-                className='mt-4 w-full bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-md'
+                className='mt-4 w-full text-white font-bold py-2 px-4 rounded-md'
             >
                 Submit Review
-            </button>
+            </Button>
         </div>
     );
 }

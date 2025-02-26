@@ -589,7 +589,7 @@ export const addCustomProductsRating = async (req, res) => {
         const averageRating = total / product.Rating.length;
 
         // Update the product's average rating field
-        product.averageRating = averageRating;
+        product.averageRating = Math.round(averageRating);
 
         // Save the updated product with the new average rating
         await product.save();
@@ -627,8 +627,17 @@ export const fetchAllRatingProducts = async(req,res)=>{
 export const removeCustomProductsRating = async(req,res)=>{
     try {
         const {productId,ratingId} = req.body;
-        console.log("Adding Custom Rating: ", productId, ratingId);
         const product = await ProductModel.findByIdAndUpdate(productId, {$pull: {Rating: {_id: ratingId}}}, {new: true});
+		if(!product) {
+            return res.status(404).json({Success: false, message: "Product not found"});
+        }
+		const total = product.Rating.reduce((acc, review) => acc + review.rating, 0);
+		const averageRating = total / product.Rating.length;
+		console.log("Updating Average Rating: ", averageRating);
+		// Update the product's average rating field
+		product.averageRating = !isNaN(averageRating) ?  Math.round(averageRating) : 0;
+		await product.save();
+        console.log("Removing Custom Rating: ", product);
         res.status(200).json({Success:true,message:"Successfully Remove Rating Data"})
     } catch (error) {
         console.error('Product Update Failed: ', error);

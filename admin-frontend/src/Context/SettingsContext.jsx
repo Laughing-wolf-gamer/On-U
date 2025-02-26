@@ -9,20 +9,23 @@ const SettingContext = createContext();
 // Provider component
 export const SettingsProvider = ({ children }) => {
 	const [activeToast, setActiveToast] = useState(null);
-    const checkAndCreateToast = (type,message) => {
+    const checkAndCreateToast = (type,message,closeTime = 1000) => {
+		console.log("Log type: ", type, "message: ", message,);
 		switch(type){
 			case "error":
-				toast.error(message,{autoClose:700})
+				toast.error(message,{autoClose:closeTime})
 				break;
 			case "warning":
-				toast.warn(message,{autoClose:700})
+				toast.warn(message,{autoClose:closeTime})
+				break;
 			case "info":
-			    toast.info(message,{autoClose:700})
+			    toast.info(message,{autoClose:closeTime})
+				break;
 			case "success":
-				toast.success(message,{autoClose:700})
+				toast.success(message,{autoClose:closeTime})
 				break;
 			default:
-			    toast.info(message,{autoClose:700})
+			    toast.info(message,{autoClose:closeTime})
 				break;
 		}
     }
