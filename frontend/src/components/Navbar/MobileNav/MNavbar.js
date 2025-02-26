@@ -177,7 +177,7 @@ const MNavbar = ({ user }) => {
                 {/* Overlay */}
                 {showbagView && (
                     <div
-                        className="fixed inset-0 bg-gray-800 bg-opacity-50 z-50 transition-opacity duration-300"
+                        className="fixed inset-0 bg-gray-800 h-screen bg-opacity-50 z-50 transition-opacity duration-300"
                         onClick={()=> setBagShow(false)}
                     ></div>
                 )}
