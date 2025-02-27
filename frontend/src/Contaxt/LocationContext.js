@@ -135,7 +135,7 @@ export const LocationContextProvider = ({ children }) => {
                     requestGeolocationPermission();  // If permission granted previously, fetch position
                 } else if (permissionStatus.state === "denied") {
                     setIsPermissionGranted(false);
-                    checkAndCreateToast("error","Geolocation permission denied. Please enable location services.");
+                    checkAndCreateToast("error","Geolocation permission denied");
                 } else {
                     requestGeolocationPermission();  // If permission undetermined, request it
                 }
