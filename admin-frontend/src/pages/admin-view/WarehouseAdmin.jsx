@@ -278,7 +278,7 @@ const WarehouseAdmin = () => {
 					/>
 				</div>
 				<div>
-					<Label htmlFor="lat" className="block text-sm font-semibold text-gray-700">Latitude <span className='text-red-500'>*</span> </Label>
+					<Label htmlFor="lat" className="block text-sm font-semibold text-gray-700">Latitude </Label>
 					<Input
 						type="text"
 						name="lat"
@@ -289,7 +289,7 @@ const WarehouseAdmin = () => {
 					/>
 				</div>
 				<div>
-					<Label htmlFor="long" className="block text-sm font-semibold text-gray-700">Longitude <span className='text-red-500'>*</span> </Label>
+					<Label htmlFor="long" className="block text-sm font-semibold text-gray-700">Longitude </Label>
 					<Input
 						type="text"
 						name="long"

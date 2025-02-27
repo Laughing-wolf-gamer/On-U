@@ -118,7 +118,7 @@ const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
     const downloadCSV = () => {
         const csvContent = convertToCSV();
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8' });
-        saveAs(blob, `${title}-${dateStart}-${dateEnd}_Growth_Data.csv`);
+        saveAs(blob, `${dateStart}-${dateEnd}_Data.csv`);
     };
 
     const downloadPDF = () => {
@@ -148,11 +148,28 @@ const CustomerBarChart = ({ data, filter, title ,dateStart,dateEnd}) => {
   
 
     const downloadExcel = () => {
-        const ws = XLSX.utils.json_to_sheet(data);
-        const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, `${title}-${dateStart}-${dateEnd}} Growth Data`);
-        XLSX.writeFile(wb, `${title}-${dateStart}-${dateEnd}_Growth_Data.xlsx`);
-    };
+		const ws = XLSX.utils.json_to_sheet(data);
+		const wb = XLSX.utils.book_new();
+
+		// Format the title
+		const title = `${new Date(dateStart)}-${new Date(dateEnd)}GrowthData`;
+
+		// Log the length of the title for debugging
+		const sanitizedTitle = title.replace(/[\\/:*?[\\]]/g, '').slice(0, 30);
+		console.log(sanitizedTitle);
+
+		// Sanitize the title to remove invalid characters
+
+		// Append the sanitized title as the sheet name
+		XLSX.utils.book_append_sheet(wb, ws, sanitizedTitle);
+
+		// Create the filename with valid characters
+		const fileName = `${sanitizedTitle}-${dateStart}-${dateEnd}_Growth_Data.xlsx`;
+
+		// Write the file
+		XLSX.writeFile(wb, fileName);
+	};
+
 
     return (
         <div>

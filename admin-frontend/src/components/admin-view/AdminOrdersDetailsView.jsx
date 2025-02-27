@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
-import { adminGetAllOrders, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
+import { adminGetAllOrders, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
 import { capitalizeFirstLetterOfEachWord, GetBadgeColor, getStatusDescription } from '@/config'
 import { toast } from 'react-toastify'
 import { useSettingsContext } from '@/Context/SettingsContext'
@@ -56,6 +56,18 @@ const AdminOrdersDetailsView = ({ order }) => {
 			checkAndCreateToast("success",'Order Status Updated Successfully: ' + data?.payload?.message)
 			setFormData(initialFormData)
 			dispatch(adminGetAllOrders())
+		}
+	}
+	const handlePickupResponse = async () => {
+		const response = await dispatch(adminRequestTryPickUp({
+			BestCourior:order?.BestCourior,
+			ShipmentCreatedResponseData:order?.ShipmentCreatedResponseData
+		}))
+		if(response.payload?.error){
+			console.log("Pickup response: ", response);
+			checkAndCreateToast("error",response.payload?.error)
+		}else{
+			checkAndCreateToast('error',"Successfully created response:");
 		}
 	}
 
@@ -137,6 +149,16 @@ const AdminOrdersDetailsView = ({ order }) => {
 				<Separator />
 
 				{/* You can add the form section here if needed */}
+				{!order?.PicketUpData && (
+					<div className="w-full flex justify-center items-center">
+						<button
+							className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+							onClick={() => handlePickupResponse()}
+						>
+							Request Pickup
+						</button>
+					</div>
+				)}
 			</div>
 		</DialogContent>
 	)

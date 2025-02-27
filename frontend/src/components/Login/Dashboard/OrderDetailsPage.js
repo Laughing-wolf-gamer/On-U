@@ -205,7 +205,7 @@ const OrderDetailsPage = ({ user }) => {
                                 <button
                                     disabled={!orderbyid || orderbyid?.IsReturning}
                                     onClick={createOrderReturn}
-                                    className="w-full py-4 active:bg-gradient-to-r acitve:from-gray-700 active:to-black text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-500 "
+                                    className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
                                 >
                                     {orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
                                 </button>

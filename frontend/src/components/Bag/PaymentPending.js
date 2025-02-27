@@ -1,18 +1,20 @@
+import axios from 'axios';
 import { Loader } from 'lucide-react';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BASE_API_URL, headerConfig } from '../../config';
 import { useDispatch, useSelector } from 'react-redux';
 import { getuser } from '../../action/useraction';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const PaymentPending = () => {
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const[isPaymentChecking,setIsPaymentChecking] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
-	const { user, isAuthentication } = useSelector(state => state.user);
+	const { user } = useSelector(state => state.user);
 	const verifyAnyOrdersPayment = async()=>{
+		setIsPaymentChecking(true);
         if(!sessionStorage.getItem("checkoutData")){
 			navigate('/bag');
 			return;
@@ -33,17 +35,19 @@ const PaymentPending = () => {
         } catch (error) {
             console.error(`Error Verifying order: `,error);
 			checkAndCreateToast("success","Error Verifying Payment");
-			navigate('/bag');
-        }
+			navigate('/bag/checkout');
+        }finally{
+			setIsPaymentChecking(false);
+		}
     }
 	useEffect(()=>{
 		dispatch(getuser());
 	},[])
 	useEffect(()=>{
-		if(user){
+		if(user && !isPaymentChecking){
 			verifyAnyOrdersPayment();
 		}
-	},[user])
+	},[user,isPaymentChecking])
 	return (
 		<div className="min-h-screen flex items-center justify-center">
 			<div className="bg-gray-50 p-10 rounded-xl shadow-2xl max-w-lg text-center w-full sm:w-auto">

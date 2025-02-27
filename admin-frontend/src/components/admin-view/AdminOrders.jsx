@@ -261,7 +261,7 @@ const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
 	<Fragment>
 		{orders.map((order) => (
 			<div key={order?._id} className="grid grid-cols-7 gap-2 p-3">
-				<div className="text-sm sm:text-sm">{order?._id}</div>
+				<div className="text-sm sm:text-base truncate">{order?._id}</div>
 				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleDateString()}</div>
 				<div className="text-sm sm:text-base">
 					<Badge className={`justify-center items-center py-1 px-3 text-white bg-green-500`}>{order?.paymentMode}</Badge>

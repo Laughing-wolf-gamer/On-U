@@ -28,6 +28,10 @@ const ordersSchema = new mongoose.Schema({
 	etd:{type:String,default:''},
 	shipment_status:{type:Number,default:0},
 	manifest:Object,
+	awb_code:Number,
+	ShipmentCreatedResponseData:{type:Object,default:null},
+	BestCourior:{type:Object,default:null},
+	PicketUpData:{type:Object,default:null},
 	IsReturning:{type:Boolean,default:false},
 	IsInExcnage:{type:Boolean,default:false},
 },{timestamps:true})

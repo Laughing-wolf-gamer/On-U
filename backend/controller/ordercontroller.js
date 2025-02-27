@@ -10,7 +10,7 @@ import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
-import { generateOrderForShipment, generateOrderRetrunShipment } from './LogisticsControllers/shiprocketLogisticController.js'
+import { generateOrderForShipment, generateOrderPicketUpRequest, generateOrderRetrunShipment } from './LogisticsControllers/shiprocketLogisticController.js'
 export const createPaymentOrder = async (req, res, next) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -171,13 +171,13 @@ export const createorder = async (req, res, next) => {
 			pincode:Address.pincode,
 			status: 'Confirmed',
 		},randomOrderShipRocketId,randomShipmentId)
-		const {manifest,warehouse_name} = createdShipRocketOrder;
+		const {shipmentCreatedResponseData,bestCourior,manifest,warehouse_name,PickupData} = createdShipRocketOrder;
 		console.log("Shipment After Order Create Data: ",createdShipRocketOrder);
 		const orderData = new OrderModel({
-            order_id: randomOrderShipRocketId,
+            order_id: shipmentCreatedResponseData.order_id,
             userId: req.user.id,
 			picketUpLoactionWareHouseName: warehouse_name || null,
-			shipment_id: randomShipmentId,
+			shipment_id: shipmentCreatedResponseData.shipment_id,
 			channel_id:'6217390',
 			ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || ConvenienceFees || 0,
             orderItems:proccessingProducts,
@@ -185,6 +185,9 @@ export const createorder = async (req, res, next) => {
             TotalAmount,
             paymentMode,
             status: 'Confirmed',
+			PicketUpData:PickupData,
+			BestCourior:bestCourior,
+			ShipmentCreatedResponseData:shipmentCreatedResponseData,
 			manifest:manifest,
         });
 
@@ -659,39 +662,6 @@ const updateBagTotals = (bag, totals) => {
 
 
 
-/* export const addItemsArrayToWishList = async(req,res)=>{
-    try {
-        const userId = req.user.id;
-        const{productIdArray} = req.body;
-        console.log("Wish list Array: ",productIdArray);
-        if(!productIdArray){
-            return res.status(200).json({success:false,message: "Product Array Not Found"})
-        }
-        let previousWishList = await WhishList.findOne({userId:userId})
-        const allArray = productIdArray.map((p => p.productId._id));
-        console.log("Saved wishList: ",allArray);
-        if(previousWishList){
-            const emitPromise = allArray.map(async(productId) =>{
-                const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
-                if (!isAlreadyPresent) {
-                    previousWishList.orderItems.push({productId: mongoose.Types.ObjectId(productId)});
-                }
-            })
-            await Promise.all(emitPromise)
-            await previousWishList.save();
-            res.status(200).json({success:true,message: "Items added to Wish List"})
-            return;
-        }
-        previousWishList = new WhishList({userId:userId, orderItems:allArray.map(p => ({
-            productId: mongoose.Types.ObjectId(p),  // Ensure productId is cast to ObjectId
-        }))})
-        await previousWishList.save();
-        res.status(200).json({success:true,message: "Items added to Wish List"})
-    } catch (error) {
-        console.error("Failed to add items array: ",error);
-        res.status(500).json({success:false,message:"Internal server error",});
-    }
-} */
 export const addItemsArrayToWishList = async (req, res) => {
     try {
         const userId = req.user.id;
@@ -795,6 +765,7 @@ export const addItemsArrayToWishList = async (req, res) => {
     }
 
 } */
+
 export const addItemsToBag = async (req, res) => {
     try {
         console.log("Bag Body", req.body);
@@ -1385,5 +1356,24 @@ export const exchangeOrder = async(req, res) => {
 		console.error("Error Occured during exchanging order ", error.message);
 		logger.error("Error occured during exchanging order", error.message);
 		res.status(500).json({success:false,message: "Internal Server Error" });
+	}
+}
+
+
+export const tryCreatePickupReqponse = async(req,res)=>{
+	try {
+		const {BestCourior,ShipmentCreatedResponseData} = req.body;
+		// console.log("PickeUp Rqquest Data: ",req.body);
+		const pickupRequest = await generateOrderPicketUpRequest(ShipmentCreatedResponseData,BestCourior);
+		console.log("Created Pickup Request: ", pickupRequest);
+		if(!pickupRequest){
+			return res.status(400).json({ success: false, message: "Failed to create pickup request", result: null });
+		}
+		res.status(200).json({success:true,message:'Successfully created a new pickup'})
+		
+	} catch (error) {
+		console.error("Error occured during creating pickup request", error);
+		logger.error("Error occured during creating pickup request", error.message);
+		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }

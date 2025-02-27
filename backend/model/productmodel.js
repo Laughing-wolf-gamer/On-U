@@ -5,7 +5,10 @@ const productModelSchema = new mongoose.Schema({
 		type:String,
         required:true,
 	},
+	sku:Number,
+	hsn:String,
     brand:String,
+	gst:Number,
     title:{
         type:String,
         required:[true,'Please enter product title'],

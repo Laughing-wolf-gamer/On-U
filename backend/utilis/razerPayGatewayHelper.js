@@ -6,6 +6,7 @@ import Bag from "../model/bag.js";
 import { generateOrderForShipment } from "../controller/LogisticsControllers/shiprocketLogisticController.js";
 import { sendMainifestMail, sendOrderPlacedMail } from "../controller/emailController.js";
 import WebSiteModel from "../model/websiteData.model.js";
+import PaymentOrderModel from "../model/PaymentGatway.model.js";
 
 export const instance = new Razorpay({
     key_id: process.env.RAZER_PG_ID,
@@ -14,8 +15,9 @@ export const instance = new Razorpay({
 
 export const createOrder = async (req, res) => {
     try {
+		const userId = req.user.id;
         console.log("Payment Amount:", req.body);
-        const { amount ,selectedAddress, orderDetails, totalAmount, bagId } = req.body;
+        const { amount,selectedAddress, orderDetails, totalAmount, bagId } = req.body;
         const options = {
             amount: Number(Math.round(amount) * 100),
             currency: "INR",
@@ -23,10 +25,11 @@ export const createOrder = async (req, res) => {
             payment_capture: 1, // auto-capture payment (1) or manual (0)
         };
         const order = await instance.orders.create(options);
-        console.log("Payment Order Created",order);
+        console.log("Razerpay Payment Order Created",order);
         if(!order){
-            order
+            return res.status(404).json({success: false, message:"Error creating Razerpay order!"});
         }
+		// const newRazerPayOrder = await PaymentOrderModel.create({})
         res.status(200).json({ success: true, order,keyId:process.env.RAZER_PG_ID});
     } catch (error) {
         console.error("Payment Order Creation Error: ", error);
@@ -81,6 +84,9 @@ export const paymentVerification = async (req, res) => {
 		const alreadyPresentConvenenceFees = await WebSiteModel.findOne({tag: 'ConvenienceFees'});
 		let manifest = null;
 		let warehouse_name = null;
+		let PickupData = null;
+		let shipmentCreatedResponseData = null
+		let bestCourior = null
 		try {
 			const createdShipRocketOrder = await generateOrderForShipment(req.user.id,{
 				order_id: randomOrderShipRocketId,
@@ -96,6 +102,9 @@ export const paymentVerification = async (req, res) => {
 			console.log("Shipment Data: ",createdShipRocketOrder);
 			manifest = createdShipRocketOrder?.manifest
 			warehouse_name = createdShipRocketOrder?.warehouse_name || null;
+			PickupData = createdShipRocketOrder?.PickupData || null;
+			bestCourior = createdShipRocketOrder?.bestCourior || null;
+			shipmentCreatedResponseData = createdShipRocketOrder?.shipmentCreatedResponseData || null;
 		} catch (error) {
 			console.error("Error while creating shipRocket order: ", error);
 		}
@@ -111,6 +120,9 @@ export const paymentVerification = async (req, res) => {
             TotalAmount:totalAmount,
             paymentMode:"prepaid",
             status: 'Confirmed',
+			PicketUpData:PickupData || null,
+			ShipmentCreatedResponseData:shipmentCreatedResponseData,
+			BestCourior:bestCourior,
 			manifest:manifest,
         });
 
@@ -246,7 +258,7 @@ export const OnPaymentCallBack = async (req,res)=>{
         console.dir(req.body, { depth: null});
         res.status(200).json({ success: true, message: 'Payment Successful' });
     } catch (error) {
-        console.error("Error Removing OnPayment Call",error);
+        console.error("Error Removing on Razerpay Payment call back",error);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }

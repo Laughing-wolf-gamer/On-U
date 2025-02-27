@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getContactUsPageData, sendContactUsPage } from '@/store/common-slice';
 import toast from 'react-hot-toast';
+import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
 
 const AdminContactPage = () => {
     const dispatch = useDispatch();
@@ -86,7 +89,7 @@ const AdminContactPage = () => {
             {/* Header */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Header</h2>
-                <input
+                <Input
                     type="text"
                     className="w-full p-2 border rounded"
                     value={header}
@@ -98,7 +101,7 @@ const AdminContactPage = () => {
             {/* SubHeader */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">SubHeader</h2>
-                <input
+                <Input
                     type="text"
                     className="w-full p-2 border rounded"
                     value={subHeader}
@@ -110,7 +113,7 @@ const AdminContactPage = () => {
             {/* Email */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Contact Email</h2>
-                <input
+                <Input
                     type="email"
                     className="w-full p-2 border rounded"
                     value={email}
@@ -122,7 +125,7 @@ const AdminContactPage = () => {
             {/* Phone Number */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Phone Number</h2>
-                <input
+                <Input
                     type="text"
                     className="w-full p-2 border rounded"
                     value={phoneNumber}
@@ -134,30 +137,35 @@ const AdminContactPage = () => {
             {/* Address */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Address</h2>
-                <textarea
+                <Textarea
                     className="w-full p-2 border rounded h-32"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Enter Contact Address"
-                ></textarea>
+                />
             </div>
 
             {/* Map Link */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Map Link</h2>
-                <input
-                type="text"
-                className="w-full p-2 border rounded"
-                value={mapLink}
-                onChange={(e) => setMapLink(e.target.value)}
-                placeholder="Enter Google Map Link"
+				<div className='w-full flex flex-col mb-3 justify-start items-center'>
+					<Label className = {"text-gray-700 text-base font-bold"}>Google Map Embedding Code</Label>
+					<Label className = {"text-gray-500 text-sm font-normal"}>Paste the Google Map Embedding Code here to display the map on your website.</Label>
+				</div>
+                <Textarea
+					type="text"
+					rows={'6'}
+					className="w-full p-2 border rounded"
+					value={mapLink}
+					onChange={(e) => setMapLink(e.target.value)}
+					placeholder="Enter Google Map Link"
                 />
             </div>
 
             {/* Team Members */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Form Field </h2>
-                <input
+                <Input
 					type="text"
 					className="w-full p-2 border rounded mb-2"
 					value={newField}

@@ -309,6 +309,8 @@ export const addNewProduct = async (req, res) => {
             shortTitle,
             size,
 			gst,
+			hsn,
+			sku,
             description,
             specification,
             careInstructions,
@@ -396,7 +398,9 @@ export const addNewProduct = async (req, res) => {
             title,
             shortTitle,
             size,
-            // gst,
+            gst,
+			hsn,
+			sku,
             description,
             careInstructions: careInstructions ? careInstructions : '',
             bulletPoints,
@@ -448,6 +452,8 @@ export const editProduct = async (req, res) => {
             title,
             size,
 			gst,
+			sku,
+			hsn,
             description,
             specification,
             careInstructions,
@@ -483,7 +489,9 @@ export const editProduct = async (req, res) => {
         addToUpdate('productId', productId);
         addToUpdate('title', title);
         addToUpdate('description', description);
-        // addToUpdate('gst', gst);
+        addToUpdate('sku', sku);
+        addToUpdate('hsn', hsn);
+        addToUpdate('gst', gst);
         addToUpdate('specification', specification);
         addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);

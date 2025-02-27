@@ -81,7 +81,10 @@ const Contact = () => {
     useEffect(()=>{
         fetchContactUsPageData();
     },[dispatch])
-	// console.log("Conatact Data: ",formData);
+
+	//<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3783.65626776301!2d73.8134405!3d18.499222699999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3bc2bfc2de8e8723%3A0xf0c0d48e330120d7!2sON%20U%20Clothing!5e0!3m2!1sen!2sin!4v1740690210221!5m2!1sen!2sin" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+	const mapUrl = formData?.mapLink;
+	console.log("Conatact Data Map Url: ",mapUrl);
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {sendingMessageLoading ? (
@@ -92,7 +95,7 @@ const Contact = () => {
                 {/* Header Section */}
                 <header className="text-center mb-12">
                     <h1 className="text-4xl font-extrabold text-gray-900 sm:text-5xl">
-						{formData.header ? formData?.header :"Get in Touch with ON-U"}
+						{formData.header ? formData?.header :"Get in Touch with ON U"}
                     
                     </h1>
                     <p className="mt-4 text-lg text-gray-600 max-w-2xl mx-auto">
@@ -195,8 +198,25 @@ const Contact = () => {
                     <h3 className="text-3xl font-semibold text-gray-900 text-center mb-6">Find Us Here</h3>
                     <div className="relative w-full h-80 sm:h-96 rounded-lg overflow-hidden shadow-lg">
                     {/* Replace iframe with actual map URL */}
-                    <iframe
-                        src={formData?.mapUrl || "https://www.google.com/maps/embed?pb=...your_map_link_here..."}
+					<div style={{ width: "100%", height: "500px" }}>
+						<iframe
+							key={mapUrl}  // Use the mapUrl as the key to force re-rendering if it changes
+							src={mapUrl}
+							width="100%"  // Use percentage for responsive design
+							height="100%" // Use percentage for responsive design
+							style={{ border: 0 }} // Removes the border using inline CSS
+							allowFullScreen // Enable fullscreen without value
+							aria-hidden="false" // Accessibility: This is not hidden for screen readers
+							tabIndex="0" // Accessibility: Can be focused by keyboard
+							loading="lazy" // Lazy load the iframe to improve performance
+							referrerPolicy="no-referrer-when-downgrade" // Security feature for the iframe
+							onError={(error) => console.error("Error Loading Map:", error)} // Log any errors loading the map
+						/>
+					</div>
+					
+
+                    {/* <iframe
+                        src={formData?.mapUrl}
                         width="100%"
                         height="100%"
                         frameBorder="2"
@@ -204,7 +224,7 @@ const Contact = () => {
                         allowFullScreen=""
                         aria-hidden="false"
                         tabIndex="0"
-                    ></iframe>
+                    ></iframe> */}
                     </div>
                 </section>
                 </div>

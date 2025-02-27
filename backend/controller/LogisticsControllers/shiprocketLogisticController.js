@@ -51,10 +51,11 @@ const generateAwb = async(awbData)=>{
                 Authorization: `Bearer ${token}`,
             },
         })
-		// console.dir(response?.data,{depth:null});
-		return response?.data?.data;
+		console.log("Awb Generationg response: ",response.data.response.data);
+		const awb_code = response.data.response.data?.awb_code
+		return awb_code || null;
 	} catch (error) {
-		console.error('Error Creating AWB:', error);
+		console.error('Error Creating AWB: ', error?.response?.data);
 		// console.dir(error,{depth:null});
 		return null;
 	}
@@ -72,25 +73,35 @@ const getAllServicalibiltyties = async (servicesData) => {
 		// console.dir(response?.data,{depth:null});
 		return response?.data?.data;
 	} catch (error) {
-		console.error('Error fetching all serviceabilityties:', error);
+		console.error('Error fetching all serviceabilityties:', error?.response?.data);
 		// console.dir(error,{depth:null});
 		return null;
 	}
 }
-const generateOrderPicketUpRequest =async(orderData)=>{
+export const generateOrderPicketUpRequest =async(orderData,bestCourior)=>{
 	if (!token) await getAuthToken();
 	try {
-		console.log("Generating Picket Up Request for Shipment: ",orderData);
 		const {shipment_id} = orderData;
+		const awbCode = await generateAwb({
+			shipment_id:shipment_id,
+			courier_id:bestCourior?.courier_company_id,
+		});
+		if(!awbCode) throw new Error("Error generating awb code");
+		console.log("Generating Picket Up Request for Shipment: ",orderData);
 		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/pickup`, {shipment_id:[shipment_id]},{
             headers: {
                 Authorization: `Bearer ${token}`,
             },
         })
 		console.log("Generated Picket Up Request for Shipment: ",response.data);
-		
+		if(!response.data.response){
+			throw new Error("Error generating picket up request");
+		}
+		const returningData = {awbCode,picketUpResponseData:response.data.response};
+		return returningData;
 	} catch (error) {
-		console.error('Error generating order picket up request:', error);
+		console.error('Error generating order picket up request:', error?.response?.data);
+		return null;
 	}
 }
 
@@ -121,7 +132,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
     if (!token) await getAuthToken();
 
     try {
-        console.log("User Id: ", userId);
+        // console.log("User Id: ", userId);
 
         // Fetch user data
         const userData = await User.findById(userId);
@@ -145,26 +156,27 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 		const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
         const orderItems = shipmentData.orderItems.map(item => ({
             name: item?.productId?.title,
-            sku: item?.productId?._id,
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
-            discount: item?.productId?.DiscountedPercentage,
-            tax: 0,
-            hsn: generateRandomId().toString()
+            discount: item?.productId?.DiscountedPercentage || 0,
+            sku: item?.productId?.sku || item?.productId?._id,
+            tax: item?.productId?.gst || 0,
+            hsn: item?.productId?.sku || generateRandomId().toString()
         }));
 		console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
 
         
 		const pickup_locations = await getPickUpLocation();
-		// console.log("Response Picketup Location",pickup_locations);
-		const activePickUpLocation = pickup_locations[0];
+		console.log("Response Picketup Location",pickup_locations);
+		const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
+		console.log("Check Is Primary Location: ",primaryLocation)
         const orderDetails = {
             order_id: randomOrderId,
             shipment_id: randomShipmentId,
             order_date: formatDate(new Date()),
-            pickup_location: activePickUpLocation?.pickup_location,
-			reseller_name: "On-U",
-			company_name: "On-U",
+            pickup_location: primaryLocation?.pickup_location,
+			reseller_name: primaryLocation?.pickup_location,
+			company_name: primaryLocation?.pickup_location,
 			channel_id:'6282866',
 			category:"Clothes",
 			billing_isd_code: "+91",
@@ -201,26 +213,31 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 		
         console.log("Shipment Created Response: ",response.data);
 		const allAvailableCourior = await getAllServicalibiltyties({
-			pickup_postcode:activePickUpLocation?.pin_code,
+			pickup_postcode:primaryLocation?.pin_code,
 			delivery_postcode:shipmentData.address.pincode, 
 			order_id:response?.data?.order_id,
 		});
+		console.log("All Available Courier: ",allAvailableCourior?.available_courier_companies);
 		const getBestCourir = getBestCourierPartners(allAvailableCourior?.available_courier_companies)
-		console.log("Best Courier: ",getBestCourir[0]);
+		const bestCourior = getBestCourir[0];
+		console.log("Best Courier: ",bestCourior);
 		
-		await generateAwb({
-			shipment_id:response?.data?.shipment_id,
-			courier_id:'',
-			status:'',
-		});
-		// const createPicketUpResponse = await generateOrderPicketUpRequest(response?.data);
-        console.log("Response: ", response.data);
+		const createPicketUpResponse = await generateOrderPicketUpRequest({
+			order_id:response?.data?.order_id,
+            shipment_id:response?.data?.shipment_id,
+			status:response?.data?.status,
+			status_code:response?.data?.status_code,
+			onboarding_completed_now:response?.data?.onboarding_completed_now,
+			courier_company_id:bestCourior?.courier_company_id
+		},bestCourior);
+        console.log("createPicketUpResponse: ", createPicketUpResponse);
 		const manifest = await generateManifest(response.data);
-		console.log("Manifest: ", manifest);
-        return {data:response.data,manifest,warehouse_name:activePickUpLocation};
+		// console.log("Manifest: ", manifest);
+
+        return {shipmentCreatedResponseData:response.data,bestCourior,manifest,warehouse_name:primaryLocation,PickupData:createPicketUpResponse};
 
     } catch (error) {
-        console.error("Error creating order:", error);
+        console.error("Error creating order:", error?.response?.data);
         return null;
     }
 };
@@ -274,12 +291,12 @@ export const generateOrderRetrunShipment = async (shipmentData,userId) => {
 		"breadth": 11,
 		"height": 11,
 		"weight": 0.5 */
-		// console.log("ShipRocket Shipment data: ", shipmentData.picketUpLoactionWareHouseName);
 		// Fetch user data
         const userData = await User.findById(userId);
         if (!userData) {
-            console.error("User not found");
-            return null;
+            // console.error("User not found");
+            // return null;
+			throw new Error("User not found");
         }
 
         // Helper function to calculate totals for order items
@@ -293,16 +310,17 @@ export const generateOrderRetrunShipment = async (shipmentData,userId) => {
         const totalOrderHeight = calculateTotal('height');
         const totalOrderLength = calculateTotal('length');
         const totalBredth = calculateTotal('breadth');
+
         // Map order items to required format
 		const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
         const orderItems = shipmentData.orderItems.map(item => ({
             name: item?.productId?.title,
-            sku: item?.productId?._id,
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
-            discount: item?.productId?.DiscountedPercentage,
-            tax: 0,
-            hsn: generateRandomId().toString()
+            discount: item?.productId?.DiscountedPercentage || 0,
+            sku: item?.productId?.sku || item?.productId?._id,
+            tax: item?.productId?.gst || 0,
+            hsn: item?.productId?.sku || generateRandomId().toString()
         }));
 		// const pickup_locations = await getPickUpLocation();
 		// console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
@@ -437,8 +455,8 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
 
 		const userData = await User.findById(userId);
         if (!userData) {
-            console.error("User not found");
-            return null;
+            // console.error("User not found");
+			throw new Error("User not found");
         }
 
         // Helper function to calculate totals for order items

@@ -151,7 +151,7 @@ const AdminContactQueryViewPage = () => {
         
         const ws = XLSX.utils.json_to_sheet(rows); // Pass the rows array to create the Excel sheet
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, 'Query Data');
+        XLSX.utils.book_append_sheet(wb, ws, 'QueryData');
         XLSX.writeFile(wb, 'Query_Data.xlsx');
     };
 

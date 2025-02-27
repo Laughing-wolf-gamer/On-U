@@ -273,7 +273,7 @@ const CheckoutPage = () => {
 	useEffect(()=>{
 		if(allAddresses){
 			if(allAddresses.length > 0){
-				// setSelectedAddress(allAddresses[0]);
+				setSelectedAddress(allAddresses[0] || null);
 			}
 		}
 	},[allAddresses,dispatch])

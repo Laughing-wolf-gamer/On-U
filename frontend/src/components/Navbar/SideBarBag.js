@@ -294,6 +294,7 @@ const SideBarBag = ({OnChangeing}) => {
         }
     },[allAddresses,dispatch])
 	console.log("Bag: ",bag);
+	
 	return (
 		<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2 pt-1">
 			{/* Left Section (Product Listing) */}
@@ -301,17 +302,20 @@ const SideBarBag = ({OnChangeing}) => {
 				<div className="flex flex-col overflow-hidden items-center w-full">
 					<h1 className="text-center font-bold text-xl sm:text-xl whitespace-nowrap text-gray-800 uppercase">You May Like</h1>
 					{RandomProductLoading ? (
-						<Fragment>
-						{
-							Array(10).fill(null).map((_, index) => (
-								<ul key={index} className="grid grid-cols-1 gap-3 w-full max-h-screen overflow-y-auto py-2">
-									<li className='min-h-[500px]'>
-										<ProductCardSkeleton />
+						<div className="grid grid-cols-1 gap-3 w-full max-h-screen overflow-y-auto py-2">
+							{
+								// Render 10 skeleton placeholders
+								Array(10).fill(null).map((_, index) => (
+									<li key={index} className="min-h-[500px] flex-grow flex-col flex-shrink-0 flex-nowrap">
+										<div className="w-full h-full my-3 font-kumbsan sm:w-[180px] md:w-full md:h-[290px] lg:w-full lg:h-[420px] 2xl:w-full 2xl:h-[470px] sm:h-[360px] border border-gray-600 border-opacity-25 shadow-lg rounded-lg relative overflow-hidden animate-pulse bg-gray-300">
+											<div className="w-full h-full flex items-center justify-center">
+                                                <div className="w-12 h-12 rounded-full bg-gray-300 animate-spin"></div>
+                                            </div>
+										</div>
 									</li>
-								</ul>
-							))
-						}
-						</Fragment>
+								))
+							}
+						</div>
 					) : (
 						<Fragment>
 							{randomProducts && randomProducts.length > 0 && (

@@ -210,13 +210,46 @@ const ProductPreview = ({
                                 {isEditing ? (
                                     <input
                                         type="numeric"
+										placeholder='Enter your GST'
                                         value={productData?.gst}
                                         onChange={(e) => handleInputChange(e, 'gst')}
                                         className="text-lg w-2/3 font-medium text-yellow-600 border-2"
                                     />
                                 ) : (
                                     <p className="text-lg font-medium text-yellow-600">
-                                        {formattedSalePrice(productData?.gst)}%
+                                        {productData?.gst}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">SKU:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="number"
+										placeholder='Enter your SKU'
+                                        value={productData?.sku}
+                                        onChange={(e) => handleInputChange(e, 'sku')}
+                                        className="text-lg w-2/3 font-medium text-yellow-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-yellow-600">
+                                        {productData?.sku}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="flex justify-between items-center border-b pb-4">
+                                <h3 className="font-semibold text-gray-700 text-lg">HSN:</h3>
+                                {isEditing ? (
+                                    <input
+                                        type="text"
+										placeholder='Enter your HSN'
+                                        value={productData?.hsn}
+                                        onChange={(e) => handleInputChange(e, 'hsn')}
+                                        className="text-lg w-2/3 font-medium text-yellow-600 border-2"
+                                    />
+                                ) : (
+                                    <p className="text-lg font-medium text-yellow-600">
+                                        {productData?.hsn}
                                     </p>
                                 )}
                             </div>

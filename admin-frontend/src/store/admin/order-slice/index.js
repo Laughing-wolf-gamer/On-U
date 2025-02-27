@@ -96,6 +96,15 @@ export const adminUpdateUsersOrdersById = createAsyncThunk('/orders/adminUpdateU
         console.error(`Error adminUpdateUsersOrdersById orders: `,error);
     }
 })
+export const adminRequestTryPickUp = createAsyncThunk('/admin/orders/tryPickUp',async(data)=>{
+	try {
+        const response = await axios.post(`${BASE_URL}/admin/orders/tryPickUp`,data,Header());
+        return response.data;
+    } catch (error) {
+        console.error(`Error trying pickup order: `,error);
+		return {error: error.response.data.message};
+    }
+})
 
 
 
