@@ -13,9 +13,9 @@ import shipRocketHookRoute from './routes/logisticRoutes.js';
 
 const app = express();
 
-app.use(express.json());
+app.use(express.json({limit:'10mb'}));
 app.use(cookieParser());
-app.use(bodyparser.urlencoded({ extended: true }));
+app.use(bodyparser.urlencoded({limit:'10mb', extended: true }));
 
 // Allowed origins (ensure these are correct)
 const allowedOrigins = [
