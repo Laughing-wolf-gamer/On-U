@@ -301,7 +301,7 @@ const isFormValid =(formData) => {
         reasons
     }
 }
-export const addNewProduct = async (req, res) => {
+/* export const addNewProduct = async (req, res) => {
     try {
         const {
             productId,
@@ -375,22 +375,23 @@ export const addNewProduct = async (req, res) => {
             // const discountAmount = price - salePrice;
             // const discountPercentage = ((discountAmount / price) * 100).toFixed(0);
             DiscountedPercentage = calculateDiscountPercentage(price,salePrice);
-        } /* else {
-            const currentProduct = await ProductModel.findById(productId);
-            const p = currentProduct.price;
-            const sp = currentProduct.salePrice;
-            const discountAmount = p - sp;
-            const discountPercentage = ((discountAmount / p) * 100).toFixed(0);
-            DiscountedPercentage = calculateDiscountPercentage(p,sp);
-        } */
+        }
+        // else {
+        //     const currentProduct = await ProductModel.findById(productId);
+        //     const p = currentProduct.price;
+        //     const sp = currentProduct.salePrice;
+        //     const discountAmount = p - sp;
+        //     const discountPercentage = ((discountAmount / p) * 100).toFixed(0);
+        //     DiscountedPercentage = calculateDiscountPercentage(p,sp);
+        // }
 
         // Apply GST to price and salePrice
         // const priceWithGST = price + (price * gst / 100);
         // const salePriceWithGST = salePrice && salePrice > 0 ? salePrice + (salePrice * gst / 100) : null;
         // priceWithGST = gst / (1 - (100 / (100 + gst)));
         //originalPrice * (1 + (gstPercent / 100));
-        /* const priceWithGST = calculateGst(price,gst);
-        const salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null; */
+        // const priceWithGST = calculateGst(price,gst);
+        // const salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
 
         // Create new product
         const newProduct = new ProductModel({
@@ -436,7 +437,154 @@ export const addNewProduct = async (req, res) => {
         logger.error("Error while creating new Product: " + error.message);
         res.status(201).json({ Success: false, message: 'Internal Server Error' ,reasons:error.message})
     }
+}; */
+
+// Main function to add a new product
+export const addNewProduct = async (req, res) => {
+    // Helper function to calculate the discounted percentage
+    const calculateDiscountPercentage = (price, salePrice) => {
+        if (salePrice <= 0) return 0;
+        return ((price - salePrice) / price * 100).toFixed(0);
+    };
+    
+    // Helper function to handle color validations
+    /* const handleColors = (size) => {
+        const allColors = [];
+        size.forEach(s => {
+            if (s.colors && s.colors.length > 0) {
+                s.colors.forEach(c => {
+                    if (c.images && c.images.length > 0) {
+                        c.images = c.images.filter(image => image !== ""); // Remove empty images
+                        allColors.push(c);
+                    } else {
+                        throw new Error(`Missing Images for Color: ${c?.name}`);
+                    }
+                });
+            }
+        });
+        return allColors;
+    }; */
+    const handleColors = (size) => {
+        return size.reduce((allColors, s) => {
+            if (s.colors && s.colors.length > 0) {
+                s.colors.forEach(c => {
+                    if (!c.images || c.images.length === 0) {
+                        throw new Error(`Missing Images for Color: ${c?.name}`);
+                    }
+    
+                    // Filter out empty images in a single line
+                    const filteredImages = c.images.filter(image => image !== "");
+                    if (filteredImages.length > 0) {
+                        c.images = filteredImages;
+                        allColors.push(c);
+                    }
+                });
+            }
+            return allColors;
+        }, []);
+    };
+    
+    
+    // Helper function to calculate total stock
+    const calculateTotalStock = (size) => {
+        return size.reduce((totalStock, s) => {
+            let sizeStock = 0;
+            if (s.colors) {
+                sizeStock = s.colors.reduce((stock, c) => stock + (c?.quantity || 0), 0);
+            }
+            return totalStock + sizeStock;
+        }, 0);
+    };
+    try {
+        const {
+            productId,
+            title,
+            shortTitle,
+            size,
+            gst,
+            hsn,
+            sku,
+            description,
+            specification,
+            careInstructions,
+            material,
+            bulletPoints,
+            gender,
+            category,
+            subCategory,
+            specialCategory,
+            price,
+            salePrice,
+            Rating,
+            Width,
+            Height,
+            Length,
+            Weight,
+            Breadth,
+        } = req.body;
+
+        // Check if form data is valid
+        const isValid = isFormValid(req.body);
+        if (!isValid || !isValid.isValid) {
+            throw new Error(`Missing Fields: ${getStringFromObject(isValid)}`);
+        }
+
+        // Handle colors and stock
+        const AllColors = handleColors(size);
+        const totalStock = calculateTotalStock(size);
+
+        // Calculate the discount percentage
+        const DiscountedPercentage = price && salePrice ? calculateDiscountPercentage(price, salePrice) : 0;
+
+        // Create new product object
+        const newProduct = new ProductModel({
+            productId: productId?.toString(),
+            title,
+            shortTitle,
+            size,
+            gst,
+            hsn,
+            sku,
+            description,
+            careInstructions: careInstructions || '',
+            bulletPoints,
+            material,
+            gender,
+            category,
+            specification,
+            subCategory,
+            specialCategory,
+            price,
+            salePrice: salePrice || 0,
+            DiscountedPercentage,
+            totalStock,
+            AllColors,
+            Rating: Rating && Rating.length > 0 ? [Rating] : [],
+            width: Width,
+            height: Height,
+            length: Length,
+            weight: Weight,
+            breadth: Breadth,
+        });
+
+        // Check if the product is successfully created
+        if (!newProduct) {
+            return res.status(400).json({ Success: false, message: "Product not created", result: null });
+        }
+
+        // Save the new product
+        await newProduct.save();
+
+        console.log("New Product Added:", newProduct);
+        res.status(201).json({ Success: true, message: 'Product added successfully!', result: newProduct });
+
+    } catch (error) {
+        console.error('Error while adding new product:', error);
+        logger.error("Error while creating new Product: " + error.message);
+        res.status(500).json({ Success: false, message: 'Internal Server Error', reasons: error.message });
+    }
 };
+
 
 
 
@@ -521,8 +669,8 @@ export const editProduct = async (req, res) => {
         }
         // Recalculate price and salePrice with GST
         // [Value of supply x {100/ (100+GST%)}]
-        /* let priceWithGST = price * (100 / (100 + gst));
-        let salePriceWithGST = salePrice && salePrice > 0 ? salePrice * (100 / (100 + gst)) : null; */
+        // let priceWithGST = price * (100 / (100 + gst));
+        // let salePriceWithGST = salePrice && salePrice > 0 ? salePrice * (100 / (100 + gst)) : null;
         let priceWithGST = calculateGst(price,gst);
         let salePriceWithGST = salePrice && salePrice > 0 ? calculateGst(salePrice,gst) : null;
         // Add the recalculated price and salePrice to the updateFields
@@ -563,7 +711,7 @@ export const editProduct = async (req, res) => {
             return res.status(404).json({ Success: false, message: "Product Update Failed" });
         }
 
-        return res.status(200).json({
+        res.status(200).json({
             Success: true,
             message: 'Product updated successfully!',
             result: updatedProduct,
@@ -571,7 +719,7 @@ export const editProduct = async (req, res) => {
     } catch (error) {
         console.error('Error while editing a product:', error);
         logger.error('Product Update Failed: ' + error.message);
-        return res.status(500).json({ Success: false, message: 'Internal Server Error' });
+        res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
 };
 
@@ -710,7 +858,7 @@ export const deleteProduct = async (req, res) => {
         const{id} = req.params;
         if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
         const deletedProduct = await ProductModel.findByIdAndDelete(id);
-        if(!deletedProduct) res.status(404).json({Success:false,message:"Product not found"});
+        if(!deletedProduct) return res.status(404).json({Success:false,message:"Product not found"});
         res.status(200).json({Success: true, message: 'Product deleted successfully!', result: deletedProduct});
     } catch (error) {
         console.error('Error deleting the Product', error);

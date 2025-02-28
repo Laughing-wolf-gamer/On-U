@@ -408,9 +408,9 @@ export const checkUserPurchasedProduct = async (req, res) => {
                 message: 'Product not found'
             })
         }
-        if(originalProduct.Rating.some(r => r.userId === userId)){
+        /* if(originalProduct.Rating.some(r => r.userId.toString() === userId)){
 
-        }
+        } */
         // Find orders for the user that have a "Delivered" status
         const orderPurchasedProductByUserId = await OrderModel.find({ 
             userId, 

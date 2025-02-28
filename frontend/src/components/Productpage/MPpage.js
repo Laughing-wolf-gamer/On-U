@@ -120,10 +120,7 @@ const MPpage = () => {
     const divRef = useRef(null);
     const scrollContainerRef = useRef(null);
     
-    useEffect(() => {
-        dispatch(singleProduct(param.id));
-        document.documentElement.scrollTop = 0;
-    }, [dispatch, param]);
+    
 
     const indicatorStyles: CSSProperties = {
         background: '#CFCECD',
@@ -207,6 +204,58 @@ const MPpage = () => {
         checkAndCreateToast("success", "Product successfully in Bag");
         updateButtonStates();
     };
+    /* const updateButtonStates = () => {
+        if (user) {
+            // console.log("Updateing wishList: ",wishlist);
+            setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+			const similarProductsInBag = bag?.orderItems?.filter(item => item.productId?._id === product?._id);
+            let isBag = false;
+
+            // If there are similar products in the bag
+            if (similarProductsInBag?.length > 0) {
+                // If current size and color are provided, find the matching product
+                if (currentSize && currentColor) {
+                    const matchingItem = similarProductsInBag.find(item => 
+                        item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
+                    );
+                    // If matching item found, check its isChecked property
+                    if (matchingItem) {
+                        isBag = matchingItem.isChecked;
+                    }
+                } else {
+                    // If no size or color is selected, check if any similar product is checked
+                    isBag = similarProductsInBag.some(item => item.isChecked);
+                }
+            }
+
+            // Set the result in state
+            setIsInBagList(isBag);
+        } else {
+            setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
+			const similarProductsInBag = getLocalStorageBag().filter(item => item.productId === product?._id);
+            let isBag = false;
+
+            // Check if there are matching items in the bag
+            if (similarProductsInBag?.length > 0) {
+                // If current size and color are provided, check for matching items with the size and color
+                if (currentSize && currentColor) {
+                    const matchingItem = similarProductsInBag.find(item => 
+                        item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
+                    );
+                    // If matching item is found, set isBag based on its 'isChecked' status
+                    if (matchingItem) {
+                        isBag = matchingItem.isChecked;
+                    }
+                } else {
+                    // If no size/color is specified, check if any product is checked
+                    isBag = similarProductsInBag.some(item => item.isChecked);
+                }
+            }
+
+            // Set the result in the state (i.e., update whether the product is in the bag)
+            setIsInBagList(isBag);
+        }
+    }; */
     const updateButtonStates = () => {
         if (user) {
             // console.log("Updateing wishList: ",wishlist);
@@ -341,6 +390,11 @@ const MPpage = () => {
 		const encodedUrl = encodeURIComponent(url); // Encode the URL to make it URL-safe
 		return `https://wa.me/?text=Check%20out%20this%20product!%20${encodedUrl}`;
 	};
+    const getCopyUrl = () => {
+        const productURL = getProductURL(); // Get the active page URL
+        const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
+        return shareLink;
+    };
 
 	// Method to handle the sharing
 	const handleShare = () => {
@@ -350,11 +404,6 @@ const MPpage = () => {
 		window.open(shareLink, "_blank");
 	};
 
-	const getCopyUrl = () => {
-		const productURL = getProductURL(); // Get the active page URL
-		const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
-		return shareLink;
-	};
 
 	// Handle button click for different share types
 	const HandleOnShareTypeButtonClick = (type) => {
@@ -369,7 +418,7 @@ const MPpage = () => {
 			break;
 		}
 	};
-    const PostRating = async (e)=>{
+    /* const PostRating = async (e)=>{
         e.preventDefault();
         try {
             if(ratingData && user && product){
@@ -384,17 +433,40 @@ const MPpage = () => {
         }finally{
             setIsPostingReview(false);
         }
-    }
+    } */
+    const PostRating = async (e) => {
+        e.preventDefault();
+    
+        if (!ratingData || !user || !product) {
+            checkAndCreateToast("error", "Missing required information");
+            return;
+        }
+        setIsPostingReview(true);
+        try {
+            // Dispatch actions in parallel if they are independent
+            const ratingPromise = dispatch(postRating({ productId: product?._id, ratingData }));
+            const productPromise = dispatch(singleProduct(param.id));
+            // Wait for both actions to complete
+            await Promise.all([ratingPromise, productPromise]);
+            checkAndCreateToast("success", "Rating Posted Successfully");
+        } catch (error) {
+            console.error("An error occurred while setting the Rating", error);
+            checkAndCreateToast("error", "An error occurred while setting the Rating");
+        } finally {
+            setIsPostingReview(false);
+        }
+    };
+        
     const checkFetchedIsPurchased = async ()=>{
         const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
         setHasPurchased(didPurchased?.success || false);
     }
-    useEffect(() => {
+    /* useEffect(() => {
         // Check if the user is logged in
         if(!loadingWishList && !bagLoading){
             updateButtonStates();
         }
-      }, [user, wishlist, bag, product,loadingWishList,sessionData,sessionBagData]); 
+    }, [user, wishlist, bag, product,loadingWishList,sessionData,sessionBagData]); 
 
     useEffect(() => {
         if (product) {
@@ -410,8 +482,6 @@ const MPpage = () => {
             setSelectedColor(selectedSize.colors);
             const color = selectedSize.colors[0];
             setSelectedSizeColorImageArray(color.images);
-            // setSelectedColorId(color._id);
-            // setSelectedImage(color.images[0]);
         }
         if(product){
             checkFetchedIsPurchased();
@@ -421,10 +491,56 @@ const MPpage = () => {
         }
         dispatch(getwishlist())
     }, [product, dispatch]);
-    // console.log("getLocalStorageWishListItem",getLocalStorageWishListItem());
+
 	useEffect(()=>{
 		updateButtonStates();
 	},[currentSize,currentColor])
+    useEffect(() => {
+        dispatch(singleProduct(param.id));
+        document.documentElement.scrollTop = 0;
+    }, [dispatch, param]); */
+    useEffect(() => {
+        // Check if the user is logged in and other conditions
+        if (!loadingWishList && !bagLoading) {
+            updateButtonStates();
+        }
+    }, [user, wishlist, bag, product, loadingWishList, sessionData, sessionBagData]);
+    
+    useEffect(() => {
+        // Check if the product exists before processing size/color
+        if (product) {
+            const availableSize = product.size.find(item => item.quantity > 0);
+            
+            if (availableSize) {
+                setSelectedSize(availableSize);
+                setSelectedColor(availableSize.colors);
+                const color = availableSize.colors[0];
+                setSelectedSizeColorImageArray(color.images);
+            }
+            
+            checkFetchedIsPurchased(); // Checking purchase status when product is loaded
+    
+            if (user) {
+                dispatch(getbag({ userId: user.id }));
+            }
+            
+            dispatch(getwishlist()); // Always fetch wishlist data when the product changes
+        }
+    }, [product, user, dispatch]); // Added user as a dependency for fetching the bag
+    
+    useEffect(() => {
+        // Only call `updateButtonStates` when `currentSize` or `currentColor` change
+        if (currentSize && currentColor) {
+            updateButtonStates();
+        }
+    }, [currentSize, currentColor]);
+    
+    useEffect(() => {
+        // Fetch the product and reset scroll position on param.id change
+        dispatch(singleProduct(param.id));
+        document.documentElement.scrollTop = 0;
+    }, [dispatch, param.id]); // Depend on `param.id` instead of `param` to avoid unnecessary calls
+    
 
 
     

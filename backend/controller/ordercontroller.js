@@ -11,7 +11,7 @@ import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { getOriginalAmount } from '../utilis/basicUtils.js'
 import { generateOrderForShipment, generateOrderPicketUpRequest, generateOrderRetrunShipment } from './LogisticsControllers/shiprocketLogisticController.js'
-export const createPaymentOrder = async (req, res, next) => {
+export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
         if (!req.user) {
@@ -130,7 +130,7 @@ export const verifyPayment = async (req, res) => {
 
 
 
-export const createorder = async (req, res, next) => {
+/* export const createorder = async (req, res) => {
     try {
         // Validate user
         if (!req.user) {
@@ -244,12 +244,134 @@ export const createorder = async (req, res, next) => {
             res.status(500).json({ success: false, message: "Internal server error" });
         }
     }
+} */
+
+// Main create order function
+export const createOrder = async (req, res) => {
+    // Helper function to generate random order ID
+    const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+    
+    // Helper function to remove products
+    const removeProducts = async (products) => {
+        const removingPromises = products.map(async (item) => {
+            try {
+                await removeProduct(item.productId?._id, item?.color?.label, item?.size, item?.quantity);
+            } catch (error) {
+                console.error(`Error removing product: ${item?.productId?._id}`, error);
+            }
+        });
+        await Promise.all(removingPromises);
+    };
+    
+    // Helper function to update the bag after the order is created
+    const updateBagAfterOrder = async (bagId, orderItems) => {
+        const activeBag = await Bag.findById(bagId);
+        if (activeBag) {
+            orderItems.forEach((item) => {
+                const findIndex = activeBag.orderItems.findIndex((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+                if (findIndex !== -1) {
+                    activeBag.orderItems.splice(findIndex, 1);
+                }
+            });
+            if (activeBag.orderItems.length <= 0) {
+                await Bag.findByIdAndDelete(bagId);
+            } else {
+                await activeBag.save();
+            }
+        }
+    };
+    try {
+        // Validate user
+        if (!req.user) {
+            return res.status(400).json({ success: false, message: "No User Found" });
+        }
+
+        // Destructure and validate the required fields from the body
+        const { orderItems, Address, bagId, TotalAmount, paymentMode, ConvenienceFees, status } = req.body;
+
+        if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+            return res.status(400).json({ success: false, message: "Please Provide All the Data" });
+        }
+
+        // Filter checked products
+        const processingProducts = orderItems.filter((item) => item?.isChecked);
+
+        if (!processingProducts || processingProducts.length <= 0) {
+            return res.status(400).json({ success: false, message: "Please select at least one product" });
+        }
+
+        // Convenience Fees and random IDs generation
+        const alreadyPresentConvenienceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+        const randomOrderShipRocketId = generateRandomId();
+        const randomShipmentId = generateRandomId();
+
+        // Create shipment order
+        const createdShipRocketOrder = await generateOrderForShipment(req.user.id, {
+            order_id: randomOrderShipRocketId,
+            userId: req.user.id,
+            ConveenianceFees: alreadyPresentConvenienceFees?.ConvenienceFees || ConvenienceFees || 0,
+            orderItems: processingProducts,
+            address: Address,
+            TotalAmount,
+            paymentMode,
+            pincode: Address.pincode,
+            status: 'Confirmed',
+        }, randomOrderShipRocketId, randomShipmentId);
+
+        const { shipmentCreatedResponseData, bestCourior, manifest, warehouse_name, PickupData } = createdShipRocketOrder;
+
+        // Create order entry in the database
+        const orderData = new OrderModel({
+            order_id: shipmentCreatedResponseData.order_id,
+            userId: req.user.id,
+            picketUpLoactionWareHouseName: warehouse_name || null,
+            shipment_id: shipmentCreatedResponseData.shipment_id,
+            channel_id: '6217390',
+            ConveenianceFees: alreadyPresentConvenienceFees?.ConvenienceFees || ConvenienceFees || 0,
+            orderItems: processingProducts,
+            address: Address,
+            TotalAmount,
+            paymentMode,
+            status: 'Confirmed',
+            PicketUpData: PickupData,
+            BestCourior: bestCourior,
+            ShipmentCreatedResponseData: shipmentCreatedResponseData,
+            manifest: manifest,
+        });
+
+        // Save the order data
+        await orderData.save();
+
+        // Send invoice if available
+        if (manifest?.is_invoice_created) {
+            await sendMainifestMail(req.user.id, manifest?.invoice_url);
+        }
+
+        // Remove product quantities and handle bag updates in parallel
+        await removeProducts(processingProducts);
+
+        // Update the bag after order creation
+        await updateBagAfterOrder(bagId, processingProducts);
+
+        // Send order confirmation email
+        await sendOrderPlacedMail(req.user.id, orderData);
+
+        // Respond with success message
+        res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
+
+    } catch (error) {
+        console.error("Error creating Order:", error);
+        if (!res.headersSent) {
+            res.status(500).json({ success: false, message: "Internal server error" });
+        }
+    }
 };
 
 
 
+
 const removeProduct = async(productId,color,size,quantity) => {
-    try {
+    /* try {
         const product = await ProductModel.findById(productId);
         if(!product) {
             console.log("Product Not Found: ",productId);
@@ -265,8 +387,9 @@ const removeProduct = async(productId,color,size,quantity) => {
             console.log("Color Not Found: ",color);
             return
         }
-        const colorReducedAmount = activeColor.quantity - quantity
-        const sizeReducedAmount = activeSize.quantity - quantity
+        const colorReducedAmount = Math.max(0, activeColor.quantity - quantity);
+        const sizeReducedAmount = Math.max(0, activeSize.quantity - quantity);
+
         // console.log("Reduced Amount: ",colorReducedAmount,sizeReducedAmount);
         activeColor.quantity = colorReducedAmount;
         activeSize.quantity = sizeReducedAmount;
@@ -297,6 +420,65 @@ const removeProduct = async(productId,color,size,quantity) => {
         // console.log("Product Updated: ",product);
     } catch (error) {
         console.error("Error Removing Product: ",error)
+    } */
+    try {
+        const product = await ProductModel.findById(productId);
+        if (!product) {
+            console.log("Product Not Found:", productId);
+            return res.status(404).json({ success: false, message: "Product not found" });
+        }
+
+        // Find the active size
+        const activeSize = product.size.find(s => s?.label === size);
+        if (!activeSize) {
+            console.log("Size Not Found:", size);
+            return res.status(404).json({ success: false, message: "Size not found" });
+        }
+
+        // Find the active color
+        const activeColor = activeSize.colors.find(c => c?.label === color);
+        if (!activeColor) {
+            console.log("Color Not Found:", color);
+            return res.status(404).json({ success: false, message: "Color not found" });
+        }
+
+        // Calculate the reduced amounts for color and size
+        const colorReducedAmount = Math.max(0, activeColor.quantity - quantity);
+        const sizeReducedAmount = Math.max(0, activeSize.quantity - quantity);
+
+
+        /* // Check for insufficient stock
+        if (colorReducedAmount < 0 || sizeReducedAmount < 0) {
+            console.log("Insufficient stock for color or size");
+            return res.status(400).json({ success: false, message: "Not enough stock to remove" });
+        } */
+
+        // Update quantities
+        activeColor.quantity = colorReducedAmount;
+        activeSize.quantity = sizeReducedAmount;
+
+        // Rebuild the AllColors array and calculate total stock in one loop
+        let totalStock = 0;
+        const AllColors = product.size.flatMap(s => {
+            if (s.colors) {
+                s.colors.forEach(c => totalStock += c.quantity); // Accumulate total stock
+                return s.colors;
+            }
+            return [];
+        });
+
+        product.AllColors = AllColors;
+        product.totalStock = totalStock > 0 ? totalStock : undefined;
+        product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
+        // Save the updated product
+        await product.save();
+        console.log("Product Updated:", product);
+
+        // Respond with success
+        // res.status(200).json({ success: true, message: "Product removed successfully" });
+    } catch (error) {
+        console.error("Error Removing Product:", error);
+        // res.status(500).json({ success: false, message: "Error removing product", error: error.message });
     }
 }
 export const getallOrders = A(async (req, res, next) => {

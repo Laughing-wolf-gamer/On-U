@@ -9,6 +9,7 @@ export function getOriginalAmount(gstRate, amountWithGST) {
     const originalAmount = amountWithGST / (1 + (gstRate / 100));
     return originalAmount;
 }
+export const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 export function getStatusDescription(statusNumber) {
   const statusMap = {
     6: 'Shipped',
