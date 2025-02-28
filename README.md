@@ -1,107 +1,96 @@
-﻿Clothing Brand On-U
+On U E-commerce Website
+Welcome to the On U E-commerce website repository! This is an online store where users can browse products, add items to their cart, and securely complete purchases. The website is developed using MongoDB for the database, along with other modern web technologies.
 
+Table of Contents
+About
+Features
+Technologies Used
+Installation
+Usage
+Contributing
+License
+Contact
+About
+On U E-commerce is an online shopping platform that allows users to explore a variety of products, manage their shopping carts, and securely check out. This website provides user authentication, product management, and order tracking with a focus on an intuitive design and smooth user experience.
 
+The backend is powered by MongoDB, providing a flexible and scalable NoSQL database for managing users, products, orders, and other data.
 
-import { createLogger, transports, format } from 'winston';
-import 'winston-daily-rotate-file';
+Features
+User Authentication: Secure login and registration, using JWT (JSON Web Tokens) for session management.
+Product Management: Admins can add, update, and delete products easily.
+Shopping Cart: Users can add, update, or remove items in their shopping cart.
+Order Management: View past orders and track new ones.
+Responsive Design: Fully mobile-responsive layout.
+Secure Checkout: Integrated payment gateways like Stripe or PayPal for secure transactions.
+Search & Filters: Find products easily with search and filtering options by category, price, and rating.
+Technologies Used
+Frontend:
 
-const logLevel = process.env.NODE_ENV === 'production' ? 'warn' : 'info';
+HTML5, CSS3 (Responsive Design)
+JavaScript (Vanilla JS or React.js)
+Bootstrap (for styling and responsive layout)
+Backend:
 
+Node.js (with Express.js)
+MongoDB (for database storage)
+Mongoose (ODM for MongoDB)
+JWT (for authentication)
+Payment Integration: Stripe / PayPal (for handling transactions)
 
-const commonLogFormat = format.combine(
-  format.timestamp(),
-  format.errors({ stack: true }),
-  format.splat(),
-  format.printf(({ timestamp, level, message, stack }) => {
-    return stack
-      ? `${timestamp} ${level}: ${message}\n${stack}`
-      : `${timestamp} ${level}: ${message}`;
-  })
-);
+Version Control: Git & GitHub
 
-const createDynamicLogger = (logName) => {
-  const dailyRotateTransport = new transports.DailyRotateFile({
-    filename: `logs/${logName}-%DATE%.log`,
-    datePattern: 'YYYY-MM-DD',
-    maxSize: '20m',
-    maxFiles: '14d',
-  });
+Installation
+To get the On U E-commerce website running on your local machine, follow the steps below:
 
-  const logger = createLogger({
-    level: logLevel,
-    format: commonLogFormat,
-    transports: [
-      new transports.Console({
-        format: format.combine(
-          format.colorize(),
-          format.simple()
-        ),
-      }),
-      dailyRotateTransport,
-    ],
-    exceptionHandlers: [dailyRotateTransport],
-    rejectionHandlers: [dailyRotateTransport],
-  });
+Clone the repository:
 
-  return logger;
-};
+bash
+Copy
+git clone https://github.com/yourusername/on-u-ecommerce.git
+Navigate to the project directory:
 
-// Create loggers dynamically
-const appLogger = createDynamicLogger('app');
-const adminLogger = createDynamicLogger('admin');
-const employeeLogger = createDynamicLogger('employee');
-const appDetailsLogger = createDynamicLogger('appDetails');
-const authLogger = createDynamicLogger('auth');
-const bonusLogger = createDynamicLogger('bonus');
-const contactLogger= createDynamicLogger('contact')
-const dashboardLogger = createDynamicLogger('dashboard')
-const Ludopointslogger = createDynamicLogger('ludopoints')
-const monthlylogger = createDynamicLogger('monthly')
-const addPayBonusLogger = createDynamicLogger('addPayBonus')
-const paymentControllerLogger = createDynamicLogger('payment')
-const RefferalLogger = createDynamicLogger('refferal')
-const ReportLogger = createDynamicLogger('report') 
-const RestrictedAreaLogger = createDynamicLogger("restrictedArea")
-const RoomLogger = createDynamicLogger("room")
-const ServerMaintenanaceLogger = createDynamicLogger("serverMaintenanace")
-const TemplateLogger = createDynamicLogger("template")
-const TicketLogger= createDynamicLogger("ticket")
-const UnlockLogger = createDynamicLogger("unlock")
-const UrlLogger = createDynamicLogger("url")
-const WalletLogger = createDynamicLogger("wallet")
-const WeeklyLogger = createDynamicLogger("weekly")
-const WithdrawalLogger = createDynamicLogger("withdrawal")
-const Pointranklogger = createDynamicLogger("pointranklogger")
-const Otplogger = createDynamicLogger("otplogger")
-const Roomlogger = createDynamicLogger("roomlogger")
-const Rommjoinamountlogger = createDynamicLogger ("rommjoinamountlogger")
+bash
+Copy
+cd on-u-ecommerce
+Install the necessary dependencies:
 
-export { appLogger, 
-  adminLogger,
-   employeeLogger,
-    appDetailsLogger,
-    authLogger,
-    bonusLogger,
-    contactLogger,
-    dashboardLogger,
-    Ludopointslogger,
-    monthlylogger,
-    addPayBonusLogger,
-    paymentControllerLogger,
-    RefferalLogger,
-    ReportLogger,
-    RestrictedAreaLogger,
-    RoomLogger,
-    ServerMaintenanaceLogger,
-    TemplateLogger,
-    TicketLogger,
-    UnlockLogger,
-    UrlLogger,
-    WalletLogger,
-    WeeklyLogger,
-    WithdrawalLogger,
-    Pointranklogger,
-    Otplogger,
-    Roomlogger,
-    Rommjoinamountlogger,
-   };
+For the backend (Node.js):
+bash
+Copy
+npm install
+Set up MongoDB:
+
+Ensure you have MongoDB installed on your machine or use MongoDB Atlas for a cloud solution.
+If using MongoDB Atlas, create a free cluster and get your connection URI.
+Add the connection URI to your .env file:
+
+ini
+Copy
+MONGO_URI=mongodb://localhost:27017/onuecommerce
+Configure environment variables:
+
+Create a .env file at the root of your project and add the following:
+ini
+Copy
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+PAYMENT_API_KEY=your_payment_gateway_api_key
+Run the application:
+
+For development:
+bash
+Copy
+npm run dev
+Access the website locally: Open a browser and go to http://localhost:5000 (or the port you specified in the backend) to see the On U E-commerce site in action.
+
+Usage
+User Features:
+Sign Up/Login: Users can register, log in, and manage their account.
+Browse Products: Explore products by category, price, or rating.
+Add to Cart: Add items to the shopping cart for purchase.
+Secure Checkout: Complete the purchase through a secure payment gateway like Stripe or PayPal.
+Order History: View previous orders and track current orders.
+Admin Features:
+Product Management: Add, edit, and delete products.
+Order Management: View and manage customer orders.
+User Management: Access user details and manage roles.
