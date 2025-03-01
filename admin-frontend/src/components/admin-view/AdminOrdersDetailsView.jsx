@@ -96,7 +96,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 				<OrderDetail label="Shipment Id" value={order?.shipment_id} />
 				<OrderDetail label="Razorpay order Id" value={order?.razorpay_order_id} />
 				<OrderDetail label="Razorpay Payment Id" value={order?.paymentId} />
-				<OrderDetail label="Manifest Data" value={"Manifest Detials"} url={order?.manifest && order?.manifest?.invoice_url} downloadEnable />
+				
 				<OrderDetail
 					label="Order Status"
 					value={
@@ -141,21 +141,23 @@ const AdminOrdersDetailsView = ({ order }) => {
 				</div>
 				
 				<Separator />
-				
-			{/* Order Items */}
-			<div className="grid grid-cols-2 gap-4">
-				<div className="font-medium">Order Details</div>
-					<OrderItemList items={order?.orderItems} />
-				</div>
-				<Separator />
-					
-				{/* Shipping Information */}
+				<OrderDetail label="Manifest Data" value={"Manifest Details"} url={order?.manifest && order?.manifest?.invoice_url} downloadEnable />
+				{/* Order Items */}
 				<div className="grid grid-cols-2 gap-4">
-					<div className="font-medium">Shipping Info</div>
-					<ShippingInfo address={order?.address} />
-				</div>
-
-				<Separator />
+					<div className="font-medium">Order Details</div>
+						<OrderItemList items={order?.orderItems} />
+					</div>
+					<Separator />
+					
+					{/* Shipping Information */}
+					<div className="grid grid-cols-2 gap-4">
+						<div className="font-medium">Shipping Info</div>
+						<ShippingInfo address={order?.address} />
+					</div>
+					<Separator />
+					{
+						order?.PicketUpData && <PicketUpDataDisplay picketUpData={order?.PicketUpData}/>
+					}
 				<div className='grid grid-cols-2 justify-between items-center'>
 					{/* You can add the form section here if needed */}
 					{!order?.PicketUpData && (
@@ -183,5 +185,19 @@ const AdminOrdersDetailsView = ({ order }) => {
 		</DialogContent>
 	)
 }
+const PicketUpDataDisplay = ({ picketUpData }) => {
+	return (
+		<div className="grid grid-cols-2 gap-4">
+			<div className="font-medium">Pickup Information</div>
+			<div className="space-y-2">
+				<div><strong>AWB Code:</strong> {picketUpData?.awbCode}</div>
+				<div><strong>Pickup Status:</strong> {picketUpData?.picketUpResponseData?.data}</div>
+				<div><strong>Pickup Scheduled Date:</strong> {new Date(picketUpData.picketUpResponseData.pickup_scheduled_date).toLocaleString()}</div>
+				<div><strong>Pickup Generated Date:</strong> {new Date(picketUpData?.picketUpResponseData?.pickup_generated_date?.date).toLocaleString()}</div>
+				<div><strong>Pickup Token Number:</strong> {picketUpData?.picketUpResponseData?.pickup_token_number}</div>
+			</div>
+		</div>
+	);
+};
 
 export default AdminOrdersDetailsView

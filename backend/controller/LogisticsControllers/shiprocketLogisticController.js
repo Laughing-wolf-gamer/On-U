@@ -15,8 +15,6 @@ let token = '';
 
 export const getAuthToken = async (email,password) => {
     try {
-        // console.log("ShipApi URL: ", SHIPROCKET_API_URL, SHIPROCKET_EMAIL, SHIPROCKET_PASSWORD);
-
         const response = await axios.post(`${SHIPROCKET_API_URL}/auth/login`, {
             email: email || SHIPROCKET_EMAIL,
             password: password || SHIPROCKET_PASSWORD
@@ -395,7 +393,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             onboarding_completed_now: response?.data?.onboarding_completed_now,
             courier_company_id: bestCourier?.courier_company_id
         }, bestCourier);
-
+		console.log("createPickUpResponse: ", createPickUpResponse);
         return {
             shipmentCreatedResponseData: response.data,
             bestCourier,
