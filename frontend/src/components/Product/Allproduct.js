@@ -97,11 +97,9 @@ const Allproductpage = ({user}) => {
             }
         }
         dispatch(getwishlist())
+        scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }, [dispatch, error, state, productLoading, state1]);
 
-    useEffect(() => {
-        window.scrollTo(0, 0);
-    }, []);
     useEffect(()=>{
         if(pro){
             if(!productLoading && pro.length <= 0 ){
