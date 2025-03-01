@@ -42,7 +42,7 @@ const CheckoutPage = () => {
 	const handleOpenPopup = () => setIsAddressPopupOpen(true);
 	const handleClosePopup = () => {
 		setIsAddressPopupOpen(false)
-		dispatch(getbag({ userId: user.id }));
+		dispatch(getbag());
 		dispatch(getAddress())
 	};
 	const handleSaveAddress = async (newAddress) => {
@@ -178,7 +178,7 @@ const CheckoutPage = () => {
 		console.log("Qty Value: ", e.target.value);
 		if(isAuthentication){
 			await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
-			dispatch(getbag({ userId: user.id }));
+			dispatch(getbag());
 		}else{
 			updateBagQuantity(itemId,size,color, e.target.value)
 		}
@@ -189,7 +189,7 @@ const CheckoutPage = () => {
 		// console.log("Is Checked Value: ", e.target.checked);
 		if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId,size,color }));
-			dispatch(getbag({ userId: user.id }));
+			dispatch(getbag());
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -199,7 +199,7 @@ const CheckoutPage = () => {
 	const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
 		if(isAuthentication){
 			await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-			dispatch(getbag({ userId: user.id }));
+			dispatch(getbag());
 		}else{
 			removeBagSessionStorage(productId,size,color)
 		}
@@ -227,7 +227,7 @@ const CheckoutPage = () => {
 			if (!isAuthentication) {
 				checkAndCreateToast("info",'Log in to access BAG');
 			} else {
-				dispatch(getbag({ userId: user.id }));
+				dispatch(getbag());
 				dispatch(getAddress())
 			}
 			setAddress(user?.user?.addresses[0]);
@@ -247,7 +247,7 @@ const CheckoutPage = () => {
 				checkAndCreateToast("success","Payment Successful");
 				if(user){
 					setTimeout(() => {
-						dispatch(getbag({ userId: user.id }));
+						dispatch(getbag());
 					}, 1000);
 				}
 			}else{
@@ -386,7 +386,7 @@ const CheckoutPage = () => {
 					totalAmount={totalProductSellingPrice}
 					originalsAmount={totalSellingPrice}
 					closePopup={() => {
-						dispatch(getbag({ userId: user.id }));
+						dispatch(getbag());
 						dispatch(getAddress());
 						setShowPayment(false);
 						setSelectedAddress(null);

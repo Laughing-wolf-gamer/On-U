@@ -37,7 +37,7 @@ const SideBarBag = ({OnChangeing}) => {
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
-        dispatch(getbag({ userId: user.id }));
+        dispatch(getbag());
         dispatch(getAddress())
     };
     /* const handleSaveAddress = async (newAddress) => {

@@ -178,7 +178,6 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 const value = sp[i + line * wordsPerLine]
                 if (!value) continue //avoid adding "undefined" values
                 result[line].push(value)
-
             }
         }
     }
@@ -517,11 +516,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     useEffect(()=>{
         dispatch(fetchAllOptions());
     },[dispatch])
-    useEffect(() => {
+    /* useEffect(() => {
         setAllOptions();
-    }, [options, dispatch]);
+    }, [options, dispatch]); */
     setPriceFilter();
-    const setAllOptions = () => {
+    /* const setAllOptions = () => {
         if (options && options.length > 0) {
             options.map(item => {
                 switch (item.type) {
@@ -546,8 +545,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                 }
             });
         }
-    };
-    useEffect(()=>{
+    }; */
+    /* useEffect(()=>{
         if(category && subcategory && color && footWearSize && clothingWearSize && gender){
             setAllData();
         }
@@ -559,10 +558,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         // let NewProductsFootWearSize = footWearSize.map(item => item.value)
         // size = clothingWearSize.map(item => item.value)
         // AllProductsGender = gender.map(item => item.value)
-    }
-    console.log("All specialCategorynewarray: ",specialCategorynewarray);
-    
-
+    } */
+    // console.log("All specialCategorynewarray: ",specialCategorynewarray);
     return (
         <div>
             <div className='space-y-4 uppercase font-kumbsan ml-4'>
@@ -591,8 +588,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                     // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {capitalizeFirstLetterOfEachWord(e)} 
+                                <label className=' text-sm uppercase space-x-1 ml-2 mr-4 mb-2'>
+                                    <span>{e}</span> 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({AllProductsGender.filter((f) => f === e).length})
                                     </span>
@@ -624,8 +621,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     className='mb-2 accent-gray-500'
                                     defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                 />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e} 
+                                <label className=' text-sm ml-2 space-x-1 mr-4 mb-2'>
+                                    <span>{e}</span> 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({AllProductsCategory.filter((f) => f === e).length})
                                     </span>
@@ -658,8 +655,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                     // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className=' text-sm uppercase ml-2 mr-4 mb-2'>
-                                    {e} <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
+                                <label className=' text-sm uppercase space-x-1 ml-2 mr-4 mb-2'>
+                                    <span>{e}</span> <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
                         );
@@ -689,8 +686,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                     // onChange={() => {}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {e} 
+                                <label className=' text-sm ml-2 space-x-1 uppercase mr-4 mb-2'>
+                                    <span>{e}</span> 
                                     <span className='text-xs font-serif font-normal text-slate-400'> 
                                         ({size.filter((f) => f === e).length})
                                     </span>
@@ -721,8 +718,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     className='mb-2 accent-gray-500'
                                     defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
                                 />
-                                <label className=' text-sm ml-2 mr-4 mb-2'>
-                                    {capitalizeFirstLetterOfEachWord(e)} 
+                                <label className=' text-sm ml-2 space-x-1 mr-4 mb-2'>
+                                    <span>{e}</span> 
                                     <span className='text-xs font-kumbsan font-normal text-slate-400'> 
                                         ({specialCategory.filter((f) => f === e).length})
                                     </span>
@@ -756,8 +753,9 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 										defaultChecked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
 										// No need for onChange handler since radio buttons will handle state automatically
 									/>
-									<label className=" text-sm ml-2 mr-4 mb-2">
-										UpTo {amount} %
+									<label className=" text-sm ml-2 space-x-1 uppercase mr-4 mb-2">
+										<span>UpTo {amount} %</span> 
+										
 										<span className="text-xs font-kumbsan font-normal text-slate-400"> 
 											({discountedPercentageAmount.filter((f) => f === amount).length})
 										</span>
@@ -800,11 +798,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                         style={{ backgroundColor: e.label }}
                                         className="w-7 h-7 border border-slate-400 rounded-md"
                                     ></div>
-                                    <label className="flex flex-row whitespace-nowrap space-x-2 text-left text-sm">
+                                    <label className="flex flex-row whitespace-nowrap space-x-1 uppercase text-left text-sm">
                                         <span className="font-semibold">
                                             {e.name && (
                                                 <span>
-                                                    {capitalizeFirstLetterOfEachWord(e?.name)}
+                                                    {e?.name}
                                                 </span>
                                             )}
                                         </span>
@@ -826,7 +824,6 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 									// Toggle between showing "+ More" and "- Less" button
 									const expandedType = colorul === 'max-h-80' ? "max-h-max":'max-h-80';
                                     setcolorul(expandedType);
-                                    // setcolorulbtn('hidden');
                                 }}>
 								<ChevronUp className={`w-5 h-5 ${colorul === 'max-h-80' ? "rotate-180":''}`}/>
 								<span>
@@ -861,8 +858,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 											className='mb-2 accent-gray-500'
 											defaultChecked={isChecked} // Set checkbox checked based on URL parameter
 										/>
-										<label className=' text-sm ml-2 mr-4 mb-2'>
-											On Sale
+										<label className='text-sm ml-2 space-x-1 uppercase mr-4 mb-2'>
+											<span>On Sale</span>
 											<span className='text-xs font-kumbsan font-normal text-slate-400'>
 												({onSale.length})
 											</span>
@@ -875,14 +872,11 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 					)
 				}
 				<button
-					className='bg-slate-900 text-white text-sm my-auto py-2 font-bold mx-auto text-center flex justify-center items-end min-w-[80%]'
+					className='bg-black hover:rounded-md ease-ease-out-expo duration-200 hover:scale-105 transition-all hover:bg-gray-800 text-white text-sm my-auto py-2 font-bold mx-auto text-center flex justify-center items-end min-w-[80%]'
 					onClick={clearAllFilters}
 				>
 					Clear All Filter
 				</button>
-
-                
-
             </div>
         </div>
     );

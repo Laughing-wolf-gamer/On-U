@@ -1,17 +1,8 @@
 import { BASE_API_URL, headerConfig } from '../config'
 import {
-    REQUEST_USER_NO,
-    SUCCESS_USER_NO,
-    FAIL_USER_NO,
     REQUEST_USER,
     SUCCESS_USER,
     FAIL_USER,
-    REQUEST_VERIFY_OTP,
-    SUCCESS_VERIFY_OTP,
-    FAIL_VERIFY_OTP,
-    REQUEST_RESEND_OTP,
-    SUCCESS_RESEND_OTP,
-    FAIL_RESEND_OTP,
     REQUEST_UPDATE_USER,
     SUCCESS_UPDATE_USER,
     FAIL_UPDATE_USER,
@@ -127,7 +118,7 @@ export const removeAddress = (addressIndex) => async (dispatch) => {
 export const getAddress = () => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
-        console.log(token);
+        // console.log(token);
         dispatch({ type: REQUEST_ALL_ADDRESS })
         if(!token){
             dispatch({ type: FAIL_ALL_ADDRESS, payload: null})

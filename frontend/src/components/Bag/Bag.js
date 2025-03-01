@@ -44,7 +44,7 @@ const Bag = () => {
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
-        dispatch(getbag({ userId: user.id }));
+        dispatch(getbag());
         dispatch(getAddress())
     };
     const handleSaveAddress = async (newAddress) => {
@@ -212,7 +212,7 @@ const Bag = () => {
         console.log("Qty Value: ", e.target.value);
         if(isAuthentication){
             await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
         }else{
             updateBagQuantity(itemId,size,color, e.target.value)
         }
@@ -222,7 +222,7 @@ const Bag = () => {
 		e.stopPropagation();
 		if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId,size,color }));
-			dispatch(getbag({ userId: user.id }));
+			dispatch(getbag());
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -232,7 +232,7 @@ const Bag = () => {
     const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
             await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
         }else{
             removeBagSessionStorage(productId,size,color)
         }
@@ -260,7 +260,7 @@ const Bag = () => {
             if (!isAuthentication) {
                 checkAndCreateToast("info",'Log in to access BAG');
             } else {
-                dispatch(getbag({ userId: user.id }));
+                dispatch(getbag());
                 dispatch(getAddress())
             }
             setAddress(user?.user?.addresses[0]);

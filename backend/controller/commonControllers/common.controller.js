@@ -356,6 +356,7 @@ export const FetchAllFilters = async (req, res) => {
 	} catch (error) {
 		// Log the error in a concise way
 		console.error("Error Fetching Filters:", error.message);
+		logger.error(`Error Fetching Filters: ${error.message}`);
 		res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
 	}
 };
@@ -416,6 +417,7 @@ export const setTermsAndConditionWebsite = async (req, res) => {
 
 	} catch (error) {
 		console.error("Error setting Terms and Conditions:", error.message);
+		logger.error(`Error setting Terms and Conditions: ${error.message}`);
 		res.status(500).json({
 			Success: false,
 			message: `Internal Server Error: ${error.message}`,
@@ -717,6 +719,7 @@ export const removeAddressFormField = async(req,res)=>{
 		res.status(200).json({Success:true,message: 'Address Data removed successfully',result: alreadyFoundWebsiteData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
+		logger.error(`Error setting about data ${error.message}`);
 		res.status(500).json({Success:false,message: 'Internal Server Error',result:[]});
 	}
 }
@@ -823,6 +826,7 @@ export const getAddressField = async(req,res)=>{
 	  res.status(200).json({Success:true,message: 'Address Data Found',result: aboutData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
+		logger.error(`Error setting about data ${error.message}`);
 		res.status(500).json({Success:false,message: 'Internal Server Error'});
 	}
 }
@@ -847,6 +851,7 @@ export const getAllOptions = async(req,res)=>{
 		res.status(200).json({success:true,message:"Fetch All Options",result:allOptions || []})
 	} catch (error) {
 		console.error(`Error Fetching Options`,error);
+		logger.error(`Error Fetching Options ${error.message}`);
 		res.status(500).json({success:false,message:"Failed to fetch all options"})
 	}
 }
@@ -862,6 +867,8 @@ export const getOptions = async (req, res) => {
 		const options = await Option.find({ type });
 		res.status(200).json({Success:true,message:"Featch All Options",result:options});
 	} catch (error) {
+		console.error(`Error Fetching Options: ${error.message}`);
+		logger.error(`Error Fetching Options ${error.message}`);
 	  	res.status(500).json({ message: 'Server error' });
 	}
 };
@@ -885,6 +892,8 @@ export const addOption = async (req, res) => {
 	
 		res.status(201).json({ Success:true,message: 'Option added successfully', result: newOption });
 	} catch (error) {
+		console.error(`Error adding option: ${error.message}`);
+		logger.error(`Error adding option ${error.message}`);
 	  	res.status(500).json({ message: 'Server error' ,result:null});
 	}
 };
@@ -922,6 +931,7 @@ export const updateColorName = async(req,res)=>{
 		res.status(200).json({ Success:true,message: 'Color Option updated successfully', result: updatedOption });
     } catch (error) {
         console.error(`Error updating color name`, error);
+		logger.error(`Error updating color name ${error.message}`);
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
@@ -948,6 +958,8 @@ export const updateIsActive = async (req, res) => {
 		);
         res.status(200).json({ Success:true,message: 'Option updated successfully', result: updatedOption });
     } catch (error) {
+		console.error(`Error updating option is active`, error);
+		logger.error(`Error updating option is active ${error.message}`);
 		res.status(500).json({ message: 'Server error' });
     }
 }
@@ -1003,8 +1015,6 @@ export const fetchCouponsByQuery = async (req,res)=>{
         const filter = {};
 		filter.Status = "Active";
         if(req.query){
-            /* if(req.query.Status){
-            } */
             if(req.query.MinimumAmount){
                 filter.MinimumAmount = {$lte: query.MinimumAmount}
             }
@@ -1051,6 +1061,7 @@ export const sendMailToGetCoupon = async (req,res)=>{
 		res.status(404).json({ success:false,message: 'No coupon found'});
 	} catch (error) {
 		console.error("Error sending email: ", error);
+		logger.error(`Error sending email: ${error.message}`);
 		res.status(500).json({ success:false,message: 'Failed to send email' });
 	}
 }

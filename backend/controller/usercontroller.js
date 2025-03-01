@@ -4,13 +4,12 @@ import { sendMessage } from 'fast-two-sms';
 import Errorhandler from '../utilis/errorhandel.js';
 import sendtoken from '../utilis/sendtoken.js';
 import bcrypt from 'bcryptjs';
-import WebSiteModel from '../model/websiteData.model.js';
 import { sendVerificationEmail } from './emailController.js';
 import { sendOTP } from '../utilis/smsAuthentication.js';
 import logger from '../utilis/loggerUtils.js';
-import { removeSpaces } from '../utilis/basicUtils.js';
+import { CheckIsPhoneNumber, removeSpaces } from '../utilis/basicUtils.js';
 
-export const registermobile = A(async (req, res, next) => {
+export const registermobile = async (req, res) => {
     try {
         const {email,name,gender, phonenumber } = req.body
     
@@ -46,52 +45,58 @@ export const registermobile = A(async (req, res, next) => {
             res.status(500).json({ success: false, message: 'Internal Server Error' });
         }
     }
-
-})
-export const loginMobileNumber = A(async(req, res, next) => {
-    const { logInData} = req.body;
-    const isPhoneNumber = CheckIsPhoneNumber(logInData);
-    console.log("Login Type: ",isPhoneNumber);
-    let phoneNumber = null;
-    let email = null;
-    let user = null;
-    if(isPhoneNumber === 'invalid'){
-        return res.status(400).json({ success: false, message: 'Invalid LogIn Data' });
-    }
-    if(isPhoneNumber === 'phone'){
-        phoneNumber = logInData;
-        user = await User.findOne({phoneNumber:logInData});
-    }else{
-        email = logInData;
-        user = await User.findOne({email:logInData});
-    }
-    if(!user){
-        return res.status(200).json({success:false,message: 'No User Found ',result:null})
-    }
-	if(user.verify !== 'verified'){
-		return res.status(200).json({success:false,message: 'User Not Verified',result:null})
-    }
-    function generateOTP() {
-        return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP
-    }
-    let otp = generateOTP();
+}
+export const loginMobileNumber = async(req, res) => {
     try {
-        if(phoneNumber){
-            await sendOTP(user.phoneNumber,otp);
-        }
-    } catch (error) {
-        console.error("Error Sending otp");
-    }
-    sendVerificationEmail(user.email, otp);
-	if(user.profilePic === ''){
-		const profilePic = `https://avatar.iran.liara.run/public/${user.gender}?${user.name}`
-		user.profilePic = profilePic;
+		const { logInData} = req.body;
+		const isPhoneNumber = CheckIsPhoneNumber(logInData);
+		console.log("Login Type: ",isPhoneNumber);
+		let phoneNumber = null;
+		let email = null;
+		let user = null;
+		if(isPhoneNumber === 'invalid'){
+			return res.status(400).json({ success: false, message: 'Invalid LogIn Data' });
+		}
+		if(isPhoneNumber === 'phone'){
+			phoneNumber = logInData;
+			user = await User.findOne({phoneNumber:logInData});
+		}else{
+			email = logInData;
+			user = await User.findOne({email:logInData});
+		}
+		if(!user){
+			return res.status(200).json({success:false,message: 'No User Found ',result:null})
+		}
+		if(user.verify !== 'verified'){
+			return res.status(200).json({success:false,message: 'User Not Verified',result:null})
+		}
+		function generateOTP() {
+			return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP
+		}
+		let otp = generateOTP();
+		try {
+			if(phoneNumber){
+				await sendOTP(user.phoneNumber,otp);
+			}
+		} catch (error) {
+			console.error("Error Sending otp");
+		}
+		sendVerificationEmail(user.email, otp);
+		if(user.profilePic === ''){
+			const profilePic = `https://avatar.iran.liara.run/public/${user.gender}?${user.name}`
+			user.profilePic = profilePic;
+		}
+		console.log("Loging In User: ",user);
+		user.otp = otp;
+		await user.save();
+		return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
+	} catch (error) {
+		console.error("Error Login User: ",error);
+		logger.error(`Error Login User: ${error.message}`);
+		res.status(500).json({success:false,message: "Internal server error"});
+		
 	}
-	console.log("Loging In User: ",user);
-    user.otp = otp;
-    await user.save();
-    return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
-})
+}
 
 export const updateProfilePic = async(req,res)=>{
 	try {
@@ -106,59 +111,48 @@ export const updateProfilePic = async(req,res)=>{
 		res.status(200).json({message: "Profile Pic Updated Successfully", result:user,token:sendtoken(user)})
 	} catch (error) {
 		console.error("Error getting user id",error);
-		res.status(500).json({message: "Internal server error"});
+		logger.error("Error getting user id: " + error.message);
+		res.status(500).json({success:false,message: "Internal server error"});
 
 	}
 }
-export const loginOtpCheck = A(async(req,res,next)=>{
-    const{otp,phoneNumber,email} = req.body;
-    let user = await User.findOne({phoneNumber:phoneNumber});
-    if(!user){
-        // return next( new Errorhandler('Mobile Number not found', 404))
-        user = await User.findOne({email:email});
-        if(!user){
-        	return next( new Errorhandler('Email not found', 404))
-        }
-    }
-    console.log("user: ",user);
-    if(!user.otp){
-        return next( new Errorhandler('OTP not found', 404))
-    }
-    console.log("otp Verify Data: ",req.body)
-    console.log("otp Verify: ",user.otp);
-    if(user.otp.toString() !== otp){
-        return res.status(200).json({success:false, message:"OTP Do not Match"});
-    }
-    user.otp = null
-    await user.save();
-    const token = sendtoken(user);
-    return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
+export const loginOtpCheck = async(req,res)=>{
+	try {
+		const{otp,phoneNumber,email} = req.body;
+		let user = await User.findOne({phoneNumber:phoneNumber});
+		if(!user){
+			// return next( new Errorhandler('Mobile Number not found', 404))
+			user = await User.findOne({email:email});
+			if(!user){
+				return res.status(404).json({error: 'Mobile Number not found'});
+			}
+		}
+		console.log("user: ",user);
+		if(!user.otp){
+			return res.status(404).json({error: 'OTP Not found!'});
+		}
+		console.log("otp Verify Data: ",req.body)
+		console.log("otp Verify: ",user.otp);
+		if(user.otp.toString() !== otp){
+			return res.status(200).json({success:false, message:"OTP Do not Match"});
+		}
+		user.otp = null
+		await user.save();
+		const token = sendtoken(user);
+		return res.status(200).json({success:true,message: 'Mobile Number Found',result:{user,token}})
+		
+	} catch (error) {
+		console.error(`Error Login Otp Check: ${error.message}`);
+		logger.error("Error Login Otp Check " + error.message);
+		res.status(500).json({success:false,message: "Internal server error"});
+	}
 
-})
-function CheckIsPhoneNumber(input) {
-    // Regex for validating phone number (simplified version)
-    const phoneRegex = /^[+]?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?[-.\s]?)?[\d\s-]{7,}$/;
-
-    // Regex for validating email
-    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-
-    // Check if the input matches the phone number pattern
-    if (phoneRegex.test(input)) {
-        return 'phone';
-    }
-    
-    // Check if the input matches the email pattern
-    if (emailRegex.test(input)) {
-        return 'email';
-    }
-
-    // If it doesn't match either, return 'invalid'
-    return 'invalid';
 }
 
 
 
-export const registerUser = A(async (req, res, next) => {
+
+export const registerUser = A(async (req, res) => {
     
     const { userName,email,password,phonenumber } = req.body
 
@@ -166,12 +160,6 @@ export const registerUser = A(async (req, res, next) => {
     const existingUser = await User.findOne({phonenumber})
 
     if (!existingUser) {
-        const user = await User.create({
-			userName,
-			email,
-			password,
-			phonenumber,
-        })
     
     }
 
@@ -207,10 +195,16 @@ export const registerUser = A(async (req, res, next) => {
     })
 })
 
-export const getuser = A(async(req, res, next)=>{
-    const user = req.user;
-    res.status(200).json({Success:true,message: 'User is Authenticated',user});
-})
+export const getuser = async(req, res)=>{
+	try {
+		const user = req.user;
+		return res.status(200).json({Success:true,message: 'User is Authenticated',user});
+	} catch (error) {
+		console.error("OTP Error while getting user", error);
+		logger.error(`Error OTP Error while getting user: ${error.message}`);
+		res.status(500).json({Success:false,message: "Internal server error"});
+	}
+}
 
 export const optverify = async (req, res)=>{
     try {
@@ -232,6 +226,7 @@ export const optverify = async (req, res)=>{
 		res.status(200).json({success:true,message: 'OTP Verified Successfully',result:user,token:sendtoken(user)});
 	} catch (error) {
 		console.error("Error getting user id",error);
+		logger.error("Error getting user id: " + error.message);
 		if(!res.headersSent){
 			res.status(500).json({message: "Internal server error"});
 		}
@@ -240,23 +235,29 @@ export const optverify = async (req, res)=>{
 }
 
 export const resendotp = async (req, res)=>{
-    // console.log(req.params.id)
-    const{email} = req.query;
-    // console.log("Resend Otp Email: ",req.query)
-    if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
-    const existingUser = await User.findOne({email:email})
-    if(!existingUser){
-        return res.status(401).json({success:true,message:"OTP Sent Successfully",result:null})
-    }
-    console.log("Existing: ",existingUser)
-    if(existingUser.verify === 'verified'){
-        return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
-    }
-    const otp = Math.floor((1 + Math.random()) * 90000)
-    await sendVerificationEmail(email, otp)
-    existingUser.otp = otp;
-    await existingUser.save();
-    return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
+	try {
+		// console.log(req.params.id)
+		const{email} = req.query;
+		// console.log("Resend Otp Email: ",req.query)
+		if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
+		const existingUser = await User.findOne({email:email})
+		if(!existingUser){
+			return res.status(401).json({success:true,message:"OTP Sent Successfully",result:null})
+		}
+		console.log("Existing: ",existingUser)
+		if(existingUser.verify === 'verified'){
+			return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
+		}
+		const otp = Math.floor((1 + Math.random()) * 90000)
+		await sendVerificationEmail(email, otp)
+		existingUser.otp = otp;
+		await existingUser.save();
+		return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
+	} catch (error) {
+		console.error(`Error resending OTP request to server:`,error.message)
+		logger.error(`Error resending OTP request to server: ${error.message}`)
+		res.status(500).json({success:false,message: 'Internal server error'});
+	}
 }
 export const logInUser = async (req,res) =>{
     try {
@@ -279,50 +280,46 @@ export const logInUser = async (req,res) =>{
         },token})
     } catch (error) {
         console.error(`Error Logging in user ${error.message}`);
+		logger.error(`Error Logging in user ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
     }
 }
 
-export const updateuser =A( async(req,res,next)=>{
-    console.log("User: ",req.user);
-    console.log("Updating User: ",req.body)
-    const{ name, gender,email,dob,profilePic} = req.body
-    const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender,profilePic:profilePic}},{new:true})
-    if(!user){
-        return res.status(303).json({success:false,message: 'User not found'});
-    }
-    return res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
-})
+export const updateuser = async(req,res)=>{
+	try {
+		console.log("User: ",req.user);
+		console.log("Updating User: ",req.body)
+		const{ name, gender,dob,profilePic} = req.body
+		const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender,profilePic:profilePic}},{new:true})
+		if(!user){
+			return res.status(303).json({success:false,message: 'User not found'});
+		}
+		return res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
+	} catch (error) {
+		console.error(`Error Logging in user ${error.message}`);
+		logger.error(`Error Logging in user ${error.message}`);
+		res.status(500).json({Success:false,message: 'Internal Server Error'});
+	}
+}
 
-export const updateuserdetails =A( async(req,res,next)=>{
+export const updateuserdetails =A( async(req,res)=>{
     console.log(req.body)
     const {name, pincode, address1, address2, citystate, phonenumber} = req.body
     
-    const user = await User.updateOne({_id: req.params.id},
-    {
-        name,
-        phonenumber,
-        'address.address1':address1,
-        'address.address2':address2,
-        'address.pincode':pincode,
-        'address.citystate':citystate,
-    })
     res.status(200).json({
         success:'Addres Update Successfully'
     })
   
 })
-export const removeAddress = A(async(req, res, next) => {
+export const removeAddress = async(req, res) => {
     try {
         const user = req.user;
         
-        if(!user) return next(new Errorhandler('User not found', 404));
+        if(!user) return res.status(403).json({success:false,message:'User not found'});
         const userToUpdate = await User.findById(user.id);
-        if(!userToUpdate) return next(new Errorhandler('User not found', 500));
+        if(!userToUpdate) return res.status(404).json({success:false,message:'User not found'});
         const { addressId } = req.body;
         console.log("Removing Address: ",req.body)
-        /* const index = userToUpdate.addresses.findIndex(item => item._id === addressId);
-        if(index === -1) return next(new Errorhandler('Address not found', 404)); */
         userToUpdate.addresses.splice(addressId, 1);
         await userToUpdate.save();
         res.status(200).json({success:true,message: 'Address Removed Successfully', user: userToUpdate});
@@ -330,7 +327,7 @@ export const removeAddress = A(async(req, res, next) => {
         console.error(`Error removing address `,error);
         res.status(500).json({success:false,message: `Internal Server Error ${error.message}`});
     }
-})
+}
 export const updateAddress = A(async(req, res, next) => {
     try {
         const user = req.user;
@@ -362,7 +359,7 @@ export const getAllAddress = A(async(req, res, next) => {
 })
 
 
-export const logout = A( async(req, res, next)=>{
+export const logout = A( async(req, res)=>{
     res.cookie('token', null,{
         expire:new Date(Date.now()),
         httpOnly:true

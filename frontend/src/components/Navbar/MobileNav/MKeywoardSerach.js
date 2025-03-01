@@ -6,13 +6,13 @@ import { X } from 'lucide-react'
 
 const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) => {
 	const{keyWoards,removeKeyWoards} = useLocalStorage();
-	const[filterSearchs,setfilterSearches] = useState(keyWoards);
+	const[filterSearches,setfilterSearches] = useState(keyWoards);
 	// Filter previous searches based on user input
 	useEffect(()=>{
 		setfilterSearches(keyWoards.filter(search =>
 			search.toLowerCase().includes(state.toLowerCase())
 		))
-		console.log("state",keyWoards,state);
+		// console.log("state",keyWoards,state);
 	},[removeKeyWoards,keyWoards,state]);
 	const applySerach = (e) => {
 		searchenter(e);
@@ -21,7 +21,6 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 		e.preventDefault();
 		searchenters(activeSearch)
 	}
-	console.log("filterSearchs",filterSearchs);
 	const inputRef = useRef(null);
 	
 	// Focus the input when it is mounted or whenever you want to trigger focus
@@ -69,7 +68,7 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 				>
 				<ul className="p-2">
 					<label className="text-base font-semibold text-gray-800">Recent Searches:</label>
-					{filterSearchs.map((search, index) => (
+					{filterSearches.map((search, index) => (
 						<div
 							key={index}
 							className="cursor-pointer font-bold relative min-w-fit py-2 flex flex-col justify-between items-start p-2 hover:bg-gray-100"

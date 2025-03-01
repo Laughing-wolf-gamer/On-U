@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getuser } from '../../action/useraction';
 import { useNavigate } from 'react-router-dom';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { getbag } from '../../action/orderaction';
 
 const PaymentPending = () => {
 	const dispatch = useDispatch();
@@ -26,6 +27,7 @@ const PaymentPending = () => {
             sessionStorage.removeItem("checkoutData")
             if(response?.data.success){
                 checkAndCreateToast("success","Payment Successful");
+				await dispatch(getbag());
 				navigate('/bag/checkout/success');
             }else{
                 checkAndCreateToast("error","Payment Failed");

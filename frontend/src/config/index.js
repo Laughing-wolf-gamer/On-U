@@ -269,10 +269,6 @@ export const BASE_API_URL = process.env.REACT_APP_API_URL;
 // export const BASE_CLIENT_URL = DevMode ? process.env.REACT_APP_CLIENT_URL : "https://theonu.in";
 
 // new Updated...
-export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
-export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
-export const SECREAT_KEY = process.env.REACT_APP_SECREAT_KEY;
-
 export const footWearSizeChartData = [
   { size: '6', footLength: '9.25"', ukSize: '5', eurSize: '38' },
   { size: '7', footLength: '9.625"', ukSize: '6', eurSize: '39' },
@@ -296,4 +292,9 @@ export const clothingSizeChartData = [
   { size: '5XL', chest: '62-64"', waist: '56-58"', hips: '50-52"' },
   { size: '6XL', chest: '66-68"', waist: '60-62"', hips: '52-54"' },
 ];
+export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
+export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
+export const SECREAT_KEY = process.env.REACT_APP_SECREAT_KEY;
+export const RAZERPAY_KEY = process.env.REACT_APP_RAZERPAY_KEY;
+
 

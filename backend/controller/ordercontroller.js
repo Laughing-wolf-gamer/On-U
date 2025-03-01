@@ -9,7 +9,13 @@ import WebSiteModel from '../model/websiteData.model.js'
 import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
-import { generateInvoice, generateManifest, generateOrderForShipment, generateOrderPicketUpRequest, generateOrderRetrunShipment, getShipmentOrderByOrderId } from './LogisticsControllers/shiprocketLogisticController.js'
+import { 
+	generateManifest, 
+	generateOrderForShipment, 
+	generateOrderPicketUpRequest, 
+	generateOrderRetrunShipment, 
+	getShipmentOrderByOrderId 
+} from './LogisticsControllers/shiprocketLogisticController.js'
 export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -115,7 +121,7 @@ export const verifyPayment = async (req, res) => {
 
     } catch (error) {
         console.error('Error while verifying payment request:', error);
-
+		logger.error(`Error while verifying payment request ${error.message}`);
         // Avoid sending multiple responses if headers already sent
         if (res.headersSent) return;
 
@@ -365,6 +371,8 @@ export const verifyPayment = async (req, res) => {
         }
     }
 }; */
+
+
 export const createOrder = async (req, res) => {
     // Helper function to generate random order ID
     const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
@@ -484,6 +492,7 @@ export const createOrder = async (req, res) => {
 
     } catch (error) {
         console.error("Error creating Order:", error);
+		logger.error(`Error creating Order: ${error.message}`)
         if (!res.headersSent) {
             res.status(500).json({ success: false, message: "Internal server error" });
         }
@@ -595,16 +604,11 @@ const removeProduct = async(productId,color,size,quantity) => {
         product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
         // Save the updated product
         await product.save();
-        // console.log("Product Updated:", product);
-
-        // Respond with success
-        // res.status(200).json({ success: true, message: "Product removed successfully" });
     } catch (error) {
         console.error("Error Removing Product:", error);
-        // res.status(500).json({ success: false, message: "Error removing product", error: error.message });
     }
 }
-export const getallOrders = A(async (req, res, next) => {
+export const getallOrders = A(async (req, res) => {
     try {
         console.log("Order User",req.user);  
         if(!req.user){
@@ -616,6 +620,7 @@ export const getallOrders = A(async (req, res, next) => {
 
     } catch (error) {
         console.error("Error Fetching Orders...",error)
+		logger.error(`Error fetching orders: ${error.message}`);
         res.status(500).json({success:false,message:"Internal server Error"});
     }
 })
@@ -652,6 +657,7 @@ export const getOrderById = async (req, res, next) => {
         
     } catch (error) {
         console.error("Error Getting Order Details: ",error);
+		logger.error(`Error getting order details: ${error.message}`);
         res.status(500).json({success:false,message:"Internal server Error"});
     }
 }
@@ -660,7 +666,7 @@ export const createwishlist = async (req, res) => {
     try {
         const id = req.user.id;
         const{productId} = req.body;
-        console.log("Creating Wish List: ",req.body);
+        // console.log("Creating Wish List: ",req.body);
         if(!id){
             return res.status(200).json({success:false,message: "user Is Not Logged In"})
         }
@@ -690,24 +696,37 @@ export const createwishlist = async (req, res) => {
         res.status(200).json({success:true,message: "Product added to wishlist"})
     } catch (error) {
         console.error("Error creating wishlist: ",error);
+		logger.error(`Error creating wishlist: ${error.message}`);
         res.status(500).json({success:false,message: "Internal server error"});
     }
 }
 
 export const getwishlist = async (req, res) => {
     try {
-        // console.log("Get wishlist: ",req.user.id)
         const userId = req.user.id;
-        if(!userId) return res.status(404).json({success:false,message: "No WishList Found!",wishlist:[]}); //
-        const wishlist = await WhishList.findOne({userId: req.user.id}).populate('orderItems.productId')
-        // console.log("All Wishlist: ", wishlist);
-        res.status(200).json({
-            success:true,
-            wishlist: wishlist || []
-        })
-        
+        if(!userId) return res.status(404).json({success:false,message: "No User Found!"}); //
+        const wishlist = await WhishList.findOne({ userId: req.user.id }).populate('orderItems.productId');
+
+		if (!wishlist) {
+			return res.status(404).json({ message: "Wishlist Not Found" });
+		}
+		// console.log("All WishList: ",wishlist);
+		// Filter out orderItems where productId is null or undefined
+		const updatedOrderItems = wishlist.orderItems.filter(item => item.productId !== null && item.productId !== undefined);
+
+		// Update the wishlist with the filtered orderItems
+		wishlist.orderItems = updatedOrderItems;
+
+		// Optionally, save the updated wishlist if required
+		await wishlist.save();
+
+		// console.log("Updated Wishlist: ", wishlist);
+
+		// If you want to return the updated wishlist to the user
+		res.status(200).json({success:true, message: "Wishlist Fetched successfully",wishlist: wishlist || []});
     } catch (error) {
-        console.error("Error getting: ",error);
+        console.error("Error getting WishList: ",error);
+		logger.error(`Error getting Wishlist: ${error.message}`);
         res.status(500).json({message: "Internal server error"});  
     }
 }
@@ -759,6 +778,7 @@ export const applyCouponToBag = async(req,res)=>{
         res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst}})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
+		logger.error(`Failed to apply coupon: ${error.message}`);
         res.status(500).json({success:false,message:"Internal server error"});
     }
 
@@ -803,6 +823,7 @@ export const removeCouponToBag = async(req,res)=>{
         res.status(200).json({success:true,message: "Coupon Removed Successfully"})
     } catch (error) {
         console.error("Failed to apply coupon: ",error);
+		logger.error(`Failed to apply coupon: ${error.message}`);
         res.status(500).json({success:false,message:"Internal server error"});
     }
 
@@ -874,6 +895,7 @@ export const addItemsArrayToBag = async (req, res) => {
         res.status(200).json({ success: true, message: "Items added to bag" });
     } catch (error) {
         console.error("Failed to add items array: ", error);
+		logger.error(`Failed to add items array: ${error.message}`);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
@@ -1028,6 +1050,7 @@ export const addItemsArrayToWishList = async (req, res) => {
         
     } catch (error) {
         console.error("Failed to add items to wishlist:", error);
+		logger.error(`Failed to add items to wishlist: ${error.message}`);
         res.status(500).json({ success: false, message: "Internal server error" });
     }
 };
@@ -1156,6 +1179,7 @@ export const addItemsToBag = async (req, res) => {
 
     } catch (error) {
         console.error("Error occurred during creating/updating bag: ", error);
+		return res.status(500).json({ success: false, message: "Internal Server Error" });
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
@@ -1391,18 +1415,16 @@ function calculateTotalAmount(products) {
 
 export const getbag = async (req, res) => {
     try {
-        const { userId } = req.params;
-
+        // const { userId } = req.params;
+		const userId = req.user.id;
         // Fetch the bag with populated orderItems.productId in one query
         const bag = await Bag.findOne({userId:userId }).populate('orderItems.productId Coupon').exec();
 
         if (!bag) {
             return res.status(404).json({ success:false,message: "Bag not found" });
         }
-
-        
         // Fetch all products from the bag's orderItems at once (reduce redundant DB calls)
-        const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString());// returns an array;
+        const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString()); // returns an array;
         // console.log("Bag Items: ", productIds);
         const products = await ProductModel.find({ _id: { $in: productIds } });
 
@@ -1450,6 +1472,7 @@ export const getbag = async (req, res) => {
 
     } catch (error) {
         console.error("Error Occurred during getting bag: ", error);
+		logger.error(`Error while getting bag: ${error.message}`)
         res.status(500).json({ success:true, message: "Internal Server Error" });
     }
 };
@@ -1500,7 +1523,7 @@ export const updateItemCheckedInBag = async (req, res, next) => {
 
 	} catch (error) {
 		console.error("Error Occurred during updating item checked in bag: ", error);
-		logger.error("Error Occurred during updating item checked in bag: " + error.message);
+		logger.error(`Error Occurred during updating item checked in bag: ${error.message}`);
 		res.status(500).json({ success:false, message: "Internal Server Error" });
 	}
 }
@@ -1568,7 +1591,7 @@ export const updateqtybag = async (req, res, next) => {
 
     } catch (error) {
         console.error("Error Occurred during updating bag:", error.message);
-        logger.error("Error occured during updating bag", error.message);
+        logger.error(`Error occured during updating bag ${error.message}`);
         res.status(500).json({ message: "Internal Server Error" });
     }
 };
@@ -1595,7 +1618,7 @@ export const deletebag = async (req, res) => {
         
     } catch (error) {
         console.error("Error Occurred during deleting bag ", error.message);
-        logger.error("Error occured during deleting bag", error.message);
+        logger.error(`Error occured during deleting bag ${error.message}`);
         res.status(500).json({message: "Internal Server Error"})
     }
 }
@@ -1603,7 +1626,10 @@ export const deletebag = async (req, res) => {
 export const deletewish = async (req, res) => {
     try {
         const { deletingProductId } = req.body;
-        console.log("Deleting product: ", deletingProductId);
+		if(!deletingProductId){
+			return res.status(400).json({message: "Product Id is required"})
+		}
+        console.log("Deleting Wishlist product: ", deletingProductId);
         // Find the wishlist of the user
         const wishlist = await WhishList.findOne({ userId: req.user.id });
         
@@ -1640,6 +1666,7 @@ export const deletewish = async (req, res) => {
     } catch (error) {
         console.error("Error: ", error);
         // Return a generic error response if an exception occurs
+		logger.error(`Error occurred during deleting wishlist item: ${error.message}`);
         res.status(500).json({ success: false, message: "An error occurred while deleting wishlist item", error: error.message });
     }
 };
@@ -1652,17 +1679,16 @@ export const returnOrder = async (req, res) => {
 		const order = await OrderModel.findById(orderId);
 		const returnSuccess = await generateOrderRetrunShipment(order,req.user.id);
 		console.log("Return Order Success: ", returnSuccess);
-		if(returnSuccess) {
-			order.status = returnSuccess.status;
-			order.IsReturning = true;
-            await order.save();
-            return res.status(200).json({ success: true, message: "Successfully returned order" });
+		if(!returnSuccess) {
+			return res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
 		}
-		res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
-
+		order.status = returnSuccess.status;
+		order.IsReturning = true;
+		await order.save();
+		return res.status(200).json({ success: true, message: "Successfully returned order" });
 	} catch (error) {
 		console.error("Error Occured during returning order ", error.message);
-		logger.error("Error occured during returning order", error.message);
+		logger.error("Error occured during returning order"+ error.message);
 		res.status(500).json({success:false,message: "Internal Server Error" });
 	}
 }
@@ -1673,7 +1699,7 @@ export const exchangeOrder = async(req, res) => {
 		res.status(200).json({ success: true, message: "Successfully received order exchange request"});
 	} catch (error) {
 		console.error("Error Occured during exchanging order ", error.message);
-		logger.error("Error occured during exchanging order", error.message);
+		logger.error(`Error occured during exchanging order ${error.message}`);
 		res.status(500).json({success:false,message: "Internal Server Error" });
 	}
 }
@@ -1692,7 +1718,7 @@ export const tryCreatePickupResponse = async(req,res)=>{
 		
 	} catch (error) {
 		console.error("Error occured during creating pickup request", error);
-		logger.error("Error occured during creating pickup request", error.message);
+		logger.error(`Error occured during creating pickup request ${error.message}`);
 		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }

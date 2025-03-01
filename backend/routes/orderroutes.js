@@ -51,7 +51,7 @@ route.put('/bag/applyCoupon/:bagId',isAuthenticateuser,applyCouponToBag);
 
 route.patch('/bag/removeCoupon/:bagId',isAuthenticateuser,removeCouponToBag);
 
-route.get('/bag/getBagByUserId/:userId',isAuthenticateuser, getbag)
+route.get('/bag/getBagByUserId',isAuthenticateuser, getbag)
 route.put('/bag/update_bag',isAuthenticateuser, updateqtybag)
 route.put('/bag/update_bagItemChecked',isAuthenticateuser, updateItemCheckedInBag)
 route.put('/bag/removeBagItem',isAuthenticateuser, deletebag)

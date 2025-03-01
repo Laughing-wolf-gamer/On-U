@@ -130,7 +130,7 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     };
     useEffect(() => {
         updateButtonStates();
-        console.log("Wishlist Updated Successfully",sessionData);
+        // console.log("Wishlist Updated Successfully",sessionData);
     }, [sessionData,sessionBagData]);
 
     return (

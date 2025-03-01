@@ -12,60 +12,69 @@ import { getRandomArrayOfProducts } from '../../action/productaction';
 import Footer from '../Footer/Footer';
 
 const Wishlist = () => {
-    const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
-    const [currentWishListItem, setCurrentWishListItem] = useState([]);
-    const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
-    const { isAuthentication, loading: userloading, error, user } = useSelector(state => state.user);
-    const { randomProducts, loading: RandomProductLoading, error: errorRandomProductLoading } = useSelector(state => state.RandomProducts);
+   	const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
+	const [currentWishListItem, setCurrentWishListItem] = useState([]);
+	const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
+	const { isAuthentication, loading: userloading, error, user } = useSelector(state => state.user);
+	const { randomProducts, loading: RandomProductLoading, error: errorRandomProductLoading } = useSelector(state => state.RandomProducts);
 
-    const navigation = useNavigate();
-    const dispatch = useDispatch();
-    const [state, setState] = useState(false);
-    const [state1, setState1] = useState(false);
+	const navigation = useNavigate();
+	const dispatch = useDispatch();
+	const [state, setState] = useState(false);
+	const [state1, setState1] = useState(false);
 
-    const handleDelWish = async (e, productId, product) => {
-        e.stopPropagation();
-        if (isAuthentication && user) {
-            await dispatch(deletewish({ deletingProductId: productId }));
-            dispatch(getwishlist());
-        } else {
-            setWishListProductInfo(product, productId);
-        }
-    };
+	const handleDelWish = async (e, productId, product) => {
+		e.stopPropagation();
+		if (isAuthentication && user) {
+			console.log("WishList: ", product);
+			await dispatch(deletewish({ deletingProductId: productId || product._id }));
+			dispatch(getwishlist()); // Call this once after deletion
+		} else {
+			setWishListProductInfo(product, productId);
+		}
+	};
 
-    useEffect(() => {
-        if (state1 === false) {
-            if (!user) {
-                dispatch(getuser());
-            }
-            setState1(true);
-        }
+	useEffect(() => {
+		if (!state1) {
+			// Fetch user data only once when the component mounts and user is not authenticated
+			if (!user && !userloading) {
+				dispatch(getuser());
+			}
+			setState1(true);
+		}
 
-        if (error) {
-            dispatch(clearErrors());
-        }
+		if (error) {
+			dispatch(clearErrors());
+		}
 
-        if (state === false) {
-            if (userloading === false) {
-                if (isAuthentication === false) {
-                    setState(true);
-                } else {
-                    setState(true);
-                }
-            }
-        }
+		if (!state && !userloading) {
+			// Update state based on user authentication status
+			setState(true);
+		}
+	}, [dispatch, error, userloading, isAuthentication, user, state, state1]);
 
-        dispatch(getwishlist());
-        dispatch(getRandomArrayOfProducts());
-    }, [dispatch, error, userloading, isAuthentication, user]);
+	useEffect(() => {
+		/* if (user) {
+			// Fetch wishlist only once when the user is authenticated
+			if (!wishlist?.orderItems?.length) {
+				dispatch(getwishlist());
+			}
+		} */
+		dispatch(getwishlist());
+		// Fetch random products if not already loaded
+		dispatch(getRandomArrayOfProducts());
+	}, []);
 
-    useEffect(() => {
-        if (isAuthentication) {
-            setCurrentWishListItem(wishlist?.orderItems || []);
-        } else {
-            setCurrentWishListItem(sessionData);
-        }
-    }, [dispatch, sessionData, user, wishlist]);
+	useEffect(() => {
+		// Update the wishlist items based on user authentication status or session data
+		if (isAuthentication) {
+			setCurrentWishListItem(wishlist?.orderItems || []);
+		} else {
+			setCurrentWishListItem(sessionData);
+		}
+	}, [dispatch, sessionData, user, wishlist, isAuthentication]);
+
+
 
     return (
         <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">

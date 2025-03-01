@@ -4,6 +4,7 @@ import ImageKit from "imagekit";
 import ProductModel from '../model/productmodel.js';
 import OrderModel from '../model/ordermodel.js';
 import logger from '../utilis/loggerUtils.js';
+import { getHexValue, handleSort } from '../utilis/basicUtils.js';
 
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
@@ -30,65 +31,6 @@ export const imagekits = A(async (req, res, next)=>{
 export const getallproducts = async (req, res) => {
     try {
         console.log("Product Query", req.query);
-        const handleSort = (sortBy) => {
-            // Create a default sort object
-            let sort = {};
-          
-            switch (sortBy) {
-                case "newest":
-                    // Sort by creation date (newest first)
-                    sort.createdAt = -1;
-                    break;
-                
-                case "popularity":
-                    // Assuming you want to sort by a custom popularity field
-                    sort.averageRating = -1;  // Descending order for most popular
-                    break;
-                case "a-z":
-                    // Assuming you want to sort by a custom popularity field
-                    sort.title = 1;  // Descending order for most popular
-                    break;
-                case "z-a":
-                    // Assuming you want to sort by a custom popularity field
-                    sort.title = -1;  // Descending order for most popular
-                    break;
-            
-                case "discount":
-                    // Assuming you have a discount field, you can sort based on that
-                    sort.salePrice = -1; // Descending order for higher discounts
-                    break;  
-                case "price-high-to-low":
-                    // Sort by price in descending order
-                    sort.price = -1;  // Highest price first
-                    break;
-            
-                case "price-low-to-high":
-                    // Sort by price in ascending order
-                    sort.price = 1;   // Lowest price first
-                    break;
-				case "rating-high-to-low":
-                    // Sort by price in descending order
-                    sort.averageRating = -1;  // Highest price first
-                    break;
-            
-                case "rating-low-to-high":
-                    // Sort by price in ascending order
-                    sort.averageRating = 1;   // Lowest price first
-                    break;
-                default:
-                    // Default sorting (e.g., by price if no valid `sortBy` provided)
-                    if (sortBy === "low-to-high") {
-                        sort.price = 1;  // Default to ascending price sorting
-                    } else {
-                        // If no sortBy parameter is given or an unknown value, default to creation date
-                        sort.createdAt = -1; // Newest first
-                    }
-                break;
-            }
-          
-            return sort;
-        };
-
         // Helper function to ensure filters are arrays
         const ensureArray = (value) => Array.isArray(value) ? value : [value];
 
@@ -174,7 +116,7 @@ export const getallproducts = async (req, res) => {
 					$elemMatch: {
 						colors: {
 							$elemMatch: {
-								name: regx
+								name: regx,
 							}
 						}
 					}
@@ -182,7 +124,9 @@ export const getallproducts = async (req, res) => {
 			});
             Object.assign(filter, keywordFilter);
         }
-
+		if(req.query.keyword && getHexValue(req.query.keyword.toLowerCase())){
+			console.log("Is Hex code for colors: ",req.query.keyword);
+		}
         // Category filter
         if (req.query.category) {
             filter.category = { $in: ensureArray(req.query.category) };
@@ -246,9 +190,6 @@ export const getallproducts = async (req, res) => {
 					// Shuffle the allProducts array
 					const shuffledProducts = currentPageproducts.sort(() => Math.random() - 0.5);
 					productsPagination = shuffledProducts.length > 0 ? shuffledProducts : currentPageproducts;
-					
-					// Paginate the shuffled products
-					// productsPagination = shuffledProducts.slice(skip, skip + itemsPerPage);
 					break;
 				case 'exclusive30':
 					const latest30Products = getTopSellingProducts(currentPageproducts);

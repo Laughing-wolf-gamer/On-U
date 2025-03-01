@@ -133,13 +133,13 @@ export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
     }
 }
 
-export const getbag = ({userId}) => async (dispatch) => {
+export const getbag = () => async (dispatch) => {
 
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
         // console.log("Asking Bag: ",userId);
-        const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId/${userId}`,{
+        const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,{
             withCredentials:true,
             headers: {
                 Authorization:`Bearer ${token}`,

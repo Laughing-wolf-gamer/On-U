@@ -83,10 +83,10 @@ const Navbar = ({user}) => {
 
     useEffect(()=>{
         if(user){
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
             dispatch(getwishlist())
         }
-    },[user,dispatch])
+    },[dispatch])
     
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
@@ -102,7 +102,7 @@ const Navbar = ({user}) => {
         
         fetchAllWishList();
         if(user){
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
         }
     }, [state]);
 	useEffect(() => {

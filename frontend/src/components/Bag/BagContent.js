@@ -126,7 +126,7 @@ const BagContent = ({
 					totalAmount={totalProductSellingPrice}
 					originalsAmount={totalSellingPrice}
 					closePopup={() => {
-						dispatch(getbag({ userId: user.id }));
+						dispatch(getbag());
 						dispatch(getAddress());
 						setShowPayment(false);
 						setSelectedAddress(null);

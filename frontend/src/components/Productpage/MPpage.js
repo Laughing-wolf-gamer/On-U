@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Clock, Heart, RotateCw, ShoppingBag, ShoppingCart, TruckIcon } from 'lucide-react';
+import { Clock, Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, TruckIcon } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -188,7 +188,7 @@ const MPpage = () => {
             };
             await dispatch(createbag(orderData));
             // await dispatch(getwishlist());
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
         } else {
             // Add to localStorage logic
             const orderData = {
@@ -521,7 +521,7 @@ const MPpage = () => {
             checkFetchedIsPurchased(); // Checking purchase status when product is loaded
     
             if (user) {
-                dispatch(getbag({ userId: user.id }));
+                dispatch(getbag());
             }
             
             dispatch(getwishlist()); // Always fetch wishlist data when the product changes
@@ -917,17 +917,19 @@ const MPpage = () => {
 							<div className="w-full flex flex-col space-y-4 mt-4">
 								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
 									<h1 className="text-gray-500"><Clock /></h1>
-									<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+									<h1 className="text-gray-500">Choose expedited shipping for faster delivery.</h1>
 								</div>
-
 								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
 									<h1 className="text-gray-500"><RotateCw /></h1>
 									<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
 								</div>
-
 								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-									<h1 className="text-gray-500"><TruckIcon /></h1>
-									<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
+									<h1 className="text-gray-500"><Package /></h1>
+									<h1 className="text-gray-500">Track your order in real-time with detailed notifications.</h1>
+								</div>
+								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
+									<h1 className="text-gray-500"><Headphones /></h1>
+									<h1 className="text-gray-500">24/7 customer support for any shipping or delivery inquiries.</h1>
 								</div>
 							</div>
 						</div>
@@ -938,7 +940,7 @@ const MPpage = () => {
 								<h3 className='text-xl md:text-lg font-semibold mt-4 text-center md:text-left'>All Reviews</h3>
 								<div className='reviews-list mt-4 overflow-y-auto h-72'>
 									<div className='reviews-list mt-4 overflow-y-auto'>
-										{product && product.Rating && product.Rating.length > 0 ? <ProductReviews reviews={product.Rating}/> : <ProductReviews reviews={reviews}/>}
+										{product && product.Rating && product.Rating.length > 0 && <ProductReviews reviews={product.Rating}/>}
 									</div>
 								</div>
 								{hasPurchased && <Fragment>
@@ -993,8 +995,8 @@ const MPpage = () => {
 									</div>
 									<div className="overflow-x-auto">
 										<ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-										{similar.map((pro) => (
-												<li key={pro._id} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
+										{similar.map((pro,index) => (
+												<li key={pro?._id || index} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
 													<Single_product pro={pro}/>
 												</li>
 											))}

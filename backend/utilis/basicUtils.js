@@ -118,6 +118,94 @@ export function getBestCourierPartners(available_courier_companies) {
 
 	return sortedCouriers;
 }
+export const handleSort = (sortBy) => {
+	// Create a default sort object
+	let sort = {};
+	
+	switch (sortBy) {
+		case "newest":
+			// Sort by creation date (newest first)
+			sort.createdAt = -1;
+			break;
+		
+		case "popularity":
+			// Assuming you want to sort by a custom popularity field
+			sort.averageRating = -1;  // Descending order for most popular
+			break;
+		case "a-z":
+			// Assuming you want to sort by a custom popularity field
+			sort.title = 1;  // Descending order for most popular
+			break;
+		case "z-a":
+			// Assuming you want to sort by a custom popularity field
+			sort.title = -1;  // Descending order for most popular
+			break;
+	
+		case "discount":
+			// Assuming you have a discount field, you can sort based on that
+			sort.salePrice = -1; // Descending order for higher discounts
+			break;  
+		case "price-high-to-low":
+			// Sort by price in descending order
+			sort.price = -1;  // Highest price first
+			break;
+	
+		case "price-low-to-high":
+			// Sort by price in ascending order
+			sort.price = 1;   // Lowest price first
+			break;
+		case "rating-high-to-low":
+			// Sort by price in descending order
+			sort.averageRating = -1;  // Highest price first
+			break;
+	
+		case "rating-low-to-high":
+			// Sort by price in ascending order
+			sort.averageRating = 1;   // Lowest price first
+			break;
+		default:
+			// Default sorting (e.g., by price if no valid `sortBy` provided)
+			if (sortBy === "low-to-high") {
+				sort.price = 1;  // Default to ascending price sorting
+			} else {
+				// If no sortBy parameter is given or an unknown value, default to creation date
+				sort.createdAt = -1; // Newest first
+			}
+		break;
+	}
+	
+	return sort;
+};
+export function getHexValue(inputString) {
+    const regex = /hex:(.*)/;
+    const match = inputString.match(regex);
+    if (match) {
+        return match[1].trim();  // Return everything after "hex:" and remove any leading/trailing spaces
+    } else {
+        return null;  // Return null if "hex:" is not found in the string
+    }
+}
+
+export function CheckIsPhoneNumber(input) {
+    // Regex for validating phone number (simplified version)
+    const phoneRegex = /^[+]?(\d{1,3})?[-.\s]?(\(?\d{1,4}\)?[-.\s]?)?[\d\s-]{7,}$/;
+
+    // Regex for validating email
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+    // Check if the input matches the phone number pattern
+    if (phoneRegex.test(input)) {
+        return 'phone';
+    }
+    
+    // Check if the input matches the email pattern
+    if (emailRegex.test(input)) {
+        return 'email';
+    }
+
+    // If it doesn't match either, return 'invalid'
+    return 'invalid';
+}
 export const removeSpaces = (str) => str.replace(/\s+/g, '');
 export const getStringFromObject = (objectData)=>{
 	return Object.values(objectData).join(", ");

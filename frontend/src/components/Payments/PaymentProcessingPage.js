@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useDispatch } from "react-redux";
 import { applyCouponToBag, create_order, fetchAllOrders, removeCouponFromBag } from "../../action/orderaction";
-import { BASE_API_URL, BASE_CLIENT_URL, formattedSalePrice, headerConfig } from "../../config";
+import { BASE_API_URL, BASE_CLIENT_URL, formattedSalePrice, headerConfig, RAZERPAY_KEY } from "../../config";
 import axios from "axios";
 import { useRazorpay } from "react-razorpay";
 import { ChevronRight, ChevronsRight, Icon, X } from "lucide-react";
@@ -140,7 +140,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 
 			// Configure Razorpay options
 			const razorpayOptions = {
-				key: data.keyId,
+				key: RAZERPAY_KEY,
 				amount: data.order.amount,
 				currency: "INR",
 				name: userName,

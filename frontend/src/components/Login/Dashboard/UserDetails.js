@@ -18,7 +18,7 @@ const EditableField = ({
   tempValue,
   Icon
 }) => {
-	console.log("tempValue:", tempValue);
+	console.log("tempValue:", value);
 	return (
 		<div className="bg-gray-50 border-2 p-4 w-full rounded-lg">
 			<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">
@@ -26,14 +26,16 @@ const EditableField = ({
 				<label className="font-semibold text-lg sm:text-base text-gray-700">{label}:</label>
 				{isEditing ? (
 					<input
-						type={name === "dob" ? "date" : "text"} // Automatically adjusts input type for dob
+						type={name === "DOB" ? "date" : "text"} // Automatically adjusts input type for dob
 						name={name}
 						className="border px-3 py-2 rounded-md w-full sm:w-80"
 						value={value}
 						onChange={onChange}
 					/>
 				) : (
-					<span className="text-lg sm:text-base text-gray-800">{value}</span>
+					<span className="text-lg sm:text-base text-gray-800">
+						{label === 'Date of Birth' ? new Date(value).toLocaleDateString() : value}
+					</span>
 				)}
 			</div>
 		</div>
@@ -186,14 +188,14 @@ const UserDetails = ({ user }) => {
 			{/* Editable Fields */}
 			<div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
 				<EditableField
-				label="Name"
-				name="name"
-				value={editedUser?.name}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={User}
+					label="Name"
+					name="name"
+					value={editedUser?.name}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={User}
 				/>
 
 				<EditableField
@@ -221,35 +223,35 @@ const UserDetails = ({ user }) => {
 				/>
 
 				<EditableField
-				label="Gender"
-				name="gender"
-				value={editedUser?.gender}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={editedUser?.gender === "Male" ? FaMars : FaVenus}
+					label="Gender"
+					name="gender"
+					value={editedUser?.gender}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={editedUser?.gender === "Male" ? FaMars : FaVenus}
 				/>
 				<EditableField
-				label="Country"
-				name="country"
-				value={"IN"}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={MapPin}
+					label="Country"
+					name="country"
+					value={"India"}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={MapPin}
 				/>
 
 				<EditableField
-				label="Date of Birth"
-				name="dob"
-				value={editedUser?.dob}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={Calendar}
+					label="Date of Birth"
+					name="DOB"
+					value={editedUser?.DOB}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={Calendar}
 				/>
 			</div>
 

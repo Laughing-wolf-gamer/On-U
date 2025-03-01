@@ -1,7 +1,8 @@
 import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
-import { getBestCourierPartners } from '../../utilis/basicUtils.js';
+import { getBestCourierPartners, getStringFromObject } from '../../utilis/basicUtils.js';
+import logger from '../../utilis/loggerUtils.js';
 
 dotenv.config();
 
@@ -57,6 +58,7 @@ const generateAwb = async(awbData)=>{
 	} catch (error) {
 		console.error('Error Creating AWB: ', error?.response?.data);
 		// console.dir(error,{depth:null});
+		// logger.error(`Error creating AWB: ${getStringFromObject(error?.response?.data)}`)
 		return null;
 	}
 }
@@ -75,6 +77,7 @@ const getAllServicalibiltyties = async (servicesData) => {
 	} catch (error) {
 		console.error('Error fetching all serviceabilityties:', error?.response?.data);
 		// console.dir(error,{depth:null});
+		// logger.error(`Failed to fetch all serviceabilityties ${getStringFromObject(error?.response?.data)}`)
 		return null;
 	}
 }
@@ -101,6 +104,7 @@ export const generateOrderPicketUpRequest =async(orderData,bestCourior)=>{
 		return returningData;
 	} catch (error) {
 		console.error('Error generating order picket up request:', error?.response?.data);
+		// logger.error(`Error generating order picket up request ${getStringFromObject(error?.response?.data || error?.message)}`);
 		return null;
 	}
 }
@@ -165,7 +169,7 @@ const formatDate = (date) => {
 	const minutes = String(date.getMinutes()).padStart(2, '0');
 	return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
-export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
+/* export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
     if (!token) await getAuthToken();
 
     try {
@@ -275,57 +279,248 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         console.error("Error creating order:", error?.response?.data);
         return null;
     }
+}; */
+export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
+    // Check if token exists and fetch it if not
+    if (!token) await getAuthToken();
+
+    try {
+        // Fetch user data if necessary
+        const userData = await User.findById(userId);
+        if (!userData) {
+            console.error("User not found");
+            return null;
+        }
+
+        // Helper function to calculate totals for order items
+        const calculateTotal = (key) => shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
+
+        // Calculate various totals
+        const [subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth] = await Promise.all([
+            calculateTotal('price'),
+            calculateTotal('weight'),
+            calculateTotal('height'),
+            calculateTotal('length'),
+            calculateTotal('breadth')
+        ]);
+
+        // Generate random ID for HSN and SKU if needed
+        const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+
+        // Map order items to required format
+        const orderItems = shipmentData.orderItems.map(item => ({
+            name: item?.productId?.title,
+            selling_price: item.productId.salePrice || item.productId.price,
+            units: item.quantity,
+            discount: item?.productId?.DiscountedPercentage || 0,
+            sku: item?.productId?.sku || item?.productId?._id,
+            tax: item?.productId?.gst || 0,
+            hsn: item?.productId?.sku || generateRandomId().toString()
+        }));
+
+        // Get available pickup locations
+        const pickup_locations = await getPickUpLocation();
+        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
+        if (!primaryLocation) {
+            console.error("Primary pickup location not found");
+            return null;
+        }
+
+        // Prepare order details
+        const orderDetails = {
+            order_id: randomOrderId,
+            shipment_id: randomShipmentId,
+            order_date: formatDate(new Date()),
+            pickup_location: primaryLocation?.pickup_location,
+            reseller_name: primaryLocation?.pickup_location,
+            company_name: primaryLocation?.pickup_location,
+            channel_id: '6282866',
+            category: "Clothes",
+            billing_isd_code: "+91",
+            billing_customer_name: shipmentData.address.Firstname,
+            billing_last_name: shipmentData.address.Lastname,
+            billing_address: shipmentData.address.address1,
+            billing_city: shipmentData.address.address2,
+            billing_pincode: shipmentData.address.pincode,
+            billing_state: shipmentData.address.state,
+            units: orderItems.length,
+            billing_country: 'In',
+            billing_phone: shipmentData.address.phoneNumber,
+            billing_alternate_phone: userData?.phoneNumber,
+            shipping_is_billing: true,
+            order_items: orderItems,
+            payment_method: shipmentData?.paymentMode,
+            sub_total: subTotal,
+            length: totalOrderLength,
+            breadth: totalBredth,
+            height: totalOrderHeight,
+            weight: totalOrderWeight / 1000, // Convert weight to KG
+            order_type: 'NON ESSENTIALS',
+            hsn: '441122',
+        };
+
+        // Send the request to ShipRocket API
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`, orderDetails, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Shipment Created Response: ", response.data);
+
+        // Fetch available couriers in parallel with other tasks
+        const [allAvailableCourier, manifest] = await Promise.all([
+            getAllServicalibiltyties({
+                pickup_postcode: primaryLocation?.pin_code,
+                delivery_postcode: shipmentData.address.pincode,
+                order_id: response?.data?.order_id,
+            }),
+            generateInvoice(response.data)
+        ]);
+
+        console.log("All Available Courier: ", allAvailableCourier?.available_courier_companies);
+        // Get the best courier based on the available companies
+        const bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
+        if (!bestCourier) {
+            console.error("No suitable courier found");
+            return null;
+        }
+
+        // Create pickup request with the best courier
+        const createPickUpResponse = await generateOrderPicketUpRequest({
+            order_id: response?.data?.order_id,
+            shipment_id: response?.data?.shipment_id,
+            status: response?.data?.status,
+            status_code: response?.data?.status_code,
+            onboarding_completed_now: response?.data?.onboarding_completed_now,
+            courier_company_id: bestCourier?.courier_company_id
+        }, bestCourier);
+
+        return {
+            shipmentCreatedResponseData: response.data,
+            bestCourier,
+            manifest,
+            warehouse_name: primaryLocation,
+            PickupData: createPickUpResponse
+        };
+
+    } catch (error) {
+        console.error("Error creating order:", error?.response?.data || error.message);
+		// logger.error(`Error creating order: ${getStringFromObject(error?.response?.data || error.message)}`)
+        return null;
+    }
 };
 
-export const generateOrderRetrunShipment = async (shipmentData,userId) => {
+
+export const generateOrderRetrunShipment = async (shipmentData, userId) => {
+    if (!token) await getAuthToken();
+
+    try {
+        // Check if user exists, skip if not needed for the process
+        if (!userId) {
+            throw new Error("User ID is required");
+        }
+
+        // Helper function to calculate totals for order items
+        const calculateTotal = (key) => shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
+
+        // Calculate various totals in parallel using Promise.all
+        const [
+            subTotal,
+            totalOrderWeight,
+            totalOrderHeight,
+            totalOrderLength,
+            totalBredth
+        ] = await Promise.all([
+            calculateTotal('price'),
+            calculateTotal('weight'),
+            calculateTotal('height'),
+            calculateTotal('length'),
+            calculateTotal('breadth')
+        ]);
+
+        // Generate random ID for HSN and SKU if needed
+        const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+
+        // Map order items to required format in a single pass
+        const orderItems = shipmentData.orderItems.map(item => ({
+            name: item?.productId?.title,
+            selling_price: item.productId.salePrice || item.productId.price,
+            units: item.quantity,
+            discount: item?.productId?.DiscountedPercentage || 0,
+            sku: item?.productId?.sku || item?.productId?._id,
+            tax: item?.productId?.gst || 0,
+            hsn: item?.productId?.sku || generateRandomId().toString()
+        }));
+
+        // Extract the active pickup location
+        const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
+        if (!activePickUpLocation) {
+            throw new Error("Pickup location is missing");
+        }
+
+        // Construct the order details for the return shipment
+        const orderDetails = {
+            order_id: shipmentData.order_id,
+            order_date: formatDate(shipmentData.createdAt),
+            reseller_name: "On U",
+            company_name: "On U",
+            channel_id: '6282866',
+            category: "Clothes",
+            pickup_isd_code: "+91",
+            pickup_customer_name: shipmentData.address.Firstname,
+            pickup_last_name: shipmentData.address.Lastname,
+            pickup_address: shipmentData.address.address1,
+            pickup_city: shipmentData.address.address2,
+            pickup_pincode: shipmentData.address.pincode,
+            pickup_state: shipmentData.address.state,
+            pickup_country: 'India',
+            pickup_phone: shipmentData.address.phoneNumber,
+
+            shipping_customer_name: activePickUpLocation.name,
+            shipping_last_name: '',
+            shipping_address: activePickUpLocation.address,
+            shipping_address_2: activePickUpLocation.address_2,
+            shipping_city: activePickUpLocation.city,
+            shipping_country: activePickUpLocation.country,
+            shipping_pincode: activePickUpLocation.pin_code,
+            shipping_state: activePickUpLocation.state,
+            shipping_email: activePickUpLocation.email,
+            shipping_phone: activePickUpLocation.phone,
+            units: orderItems.length,
+            order_items: orderItems,
+            payment_method: shipmentData?.paymentMode,
+            sub_total: subTotal,
+            length: totalOrderLength,
+            breadth: totalBredth,
+            height: totalOrderHeight,
+            weight: totalOrderWeight / 1000, // Convert weight to KG
+            hsn: '441122' // Use a predefined HSN code
+        };
+
+        console.log("ShipRocket Order Returning Data: ", orderDetails);
+
+        // Create return shipment by calling ShipRocket API
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/return`, orderDetails, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Return Shipment Created Response: ", response.data);
+        return response.data;
+
+    } catch (error) {
+        console.error("Error creating return shipment:", error?.response?.data || error.message);
+        logger.error(`Error creating return shipment: ${getStringFromObject(error?.response?.data || error.message)}`);
+        return null;
+    }
+};
+
+
+/* export const generateOrderRetrunShipment = async (shipmentData,userId) => {
 	if(!token) await getAuthToken();
 	try {
-		/* "order_id": "r121579B09ap3o",
-		"order_date": "2021-12-30",
-		"channel_id": "27202",
-		"pickup_customer_name": "iron man",
-		"pickup_last_name": "",
-		"company_name":"iorn pvt ltd",
-		"pickup_address": "b 123",
-		"pickup_address_2": "",
-		"pickup_city": "Delhi",
-		"pickup_state": "New Delhi",
-		"pickup_country": "India",
-		"pickup_pincode": 110030,
-		"pickup_email": "deadpool@red.com",
-		"pickup_phone": "9810363552",
-		"pickup_isd_code": "91",
-		"shipping_customer_name": "Jax",
-		"shipping_last_name": "Doe",
-		"shipping_address": "Castle",
-		"shipping_address_2": "Bridge",
-		"shipping_city": "ghaziabad",
-		"shipping_country": "India",
-		"shipping_pincode": 201005,
-		"shipping_state": "Uttarpardesh",
-		"shipping_email": "kumar.abhishek@shiprocket.com",
-		"shipping_isd_code": "91",
-		"shipping_phone": 8888888888,
-		"order_items": [
-			{
-			"sku": "WSH234",
-			"name": "shoes",
-			"units": 2,
-			"selling_price": 100,
-			"discount": 0,
-			"qc_enable":true,
-			"hsn": "123",
-			"brand":"",
-			"qc_size":"43"
-			}
-			],
-		"payment_method": "PREPAID",
-		"total_discount": "0",
-		"sub_total": 400,
-		"length": 11,
-		"breadth": 11,
-		"height": 11,
-		"weight": 0.5 */
 		// Fetch user data
         const userData = await User.findById(userId);
         if (!userData) {
@@ -409,85 +604,15 @@ export const generateOrderRetrunShipment = async (shipmentData,userId) => {
     } catch (error) {
         // console.dir(error,{depth:null});
 		console.error("Error creating return shipment:", error?.response?.data);
+		logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
         return null;
     }
-}
+} */
 
-export const generateExchangeShipment = async (shipmentData, userId) => {
+/* export const generateExchangeShipment = async (shipmentData, userId) => {
 	if(!token) await getAuthToken();
 	try {
-		/* 
-			"order_items": [
-			{
-			"name": "Black tshirt XL",
-			"selling_price": "500.00",
-			"units": "1",
-			"hsn": "1733808730720",
-			"sku": "mackbook",
-			"tax": "",
-			"discount": "",
-			"brand": "",
-			"color": "",
-			"exchange_item_id": "193658024",
-			"exchange_item_name": "Black tshirt XL",
-			"exchange_item_sku": "mackbook",
-			"qc_enable": true,
-			"qc_product_name": "Black tshirt XL",
-			"qc_product_image": "https://sr-multichannel-stage.s3.ap-south-1.amazonaws.com/1310/qc_product_img/547950c2-9c2f-4908-98d5-276f9ad5b63a.png",
-			"qc_brand": "changedname1",
-			"qc_color": "changecolr",
-			"qc_size": "changesize112",
-			"accessories": "",
-			"qc_used_check": "1",
-			"qc_sealtag_check": "1",
-			"qc_brand_box": "1",
-			"qc_check_damaged_product": "yes"
-			}
-		],
-		"buyer_pickup_first_name": "Test",
-		"buyer_pickup_last_name": "Test",
-		"buyer_pickup_email": "test@gmail.com",
-		"buyer_pickup_address": "Test",
-		"buyer_pickup_address_2": "",
-		"buyer_pickup_city": "South West Delhi",
-		"buyer_pickup_state": "Delhi",
-		"buyer_pickup_country": "India",
-		"buyer_pickup_phone": "9716414139",
-		"buyer_pickup_pincode": "110045",
-		"buyer_shipping_first_name": "Test",
-		"buyer_shipping_last_name": "Test",
-		"buyer_shipping_email": "test@gmail.com",
-		"buyer_shipping_address": "dkalsd",
-		"buyer_shipping_address_2": "",
-		"buyer_shipping_city": "South West Delhi",
-		"buyer_shipping_state": "Delhi",
-		"buyer_shipping_country": "India",
-		"buyer_shipping_phone": "9716414139",
-		"buyer_shipping_pincode": "110045",
-		"seller_pickup_location_id": "5723898",
-		"seller_shipping_location_id": "5723898",
-		"exchange_order_id": "EX_TEST002",
-		"return_order_id": "R_TEST002",
-		"payment_method": "prepaid",
-		"order_date": "2024-12-10",
-		"channel_id": "1960878",
-		"existing_order_id": "",
-		"return_reason": "29",
-		"sub_total": "500.00",
-		"shipping_charges": "",
-		"giftwrap_charges": "",
-		"total_discount": "0",
-		"transaction_charges": "",
-		"exchange_length": "11",
-		"exchange_breadth": "11",
-		"exchange_height": "11",
-		"exchange_weight": "11",
-		"return_length": "10.00",
-		"return_breadth": "10.00",
-		"return_height": "10.00",
-		"return_weight": "0.500",
-		"qc_check": "true" */
-
+		
 		const userData = await User.findById(userId);
         if (!userData) {
             // console.error("User not found");
@@ -572,7 +697,109 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
 	} catch (error) {
 		console.error("Error creating exchange shipment:", error?.response?.data);
 	}
-}
+} */
+
+
+export const generateExchangeShipment = async (shipmentData, userId) => {
+    // Check and fetch token only if it's not available
+    if (!token) await getAuthToken();
+
+    try {
+        // If userId is passed, no need to fetch user data from DB unless necessary
+        if (!userId) {
+            throw new Error("User ID is required");
+        }
+
+        // Helper function to calculate totals for order items
+        const calculateTotal = (key) => shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
+
+        // Calculate totals concurrently using Promise.all
+        const [subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth] = await Promise.all([
+            calculateTotal('price'),
+            calculateTotal('weight'),
+            calculateTotal('height'),
+            calculateTotal('length'),
+            calculateTotal('breadth')
+        ]);
+
+        // Map order items to the required format
+        const orderItems = shipmentData.orderItems.map(item => ({
+            name: item?.productId?.title,
+            sku: item?.productId?._id,
+            selling_price: item.productId.salePrice || item.productId.price,
+            units: item.quantity,
+            qc_enable: true,
+            qc_product_name: item?.productId?.title,
+            qc_product_image: item?.productId?.image,
+            qc_brand: item?.productId?.brand,
+            qc_color: item?.productId?.color?.name,
+            qc_size: item?.productId?.size?.label,
+            discount: item?.productId?.DiscountedPercentage,
+            tax: 0,
+        }));
+
+        // Get pickup location from shipment data
+        const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
+        if (!activePickUpLocation) {
+            throw new Error("Pickup location is missing");
+        }
+
+        // Construct the order details
+        const orderDetails = {
+            order_id: shipmentData.order_id,
+            order_date: formatDate(shipmentData.createdAt),
+            reseller_name: "On U",
+            company_name: "On U",
+            channel_id: '6282866',
+            category: "Clothes",
+            pickup_isd_code: "+91",
+            pickup_customer_name: shipmentData.address.Firstname,
+            pickup_last_name: shipmentData.address.Lastname,
+            pickup_address: shipmentData.address.address1,
+            pickup_city: shipmentData.address.address2,
+            pickup_pincode: shipmentData.address.pincode,
+            pickup_state: shipmentData.address.state,
+            pickup_country: 'India',
+            pickup_phone: shipmentData.address.phoneNumber,
+
+            shipping_customer_name: activePickUpLocation.name,
+            shipping_last_name: '',
+            shipping_address: activePickUpLocation.address,
+            shipping_address_2: activePickUpLocation.address_2,
+            shipping_city: activePickUpLocation.city,
+            shipping_country: activePickUpLocation.country,
+            shipping_pincode: activePickUpLocation.pin_code,
+            shipping_state: activePickUpLocation.state,
+            shipping_email: activePickUpLocation.email,
+            shipping_phone: activePickUpLocation.phone,
+            units: orderItems.length,
+            order_items: orderItems,
+            payment_method: shipmentData?.paymentMode,
+            sub_total: subTotal,
+            length: totalOrderLength,
+            breadth: totalBredth,
+            height: totalOrderHeight,
+            weight: totalOrderWeight / 1000,  // Convert weight to KG
+        };
+
+        console.log("ShipRocket Exchange Data: ", orderDetails);
+
+        // Make the request to ShipRocket API to create the exchange shipment
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/exchange`, orderDetails, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Return Shipment Created Response: ", response.data);
+        return response.data; // Returning response for further processing if necessary
+    } catch (error) {
+        console.error("Error creating exchange shipment:", error?.response?.data || error.message);
+		logger.error(`Error creating exchange shipment ${getStringFromObject(error?.response?.data || error.message)}`)
+        // throw new Error("Failed to create exchange shipment"); // Forward the error for handling upstream
+		return null;
+    }
+};
 
 export const getAllShipRocketOrder = async()=>{
     if(!token) await getAuthToken();

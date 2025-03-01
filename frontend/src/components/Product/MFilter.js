@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react'
+import React, { Fragment, useEffect, useState } from 'react'
 import { AiOutlineFire, AiOutlineStar } from 'react-icons/ai'
 import { useNavigate, Link } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
@@ -9,7 +9,7 @@ import { capitalizeFirstLetterOfEachWord } from '../../config'
 import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
 import { BsSortDown, BsSortUp } from 'react-icons/bs'
-import { ArrowDown01, ArrowDown10, ArrowDownAZ, ArrowDownZA, ArrowUpDown, BadgePercent, Filter, SortAsc } from 'lucide-react'
+import { ArrowDown01, ArrowDown10, ArrowUpDown, BadgePercent, Filter } from 'lucide-react'
 import { FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa'
 
 

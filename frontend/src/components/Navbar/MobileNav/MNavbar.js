@@ -1,21 +1,20 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import './MNavbar.css'
-import { FiSearch } from 'react-icons/fi'
 import Ripples from 'react-ripples'
 import Mhome from './Msubmenu/Home'
 import { Link, useNavigate } from 'react-router-dom'
 import {logout} from '../../../action/useraction'
 import { useDispatch, useSelector} from 'react-redux'
-import {MdArrowBack, MdPerson} from 'react-icons/md'
+import {MdPerson} from 'react-icons/md'
 import {Allproduct} from '../../../action/productaction'
 import MProductsBar from './Msubmenu/ProductsBar'
 import { FaHeart } from 'react-icons/fa'
 import { getbag, getwishlist } from '../../../action/orderaction'
-import { ChevronDown, ChevronRight, UserRound, X } from 'lucide-react'
+import { ChevronRight, X } from 'lucide-react'
 import { useSessionStorage } from '../../../Contaxt/SessionStorageContext'
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im'
 import SideBarBag from '../SideBarBag'
-import { IoBagRemoveSharp, IoMenu, IoSearch } from 'react-icons/io5'
+import { IoMenu, IoSearch } from 'react-icons/io5'
 import MKeywoardSerach from './MKeywoardSerach'
 import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
 import bagCartIcon from '../../images/shopping-cart.png'
@@ -35,22 +34,11 @@ const MNavbar = ({ user }) => {
     const [Menu2, setMenu2] = useState("hidden");
     const [Menu3, setMenu3] = useState("hidden");
     const [Menu4, setMenu4] = useState("hidden");
-    const [Menu5, setMenu5] = useState("hidden");
-    const [startX, setstartX] = useState(null)
-    const [startY, setstartY] = useState(null)
-    const [Men, setMen] = useState(false)
     const [Women, setWomen] = useState(false)
-    const [Kids, setKids] = useState(false)
-    const [Home, setHome] = useState(false)
-    const [Beauty, setBeauty] = useState(false)
     const classchange = () => setClass("block");
     const classunchange = () => setClass("hidden");
     const handleMenuClose = () => (setMenuShow(false));
-    const handleShow = () => setMenuShow(true);
-    const loginunchange = () => setClass("hidden");
-    const loginClose = () => setMenuShow(false);
-    const [isSwiping, setIsSwiping] = useState(false);
-    
+    const handleShow = () => setMenuShow(true);    
 
     const logoutBTN = () =>{
         dispatch(logout())
@@ -89,13 +77,13 @@ const MNavbar = ({ user }) => {
     }
     useEffect(()=>{
         if(user){
-          dispatch(getbag({ userId: user.id }));
-          dispatch(getwishlist())
+			dispatch(getbag());
+			dispatch(getwishlist())
         }
-    },[user])
+    },[user,dispatch])
     useEffect(() => {
         // Optionally you can trigger updates based on other session storage events here
-        console.log("Nav Bar sessionBagData: ",sessionBagData);
+        // console.log("Nav Bar sessionBagData: ",sessionBagData);
         setWishListCount(sessionData.length);
         setBagCount(sessionBagData.length);
     }, [sessionData,sessionBagData]);

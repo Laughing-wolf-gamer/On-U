@@ -10,7 +10,7 @@ const Search = ({ toggleSearchBar }) => {
 	const [state, setState] = useState("");
 	const dispatch = useDispatch();
 	const navigate = useNavigate();
-	const[filterSearchs,setfilterSearches] = useState(keyWoards);
+	const[filterSearches,setfilterSearches] = useState(keyWoards);
 	// Mock of previous searches (can be stored in localStorage or state management)
 	useEffect(()=>{
 		setfilterSearches(keyWoards.filter(search =>
@@ -59,7 +59,7 @@ const Search = ({ toggleSearchBar }) => {
 			</form>
 
 			<div
-				className="fixed top-0 left-0 w-full min-h-screen bg-black opacity-50 z-20"
+				className="fixed top-0 left-0 w-full h-full bg-black opacity-50 z-20"
 				onClick={() => {
 					setState("")
 					toggleSearchBar()
@@ -73,7 +73,7 @@ const Search = ({ toggleSearchBar }) => {
 			>
 				<ul className="p-2">
 					<label className="text-base font-bold text-gray-800">Recent Searches:</label>
-					{filterSearchs.map((search, index) => (
+					{filterSearches.map((search, index) => (
 						<li
 							key={index}
 							className="cursor-pointer relative min-w-fit py-2 justify-between items-start flex-col flex p-2 peer-hover:bg-gray-300"
