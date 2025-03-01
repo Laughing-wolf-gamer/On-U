@@ -8,6 +8,7 @@ import { useToast } from '../../Contaxt/ToastProvider';
 import toast from 'react-hot-toast';
 import ShareView from '../Productpage/ShareView';
 import { calculateDiscountPercentage } from '../../config';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
@@ -16,7 +17,8 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
-    const { activeToast, showToast } = useToast();
+	const {checkAndCreateToast} = useSettingsContext();
+    /* const { activeToast, showToast } = useToast();
     const checkAndCreateToast = (type, message) => {
         console.log("check Toast: ", type, message, activeToast);
         if (activeToast !== message) {
@@ -39,7 +41,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
             }
             showToast(message);
         }
-    };
+    }; */
     const addToWishList = async (e) => {
         e.stopPropagation();
         if (user) {
@@ -160,14 +162,14 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                         <div className="w-full h-8 md:h-10 flex items-center justify-center">
                             <button onClick={addToWishList} className="w-full h-full flex items-center text-black bg-white text-center justify-center font-kumbsan hover:shadow-md space-x-2">
                                 {
-                                    isInWishList ? <div className='animate-vibrateScale'><Heart className='text-[8px] md:text-sm' fill='red' strokeWidth={0}/></div>:<Heart strokeWidth={.8} className='text-[8px] md:text-sm' />
+                                    isInWishList ? <div className='animate-vibrateScale'><Heart className='text-[8px] md:text-sm hover:animate-vibrateScale' fill='red' strokeWidth={0}/></div>:<Heart strokeWidth={.8} className='hover:animate-vibrateScale text-[8px] md:text-sm' />
                                 }
                                 <span className="font-kumbsan text-[10px] md:text-sm">Add to Wishlist</span>
                             </button>
                         </div>
                         <div className="w-full h-8 md:h-10 flex items-center justify-center">
                             <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
-                                <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm' />
+                                <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm hover:animate-vibrateScale' />
                                 <span className="font-kumbsan text-[10px] md:text-sm">Add to Cart</span>
                             </button>
                         </div>
