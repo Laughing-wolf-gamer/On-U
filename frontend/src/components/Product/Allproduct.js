@@ -122,7 +122,7 @@ const Allproductpage = ({user}) => {
                 <div className='text-slate-900 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
                     <div className="hidden 2xl:block xl:block lg:block font2 pb-2">
                         <span className=" text-sm capitalize">NO OF ITEMS</span>
-                        <span className="text-gray-700 font-light">- {productLoading === false ? pro?.length : '...'} items</span>
+                        <span className="text-gray-700 font-light">- {productLoading === false ? `${pro?.length} / ${product?.length}` : '...'} Products</span>
                     </div>
                 </div>
                 <FilterTitle sortvalue={sortvalue} handleSortChange={handleSortChange} setSortValue = {setSortValue} />
