@@ -239,7 +239,7 @@ const getDateRange = (preset) => {
 };
 const AdminDashboard = ({ user }) => {
     const{startDate:defaulStart, endDate:defaultEnd} = getDateRange("THIS MONTH");
-    const { isLoading,walletBalance, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
+    const {isLoading,walletBalance, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
     const dispatch = useDispatch();
     const [stats, setStats] = useState({ title: "Total Customers", value: TotalCustomers });
     const [currentGraphData, setGraphData] = useState({ title: "Total Orders", value: [] });
@@ -304,7 +304,9 @@ const AdminDashboard = ({ user }) => {
         dispatch(fetchAllProductsCount());
         dispatch(fetchAllOrdersCount());
         dispatch(fetchMaxDeliveredOrders());
-		dispatch(getWalletBalance());
+		if(user?.role !== 'admin'){
+			dispatch(getWalletBalance());
+		}
         dispatch(fetchRecentOrders());
         dispatch(fetchTopSellingProducts());
         // console.log("Fetching all customers: ",startDate,endDate);
@@ -358,9 +360,9 @@ const AdminDashboard = ({ user }) => {
 							<StatsCard
 								isActive={currentGraphData.title === "Max Delivered Orders"}
 								onChange={(title, value) => {
-								setStats({ title, value });
-								setGraphData({ title, value: OrderDeliverData });
-								handleFilterChange("THIS MONTH", OrderDeliverData);
+									setStats({ title, value });
+									setGraphData({ title, value: OrderDeliverData });
+									handleFilterChange("THIS MONTH", OrderDeliverData);
 								}}
 								title="Max Delivered Orders"
 								value={MaxDeliveredOrders}
@@ -377,12 +379,16 @@ const AdminDashboard = ({ user }) => {
 								icon={<BoxIcon className="text-3xl text-orange-600" />}
 								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 							/>
-							<StatsCard
-								title="Shiprocket Wallet Balance"
-								value={`₹${walletBalance}`}
-								icon={<IndianRupee strokeWidth={3} className="text-3xl font-bold text-green-600" />}
-								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
-							/>
+							{
+								user && user.role ==='superAdmin' && (
+									<StatsCard
+										title="Shiprocket Wallet Balance"
+										value={`₹${walletBalance}`}
+										icon={<IndianRupee strokeWidth={3} className="text-3xl font-bold text-green-600" />}
+										className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+									/>
+								)
+							}
 						</div>
 					</div>
 

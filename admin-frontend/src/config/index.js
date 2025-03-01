@@ -128,14 +128,14 @@ export const adminSideBarMenu = [
     {
         id: 'products',
         label: 'Products',
-        accessRole:['superAdmin'],
+        accessRole:['superAdmin','admin'],
         path: '/admin/products',
         
     },
     {
         id: 'customers',
         label: 'Customers',
-        accessRole:['superAdmin'],
+        accessRole:['superAdmin','admin'],
         path: '/admin/customers',
         
     },
@@ -156,13 +156,13 @@ export const adminSideBarMenu = [
     {
         id:'warehouse',
         label: 'Warehouse',
-        accessRole:['superAdmin'],
+        accessRole:['superAdmin','admin'],
         path: '/admin/warehouse',
     },
     {
         id: 'pages',
         label: 'Pages',
-        accessRole:['superAdmin'],
+        accessRole:['superAdmin','admin'],
         dropDownView:[
             {
                 id:'privacyPolicy',
@@ -185,7 +185,7 @@ export const adminSideBarMenu = [
             {
                 id:'contactManagement',
                 label:'Contact Us Page',
-                accessRole:['superAdmin'],
+                accessRole:['superAdmin','admin'],
                 path: 'pages/contactUsManagement',
             },
             {

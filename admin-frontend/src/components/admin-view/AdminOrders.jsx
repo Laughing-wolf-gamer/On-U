@@ -158,40 +158,40 @@ const AdminOrderLayout = () => {
 						{/* Orders List for smaller screens */}
 						<div className="sm:hidden">
 							{displayedOrders.map((order) => (
-							<div key={order?._id} className="p-4 mb-4 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
-								<div className="flex flex-col space-y-3">
-								<div className="flex justify-between">
-									<span className="font-semibold text-sm">Order Id:</span>
-									<span className="text-sm">{order?._id}</span>
+								<div key={order?._id} className="p-4 mb-4 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
+									<div className="flex flex-col space-y-3">
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Id:</span>
+										<span className="text-sm">{order?._id}</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Date:</span>
+										<span className="text-sm">{new Date(order?.createdAt).toLocaleString()}</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Status:</span>
+										<span className="text-sm">
+										<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Shipment Status:</span>
+										<span className="text-sm">
+										<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
+										</span>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order Total Amount:</span>
+										<span className="text-sm">₹ {order?.TotalAmount}</span>
+									</div>
+									<Button
+										onClick={() => handleFetchOrderDetails(order?._id)}
+										className="btn btn-primary mt-2 w-full text-sm"
+									>
+										View Details
+									</Button>
+									</div>
 								</div>
-								<div className="flex justify-between">
-									<span className="font-semibold text-sm">Order Date:</span>
-									<span className="text-sm">{new Date(order?.createdAt).toLocaleString()}</span>
-								</div>
-								<div className="flex justify-between">
-									<span className="font-semibold text-sm">Order Status:</span>
-									<span className="text-sm">
-									<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
-									</span>
-								</div>
-								<div className="flex justify-between">
-									<span className="font-semibold text-sm">Order Shipment Status:</span>
-									<span className="text-sm">
-									<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
-									</span>
-								</div>
-								<div className="flex justify-between">
-									<span className="font-semibold text-sm">Order Total Amount:</span>
-									<span className="text-sm">₹ {order?.TotalAmount}</span>
-								</div>
-								<Button
-									onClick={() => handleFetchOrderDetails(order?._id)}
-									className="btn btn-primary mt-2 w-full text-sm"
-								>
-									View Details
-								</Button>
-								</div>
-							</div>
 							))}
 						</div>
 						</CardContent>
