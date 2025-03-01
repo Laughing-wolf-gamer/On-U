@@ -1054,7 +1054,7 @@ const NewLeftSideImageContent = ({
                         {/* <ShareView/> */}
                     </div>
                 ) : (
-                    <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={110}/>
+                    <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={150}/>
                 )
             }
         </div>

@@ -1,6 +1,5 @@
 import React, { useState, useCallback } from 'react';
-import ShareView from './ShareView';
-const ImageZoom = ({ imageSrc, zoomSize = 80 }) => {
+const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
 
