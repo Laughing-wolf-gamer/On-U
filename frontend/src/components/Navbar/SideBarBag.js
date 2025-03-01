@@ -321,7 +321,7 @@ const SideBarBag = ({OnChangeing}) => {
 							{randomProducts && randomProducts.length > 0 && (
 								<ul className="grid grid-cols-1 w-full max-h-screen px-2 overflow-y-auto py-2 scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200">
 									{randomProducts.map((pro, index) => (
-										<SideBarBagProductItem pro={pro} user={user} key={index} refreshTwice = {true} />
+										<SideBarBagProductItem pro={pro} user={user} key={index} refreshTwice = {true} OnPress ={handleOnChange} />
 									))}
 								</ul>
 							)}

@@ -18,7 +18,8 @@ import {
 	updateItemCheckedInBag,
 	returnOrder,
 	exchangeOrder,
-	createOrder
+	createOrder,
+	createOrderCancel
 } from "../controller/ordercontroller.js";
 
 
@@ -29,6 +30,7 @@ route.post('/orders/create_cashFreeOrder',isAuthenticateuser,createPaymentOrder)
 route.get('/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)
 route.post('/order/returnOrder',isAuthenticateuser,returnOrder);
+route.post('/order/cancelOrder/:orderId',isAuthenticateuser,createOrderCancel);
 route.post('/order/exchangeRequest',isAuthenticateuser,exchangeOrder);
 
 

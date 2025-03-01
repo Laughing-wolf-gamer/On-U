@@ -159,12 +159,12 @@ const Footer = () => {
 							{
 								openDropdown["information"] && (
 									<ul className="text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full">
-										<p className="text-sm hover:underline text-gray-600">Owner: On-U</p>
+										<p className="text-sm hover:underline text-gray-600">Owner: On U</p>
 										<div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
 											<Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
 											<ArrowUp className="rotate-45" />
 										</div>
-										<p className="text-sm hover:underline text-gray-600">Company: On-U</p>
+										<p className="text-sm hover:underline text-gray-600">Company: On U</p>
 										<p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
 										<p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
 										<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</a>

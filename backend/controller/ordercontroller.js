@@ -11,6 +11,7 @@ import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { 
 	generateManifest, 
+	generateOrderCancel, 
 	generateOrderForShipment, 
 	generateOrderPicketUpRequest, 
 	generateOrderRetrunShipment, 
@@ -614,7 +615,7 @@ export const getallOrders = A(async (req, res) => {
         if(!req.user){
             return res.status(400).json({success:false,message:"No User Found!",result:[]});
         }
-        const orders = await OrderModel.find({userId:req.user.id});
+        const orders = await OrderModel.find({userId:req.user.id}).sort({createdAt:-1});
         
         res.status(200).json({success:true,message:"Successfully Fetched Orders",result:orders || []})
 
@@ -642,7 +643,7 @@ export const getOrderById = async (req, res, next) => {
 		try {
 			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
 			shipmenetOrder.map(shipOrder => {
-				console.log("Admin Shipment Order: ");
+				console.log("Admin Shipment Order: ",);
 				// Log each key-value pair in shipOrder
 				Object.entries(shipOrder).forEach(([key, value]) => {
 					console.log(`${key}:`, value.tracking_data);
@@ -1690,6 +1691,26 @@ export const returnOrder = async (req, res) => {
 		console.error("Error Occured during returning order ", error.message);
 		logger.error("Error occured during returning order"+ error.message);
 		res.status(500).json({success:false,message: "Internal Server Error" });
+	}
+}
+export const createOrderCancel = async(req,res)=>{
+	try {
+		const { orderId } = req.params;
+        console.log("Returning Order: ", orderId);
+		const order = await OrderModel.findById(orderId);
+		if(!order) return res.status(404).json({ success: false, message: "Order not found", result: null });
+		const cancelRequest = await generateOrderCancel(order.order_id);
+		console.log("Cancel Request Success: ", cancelRequest);
+		if(!cancelRequest) {
+            return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
+        }
+		order.IsCancelled = cancelRequest;
+		await order.save();
+		res.status(200).json({ success: true, message: "Order Canceled successfully"});
+	} catch (error) {
+		console.error("Error occured during creating order", error);
+		logger.error(`Error occured during creating order ${error.message}`);
+		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }
 export const exchangeOrder = async(req, res) => {

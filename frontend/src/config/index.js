@@ -177,7 +177,7 @@ export const extractSpecificWord = (inputString) => {
     if(inputString == null){
         return "-"
     }
-    // Regular expression to match uppercase words or phrases like "ON-U"
+    // Regular expression to match uppercase words or phrases like "ON U"
     const regex = /\b[A-Z]+(?:-[A-Z]+)*\b/g;
   
     // Find matches

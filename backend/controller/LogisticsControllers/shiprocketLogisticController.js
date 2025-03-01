@@ -409,7 +409,22 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
     }
 };
 
+export const generateOrderCancel = async(orderId)=>{
+	if (!token) await getAuthToken();
+	try {
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/cancel`, {ids: [orderId]}, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
 
+        console.log("Cancel Order Response: ", response.data);
+        return response.data?.status_code === 200 ? true : false;
+    } catch (error) {
+        console.error("Error cancelling order:", error?.response?.data || error.message);
+        return false;
+    }
+}
 export const generateOrderRetrunShipment = async (shipmentData, userId) => {
     if (!token) await getAuthToken();
 

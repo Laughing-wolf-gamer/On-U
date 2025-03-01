@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { fetchOrderById, sendExchangeRequest, sendOrderReturn } from '../../../action/orderaction';
+import { fetchOrderById, sendExchangeRequest, sendOrderCancel, sendOrderReturn } from '../../../action/orderaction';
 import DeliveryStatus from './DeliveryStatus';
 import Loader from '../../Loader/Loader';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../../config';
@@ -103,6 +103,17 @@ const OrderDetailsPage = ({ user }) => {
             checkAndCreateToast('error', 'Order is already in return process');
         }
     }
+	const createCancelOrder = async(e)=>{
+		if(!orderbyid?.IsCancelled){
+			await dispatch(sendOrderCancel({ orderId: orderbyid._id }));
+            await dispatch(fetchOrderById(id));
+            if (orderbyid?.IsCancelled) {
+                checkAndCreateToast("success", 'Order Cancelled Successfully');
+            } else {
+                checkAndCreateToast("success", 'Order Refunded Successfully');
+            }
+		}
+	}
 
     const createOrderExchange = async (e) => {
         if (!orderbyid?.IsInExcnage) {
@@ -174,7 +185,7 @@ const OrderDetailsPage = ({ user }) => {
                             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                                 <div className="space-y-2">
                                     <h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
-                                    <p>{orderbyid?.status}</p>
+									<p>{orderbyid?.status}</p>
                                 </div>
                                 <div className="space-y-2">
                                     <h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
@@ -202,13 +213,24 @@ const OrderDetailsPage = ({ user }) => {
                                 </div>
                             </div>
                             <div className="space-y-2">
-                                <button
-                                    disabled={!orderbyid || orderbyid?.IsReturning}
-                                    onClick={createOrderReturn}
-                                    className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
-                                >
-                                    {orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
-                                </button>
+								{
+									orderbyid?.status === 'Delivered' ? (<button
+										disabled={!orderbyid || orderbyid?.IsReturning}
+										onClick={createOrderReturn}
+										className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
+									>
+										{orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
+									</button>):(
+										<button
+											disabled={!orderbyid || orderbyid?.IsCancelled}
+											onClick={createCancelOrder}
+											className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
+										>
+											{orderbyid?.IsCancelled ? "Cancel Request in Process" : "Request Cancel Order"}
+										</button>
+									)
+								}
+                                
                             </div>
                         </div>
                     </div>

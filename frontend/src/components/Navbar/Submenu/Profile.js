@@ -25,7 +25,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
         <div>
             
             {transitions((styles, item) => item && <animated.div style={styles}>
-                <div className={`container font-kumbsan absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[480px] ${CMenu}  Mmenu bg-gray-100 text-gray-900 cursor-pointer`}
+                <div className={`container font-kumbsan absolute  top-14 right-10  z-10 font1 max-w-[25%] w-[25%] h-[340px] ${CMenu}  Mmenu bg-gray-100 text-gray-900 cursor-pointer`}
                     onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
                 >
                     <div className='px-8 py-8 '>
@@ -50,27 +50,19 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
                                 </Link>
             
                             }
-                        
-                        
                             <hr className='my-4' />
-                            <Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Bag</Link>
-                                <h1 className='litext list-none py-0.5  hover:font-semibold'>Gift Cards</h1>
-                            <Link to="/contact">
-                                <h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
-                            </Link>
-                            <div className='flex'>
-                                <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Insider </h1><div className='bg-gray-700 flex w-max h-max ml-2 mt-2 float-left px-1 text-xs skewnew text-white'>New</div>
-                            </div>
-                        
-
-                            <hr className='my-4' />
-                            <h1 className='litext list-none py-0.5  hover:font-semibold'>ONU Credit</h1>
-                            <h1 className='litext list-none py-0.5  hover:font-semibold'>Coupons</h1>
-                            <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Cards</h1>
-                            <Link to={`dashboard`}>
-                                <h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
-                            </Link>
-                            <br />
+                            	<Link to='/bag' className='litext list-none py-0.5  hover:font-semibold'>Bag</Link>
+								<Link to={`dashboard`} className='litext list-none py-0.5  hover:font-semibold'>
+									<h1>Order & Returns</h1>
+								</Link>
+								<Link to="/contact">
+								<h1 className='litext list-none py-0.5  hover:font-semibold'>Contact Us</h1>
+								</Link>
+								<Link to={`dashboard`}>
+									<h1 className='litext list-none py-0.5  hover:font-semibold'>Saved Addresses</h1>
+								</Link>
+								<hr className='my-4' />
+								<br />
 
                             {
                             user ? 

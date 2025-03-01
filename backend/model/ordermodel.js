@@ -34,6 +34,7 @@ const ordersSchema = new mongoose.Schema({
 	PicketUpData:{type:Object,default:null},
 	IsReturning:{type:Boolean,default:false},
 	IsInExcnage:{type:Boolean,default:false},
+	IsCancelled:{type:Boolean,default:false},
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

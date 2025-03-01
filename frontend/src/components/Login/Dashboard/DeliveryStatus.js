@@ -24,7 +24,7 @@ const DeliveryStatus = ({ status }) => {
                 {/* Progress bar connector for horizontal view (larger screens) */}
                 <div className="absolute hidden sm:block top-1/2 my-auto left-0 right-0 h-1 bg-gray-300 z-10">
                     <div
-                        className={`absolute top-1/2 transform -translate-y-1/2 h-1 bg-black`}
+                        className={`absolute top-1/2 transform -translate-y-1/2 h-1 bg-[#32A76B]`}
                         style={{
                             width: `${progress}%`, // Fill the bar to the current step
                         }}
@@ -49,7 +49,7 @@ const DeliveryStatus = ({ status }) => {
                             <div
                                 className={`w-7 h-7 rounded-full font-bold mx-auto mb-3 flex items-center justify-center transition-colors duration-300 ${
                                     index <= currentStepIndex
-                                        ? "bg-black text-white"
+                                        ? "bg-[#32A76B] text-white"
                                         : "bg-gray-300 text-gray-600"
                                 }`}
                             >
@@ -63,7 +63,7 @@ const DeliveryStatus = ({ status }) => {
                             <p
                                 className={`text-sm font-bold text-center flex-wrap ${
                                     index <= currentStepIndex
-                                        ? "text-black"
+                                        ? "text-[#32A76B]"
                                         : "text-gray-500"
                                 }`}
                             >

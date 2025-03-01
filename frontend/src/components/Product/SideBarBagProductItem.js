@@ -3,7 +3,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 
-const SideBarBagProductItem = memo(({pro , user,refreshTwice = false}) => {
+const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) => {
     const { updateRecentlyViewProducts } = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -38,6 +38,9 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false}) => {
 		if(refreshTwice){
             // window.location.reload();
         }
+		if(OnPress){
+			OnPress();
+		}
     };
 
     const renderPrice = () => (

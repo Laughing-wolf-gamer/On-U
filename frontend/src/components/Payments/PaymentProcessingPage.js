@@ -505,7 +505,7 @@ const SwipeToConfirmPaymentButton = ({ disabled = false, OnSwipeComplete, HasSta
 				onTouchEnd={handleEnd}
 				onMouseLeave={handleEnd}
 				onTouchCancel={handleEnd}
-				className={`w-full text-white p-4 rounded-md mt-6 bg-black hover:bg-gray-800 flex justify-center items-center relative disabled:bg-gray-700 overflow-hidden transition-all duration-300 ease-out`}
+				className={`w-full text-white p-4 rounded-md mt-6  ${HasStarted ? "bg-[#32A76B]":"bg-black hover:bg-gray-800 disabled:bg-gray-700"} flex justify-center items-center relative  overflow-hidden transition-all duration-300 ease-out`}
 				style={{
 					cursor: isSwiping ? "grabbing" : "grab", // Change cursor when swiping
 					

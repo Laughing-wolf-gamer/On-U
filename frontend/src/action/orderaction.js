@@ -284,6 +284,16 @@ export const sendOrderReturn = ({orderId}) => async () => {
 		return false;
 	}
 }
+export const sendOrderCancel = ({orderId}) => async () => {
+	try {
+        const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/cancelOrder/${orderId}`,{}, headerConfig());
+        console.log("Cancel Order: ",data);
+        return data?.success;
+    } catch (error) {
+        console.error("Error Creating Order Cancellation: ",error);
+        return false;
+    }
+}
 export const sendExchangeRequest = ({orderId}) => async () => {
 	try {
         const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/exchangeRequest`,{orderId}, headerConfig());
