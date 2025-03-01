@@ -15,6 +15,9 @@ export const LocalStorageContextProvider = ({ children }) => {
 		const keywoards = getSearchKeywoards('keywoards') || [];
 		if(newKeyWoard.trim() && !keywoards.includes(newKeyWoard)) {
 			keywoards.push(newKeyWoard);
+			if (keywoards.length > 10) {
+				keywoards.shift();  // Removes the first item from the array (oldest keyword)
+			}
             localStorage.setItem('keywoards', JSON.stringify(keywoards));
 		}
 		setKeyWoards(JSON.parse(localStorage.getItem('keywoards')) || []);
