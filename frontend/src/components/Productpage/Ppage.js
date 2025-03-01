@@ -658,15 +658,6 @@ const Ppage = () => {
                                         </div>
                                     </div>
 									<div className="w-full flex flex-col space-y-3 mt-4 text-sm">
-										{/* {
-											product && product?.delivaryPoints && product?.delivaryPoints.length > 0 && product?.delivaryPoints.map((point,index)=>{
-												return(
-													<div key={`point_${index}`} className="w-full flex flex-row items-center space-x-2 text-left justify-start">
-														<h1 className="text-gray-500">{point}</h1>
-													</div>
-												)
-											})
-										} */}
 										<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
 											<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
 												<h1 className="text-gray-500"><Clock /></h1>

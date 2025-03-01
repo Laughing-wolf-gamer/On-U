@@ -1,10 +1,10 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import g1 from "../images/googleplay.png";
 import g2 from "../images/appleplay.png";
 import { AiFillFacebook, AiFillYoutube } from "react-icons/ai";
 import { ImTwitter, ImInstagram } from "react-icons/im";
 import { Link, useNavigate } from "react-router-dom";
-import { ArrowUp, ChevronUp, Navigation } from "lucide-react";
+import { ArrowUp, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTermsAndCondition } from "../../action/common.action";
 import { fetchAllOptions } from "../../action/productaction";
@@ -138,14 +138,14 @@ const Footer = () => {
 						</div>
                     {/* Online Shopping */}
                     <div className="md:border-r hidden sm:block lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
-                        <h1 className="text-lg font-bold mb-4 text-gray-800">ON-U</h1>
+                        <h1 className="text-lg font-bold mb-4 text-gray-800">ON U</h1>
                         <ul className="text-sm space-y-4 mt-3">
-							<p className="text-sm hover:underline text-gray-600">Owner: On-U</p>
+							<p className="text-sm hover:underline text-gray-600">Owner: On U</p>
 							<div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
 								<Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
 								<ArrowUp className="rotate-45" />
 							</div>
-							<p className="text-sm hover:underline text-gray-600">Company: On-U</p>
+							<p className="text-sm hover:underline text-gray-600">Company: On U</p>
 							<p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
 							<p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
 							<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</a>

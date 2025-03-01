@@ -92,6 +92,7 @@ const WarehouseAdmin = () => {
         dispatch(fetchAllWareHouses());
     },[dispatch])
     useEffect(()=>{
+		console.log("Warehouse to edit",Warehouses)
         if(Warehouses){
             setCountries(Warehouses.map((warehouse) => warehouse.country))
             setStates(Warehouses.map((warehouse) => warehouse.state))
@@ -105,7 +106,7 @@ const WarehouseAdmin = () => {
     },[Warehouses])
 
     // Filter and sort warehouses
-    console.log("states: ",states)
+    console.log("states: ",Warehouses)
 	
     return (
         <div className="w-full mx-auto p-6 bg-white shadow-lg rounded-lg">

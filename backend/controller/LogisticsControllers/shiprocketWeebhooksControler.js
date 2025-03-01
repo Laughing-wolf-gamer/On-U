@@ -2,7 +2,7 @@ import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
 import logger from "../../utilis/loggerUtils.js";
-import { addNewPicketUpLocation, checkShipmentAvailability, getAuthToken } from "./shiprocketLogisticController.js";
+import { addNewPicketUpLocation, checkShipmentAvailability, fetchAllPickupLocation, getAuthToken } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
     try {
@@ -44,7 +44,7 @@ export const createNewWareHouse = async(req,res)=>{
 			vendor_name,
 			gstin,
 		} = req.body;
-        console.log("Warehouse: ",req.body);
+        /* console.log("Warehouse: ",req.body);
         if(_id){
             const updateFields = {};
             if(pickup_location) updateFields.pickup_location = pickup_location;
@@ -95,8 +95,8 @@ export const createNewWareHouse = async(req,res)=>{
             console.error("Error creating new Ware House");
             return res.status(400).json({Success:false, message: 'Error creating new Ware House'});
         }
-        await newWareHouse.save();
-		await addNewPicketUpLocation({
+        await newWareHouse.save(); */
+		const newWareHouseLocation = await addNewPicketUpLocation({
 			pickup_location,
 			name,
 			email,
@@ -115,7 +115,11 @@ export const createNewWareHouse = async(req,res)=>{
 			vendor_name,
 			gstin,
 		})
-        res.status(201).json({Success: true, message: 'New Ware House created successfully', result: newWareHouse});
+		if(!newWareHouseLocation){
+			console.error("Error creating new ShipRocket Pickup Location");
+            return res.status(400).json({Success: false, message: 'Error creating new ShipRocket Pickup Location'});
+		}
+        res.status(201).json({Success: true, message: 'New Ware House created successfully'});
     } catch (error) {
         console.error("Error Creating Ware House: ",error);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
@@ -123,14 +127,16 @@ export const createNewWareHouse = async(req,res)=>{
 }
 export const fetchAllWareHouses= async (req, res) => {
     try {
-        const wareHouse = await WareHouseModel.find({});
-        if(!wareHouse){
-            return res.status(404).json({Success: false, message: 'No Ware House found'});
-        }
-        res.status(200).json({Success: true, message: 'Ware House found', result: wareHouse});
+		const allPickUpLoaction = await fetchAllPickupLocation();
+		if(!allPickUpLoaction){
+			throw new Error("Couldn't fetch all available Pickup locations");
+		}
+		console.log("All ShipRocket: Pick Up Loaction",allPickUpLoaction);
+        res.status(200).json({Success: true, message: 'Ware House found', result: allPickUpLoaction || []});
     } catch (error) {
         console.error("Error fetching Ware House: ",error);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
+		logger.error(`Error occured during fetching Ware House ${error.message}`);
+        res.status(500).json({Success: false, message: 'Internal Server Error',error:error.message});
     }
 }
 
@@ -149,6 +155,7 @@ export const fetchWareHouseById = async(req,res)=>{
         res.status(200).json({Success: true, message: 'Ware House found', result: wareHouse});
     } catch (error) {
         console.error("Error fetching Ware House: ",error);
+		logger.error(`Error occured during fetching Ware House ${error.message}`);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
@@ -164,6 +171,7 @@ export const removeWareHouseById = async(req,res)=>{
         res.status(200).json({Success: true, message: 'Warehouse'});
     } catch (error) {
         console.error("Error fetching",error);
+		logger.error(`Error occured during deleting Ware House ${error.message}`);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
@@ -185,6 +193,8 @@ export const loginLogistics = async (req,res)=>{
 		res.status(200).json({Success: true, message: 'Logged in successfully', result: resposse});
     } catch (error) {
         console.error("Error getting ShipRocket auth token: ",error);
+		logger.error(`Error occured during login ${error.message}`);
+		res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }
 
@@ -226,7 +236,8 @@ export const checkAvailability = async (req,res)=>{
         }
         res.status(200).json({Success: false, message: 'Delivery not available'});
     } catch (error) {
-        console.error("Error: ", error);
+        console.error("Error occured during checking availability: ", error);
+		logger.error(`Error occured during checking availability ${error.message}`);
         res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }

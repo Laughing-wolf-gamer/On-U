@@ -105,6 +105,15 @@ export const adminRequestTryPickUp = createAsyncThunk('/admin/orders/tryPickUp',
 		return {error: error.response.data.message};
     }
 })
+export const adminRequestTryCreateManifest = createAsyncThunk('/admin/orders/tryCreateManifest',async({orderId})=>{
+	try {
+        const response = await axios.patch(`${BASE_URL}/admin/orders/tryCreateManifest/${orderId}`,{},Header());
+        return response.data;
+    } catch (error) {
+        console.error(`Error trying create manifest: `,error);
+        return {error: error.response.data.message};
+    }
+})
 
 
 
@@ -117,6 +126,7 @@ export const createNewWareHouse = createAsyncThunk('/logiscti/warehouse/createNe
         return response.data;
     } catch (error) {
         console.error(`Error creating new warehouse: `,error);
+		return {error: error.response.data.message};
     }
 })
 export const fetchAllWareHouses = createAsyncThunk('/logistic/warehouse/fetchAllWareHouses',async()=>{

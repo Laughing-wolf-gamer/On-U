@@ -24,7 +24,7 @@ const CustomSelect = ({ controlItems, setChangeData,defaultValue = ""}) => {
         setInputValue(e.target.value);
         setValue('');
         // setChangeData(e.target.value);
-        console.log("Value: ",e.target.value);
+        // console.log("Value: ",e.target.value);
     }
     const handelSetActiveValue = (e)=>{
         // setChangeData(e.target.value);
@@ -32,7 +32,7 @@ const CustomSelect = ({ controlItems, setChangeData,defaultValue = ""}) => {
         setInputValue(e);
     }
     useEffect(()=>{
-        console.log("Value: ",value,inputValue);
+        // console.log("Value: ",value,inputValue);
         setChangeData(value || inputValue)
     },[value,inputValue])
 

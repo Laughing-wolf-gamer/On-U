@@ -72,13 +72,13 @@ const AdminOrderLayout = () => {
 		dispatch(adminGetAllOrders());
 	}, [dispatch]);
 
-	const handleFetchOrderDetails = useCallback(async (orderId) => {
+	const handleFetchOrderDetails = async (orderId)=>{
 		await dispatch(adminGetUsersOrdersById(orderId));
-	}, [dispatch]);
+	};
 
 	useEffect(() => {
 		if (orderDetails) {
-		setOpenDetailsDialogue(true);
+			setOpenDetailsDialogue(true);
 		}
 	}, [orderDetails]);
 
@@ -109,103 +109,107 @@ const AdminOrderLayout = () => {
 	const isNoOrders = displayedOrders.length === 0;
 
 	return (
-		<Card className="w-full sm:w-11/12 md:w-3/4 lg:w-2/3 xl:w-full mx-auto">
-			{isLoading  && <LoadingView/>}
-			<CardHeader className="text-center p-4 relative">
-				<CardTitle className="text-2xl font-semibold mb-4">All Orders</CardTitle>
-				<div className="absolute right-3 space-x-4 flex flex-row justify-between">
-				<Button
-					onClick={() => setOpenLoginDialogue(true)}
-					variant="outline"
-					className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
-				>
-					<TruckIcon />
-					<span>Get ShipRocket API Token</span>
-				</Button>
-				{logisticsToken && (
-					<Button
-						onClick={() => {
-							navigator.clipboard.writeText(logisticsToken);
-							toast.success('Logistics Token copied to clipboard!');
-						}}
-						variant="outline"
-						className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
-					>
-					<Copy />
-						<span>{logisticsToken.slice(0, 20)}....</span>
-					</Button>
-				)}
-				</div>
-			</CardHeader>
+		<Card className="w-full">
+			{isLoading  ? <LoadingView/> :(
+				<Fragment>
+					<CardHeader className="text-center p-4 relative">
+						<CardTitle className="text-2xl font-semibold mb-4">All Orders</CardTitle>
+						<div className="absolute right-3 top-4 space-x-4 flex flex-col lg:flex-row lg:space-x-4 lg:space-y-0 space-y-2">
+							<Button
+								onClick={() => setOpenLoginDialogue(true)}
+								variant="outline"
+								className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+							>
+								<TruckIcon /><span className='md:block hidden'>Get ShipRocket API Token</span>
+							</Button>
+							{logisticsToken && (
+								<Button
+									onClick={() => {
+										navigator.clipboard.writeText(logisticsToken);
+										toast.success('Logistics Token copied to clipboard!');
+									}}
+									variant="outline"
+									className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+								>
+									<Copy />
+									<span>{logisticsToken.slice(0, 20)}....</span>
+								</Button>
+							)}
+						</div>
+					</CardHeader>
 
-			<CardContent>
-				<OrderFilter filters={filters} setFilters={setFilters} orderStatus={orderStatus} filteredOrderList = {filteredOrderList} />
 
-				
+					<CardContent>
+						<OrderFilter filters={filters} setFilters={setFilters} orderStatus={orderStatus} filteredOrderList={filteredOrderList} />
 
-				{/* No Orders Banner */}
-				{isNoOrders && (
-				<div className="text-center p-4 mb-4 border border-gray-200 rounded-lg shadow-sm bg-gray-100">
-					<span className="text-lg font-semibold text-gray-800">No Orders Available</span>
-				</div>
-				)}
+						{/* No Orders Banner */}
+						{isNoOrders && (
+							<div className="text-center p-4 mb-4 border border-gray-200 rounded-lg shadow-sm bg-gray-100">
+							<span className="text-lg font-semibold text-gray-800">No Orders Available</span>
+							</div>
+						)}
 
-				{/* Table for larger screens */}
-				<div className='hidden sm:block'>
-					{!isNoOrders && <OrderTable orders={displayedOrders} handleFetchOrderDetails={handleFetchOrderDetails} />}
-					{!isNoOrders && <OrderTableRow orders={displayedOrders} handleFetchOrderDetails={handleFetchOrderDetails} />}
-				</div>
-				<div className="sm:hidden">
-					{
-						displayedOrders.map((order) => (
+						{/* Table for larger screens */}
+						<div className="hidden sm:block">
+							{!isNoOrders && <OrderTable orders={displayedOrders} handleFetchOrderDetails={handleFetchOrderDetails} />}
+							{!isNoOrders && <OrderTableRow orders={displayedOrders} handleFetchOrderDetails={handleFetchOrderDetails} />}
+						</div>
+
+						{/* Orders List for smaller screens */}
+						<div className="sm:hidden">
+							{displayedOrders.map((order) => (
 							<div key={order?._id} className="p-4 mb-4 text-center border border-gray-200 rounded-lg shadow-sm hover:shadow-md">
 								<div className="flex flex-col space-y-3">
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Id:</span>
-										<span className="text-sm">{order?._id}</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Date:</span>
-										<span className="text-sm">{new Date(order?.createdAt).toLocaleString()}</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Status:</span>
-										<span className="text-sm">
-											<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
-										</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Shipment Status:</span>
-										<span className="text-sm">
-											<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
-										</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Total Amount:</span>
-										<span className="text-sm">₹ {order?.TotalAmount}</span>
-									</div>
-									<Button 
-										onClick={() => handleFetchOrderDetails(order?._id)} 
-										className="btn btn-primary mt-2 w-full text-sm"
-									>
-										View Details
-									</Button>
+								<div className="flex justify-between">
+									<span className="font-semibold text-sm">Order Id:</span>
+									<span className="text-sm">{order?._id}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="font-semibold text-sm">Order Date:</span>
+									<span className="text-sm">{new Date(order?.createdAt).toLocaleString()}</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="font-semibold text-sm">Order Status:</span>
+									<span className="text-sm">
+									<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
+									</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="font-semibold text-sm">Order Shipment Status:</span>
+									<span className="text-sm">
+									<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
+									</span>
+								</div>
+								<div className="flex justify-between">
+									<span className="font-semibold text-sm">Order Total Amount:</span>
+									<span className="text-sm">₹ {order?.TotalAmount}</span>
+								</div>
+								<Button
+									onClick={() => handleFetchOrderDetails(order?._id)}
+									className="btn btn-primary mt-2 w-full text-sm"
+								>
+									View Details
+								</Button>
 								</div>
 							</div>
-						))
-					}
-				</div>
-			</CardContent>
+							))}
+						</div>
+						</CardContent>
 
-			{/* Dialog for order details */}
-			<Dialog open={openDetailsDialogue} onOpenChange={() => { setOpenDetailsDialogue(false); dispatch(resetOrderDetails()); }}>
-				<AdminOrdersDetailsView order={orderDetails} user={user} />
-			</Dialog>
 
-			{/* Dialog for login */}
-			<Dialog open={openLoginDialogue} onOpenChange={() => { setOpenLoginDialogue(false); }}>
-				<LogisticsLoginView onLoginComplete={handleLoginComplete} />
-			</Dialog>
+					{/* Dialog for order details */}
+					<Dialog open={openDetailsDialogue} onOpenChange={() => { setOpenDetailsDialogue(false); dispatch(resetOrderDetails()); }}>
+						{orderDetails && (
+							<AdminOrdersDetailsView order={orderDetails} user={user} />
+						)}
+					</Dialog>
+
+					{/* Dialog for login */}
+					<Dialog open={openLoginDialogue} onOpenChange={() => { setOpenLoginDialogue(false); }}>
+						<LogisticsLoginView OnLoginComplete={handleLoginComplete} />
+					</Dialog>
+				</Fragment>
+			)}
 		</Card>
 	);
 };

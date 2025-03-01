@@ -1,13 +1,14 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { DialogContent, DialogTitle } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
-import { adminGetAllOrders, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
+import { adminGetAllOrders, adminGetUsersOrdersById, adminRequestTryCreateManifest, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
 import { capitalizeFirstLetterOfEachWord, GetBadgeColor, getStatusDescription } from '@/config'
 import { toast } from 'react-toastify'
 import { useSettingsContext } from '@/Context/SettingsContext'
+import { Button } from '../ui/button'
 
 const initialFormData = {
   status: '',
@@ -69,6 +70,15 @@ const AdminOrdersDetailsView = ({ order }) => {
 		}else{
 			checkAndCreateToast('error',"Successfully created response:");
 		}
+	}
+	const handleCreateManifest = async()=>{
+		const response = await dispatch(adminRequestTryCreateManifest({ orderId: order._id }))
+        if(response.payload?.error){
+            console.log("Manifest response: ", response);
+            checkAndCreateToast("error",response.payload?.error)
+        }else{
+            checkAndCreateToast('success',"Successfully created manifest:");
+        }
 	}
 
 	return (
@@ -132,33 +142,43 @@ const AdminOrdersDetailsView = ({ order }) => {
 				
 				<Separator />
 				
-				{/* Order Items */}
-				<div className="grid gap-4">
-					<div className="font-medium">Order Details</div>
-						<OrderItemList items={order?.orderItems} />
-					</div>
-
-					<Separator />
+			{/* Order Items */}
+			<div className="grid grid-cols-2 gap-4">
+				<div className="font-medium">Order Details</div>
+					<OrderItemList items={order?.orderItems} />
+				</div>
+				<Separator />
 					
 				{/* Shipping Information */}
-				<div className="grid gap-4">
+				<div className="grid grid-cols-2 gap-4">
 					<div className="font-medium">Shipping Info</div>
 					<ShippingInfo address={order?.address} />
 				</div>
 
 				<Separator />
-
-				{/* You can add the form section here if needed */}
-				{!order?.PicketUpData && (
-					<div className="w-full flex justify-center items-center">
-						<button
-							className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
-							onClick={() => handlePickupResponse()}
-						>
-							Request Pickup
-						</button>
-					</div>
-				)}
+				<div className='grid grid-cols-2 justify-between items-center'>
+					{/* You can add the form section here if needed */}
+					{!order?.PicketUpData && (
+						<div className="w-full flex justify-center items-center">
+							<Button
+								className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+								onClick={() => handlePickupResponse()}
+							>
+								Re-Try Pickup
+							</Button>
+						</div>
+					)}
+					{
+						!order?.manifest && <div className="w-full flex justify-center items-center">
+							<Button
+								className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+								onClick={handleCreateManifest}
+							>
+								Create Manifest
+							</Button>
+						</div>
+					}
+				</div>
 			</div>
 		</DialogContent>
 	)

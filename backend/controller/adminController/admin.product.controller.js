@@ -5,7 +5,9 @@ import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
 import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
-import { getShipmentTrackingStatus } from "../LogisticsControllers/shiprocketLogisticController.js";
+import { getShipmentOrderByOrderId, getShipmentTrackingStatus } from "../LogisticsControllers/shiprocketLogisticController.js";
+import Bag from "../../model/bag.js";
+import WhishList from "../../model/wishlist.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -682,7 +684,8 @@ export const editProduct = async (req, res) => {
 		}
 
         // Calculate and set the DiscountedPercentage field if salePrice exists
-        if (price && salePrice && salePrice > 0) {
+		
+        /* if (price && salePrice && salePrice > 0) {
             const discountAmount = price - salePrice;
             const discountPercentage = ((discountAmount / salePrice) * 100).toFixed(0);
             updateFields.DiscountedPercentage = discountPercentage;
@@ -694,8 +697,9 @@ export const editProduct = async (req, res) => {
             const discountPercentage = ((discountAmount / p) * 100).toFixed(0);
             // If no salePrice, set DiscountedPercentage to 0
             updateFields.DiscountedPercentage = discountPercentage;
-        }
-
+        } */
+		const DiscountedPercentage = price && salePrice ? calculateDiscountPercentage(price, salePrice) : 0;
+		updateFields.DiscountedPercentage = DiscountedPercentage;
         console.log("Updating Product Fields: ", updateFields);
 
         // If no fields to update, return early
@@ -855,25 +859,83 @@ export const getProductById = async (req, res) => {
 
 export const deleteProduct = async (req, res) => {
     try {
-        const{id} = req.params;
-        if(!id) return res.status(400).json({Success:false,message:"Product ID is required"});
+        const { id } = req.params;
+        if (!id) return res.status(400).json({ Success: false, message: "Product ID is required" });
+
+        // Delete the product
         const deletedProduct = await ProductModel.findByIdAndDelete(id);
-        if(!deletedProduct) return res.status(404).json({Success:false,message:"Product not found"});
-        res.status(200).json({Success: true, message: 'Product deleted successfully!', result: deletedProduct});
+        if (!deletedProduct) return res.status(404).json({ Success: false, message: "Product not found" });
+
+        // Find bags that contain the product
+        const removeProductsFromBag = await Bag.find({
+            "orderItems.productId": id
+        });
+
+        if (removeProductsFromBag.length > 0) {
+            // Create an array of bulk update operations
+            const bulkOps = removeProductsFromBag.map(bag => {
+                const updatedOrderItems = bag.orderItems.filter(item => item.productId.toString() !== id.toString());
+                return {
+                    updateOne: {
+                        filter: { _id: bag._id },
+                        update: { $set: { orderItems: updatedOrderItems } }
+                    }
+                };
+            });
+
+            // Execute all the updates in bulk
+            await Bag.bulkWrite(bulkOps);
+        }
+		const removeProductsFromWishList = await WhishList.find({
+            "orderItems.productId": id
+        });
+		if (removeProductsFromWishList.length > 0) {
+			// Create an array of bulk update operations
+            const bulkOps = removeProductsFromWishList.map(wishList => {
+                const updatedOrderItems = wishList.orderItems.filter(item => item.productId.toString() !== id.toString());
+                return {
+                    updateOne: {
+                        filter: { _id: wishList._id },
+                        update: { $set: { orderItems: updatedOrderItems } }
+                    }
+                };
+            });
+			
+            // Execute all the updates in bulk
+			await WhishList.bulkWrite(bulkOps);
+		}
+        // Return success response
+        res.status(200).json({ Success: true, message: 'Product deleted successfully!', result: deletedProduct });
+
     } catch (error) {
         console.error('Error deleting the Product', error);
-        logger.error('Error deleting the Product'+ error.message);
-        res.status(500).json({Success: false, message: 'Internal Server Error'});
+        logger.error('Error deleting the Product' + error.message);
+        res.status(500).json({ Success: false, message: 'Internal Server Error' });
     }
-}
+};
+
 
 export const getOrderById = async(req,res)=>{
     try {
         const{orderId} = req.params;
         const order = await OrderModel.findById(orderId);
         if(!order){
-            return res.status(200).json({Success:true,message:"NO Orders Found Yet",order:{}})
+            return res.status(200).json({Success:true,message:"No Orders Found Yet",order:{}})
         }
+		try {
+			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
+			// console.log("Admin Checking Shipment Order: ",)
+			shipmenetOrder.map(shipOrder => {
+				console.log("Admin Shipment Order: ");
+				// Log each key-value pair in shipOrder
+				Object.entries(shipOrder).forEach(([key, value]) => {
+					console.log(`${key}:`, value.tracking_data);
+				});
+			});
+		} catch (error) {
+			console.error("Error while getting shipment Status Shiprocket: ",error);
+		}
+
         res.status(200).json({Success:true,message:'Fetched All Orders',result:order})
     } catch (error) {
         console.error("Error getting orders by Id: ",error);
@@ -927,7 +989,7 @@ export const getallOrders = async (req, res) => {
 				scans:status?.shipment_track,
 			};
         }));
-		console.log("order Status Updated: ", orderStatus);
+		// console.log("order Status Updated: ", orderStatus);
 
         // Send the updated orders with current status
         res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] });

@@ -9,8 +9,7 @@ import WebSiteModel from '../model/websiteData.model.js'
 import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
-import { getOriginalAmount } from '../utilis/basicUtils.js'
-import { generateOrderForShipment, generateOrderPicketUpRequest, generateOrderRetrunShipment } from './LogisticsControllers/shiprocketLogisticController.js'
+import { generateInvoice, generateManifest, generateOrderForShipment, generateOrderPicketUpRequest, generateOrderRetrunShipment, getShipmentOrderByOrderId } from './LogisticsControllers/shiprocketLogisticController.js'
 export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -247,7 +246,7 @@ export const verifyPayment = async (req, res) => {
 } */
 
 // Main create order function
-export const createOrder = async (req, res) => {
+/* export const createOrder = async (req, res) => {
     // Helper function to generate random order ID
     const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
     
@@ -365,6 +364,130 @@ export const createOrder = async (req, res) => {
             res.status(500).json({ success: false, message: "Internal server error" });
         }
     }
+}; */
+export const createOrder = async (req, res) => {
+    // Helper function to generate random order ID
+    const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+    
+    // Helper function to remove products
+    const removeProducts = async (products) => {
+        const removingPromises = products.map(async (item) => {
+            try {
+                await removeProduct(item.productId?._id, item?.color?.label, item?.size, item?.quantity);
+            } catch (error) {
+                console.error(`Error removing product: ${item?.productId?._id}`, error);
+            }
+        });
+        await Promise.all(removingPromises);
+    };
+    
+    // Helper function to update the bag after the order is created
+    const updateBagAfterOrder = async (bagId, orderItems) => {
+        const activeBag = await Bag.findById(bagId);
+        if (activeBag) {
+            orderItems.forEach((item) => {
+                const findIndex = activeBag.orderItems.findIndex((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+                if (findIndex !== -1) {
+                    activeBag.orderItems.splice(findIndex, 1);
+                }
+            });
+            if (activeBag.orderItems.length <= 0) {
+                await Bag.findByIdAndDelete(bagId);
+            } else {
+                await activeBag.save();
+            }
+        }
+    };
+
+    try {
+        // Validate user
+        if (!req.user) {
+            return res.status(400).json({ success: false, message: "No User Found" });
+        }
+
+        // Destructure and validate the required fields from the body
+        const { orderItems, Address, bagId, TotalAmount, paymentMode, ConvenienceFees, status } = req.body;
+
+        if (!orderItems || !Address || !bagId || !TotalAmount || !paymentMode || !status) {
+            return res.status(400).json({ success: false, message: "Please Provide All the Data" });
+        }
+
+        // Filter checked products
+        const processingProducts = orderItems.filter((item) => item?.isChecked);
+
+        if (!processingProducts || processingProducts.length <= 0) {
+            return res.status(400).json({ success: false, message: "Please select at least one product" });
+        }
+
+        // Convenience Fees and random IDs generation
+        const alreadyPresentConvenienceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+        const randomOrderShipRocketId = generateRandomId();
+        const randomShipmentId = generateRandomId();
+
+        // Create shipment order
+        const createdShipRocketOrder = await generateOrderForShipment(req.user.id, {
+            order_id: randomOrderShipRocketId,
+            userId: req.user.id,
+            ConveenianceFees: alreadyPresentConvenienceFees?.ConvenienceFees || ConvenienceFees || 0,
+            orderItems: processingProducts,
+            address: Address,
+            TotalAmount,
+            paymentMode,
+            pincode: Address.pincode,
+            status: 'Confirmed',
+        }, randomOrderShipRocketId, randomShipmentId);
+
+        const { shipmentCreatedResponseData, bestCourior, manifest, warehouse_name, PickupData } = createdShipRocketOrder;
+
+        // Create order entry in the database
+        const orderData = new OrderModel({
+            order_id: shipmentCreatedResponseData.order_id,
+            userId: req.user.id,
+            picketUpLoactionWareHouseName: warehouse_name || null,
+            shipment_id: shipmentCreatedResponseData.shipment_id,
+            channel_id: '6217390',
+            ConveenianceFees: alreadyPresentConvenienceFees?.ConvenienceFees || ConvenienceFees || 0,
+            orderItems: processingProducts,
+            address: Address,
+            TotalAmount,
+            paymentMode,
+            status: 'Confirmed',
+            PicketUpData: PickupData,
+            BestCourior: bestCourior,
+            ShipmentCreatedResponseData: shipmentCreatedResponseData,
+            manifest: manifest,
+        });
+
+        // Save the order data
+        await orderData.save();
+
+        // Prepare email sending promises
+        const emailPromises = [];
+
+        // Send invoice if available
+        if (manifest?.is_invoice_created) {
+            emailPromises.push(sendMainifestMail(req.user.id, manifest?.invoice_url));
+        }
+
+        // Send order confirmation email
+        emailPromises.push(sendOrderPlacedMail(req.user.id, orderData));
+
+        // Send emails in parallel
+        await Promise.all(emailPromises);
+
+        // Remove product quantities and handle bag updates sequentially
+        await removeProducts(processingProducts);
+        await updateBagAfterOrder(bagId, processingProducts);
+
+        // Respond with success message
+        res.status(200).json({ success: true, message: "Order Created Successfully", result: orderData });
+
+    } catch (error) {
+        console.error("Error creating Order:", error);
+        if (!res.headersSent) {
+            res.status(500).json({ success: false, message: "Internal server error" });
+        }
+    }
 };
 
 
@@ -472,7 +595,7 @@ const removeProduct = async(productId,color,size,quantity) => {
         product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
         // Save the updated product
         await product.save();
-        console.log("Product Updated:", product);
+        // console.log("Product Updated:", product);
 
         // Respond with success
         // res.status(200).json({ success: true, message: "Product removed successfully" });
@@ -511,6 +634,20 @@ export const getOrderById = async (req, res, next) => {
         if(order.userId.toString() !== req.user.id){
             return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
         }
+		try {
+			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
+			shipmenetOrder.map(shipOrder => {
+				console.log("Admin Shipment Order: ");
+				// Log each key-value pair in shipOrder
+				Object.entries(shipOrder).forEach(([key, value]) => {
+					console.log(`${key}:`, value.tracking_data);
+				});
+			});
+			
+		} catch (error) {
+			console.error("Error Getting Shipment Status: ", error);
+		}
+		
         res.status(200).json({success:true,message:"Found Order",result:order});
         
     } catch (error) {
@@ -1413,7 +1550,7 @@ export const updateqtybag = async (req, res, next) => {
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
-        console.log("Update Bag Qunatity New Data ",bag.TotalBagAmount);
+        console.log("Update Bag Qunatity  Data ",bag.TotalBagAmount);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
         if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
         if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
@@ -1542,10 +1679,10 @@ export const exchangeOrder = async(req, res) => {
 }
 
 
-export const tryCreatePickupReqponse = async(req,res)=>{
+export const tryCreatePickupResponse = async(req,res)=>{
 	try {
 		const {BestCourior,ShipmentCreatedResponseData} = req.body;
-		// console.log("PickeUp Rqquest Data: ",req.body);
+		// console.log("PickeUp Request Data: ",req.body);
 		const pickupRequest = await generateOrderPicketUpRequest(ShipmentCreatedResponseData,BestCourior);
 		console.log("Created Pickup Request: ", pickupRequest);
 		if(!pickupRequest){
@@ -1556,6 +1693,26 @@ export const tryCreatePickupReqponse = async(req,res)=>{
 	} catch (error) {
 		console.error("Error occured during creating pickup request", error);
 		logger.error("Error occured during creating pickup request", error.message);
+		res.status(500).json({ success: false, message: "Internal Server Error" });
+	}
+}
+export const createAndSendOrderManifest = async (req, res) => {
+	try {
+		const{orderId} = req.params;
+		const order = await OrderModel.findById(orderId);
+		if(!order) return res.status(404).json({ success: false, message: "Order not found" });
+		console.log("Order Found! : ", order.shipment_id);
+		const manifest = await generateManifest({shipment_id:order.shipment_id});
+		console.log("Manifest: ", manifest);
+		/* if (manifest?.is_invoice_created) {
+            await sendMainifestMail(req.user.id, manifest?.invoice_url);
+			// console.log("Manifest: ", manifest);
+			return res.status(200).json({success: true, message:"Order Manifest created successfully"});
+        } */
+		res.status(200).json({ success: false, message: "Failed to create order manifest" });
+	} catch (error) {
+		console.error(`Error creating order manifest: `, error);
+		logger.error(`Error creating order manifest: ${error.message}`);
 		res.status(500).json({ success: false, message: "Internal Server Error" });
 	}
 }

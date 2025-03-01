@@ -39,7 +39,7 @@ const FAQ = () => {
 						Frequently Asked Questions
 					</h1>
 					<p className="mt-4 text-lg text-gray-600">
-						Find answers to some of the most common questions about shopping on ON-U.
+						Find answers to some of the most common questions about shopping on ON U.
 					</p>
 				</header>
 

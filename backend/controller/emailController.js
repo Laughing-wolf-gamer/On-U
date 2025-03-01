@@ -53,7 +53,7 @@ export const sendCouponMail = async (fullName, toEmail, couponCode) => {
             <p><em>Hurry, it’s valid for a limited time! Don’t miss out on this special offer.</em></p>
             <p>Thank you for being a valued customer. We appreciate your support!</p>
             <p>Best regards,</p>
-            <p>Your ON-U Team</p>
+            <p>Your On U Team</p>
         `
     };
 
@@ -123,7 +123,7 @@ export const sendUpdateOrderStatus = async(userId, orderData) => {
             Thank you for shopping with us! We will notify you of any further updates.
 
             Best regards,
-            On-U
+            On U
         `;
 
         // Set up the email options
@@ -166,7 +166,7 @@ export const sendMainifestMail = async (userId,manifestLink) => {
         message += `
             Thank you for shopping with us! We will notify you of any further updates.
             Best regards,
-            On-U
+            On U
         `;
 
         // Set up the email options
@@ -231,7 +231,7 @@ export const sendOrderPlacedMail = async (userId,orderData)=>{
             Thank you for shopping with us!
 
             Best regards,
-            On-U
+            On U
         `;
         const mailOptions = {
             from: process.env.ADMIN_EMAIL,

@@ -7,7 +7,6 @@ import SizeSelector from '../admin-view/SizeSelector';
 import BulletPointsForm from '../admin-view/BulletPointsForm';
 import CustomSelect from '../admin-view/CustomSelect';
 import TextInputArrayCustom from '../admin-view/TextInputArrayCustom';
-import AllColorsWithImages from '../admin-view/AllColorsWithImages';
 
 const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonText, isBtnValid }) => {
     // Function to render form controls based on their type
@@ -63,20 +62,13 @@ const CommonForm = ({ formControls, formData, setFormData, handleSubmit, buttonT
 				setFormData({...formData,[controlItems.name]:e})
 			}}
 		/>
-		/* case 'allcolorSelect':
-			return <AllColorsWithImages
-				OnChange={(changedFiles)=>{
-					console.log("Changed Files: ",changedFiles)
-				}}
-			/>
-		break; */
         case 'sizeSelect':
             return (
                 <SizeSelector
                     sizeType={controlItems?.name}
                     sizeOptions={controlItems.options}
                     OnChange={(e) => {
-						console.log("All Sizes: ",e);
+						// console.log("All Sizes: ",e);
                         setFormData({ ...formData, ['size']: e });
                     }}
                 />

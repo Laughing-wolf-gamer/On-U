@@ -23,7 +23,7 @@ const Header = ({user}) => {
     const navigation = useNavigate();
     return (
         <div className="w-full bg-white p-6 flex justify-between items-center shadow-lg rounded-md">
-			<h1 className="text-3xl font-semibold text-gray-800">On-U Dashboard</h1>
+			<h1 className="text-3xl font-semibold text-gray-800">On U Dashboard</h1>
 			<button onClick={() => navigation('/admin/profile')} className="flex justify-between items-center space-x-6">
 				<img
 					src={user?.profilePic}

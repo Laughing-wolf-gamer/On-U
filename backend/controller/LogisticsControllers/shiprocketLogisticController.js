@@ -105,10 +105,30 @@ export const generateOrderPicketUpRequest =async(orderData,bestCourior)=>{
 	}
 }
 
-export const generateManifest = async (orderData) => {
+export const generateInvoice = async (orderData) => {
+	if (!token) await getAuthToken();
 	try {
+		console.log("Generating order Invoice:", orderData)
 		const{order_id} = orderData;
 		const response = await axios.post(`${SHIPROCKET_API_URL}/orders/print/invoice`, {ids:[order_id]},{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+		console.log("Invoice: ",response.data);
+		return response.data;
+	} catch (error) {
+		console.error("Error generating Invoice:", error?.response?.data);
+		return null;
+	}
+}
+export const generateManifest = async (orderData) => {
+	if (!token) await getAuthToken();
+	try {
+
+		const{shipment_id} = orderData;
+		console.log("Generating order Manifest:", shipment_id)
+		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/label`, {shipment_id:[shipment_id]},{
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -116,8 +136,25 @@ export const generateManifest = async (orderData) => {
 		console.log("Manifest: ",response.data);
 		return response.data;
 	} catch (error) {
-		console.error("Error generating manifest:", error);
+		console.error("Error generating manifest:", error?.response?.data);
+		return null;
 	}
+}
+export const fetchAllPickupLocation =async()=>{
+	if (!token) await getAuthToken();
+    try {
+        console.log("Fetching all pickup locations");
+        const response = await axios.get(`${SHIPROCKET_API_URL}/settings/company/pickup`,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        console.log("All pickup locations: ",response.data);
+        return response?.data?.data?.shipping_address || [];
+    } catch (error) {
+        console.error('Error fetching all pickup locations:', error?.response?.data);
+        return null;
+    }
 }
 // Helper function to format date
 const formatDate = (date) => {
@@ -230,10 +267,8 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 			onboarding_completed_now:response?.data?.onboarding_completed_now,
 			courier_company_id:bestCourior?.courier_company_id
 		},bestCourior);
-        console.log("createPicketUpResponse: ", createPicketUpResponse);
-		const manifest = await generateManifest(response.data);
-		// console.log("Manifest: ", manifest);
-
+        // console.log("createPicketUpResponse: ", createPicketUpResponse);
+		const manifest = await generateInvoice(response.data);
         return {shipmentCreatedResponseData:response.data,bestCourior,manifest,warehouse_name:primaryLocation,PickupData:createPicketUpResponse};
 
     } catch (error) {
@@ -329,8 +364,8 @@ export const generateOrderRetrunShipment = async (shipmentData,userId) => {
         const orderDetails = {
             order_id: shipmentData.order_id,
             order_date: formatDate(shipmentData.createdAt),
-			reseller_name: "On-U",
-			company_name: "On-U",
+			reseller_name: "On U",
+			company_name: "On U",
 			channel_id:'6282866',
 			category:"Clothes",
 			pickup_isd_code: "+91",
@@ -493,8 +528,8 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
         const orderDetails = {
             order_id: shipmentData.order_id,
             order_date: formatDate(shipmentData.createdAt),
-			reseller_name: "On-U",
-			company_name: "On-U",
+			reseller_name: "On U",
+			company_name: "On U",
 			channel_id:'6282866',
 			category:"Clothes",
 			pickup_isd_code: "+91",
@@ -559,10 +594,18 @@ export const getAllShipRocketOrder = async()=>{
 }
 
 export const getShipmentOrderByOrderId = async(orderId)=>{
+	if(!token) await getAuthToken();
     try {
-        
+		const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track?order_id=${orderId}&channel_id=6282866`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+		console.log("Shipment order Tracking: ",res.data);
+        return res.data;
     } catch (error) {
-        console.dir(error, { depth: null});
+		console.error("Error getting Shipment Order by ID: ",error?.response?.data);
+		return null;
     }
 }
 export const getPickUpLocation = async()=>{
@@ -576,7 +619,8 @@ export const getPickUpLocation = async()=>{
 		
 		return res?.data?.data?.shipping_address;
 	} catch (error) {
-		console.dir(error, { depth: null});
+		// console.dir(error, { depth: null});
+		console.error("Error getting PickeUp Location: ",error?.response?.data);
 	}
 }
 export const addNewPicketUpLocation = async(locationData)=>{
@@ -589,8 +633,10 @@ export const addNewPicketUpLocation = async(locationData)=>{
         });
         
         console.log("Created PickeUp Location Response: ",res?.data);
+		return res?.data?.success;
     } catch (error) {
-        console.dir(error, { depth: null});
+        // console.dir(error, { depth: null});
+		console.error("Error adding new PickeUp Location: ",error?.response?.data);
     }
 }
 

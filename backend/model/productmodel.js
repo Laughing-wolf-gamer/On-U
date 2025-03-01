@@ -16,12 +16,12 @@ const productModelSchema = new mongoose.Schema({
     shortTitle:String,
     brand:{
         type:String,
-        default:'On-U'
+        default:'On U'
     },
     gst:Number,
     salePrice:{
         type:Number,
-        default:-1
+        default:0
     },
     price:{
         type:Number,
@@ -69,13 +69,9 @@ const productModelSchema = new mongoose.Schema({
     category:{
         type:String
     },
-    style_no:{
-        type:String,default:'1'
-    },
     subCategory:{
         type:String,
     },
-	delivaryPoints:[{type:String,default:[]}],
     specialCategory:{type:String},
     totalStock:{type: Number},
     Rating:[

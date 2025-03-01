@@ -1,7 +1,6 @@
 import express from 'express';
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
 import { 
-    createorder, 
     createwishlist, 
     getwishlist, 
     addItemsToBag, 
@@ -12,20 +11,20 @@ import {
     getOrderById, 
     getallOrders, 
     createPaymentOrder, 
-    verifyPayment, 
     applyCouponToBag, 
     removeCouponToBag, 
     addItemsArrayToBag, 
     addItemsArrayToWishList, 
 	updateItemCheckedInBag,
 	returnOrder,
-	exchangeOrder
+	exchangeOrder,
+	createOrder
 } from "../controller/ordercontroller.js";
 
 
 const route = express.Router();
 
-route.post('/create_order',isAuthenticateuser, createorder)
+route.post('/create_order',isAuthenticateuser, createOrder)
 route.post('/orders/create_cashFreeOrder',isAuthenticateuser,createPaymentOrder)
 route.get('/get_order/:orderId',isAuthenticateuser, getOrderById)
 route.get('/orders/all',isAuthenticateuser,getallOrders)

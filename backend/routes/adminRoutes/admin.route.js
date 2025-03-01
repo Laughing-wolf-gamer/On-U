@@ -5,7 +5,7 @@ import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import { GetWalletBalance } from '../../controller/LogisticsControllers/shiprocketLogisticController.js';
-import { tryCreatePickupReqponse } from '../../controller/ordercontroller.js';
+import { createAndSendOrderManifest, tryCreatePickupResponse } from '../../controller/ordercontroller.js';
 
 const route = express.Router();
 route.post('/auth/register',registerNewAdmin)
@@ -30,7 +30,8 @@ route.delete('/product/del/:id',ProtectAdminRoute,deleteProduct);
 route.get('/orders/getAllOrders',isAuthenticateuser,ProtectAdminRoute,getallOrders);
 route.get('/orders/:orderId',isAuthenticateuser,ProtectAdminRoute,getOrderById)
 route.put('/orders/updateOrderStatus/:orderId',isAuthenticateuser,ProtectAdminRoute,updateOrderStatus);
-route.post('/orders/tryPickUp',isAuthenticateuser,ProtectAdminRoute,tryCreatePickupReqponse);
+route.post('/orders/tryPickUp',isAuthenticateuser,ProtectAdminRoute,tryCreatePickupResponse);
+route.patch('/orders/tryCreateManifest/:orderId',isAuthenticateuser,ProtectAdminRoute,createAndSendOrderManifest);
 
 route.get('/stats/getRecentOrders',isAuthenticateuser,ProtectAdminRoute,getRecentOrders);
 route.get('/stats/getTopSellingProducts',isAuthenticateuser,ProtectAdminRoute,getTopSellingProducts);

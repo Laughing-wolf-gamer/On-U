@@ -187,7 +187,7 @@ export const createOrder = async (req, res) => {
 // Helper function for generating random order/shipment IDs
 
 // Main payment verification function
-export const paymentVerification = async (req, res) => {
+/* export const paymentVerification = async (req, res) => {
     const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
     
     // Helper function to validate the payment signature
@@ -288,13 +288,151 @@ export const paymentVerification = async (req, res) => {
 
         await orderData.save();
 
-        if (manifest?.is_invoice_created) {
+        
+        // Update product quantities concurrently
+        await updateProductQuantities(proccessingProducts);
+
+        // Handle bag deletion after order creation
+        const activeBag = await Bag.findById(bagId);
+        if (activeBag) {
+            proccessingProducts.forEach((item) => {
+                const findIndex = activeBag.orderItems.findIndex((bI) => bI?.productId.toString() === item?.productId?._id.toString());
+                if (findIndex !== -1) {
+                    activeBag.orderItems.splice(findIndex, 1);
+                }
+            });
+
+            if (activeBag.orderItems.length <= 0) {
+                await Bag.findByIdAndDelete(bagId);
+            } else {
+                await activeBag.save();
+            }
+        }
+		if (manifest?.is_invoice_created) {
             try {
                 await sendMainifestMail(id, manifest?.invoice_url);
             } catch (error) {
                 console.error(`Error while sending invoice: ${error}`);
             }
         }
+
+        // Send confirmation email
+        await sendOrderPlacedMail(id, orderData);
+
+        // Respond with success
+        res.status(200).json({
+            success: true,
+            message: 'Order Created Successfully',
+            result: 'SUCCESS',
+            userId: id,
+        });
+
+    } catch (error) {
+        console.error('Payment Verification Error:', error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}; */
+export const paymentVerification = async (req, res) => {
+    const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+    
+    // Helper function to validate the payment signature
+    const isPaymentSignatureValid = (razorpay_payment_id, razorpay_order_id, razorpay_signature) => {
+        const body = `${razorpay_order_id}|${razorpay_payment_id}`;
+        const expectedSignature = crypto
+            .createHmac('sha256', process.env.RAZER_PG_SECRETE)
+            .update(body)
+            .digest('hex');
+        return expectedSignature === razorpay_signature;
+    };
+    
+    // Helper function to process product quantity updates
+    const updateProductQuantities = async (products) => {
+        const promises = products.map(async (item) => {
+            try {
+                await removeProduct(item?.productId?._id, item?.color?.label, item?.size, item?.quantity);
+            } catch (err) {
+                console.error(`Error removing product: ${item?.productId?._id}`, err);
+            }
+        });
+        await Promise.all(promises);
+    };
+    
+    // Helper function to create order in ShipRocket
+    const createShipRocketOrder = async (userId, orderDetails, randomOrderShipRocketId, randomShipmentId) => {
+        try {
+            return await generateOrderForShipment(userId, {
+                order_id: randomOrderShipRocketId,
+                ...orderDetails,
+            }, randomOrderShipRocketId, randomShipmentId);
+        } catch (error) {
+            console.error("Error while creating ShipRocket order: ", error);
+            return null;
+        }
+    };
+    
+    try {
+        const { id } = req.user;
+        const { razorpay_payment_id, razorpay_order_id, razorpay_signature, selectedAddress, orderDetails, totalAmount, bagId } = req.body;
+
+        if (!id) {
+            return res.status(401).json({ success: false, message: 'User not authenticated' });
+        }
+
+        // Validate payment signature
+        if (!isPaymentSignatureValid(razorpay_payment_id, razorpay_order_id, razorpay_signature)) {
+            return res.status(400).json({ success: false, message: 'Payment not authenticated' });
+        }
+
+        // Filter checked products
+        const proccessingProducts = orderDetails.filter((item) => item?.isChecked);
+        if (!proccessingProducts || proccessingProducts.length <= 0) {
+            return res.status(400).json({ success: false, message: "Please select at least one product" });
+        }
+
+        const bagData = await Bag.findById(bagId).populate('orderItems.productId');
+        if (!bagData) {
+            return res.status(404).json({ success: false, message: 'Bag not found' });
+        }
+
+        // Generate ShipRocket order IDs
+        const randomOrderShipRocketId = generateRandomId();
+        const randomShipmentId = generateRandomId();
+
+        const alreadyPresentConvenenceFees = await WebSiteModel.findOne({ tag: 'ConvenienceFees' });
+
+        // Create ShipRocket order
+        const createdShipRocketOrder = await createShipRocketOrder(req.user.id, {
+            orderItems: proccessingProducts,
+            address: selectedAddress,
+            TotalAmount: totalAmount,
+            paymentMode: "prepaid",
+            status: 'Confirmed',
+            razorpay_order_id: razorpay_order_id,
+            ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
+        }, randomOrderShipRocketId, randomShipmentId);
+
+        const { manifest, warehouse_name, PickupData, bestCourior, shipmentCreatedResponseData } = createdShipRocketOrder || {};
+
+        // Create the order in the database
+        const orderData = new OrderModel({
+            order_id: randomOrderShipRocketId,
+            userId: id,
+            shipment_id: randomShipmentId,
+            razorpay_order_id,
+            ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
+            orderItems: proccessingProducts,
+            address: selectedAddress,
+            TotalAmount: totalAmount,
+            paymentMode: "prepaid",
+            status: 'Confirmed',
+            PicketUpLoactionWareHouseName: warehouse_name,
+            PicketUpData: PickupData || null,
+            ShipmentCreatedResponseData: shipmentCreatedResponseData,
+            BestCourior: bestCourior,
+            manifest,
+        });
+
+        await orderData.save();
 
         // Update product quantities concurrently
         await updateProductQuantities(proccessingProducts);
@@ -316,8 +454,17 @@ export const paymentVerification = async (req, res) => {
             }
         }
 
-        // Send confirmation email
-        await sendOrderPlacedMail(id, orderData);
+        // Send emails in parallel
+        const emailPromises = [];
+
+        if (manifest?.is_invoice_created) {
+            emailPromises.push(sendMainifestMail(id, manifest?.invoice_url));
+        }
+
+        emailPromises.push(sendOrderPlacedMail(id, orderData));
+
+        // Await all email promises concurrently
+        await Promise.all(emailPromises);
 
         // Respond with success
         res.status(200).json({
@@ -332,6 +479,7 @@ export const paymentVerification = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };
+
 
 
 
@@ -387,7 +535,7 @@ const removeProduct = async (productId, color, size, quantity) => {
 		product.TotalSoldAmount = product?.TotalSoldAmount + quantity;
         // Save the updated product
         await product.save();
-        console.log("Product Updated:", product);
+        // console.log("Product Updated:", product);
 
         // Respond with success
         // res.status(200).json({ success: true, message: "Product removed successfully" });

@@ -11,16 +11,6 @@ const About = () => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const [aboutData, setAboutData] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
-    /* const founderData = {
-		image: "https://th.bing.com/th?id=OIP.rVHb8aGuPiS7hU7mOGBIvAHaEK&w=333&h=187&c=8&rs=1&qlt=90&o=6&dpr=1.3&pid=3.1&rm=2",
-		name: "John Doe",
-		designation: "CEO & Founder of Our Company",
-		introduction: "John has a long and distinguished history of leadership in the tech industry, having played pivotal roles in driving innovation and fostering creativity within teams. Over the years, he has built a reputation as a visionary who pushes the boundaries of what's possible in the world of technology, encouraging his teams to embrace cutting-edge solutions and disruptive ideas. His expertise spans across numerous successful projects that have shaped the tech landscape.",
-		details: "With over 20 years of experience in the tech field, John has successfully founded and grown several startups, as well as led large, multi-national organizations. His business acumen and passion for technological advancement have earned him numerous accolades and recognition. John’s leadership style is focused on empowering individuals and creating an environment where innovation thrives. Throughout his career, he has worked with a diverse range of teams and clients, always striving to find solutions that bring about lasting change and progress in the industry.",
-		founderVision: "Our vision is to bring unique, sustainable, and exceptional products from all around the world, offering them to a global community of individuals who share a love for creativity, craftsmanship, and quality. We aim to foster a world where sustainability is at the core of all products, ensuring that each item we offer contributes positively to the environment and the lives of our customers. By collaborating with artisans and creators from diverse cultures, we believe we can provide a platform for the celebration of culture, creativity, and conscious living.",
-		goals: "On-U’s community is built around sharing knowledge, sustainability, and a passion for exceptional, one-of-a-kind products. We are not just a marketplace, but a space for individuals who are passionate about contributing to positive change. Our members are thought leaders, innovators, and people who believe in the power of connection and conscious consumption. By joining the On-U community, you become part of a global movement that values creativity, sustainability, and high-quality craftsmanship. We are committed to providing a platform where like-minded individuals can share experiences, ideas, and collaborate on building a better, more sustainable future.",
-		promises: "On-U’s community is built around sharing knowledge, sustainability, and a passion for exceptional, one-of-a-kind products. We are not just a marketplace, but a space for individuals who are passionate about contributing to positive change. Our members are thought leaders, innovators, and people who believe in the power of connection and conscious consumption. By joining the On-U community, you become part of a global movement that values creativity, sustainability, and high-quality craftsmanship. We are committed to providing a platform where like-minded individuals can share experiences, ideas, and collaborate on building a better, more sustainable future."
-	} */
 
     const fetchPageAboutData = async () => {
         setIsLoading(true);
@@ -39,27 +29,24 @@ const About = () => {
         scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
         fetchPageAboutData();
     }, []);
-    // console.log("About Data:,",aboutData);
+    console.log("About Data:",aboutData);
     
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
             {!isLoading ? (
                 <div className="bg-white py-12 px-6 lg:px-24 w-full max-w-screen-2xl justify-self-center">
-					
                     {/* Header Section */}
                     <header className="text-center mb-8">
                         <h1 className="text-3xl font-extrabold text-gray-700 sm:text-5xl md:text-6xl">
-                            Welcome to <span className="text-slate-600 hover:animate-bounce">{extractSpecificWord(aboutData?.header) || "ON-U"}</span>
+                            {aboutData?.header} 
                         </h1>
-                        <p className="mt-4 text-lg text-gray-700 sm:text-xl md:text-2xl">
-                            {aboutData ? aboutData.subheader : "Where innovation meets style – Your go-to e-commerce destination"}
-                        </p>
+                        <h2 className="mt-4 text-lg text-gray-700 sm:text-xl md:text-2xl">
+                            {aboutData?.subHeader}
+                        </h2>
                     </header>
 					{
 						aboutData && aboutData.founderData &&  <FounderSection founderData={aboutData.founderData}/>
 					}
-					
-
                     {/* Mission Statement Section */}
                     <section className="py-5 w-full">
                         <div className="w-full mx-auto text-center">

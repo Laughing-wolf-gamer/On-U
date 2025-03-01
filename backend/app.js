@@ -49,7 +49,7 @@ app.options('*', cors());
 
 // Define the / route to send a JSON response
 app.get('/', (req, res) => {
-    res.json({ message: 'Welcome to the On-U API. The server is running!' });
+    res.json({ message: 'Welcome to the On U API. The server is running!' });
 });
 
 // Define the other routes

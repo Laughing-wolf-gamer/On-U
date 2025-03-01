@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import { Button } from "../ui/button";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 import { Textarea } from "../ui/textarea";
-import { Dot, Plus, XIcon } from "lucide-react";
+import { Plus, XIcon } from "lucide-react";
+import { Label } from "../ui/label";
 
 const BulletPointsForm = ({ onChange,defaultPoinst = [] }) => {
 	const [bulletPoints, setBulletPoints] = useState(defaultPoinst);
@@ -42,47 +41,47 @@ const BulletPointsForm = ({ onChange,defaultPoinst = [] }) => {
 				<div key={index} className="relative w-full grid grid-cols-1 md:grid-cols-2 gap-6 p-4 border border-gray-300 rounded-lg shadow-sm">
 				<div className="flex flex-col gap-3">
 					{/* Header Input */}
-					<span className="font-semibold text-lg">Header:
-					{point?.header === "" && (
-						<span className="text-red-500 text-xl ml-1">*</span> // Star for missing header
-					)}
-					</span>
+					<Label className="font-semibold text-lg">Header:
+						{point?.header === "" && (
+							<Label className="text-red-500 text-xl ml-1">*</Label> // Star for missing header
+						)}
+					</Label>
 					<Textarea
-					type="text"
-					rows="5"
-					value={point?.header}
-					onChange={(e) => handleInputChange(index, "header", e.target.value)}
-					placeholder="Enter header"
-					required
-					className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
+						type="text"
+						rows="5"
+						value={point?.header}
+						onChange={(e) => handleInputChange(index, "header", e.target.value)}
+						placeholder="Enter header"
+						required
+						className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
 					/>
 				</div>
 
 				<div className="flex flex-col gap-3">
 					{/* Body Input */}
-					<span className="font-semibold text-lg">Body:
-					{point?.body === "" && (
-						<span className="text-red-500 text-xl ml-1">*</span> // Star for missing body
-					)}
-					</span>
+					<Label className="font-semibold text-lg">Body:
+						{point?.body === "" && (
+							<span className="text-red-500 text-xl ml-1">*</span> // Star for missing body
+						)}
+					</Label>
 					<Textarea
-					value={point?.body}
-					onChange={(e) => handleInputChange(index, "body", e.target.value)}
-					placeholder="Enter body"
-					rows="6"
-					required
-					className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
+						value={point?.body}
+						onChange={(e) => handleInputChange(index, "body", e.target.value)}
+						placeholder="Enter body"
+						rows="5"
+						required
+						className="border-2 border-gray-400 focus:border-gray-900 p-3 rounded-md"
 					/>
 				</div>
 
 				{/* Remove Button */}
-				<Button
-					type="button"
-					className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
-					onClick={() => removeBulletPoint(index)}
-				>
-					<XIcon className="w-5 h-5" />
-				</Button>
+					<Button
+						type="button"
+						className="absolute top-0 right-0 p-2 bg-red-500 text-white rounded-full hover:bg-red-600"
+						onClick={() => removeBulletPoint(index)}
+					>
+						<XIcon className="w-5 h-5" />
+					</Button>
 				</div>
 			))}
 
@@ -94,7 +93,7 @@ const BulletPointsForm = ({ onChange,defaultPoinst = [] }) => {
 			>
 				Add New Bullet Point <Plus className="ml-2" strokeWidth={5} />
 			</Button>
-			</form>
+		</form>
 
 	);
 };

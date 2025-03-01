@@ -3,12 +3,14 @@ import { DialogContent, DialogTitle } from '../ui/dialog';
 import { Input } from '../ui/input';
 import { Button } from '../ui/button';
 import axios from 'axios';
-import { Header } from '@/config';
+import { BASE_URL, Header } from '@/config';
 import { useSettingsContext } from '@/Context/SettingsContext';
-
+const defaultView = {
+	email: '', password: ''
+}
 const LogisticsLoginView = ({OnLoginComplete})=>{
 	const{checkAndCreateToast} = useSettingsContext();
-	const[logisticsLoginForm,setLogisticsLoginForm] = useState({email: '', password: ''});
+	const[logisticsLoginForm,setLogisticsLoginForm] = useState(defaultView);
 	const handleLogisticsTokenChange = async(e) => {
 		e.preventDefault();
 		try {
@@ -18,6 +20,7 @@ const LogisticsLoginView = ({OnLoginComplete})=>{
 				console.log("Logistics Login Response: ", response?.data?.result);
 				OnLoginComplete(response?.data?.result);
 				checkAndCreateToast("success","Logged In Success" );
+				setLogisticsLoginForm(defaultView);
 			}else{
 				checkAndCreateToast("error","Invalid Email or Password");
 			}
