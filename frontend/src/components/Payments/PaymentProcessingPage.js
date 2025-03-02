@@ -364,15 +364,6 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
                         <span>₹{formattedSalePrice(totalAmount)}</span>
                     </p>
                 </div>
-
-                {/* Confirm Payment Button */}
-                {/* <button
-                    disabled={isPaymentStart || !paymentMethod || paymentMethod ===  '' }
-                    onClick={confirmPayment}
-                    className="w-full bg-black text-white p-4 rounded-md mt-6 hover:bg-gray-800 focus:ring-2 flex flex-row justify-center items-center focus:ring-black disabled:bg-gray-700"
-                >
-                    {isPaymentStart ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : <span>Confirm Payment</span>}
-                </button> */}
 				<SwipeToConfirmPaymentButton disabled = {isPaymentStart || !paymentMethod || paymentMethod ===  ''} HasStarted={isPaymentStart} OnSwipeComplete={()=> confirmPayment()}/>
             </div>
         </div>

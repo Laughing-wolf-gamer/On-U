@@ -92,11 +92,11 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 // Reusable Category Section Component
 const CategorySection = ({ title, categories, parentCallback, handelSetQuery }) => (
 	<div>
-		<h1 className="text-red-600 text-sm font-semibold py-1 mx-2">{title}</h1>
+		<h1 className="text-gray-900 text-base font-extrabold py-1 mx-2">{title}</h1>
 		{categories && categories.slice(0, 4).map((category, i) => (
 				<div onClick={(e) => handelSetQuery(title, category.title)} key={i}>
 				<li
-					className="litext list-none py-0.5 m-2 hover:font-semibold"
+					className="litext list-none py-0.5 m-2 text-gray-600 hover:font-semibold"
 					onClick={() => parentCallback('hidden', false)}
 				>
 					{category.title}
