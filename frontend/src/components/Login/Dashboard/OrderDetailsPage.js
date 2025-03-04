@@ -105,13 +105,17 @@ const OrderDetailsPage = ({ user }) => {
     }
 	const createCancelOrder = async(e)=>{
 		if(!orderbyid?.IsCancelled){
-			await dispatch(sendOrderCancel({ orderId: orderbyid._id }));
+			const response = await dispatch(sendOrderCancel({ orderId: orderbyid._id }));
             await dispatch(fetchOrderById(id));
-            if (orderbyid?.IsCancelled) {
-                checkAndCreateToast("success", 'Order Cancelled Successfully');
-            } else {
-                checkAndCreateToast("success", 'Order Refunded Successfully');
-            }
+			if(response){
+				if (orderbyid?.IsCancelled) {
+					checkAndCreateToast("success", 'Order Cancelled Successfully');
+				} else {
+					checkAndCreateToast("success", 'Order Refunded Successfully');
+				}
+			}else{
+				checkAndCreateToast('error','Failed to Cancel Order')
+			}
 		}
 	}
 
