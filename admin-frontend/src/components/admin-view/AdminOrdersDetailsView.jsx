@@ -61,6 +61,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 	}
 	const handlePickupResponse = async () => {
 		const response = await dispatch(adminRequestTryPickUp({
+			orderId:order._id,
 			BestCourior:order?.BestCourior,
 			ShipmentCreatedResponseData:order?.ShipmentCreatedResponseData
 		}))

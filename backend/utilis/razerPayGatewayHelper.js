@@ -419,6 +419,7 @@ export const paymentVerification = async (req, res) => {
             userId: id,
             shipment_id: randomShipmentId,
             razorpay_order_id,
+			paymentId:razorpay_payment_id,
             ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
             orderItems: proccessingProducts,
             address: selectedAddress,

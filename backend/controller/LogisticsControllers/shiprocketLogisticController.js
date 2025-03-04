@@ -3,6 +3,7 @@ import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
 import { getBestCourierPartners, getStringFromObject } from '../../utilis/basicUtils.js';
 import logger from '../../utilis/loggerUtils.js';
+import OrderModel from '../../model/ordermodel.js';
 
 dotenv.config();
 
@@ -79,15 +80,34 @@ const getAllServicalibiltyties = async (servicesData) => {
 		return null;
 	}
 }
-export const generateOrderPicketUpRequest =async(orderData,bestCourior)=>{
+export const generateOrderPicketUpRequest =async(order,orderData,bestCourior)=>{
 	if (!token) await getAuthToken();
 	try {
-		const {shipment_id} = orderData;
+		const {shipment_id,order_id} = orderData;
+		let bestCourier = bestCourior;
+		if(!bestCourier){
+			// const order = await OrderModel.findOne({order_id:order_id,shipment_id:shipment_id})
+			console.log("Delivary Pincode Address: ",order);
+			const pickup_locations = await getPickUpLocation();
+			const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
+			const allAvailableCourier = await getAllServicalibiltyties({
+                pickup_postcode: primaryLocation?.pin_code,
+                delivery_postcode: order?.address?.pincode,
+                order_id: order_id,
+            })
+			bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
+            console.error("No suitable courier found");
+			bestCourier = allAvailableCourier?.available_courier_companies[0];
+		}
 		const awbCode = await generateAwb({
 			shipment_id:shipment_id,
-			courier_id:bestCourior?.courier_company_id,
+			courier_id:bestCourier?.courier_company_id,
 		});
-		if(!awbCode) throw new Error("Error generating awb code");
+		console.log('awbCode', awbCode);
+		if(!awbCode){
+			return null;
+		}
+		// if(!awbCode) throw new Error("Error generating awb code");
 		console.log("Generating Picket Up Request for Shipment: ",orderData);
 		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/pickup`, {shipment_id:[shipment_id]},{
             headers: {
@@ -101,7 +121,7 @@ export const generateOrderPicketUpRequest =async(orderData,bestCourior)=>{
 		const returningData = {awbCode,picketUpResponseData:response.data.response};
 		return returningData;
 	} catch (error) {
-		console.error('Error generating order picket up request:', error?.response?.data);
+		console.error('Error generating order picket up request:', error);
 		// logger.error(`Error generating order picket up request ${getStringFromObject(error?.response?.data || error?.message)}`);
 		return null;
 	}
@@ -130,7 +150,7 @@ export const generateManifest = async (orderData) => {
 
 		const{shipment_id} = orderData;
 		console.log("Generating order Manifest:", shipment_id)
-		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/label`, {shipment_id:[shipment_id]},{
+		const response = await axios.post(`${SHIPROCKET_API_URL}/manifests/generate`, {shipment_id:[Number(shipment_id)]},{
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -321,7 +341,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
         if (!primaryLocation) {
             console.error("Primary pickup location not found");
-            return null;
+            // return null;
         }
 
         // Prepare order details
@@ -378,10 +398,10 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 
         console.log("All Available Courier: ", allAvailableCourier?.available_courier_companies);
         // Get the best courier based on the available companies
-        const bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
+        let bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
         if (!bestCourier) {
             console.error("No suitable courier found");
-            return null;
+			bestCourier = allAvailableCourier?.available_courier_companies[0];
         }
 
         // Create pickup request with the best courier
@@ -408,7 +428,14 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         return null;
     }
 };
-
+export const generateRefundOrder = async(order)=>{
+	try {
+		const {paymentId,TotalAmount} = order;
+		const response = await axios.post(`https://api.razorpay.com/v1/payments/${paymentId}/refund`,{amount: TotalAmount});
+	} catch (error) {
+		console.error(`Error creating order: `,error);
+	}
+}
 export const generateOrderCancel = async(orderId)=>{
 	if (!token) await getAuthToken();
 	try {

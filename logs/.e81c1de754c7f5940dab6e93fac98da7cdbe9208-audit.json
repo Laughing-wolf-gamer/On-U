@@ -54,6 +54,16 @@
             "date": 1740857721696,
             "name": "logs\\OnU-2025-03-02.log",
             "hash": "9aedb21aba7bd1176c547128343652c1aa64ffcb2789c6ae0c1d90e0da77ed85"
+        },
+        {
+            "date": 1741112782733,
+            "name": "logs\\OnU-2025-03-04.log",
+            "hash": "7145c17ace2cae60a8bf430a023e166d087b43c6ea80bdb3f92e12e934766836"
+        },
+        {
+            "date": 1741113042542,
+            "name": "logs\\OnU-2025-03-05.log",
+            "hash": "6465c3df30bf5a8ae2e289f14fd596b9765bf94c6d40d6f5d4efabe5cb7d5ec8"
         }
     ],
     "hashType": "sha256"

@@ -15,6 +15,7 @@ import {
 	generateOrderForShipment, 
 	generateOrderPicketUpRequest, 
 	generateOrderRetrunShipment, 
+	generateRefundOrder, 
 	getShipmentOrderByOrderId 
 } from './LogisticsControllers/shiprocketLogisticController.js'
 export const createPaymentOrder = async (req, res) => {
@@ -1704,6 +1705,11 @@ export const createOrderCancel = async(req,res)=>{
 		if(!cancelRequest) {
             return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
         }
+		// https://api.razorpay.com/v1/payments/{pay_id}/refund;
+		let refundGeneration = false;
+		if(order.paymentMode === 'prepaid'){
+			refundGeneration = await generateRefundOrder(order);
+		} 
 		order.IsCancelled = cancelRequest;
 		await order.save();
 		res.status(200).json({ success: true, message: "Order Canceled successfully"});
@@ -1728,9 +1734,10 @@ export const exchangeOrder = async(req, res) => {
 
 export const tryCreatePickupResponse = async(req,res)=>{
 	try {
-		const {BestCourior,ShipmentCreatedResponseData} = req.body;
-		// console.log("PickeUp Request Data: ",req.body);
-		const pickupRequest = await generateOrderPicketUpRequest(ShipmentCreatedResponseData,BestCourior);
+		const {orderId,BestCourior,ShipmentCreatedResponseData} = req.body;
+		const order = await OrderModel.findById(orderId);
+		console.log("PickeUp Request Data: ",req.body,order);
+		const pickupRequest = await generateOrderPicketUpRequest(order,ShipmentCreatedResponseData,BestCourior);
 		console.log("Created Pickup Request: ", pickupRequest);
 		if(!pickupRequest){
 			return res.status(400).json({ success: false, message: "Failed to create pickup request", result: null });
@@ -1748,8 +1755,8 @@ export const createAndSendOrderManifest = async (req, res) => {
 		const{orderId} = req.params;
 		const order = await OrderModel.findById(orderId);
 		if(!order) return res.status(404).json({ success: false, message: "Order not found" });
-		console.log("Order Found! : ", order.shipment_id);
-		const manifest = await generateManifest({shipment_id:order.shipment_id});
+		console.log("Order Found! : ", order.order_id);
+		const manifest = await generateManifest(order);
 		console.log("Manifest: ", manifest);
 		/* if (manifest?.is_invoice_created) {
             await sendMainifestMail(req.user.id, manifest?.invoice_url);
