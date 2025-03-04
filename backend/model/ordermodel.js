@@ -19,7 +19,7 @@ const ordersSchema = new mongoose.Schema({
     address:{type:Object,required:true},
 	ConveenianceFees:{type:Number,default:0},
 	channel_id:{type:Number,default:6217390},
-    paymentMode:{type:String,default:"PrePaid",required:true},
+    paymentMode:{type:String,default:"prepaid",required:true},
     status: { type: String, default:"Processing", required: true },
     current_status: { type: String,default:"Processing"},
     current_timestamp:{type:String,},
