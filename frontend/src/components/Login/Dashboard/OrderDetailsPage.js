@@ -92,13 +92,17 @@ const OrderDetailsPage = ({ user }) => {
 
     const createOrderReturn = async (e) => {
         if (!orderbyid?.IsReturning) {
-            await dispatch(sendOrderReturn({ orderId: orderbyid._id }));
-            await dispatch(fetchOrderById(id));
-            if (orderbyid?.IsReturning) {
-                checkAndCreateToast("success", 'Order Returned Successfully');
-            } else {
-                checkAndCreateToast("success", 'Order Exchanged Successfully');
-            }
+            const response = await dispatch(sendOrderReturn({ orderId: orderbyid._id }));
+			if(response){
+            	await dispatch(fetchOrderById(id));
+				if (orderbyid?.IsReturning) {
+					checkAndCreateToast("success", 'Order Returned Successfully');
+				} else {
+					checkAndCreateToast("success", 'Order Exchanged Successfully');
+				}
+			}else{
+				checkAndCreateToast('error','Failed to Return Order')
+			}
         } else {
             checkAndCreateToast('error', 'Order is already in return process');
         }
