@@ -105,6 +105,16 @@ export const adminRequestTryPickUp = createAsyncThunk('/admin/orders/tryPickUp',
 		return {error: error.response.data.message};
     }
 })
+export const adminCreateRefundRequest = ({orderId}) => async()=>{
+	try {
+        console.log("Refund Request: ",orderId);
+        const {data} = await axios.post(`${BASE_URL}/admin/order/refundRequest/${orderId}`,{}, Header());
+        return data?.Success;
+    } catch (error) {
+        console.error("Error Creating Refund Request: ",error);
+        return false;
+    }
+}
 export const adminRequestTryCreateManifest = createAsyncThunk('/admin/orders/tryCreateManifest',async({orderId})=>{
 	try {
         const response = await axios.patch(`${BASE_URL}/admin/orders/tryCreateManifest/${orderId}`,{},Header());

@@ -460,7 +460,7 @@ export const createOrder = async (req, res) => {
             orderItems: processingProducts,
             address: Address,
             TotalAmount,
-            paymentMode,
+            paymentMode:paymentMode || 'COD',
             status: 'Confirmed',
             PicketUpData: PickupData,
             BestCourior: bestCourior,
@@ -1689,10 +1689,11 @@ export const createOrderCancel = async(req,res)=>{
             return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
         }
 		// https://api.razorpay.com/v1/payments/{pay_id}/refund;
-		let refundGeneration = false;
+		let refundGeneration = null;
 		if(order.paymentMode === 'prepaid'){
 			refundGeneration = await generateRefundOrder(order);
-		} 
+		}
+		order.RefundData = refundGeneration;
 		order.IsCancelled = cancelRequest;
 		await order.save();
 		res.status(200).json({ success: true, message: "Order Canceled successfully"});
@@ -1731,6 +1732,25 @@ export const tryCreatePickupResponse = async(req,res)=>{
 		console.error("Error occured during creating pickup request", error);
 		logger.error(`Error occured during creating pickup request ${error.message}`);
 		res.status(500).json({ success: false, message: "Internal Server Error" });
+	}
+}
+export const retryRefundData = async(req,res)=>{
+	try {
+		const{orderId} = req.params;
+		console.log("Returynging Refund: ",orderId);
+		const order = await OrderModel.findById(orderId);
+		const refundData = await generateRefundOrder(order);
+		if(!refundData){
+			return res.status(400).json({ success: false, message: "Failed to create refund", result: null });
+		}
+		console.log("Admin Refund Data: ", refundData);
+		order.RefundData = refundData;
+		await order.save();
+		res.status(200).json({ Success: true, message: "Successfully retried refund data" });
+	} catch (error) {
+		console.error(`Error Creating Refund: `,error);
+		logger.error(`Error Creating Refund: ${error.message}`);
+		res.status(500).json({ Success: false, message: "Internal Server Error" });
 	}
 }
 export const createAndSendOrderManifest = async (req, res) => {

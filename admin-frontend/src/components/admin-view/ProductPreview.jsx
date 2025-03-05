@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { Button } from '../ui/button';
 import BulletPointView from './BulletPointView';
-import { Edit, Eye, ImageUpIcon, Minus, MinusCircleIcon, Plus, PlusCircleIcon, X } from 'lucide-react';
+import { ChevronUp, Edit, Eye, ImageUpIcon, Minus, MinusCircleIcon, Plus, PlusCircleIcon, X } from 'lucide-react';
 import axios from 'axios';
 import { addProductsFromElement, BASE_URL, formattedSalePrice, Header } from '@/config';
 import SizeSelector from './SizeSelector';
@@ -561,7 +561,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			}, Header());
 			console.log(` Quantity Updated:`, response.data);
 			checkAndCreateToast("success","SKU Updated Successfully");
-			setUpdatingSKU({sizeId:'',colorId:'',sku:''})
+			setUpdatingSKU(null);
 		} catch (error) {
 			console.log(`Error Updating SKU:`, error);
 			checkAndCreateToast("error",error.message);
@@ -983,6 +983,19 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							<Label>SKU:</Label>
 							<Label>{color?.sku}</Label>
 						</Badge>
+						<Button
+							
+							onClick={()=> {
+								if(updatingSKU){
+									setUpdatingSKU(null);
+								}else{
+									setUpdatingSKU({sizeId:size._id, colorId:color._id,sku:''})
+								}
+							}}
+							className="w-full py-2 text-center text-white font-extrabold bg-red-600 hover:bg-red-700 rounded-lg transition-all duration-200"
+						>
+							<span>Change SKU</span> <ChevronUp strokeWidth={5} className={`${updatingSKU && updatingSKU.sizeId === size._id && updatingSKU.colorId === color._id ? "rotate-180":"rotate-0"} transition-all duration-300 ease-in-out`}/>
+						</Button>
 						{
 							updatingSKU && updatingSKU.sizeId === size._id && updatingSKU.colorId === color._id && <form onSubmit={HandleUpdateColorSKU} className="w-full flex flex-col items-center space-y-4 mt-4">
 								<div className="w-full flex flex-row items-center space-x-2">
@@ -1005,13 +1018,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 								</div>
 							</form>
 						}
-						<Button
-							
-							onClick={()=> setUpdatingSKU({sizeId:size._id, colorId:color._id,sku:''})}
-							className="w-full py-2 text-center text-white font-extrabold bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200"
-						>
-							Update SKU
-						</Button>
 
 						{/* Update SKU Form */}
 						

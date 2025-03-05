@@ -415,22 +415,23 @@ export const paymentVerification = async (req, res) => {
 
         // Create the order in the database
         const orderData = new OrderModel({
-            order_id: randomOrderShipRocketId,
+            order_id: shipmentCreatedResponseData.order_id,
             userId: id,
-            shipment_id: randomShipmentId,
-            razorpay_order_id,
-			paymentId:razorpay_payment_id,
+            PicketUpLoactionWareHouseName: warehouse_name || null,
+            shipment_id: shipmentCreatedResponseData.shipment_id,
+			channel_id: '6217390',
             ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
             orderItems: proccessingProducts,
+            razorpay_order_id,
+			paymentId:razorpay_payment_id,
             address: selectedAddress,
             TotalAmount: totalAmount,
             paymentMode: "prepaid",
             status: 'Confirmed',
-            PicketUpLoactionWareHouseName: warehouse_name,
-            PicketUpData: PickupData || null,
+            PicketUpData: PickupData,
             ShipmentCreatedResponseData: shipmentCreatedResponseData,
             BestCourior: bestCourior,
-            manifest,
+            manifest:manifest,
         });
 
         await orderData.save();

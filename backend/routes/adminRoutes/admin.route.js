@@ -5,7 +5,7 @@ import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import { GetWalletBalance } from '../../controller/LogisticsControllers/shiprocketLogisticController.js';
-import { createAndSendOrderManifest, tryCreatePickupResponse } from '../../controller/ordercontroller.js';
+import { createAndSendOrderManifest, retryRefundData, tryCreatePickupResponse } from '../../controller/ordercontroller.js';
 
 const route = express.Router();
 route.post('/auth/register',registerNewAdmin)
@@ -31,6 +31,7 @@ route.get('/orders/getAllOrders',isAuthenticateuser,ProtectAdminRoute,getallOrde
 route.get('/orders/:orderId',isAuthenticateuser,ProtectAdminRoute,getOrderById)
 route.put('/orders/updateOrderStatus/:orderId',isAuthenticateuser,ProtectAdminRoute,updateOrderStatus);
 route.post('/orders/tryPickUp',isAuthenticateuser,ProtectAdminRoute,tryCreatePickupResponse);
+route.post('/order/refundRequest/:orderId',ProtectAdminRoute,isAuthenticateuser,retryRefundData);
 route.patch('/orders/tryCreateManifest/:orderId',isAuthenticateuser,ProtectAdminRoute,createAndSendOrderManifest);
 
 route.get('/stats/getRecentOrders',isAuthenticateuser,ProtectAdminRoute,getRecentOrders);

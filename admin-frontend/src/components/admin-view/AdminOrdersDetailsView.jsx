@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
-import { adminGetAllOrders, adminGetUsersOrdersById, adminRequestTryCreateManifest, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
+import { adminCreateRefundRequest, adminGetAllOrders, adminGetUsersOrdersById, adminRequestTryCreateManifest, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
 import { capitalizeFirstLetterOfEachWord, GetBadgeColor, getStatusDescription } from '@/config'
 import { toast } from 'react-toastify'
 import { useSettingsContext } from '@/Context/SettingsContext'
@@ -57,6 +57,17 @@ const AdminOrdersDetailsView = ({ order }) => {
 			checkAndCreateToast("success",'Order Status Updated Successfully: ' + data?.payload?.message)
 			setFormData(initialFormData)
 			dispatch(adminGetAllOrders())
+		}
+	}
+	const handleInitiateRefund = async(e) =>{
+		e.preventDefault();
+		const response = await dispatch(adminCreateRefundRequest({ orderId: order._id }))
+		console.log("response:",response);
+		if(response){
+			checkAndCreateToast("success","Refund Request Initiated Successfully")
+            dispatch(adminGetAllOrders())
+		}else{
+			checkAndCreateToast('error',"Failed to initiate refund request")
 		}
 	}
 	const handlePickupResponse = async () => {
@@ -159,7 +170,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 					{
 						order?.PicketUpData && <PicketUpDataDisplay picketUpData={order?.PicketUpData}/>
 					}
-				<div className='grid grid-cols-2 justify-between items-center'>
+				<div className='grid grid-cols-3 justify-between items-center'>
 					{/* You can add the form section here if needed */}
 					{!order?.PicketUpData && (
 						<div className="w-full flex justify-center items-center">
@@ -174,10 +185,20 @@ const AdminOrdersDetailsView = ({ order }) => {
 					{
 						!order?.manifest && <div className="w-full flex justify-center items-center">
 							<Button
-								className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+								className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600"
 								onClick={handleCreateManifest}
 							>
 								Create Manifest
+							</Button>
+						</div>
+					}
+					{
+						order?.IsCancelled && order?.paymentMode === 'prepaid' && !order?.RefundData && <div className="w-full flex justify-center items-center">
+							<Button
+								className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+								onClick={handleInitiateRefund}
+							>
+								Initiate Refund
 							</Button>
 						</div>
 					}

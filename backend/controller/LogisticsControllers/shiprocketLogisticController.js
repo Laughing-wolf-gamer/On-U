@@ -324,7 +324,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 
         // Generate random ID for HSN and SKU if needed
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-
+		console.log("Order Items: ",shipmentData.orderItems);
         // Map order items to required format
         const orderItems = shipmentData.orderItems.map(item => ({
             name: item?.productId?.title,
@@ -405,7 +405,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         }
 
         // Create pickup request with the best courier
-        const createPickUpResponse = await generateOrderPicketUpRequest({
+        const createPickUpResponse = await generateOrderPicketUpRequest(null,{
             order_id: response?.data?.order_id,
             shipment_id: response?.data?.shipment_id,
             status: response?.data?.status,
@@ -428,14 +428,38 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         return null;
     }
 };
-export const generateRefundOrder = async(order)=>{
+
+export const generateRefundOrder = async (order) => {
 	try {
-		const {paymentId,TotalAmount} = order;
-		const response = await axios.post(`https://api.razorpay.com/v1/payments/${paymentId}/refund`,{amount: TotalAmount});
+		const { paymentId, TotalAmount } = order;
+
+		// Retrieve the Razorpay API Key and API Secret from environment variables (keep them secure)
+		const razorpayApiKey = process.env.RAZER_PG_ID;  // Replace with your actual key
+		const razorpayApiSecret = process.env.RAZER_PG_SECRETE;  // Replace with your actual secret
+
+		// Base64 encode the API key and secret for Basic Authentication
+		const auth = Buffer.from(`${razorpayApiKey}:${razorpayApiSecret}`).toString('base64');
+
+		// Make the refund API call with the Basic Authentication header
+		const response = await axios.post(
+			`https://api.razorpay.com/v1/payments/${paymentId}/refund`,
+			{ amount: TotalAmount }, 
+			{
+				headers: {
+					Authorization: `Basic ${auth}`, // Add the Basic Authentication header
+				}
+			}
+		);
+
+		console.log('Refund Success:', response.data);
+		return response.data; // Return the response data from Razorpay
 	} catch (error) {
-		console.error(`Error creating order: `,error);
+		console.error(`Error Generating Refund in Razorpay order: `, error?.response?.data || error.message);
+		// throw error; // Optionally throw the error so that the calling function can handle it
+		return null;
 	}
-}
+};
+
 export const generateOrderCancel = async(orderId)=>{
 	if (!token) await getAuthToken();
 	try {
@@ -481,14 +505,14 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
 
         // Generate random ID for HSN and SKU if needed
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-
+		console.log("Order Items: ",shipmentData.orderItems);
         // Map order items to required format in a single pass
         const orderItems = shipmentData.orderItems.map(item => ({
             name: item?.productId?.title,
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
-            sku: generateRandomId().toString() || item?.productId?.sku || item?.productId?._id,
+            sku: item?.sku || generateRandomId().toString() || item?.productId?.sku || item?.productId?._id,
             tax: item?.productId?.gst || 0,
             hsn: item?.productId?.sku || generateRandomId().toString()
         }));
