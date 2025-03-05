@@ -21,6 +21,7 @@ import { Input } from '../ui/input';
 import { Textarea } from '../ui/textarea';
 import { MdWarning } from 'react-icons/md';
 import { IoMdAlert, IoMdWarning } from 'react-icons/io';
+import { Badge } from '../ui/badge';
 const ProductPreview = ({
 	categories,
 	genders,
@@ -484,11 +485,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	const [updatingColors, setUpdatingColors] = useState([]);
 	const [selectedColorImages, setSelectedColorImages] = useState([]);
 	const [colorOptions, setColorOptions] = useState([]);
-
-	const[colorInputQuantiy, setColorInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
-	const[sizeInputQuantiy, setSizeInputQuantiy] = useState({sizeId:'',colorId:'',quantity:0});
-
-
+	const[updatingSKU,setUpdatingSKU] = useState({sizeId:'',colorId:'',sku:''});
 	// State for size quantities
 	const [sizeQuantities, setSizeQuantities] = useState(
 		SizesArray.reduce((acc, size) => {
@@ -546,6 +543,33 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			};
 		});
 	};
+	const HandleUpdateColorSKU = async (e)=>{
+		e.preventDefault();
+		if(!updatingSKU){
+			console.log("Updating SKU: ", updatingSKU);
+			checkAndCreateToast("error","No Sku Changed!")
+			return
+		}
+		setIsLoading(true);
+		if (!productId) return;
+		try {
+			const response = await axios.patch(`${BASE_URL}/admin/product/update/updateColorSku`, {
+				productId,
+				sizeId:updatingSKU.sizeId,
+				colorId:updatingSKU.colorId,
+				sku: updatingSKU.sku,
+			}, Header());
+			console.log(` Quantity Updated:`, response.data);
+			checkAndCreateToast("success","SKU Updated Successfully");
+			setUpdatingSKU({sizeId:'',colorId:'',sku:''})
+		} catch (error) {
+			console.log(`Error Updating SKU:`, error);
+			checkAndCreateToast("error",error.message);
+		}finally{
+			OnRefresh();
+			setIsLoading(false);
+		}
+	}
 
 	// API call to update size quantity
 	const putHandleUpdateSizeQuantity = async (id, change, type) => {
@@ -567,6 +591,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 			setIsLoading(false);
 		}
 	};
+	
 
 	// Handle adding new color to size
 	const handleAddNewColor = async (sizeId, colors) => {
@@ -884,8 +909,8 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				<Button 
 					disabled={isLoading} 
 					onClick={() => {
-					setSizeDeletingData({sizeId: size._id});
-					setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+						setSizeDeletingData({sizeId: size._id});
+						setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
 					}} 
 					className="absolute top-2 right-6 text-white p-2 rounded-full bg-red-700"
 				>
@@ -895,14 +920,14 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				{/* Color Options */}
 				<div className="flex gap-4 mt-4 max-w-full overflow-x-auto justify-start items-start">
 					{size && size.colors && size.colors.length > 0 && size.colors.map((color, index) => (
-					<div
+						<div
 						key={index}
-						className="relative flex flex-col items-center min-h-[100px] min-w-[260px] cursor-pointer justify-center border border-black gap-3 bg-neutral-50 p-4 rounded-md shadow-md"
-					>
-						<div className='flex justify-center space-x-2 items-center'>
+						className="relative flex flex-col items-center min-h-[200px] min-w-[260px] cursor-pointer justify-center border border-black gap-3 bg-neutral-50 p-4 rounded-md shadow-md"
+						>
+						<div className="flex justify-center space-x-2 items-center">
 							<div
-								className="w-10 h-10 rounded-full border-2"
-								style={{ backgroundColor: color.label }}
+							className="w-10 h-10 rounded-full border-2"
+							style={{ backgroundColor: color.label }}
 							/>
 							<Label className="text-sm text-gray-700 font-extrabold whitespace-nowrap">{color?.name}</Label>
 						</div>
@@ -921,55 +946,91 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 						{/* Color Quantity Control */}
 						<div className="flex items-center px-3 min-w-fit justify-between border border-gray-600 rounded-lg space-x-4">
 							<Button
-								disabled={isLoading || sizeQuantities[`${size._id}-${color._id}`] <= 0}
-								onClick={(e) => {
-									handleColorQuantityChange(size._id, color._id, -1);
-								}}
-								className="bg-black p-2 rounded-full"
+							disabled={isLoading || sizeQuantities[`${size._id}-${color._id}`] <= 0}
+							onClick={(e) => {
+								handleColorQuantityChange(size._id, color._id, -1);
+							}}
+							className="bg-black p-2 rounded-full"
 							>
-								<Minus />
+							<Minus />
 							</Button>
 							<Label className="text-lg text-gray-700 font-extrabold whitespace-nowrap">
-								Qty: {sizeQuantities[`${size._id}-${color._id}`]}
+							Qty: {sizeQuantities[`${size._id}-${color._id}`]}
 							</Label>
 							<Button
-								disabled={isLoading}
-								onClick={(e) => {
-									e.preventDefault();
-									handleColorQuantityChange(size._id, color._id, 1);
-								}}
-								className="bg-black p-2 rounded-full"
+							disabled={isLoading}
+							onClick={(e) => {
+								handleColorQuantityChange(size._id, color._id, 1);
+							}}
+							className="bg-black p-2 rounded-full"
 							>
-								<Plus />
+							<Plus />
 							</Button>
 
 							{/* File Upload Button with Icon */}
 							<div className="p-2">
-								<Button onClick={(e) => {
-									setActiveSelectedColor(color._id);
-									setActiveSelectedSize(size._id);
-									setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-									setSelectedColorImages([]);
-								}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
+							<Button onClick={(e) => {
+								setActiveSelectedColor(color._id);
+								setActiveSelectedSize(size._id);
+								setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+								setSelectedColorImages([]);
+							}} className="bg-blue-600 text-white p-2 rounded-full hover:bg-blue-800">
 								<ImageUpIcon />
-								</Button>
+							</Button>
 							</div>
 						</div>
+						<Badge className='space-x-2 w-full flex justify-center items-center text-white font-bold text-lg py-2 px-2'>
+							<Label>SKU:</Label>
+							<Label>{color?.sku}</Label>
+						</Badge>
+						{
+							updatingSKU && updatingSKU.sizeId === size._id && updatingSKU.colorId === color._id && <form onSubmit={HandleUpdateColorSKU} className="w-full flex flex-col items-center space-y-4 mt-4">
+								<div className="w-full flex flex-row items-center space-x-2">
+									<Input
+										type="text"
+										className="w-full h-10 px-3 text-gray-700 border border-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all duration-300"
+										value={updatingSKU?.sizeId === size?._id && updatingSKU?.colorId === color._id ?  updatingSKU?.sku :""}
+										onChange={(e) => {
+											setUpdatingSKU({...updatingSKU, sku: e.target.value});
+										}}
+										placeholder={`SKU number = ${size.label}-${color?.name}`}
+									/>
+									<Button 
+										type="submit" 
+										disabled={updatingSKU.sizeId !== size._id || updatingSKU.colorId !== color?._id || updatingSKU.sku === ''}
+										onClick={HandleUpdateColorSKU} 
+										className="w-12 py-2 text-center px-3 text-white font-extrabold bg-black hover:bg-gray-800 rounded-md text-xs transition-all duration-200">
+                                        <span>Update</span>
+                                    </Button>
+								</div>
+							</form>
+						}
+						<Button
+							
+							onClick={()=> setUpdatingSKU({sizeId:size._id, colorId:color._id,sku:''})}
+							className="w-full py-2 text-center text-white font-extrabold bg-blue-600 hover:bg-blue-700 rounded-lg transition-all duration-200"
+						>
+							Update SKU
+						</Button>
+
+						{/* Update SKU Form */}
+						
 
 						{/* Remove Color Button */}
 						<Button
-						disabled={isLoading}
-						onClick={() => {
+							disabled={isLoading}
+							onClick={() => {
 							setColorDeletingData({sizeId: size._id, colorId: color._id});
 							setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-						}}
-						className="text-white w-6 h-6 px-2 absolute top-2 right-2 bg-black p-2 rounded-full"
+							}}
+							className="text-white w-6 h-6 px-2 absolute top-2 right-2 bg-black p-2 rounded-full"
 						>
-						<X />
+							<X />
 						</Button>
-					</div>
+						</div>
 					))}
-				</div>
+					</div>
+
 
 				{/* Image Preview Dialog */}
 				<Dialog open={activeImageColorSize && activeImageColorSize === size?._id && selectedColorImages && selectedColorImages.length > 0} onOpenChange={() => {

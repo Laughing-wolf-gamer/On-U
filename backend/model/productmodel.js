@@ -39,6 +39,7 @@ const productModelSchema = new mongoose.Schema({
                     label:String,
                     quantity:Number,
                     name:String,
+					sku:String,
                     images:[],
                 }
             ]

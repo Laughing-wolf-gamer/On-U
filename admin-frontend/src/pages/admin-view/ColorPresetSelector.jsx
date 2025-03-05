@@ -51,6 +51,19 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 			// console.log("Color Images Image Urls:  ",selectedColorArray);
 		}
 	};
+	const handleChangeSKU = (e,color)=>{
+		if(isLoading) return;
+        const value = e.target.value;
+        setSelectedColorArray((prev) =>
+            prev.map((c) =>
+                c.id === color.id ? {...c, sku: value } : c
+            )
+        );
+        if (OnChange) {
+            OnChange(selectedColorArray);
+            // console.log("Color Images Image Urls:  ",selectedColorArray);
+        }
+	}
 
 	const handleChangeQuantity = (e, color) => {
 		if(isLoading) return;
@@ -170,25 +183,6 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 					<div
 						className={`mt-6 ${showMore[i]?.value ? "block" : "hidden"} w-full flex flex-col items-center justify-center space-y-4 p-4 bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow`}
 					>
-						{/* <div className="flex w-full m-6 items-center justify-start gap-4 px-4 relative">
-							<div
-								className="w-14 h-14 rounded-full mt-3"
-								style={{ backgroundColor: color?.label || "#ffffff" }}
-							></div>
-
-							<div
-								className={`w-20 h-12 relative flex items-center justify-center overflow-hidden rounded-full focus:outline-none transition-transform ${
-									selectedColorArray.find((s) => s.id === color.id)?.quantity > 0
-									? `scale-110 shadow-lg`
-									: `hover:scale-105`
-								}`}
-								aria-label={`Select color ${color.id}`}
-							>
-							</div>
-						
-
-						
-						</div> */}
 					<Select
 						disabled={isLoading}
 						value={color.label}
@@ -229,7 +223,14 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 							))}
 						</SelectContent>
 					</Select>
-
+					<Input
+						disabled = {isLoading}
+						type = 'text'
+						value = {selectedColorArray.find((s) => s.id === color.id)?.sku || ""}
+						onChange={(e) => handleChangeSKU(e, color)}
+						className="w-full h-full text-center border-2 rounded-md focus:ring-2 focus:ring-gray-500 focus:outline-none"
+						placeholder = {"SKU"}
+					/>
 					{/* Increment/Decrement Quantity */}
 					<div className="flex items-center space-x-2">
 						<Button
@@ -250,6 +251,7 @@ const ColorPresetSelector = ({colorOptions,sizeTag,sizeTitle,OnChange,editingMod
 							className="w-full h-full text-center border-2 rounded-full focus:ring-2 focus:ring-gray-500 focus:outline-none"
 							min="1"
 						/>
+						
 
 						<Button
 							disabled={isLoading}
