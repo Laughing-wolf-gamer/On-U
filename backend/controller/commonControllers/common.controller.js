@@ -866,7 +866,7 @@ export const getOptions = async (req, res) => {
 	}
 };
   
-  // Add a new option
+// Add a new option
 export const addOption = async (req, res) => {
 	try {
 		const { type, value } = req.body;
