@@ -289,7 +289,7 @@ export const updateuser = async(req,res)=>{
 		if(!user){
 			return res.status(303).json({success:false,message: 'User not found'});
 		}
-		return res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
+		res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
 	} catch (error) {
 		console.error(`Error Logging in user ${error.message}`);
 		logger.error(`Error Logging in user ${error.message}`);
@@ -297,7 +297,7 @@ export const updateuser = async(req,res)=>{
 	}
 }
 
-export const updateuserdetails =A( async(req,res)=>{
+/* export const updateuserdetails =A( async(req,res)=>{
     console.log(req.body)
     const {name, pincode, address1, address2, citystate, phonenumber} = req.body
     
@@ -305,7 +305,7 @@ export const updateuserdetails =A( async(req,res)=>{
         success:'Addres Update Successfully'
     })
   
-})
+}) */
 export const removeAddress = async(req, res) => {
     try {
         const user = req.user;
@@ -320,15 +320,16 @@ export const removeAddress = async(req, res) => {
         res.status(200).json({success:true,message: 'Address Removed Successfully', user: userToUpdate});
     } catch (error) {
         console.error(`Error removing address `,error);
+		logger.error(`Error Removing Address: ${error.message}`);
         res.status(500).json({success:false,message: `Internal Server Error ${error.message}`});
     }
 }
-export const updateAddress = A(async(req, res, next) => {
+export const updateAddress = async(req, res, next) => {
     try {
         const user = req.user;
-        console.log("Updating Address: ",user)
-        if(!user) return next(new Errorhandler('User not found', 404));
-        if(!req.body) return next(new Errorhandler('Address not found', 404));
+        // console.log("Updating Address: ",user)
+        if(!user) return res.status(404).json({success:false,message:"User not found"});
+        if(!req.body) return res.status(404).json({success:false,message:"Address not found"});
         // const { name, phonenumber, pincode, address1, address2, citystate } = req.body;
         const userToUpdate = await User.findById(user.id);
         if(!userToUpdate) return next(new Errorhandler('User not found', 500));
@@ -337,21 +338,23 @@ export const updateAddress = A(async(req, res, next) => {
         res.status(200).json({success:true,message: 'Address Updated Successfully', user: userToUpdate});
     } catch (error) {
         console.error(`Error updating address `,error);
+		logger.error(`Error Updating Address: ${error.message}`);
         res.status(500).json({success:false,message: `Internal Server Error ${error.message}`});
     }
-})
-export const getAllAddress = A(async(req, res, next) => {
+}
+export const getAllAddress = async(req, res) => {
     try {
         const user = req.user;
-        if(!user) return next(new Errorhandler('User not found', 404));
+        if(!user) return res.status(404).json({success:false,message:'User not found'});
         const userAddresses = await User.findById(user.id);
-        if(!userAddresses) return next(new Errorhandler('User not found', 500));
+        if(!userAddresses) return res.status(403).json({success:false,message:'User Address Not Found'});
         res.status(200).json({success:true,message: 'Address Found Successfully',allAddresses: userAddresses.addresses || []});
     } catch (error) {
-        console.error("Error getting all address ", error.message)
+        console.error("Error getting all address ", error)
+		logger.error(`Error Getting All Address: ${error.message}`);
         res.status(500).json({message: "Internal Server Error"})
     }
-})
+}
 
 
 export const logout = A( async(req, res)=>{

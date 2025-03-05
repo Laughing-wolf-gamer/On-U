@@ -1,6 +1,6 @@
 import express from 'express';
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
-import { registerUser, getuser, optverify, resendotp, updateuser, logout, updateuserdetails, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress, removeAddress, loginOtpCheck, updateProfilePic } from '../controller/usercontroller.js';
+import { registerUser, getuser, optverify, resendotp, updateuser, logout, logInUser, registermobile, loginMobileNumber, updateAddress, getAllAddress, removeAddress, loginOtpCheck, updateProfilePic } from '../controller/usercontroller.js';
 
 const route = express.Router();
 route.post('/register', registerUser)
