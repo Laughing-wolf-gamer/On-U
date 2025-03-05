@@ -580,13 +580,6 @@ const removeProduct = async(productId,color,size,quantity) => {
         const colorReducedAmount = Math.max(0, activeColor.quantity - quantity);
         const sizeReducedAmount = Math.max(0, activeSize.quantity - quantity);
 
-
-        /* // Check for insufficient stock
-        if (colorReducedAmount < 0 || sizeReducedAmount < 0) {
-            console.log("Insufficient stock for color or size");
-            return res.status(400).json({ success: false, message: "Not enough stock to remove" });
-        } */
-
         // Update quantities
         activeColor.quantity = colorReducedAmount;
         activeSize.quantity = sizeReducedAmount;
@@ -612,14 +605,12 @@ const removeProduct = async(productId,color,size,quantity) => {
 }
 export const getallOrders = A(async (req, res) => {
     try {
-        console.log("Order User",req.user);  
+        // console.log("Order User",req.user);
         if(!req.user){
             return res.status(400).json({success:false,message:"No User Found!",result:[]});
         }
         const orders = await OrderModel.find({userId:req.user.id}).sort({createdAt:-1});
-        
         res.status(200).json({success:true,message:"Successfully Fetched Orders",result:orders || []})
-
     } catch (error) {
         console.error("Error Fetching Orders...",error)
 		logger.error(`Error fetching orders: ${error.message}`);
@@ -628,7 +619,7 @@ export const getallOrders = A(async (req, res) => {
 })
 
 
-export const getOrderById = async (req, res, next) => {
+export const getOrderById = async (req, res) => {
     try {
         const{orderId} = req.params
         if(!orderId){
@@ -706,24 +697,17 @@ export const createwishlist = async (req, res) => {
 export const getwishlist = async (req, res) => {
     try {
         const userId = req.user.id;
-        if(!userId) return res.status(404).json({success:false,message: "No User Found!"}); //
+        if(!userId) return res.status(404).json({success:false,message: "No User Found!"});
         const wishlist = await WhishList.findOne({ userId: req.user.id }).populate('orderItems.productId');
-
 		if (!wishlist) {
 			return res.status(404).json({ message: "Wishlist Not Found" });
 		}
-		// console.log("All WishList: ",wishlist);
 		// Filter out orderItems where productId is null or undefined
 		const updatedOrderItems = wishlist.orderItems.filter(item => item.productId !== null && item.productId !== undefined);
-
 		// Update the wishlist with the filtered orderItems
 		wishlist.orderItems = updatedOrderItems;
-
 		// Optionally, save the updated wishlist if required
 		await wishlist.save();
-
-		// console.log("Updated Wishlist: ", wishlist);
-
 		// If you want to return the updated wishlist to the user
 		res.status(200).json({success:true, message: "Wishlist Fetched successfully",wishlist: wishlist || []});
     } catch (error) {
@@ -797,7 +781,7 @@ export const removeCouponToBag = async(req,res)=>{
         }
         
         const coupon = await Coupon.findOne({CouponCode: couponCode});
-        console.log("Coupon Code: ",coupon)
+        // console.log("Coupon Code: ",coupon)
         if(!coupon){
             return res.status(404).json({message: "Coupon Not Found"})
         }
@@ -833,8 +817,6 @@ export const removeCouponToBag = async(req,res)=>{
 
 export const addItemsArrayToBag = async (req, res) => {
     try {
-        // console.log("Bag Array: ", req.body);
-
         // Check if the user is logged in
         if (!req.user || !req.user.id) {
             return res.status(400).json({ message: "User Not Logged In" });
@@ -910,7 +892,9 @@ const updateBagTotals = (bag, totals) => {
     if (totalDiscount) bag.totalDiscount = totalDiscount;
     if (totalMRP) bag.totalMRP = totalMRP;
     if (totalGst) bag.totalGst = totalGst;
-};
+}
+
+
 /* export const addItemsArrayToBag = async (req, res) => {
     try {
         // Check if the user is logged in
@@ -1177,12 +1161,11 @@ export const addItemsToBag = async (req, res) => {
 
         // Return the updated bag data
         const updatedBag = await Bag.findOne({ userId }).populate('orderItems.productId');
-        return res.status(200).json({ success: true, message: "Successfully added Items to Bag", bag: updatedBag });
-
+        res.status(200).json({ success: true, message: "Successfully added Items to Bag", bag: updatedBag });
     } catch (error) {
         console.error("Error occurred during creating/updating bag: ", error);
-		return res.status(500).json({ success: false, message: "Internal Server Error" });
-        res.status(500).json({ success: false, message: "Internal Server Error" });
+        logger.error(`Error occurred during creating/updating bag: ${error.message}`)
+		res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
     

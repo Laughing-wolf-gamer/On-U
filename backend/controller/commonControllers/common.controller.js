@@ -895,7 +895,7 @@ export const updateColorName = async(req,res)=>{
 	try {
         const { updatingData} = req.body;
         const { type, value, name } = JSON.parse(updatingData);
-		console.log("Updating colors...",updatingData);
+		// console.log("Updating colors...",updatingData);
         if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
             return res.status(400).json({ message: 'Invalid option type' });
         }
@@ -911,12 +911,12 @@ export const updateColorName = async(req,res)=>{
 			{},  // Empty filter to match all products
 			{ 
 				$set: {
-				"AllColors.$[elem].name": name  // Update the name of the matching label
+					"AllColors.$[elem].name": name  // Update the name of the matching label
 				}
 			},
 			{
 				arrayFilters: [
-				{ "elem.label": value }  // Specify the label to match (e.g., "color")
+					{ "elem.label": value }  // Specify the label to match (e.g., "color")
 				]
 			}
 		);

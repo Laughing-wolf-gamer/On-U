@@ -81,41 +81,28 @@ export const sendUpdateOrderStatus = async(userId, orderData) => {
         // Handle different order statuses
         switch(orderData?.status) {
             case 'Processing':
-                message += `
-                Your order is currently being processed. We are preparing your items for shipment.
-                Here are the details:
-                `;
+                message += `Your order is currently being processed. We are preparing your items for shipment.Here are the details:`;
                 break;
             case 'Order Confirmed':
-                message += `
-                Your order has been confirmed. We are getting ready to ship your items. Here are the details:
-                `;
+                message += `Your order has been confirmed. We are getting ready to ship your items. Here are the details:`;
                 break;
             case 'Order Shipped':
-                message += `
-                Great news! Your order has been dispatched and is on its way. Here are the details:
-                `;
+                message += `Great news! Your order has been dispatched and is on its way. Here are the details:`;
                 break;
             case 'Out for Delivery':
-                message += `
-                Your order is out for delivery. It should be arriving soon. Here are the details:
-                `;
+                message += `Your order is out for delivery. It should be arriving soon. Here are the details:`;
                 break;
             case 'Delivered':
-                message += `
-                Your order has been successfully delivered! We hope you enjoy your purchase. Here are the details:
-                `;
+                message += `Your order has been successfully delivered! We hope you enjoy your purchase. Here are the details:`;
                 break;
             default:
-                message += `
-                We have received your order and it is being processed. Here are the details:
-                `;
+                message += `We have received your order and it is being processed. Here are the details:`;
                 break;
         }
 
         // Add order items to the message
         orderData.orderItems.forEach(item => {
-            message += `\nProduct: ${item.productId.title}\nSize: ${item.size}\nQuantity: ${item.quantity}\n`;
+            message += `\nProduct: ${item.productId.title}\nSize: ${item.size}\n Color: ${item?.color}\n Quantity: ${item.quantity}\n`;
         });
 
         // Final message and thank you note
@@ -176,9 +163,9 @@ export const sendMainifestMail = async (userId,manifestLink) => {
             subject: `Your Order Manifest`,
             text: message,
 			html: `
-			<p>${message}</p>
-			<p>Click the link below to download your manifest:</p>
-			<a href="${manifestLink}" download="order_manifest">Download Manifest</a>
+                <p>${message}</p>
+                <p>Click the link below to download your manifest:</p>
+                <a href="${manifestLink}" download="order_manifest">Download Manifest</a>
 			`
         };
         
