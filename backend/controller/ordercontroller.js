@@ -1758,11 +1758,11 @@ export const createAndSendOrderManifest = async (req, res) => {
 		console.log("Order Found! : ", order.order_id);
 		const manifest = await generateManifest(order);
 		console.log("Manifest: ", manifest);
-		/* if (manifest?.is_invoice_created) {
+		if (manifest?.is_invoice_created) {
             await sendMainifestMail(req.user.id, manifest?.invoice_url);
 			// console.log("Manifest: ", manifest);
 			return res.status(200).json({success: true, message:"Order Manifest created successfully"});
-        } */
+        }
 		res.status(200).json({ success: false, message: "Failed to create order manifest" });
 	} catch (error) {
 		console.error(`Error creating order manifest: `, error);
