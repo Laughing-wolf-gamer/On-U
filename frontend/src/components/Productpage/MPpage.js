@@ -916,10 +916,6 @@ const MPpage = () => {
 						<div className="w-full flex flex-col space-y-4 mt-4">
 							<div className="w-full flex flex-col space-y-4 mt-4">
 								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
-									<h1 className="text-gray-500"><Clock /></h1>
-									<h1 className="text-gray-500">Choose expedited shipping for faster delivery.</h1>
-								</div>
-								<div className="w-full flex flex-row items-center space-x-2 text-xs text-left justify-start">
 									<h1 className="text-gray-500"><RotateCw /></h1>
 									<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
 								</div>

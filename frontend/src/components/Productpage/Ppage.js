@@ -658,33 +658,7 @@ const Ppage = () => {
                                         </div>
                                     </div>
 									<div className="w-full flex flex-col space-y-3 mt-4 text-sm">
-										{/* <div className="w-full flex flex-col space-y-4 mt-4 text-sm">
-											<div className="w-full flex flex-row items-center space-x-2 text-left justify-start">
-												<h1 className="text-gray-500"><Clock /></h1>
-												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-											</div>
-
-											<div className="w-full flex flex-row items-center space-x-2 justify-start">
-												<h1 className="text-gray-500"><RotateCw /></h1>
-												<h1 className="text-gray-500">Return within 45 days of purchase. Duties & taxes are non-refundable.</h1>
-											</div>
-
-											<div className="w-full flex flex-row items-center space-x-2 justify-start">
-												<h1 className="text-gray-500"><Truck /></h1>
-												<h1 className="text-gray-500">Estimated Delivery: 12-26 days (International), 3-6 days</h1>
-											</div>
-										</div> */}
 										<div className="w-full flex flex-col space-y-4 mt-4 text-sm">
-											{/* Estimated Delivery Time */}
-											<div className="w-full flex flex-row items-center space-x-2 justify-start">
-												<h1 className="text-gray-500">
-													<Clock />
-												</h1>
-												<h1 className="text-gray-500">
-													Choose expedited shipping for faster delivery.
-												</h1>
-											</div>
-
 											{/* Return Policy */}
 											<div className="w-full flex flex-row items-center space-x-2 justify-start">
 												<h1 className="text-gray-500">
