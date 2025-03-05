@@ -601,6 +601,7 @@ const removeProduct = async(productId,color,size,quantity) => {
         await product.save();
     } catch (error) {
         console.error("Error Removing Product:", error);
+        logger.error(`Error Removing and Product Quantity: ${error.message}`);
     }
 }
 export const getallOrders = A(async (req, res) => {
@@ -659,7 +660,6 @@ export const createwishlist = async (req, res) => {
     try {
         const id = req.user.id;
         const{productId} = req.body;
-        // console.log("Creating Wish List: ",req.body);
         if(!id){
             return res.status(200).json({success:false,message: "user Is Not Logged In"})
         }
@@ -671,7 +671,7 @@ export const createwishlist = async (req, res) => {
         if(previousWishList){
             const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
             if (isAlreadyPresent) {
-                console.log("Product already present",isAlreadyPresent);
+                // console.log("Product already present",isAlreadyPresent);
                 // return res.status(409).json({ success: false, message: "Product already in wishlist" });
                 const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
                 previousWishList.orderItems.splice(index, 1);
@@ -698,7 +698,7 @@ export const getwishlist = async (req, res) => {
     try {
         const userId = req.user.id;
         if(!userId) return res.status(404).json({success:false,message: "No User Found!"});
-        const wishlist = await WhishList.findOne({ userId: req.user.id }).populate('orderItems.productId');
+        const wishlist = await WhishList.findOne({ userId: userId }).populate('orderItems.productId');
 		if (!wishlist) {
 			return res.status(404).json({ message: "Wishlist Not Found" });
 		}

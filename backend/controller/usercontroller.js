@@ -83,7 +83,8 @@ export const loginMobileNumber = async(req, res) => {
 		}
 		sendVerificationEmail(user.email, otp);
 		if(user.profilePic === ''){
-			const profilePic = `https://avatar.iran.liara.run/public/${user.gender}?${user.name}`
+			//${gender === 'men' ? "boy":'girl'}
+			const profilePic = `https://avatar.iran.liara.run/public/${user.gender === 'men' ? "boy":'girl'}?${user.name}`
 			user.profilePic = profilePic;
 		}
 		console.log("Loging In User: ",user);
@@ -94,7 +95,6 @@ export const loginMobileNumber = async(req, res) => {
 		console.error("Error Login User: ",error);
 		logger.error(`Error Login User: ${error.message}`);
 		res.status(500).json({success:false,message: "Internal server error"});
-		
 	}
 }
 
@@ -157,12 +157,7 @@ export const registerUser = A(async (req, res) => {
     const { userName,email,password,phonenumber } = req.body
 
     console.log("Authenticating with: ",userName,email,password,phonenumber )
-    const existingUser = await User.findOne({phonenumber})
-
-    if (!existingUser) {
-    
-    }
-
+    // const existingUser = await User.findOne({phonenumber})
     const user = await User.findOne({phonenumber})
 
     let otp = Math.floor((1 + Math.random()) * 90000)
@@ -252,7 +247,7 @@ export const resendotp = async (req, res)=>{
 		await sendVerificationEmail(email, otp)
 		existingUser.otp = otp;
 		await existingUser.save();
-		return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
+		res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
 	} catch (error) {
 		console.error(`Error resending OTP request to server:`,error.message)
 		logger.error(`Error resending OTP request to server: ${error.message}`)
