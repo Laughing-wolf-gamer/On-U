@@ -1033,8 +1033,8 @@ export const fetchCouponsByQuery = async (req,res)=>{
         res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
     } catch (error) {
         console.error(`Error getting Coupons: `,error);
-        res.status(500).json({success: false, message: `Internal Server Error ${error.message}`});
         logger.error(`Error getting Coupons: `,error);
+        res.status(500).json({success: false, message: `Internal Server Error ${error.message}`});
     }
 }
 
@@ -1045,13 +1045,13 @@ export const sendMailToGetCoupon = async (req,res)=>{
 		const randomCoupon = coupon[0]; // Get the first (and only) item in the array
 		if(randomCoupon){
 			const success = await sendCouponMail(fullName,email,randomCoupon?.CouponCode)
-			console.log("Coupon sent: ",success)
+			// console.log("Coupon sent: ",success)
 			if(!success){
                 return res.status(500).json({ success:false,message: 'Failed to send coupon email'});
 			}
 			return res.status(200).json({ success:true,message: 'Coupon sent successfully'});
 		}
-		res.status(404).json({ success:false,message: 'No coupon found'});
+		res.status(200).json({ success:false,message: 'No coupon found'});
 	} catch (error) {
 		console.error("Error sending email: ", error);
 		logger.error(`Error sending email: ${error.message}`);
@@ -1062,10 +1062,6 @@ export const sendMailToGetCoupon = async (req,res)=>{
 
 export const setCouponBannerData = async (req,res)=>{
 	try {
-
-		// const { header, subHeader,bannerModelUrl} = req.body;
-        console.log("About Body:", req.body);
-
         const alreadyPresetCouponBannerData = await WebSiteModel.findOne({ tag: 'Coupon-banner' });
 
         if (!alreadyPresetCouponBannerData) {
