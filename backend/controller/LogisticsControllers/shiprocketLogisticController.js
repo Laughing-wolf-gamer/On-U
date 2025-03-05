@@ -470,7 +470,7 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
             totalOrderWeight,
             totalOrderHeight,
             totalOrderLength,
-            totalBredth
+            totalBreadth
         ] = await Promise.all([
             calculateTotal('price'),
             calculateTotal('weight'),
@@ -488,7 +488,7 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
-            sku: item?.productId?.sku || item?.productId?._id,
+            sku: generateRandomId().toString() || item?.productId?.sku || item?.productId?._id,
             tax: item?.productId?.gst || 0,
             hsn: item?.productId?.sku || generateRandomId().toString()
         }));
@@ -532,14 +532,11 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
             payment_method: shipmentData?.paymentMode,
             sub_total: subTotal,
             length: totalOrderLength,
-            breadth: totalBredth,
+            breadth: totalBreadth,
             height: totalOrderHeight,
             weight: totalOrderWeight / 1000, // Convert weight to KG
-            hsn: '441122' // Use a predefined HSN code
+            // hsn: '441122' // Use a predefined HSN code
         };
-
-        console.log("ShipRocket Order Returning Data: ", orderDetails);
-
         // Create return shipment by calling ShipRocket API
         const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/return`, orderDetails, {
             headers: {
