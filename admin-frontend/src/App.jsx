@@ -5,9 +5,7 @@ import AdminHomeFeatures from "./pages/admin-view/AdminHomeFeatures"
 import AdminProducts from "./pages/admin-view/products"
 import AdminOrders from "./pages/admin-view/AdminOrdersView"
 
-import NotFound from "./pages/not-found"
 
-import CheckAuth from "./components/common/checkAuth"
 import { useDispatch, useSelector } from "react-redux"
 import { useEffect } from "react"
 import { checkAuth } from "./store/auth-slice"
@@ -26,15 +24,19 @@ import AdminContactQueryViewPage from "./pages/admin-view/AdminContactQueryViewP
 import WarehouseAdmin from "./pages/admin-view/WarehouseAdmin"
 import AdminPrivacyPolicyPage from "./pages/admin-view/AdminPrivacyPolicyPage"
 import AdminTermsConditionsPage from "./pages/admin-view/AdminTermsConditionsPage"
-import { Toaster } from "react-hot-toast"
 import AdminUsers from "./pages/admin-view/AdminUsers"
-import { ToastContainer } from "react-toastify"
 import AdminFAQPage from "./pages/admin-view/AdminFAQPage"
 import AdminCategoryBanners from "./pages/admin-view/AdminCategoryBanners"
 import AdminHomeCouponBanner from "./pages/admin-view/AdminHomeCouponBanner"
 import DisclaimerManager from "./components/admin-view/DisclaimerManager"
+
+import { Toaster } from "react-hot-toast"
+import { ToastContainer } from "react-toastify"
+import CheckAuth from "./components/common/checkAuth"
+import NotFound from "./pages/not-found"
+
+
 function App() {
-    
     const {isAuthenticated,user,isLoading} = useSelector(state => state.auth)
     const dispatch = useDispatch();
     useEffect(()=>{

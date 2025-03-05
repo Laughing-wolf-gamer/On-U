@@ -50,7 +50,7 @@ export const verifyPayment = async (req, res) => {
 
         const { paymentData, SelectedAddress, orderDetails, totalAmount, bagId } = req.body;
 
-        console.log("Payment Verification Request: ", req.body);
+        // console.log("Payment Verification Request: ", req.body);
 
         // Validate if paymentData exists
         if (!paymentData) {
@@ -59,7 +59,7 @@ export const verifyPayment = async (req, res) => {
 
         // Fetch payment status
         const paymentStatus = await fetchPayments(paymentData.order_id);
-        console.log("Payment Status: ", paymentStatus);
+        // console.log("Payment Status: ", paymentStatus);
 
         // If no payment status found
         if (!paymentStatus || paymentStatus.length === 0) {
@@ -72,7 +72,7 @@ export const verifyPayment = async (req, res) => {
 
             // If bag data exists
             if (bagData) {
-                console.log("Bag Data: ", bagData);
+                // console.log("Bag Data: ", bagData);
 				const addressString = Object.values(SelectedAddress).join(", ");
                 // Create new order
                 const orderData = new OrderModel({
