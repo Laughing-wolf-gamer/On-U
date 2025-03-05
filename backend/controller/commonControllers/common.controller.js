@@ -482,11 +482,6 @@ export const setPrivacyPolicyWebsite = async (req, res) => {
 				: "Successfully updated Privacy Policy",
 			});
 		} else {
-			// This code shouldn't be reached due to upsert, but you can handle an unexpected case
-			/* res.status(500).json({
-				Success: false,
-				message: "Unexpected error occurred.",
-			}); */
 			throw new Error("Unexpected error occurred while updating Privacy Policy.");
 		}
 
@@ -662,13 +657,13 @@ export const patchConvenienceOptions = async (req, res) => {
 	
 		// Ensure convenienceFees is provided
 		if (!convenienceFees) {
-		return res.status(400).json({ Success: false, message: "Convenience Fees are required" });
+			return res.status(400).json({ Success: false, message: "Convenience Fees are required" });
 		}
 	
 		// Convert convenienceFees to a number and handle invalid inputs
 		const feeValue = Number(convenienceFees);
 		if (isNaN(feeValue)) {
-		return res.status(400).json({ Success: false, message: "Invalid convenience fee value" });
+			return res.status(400).json({ Success: false, message: "Invalid convenience fee value" });
 		}
 	
 		// Check if the convenience fees already exist in the database
@@ -730,12 +725,10 @@ export const setAddressField = async(req,res)=>{
 		if(!alreadyFoundWebsiteData){
 			const about = new WebSiteModel({Address: [addressFormFields],tag: 'Address'});
 			await about.save();
-			// console.log("Address Data: ",about)
 			return res.status(200).json({Success:true,message: 'Address Data set successfully'});
 		}
 		alreadyFoundWebsiteData.Address.push(addressFormFields);
 		await alreadyFoundWebsiteData.save();
-		// console.log("Address Data: ",alreadyFoundWebsiteData)
 		res.status(200).json({Success:true,message: 'Address Data set successfully',result: alreadyFoundWebsiteData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);
@@ -798,7 +791,7 @@ export const removeWebsiteDisclaimers = async(req,res)=>{
         alreadyFoundWebsiteData.WebsiteDisclaimers.splice(index,1);
         await alreadyFoundWebsiteData.save();
         // console.log("Website Disclaimers: ",alreadyFoundWebsiteData)
-        
+		res.status(200).json({Success:true,message: 'Website Disclaimers updated successfully',result:alreadyFoundWebsiteData?.WebsiteDisclaimers})
     } catch (error) {
         console.error(`Error setting about data`,error);
 		logger.error(`Error setting about data ${error.message}`);

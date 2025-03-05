@@ -1,5 +1,34 @@
 import express from 'express';
-import { addCategoryBanners, addHomeCarousal, addHomeCarousalMultiple, addOption, createContactQuery, editDisclaimers, FetchAllFilters, fetchCouponsByQuery, getAboutData, getAddressField, getAllOptions, getCategoryBanners, getContactQuery, getContactUsPageData, getConvenienceFees, getCouponBannerData, getFAQWebsite, getHomeBanners, getOptions, getPrivacyPolicyWebsite, getTermsAndConditionWebsite, getWebsiteDisclaimers, patchConvenienceOptions, removeAddressFormField, removeCategoryBanners, removeFAQById, removeHomeCarousal, removeOptionsByType, removeWebsiteDisclaimers, sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+import {addCategoryBanners,
+    addHomeCarousal,
+    addHomeCarousalMultiple,
+    addOption,
+    createContactQuery,
+    editDisclaimers,
+    FetchAllFilters,
+    fetchCouponsByQuery,
+    getAboutData,
+    getAddressField,
+    getAllOptions,
+    getCategoryBanners,
+    getContactQuery,
+    getContactUsPageData,
+    getConvenienceFees,
+    getCouponBannerData,
+    getFAQWebsite,
+    getHomeBanners,
+    getOptions,
+    getPrivacyPolicyWebsite,
+    getTermsAndConditionWebsite,
+    getWebsiteDisclaimers,
+    patchConvenienceOptions,
+    removeAddressFormField,
+    removeCategoryBanners,
+    removeFAQById,
+    removeHomeCarousal,
+    removeOptionsByType,
+    removeWebsiteDisclaimers,
+    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
