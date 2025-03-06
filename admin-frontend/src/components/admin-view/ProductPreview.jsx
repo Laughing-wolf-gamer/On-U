@@ -1072,13 +1072,13 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
 			}}>
 				<FileUploadPopUpWindow 
-				sizeId={activeSelectedSize} 
-				colorId={activeSelectedColor} 
-				isOpen={isFileUploadPopUpOpen} 
-				onConfirm={(imageArray) => {
-					updateImageImageBuyColorId(activeSelectedColor, activeSelectedSize, imageArray);
-					setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
-				}} 
+					sizeId={activeSelectedSize} 
+					colorId={activeSelectedColor} 
+					isOpen={isFileUploadPopUpOpen} 
+					onConfirm={(imageArray) => {
+						updateImageImageBuyColorId(activeSelectedColor, activeSelectedSize, imageArray);
+						setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
+					}} 
 				/>
 			</Dialog>
 			</div>
