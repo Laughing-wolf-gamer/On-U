@@ -1,6 +1,7 @@
 import {v2 as cloudinary} from 'cloudinary';
 import multer from 'multer';
 import dotenv from 'dotenv';
+import pLimit from 'p-limit';
 dotenv.config();
 
 
@@ -35,19 +36,28 @@ async function handleImageUpload(file){
 }
 async function handleMultipleImageUpload(files) {
     try {
-		console.log("Uploading multiple")
+        console.log("Uploading multiple images...",files.length);
+        
+        // Set a limit for concurrent uploads (e.g., 5 concurrent uploads at a time)
+        const limit = pLimit(5);
+        
+        // Map files to upload promises but limit the number of concurrent uploads
         const uploadPromises = files.map(file =>
-            cloudinary.uploader.upload(file, {
+            limit(() => cloudinary.uploader.upload(file, {
                 resource_type: 'auto',
-                quality: 60, // Reduce image quality to 60%
-            })
+                quality: 60, // Adjust the quality to reduce file size
+                // Optionally, add other optimizations like `fetch_format` to auto-select format based on file type
+                fetch_format: 'auto', // Automatically selects the best format
+                crop: 'scale', // Optional: Use this to scale down large images during upload
+            }))
         );
+        
+        // Await all upload promises
         const results = await Promise.all(uploadPromises);
-        return results; // Return an array of results with image URLs, public_ids, etc.
+        return results; // Return the array with image URLs, public_ids, etc.
     } catch (error) {
         console.error('Error uploading multiple files to Cloudinary:', error);
-        // throw new Error('Cloudinary multiple upload failed');
-        return {error:error.message};
+        return { error: error.message }; // Return the error message if anything fails
     }
 }
 
