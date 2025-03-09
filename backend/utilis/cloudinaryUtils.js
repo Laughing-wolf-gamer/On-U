@@ -39,7 +39,6 @@ async function handleMultipleImageUpload(files) {
             cloudinary.uploader.upload(file, {
                 resource_type: 'auto',
                 quality: 60, // Reduce image quality to 60%
-                max_file_size: 50 * 1024 * 1024 // 50MB
             })
         );
         const results = await Promise.all(uploadPromises);
