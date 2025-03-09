@@ -53,8 +53,6 @@ const FileUploadComponent = ({
     const handleUploadFiles = async (files) => {
         setIsLoading(true);
         const formData = new FormData();
-        // const token = sessionStorage.getItem('token');
-
         // Append each file to the FormData object
         files.forEach((file) => {
             formData.append('my_files[]', file);

@@ -39,26 +39,26 @@ const UploadMultipleImagesArray = ({
   };
 
   const handleUploadImage = async (file, index) => {
-    setLoadingState(index, true);
-    try {
-      const formData = new FormData();
-      formData.append("my_file", file);
+		setLoadingState(index, true);
+		try {
+		const formData = new FormData();
+		formData.append("my_file", file);
 
-      const token = sessionStorage.getItem("token");
-      const res = await axios.post(`${BASE_URL}/admin/upload-image`, formData, {
-        withCredentials: true,
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache, must-revalidate, proxy-revalidate",
-        },
-      });
+		const token = sessionStorage.getItem("token");
+		const res = await axios.post(`${BASE_URL}/admin/upload-image`, formData, {
+			withCredentials: true,
+			headers: {
+			Authorization: `Bearer ${token}`,
+			"Cache-Control": "no-cache, must-revalidate, proxy-revalidate",
+			},
+		});
 
-      return res.data?.result || "";
-    } catch (error) {
-      console.error("Error while uploading image:", error);
-    } finally {
-      setLoadingState(index, false);
-    }
+		return res.data?.result || "";
+		} catch (error) {
+		console.error("Error while uploading image:", error);
+		} finally {
+		setLoadingState(index, false);
+		}
   };
 
   const updateFile = (index, file) => {

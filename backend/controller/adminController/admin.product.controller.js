@@ -47,19 +47,36 @@ export const uploadImage = async (req, res) =>{
 }
 export const uploadMultipleImages = async (req, res) => {
     try {
+		if(!req.files){
+			logger.warn("No images were provided");
+            return res.status(400).json({Success: true,message:"No images were provided!"});
+		}
+		if(req.files.length <= 0){
+			logger.warn("No images were provided");
+            return res.status(400).json({Success: true,message:"No images were provided!"});
+		}
         const files = req.files.map(file => {
             const b64 = Buffer.from(file.buffer).toString('base64');
             return `data:${file.mimetype};base64,${b64}`;
         });
+		if(files.length <= 0){
+            logger.warn("No images were provided");
+            return res.status(400).json({Success: true,message:"No images were provided!"});
+        }
         // Upload multiple images to Cloudinary
         const results = await handleMultipleImageUpload(files);
-        // console.log("Uploaded Images:", results.map(result => result.secure_url));
-        if(!results || results.length <= 0) {
+        console.log("Uploaded Images:", results);
+		if(!results){
+			console.error("No images were uploaded");
+            return res.status(400).json({Success: true,message:"No images were uploaded!"});
+		}
+		// console.log("Uploaded Images:", results.map(result => result.secure_url));
+        if(results.length <= 0) {
             logger.warn("No images were uploaded");
             return res.status(400).json({Success: true,message:"No images were uploaded!"});
         }
         // Return the uploaded image URLs
-        res.status(200).json({
+        return res.status(200).json({
             Success: true,
             message: 'Images uploaded successfully!',
             results: results.map(result => result.secure_url)
