@@ -45,6 +45,7 @@ async function handleMultipleImageUpload(files) {
         const uploadPromises = files.map(file =>
             limit(() => cloudinary.uploader.upload(file, {
                 resource_type: 'auto',
+				timeout:120000,
                 quality: 60, // Adjust the quality to reduce file size
                 // Optionally, add other optimizations like `fetch_format` to auto-select format based on file type
                 fetch_format: 'auto', // Automatically selects the best format

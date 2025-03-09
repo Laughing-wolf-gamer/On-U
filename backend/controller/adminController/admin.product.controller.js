@@ -78,7 +78,7 @@ export const uploadMultipleImages = async (req, res) => {
             logger.warn("No images were uploaded");
             return res.status(400).json({Success: true,message:"No images were uploaded!"});
         }
-		const imageArray = results.map(result => result.secure_url);
+		const imageArray = results?.map(result => result.secure_url);
         // Return the uploaded image URLs
         return res.status(200).json({
             Success: true,

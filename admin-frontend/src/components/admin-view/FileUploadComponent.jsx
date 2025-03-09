@@ -59,7 +59,10 @@ const FileUploadComponent = ({
         });
 
         try {
-            const res = await axios.post(`${BASE_URL}/admin/upload-image-all`, formData, Header());
+            const res = await axios.post(`${BASE_URL}/admin/upload-image-all`, formData, {
+				...Header(),
+				timeout: 120000  // Set timeout to 60 seconds (you can adjust the value as needed)
+			});
             const urls = res.data?.results || [];
             updateUploadedFileUrls(urls);
             checkAndCreateToast("success","Files uploaded successfully");
