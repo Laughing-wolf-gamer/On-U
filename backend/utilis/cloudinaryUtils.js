@@ -39,7 +39,7 @@ async function handleMultipleImageUpload(files) {
         console.log("Uploading multiple images...",files.length);
         
         // Set a limit for concurrent uploads (e.g., 5 concurrent uploads at a time)
-        const limit = pLimit(5);
+        const limit = pLimit(10);
         
         // Map files to upload promises but limit the number of concurrent uploads
         const uploadPromises = files.map(file =>
