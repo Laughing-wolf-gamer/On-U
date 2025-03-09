@@ -1,5 +1,4 @@
 import App from './app.js';
-import { getAuthToken } from './controller/LogisticsControllers/shiprocketLogisticController.js';
 import connectdatabse from './database/Database.js';
 import { config } from 'dotenv';
 config();
@@ -10,11 +9,12 @@ process.on('uncaughtException', (err)=>{
     process.exit(1)
 })
 const PORT = process.env.PORT || 8004;
-const server = App.listen(process.env.PORT, ()=>{
-    console.log(`Server on http://localhost:${PORT}`)
+let server = null
+connectdatabse().then(()=>{
+	server = App.listen(process.env.PORT, ()=>{
+		console.log(`Server on http://localhost:${PORT}`)
+	})
 })
-
-connectdatabse()
 
 process.on('unhandledRejection', (err)=>{
     console.log(`Error `,err);
