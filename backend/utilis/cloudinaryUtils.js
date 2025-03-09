@@ -35,6 +35,7 @@ async function handleImageUpload(file){
 }
 async function handleMultipleImageUpload(files) {
     try {
+		console.log("Uploading multiple")
         const uploadPromises = files.map(file =>
             cloudinary.uploader.upload(file, {
                 resource_type: 'auto',

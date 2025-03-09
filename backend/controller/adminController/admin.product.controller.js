@@ -47,7 +47,6 @@ export const uploadImage = async (req, res) =>{
 }
 export const uploadMultipleImages = async (req, res) => {
     try {
-		console.log("Uploading multiple")
 		if(!req.files){
 			logger.warn("No images were provided");
             return res.status(400).json({Success: true,message:"No images were provided!"});
@@ -84,7 +83,7 @@ export const uploadMultipleImages = async (req, res) => {
         return res.status(200).json({
             Success: true,
             message: 'Images uploaded successfully!',
-            results: imageArray
+            results: imageArray || []
         });
     } catch (error) {
         console.error('Error while uploading images:', error);
