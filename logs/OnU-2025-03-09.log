@@ -1,2 +1,6 @@
 2025-03-09T12:43:08.262Z error: Error while uploading images: results.map is not a function
 2025-03-09T12:43:08.262Z error: Error while uploading images: results.map is not a function
+2025-03-09T13:08:39.898Z error: Error while uploading images: Server returned unexpected status code - 502
+2025-03-09T13:08:39.898Z error: Error while uploading images: Server returned unexpected status code - 502
+2025-03-09T13:14:33.608Z error: Error while uploading images: results?.map is not a function
+2025-03-09T13:14:33.608Z error: Error while uploading images: results?.map is not a function

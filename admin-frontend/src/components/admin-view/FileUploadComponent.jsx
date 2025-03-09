@@ -59,36 +59,44 @@ const FileUploadComponent = ({
         });
 
         try {
-            const res = await axios.post(`${BASE_URL}/admin/upload-image-all`, formData, {
-				...Header(),
-				timeout: 120000  // Set timeout to 60 seconds (you can adjust the value as needed)
-			});
-            const urls = res.data?.results || [];
-            updateUploadedFileUrls(urls);
-            checkAndCreateToast("success","Files uploaded successfully");
-        } catch (error) {
-            // Check if the error is a response error (status codes outside 2xx range)
-            if (error.response) {
-                // The server responded with a status other than 2xx
-                console.log('Error Status Code:', error.response.status);
-                console.log('Error Data:', error.response.data); // The JSON error message from the server
-                console.log('Error Headers:', error.response.headers);
-                checkAndCreateToast("error","Error uploading files: " + error.response.data.message);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.log('No response received:', error.request);
-                checkAndCreateToast("error","No response received while uploading files");
-            } else {
-                // Something happened in setting up the request that triggered an error
-                console.log('Error Message:', error.message);
-                checkAndCreateToast("error","Error uploading files: ", error.message);
-            }
-            console.error('Error while uploading files:', error);
-            updateUploadedFileUrls([]);
-        } finally {
-            setIsLoading(false);
-            setLoadingStates(Array(files.length).fill(false)); // Reset loading states
-        }
+			const res = await axios.post(
+				`${BASE_URL}/admin/upload-image-all`, 
+				formData, 
+				{
+					...Header(),
+					timeout: 120000  // Set timeout to 60 seconds (you can adjust the value as needed)
+				}
+			);
+			const urls = res.data?.results || [];
+			updateUploadedFileUrls(urls);
+			checkAndCreateToast("success", "Files uploaded successfully");
+		} catch (error) {
+			// Check if the error is a response error (status codes outside 2xx range)
+			if (error.response) {
+				// The server responded with a status other than 2xx
+				console.log('Error Status Code:', error.response.status);
+				console.log('Error Data:', error.response.data); // The JSON error message from the server
+				console.log('Error Headers:', error.response.headers);
+				checkAndCreateToast("error", "Error uploading files: " + error.response.data.message);
+			} else if (error.request) {
+				// The request was made but no response was received
+				console.log('No response received:', error.request);
+				checkAndCreateToast("error", "No response received while uploading files");
+			} else if (error.code === 'ECONNABORTED') {
+				// Handle timeout specifically
+				console.log('Request timed out');
+				checkAndCreateToast("error", "Request timed out while uploading files");
+			} else {
+				// Something happened in setting up the request that triggered an error
+				console.log('Error Message:', error.message);
+				checkAndCreateToast("error", "Error uploading files: " + error.message);
+			}
+			console.error('Error while uploading files:', error);
+			updateUploadedFileUrls([]);
+		} finally {
+			setIsLoading(false);
+			setLoadingStates(Array(files.length).fill(false)); // Reset loading states
+		}
     };
 
     // Function to update uploaded file URLs
