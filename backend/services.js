@@ -12,7 +12,7 @@ const PORT = process.env.PORT || 8004;
 let server = null
 connectdatabse().then(()=>{
 	server = App.listen(process.env.PORT, ()=>{
-		console.log(`Server on http://localhost:${PORT}`)
+		console.log(`Server on ${process.env.API_URL}`)
 	})
 })
 
