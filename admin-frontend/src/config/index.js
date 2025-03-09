@@ -321,14 +321,6 @@ export const addProductsFromElement = [
         required:true,
     },
 	{
-        label:'SKU',
-        name:'sku',
-        componentType:'input',
-        type:'number',
-        placeHolder:'Enter Product SKU',
-        required:true,
-    },
-	{
         label:'HSN',
         name:'hsn',
         componentType:'input',

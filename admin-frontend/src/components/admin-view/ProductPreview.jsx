@@ -224,7 +224,7 @@ const ProductPreview = ({
 							</div>
 
 							{/* GST, SKU, HSN, Price, Sale Price */}
-							{['gst', 'sku', 'hsn'].map((field) => (
+							{['gst', 'hsn'].map((field) => (
 								<div key={field} className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
 									<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
 									{isEditing ? (
