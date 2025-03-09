@@ -10,6 +10,7 @@ import Order from './routes/orderroutes.js';
 import paymentRoutes from './routes/payment.route.js';
 import razorPayRoute from './routes/razerPayPayment.route.js';
 import shipRocketHookRoute from './routes/logisticRoutes.js';
+import logger from './utilis/loggerUtils.js';
 
 const app = express();
 
@@ -27,8 +28,8 @@ const allowedOrigins = [
 app.use(
     cors({
         origin: (origin, callback) => {
-            // console.log('Origin: ' + origin, ', Allowed: ', allowedOrigins.includes(origin));
-
+            console.log('Origin:', origin); // Debugging log
+			logger.log(`Origin: ${origin}` + '\n' + 'Allowed origins:' + allowedOrigins.includes(origin))
             // Allow requests with no origin (like mobile apps or Postman)
             if (!origin) return callback(null, true);
 
@@ -44,8 +45,9 @@ app.use(
     })
 );
 
-// You can explicitly handle OPTIONS requests if needed:
+// Handling OPTIONS requests for preflight CORS
 app.options('*', cors());
+
 
 // Define the / route to send a JSON response
 app.get('/', (req, res) => {

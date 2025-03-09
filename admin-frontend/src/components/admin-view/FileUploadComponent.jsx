@@ -59,12 +59,17 @@ const FileUploadComponent = ({
         });
 
         try {
+			const token = sessionStorage.getItem('token');
+    		console.log(token);
 			const res = await axios.post(
 				`${BASE_URL}/admin/upload-image-all`, 
 				formData, 
 				{
-					...Header(),
-					timeout: 120000  // Set timeout to 60 seconds (you can adjust the value as needed)
+					withCredentials:true,
+					headers: {
+						Authorization:`Bearer ${token}`,
+						"Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
+					},
 				}
 			);
 			const urls = res.data?.results || [];
