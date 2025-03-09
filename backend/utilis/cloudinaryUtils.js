@@ -45,7 +45,7 @@ async function handleMultipleImageUpload(files) {
         const results = await Promise.all(uploadPromises);
         return results; // Return an array of results with image URLs, public_ids, etc.
     } catch (error) {
-        console.error('Error uploading multiple files to Cloudinary:', error.message);
+        console.error('Error uploading multiple files to Cloudinary:', error);
         // throw new Error('Cloudinary multiple upload failed');
         return {error:error.message};
     }
