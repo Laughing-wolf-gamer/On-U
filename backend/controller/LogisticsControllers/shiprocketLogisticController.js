@@ -343,6 +343,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             console.error("Primary pickup location not found");
             // return null;
         }
+		console.log("shipment Address",shipmentData.address);
 
         // Prepare order details
         const orderDetails = {

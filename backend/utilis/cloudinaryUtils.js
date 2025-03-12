@@ -2,6 +2,8 @@ import {v2 as cloudinary} from 'cloudinary';
 import multer from 'multer';
 import dotenv from 'dotenv';
 import pLimit from 'p-limit';
+
+
 dotenv.config();
 
 
@@ -10,6 +12,15 @@ cloudinary.config({
     api_key: process.env.CLOUDINARY_API_KEY,
     api_secret: process.env.CLOUDINARY_API_SECRET,
 });
+
+
+const uploadOptions = {
+	resource_type: 'auto',
+	quality: 60, // Reduce image quality to 60%
+	fetch_format: 'auto', // Automatically selects the best format
+	crop: 'scale', // Scale the image down
+	timeout: 120000, // Timeout for upload request
+};
 const storage = new multer.memoryStorage();
 /* const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
@@ -23,10 +34,7 @@ const storage = new multer.memoryStorage();
 async function handleImageUpload(file){
     try {
         // Upload image to Cloudinary
-        const result = await cloudinary.uploader.upload(file, {
-            resource_type: 'auto', // Automatically detect the resource type (image/video)
-            quality: 60, // Reduce image quality to 60%
-        });
+        const result = await cloudinary.uploader.upload(file, uploadOptions);
         return result; // Return the result which contains the image URL, public_id, etc.
     } catch (error) {
         console.error('Error uploading to Cloudinary:', error);
@@ -42,14 +50,7 @@ async function handleMultipleImageUpload(files) {
         
         // Map files to upload promises but limit the number of concurrent uploads
         const uploadPromises = files.map(file =>
-            limit(() => cloudinary.uploader.upload(file, {
-                resource_type: 'auto',
-				timeout:120000,
-                quality: 60, // Adjust the quality to reduce file size
-                // Optionally, add other optimizations like `fetch_format` to auto-select format based on file type
-                fetch_format: 'auto', // Automatically selects the best format
-                crop: 'scale', // Optional: Use this to scale down large images during upload
-            }))
+            limit(() => cloudinary.uploader.upload(file, uploadOptions))
         );
         
         // Await all upload promises

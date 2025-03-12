@@ -108,10 +108,11 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 		setIsPaymentStart(true);
 
 		try {
+			console.log("Payment Gateway : ",RAZERPAY_KEY);
 			// Prepare payment data
 			const userContact = user?.user?.phoneNumber;
 			const userEmail = user?.user?.email;
-			const userName = user?.user?.name || "Test User";
+			const userName = user?.user?.name || "UNKNOWN";
 			const bagId = bag?._id;
 			const orderItems = bag.orderItems.map(item => ({
 				productId: item.productId,
@@ -133,6 +134,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 				},
 				headerConfig()
 			);
+			console.log("Successful Razerpay order created!",data);
 
 			if (!data.success) {
 				throw new Error("Failed to create order, please try again to process payment!");
@@ -145,7 +147,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 				currency: "INR",
 				name: userName,
 				image:user.user.profilePic,
-				description: "Your order has been created",
+				description: "Your Razerpay order has been created",
 				order_id: data.order.id,
 				handler: function (response) {
 					const paymentData = {
@@ -471,7 +473,6 @@ const SwipeToConfirmPaymentButton = ({ disabled = false, OnSwipeComplete, HasSta
 		// Simulate a payment process (replace with actual logic)
 		setTimeout(() => {
 			setIsPaymentStart(false);
-			// alert("Payment Started");
 			if (OnSwipeComplete && !HasStarted) {
 				setArrowPosition(0)
 				setIsPaymentStart(false);

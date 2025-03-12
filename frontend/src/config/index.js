@@ -294,6 +294,8 @@ export const clothingSizeChartData = [
 ];
 export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
 export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
+
+
 export const SECREAT_KEY = process.env.REACT_APP_SECREAT_KEY;
 export const RAZERPAY_KEY = process.env.REACT_APP_RAZERPAY_KEY;
 
