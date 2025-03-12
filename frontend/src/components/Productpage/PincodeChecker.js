@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import { useLocationContext } from "../../Contaxt/LocationContext";
@@ -35,6 +35,13 @@ const PincodeChecker = ({productId}) => {
             setMessage("Pincode not found!, Please try different PinCode and try again");
         }
     }
+	useEffect(()=>{
+		if(pincode){
+			// setMessage(`Delivery is available for this pincode Within days`);
+            setCustomPincode(pincode);
+            console.log("Pincode is set from context: ",position);
+		}
+	},[pincode])
     return (
         <div className="max-w-sm w-full p-4 bg-white">
 		<h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
@@ -45,7 +52,7 @@ const PincodeChecker = ({productId}) => {
 				placeholder="Enter Pincode"
 				value={customPincode}
 				onChange={handleInputChange}
-				className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+				className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
 				maxLength="6"
 			/>
 			
