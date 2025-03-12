@@ -28,7 +28,7 @@ import {addCategoryBanners,
     removeHomeCarousal,
     removeOptionsByType,
     removeWebsiteDisclaimers,
-    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -74,6 +74,8 @@ route.post('/website/send-contact-query',createContactQuery)
 route.get('/website/get-contact-query',getContactQuery)
 route.put('/website/address',isAuthenticateuser,ProtectAdminRoute,setAddressField);
 route.patch('/website/address/remove',isAuthenticateuser,ProtectAdminRoute,removeAddressFormField);
+
+route.patch('/website/address/updateIndex',isAuthenticateuser,ProtectAdminRoute,updateAddressFormFiledIndex);
 route.get('/website/address',getAddressField);
 
 route.put('/website/disclaimer',isAuthenticateuser,ProtectAdminRoute,setWebsiteDisclaimers);

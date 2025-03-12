@@ -37,6 +37,8 @@ const CheckoutPage = () => {
 
 	const [selectedAddress, setSelectedAddress] = useState(null);
 	const [showPayment,setShowPayment] = useState(false);
+	const [coupon, setCoupon] = useState(null);
+	// const [discount, setDiscount] = useState(0);
 
 	
 	const handleOpenPopup = () => setIsAddressPopupOpen(true);
@@ -290,9 +292,7 @@ const CheckoutPage = () => {
 			},400)
 		}
 	};
-	console.log("Discounted Amount: ",discountedAmount)
-	const [coupon, setCoupon] = useState(null);
-	const [discount, setDiscount] = useState(0);
+	
 	// Apply coupon discount
 	const applyCoupon = async (e) => {
 		e.preventDefault();
@@ -313,7 +313,6 @@ const CheckoutPage = () => {
 			await dispatch(removeCouponFromBag({ bagId: bag._id, couponCode: code }));
 			checkAndCreateToast("success","Coupon Removed");
 			setCoupon(null);
-			// dispatch(getbag({ userId: user.id }));
 			window.location.reload();
 		}
 	}
@@ -348,8 +347,8 @@ const CheckoutPage = () => {
 
 
 					{/* Right Side: Shopping Cart */}
-					<div className="col-span-5 lg:col-span-2 md:col-span-2 xl:col-span-2 2xl:col-span-2">
-						<h3 className="text-xl font-semibold mb-4">Shopping Cart</h3>
+					<div className="col-span-5 font-kumbsan lg:col-span-2 md:col-span-2 xl:col-span-2 2xl:col-span-2">
+						<h3 className="text-xl font-semibold mb-4">BAG ITEMS</h3>
 						<ProductListingComponent
 							updateQty={updateQty}
 							updateChecked = {updateChecked}
@@ -413,7 +412,7 @@ const AddressAndPaymentComponent = ({
 				{user?.user && allAddresses?.length > 0 ? "Your Addresses" : "No Addresses Available"}
 			</h3>
 
-			<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto`}>
+			<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-200`}>
 				{/* Address Display */}
 				{user?.user && allAddresses && allAddresses?.length > 0 && (
 					allAddresses.map((addr, index) => {
@@ -423,7 +422,7 @@ const AddressAndPaymentComponent = ({
 								key={index}
 								className={`p-4 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
 								onClick={() => handleAddressSelection(active)}
-								>
+							>
 								{Object.entries(active).map(([key, value]) => (
 									<div key={key} className="flex justify-between mb-1">
 										<span className="font-medium text-[12px] sm:text-base md:text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
@@ -448,17 +447,13 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 	return (
 		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
 			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
-				ORDER DETAILS ({bag?.orderItems.length} items)
+				ORDER DETAILS ({bag?.orderItems?.length} ITEMS)
 			</h3>
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>Total MRP</span>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
 				</div>
-				{/* <div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Total GST</span>
-					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}%</span>
-				</div> */}
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<span>You Saved</span>
 					{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>}
@@ -545,117 +540,117 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 
 const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => (
 	<div className="flex-1 font-kumbsan space-y-6">
-		{bag?.orderItems?.map((item, i) => {
-			const active = item;
-			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-			const isValidImage = (url) => {
-				return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
-			};
-			const getImageExtensionsFile = () => {
-				
-				// Find the first valid image URL based on extensions
-				return active?.color?.images.find((image) => 
-				  	image.url && isValidImage(image.url)
-				);
-			};
-			const validImage = getImageExtensionsFile();
-			return(
-				<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
-					{/* Product Image */}
-					<div className="relative w-28 h-28 sm:w-40 sm:h-40 border-2 rounded-lg">
-						<Link to={`/products/${active.productId?._id}`}>
-						{validImage ? (
-							<div className="relative w-full h-full">
-							<img
-								src={validImage?.url}
-								alt={active?.productId?.title}
-								className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
-							/>
-							<div
-								onClick={(e) => updateChecked(e, active.productId?._id,active.size,active.color)}
-								className="absolute top-2 left-2 w-5 h-5"
-							>
-								<input
-									type="checkbox"
-									className="w-full h-full cursor-pointer"
-									checked={active?.isChecked}
-									onChange={() => {}}
+		<div className='space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200'>
+			{bag?.orderItems?.map((item, i) => {
+				const active = item;
+				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+				const isValidImage = (url) => {
+					return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+				};
+				const getImageExtensionsFile = () => {
+					
+					// Find the first valid image URL based on extensions
+					return active?.color?.images.find((image) => 
+						image.url && isValidImage(image.url)
+					);
+				};
+				const validImage = getImageExtensionsFile();
+				return(
+					<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+						{/* Product Image */}
+						<div className="relative w-28 h-28 sm:w-40 sm:h-40 border-2 rounded-lg">
+							<Link to={`/products/${active.productId?._id}`}>
+							{validImage ? (
+								<div className="relative w-full h-full">
+								<img
+									src={validImage?.url}
+									alt={active?.productId?.title}
+									className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 								/>
+								<div
+									onClick={(e) => updateChecked(e, active.productId?._id,active.size,active.color)}
+									className="absolute top-2 left-2 w-5 h-5"
+								>
+									<input
+										type="checkbox"
+										className="w-full h-full cursor-pointer"
+										checked={active?.isChecked}
+										onChange={() => {}}
+									/>
+								</div>
+								</div>
+							) : (
+								<p>No valid image available</p>
+							)}
+							</Link>
+
+							{/* Delete Button on the Image (Mobile Only) */}
+							<div
+								className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+								onClick={(e) => {
+									e.stopPropagation();
+									handleDeleteBag(active.productId._id, active._id,active.size,active.color);
+								}}
+							>
+							<Trash size={15} />
 							</div>
-							</div>
-						) : (
-							<p>No valid image available</p>
-						)}
-						</Link>
-
-						{/* Delete Button on the Image (Mobile Only) */}
-						<div
-							className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
-							onClick={(e) => {
-								e.stopPropagation();
-								handleDeleteBag(active.productId._id, active._id,active.size,active.color);
-							}}
-						>
-						<Trash size={15} />
-						</div>
-					</div>
-
-					{/* Product Info */}
-					<div className="ml-6 flex-1 w-full">
-						<h3 className="font-semibold text-base sm:text-lg md:text-xl text-gray-800 truncate space-x-1 whitespace-nowrap"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
-						<p className="text-xs sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
-						<p className="text-xs sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
-
-						{/* Price and Discount Info */}
-						<div className="flex items-center space-x-3 text-[10px] sm:text-base md:text-lg text-red-400 mt-2">
-						{active?.productId?.salePrice ? (
-							<>
-							<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-							<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-							<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
-							</>
-						) : (
-							<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
-						)}
 						</div>
 
+						{/* Product Info */}
+						<div className="ml-6 flex-1 w-full">
+							<h3 className="font-semibold text-base sm:text-lg md:text-xl text-gray-800 truncate space-x-1 whitespace-nowrap"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
+							<p className="text-xs sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
+							<p className="text-xs sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
 
-						{/* Quantity Selector */}
-						<div className="mt-4 flex w-fit items-center space-x-4 px-3 sm:px-5 shadow-md justify-between rounded-full p-2">
-							<div className="flex items-center space-x-2 justify-between">
+							{/* Price and Discount Info */}
+							<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
+							{active?.productId?.salePrice ? (
+								<>
+									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+									<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+									<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+								</>
+							) : (
+								<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+							)}
+							</div>
+
+
+							{/* Quantity Selector */}
+							<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 								{/* Decrease Button */}
 								<button
 									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
-									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
+									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
 									disabled={active?.quantity <= 1}
 								>
-								<Minus />
+									<Minus />
 								</button>
 
 								{/* Display Current Quantity */}
-								<span className="text-sm">{active?.quantity}</span>
+								<span className="text-xs sm:text-sm">{active?.quantity}</span>
 
 								{/* Increase Button */}
 								<button
 									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
-									className="h-10 w-10 px-2 rounded-full disabled:text-gray-300"
+									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
 									disabled={active?.quantity >= active?.size?.quantity}
 								>
 								<Plus />
 								</button>
 							</div>
 						</div>
+
+						{/* Delete Button for larger screens */}
+						<Trash
+							className="text-xl text-black hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+							onClick={() => handleDeleteBag(active.productId._id, active._id,active.size,active.color)}
+						/>
 					</div>
 
-					{/* Delete Button for larger screens */}
-					<Trash
-						className="text-xl text-black hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-						onClick={() => handleDeleteBag(active.productId._id, active._id,active.size,active.color)}
-					/>
-					</div>
-
-			)
-		})}
+				)
+			})}
+		</div>
 
 		{/* Coupon Section */}
 		<div className="mt-6 space-y-2">
@@ -691,7 +686,32 @@ const AddAddress = ({onSave }) => {
     const { formData } = useSelector(state => state.fetchFormBanners);
     const dispatch = useDispatch();
     const [error, setError] = useState('');
+	/* const handleInputChange = (e) => {
+		setCustomPincode(e.target.value);
+	};
 
+	const handleSubmit = async (e) => {
+		e.preventDefault();
+
+		try {
+			let currentPincode = pincode;
+			if(customPincode) currentPincode = customPincode;
+			if(!currentPincode){
+				checkAndCreateToast('error','Please enter a valid pincode');
+				return;
+			}
+			const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${currentPincode}&productId=${productId}`);
+			if (response.data.result) {
+				console.log("Delivery is available! ",response.data.result);
+				const result = response.data.result;
+				setMessage(`Delivery is available for this pincode Within ${result?.edd} days`);
+			} else {
+				setMessage("Sorry, delivery is not available for this pincode.");
+			}
+		} catch (error) {
+			setMessage("Pincode not found!, Please try different PinCode and try again");
+		}
+	} */
     // Handle changes in form fields
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -737,39 +757,37 @@ const AddAddress = ({onSave }) => {
 		<div className='w-full flex flex-col items-start'>
 			<h2 className="text-xl w-full font-semibold mb-4 text-left">Add New Address</h2>
 			
-			<form className="space-y-4 w-full flex flex-col">
+			<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
 				{formData && formData.map((item, index) => (
-				<div key={index} className='w-full flex flex-col space-y-3'>
-					<label className="text-sm font-medium text-left">{item}
-					{!newAddress[removeSpaces(item)] && <span className='text-red-300'>*</span>}
-					</label>
-					<input
-					type="text"
-					value={newAddress[removeSpaces(item)] || ''}
-					id={removeSpaces(item)}
-					name={removeSpaces(item)}
-					onChange={handleChange}
-					className="border p-2 rounded-md mt-1 w-full"
-					required
-					placeholder={`Enter ${removeSpaces(item)}`}
-					/>
-					{error && <FormHelperText>{error}</FormHelperText>}
-				</div>
+					<div key={index} className='w-full flex flex-col space-y-3'>
+						<label className="text-sm font-medium text-left">{capitalizeFirstLetterOfEachWord(item)}
+							{!newAddress[removeSpaces(item)] && <span className='text-red-600'>*</span>}
+						</label>
+						<input
+							type="text"
+							value={newAddress[removeSpaces(item)] || ''}
+							id={removeSpaces(item)}
+							name={removeSpaces(item)}
+							onChange={handleChange}
+							className="border p-2 rounded-md mt-1 w-full"
+							required
+							placeholder={`Enter ${removeSpaces(item)}`}
+						/>
+						{error && <FormHelperText>{error}</FormHelperText>}
+					</div>
 				))}
 			</form>
 			
 			{/* Save Button */}
 			{formData && formData.length > 0 && (
-				<div className="flex justify-end mt-4 w-full">
 				<button
+					type='submit'
 					disabled={Object.values(newAddress).every(value => value.trim() === '')}
 					onClick={handleSave}
-					color="primary"
-					className={`px-4 py-2 w-full sm:w-auto bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
+					className={`px-4 text-center justify-center flex items-center min-w-full mt-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
 				>
-					Save
+					<span>SAVE</span>
 				</button>
-				</div>
 			)}
 		</div>
 

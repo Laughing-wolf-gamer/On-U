@@ -696,6 +696,26 @@ export const patchConvenienceOptions = async (req, res) => {
 		res.status(500).json({ Success: false, message: 'Internal Server Error' });
 	}
 };
+export const updateAddressFormFiledIndex = async(req,res)=>{
+	try {
+		const alreadyFoundWebsiteData = await WebSiteModel.findOne({tag: 'Address'}); 
+		if(!alreadyFoundWebsiteData){
+			return res.status(404).json({Success: false, message: 'Address not found'})
+		}
+		const{sourceIndex,destinationIndex} = req.body;
+		console.log("Updated Body: ", sourceIndex, destinationIndex);
+		// const items = Array.from(alreadyFoundWebsiteData.Address);
+		const[removed] = alreadyFoundWebsiteData.Address.splice(sourceIndex,1);
+		alreadyFoundWebsiteData.Address.splice(destinationIndex,0,removed);
+		console.log("Updated Address Form: ",alreadyFoundWebsiteData);
+		await alreadyFoundWebsiteData.save();
+		res.status(200).json({Success: true, message: 'Address Form saved successfully'});
+	} catch (error) {
+		console.error("Error updating address Form Index: ",error);
+		logger.error(`Error updating address Form Index: ${error.message}`);
+		res.status(500).json({Success:false,message:"Internal Server Error"})
+	}
+}
 	  
 export const removeAddressFormField = async(req,res)=>{
 	try {
@@ -815,7 +835,7 @@ export const getWebsiteDisclaimers = async(req,res)=>{
 export const getAddressField = async(req,res)=>{
 	try {
 	  const aboutData = await WebSiteModel.findOne({tag:'Address'});
-	  console.log("Address Data: ",aboutData?.Address)
+	//   console.log("Address Data: ",aboutData?.Address)
 	  res.status(200).json({Success:true,message: 'Address Data Found',result: aboutData?.Address || []});
 	} catch (error) {
 		console.error(`Error setting about data `,error);

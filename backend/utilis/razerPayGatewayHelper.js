@@ -33,7 +33,7 @@ export const createOrder = async (req, res) => {
         res.status(200).json({ success: true, order,keyId:process.env.RAZER_PG_ID});
     } catch (error) {
         console.error("Payment Order Creation Error: ", error);
-        res.status(404).json({success: false,message:"Internal Server Error",});
+        res.status(500).json({success: false,message:"Internal Server Error",});
     }
 };
 
@@ -332,6 +332,7 @@ export const createOrder = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }; */
+
 export const paymentVerification = async (req, res) => {
     const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
     

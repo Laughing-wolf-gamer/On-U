@@ -37,7 +37,7 @@ const Footer = () => {
 	
 			return genders.slice(0,2).map((g) => ({
 				Gender: g.value,
-				category: categories.slice(0,3).map((c) => ({
+				category: categories.slice(0,4).map((c) => ({
 					title: c.value,
 					subcategories: subcategories.filter((s) => s.categoryId === c.id).map((s) => s.value),
 				})),
@@ -138,17 +138,17 @@ const Footer = () => {
 						</div>
                     {/* Online Shopping */}
                     <div className="md:border-r hidden sm:block lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
-                        <h1 className="text-lg font-bold mb-4 text-gray-800">ON U</h1>
-                        <ul className="text-sm space-y-4 mt-3">
-							<p className="text-sm hover:underline text-gray-600">Owner: On U</p>
+                        <h1 className="text-lg font-bold mb-4 text-gray-800">Info</h1>
+                        <ul className="text-sm space-y-2 mt-3">
+							<h3 className="text-sm font-bold text-gray-600">Owner: <span className="font-normal text-xs">On U</span></h3>
 							<div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
 								<Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
 								<ArrowUp className="rotate-45" />
 							</div>
-							<p className="text-sm hover:underline text-gray-600">Company: On U</p>
-							<p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
-							<p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
-							<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</a>
+							<p className="text-sm text-gray-600 font-bold">Company: <span className="font-normal text-xs">On U</span></p>
+							<p className="text-sm text-gray-600 font-bold">Address: <span className="font-normal text-xs">{termsAndCondition?.businessAddress}</span></p>
+							<p className="text-sm text-gray-600 font-bold">Phone: <span className="font-normal text-xs">{termsAndCondition?.phoneNumber}</span></p>
+							<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline font-bold text-gray-600">Email: <span className="font-normal text-xs">{termsAndCondition?.contactInfo}</span></a>
 						</ul>
                     </div>
 					<div className="md:border-r block sm:hidden lg:border-r xl:border-r 2xl:border-r border-gray-200 space-y-3">
@@ -159,15 +159,15 @@ const Footer = () => {
 							{
 								openDropdown["information"] && (
 									<ul className="text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full">
-										<p className="text-sm hover:underline text-gray-600">Owner: On U</p>
+										<p className="text-sm text-gray-600">Owner: <span className="font-normal text-xs">On U</span></p>
 										<div className="flex flex-row justify-start space-x-1 cursor-pointer hover:text-indigo-400 items-center">
 											<Link to={'/contact'}><h2 className="text-xl font-bold">GET DIRECTION</h2></Link>
 											<ArrowUp className="rotate-45" />
 										</div>
-										<p className="text-sm hover:underline text-gray-600">Company: On U</p>
-										<p className="text-sm hover:underline text-gray-600">Address: {termsAndCondition?.businessAddress}</p>
-										<p className="text-sm hover:underline text-gray-600">Phone: {termsAndCondition?.phoneNumber}</p>
-										<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: {termsAndCondition?.contactInfo}</a>
+										<p className="text-sm font-bold text-gray-600">Company: <span className="font-normal text-xs">On U</span></p>
+										<p className="text-sm font-bold text-gray-600">Address: <span className="font-normal text-xs">{termsAndCondition?.businessAddress}</span></p>
+										<p className="text-sm font-bold text-gray-600">Phone: <span className="font-normal text-xs">{termsAndCondition?.phoneNumber}</span></p>
+										<a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-sm hover:underline text-gray-600">Email: <span className="font-normal text-xs">{termsAndCondition?.contactInfo}</span></a>
 									</ul>
 								)
 							}
@@ -178,8 +178,8 @@ const Footer = () => {
                     <div className="md:border-r hidden sm:block lg:border-r xl:border-r 2xl:border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold text-gray-800 mb-4">USEFULL LINKS</h1>
                         <ul className="text-sm space-y-4">
-                            <Link to="/dashboard">
-                                <li className="hover:underline text-gray-600">Shipping</li>
+                            <Link to={`/dashboard?sideTab=Orders-Returns`}>
+                                <li className="hover:underline text-gray-600">Orders & Returns</li>
                             </Link>
                             <Link to="/about">
                                 <li className="hover:underline text-gray-600">About Us</li>
@@ -208,8 +208,8 @@ const Footer = () => {
 							{
 								openDropdown["services"] && (
 									<ul className="text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full">
-										<Link to="/dashboard">
-										<li className="hover:underline text-gray-600">Shipping</li>
+										<Link to="/dashboard?sideTab=Orders-Returns">
+										<li className="hover:underline text-gray-600">Orders & Returns</li>
 									</Link>
 									<Link to="/about">
 										<li className="hover:underline text-gray-600">About Us</li>

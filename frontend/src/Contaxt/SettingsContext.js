@@ -24,14 +24,14 @@ export const SettingsProvider = ({ children }) => {
             'aria-live': 'polite',
         };
         const removeDelay = 500;
-        const appearDuratin = 1000;
+        const appearDuration = 1000;
         const position = 'top-center'
         // console.log("check Toast: ",type, message,activeToast);
         if(!activeToast){
             switch(type){
                 case "success":
                     toast.success(message,{
-                        duration: appearDuratin,
+                        duration: appearDuration,
                         position: position,
                       
                         // Styling
@@ -49,7 +49,7 @@ export const SettingsProvider = ({ children }) => {
                     break;
                 default:
                     toast.error(message,{
-                        duration: appearDuratin,
+                        duration: appearDuration,
                         position: position,
                       
                         // Styling

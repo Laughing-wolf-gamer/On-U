@@ -634,6 +634,7 @@ export const getOrderById = async (req, res) => {
             return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
         }
 		try {
+			console.log("Shipment Order Id: ",order.order_id);
 			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
 			shipmenetOrder.map(shipOrder => {
 				console.log("Admin Shipment Order: ",);

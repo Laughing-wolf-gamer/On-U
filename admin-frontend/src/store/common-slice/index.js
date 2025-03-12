@@ -211,6 +211,15 @@ export const removeAddressFormData = createAsyncThunk('/common/removeAddressForm
         console.error(`Error Removing Address Data: `,error);
     }
 })
+export const updateAddressFormElementIndex = createAsyncThunk('/common/updateAddressFormElementIndex',async(data,{rejectWithValue})=>{
+	try {
+		const response = await axios.patch(`${BASE_URL}/api/common/website/address/updateIndex`,data,Header());
+		return response.data;
+	} catch (error) {
+		console.error("Error updating address element index",error);
+		rejectWithValue(error);
+	}
+})
 export const fetchAddressFormData = createAsyncThunk('/common/fetchAddressFormData',async()=>{
     try {
         const response = await axios.get(`${BASE_URL}/api/common/website/address`);

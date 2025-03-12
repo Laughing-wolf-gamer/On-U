@@ -88,7 +88,7 @@ export const getuser = () => async (dispatch) => {
 export const updateAddress = (address) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
-        console.log("Address Data: ", address)
+        // console.log("Address Data: ", address)
         dispatch({ type: REQUEST_UPDATE_ADDRESS })
         const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
             withCredentials:true,

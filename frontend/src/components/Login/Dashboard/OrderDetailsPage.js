@@ -142,7 +142,7 @@ const OrderDetailsPage = ({ user }) => {
     };
 
     return (
-        <div ref={scrollableDivRef} className="w-full min-h-screen overflow-y-auto bg-gray-50 font-sans">
+        <div ref={scrollableDivRef} className="w-full min-h-screen overflow-y-auto bg-gray-50 font-sans scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {!loading && orderbyid ? (
                 <div className="max-w-screen-2xl w-full mx-auto py-8 px-6">
                     <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Details</h1>

@@ -4,7 +4,7 @@ import OrdersReturns from './OrdersReturns';
 import SavedAddresses from './SavedAddresses';
 import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { AlignJustify, LogOut } from 'lucide-react';
 import { FaExclamationTriangle, FaUser, FaUserAltSlash } from 'react-icons/fa'; // Import the react-icon for logout
 import BackToTopButton from '../../Home/BackToTopButton';
@@ -47,17 +47,24 @@ const NotLoggedInModal = () => {
 	);
 };
 const Overview = ({ user ,loading,isAuthentication}) => {
+	const location = useLocation(); // Get the current location
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
+	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 	const [activeSection, setActiveSection] = useState('User-Details');
-	const [sidebarOpen, setSidebarOpen] = useState(false);
 
+	
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, []);
-
-	const scrollableDivRef = useRef(null); // Create a ref to access the div element
-
+	useEffect(()=>{
+		if(location){
+			const queryParams = new URLSearchParams(location.search);
+			if(queryParams.has('sideTab')){
+				setActiveSection(queryParams.get('sideTab'))
+			}
+		}
+	},[])
 	const handleLogout = async () => {
 		await dispatch(logout())
 		navigate('/Login');
