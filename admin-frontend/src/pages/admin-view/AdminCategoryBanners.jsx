@@ -287,7 +287,7 @@ const PopUpFormForHomeCategoryBanners = ({
 					</div>
 					<div className="w-full">
 						<Label className="text-xl sm:text-2xl font-bold text-center relative text-gray-900 mb-4 flex items-center justify-center">
-							Selecte a Product Category for the Image
+							Select a Product Category for the Image
 							<span className="ml-2 text-red-600">*</span> {/* You can apply a different color for the asterisk */}
 						</Label>
 						<select
