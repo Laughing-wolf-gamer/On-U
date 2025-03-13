@@ -1,4 +1,6 @@
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { fetchCouponBannerData, setCouponBannerData } from '@/store/common-slice';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
@@ -38,7 +40,7 @@ const AdminHomeCouponBanner = () => {
 			{/* Header */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">Header</h2>
-                <input
+                <Input
                     type="text"
                     className="w-full p-2 border rounded"
                     value={header}
@@ -49,7 +51,7 @@ const AdminHomeCouponBanner = () => {
 			{/* SubHeader */}
             <div className="mb-8 bg-white p-4 rounded shadow">
                 <h2 className="text-xl font-semibold mb-4">SubHeader</h2>
-                <input
+                <Input
                     type="text"
                     className="w-full p-2 border rounded"
                     value={subHeader}
@@ -78,14 +80,12 @@ const AdminHomeCouponBanner = () => {
 				isLoading = {imageLoading}
 				setIsLoading={setImageLoading}
 			/>
-			<div className="text-center">
-                <button
-                    className="bg-gray-500 text-white px-6 py-3 rounded hover:bg-gray-600"
-                    onClick={handleSave}
-                >
-                	Save Details
-                </button>
-            </div>
+			<Button
+				className="bg-gray-500 flex justify-center items-center w-full mt-6 text-center text-white px-6 py-3 rounded hover:bg-gray-600"
+				onClick={handleSave}
+			>
+				<span>Save Details</span>
+			</Button>
 		</div>
 	)
 }

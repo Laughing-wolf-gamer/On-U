@@ -3,15 +3,16 @@ import { useDispatch, useSelector } from 'react-redux';
 import ImageUpload from '@/components/admin-view/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { addFeaturesImage, addMultipleImages, delFeatureImage, fetchOptionsByType, getFeatureImage, updateFeatureImageIndex } from '@/store/common-slice';
+import { addFeaturesImage, addMultipleImages, delFeatureImage, getFeatureImage, updateFeatureImageIndex } from '@/store/common-slice';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
 import { X } from 'lucide-react';
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
-import toast from 'react-hot-toast';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import ReactPlayer from 'react-player';
+import { Badge } from '@/components/ui/badge';
+import { useSettingsContext } from '@/Context/SettingsContext';
 const allPositions = [
 	'Wide Screen Section- 1',
 	'Wide Screen Section- 2',
@@ -31,10 +32,9 @@ const allPositions = [
     'Small Screen Section- 5'
 ];
 const AdminHomeFeatures = () => {
-    const { featuresList } = useSelector(state => state.common);
     const dispatch = useDispatch();
-
-
+    const { featuresList } = useSelector(state => state.common);
+	const[filteredList,setFilteredList] = useState([]);
     // Boolean State................................................................
     const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
     const[resetImageUpload,setResetImageUpload] = useState(false);
@@ -51,89 +51,67 @@ const AdminHomeFeatures = () => {
     const [selectedCategory, setSelectedCategory] = useState('');
 
     // Array State..............................................................
-    // const[filteredItems,setFilteredItems] = useState([]);
     const[multipleImages,setMultipleImages] = useState([]);
     const[deletingImageCategory, setDeletingImageCategory] = useState(null)
-    // const[categories,setCategories] = useState([]);
-
-
-
-    useEffect(() => {
-        dispatch(getFeatureImage());
-		// fetchCategoryOptions();
-    }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
-    /* let categories = [];
-    if(featuresList && featuresList.length > 0){
-        categories = [...new Set(featuresList.map(item => item?.CategoryType).filter(Boolean))];
-    } */
-	// console.log("allProductsCategory: ",allProductsCategory);
-	/* const fetchCategoryOptions = async () => {
-		try {
-			const data = await dispatch(fetchOptionsByType("category"));
-			const categoryData = data.payload?.result;
-			console.log("Category Options: ",categoryData)
-			setAllProductsCategory(categoryData?.map((s) => ({ id: s._id, label: s.value })) || []);
-		} catch (error) {
-			console.error("Error Fetching Category Options: ", error);
-		}
-	}; */
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const{checkAndCreateToast} = useSettingsContext();
+    
     const handleImageUpload = async (url) => {
         try {
             if (!imageUrlsCategory) {
-                // toast({ title: 'Please select a category to upload or Update.' });
-                toast.error('Please select a category to upload or Update.');
+                checkAndCreateToast('error','Please select a category to upload or Update.');
                 return;
             }
             const response = await dispatch(
                 addFeaturesImage({ url, CategoryType: imageUrlsCategory, Header: imageHeader || '' })
             );
-            // toast({ title: 'Upload Successful', description: response?.payload?.message });
             if(!response){
                 throw new Error('Failed to add image');
             }
-            toast.success('Upload Successful');
+            checkAndCreateToast('success','Upload Successful');
             setImageHeader('');
             setImageFile('');
-            
         } catch (error) {
             console.error('Error during file upload:', error);
-            toast.error('Image Failed Upload');
-        }
+            checkAndCreateToast('error','Image Failed Upload');
+        }finally{
+			dispatch(getFeatureImage());
+			setIsModalOpen(false);
+		}
     };
     const HandleMultipleImagesUpload = async()=>{
         try {
             console.log('Image Urls: ', multipleImages);
             if(multipleImages.length <= 0){
                 // toast({ title: 'Please select at least one image to upload.' });
-                toast.error('Please select at least one image to upload.');
+                checkAndCreateToast('error','Please select at least one image to upload.');
                 return;
             }
             const response = await dispatch(addMultipleImages({ images: multipleImages, CategoryType: imageUrlsCategory, Header: imageHeader || '' }));
             if(!response){
                 throw new Error('Failed to add multiple images');
             }
-            // toast({ title: 'Upload Successful', description: response?.payload?.message });
-            toast.success('Upload Successful');
+            checkAndCreateToast('success','Upload Successful');
             setImageHeader('');
             setImageFile('');
-            
         } catch (error) {
             console.error('Error during file upload:', error);
-            // toast({ title: 'Image Failed Upload', type: 'error' });
-            toast.error('Image Failed Upload');
+            checkAndCreateToast('error','Image Failed Upload');
         }finally{
+			dispatch(getFeatureImage());
             setMultipleImages([]);
             setResetImageUpload(true);
             setTimeout(() => {
                 setResetImageUpload(false);
             }, 100);
+			setIsModalOpen(false);
         }
     }
 
     const handleDeleteImage = async () => {
         try {
             if(!deletingImageCategory){
-                toast.error('Please select an image to delete.');
+                checkAndCreateToast('error','Please select an image to delete.');
                 return;
             }
             console.log("Images Deleting: ", deletingImageCategory)
@@ -146,14 +124,14 @@ const AdminHomeFeatures = () => {
             if(!response.payload.Success){
                 throw new Error('Failed to delete image');
             }
-            toast.success('Image Deleted ' + response?.payload?.message);
-            dispatch(getFeatureImage());
+            checkAndCreateToast('success','Image Deleted ' + response?.payload?.message);
         } catch (error) {
             console.error('Error deleting image:', error);
-            // toast({ title: 'Image Failed Deleted', type: 'warning' });
-            toast.error('Image Failed Deleted');
+            checkAndCreateToast('error','Image Failed Deleted');
         }finally{
             setDeletingImageCategory(null);
+			dispatch(getFeatureImage());
+			setIsModalOpen(false);
         }
     };
 	const UpdateCategoryNameIndex = (data)=>{
@@ -163,13 +141,19 @@ const AdminHomeFeatures = () => {
         setSelectedCategory(e.target.value);
         setImageUrlsCategory(e.target.value);
     };
-    let filteredItems = [];
+	useEffect(()=>{
+		if(featuresList){
+			setFilteredList(featuresList.filter(item => selectedCategory === '' || item.CategoryType === selectedCategory));
+		}
+	},[featuresList])
+    /* let filteredItems = [];
     if(featuresList && featuresList.length > 0) {
-        filteredItems = featuresList.filter(
-            item => selectedCategory === '' || item.CategoryType === selectedCategory
-        );
-    }
-	const [isModalOpen, setIsModalOpen] = useState(false);
+        filteredItems = featuresList.filter(item => selectedCategory === '' || item.CategoryType === selectedCategory);
+    } */
+	useEffect(() => {
+        dispatch(getFeatureImage());
+    }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
+	console.log("Filtered items: " , filteredList)
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
             {/* Image Upload Section */}
@@ -256,9 +240,9 @@ const AdminHomeFeatures = () => {
                 />
 				
             </div> */}
-			<button className='px-4 py-3 bg-black text-white' onClick={() => setIsModalOpen(true)}>
+			<Button className='px-4 py-3 bg-black text-white' onClick={() => setIsModalOpen(true)}>
 				Add New Home Page Image/Video
-			</button>
+			</Button>
 			<PopupModal
 				isOpen={isModalOpen}
 				setIsModelOpen = {setIsModalOpen}
@@ -303,30 +287,33 @@ const AdminHomeFeatures = () => {
     
             {/* Selected Category Display */}
             <div className="w-full ">
-                {filteredItems && filteredItems.length > 0 ? (
-                    filteredItems.map((item, index) => (
-                        <div key={index} className="mb-8">
-                            {/* Show category header */}
-                            <h2 className="text-xl font-semibold text-gray-700 mb-2">
-                                Category: {capitalizeFirstLetterOfEachWord(item.CategoryType)}
-                            </h2>
-                            {item.Header && (
-                                <h3 className="text-lg font-medium text-gray-600 mb-4">
-                                    Header: {item.Header}
-                                </h3>
-                            )}
-                            
-                            <GridImageView 
-                                item={item}
-								updateCategoryIndex = {(data)=>{
-									UpdateCategoryNameIndex({...data,categoryType:item.CategoryType})
-								}}
-                                setIsConfirmDeleteWindow={setIsConfirmDeleteWindow} 
-                                isConfirmDeleteWindow={isConfirmDeleteWindow} 
-                                setDeletingImageCategory={setDeletingImageCategory}
-                            />
-                        </div>
-                    ))
+                {filteredList && filteredList.length > 0 ? (
+                    filteredList.map((item, index) => {
+						const active = item;
+						return (
+							<div key={index} className="mb-8 space-x-2">
+								{/* Show category header */}
+								<h2 className="text-xl font-semibold text-gray-700 mb-2">
+									Category: {capitalizeFirstLetterOfEachWord(active.CategoryType)}
+								</h2>
+								{active.Header && (
+									<h3 className="text-lg font-medium text-gray-600 mb-4">
+										Header: {active.Header}
+									</h3>
+								)}
+								
+								<GridImageView 
+									item={active}
+									updateCategoryIndex = {(data)=>{
+										UpdateCategoryNameIndex({...data,categoryType:active.CategoryType})
+									}}
+									setIsConfirmDeleteWindow={setIsConfirmDeleteWindow} 
+									isConfirmDeleteWindow={isConfirmDeleteWindow} 
+									setDeletingImageCategory={setDeletingImageCategory}
+								/>
+							</div>
+						)
+					})
                 ) : (
                     <p className="text-center text-gray-600">No images found for the selected category.</p>
                 )}
@@ -408,7 +395,8 @@ const PopupModal = ({
 			</div>
 
 			{toggleBulkUpload ? (
-				<div className="w-full justify-center items-center flex flex-col">
+				<div className="w-full justify-center space-y-3 items-center flex flex-col">
+					<Badge>Total Images to Upload: {multipleImages?.length}</Badge>
 					<FileUploadComponent
 						maxFiles={10}
 						tag={`home-carousal-upload`}
@@ -481,11 +469,11 @@ const PopupModal = ({
 	);
 };
 
-const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
+const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
     // Initialize loading states for each item in the Url array, all true initially
     const [loadingStates, setLoadingStates] = useState(item.Url.map(() => true));
     const videoRefs = useRef([]); // References to video elements for lazy loading
-    const [items, setItems] = useState(item.Url); // State to manage the order of items
+    const [items, setItems] = useState([]); // State to manage the order of items
 
     // Helper function to determine if the file is a video or an image
     const getFileType = useCallback((url) => {
@@ -547,7 +535,11 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
 			updateCategoryIndex({sourceIndex: source.index, destinationIndex:destination.index});
 		}
     };
-
+	useEffect(()=>{
+		if(item){
+			setItems(item.Url);
+		}
+	},[item]); // Re-run the observer when URLs change
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" direction="horizontal">
@@ -560,7 +552,6 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
                         {items.length > 0 ? (
                             items.map((url, index) => {
                                 const { isImage, isVideo } = getFileType(url);
-
                                 return (
                                     <Draggable key={index} draggableId={String(index)} index={index}>
                                         {(provided) => (
@@ -631,5 +622,5 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
             </Droppable>
         </DragDropContext>
     );
-});
+}
 export default AdminHomeFeatures;

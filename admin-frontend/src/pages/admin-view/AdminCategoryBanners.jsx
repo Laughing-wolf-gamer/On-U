@@ -12,6 +12,8 @@ import { toast } from 'react-toastify';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import ReactPlayer from 'react-player';
+import { use } from 'react';
+import { Badge } from '@/components/ui/badge';
 const allPositions = [
 	'WideScreen_Video',
 	'MobileScreen_CategorySlider',
@@ -258,7 +260,7 @@ const PopUpFormForHomeCategoryBanners = ({
 				</Button>
 				<div className="w-full space-y-6">
 					<Label className="text-xl sm:text-2xl font-bold text-center relative text-gray-900 mb-4 flex items-center justify-center">
-						Add Header (Optionl) <span className="ml-2 text-blue-600">*</span> 
+						Add Header (Optional) <span className="ml-2 text-blue-600">*</span> 
 					</Label>
 					<Input
 						type="text"
@@ -270,7 +272,8 @@ const PopUpFormForHomeCategoryBanners = ({
 					<Label className="text-xl sm:text-2xl font-bold text-center relative text-gray-900 mb-4 flex items-center justify-center">
 						Upload Images for {selectedCategory || 'All Categories'} <span className="ml-2 text-red-600">*</span> 
 					</Label>
-					<div className='w-full justify-center items-center flex flex-col'>
+					<div className='w-full justify-center items-center space-y-2 flex flex-col'>
+						<Badge>Total Image to Upload: {imageUrls?.length}</Badge>
 						<ImageUpload
 							file={imageFile}
 							setFile={setImageFile}
@@ -434,7 +437,7 @@ const PopUpFormForHomeCategoryBanners = ({
 const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
     const [loadingStates, setLoadingStates] = useState(item.Url.map(() => true));
     const videoRefs = useRef([]); // References to video elements for lazy loading
-    const [items, setItems] = useState(item.Url); // This will hold the current order of items
+    const [items, setItems] = useState([]); // This will hold the current order of items
 
     // Helper function to determine if the file is a video or an image
     const getFileType = useCallback((url) => {
@@ -498,7 +501,11 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
 			updateCategoryIndex({sourceIndex: source.index, destinationIndex:destination.index});
 		}
     };
-
+	useEffect(()=>{
+		if(item){
+			setItems(item.Url);
+		}
+	},[item])
     return (
         <DragDropContext onDragEnd={onDragEnd}>
             <Droppable droppableId="droppable" direction="horizontal">

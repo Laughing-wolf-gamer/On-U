@@ -384,7 +384,7 @@ const FileUploadComponent = ({
     return (
         <div className="flex flex-col items-center min-w-full">
             <Label className="mb-4">
-                Files: {files.filter((file) => file !== '').length} / {maxFiles}
+                Selected Files: {files.filter((file) => file !== '').length} / {maxFiles}
             </Label>
             <div
                 ref={dropzoneRef}
@@ -413,7 +413,7 @@ const FileUploadComponent = ({
                 </div>
             </div>
 
-            {isLoading && <Badge>Please wait while the files are uploading...</Badge>}
+            {isLoading && <Badge className={"mt-2"}>Please wait while the files are uploading...</Badge>}
 
             <div className="mt-4 w-full h-full justify-start items-center flex flex-col">
                 {files.map((file, index) => (
@@ -457,7 +457,7 @@ const FileUploadComponent = ({
                 ))}
             </div>
 
-            {isUploadReady && (
+            {isUploadReady && files.length > 0 && (
                 <Button
                     onClick={handleUploadFiles}
                     className="mt-4 bg-red-500 hover:bg-red-800 justify-center w-full items-center text-white"
