@@ -129,18 +129,12 @@ const AdminOptions = () => {
     };
     const updateConvenienceFees = async()=>{
         try {
-            if(convenienceFeesAmount <= 0){
-                toast({title:'Please enter a Number greater than zero'})
-                return;
-            }
-            dispatch(setConvenienceFees({convenienceFees:convenienceFeesAmount}));
+            await dispatch(setConvenienceFees({convenienceFees:convenienceFeesAmount || 0}));
             setConvenienceFeesAmount(0);
         } catch (error) {
             console.error("Failed to set convenience: " + amount, error);
         }
     }
-    console.log("All Options: ",AllOptions);
-
     return (
 
         <div className="p-8 space-y-6 bg-gray-50">
@@ -159,7 +153,7 @@ const AdminOptions = () => {
                         className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
                     <button
-                        onClick={() => updateConvenienceFees()}
+                        onClick={updateConvenienceFees}
                         className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
                     >
                         Add Convenience Fees
@@ -169,10 +163,10 @@ const AdminOptions = () => {
                 <div>
                     <label className="block font-medium text-gray-700">Product Category</label>
                     <input
-                    type="text"
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+						type="text"
+						value={category}
+						onChange={(e) => setCategory(e.target.value)}
+						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
                     <button
                     onClick={() => handleAddOption('category', category)}
@@ -252,14 +246,14 @@ const AdminOptions = () => {
                 <div>
                     <label className="block font-medium text-gray-700">Product Gender</label>
                     <input
-                    type="text"
-                    value={gender}
-                    onChange={(e) => setGender(e.target.value)}
-                    className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
+						type="text"
+						value={gender}
+						onChange={(e) => setGender(e.target.value)}
+						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
                     <button
-                    onClick={() => handleAddOption('gender', gender)}
-                    className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+						onClick={() => handleAddOption('gender', gender)}
+						className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
                     >
                     Add Gender
                     </button>
@@ -267,92 +261,92 @@ const AdminOptions = () => {
                 </div>
 
                 <div className="bg-white p-6 rounded-lg shadow-md space-y-6">
-            <div>
-                <h3 className="text-3xl font-bold text-red-600 flex items-center justify-between">
-                	Delivary Convenience Fees 
-                	<span className='text-red-700'>{convenienceFees}</span>
-                </h3>
-            </div>
-            <h2 className="text-2xl font-semibold text-gray-700">Manage Options</h2>
-            {/* Categories List */}
-            <div>
-                <button onClick={() => toggleDropdown('categories')} className="text-xl font-medium text-gray-800 flex w-full items-center justify-between">
-					Product Categories: {categories && categories.length > 0? `(${categories.length})` : 'No Categories'}
-					<div  className="text-black">
-						<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.categories ? "rotate-90":""}`}/>
+					<div>
+						<h3 className="text-3xl font-bold text-red-600 flex items-center justify-between">
+							Delivery Convenience Fees 
+							<span className='text-red-700'>{convenienceFees}</span>
+						</h3>
 					</div>
-                </button>
-				<ul
-					className="mt-2 space-y-2"
-					style={{
-						maxHeight: '300px', // Set the maximum height for the scrollable area
-						overflowY: 'auto',  // Enable vertical scrolling
-						overflowX:'auto'
-					}}
-				>
-					{dropdowns.categories && (
-						<ul className="mt-2 space-y-2">
-							{categories.map((item, index) => (
-								<li key={index} className="flex justify-between items-center hover:bg-gray-50">
-									<input
-										type="checkbox"
-										id='category-select'
-										checked={item?.isActive || false}
-										onChange={(e) => handleToggleShowOptionInProducts('category',item, e.target.value)}
-									/>
-									<span className='font-sans'>{item?.value}</span>
-									<button
-										onClick={() => handleRemoveOption('category', item)}
-										className="p-2  text-black rounded-md  transition duration-300"
-									>
-										<Trash/>
-									</button>
-								</li>
-							))}
+					<h2 className="text-2xl font-semibold text-gray-700">Manage Options</h2>
+					{/* Categories List */}
+					<div className='border border-gray-800 p-2 space-y-1'>
+						<button onClick={() => toggleDropdown('categories')} className="text-xl font-medium text-gray-800 flex w-full items-center justify-between">
+							Product Categories: {categories && categories.length > 0? `(${categories.length})` : 'No Categories'}
+							<div  className="text-black">
+								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.categories ? "rotate-90":""}`}/>
+							</div>
+						</button>
+						<ul
+							className="space-y-2"
+							style={{
+								maxHeight: '300px', // Set the maximum height for the scrollable area
+								overflowY: 'auto',  // Enable vertical scrolling
+								overflowX:'auto'
+							}}
+						>
+							{dropdowns.categories && (
+								<ul className="space-y-2">
+									{categories.map((item, index) => (
+										<li key={index} className="flex justify-between items-center hover:bg-gray-50">
+											<input
+												type="checkbox"
+												id='category-select'
+												checked={item?.isActive || false}
+												onChange={(e) => handleToggleShowOptionInProducts('category',item, e.target.value)}
+											/>
+											<span className='font-sans'>{item?.value}</span>
+											<button
+												onClick={() => handleRemoveOption('category', item)}
+												className="p-2  text-black rounded-md  transition duration-300"
+											>
+												<Trash/>
+											</button>
+										</li>
+									))}
+								</ul>
+							)}
 						</ul>
-					)}
-				</ul>
-            </div>
+					</div>
 
-            {/* Subcategories List */}
-            <div onClick={() => toggleDropdown('subcategories')}>
-                <button className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
-					<h3>Product Subcategories:  {subcategories && subcategories.length > 0? `(${subcategories.length})` : 'No Values'}</h3>
-                    <div  className="text-black">
-						<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.subcategories ? "rotate-90":""}`}/>
-                    </div>
-                </button>
-				<ul
-					className="mt-2 space-y-2"
-					style={{
-						maxHeight: '300px', // Set the maximum height for the scrollable area
-						overflowY: 'auto',  // Enable vertical scrolling
-						overflowX:'auto'
-					}}
-				>
-					{dropdowns.subcategories && (
-						<ul className="mt-2 space-y-2">
-							{subcategories.map((item, index) => (
-								<li key={index} className="flex justify-between items-center">
-									<input
-										type="checkbox"
-										id='Subcategories-select'
-										checked={item?.isActive || false}
-										onChange={(e) => handleToggleShowOptionInProducts('subcategory',item, e.target.value)}
-									/>
-									<span className='font-sans'>{item?.value}</span>
-									<button
-										onClick={() => handleRemoveOption('subcategory', item)}
-										className="p-2  text-black rounded-md  transition-all duration-300"
-									>
-									<Trash/>
-									</button>
-								</li>
-							))}
+					{/* Subcategories List */}
+					<div className='border border-gray-800 p-2 space-y-1'>
+						<button onClick={() => toggleDropdown('subcategories')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
+							<h3>Product Subcategories:  {subcategories && subcategories.length > 0? `(${subcategories.length})` : 'No Values'}</h3>
+							<div  className="text-black">
+								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.subcategories ? "rotate-90":""}`}/>
+							</div>
+						</button>
+						<ul
+							className="mt-2 space-y-2"
+							style={{
+								maxHeight: '300px', // Set the maximum height for the scrollable area
+								overflowY: 'auto',  // Enable vertical scrolling
+								overflowX:'auto'
+							}}
+						>
+							{dropdowns.subcategories && (
+								<ul className="mt-2 space-y-2">
+									{subcategories.map((item, index) => (
+										<li key={index} className="flex justify-between items-center">
+											<input
+												type="checkbox"
+												id='Subcategories-select'
+												checked={item?.isActive || false}
+												onChange={(e) => handleToggleShowOptionInProducts('subcategory',item, e.target.value)}
+											/>
+											<span className='font-sans'>{item?.value}</span>
+											<button
+												onClick={() => handleRemoveOption('subcategory', item)}
+												className="p-2  text-black rounded-md  transition-all duration-300"
+											>
+											<Trash/>
+											</button>
+										</li>
+									))}
+								</ul>
+							)}
 						</ul>
-					)}
-				</ul>
-            </div>
+					</div>
 
                 {/* Genders List */}
                 <div>
