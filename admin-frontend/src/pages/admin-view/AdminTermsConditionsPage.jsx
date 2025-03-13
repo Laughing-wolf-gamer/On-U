@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -257,7 +258,7 @@ const AdminTermsConditionsPage = () => {
                 <Label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
                     Contact Information
                 </Label>
-                <input
+                <Input
                     id="contactInfo"
                     name="contactInfo"
 					type="email"
@@ -274,7 +275,7 @@ const AdminTermsConditionsPage = () => {
                 <Label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
                     Phone Number
                 </Label>
-                <input
+                <Input
                     type="text"
                     id="phoneNumber"
                     name="phoneNumber"
@@ -290,7 +291,7 @@ const AdminTermsConditionsPage = () => {
                 <Label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
                     Business Address
                 </Label>
-                <input
+                <Input
                     type="text"
                     id="businessAddress"
                     name="businessAddress"
@@ -303,12 +304,12 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Submit Button */}
                 <div>
-                <button
-                    type="submit"
-                    className="w-full py-3 px-6 bg-blue-600 text-white text-lg font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-                >
-                    Save Terms and Conditions
-                </button>
+					<Button
+						type="submit"
+						className="w-full py-6 px-6 text-white text-lg font-semibold rounded-md shadow-sm"
+					>
+						Save Terms and Conditions
+					</Button>
                 </div>
             </form>
         </div>

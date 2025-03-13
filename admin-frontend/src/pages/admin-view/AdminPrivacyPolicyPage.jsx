@@ -1,3 +1,4 @@
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
@@ -96,7 +97,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="informationCollect">
                 Information We Collect
             </Label>
-            <textarea
+            <Textarea
                 id="informationCollect"
                 name="informationCollect"
                 value={formData.informationCollect}
@@ -112,7 +113,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="usageInfo">
                 How We Use Your Information
             </Label>
-            <textarea
+            <Textarea
                 id="usageInfo"
                 name="usageInfo"
                 value={formData.usageInfo}
@@ -128,7 +129,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="dataSecurity">
                 Data Security
             </Label>
-            <textarea
+            <Textarea
                 id="dataSecurity"
                 name="dataSecurity"
                 value={formData.dataSecurity}
@@ -144,7 +145,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="sharingInfo">
                 Sharing Your Information
             </Label>
-            <textarea
+            <Textarea
                 id="sharingInfo"
                 name="sharingInfo"
                 value={formData.sharingInfo}
@@ -160,7 +161,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="rights">
                 Your Rights
             </Label>
-            <textarea
+            <Textarea
                 id="rights"
                 name="rights"
                 value={formData.rights}
@@ -176,7 +177,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="cookiesInfo">
                 Cookies and Tracking Technologies
             </Label>
-            <textarea
+            <Textarea
                 id="cookiesInfo"
                 name="cookiesInfo"
                 value={formData.cookiesInfo}
@@ -192,7 +193,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="thirdPartyLinks">
                 Third-Party Links
             </Label>
-            <textarea
+            <Textarea
                 id="thirdPartyLinks"
                 name="thirdPartyLinks"
                 value={formData.thirdPartyLinks}
@@ -208,7 +209,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="changesPolicy">
                 Changes to This Privacy Policy
             </Label>
-            <textarea
+            <Textarea
                 id="changesPolicy"
                 name="changesPolicy"
                 value={formData.changesPolicy}
@@ -224,7 +225,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
                 Contact Information
             </Label>
-            <input
+            <Input
                 id="contactInfo"
                 name="contactInfo"
 				type="email"
@@ -240,7 +241,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
                 Phone Number
             </Label>
-            <input
+            <Input
                 type="text"
                 id="phoneNumber"
                 name="phoneNumber"
@@ -256,7 +257,7 @@ const AdminPrivacyPolicyPage = () => {
             <Label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
                 Business Address
             </Label>
-            <input
+            <Input
                 type="text"
                 id="businessAddress"
                 name="businessAddress"
@@ -269,12 +270,12 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Submit Button */}
             <div>
-            <button
-                type="submit"
-                className="w-full py-3 px-6 bg-blue-600 text-white text-lg font-semibold rounded-md shadow-sm hover:bg-blue-700 focus:ring-2 focus:ring-blue-500"
-            >
-                Save Privacy Policy
-            </button>
+				<Button
+					type="submit"
+					className="w-full py-3 px-6 text-white text-lg font-semibold rounded-md shadow-sm"
+				>
+					Save Privacy Policy
+				</Button>
             </div>
         </form>
         </div>
