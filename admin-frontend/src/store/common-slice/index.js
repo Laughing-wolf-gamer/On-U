@@ -176,6 +176,16 @@ export const getFeatureImage = createAsyncThunk('/common/getFeatureImage',async(
         return null;
     }
 })
+export const updateFeatureImageIndex = createAsyncThunk('/common/updateFeatureImageIndex',async(data)=>{
+	try {
+        const response = await axios.patch(`${BASE_URL}/api/common/feature/updateFeaturesIndex`,data,Header());
+		console.log("Updated response for Updating Features Image Index: ",response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error Review product: `,error);
+        return null;
+    }
+})
 export const delFeatureImage = createAsyncThunk('/common/delFeatureImage',async({id,imageIndex})=>{
     try {
         const token = sessionStorage.getItem('token');
@@ -494,6 +504,15 @@ export const fetchAllCategoryNameBanners = createAsyncThunk('/common/getAllCateg
     } catch (error) {
         console.error(`Error Fetching All Options: `,error);
     }
+})
+export const updateCategoryNameBannerIndex = createAsyncThunk('/common/updateBannerIndex',async(data)=>{
+	try {
+		const response = await axios.patch(`${BASE_URL}/api/common/categoryBanners/updateIndex`,data,Header());
+        console.log("Update Banner Index Response: ", response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error updating banner index: `,error);
+	}
 })
 export const addCategoryNameBanner = createAsyncThunk('/common/addCategoryNameBanner',async(data) =>{
 	try {

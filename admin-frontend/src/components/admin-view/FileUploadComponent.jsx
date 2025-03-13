@@ -21,7 +21,6 @@ const FileUploadComponent = ({
 	const {checkAndCreateToast} = useSettingsContext();
     const [files, setFiles] = useState([]); // Array of selected files
     const [loadingStates, setLoadingStates] = useState([]); // Loading state per file
-    const inputRef = useRef(null);
     const dropzoneRef = useRef(null);
 
     const handleFileChange = async (e) => {

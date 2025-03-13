@@ -18,6 +18,35 @@ export const getHomeBanners = async (req,res)=>{
 		res.status(500).json({Success: false, message: `Internal Server Error ${error.message}`});
 	}
 }
+export const updateFeaturesIndex = async(req,res)=>{
+	try {
+		const{categoryType,sourceIndex,destinationIndex} = req.body;
+		if(!categoryType){
+			return res.status(400).json({Success: false, message:"Not category type specified"});
+		}
+		if(!sourceIndex){
+            return res.status(400).json({Success: false, message:"Not source index specified"});
+        }
+		if(!destinationIndex){
+			return res.status(400).json({Success: false, message:"Not destination index specified"});
+		}
+		const bannerModel = await BannerModel.findOne({CategoryType:categoryType});
+		console.log("Updating features Images Index: ",req.body,bannerModel);
+		if(!bannerModel){
+			return res.status(404).json({Success: false, message: "Category Type not found"});
+		}
+		const reorderItems = Array.from(bannerModel.Url);
+		const [removed] = reorderItems.splice(sourceIndex,1);
+		reorderItems.splice(destinationIndex,0,removed);
+		bannerModel.Url = reorderItems;
+		await bannerModel.save();
+		res.status(200).json({Success:true,message:"Successfully Updated Features Image Positions"});
+	} catch (error) {
+		console.error("Error updating features index",error);
+		logger.error(`Error updating features index: ${error.message}`);
+		res.status(500).json({Success: false, message: 'Internal Server Error', result:[]});
+	}
+}
 export const addHomeCarousalMultiple = async (req, res) => {
     try {
         // Destructuring inputs from the request body
@@ -265,6 +294,38 @@ export const getCategoryBanners = async(req,res)=>{
         logger.error(`Error fetching Category Banners: ${error.message}`);
         res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
     }
+}
+export const updateCategoryBannerIndex = async(req,res)=>{
+	try {
+		const{categoryType,sourceIndex,destinationIndex} = req.body;
+		if(!categoryType){
+			return res.status(400).json({ success: false, message: "Category Type is required" });
+		}
+		if(sourceIndex === destinationIndex){
+			return res.status(400).json({ success: false, message: "Source and Destination indices cannot be the same" });
+		}
+		if(sourceIndex < 0){
+			return res.status(400).json({ success: false, message: "Source index cannot be negative" });
+		}
+		if(destinationIndex < 0){
+			return res.status(400).json({ success: false, message: "Destination index cannot be negative" });
+		}
+		const bannerData = await CategoryBannerModel.findOne({CategoryType:categoryType});
+		if(!bannerData){
+			return res.status(404).json({ success: false, message: "No such category type found" });
+		}
+		console.log("Update Category Banner Index req.body", bannerData);
+		const reorderItems = Array.from(bannerData.Url);
+		const[removed] = reorderItems.splice(sourceIndex,1);
+		reorderItems.splice(destinationIndex, 0, removed);
+		bannerData.Url = reorderItems;
+		await bannerData.save();
+		res.status(200).json({success: true, message:"Category Banner Index"});
+	} catch (error) {
+		console.error(`Error updating category banner index: `,error);
+		logger.error(`Error updating category banner index: ${error.message}`)
+		return res.status(500).json({ Success: false, message: `Internal Server Error: ${error.message}` });
+	}
 }
 export const removeCategoryBanners = async(req,res)=>{
 	try {

@@ -28,7 +28,7 @@ import {addCategoryBanners,
     removeHomeCarousal,
     removeOptionsByType,
     removeWebsiteDisclaimers,
-    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateColorName, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateCategoryBannerIndex, updateColorName, updateFeaturesIndex, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -38,6 +38,7 @@ route.post('/create/home/carousal',isAuthenticateuser,ProtectAdminRoute,addHomeC
 route.post('/create/home/carousal/multiple',isAuthenticateuser,ProtectAdminRoute,addHomeCarousalMultiple)
 route.get('/fetch/all/:CategoryType',getHomeBanners)
 route.get('/fetch/all',getHomeBanners)
+route.patch('/feature/updateFeaturesIndex',updateFeaturesIndex)
 route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeHomeCarousal)
 
 
@@ -45,6 +46,7 @@ route.delete('/del/:id/:imageIndex',isAuthenticateuser,ProtectAdminRoute,removeH
 route.post('/categoryBanners/add',isAuthenticateuser,ProtectAdminRoute,addCategoryBanners);
 route.get('/categoryBanners/all',getCategoryBanners);
 route.patch('/categoryBanners/del',isAuthenticateuser,ProtectAdminRoute,removeCategoryBanners);
+route.patch('/categoryBanners/updateIndex',updateCategoryBannerIndex);
 
 
 route.get('/product/filters',FetchAllFilters);

@@ -16,5 +16,5 @@ route.get('/warehouse/:warehouseId',isAuthenticateuser,ProtectAdminRoute,fetchWa
 route.delete('/warehouse/:warehouseId',isAuthenticateuser,ProtectAdminRoute,removeWareHouseById)
 
 
-route.get('/logistic/checkAvailability',checkAvailability)
+route.get('/checkPincode',checkAvailability)
 export default route

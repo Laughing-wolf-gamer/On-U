@@ -23,7 +23,7 @@ const PincodeChecker = ({productId}) => {
 				checkAndCreateToast('error','Please enter a valid pincode');
 				return;
 			}
-            const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${currentPincode}&productId=${productId}`);
+            const response = await axios.get(`${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${productId}`);
             if (response.data.result) {
                 console.log("Delivery is available! ",response.data.result);
                 const result = response.data.result;

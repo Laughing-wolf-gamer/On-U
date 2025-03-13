@@ -72,17 +72,16 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	useEffect(() => {
 		fetchColorOptions();
 	}, [dispatch]);
-
-	// Log selected colors for debugging purposes
-	console.log("selectedColorArray: ", activeColorSelect);
-
 	return (
 		<div className="p-3 w-full bg-white">
 			{/* Total Colors Count */}
 			<div className="flex items-center text-center text-xl font-bold justify-center">
 				<Badge className={"font-bold text-white text-center text-lg"}>All Colors: {allColors.length}</Badge>
 			</div>
-			<div className="max-w-[400px] my-4 overflow-x-auto flex flex-row space-x-4">
+			<div className='w-full justify-center items-center flex mt-2'>
+				<Label className={"font-normal text-gray-700 text-center text-xs"}>Image Size Should be: <span className='font-extrabold text-gray-600 text-sm'>(3000px x 4000px)</span><span className='text-blue-400 font-bold '>*</span> </Label>
+			</div>
+			<div className="max-w-[400px] my-1 overflow-x-auto flex flex-row space-x-4">
 				{allColors.map((color, index) => {
 					const active = color;
 					return(

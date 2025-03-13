@@ -3,12 +3,15 @@ import { useDispatch, useSelector } from 'react-redux';
 import ImageUpload from '@/components/admin-view/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { addCategoryNameBanner, fetchAllCategoryNameBanners, fetchOptionsByType, removeCategoryBanners } from '@/store/common-slice';
+import { addCategoryNameBanner, fetchAllCategoryNameBanners, fetchOptionsByType, removeCategoryBanners, updateCategoryNameBannerIndex } from '@/store/common-slice';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
 import { X } from 'lucide-react';
 import ConfirmDeletePopup from './ConfirmDeletePopup';
 import { Label } from '@/components/ui/label';
 import { toast } from 'react-toastify';
+import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
+import { RxHamburgerMenu } from 'react-icons/rx';
+import ReactPlayer from 'react-player';
 const allPositions = [
 	'WideScreen_Video',
 	'MobileScreen_CategorySlider',
@@ -118,6 +121,9 @@ const AdminCategoryBanners = () => {
         setSelectedCategory(e.target.value);
         setImageUrlsCategory(e.target.value);
     };
+	const UpdateCategoryNameIndex = (data)=>{
+		dispatch(updateCategoryNameBannerIndex(data));
+	}
     let filteredItems = [];
     if(CategoryNameBanners && CategoryNameBanners.length > 0) {
         filteredItems = CategoryNameBanners.filter(
@@ -198,7 +204,10 @@ const AdminCategoryBanners = () => {
 							)}
 							
 							<GridImageView 
-								item={item} 
+								item={item}
+								updateCategoryIndex = {(data)=>{
+									UpdateCategoryNameIndex({...data,categoryType: item.CategoryType})
+								}}
 								setIsConfirmDeleteWindow={setIsConfirmDeleteWindow} 
 								isConfirmDeleteWindow={isConfirmDeleteWindow} 
 								setDeletingImageCategory={setDeletingImageCategory}
@@ -297,22 +306,13 @@ const PopUpFormForHomeCategoryBanners = ({
 						className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
 					>
 						Upload
-					</Button>
-					
-					{/* <Input
-						type="text"
-						value={currentImageCategoryName}
-						onChange={(e) => setCurrentImageCategoryName(e.target.value)}
-						placeholder="Enter Category Name"
-						className="w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
-					/> */}
-					
+					</Button>					
 				</div>
 			</div>
 		</div>
 	)
 }
-const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
+/* const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
     const [loadingStates, setLoadingStates] = useState(item.Url.map(() => true));
     const videoRefs = useRef([]); // References to video elements for lazy loading
 
@@ -362,9 +362,9 @@ const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWin
             });
         };
     }, [item.Url.length, handleIntersection]); // Re-run the observer when URLs change
-
+	console.log("item url: ",item.Url);
     return (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative">
+        <div className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative'>
             {item.Url && item.Url.length > 0 ? (
                 item.Url.map((url, index) => {
                     const { isImage, isVideo } = getFileType(url);
@@ -380,14 +380,12 @@ const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWin
                                     <p className="text-black font-bold">Loading...</p>
                                 </div>
                             )}
-							{/* Title */}
                             <div className='w-full justify-center flex items-center'>
                                 <h1 className='text-lg font-bold'>
                                     {url?.name}
                                 </h1>
                             </div>
 
-                            {/* Image */}
                             {isImage ? (
                                 <img
                                     src={url.url}
@@ -413,7 +411,6 @@ const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWin
                             
                             
 
-                            {/* Delete Button */}
                             <Button
                                 onClick={() => {
                                     setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
@@ -433,6 +430,157 @@ const GridImageView = memo(({ item, setIsConfirmDeleteWindow, isConfirmDeleteWin
             )}
         </div>
     );
-});
+}); */
+const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isConfirmDeleteWindow, setDeletingImageCategory }) => {
+    const [loadingStates, setLoadingStates] = useState(item.Url.map(() => true));
+    const videoRefs = useRef([]); // References to video elements for lazy loading
+    const [items, setItems] = useState(item.Url); // This will hold the current order of items
 
+    // Helper function to determine if the file is a video or an image
+    const getFileType = useCallback((url) => {
+        const fileExtension = url?.url.split('.').pop().toLowerCase();
+        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
+        return { isImage, isVideo };
+    }, []);
+
+    // Lazy load images and videos when they come into view
+    const handleMediaLoad = (index) => {
+        setLoadingStates((prevState) => {
+            const updatedStates = [...prevState];
+            updatedStates[index] = false; // Set loading state to false for the specific item
+            return updatedStates;
+        });
+    };
+
+    // IntersectionObserver callback to load media when in view
+    const handleIntersection = useCallback((entries, observer) => {
+        entries.forEach((entry) => {
+            const index = videoRefs.current.indexOf(entry.target);
+            if (entry.isIntersecting) {
+                handleMediaLoad(index); // Load media when in view
+                observer.unobserve(entry.target); // Stop observing once it's in view
+            }
+        });
+    }, []);
+
+    // Set up IntersectionObserver on mount and clean up on unmount
+    useEffect(() => {
+        const observer = new IntersectionObserver(handleIntersection, {
+            threshold: 0.1, // Trigger when 10% of the element is in view
+        });
+
+        // Set up the observer for each image/video element
+        videoRefs.current.forEach((ref) => {
+			if (ref && ref instanceof Element) observer.observe(ref); // Ensure the ref is an Element
+        });
+
+        // Cleanup observer on unmount
+        return () => {
+            videoRefs.current.forEach((ref) => {
+				if (ref && ref instanceof Element) observer.observe(ref); // Ensure the ref is an Element
+            });
+        };
+    }, [item.Url.length, handleIntersection]);
+
+    // Handle the drag-and-drop reordering logic
+    const onDragEnd = (result) => {
+        const { destination, source } = result;
+        if (!destination) return; // If dropped outside the list, do nothing
+
+        // Reorder the items array
+        const reorderedItems = Array.from(items);
+        const [removed] = reorderedItems.splice(source.index, 1);
+        reorderedItems.splice(destination.index, 0, removed);
+        
+        setItems(reorderedItems); // Update state with new order
+		if(updateCategoryIndex){
+			updateCategoryIndex({sourceIndex: source.index, destinationIndex:destination.index});
+		}
+    };
+
+    return (
+        <DragDropContext onDragEnd={onDragEnd}>
+            <Droppable droppableId="droppable" direction="horizontal">
+                {(provided) => (
+                    <div
+                        className='grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative'
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                    >
+                        {items.length > 0 ? (
+                            items.map((url, index) => {
+                                const { isImage, isVideo } = getFileType(url);
+
+                                return (
+                                    <Draggable key={index} draggableId={String(index)} index={index}>
+                                        {(provided) => (
+                                            <div
+                                                className="relative group border border-gray-800 w-full bg-gray-50 h-40 rounded-lg overflow-hidden"
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                            >
+                                                {loadingStates[index] && (
+                                                    <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
+                                                        <p className="text-black font-bold">Loading...</p>
+                                                    </div>
+                                                )}
+												<RxHamburgerMenu className='absolute top-2 left-2'/>
+                                                <div className='w-full justify-center flex items-center'>
+                                                    <h1 className='text-lg font-bold'>
+                                                        {url?.name}
+                                                    </h1>
+                                                </div>
+
+                                                {isImage ? (
+                                                    <img
+                                                        src={url.url}
+                                                        alt={`Image ${index + 1}-${url?.name}`}
+                                                        className="w-full h-full object-contain rounded-lg shadow-sm"
+                                                        onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
+                                                    />
+                                                ) : isVideo ? (
+                                                    <ReactPlayer
+                                                        ref={(el) => (videoRefs.current[index] = el)} // Assign ref for lazy loading
+														url={url.url} 
+														type={`video/${url.url.split('.').pop()}`}
+                                                        className="w-full h-full object-contain rounded-lg shadow-sm"
+                                                        controls
+														width="100%"
+                            							height="100%"
+                                                        muted
+                                                        playing={false}
+                                                        onReady={() => handleMediaLoad(index)} // Trigger loading state on video load
+                                                    />
+                                                ) : (
+                                                    <p>Unsupported file type {url?.name}</p>
+                                                )}
+
+                                                <Button
+                                                    onClick={() => {
+                                                        setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+                                                        setDeletingImageCategory({ itemId: item._id, idx: index });
+                                                    }}
+                                                    className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg"
+                                                >
+                                                    <X size={16} />
+                                                </Button>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                );
+                            })
+                        ) : (
+                            <div className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden">
+                                <p>No Images Uploaded!</p>
+                            </div>
+                        )}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
+    );
+});
 export default AdminCategoryBanners
