@@ -10,10 +10,12 @@ import { toast } from 'react-toastify';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { useSettingsContext } from '@/Context/SettingsContext';
 const AdminCouponFormPage = () => {
+    const dispatch = useDispatch();
     const { Coupons } = useSelector(state => state.adminProducts);
     const { AllOptions } = useSelector(state => state.common);
-    const dispatch = useDispatch();
+	const {checkAndCreateToast} = useSettingsContext();
 
     // State to handle form data and coupons list
     const [couponName, setCouponName] = useState('');
@@ -63,11 +65,11 @@ const AdminCouponFormPage = () => {
         if (modalCoupon === null) {
             console.log("New Coupon: ", newCoupon);
             await dispatch(createNewCoupon({ couponData: newCoupon }));
-            toast.success("Coupon created successfully")
+            checkAndCreateToast('success',"Coupon created successfully")
         } else {
             console.log("Editing Coupon: ", modalCoupon);
             await dispatch(editCoupon({ couponId: modalCoupon._id, couponData: newCoupon }));
-            toast.success("Coupon updated successfully")
+            checkAndCreateToast('success',"Coupon updated successfully")
         }
         resetForm();
         setModalCoupon(null);
@@ -111,7 +113,7 @@ const AdminCouponFormPage = () => {
         dispatch(fetchAllCoupons());
         dispatch(fetchAllOptions());
     }, [dispatch]);
-	console.log("validDate: ",validDate)
+	
     useEffect(() => {
         let sortedCoupons = [...Coupons];
 
@@ -135,8 +137,8 @@ const AdminCouponFormPage = () => {
         setSortedCoupons(sortedCoupons);
     }, [Coupons, sortOption]);
 
-    console.log("Coupon: ", Coupons);
-    console.log("Modal opened: ", modalCoupon);
+    // console.log("Coupon: ", Coupons);
+    // console.log("Modal opened: ", modalCoupon);
     const allCategories = AllOptions && AllOptions.length > 0 && AllOptions.filter(item => item.type === 'category') || [];
 
     // Check if there are no orders available
@@ -145,6 +147,9 @@ const AdminCouponFormPage = () => {
         if (statusFilter === '') return true; // No filter selected, show all orders
         return coupon?.Status === statusFilter;
     });
+	useEffect(()=>{
+		window.scroll(0,0);
+	},[])
 
     return (
         <div className="container mx-auto p-4">

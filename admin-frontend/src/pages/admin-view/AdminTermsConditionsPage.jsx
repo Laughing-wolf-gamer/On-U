@@ -1,11 +1,14 @@
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { fetchTermsAndCondition, setTermsAndCondition } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 
 const AdminTermsConditionsPage = () => {
-	const{termsAndCondition} = useSelector(state => state.common);
 	const dispatch = useDispatch();
+	const{termsAndCondition} = useSelector(state => state.common);
     const [formData, setFormData] = useState({
         effectiveDate: "",
         acceptanceOfTerms: "",
@@ -59,11 +62,11 @@ const AdminTermsConditionsPage = () => {
             <form onSubmit={handleSubmit} className="space-y-8">
                 {/* Effective Date */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="effectiveDate">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="effectiveDate">
                     Effective Date
-                </label>
-                <input
-                    type="text"
+                </Label>
+                <Input
+                    type="date"
                     id="effectiveDate"
                     name="effectiveDate"
                     value={formData.effectiveDate}
@@ -75,10 +78,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Acceptance of Terms */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="acceptanceOfTerms">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="acceptanceOfTerms">
                     Acceptance of Terms
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="acceptanceOfTerms"
                     name="acceptanceOfTerms"
                     value={formData.acceptanceOfTerms}
@@ -91,10 +94,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Use of Website */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="useOfWebsite">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="useOfWebsite">
                     Use of Website
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="useOfWebsite"
                     name="useOfWebsite"
                     value={formData.useOfWebsite}
@@ -107,10 +110,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Products and Pricing */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="productsAndPricing">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="productsAndPricing">
                     Products and Pricing
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="productsAndPricing"
                     name="productsAndPricing"
                     value={formData.productsAndPricing}
@@ -123,10 +126,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Orders and Payments */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="ordersAndPayments">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="ordersAndPayments">
                     Orders and Payments
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="ordersAndPayments"
                     name="ordersAndPayments"
                     value={formData.ordersAndPayments}
@@ -139,10 +142,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Shipping and Delivery */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="shippingAndDelivery">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="shippingAndDelivery">
                     Shipping and Delivery
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="shippingAndDelivery"
                     name="shippingAndDelivery"
                     value={formData.shippingAndDelivery}
@@ -155,10 +158,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Returns and Refunds */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="returnsAndRefunds">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="returnsAndRefunds">
                     Returns and Refunds
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="returnsAndRefunds"
                     name="returnsAndRefunds"
                     value={formData.returnsAndRefunds}
@@ -171,10 +174,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Privacy and Data Protection */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="privacyAndDataProtection">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="privacyAndDataProtection">
                     Privacy and Data Protection
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="privacyAndDataProtection"
                     name="privacyAndDataProtection"
                     value={formData.privacyAndDataProtection}
@@ -187,10 +190,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Intellectual Property */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="intellectualProperty">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="intellectualProperty">
                     Intellectual Property
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="intellectualProperty"
                     name="intellectualProperty"
                     value={formData.intellectualProperty}
@@ -203,10 +206,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Indemnification */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="indemnification">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="indemnification">
                     Indemnification
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="indemnification"
                     name="indemnification"
                     value={formData.indemnification}
@@ -219,10 +222,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Governing Law and Dispute */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="governingLawAndDispute">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="governingLawAndDispute">
                     Governing Law and Dispute Resolution
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="governingLawAndDispute"
                     name="governingLawAndDispute"
                     value={formData.governingLawAndDispute}
@@ -235,10 +238,10 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Modifications to Terms */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="modificationsToTerms">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="modificationsToTerms">
                     Modifications to Terms
-                </label>
-                <textarea
+                </Label>
+                <Textarea
                     id="modificationsToTerms"
                     name="modificationsToTerms"
                     value={formData.modificationsToTerms}
@@ -251,9 +254,9 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Contact Information */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
                     Contact Information
-                </label>
+                </Label>
                 <input
                     id="contactInfo"
                     name="contactInfo"
@@ -268,9 +271,9 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Phone Number */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
                     Phone Number
-                </label>
+                </Label>
                 <input
                     type="text"
                     id="phoneNumber"
@@ -284,9 +287,9 @@ const AdminTermsConditionsPage = () => {
 
                 {/* Business Address */}
                 <div className="space-y-2">
-                <label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
+                <Label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
                     Business Address
-                </label>
+                </Label>
                 <input
                     type="text"
                     id="businessAddress"

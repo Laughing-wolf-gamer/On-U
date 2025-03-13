@@ -28,7 +28,10 @@ const AdminHomeCouponBanner = () => {
         setSubHeader(CouponBannerData?.subHeader);
 		setBannerModelUrl(CouponBannerData?.bannerModelUrl)
 	},[dispatch, CouponBannerData]);
-	console.log("CouponBannerData: ",CouponBannerData);
+	useEffect(()=>{
+		window.scroll(0,0);
+	},[])
+	// console.log("CouponBannerData: ",CouponBannerData);
 	return (
 		<div className="p-6 bg-gray-100 min-h-screen">
 			<h1 className="text-3xl font-bold mb-6 text-center">Home screen Coupon Banner</h1>

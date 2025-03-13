@@ -1,3 +1,6 @@
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { fetchFAQSWebstis, fetchPrivacyPolicyWebsite, setPrivacyPolicyWebsite } from "@/store/common-slice";
 import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -58,11 +61,11 @@ const AdminPrivacyPolicyPage = () => {
         <form onSubmit={handleSubmit} className="space-y-8 px-3">
             {/* Effective Date */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="effectiveDate">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="effectiveDate">
                 Effective Date
-            </label>
-            <input
-                type="text"
+            </Label>
+            <Input
+                type="date"
                 id="effectiveDate"
                 name="effectiveDate"
                 value={formData.effectiveDate}
@@ -74,25 +77,25 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Introduction */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="introduction">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="introduction">
                 Introduction
-            </label>
-            <textarea
+            </Label>
+            <Textarea
                 id="introduction"
                 name="introduction"
                 value={formData.introduction}
                 onChange={handleChange}
                 className="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500"
-                rows="4"
+                rows="6"
                 required
             />
             </div>
 
             {/* Information We Collect */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="informationCollect">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="informationCollect">
                 Information We Collect
-            </label>
+            </Label>
             <textarea
                 id="informationCollect"
                 name="informationCollect"
@@ -106,9 +109,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* How We Use Your Information */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="usageInfo">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="usageInfo">
                 How We Use Your Information
-            </label>
+            </Label>
             <textarea
                 id="usageInfo"
                 name="usageInfo"
@@ -122,9 +125,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Data Security */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="dataSecurity">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="dataSecurity">
                 Data Security
-            </label>
+            </Label>
             <textarea
                 id="dataSecurity"
                 name="dataSecurity"
@@ -138,9 +141,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Sharing Your Information */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="sharingInfo">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="sharingInfo">
                 Sharing Your Information
-            </label>
+            </Label>
             <textarea
                 id="sharingInfo"
                 name="sharingInfo"
@@ -154,9 +157,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Your Rights */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="rights">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="rights">
                 Your Rights
-            </label>
+            </Label>
             <textarea
                 id="rights"
                 name="rights"
@@ -170,9 +173,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Cookies and Tracking Technologies */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="cookiesInfo">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="cookiesInfo">
                 Cookies and Tracking Technologies
-            </label>
+            </Label>
             <textarea
                 id="cookiesInfo"
                 name="cookiesInfo"
@@ -186,9 +189,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Third-Party Links */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="thirdPartyLinks">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="thirdPartyLinks">
                 Third-Party Links
-            </label>
+            </Label>
             <textarea
                 id="thirdPartyLinks"
                 name="thirdPartyLinks"
@@ -202,9 +205,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Changes to This Policy */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="changesPolicy">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="changesPolicy">
                 Changes to This Privacy Policy
-            </label>
+            </Label>
             <textarea
                 id="changesPolicy"
                 name="changesPolicy"
@@ -218,9 +221,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Contact Information */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="contactInfo">
                 Contact Information
-            </label>
+            </Label>
             <input
                 id="contactInfo"
                 name="contactInfo"
@@ -234,9 +237,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Phone Number */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="phoneNumber">
                 Phone Number
-            </label>
+            </Label>
             <input
                 type="text"
                 id="phoneNumber"
@@ -250,9 +253,9 @@ const AdminPrivacyPolicyPage = () => {
 
             {/* Business Address */}
             <div className="space-y-2">
-            <label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
+            <Label className="text-lg font-medium text-gray-800" htmlFor="businessAddress">
                 Business Address
-            </label>
+            </Label>
             <input
                 type="text"
                 id="businessAddress"

@@ -96,6 +96,9 @@ const DisclaimerManager = () => {
     useEffect(() => {
         dispatch(fetchWebsiteDisclaimer());
     }, [dispatch]);
+	useEffect(()=>{
+		window.scroll(0,0);
+	},[])
 
     return (
         <div className="w-full justify-center items-center flex flex-col border-b border-gray-800">

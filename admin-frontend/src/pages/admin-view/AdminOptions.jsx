@@ -101,7 +101,9 @@ const AdminOptions = () => {
     useEffect(() => {
         setAllOptions();
     }, [AllOptions, dispatch]);
-
+	useEffect(()=>{
+		window.scrollTo(0,0);
+	},[])
     const setAllOptions = () => {
         if (AllOptions && AllOptions.length > 0) {
             AllOptions.map(item => {
@@ -115,9 +117,6 @@ const AdminOptions = () => {
                 case 'color':
                     setColors(AllOptions.filter(item => item.type === 'color') || []);
                     break;
-                /* case 'footWearSize':
-                    setFootWearSizes(AllOptions.filter(item => item.type === 'footWearSize'));
-                    break; */
                 case 'clothingSize':
                     setClothingWearSizes(AllOptions.filter(item => item.type === 'clothingSize'));
                     break;

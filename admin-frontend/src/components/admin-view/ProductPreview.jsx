@@ -1165,6 +1165,7 @@ const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onConfirm }) => {
 	return (
 		<DialogContent>
 			<DialogTitle>Upload Images New Images (Max : 8)</DialogTitle>
+			<Label className={"font-normal text-gray-700 text-center text-xs"}>Image Size Should be: <span className='font-extrabold text-gray-600 text-sm'>(3000px x 4000px)</span><span className='text-blue-400 font-bold '>*</span> </Label>
 			<div className="justify-between space-y-4 flex flex-col">
 				<FileUploadComponent
 
