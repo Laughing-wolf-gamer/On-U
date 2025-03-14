@@ -393,7 +393,7 @@ const AdminOptions = () => {
 
 					{/* Clothing Size List */}
 					<div  className='w-full border border-gray-800 p-2 space-y-1'>
-						<button onClick={() => toggleDropdown('clothingWearSizes')} className="text-xl font-medium text-gray-800 flex items-center justify-between">
+						<button onClick={() => toggleDropdown('clothingWearSizes')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
 							<h3>Product Clothing Size: {clothingWearSizes && clothingWearSizes.length > 0 ? `(${clothingWearSizes.length})` : 'No Values' }</h3>
 							<div className="text-black">
 								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.clothingWearSizes ? "rotate-90":""}`}/>
@@ -441,7 +441,7 @@ const AdminOptions = () => {
 
 					{/* Colors List */}
 					<div className='border border-gray-800 p-2 space-y-1 '>
-						<button onClick={() => toggleDropdown('colors')} className="text-xl font-medium text-gray-800 flex items-center justify-between">
+						<button onClick={() => toggleDropdown('colors')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
 							Colors: {colors && colors.length > 0 ? `(${colors.length})` : 'No Values' }
 							<div className="text-black">
 								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.colors ? "rotate-90":""}`}/>
