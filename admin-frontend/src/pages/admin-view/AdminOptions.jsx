@@ -1,4 +1,6 @@
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { addNewOption, deleteOption, fetchAllOptions, setConvenienceFees, updateColorName, updateOptionActive } from '@/store/common-slice';
 import { ChevronRight, Trash } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
@@ -145,118 +147,118 @@ const AdminOptions = () => {
                 <div className="bg-white p-6 rounded-lg shadow-md space-y-6 transform transition-transform hover:shadow-xl hover:bg-gray-50">
                 <h2 className="text-2xl font-semibold text-gray-700">Create New Option</h2>
                 <div>
-                    <label className="block font-medium text-gray-700">Add Products Purchase Convenience Fees</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Add Products Purchase Convenience Fees</Label>
+                    <Input
                         type="number"
                         value={convenienceFeesAmount}
                         onChange={(e) => setConvenienceFeesAmount(e.target.value)}
                         className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
                         onClick={updateConvenienceFees}
-                        className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+                        className="mt-4 w-full p-2 text-white rounded-md transition duration-300"
                     >
                         Add Convenience Fees
-                    </button>
+                    </Button>
                 </div>
                 {/* Product Category */}
                 <div>
-                    <label className="block font-medium text-gray-700">Product Category</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product Category</Label>
+                    <Input
 						type="text"
 						value={category}
 						onChange={(e) => setCategory(e.target.value)}
 						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
                     onClick={() => handleAddOption('category', category)}
-                    className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+                    className="mt-4 w-full p-2 text-white rounded-md transition duration-300"
                     >
                     Add Category
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Product Subcategory */}
                 <div>
-                    <label className="block font-medium text-gray-700">Product Subcategory</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product Subcategory</Label>
+                    <Input
                         type="text"
                         value={subcategory}
                         onChange={(e) => setSubcategory(e.target.value)}
                         className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
                         onClick={() => handleAddOption('subcategory', subcategory)}
-                        className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+                        className="mt-4 w-full p-2 text-white rounded-md transition duration-300"
                     >
                     Add Subcategory
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Product Color */}
                 <div>
-                    <label className="block font-medium text-gray-700">Product Color</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product Color</Label>
+                    <Input
                         type="color"
                         value={color}
                         onChange={(e) => setColor(e.target.value)}
                         className="mt-2 w-full h-16 p-2 border border-gray-300 rounded-md"
                     />
-                    <button
+                    <Button
                         onClick={() => handleAddOption('color', color)}
-                        className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+                        className="mt-4 w-full p-2 text-white rounded-md transition duration-300"
                     >
-                    Add Color
-                    </button>
+                    	Add Color
+                    </Button>
                 </div>
 
                 {/* Product Size */}
                 {/* <div>
-                    <label className="block font-medium text-gray-700">Product FootWear Size</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product FootWear Size</Label>
+                    <Input
 						type="text"
 						value={footWearSize}
 						onChange={(e) => setFootWearSize(e.target.value)}
 						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
 						onClick={() => handleAddOption('footWearSize', footWearSize)}
 						className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
                     >
                     Add Foot Wear Size
-                    </button>
+                    </Button>
                 </div> */}
                 <div>
-                    <label className="block font-medium text-gray-700">Product Cloth Size</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product Cloth Size</Label>
+                    <Input
 						type="text"
 						value={clothingWearSize}
 						onChange={(e) => setClothingWearSize(e.target.value)}
 						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
 						onClick={() => handleAddOption('clothingSize', clothingWearSize)}
-						className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+						className="mt-4 w-full p-2 text-white rounded-md transition duration-300"
                     >
                     Add Clothing Size
-                    </button>
+                    </Button>
                 </div>
 
                 {/* Product Gender */}
                 <div>
-                    <label className="block font-medium text-gray-700">Product Gender</label>
-                    <input
+                    <Label className="block font-medium text-gray-700">Product Gender</Label>
+                    <Input
 						type="text"
 						value={gender}
 						onChange={(e) => setGender(e.target.value)}
 						className="mt-2 w-full p-2 border border-gray-300 rounded-md focus:ring-gray-500 focus:border-gray-500"
                     />
-                    <button
+                    <Button
 						onClick={() => handleAddOption('gender', gender)}
-						className="mt-4 w-full p-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition duration-300"
+						className="mt-4 w-full p-2 text-white rounded-md transition-all duration-300"
                     >
                     Add Gender
-                    </button>
+                    </Button>
                 </div>
                 </div>
 
@@ -348,194 +350,157 @@ const AdminOptions = () => {
 						</ul>
 					</div>
 
-                {/* Genders List */}
-                <div>
-					<button onClick={() => toggleDropdown('genders')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
-						<h3>Product Genders: {genders && genders.length > 0 ? `(${genders.length})` : 'No Values' }</h3>
-						<div  className="text-black text-base">
-							<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.genders ? "rotate-90":""}`}/>
-						</div>
-					</button>
-					<ul
-						className="mt-2 space-y-2"
-						style={{
-							maxHeight: '300px', // Set the maximum height for the scrollable area
-							overflowY: 'auto',  // Enable vertical scrolling
-							overflowX:'auto'
-						}}
-					>
-						{dropdowns.genders && (
-							<ul className="mt-2 space-y-2">
-								{genders.map((item, index) => (
+					{/* Genders List */}
+					<div className='border border-gray-800 p-2 space-y-1'>
+						<button onClick={() => toggleDropdown('genders')} className="text-xl font-medium text-gray-800 flex items-center w-full justify-between">
+							<h3>Product Genders: {genders && genders.length > 0 ? `(${genders.length})` : 'No Values' }</h3>
+							<div  className="text-black text-base">
+								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.genders ? "rotate-90":""}`}/>
+							</div>
+						</button>
+						<ul
+							className="mt-2 space-y-2"
+							style={{
+								maxHeight: '300px', // Set the maximum height for the scrollable area
+								overflowY: 'auto',  // Enable vertical scrolling
+								overflowX:'auto'
+							}}
+						>
+							{dropdowns.genders && (
+								<ul className="mt-2 space-y-2">
+									{genders.map((item, index) => (
+										<li key={index} className="flex justify-between items-center">
+											<input
+												type="checkbox"
+												id="Genders-select"
+												checked={item?.isActive || false}
+												onChange={(e) => handleToggleShowOptionInProducts('gender', item, e.target.value)}
+											/>
+											<span className="font-sans">{item?.value}</span>
+											<button
+												onClick={() => handleRemoveOption('gender', item)}
+												className="p-2  text-black rounded-md  transition duration-300"
+											>
+											<Trash/>
+											</button>
+										</li>
+									))}
+								</ul>
+							)}
+						</ul>
+					</div>
+
+
+					{/* Clothing Size List */}
+					<div  className='w-full border border-gray-800 p-2 space-y-1'>
+						<button onClick={() => toggleDropdown('clothingWearSizes')} className="text-xl font-medium text-gray-800 flex items-center justify-between">
+							<h3>Product Clothing Size: {clothingWearSizes && clothingWearSizes.length > 0 ? `(${clothingWearSizes.length})` : 'No Values' }</h3>
+							<div className="text-black">
+								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.clothingWearSizes ? "rotate-90":""}`}/>
+							</div>
+						</button>
+						<ul
+							className="mt-2 space-y-2"
+							style={{
+								maxHeight: '300px', // Set the maximum height for the scrollable area
+								overflowY: 'auto',  // Enable vertical scrolling
+								overflowX:'auto'
+							}}
+						>
+							{dropdowns.clothingWearSizes && (
+								<ul className="mt-2 space-y-2">
+									{clothingWearSizes.map((item, index) => (
 									<li key={index} className="flex justify-between items-center">
 										<input
 											type="checkbox"
-											id="Genders-select"
+											id='Clothing-Size-select'
 											checked={item?.isActive || false}
-											onChange={(e) => handleToggleShowOptionInProducts('gender', item, e.target.value)}
+											onChange={(e) => {
+												e.stopPropagation();
+												handleToggleShowOptionInProducts('clothingSize',item, e.target.value)
+											}}
 										/>
-										<span className="font-sans">{item?.value}</span>
+										<span className='font-sans'>{item?.value}</span>
 										<button
-											onClick={() => handleRemoveOption('gender', item)}
-											className="p-2  text-black rounded-md  transition duration-300"
+											onClick={(e) => {
+												e.stopPropagation();
+												handleRemoveOption('clothingSize', item)
+											}}
+											className="p-2 text-black rounded-md transition duration-300"
 										>
 										<Trash/>
 										</button>
 									</li>
-								))}
-							</ul>
-						)}
-					</ul>
-				</div>
-
-
-                {/* Clothing Size List */}
-                <div  className='w-full cursor-pointer'>
-                    <div onClick={() => toggleDropdown('clothingWearSizes')} className="text-xl font-medium cursor-pointer text-gray-800 flex items-center justify-between">
-                        <h3>Product Clothing Size: {clothingWearSizes && clothingWearSizes.length > 0 ? `(${clothingWearSizes.length})` : 'No Values' }</h3>
-                        <div className="text-black">
-							<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.clothingWearSizes ? "rotate-90":""}`}/>
-                        </div>
-                    </div>
-					<ul
-						className="mt-2 space-y-2"
-						style={{
-							maxHeight: '300px', // Set the maximum height for the scrollable area
-							overflowY: 'auto',  // Enable vertical scrolling
-							overflowX:'auto'
-						}}
-					>
-						{dropdowns.clothingWearSizes && (
-							<ul className="mt-2 space-y-2">
-								{clothingWearSizes.map((item, index) => (
-								<li key={index} className="flex justify-between items-center">
-									<input
-										type="checkbox"
-										id='Clothing-Size-select'
-										checked={item?.isActive || false}
-										onChange={(e) => {
-											e.stopPropagation();
-											handleToggleShowOptionInProducts('clothingSize',item, e.target.value)
-										}}
-									/>
-									<span className='font-sans'>{item?.value}</span>
-									<button
-										onClick={(e) => {
-											e.stopPropagation();
-											handleRemoveOption('clothingSize', item)
-										}}
-										className="p-2 text-black rounded-md transition duration-300"
-									>
-									<Trash/>
-									</button>
-								</li>
-								))}
-							</ul>
-						)}
-					</ul>
-                </div>
-
-                {/* Footwear Size List */}
-                {/* <div
-					style={{
-						maxHeight: '400px', // Set the maximum height for the scrollable area
-						overflowY: 'auto',  // Enable vertical scrolling when content exceeds max height
-					}}
-				>
-					<h3 className="text-xl font-medium text-gray-800 flex items-center justify-between">
-						Product Footwear Size
-						<button onClick={() => toggleDropdown('footWearSizes')} className="text-black">
-						{dropdowns.footWearSizes ? <ChevronDown/> : <ChevronUp/>}
-						</button>
-					</h3>
-					{dropdowns.footWearSizes && (
-						<ul className="mt-2 space-y-2">
-						{footWearSizes.map((item, index) => (
-							<li key={index} className="flex justify-between items-center">
-								<input
-									type="checkbox"
-									id="footWear-Size-select"
-									className='border border-gray-400 focus:border-gray-800'
-									checked={item?.isActive || false}
-									onChange={(e) => handleToggleShowOptionInProducts('footWearSize', item, e.target.value)}
-								/>
-								<span className="font-sans">{item?.value}</span>
-								<button
-									onClick={() => handleRemoveOption('footWearSize', item)}
-									className="p-2  text-black rounded-md  transition duration-300"
-								>
-									<Trash/>
-								</button>
-							</li>
-						))}
+									))}
+								</ul>
+							)}
 						</ul>
-					)}
-				</div> */}
-
-
-                {/* Colors List */}
-                {/* Colors List */}
-				<div>
-					<div onClick={() => toggleDropdown('colors')} className="text-xl font-medium text-gray-800 flex items-center cursor-pointer justify-between">
-						Colors: {colors && colors.length > 0 ? `(${colors.length})` : 'No Values' }
-						<button  className="text-black">
-							<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.colors ? "rotate-90":""}`}/>
-						</button>
 					</div>
-					{dropdowns.colors && (
-						<ul
-							className="mt-2 space-y-2"
-							style={{
-							maxHeight: '300px', // Set the maximum height for the scrollable area
-							overflowY: 'auto',  // Enable vertical scrolling
-							overflowX: 'auto',  // Enable horizontal scrolling if necessary
-							}}
-						>
-							{colors.map((item, index) => (
-								<li key={index} className="flex justify-between items-center space-x-4">
-									<div className="w-fit flex flex-row justify-start items-start space-x-3">
-									<input
-										type="text"
-										id="color-select"
-										className="border border-gray-400 focus:border-gray-800"
-										value={
-										currentUpdatingColorNameData && currentUpdatingColorNameData.value && currentUpdatingColorNameData.value._id === item._id
-											? currentUpdatingColorNameData?.name
-											: item?.name
-										}
-										placeholder="Enter Color Name"
-										onChange={(e) => {
-											setUpdatingColorNameData({ type: 'color', value: item, name: e.target.value });
-											setIsUpdateEnabled(true);  // Enable the update button when the input value changes
-										}}
-									/>
-									<Button
-										className="w-fit"
-										onClick={handleUpdateColorName}
-										disabled={!isUpdateEnabled}  // Disable the update button when isUpdateEnabled is false
-									>
-										Update
-									</Button>
-									</div>
-									<div
-									className="w-full h-fit border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3"
-									style={{ backgroundColor: item?.value }}
-									></div>
-									<button
-									onClick={() => handleRemoveOption('color', item)}
-									className="p-2 text-gray-800 rounded-md transition duration-300"
-									>
-									<Trash />
-									</button>
-								</li>
-							))}
-						</ul>
-						)}
 
-				</div>
 
-            </div>
-            </div>
+
+					{/* Colors List */}
+					<div className='border border-gray-800 p-2 space-y-1 '>
+						<button onClick={() => toggleDropdown('colors')} className="text-xl font-medium text-gray-800 flex items-center justify-between">
+							Colors: {colors && colors.length > 0 ? `(${colors.length})` : 'No Values' }
+							<div className="text-black">
+								<ChevronRight className={`transition-all duration-300 ease-ease-out-expo ${dropdowns.colors ? "rotate-90":""}`}/>
+							</div>
+						</button>
+						{dropdowns.colors && (
+							<ul
+								className="mt-2 space-y-2"
+								style={{
+									maxHeight: '300px', // Set the maximum height for the scrollable area
+									overflowY: 'auto',  // Enable vertical scrolling
+									overflowX: 'auto',  // Enable horizontal scrolling if necessary
+								}}
+							>
+								{colors.map((item, index) => (
+									<li key={index} className="flex justify-between items-center space-x-4">
+										<div className="w-fit flex flex-row justify-start items-start space-x-3">
+										<Input
+											type="text"
+											id="color-select"
+											className="border border-gray-400 w-32 focus:border-gray-800"
+											value={
+											currentUpdatingColorNameData && currentUpdatingColorNameData.value && currentUpdatingColorNameData.value._id === item._id
+												? currentUpdatingColorNameData?.name
+												: item?.name
+											}
+											placeholder="Enter Color Name"
+											onChange={(e) => {
+												setUpdatingColorNameData({ type: 'color', value: item, name: e.target.value });
+												setIsUpdateEnabled(true);  // Enable the update button when the input value changes
+											}}
+										/>
+										<Button
+											className="w-fit"
+											onClick={handleUpdateColorName}
+											disabled={!isUpdateEnabled}  // Disable the update button when isUpdateEnabled is false
+										>
+											Update
+										</Button>
+										</div>
+										<div
+										className="w-full h-fit border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3"
+										style={{ backgroundColor: item?.value }}
+										></div>
+										<button
+										onClick={() => handleRemoveOption('color', item)}
+										className="p-2 text-gray-800 rounded-md transition duration-300"
+										>
+										<Trash />
+										</button>
+									</li>
+								))}
+							</ul>
+							)}
+
+					</div>
+
+            	</div>
+		</div>
         </div>
     );
 };
