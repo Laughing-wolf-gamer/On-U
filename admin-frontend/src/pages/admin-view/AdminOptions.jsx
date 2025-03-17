@@ -483,12 +483,12 @@ const AdminOptions = () => {
 										</Button>
 										</div>
 										<div
-										className="w-full h-fit border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3"
-										style={{ backgroundColor: item?.value }}
+											className="w-full h-fit border border-gray-800 shadow-md border-spacing-4 hover:scale-y-105 transition-transform duration-300 p-3"
+											style={{ backgroundColor: item?.value }}
 										></div>
 										<button
-										onClick={() => handleRemoveOption('color', item)}
-										className="p-2 text-gray-800 rounded-md transition duration-300"
+											onClick={() => handleRemoveOption('color', item)}
+											className="p-2 text-gray-800 rounded-md transition duration-300"
 										>
 										<Trash />
 										</button>

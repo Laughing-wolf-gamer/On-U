@@ -144,6 +144,12 @@ const commonSlice = createSlice({
 		}).addCase(fetchCouponBannerData.rejected,(state,action)=>{
 			state.isLoading = false;
             state.CouponBannerData = null;
+		}).addCase(sendAboutData.pending,(state,action)=>{
+			state.isLoading = true;
+		}).addCase(sendAboutData.fulfilled,(state,action)=>{
+			state.isLoading = false;
+		}).addCase(sendAboutData.rejected,(state,action)=>{
+			state.isLoading = false;
 		})
     }
 })

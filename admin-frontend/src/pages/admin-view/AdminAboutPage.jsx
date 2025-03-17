@@ -11,7 +11,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const AdminAboutPage = () => {
 	const{checkAndCreateToast} = useSettingsContext();
     const dispatch = useDispatch();
-	const{aboutData} = useSelector(state => state.common);
+	const{isLoading:aboutDataLoading,aboutData} = useSelector(state => state.common);
     const [imageLoading, setImageLoading] = useState(false);
 
     // New state variables
@@ -46,14 +46,6 @@ const AdminAboutPage = () => {
 
     // Handle saving the form data
     const handleSave = async () => {
-        /* console.log("About Data.",{
-            header,
-            subHeader,
-            ourMissionDescription,
-            outMoto,
-            teamMembers,
-			founderData,
-        }); */
 		if(imageLoading){
             return;
         }
@@ -74,19 +66,9 @@ const AdminAboutPage = () => {
         const updatedTeamMembers = teamMembers.filter((_, i) => i !== index);
         setTeamMembers(updatedTeamMembers);
     };
-	useEffect(()=>{
-		dispatch(fetchAboutData());
-	},[dispatch])
-	useEffect(()=>{
-		if(aboutData){
-			setHeader(aboutData?.header);
-            setSubHeader(aboutData?.subHeader);
-            setOurMissionDescription(aboutData?.ourMissionDescription);
-            setOutMoto(aboutData?.outMoto);
-            setTeamMembers(aboutData?.teamMembers);
-			setFounderData(aboutData?.founderData);
-		}
-	},[aboutData,dispatch])
+	
+
+
 	const handleSetMotoData = (text,field,index) => {
 		if(!text){
 			checkAndCreateToast("error",'No Images Files found!');
@@ -107,7 +89,6 @@ const AdminAboutPage = () => {
 			checkAndCreateToast("error",'No Images Files found!');
 			return;
 		}
-		console.log("update Data: ",text,field,index);
 		if (index >= 0 && index < teamMembers.length) {
 			const updatedTeamMembers = teamMembers.map((member, i) => 
 				i === index ? { ...member, [field]: text } : member
@@ -142,8 +123,19 @@ const AdminAboutPage = () => {
 			checkAndCreateToast("error","Invalid index.");
 		}
 	}
-	console.log("About Data: ",aboutData);
-
+	useEffect(()=>{
+		dispatch(fetchAboutData());
+	},[dispatch])
+	useEffect(()=>{
+		if(aboutData){
+			setHeader(aboutData?.header);
+            setSubHeader(aboutData?.subHeader);
+            setOurMissionDescription(aboutData?.ourMissionDescription);
+            setOutMoto(aboutData?.outMoto);
+            setTeamMembers(aboutData?.teamMembers);
+			setFounderData(aboutData?.founderData);
+		}
+	},[aboutData,dispatch])
     return (
         <div className="">
             <h1 className="text-3xl font-bold mb-6 text-center">Admin: About Page Management</h1>
@@ -177,6 +169,8 @@ const AdminAboutPage = () => {
                 <Textarea
                     className="w-full p-2 border rounded h-32"
                     value={ourMissionDescription}
+					rows={'10'}
+					cols={'30'}
                     onChange={(e) => setOurMissionDescription(e.target.value)}
                     placeholder="Enter Our Mission Description"
                 />
@@ -361,10 +355,12 @@ const AdminAboutPage = () => {
             {/* Save Button */}
             <div className="text-center">
                 <Button
+					disabled = {aboutDataLoading}
                     className="bg-blue-500 w-full text-white px-6 py-3 rounded hover:bg-blue-600"
                     onClick={handleSave}
                 >
-                	Update Details
+					{aboutDataLoading ? <div className="w-6 h-6 border-4 border-t-4 border-white border-t-purple-800 rounded-full animate-spin"></div> :<span>Update Details</span>}
+                	
                 </Button>
             </div>
         </div>
