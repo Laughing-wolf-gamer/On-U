@@ -263,7 +263,7 @@ const AdminAboutPage = () => {
                     </div>
                 ))}
                 <Button
-                    className="bg-green-500 w-full text-center flex text-white px-6 py-3"
+                    className="bg-green-500 hover:bg-green-700 w-full text-center flex text-white px-6 py-3"
                     onClick={handleAddTeamMember}
                 >
                 	Add Team Member
