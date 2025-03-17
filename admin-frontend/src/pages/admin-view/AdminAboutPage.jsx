@@ -183,9 +183,9 @@ const AdminAboutPage = () => {
 
             {/* Out Moto */}
             <div className="mb-8 bg-white p-4 rounded shadow">
-                <h2 className="text-xl font-semibold mb-4">Our Moto <span className='text-xs'>(Min-3)</span> </h2>
+                <h2 className="text-xl font-semibold uppercase mb-4">Our Moto <span className='text-xs'>(Min-3)</span> </h2>
                 {outMoto.map((moto, index) => (
-                    <div key={index} className="mb-4 relative my-2 p-2 rounded-md border border-gray-900">
+                    <div key={index} className="mb-4 relative my-2 p-2 rounded-md border border-purple-600">
 						<Button
                             className=" px-4 py-2 rounded absolute top-2 right-2"
                             onClick={() => handleRemoveOutMoto(index)}
@@ -199,7 +199,7 @@ const AdminAboutPage = () => {
 								value={moto?.title}
 								
 								onChange={(e) => handleSetMotoData(e.target.value,'title',index)}
-								placeholder="Our Moto Title"
+								placeholder="Your Company Moto Title"
 							/>
 							<Textarea
 								className="w-full p-2 border rounded mb-2"
@@ -207,7 +207,7 @@ const AdminAboutPage = () => {
 								rows={'5'}
 								cols={'30'}
 								onChange={(e) => handleSetMotoData(e.target.value,'description',index)}
-								placeholder="Out Moto Description"
+								placeholder="Explain this Moto...."
 							/>
                         
 						</div>
@@ -226,7 +226,7 @@ const AdminAboutPage = () => {
             <div className="mb-8 bg-white p-4 space-y-3 rounded shadow">
                 <h1 className="text-xl font-semibold mb-4">Team Members</h1>
                 {teamMembers.map((team, index) => (
-                    <div key={index} className="relative my-2 p-2 rounded-md border border-gray-900">
+                    <div key={index} className="relative my-2 p-2 rounded-md border border-green-600">
 						<Button
                             className="absolute top-2 right-2"
                             onClick={() => handleRemoveTeamMember(index)}
@@ -237,7 +237,7 @@ const AdminAboutPage = () => {
 							<img
 								src={team?.image}
 								alt="Team Member Image"
-								className="h-20 w-20 object-cover rounded-md border border-gray-900"
+								className="h-20 w-20 object-cover rounded-md border border-green-600"
 								style={{ maxWidth: '100%', height: 'auto' }}
 							/>
 							<Input
