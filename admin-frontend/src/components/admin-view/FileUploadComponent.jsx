@@ -300,6 +300,7 @@ const FileUploadComponent = ({
                     },
                 }
             );
+			
             const urls = res.data?.results || [];
             updateUploadedFileUrls(urls);
             checkAndCreateToast("success", "Files uploaded successfully");
@@ -326,6 +327,7 @@ const FileUploadComponent = ({
             newFiles[index] = { ...newFiles[index], url }; // Attach URL to file
         });
         setFiles(newFiles);
+		// console.log("Upload Image Urls: ",newFiles);
         onSetImageUrls(newFiles); // Notify parent about the updated file URLs
     };
 
