@@ -92,8 +92,8 @@ const AdminAboutPage = () => {
 			checkAndCreateToast("error",'No Images Files found!');
 			return;
 		}
-		console.log("update Data: ",text,field,index);
-		if (index >= 0 && index < teamMembers.length) {
+		console.log("update Data: ",text,field,index,teamMembers.length);
+		if (index >= 0 && index < outMoto.length) {
 			const updateMoto = outMoto.map((member, i) => 
 				i === index ? { ...member, [field]: text } : member
 			);
@@ -142,6 +142,7 @@ const AdminAboutPage = () => {
 			checkAndCreateToast("error","Invalid index.");
 		}
 	}
+	console.log("About Data: ",aboutData);
 
     return (
         <div className="">
