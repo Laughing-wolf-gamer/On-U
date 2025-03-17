@@ -87,8 +87,61 @@ const AdminAboutPage = () => {
 			setFounderData(aboutData?.founderData);
 		}
 	},[aboutData,dispatch])
-    // console.log("Team Members: ",teamMembers);
-	console.log("About Data: ",aboutData);
+	const handleSetMotoData = (text,field,index) => {
+		if(!text){
+			checkAndCreateToast("error",'No Images Files found!');
+			return;
+		}
+		console.log("update Data: ",text,field,index);
+		if (index >= 0 && index < teamMembers.length) {
+			const updateMoto = outMoto.map((member, i) => 
+				i === index ? { ...member, [field]: text } : member
+			);
+			setOutMoto(updateMoto);
+		} else {
+			checkAndCreateToast("error","Invalid index.");
+		}
+	}
+	const handleChangeTeamMembersData = (text,field,index)=>{
+		if(!text){
+			checkAndCreateToast("error",'No Images Files found!');
+			return;
+		}
+		console.log("update Data: ",text,field,index);
+		if (index >= 0 && index < teamMembers.length) {
+			const updatedTeamMembers = teamMembers.map((member, i) => 
+				i === index ? { ...member, [field]: text } : member
+			);
+			setTeamMembers(updatedTeamMembers);
+		} else {
+			checkAndCreateToast("error","Invalid index.");
+		}
+	}
+	const handleHandleUploadAddTeamMembers = (file,index)=>{
+		if(!file){
+			checkAndCreateToast("error",'No Images Files found!');
+			return;
+		}
+		if(file.length <= 0){
+			checkAndCreateToast("error",'No files Found!');
+			return;
+		}
+
+		const urls = file[0];
+
+		if(!urls){
+			checkAndCreateToast("error",'No url found!');
+			return;
+		}
+		if (index >= 0 && index < teamMembers.length) {
+			const updatedTeamMembers = teamMembers.map((member, i) => 
+				i === index ? { ...member, image: urls?.url } : member
+			);
+			setTeamMembers(updatedTeamMembers);
+		} else {
+			checkAndCreateToast("error","Invalid index.");
+		}
+	}
 
     return (
         <div className="">
@@ -130,52 +183,48 @@ const AdminAboutPage = () => {
 
             {/* Out Moto */}
             <div className="mb-8 bg-white p-4 rounded shadow">
-                <h2 className="text-xl font-semibold mb-4">Out Moto <span className='text-xs'>(Min-3)</span> </h2>
-                {outMoto.map((out, index) => (
-                    <div key={index} className="mb-4">
-                        <Input
-                            type="text"
-                            className="w-full p-2 border rounded mb-2"
-                            value={out?.title}
-                            onChange={(e) => {
-                                const updatedOutMoto = [...outMoto];
-                                updatedOutMoto[index].title = e.target.value;
-                                setOutMoto(updatedOutMoto);
-                            }}
-                            placeholder="Our Moto Title"
-                        />
-                        <Textarea
-                            className="w-full p-2 border rounded mb-2"
-                            value={out?.description}
-							rows={'5'}
-							cols={'30'}
-                            onChange={(e) => {
-                                const updatedOutMoto = [...outMoto];
-                                updatedOutMoto[index].description = e.target.value;
-                                setOutMoto(updatedOutMoto);
-                            }}
-                            placeholder="Out Moto Description"
-                        />
-                        <Button
-                            className=" px-4 py-2 rounded mt-2"
+                <h2 className="text-xl font-semibold mb-4">Our Moto <span className='text-xs'>(Min-3)</span> </h2>
+                {outMoto.map((moto, index) => (
+                    <div key={index} className="mb-4 relative my-2 p-2 rounded-md border border-gray-900">
+						<Button
+                            className=" px-4 py-2 rounded absolute top-2 right-2"
                             onClick={() => handleRemoveOutMoto(index)}
                         >
-                        	Remove Out Moto
+                        	Remove Moto
                         </Button>
+						<div className='py-6 my-5 space-y-3'>
+							<Input
+								type="text"
+								className="w-full p-2 border rounded mb-2"
+								value={moto?.title}
+								
+								onChange={(e) => handleSetMotoData(e.target.value,'title',index)}
+								placeholder="Our Moto Title"
+							/>
+							<Textarea
+								className="w-full p-2 border rounded mb-2"
+								value={moto?.description}
+								rows={'5'}
+								cols={'30'}
+								onChange={(e) => handleSetMotoData(e.target.value,'description',index)}
+								placeholder="Out Moto Description"
+							/>
+                        
+						</div>
                     </div>
                 ))}
                 <Button
-                    className="bg-green-500 text-white px-6 py-3 rounded"
+                    className="bg-purple-500 hover:bg-purple-700 w-full text-center flex text-white px-6 py-3 rounded"
                     onClick={handleAddOutMoto}
                 >
-                Add Out Moto
+                	Add (Our Moto)
                 </Button>
             </div>
 			
 
             {/* Team Members */}
             <div className="mb-8 bg-white p-4 space-y-3 rounded shadow">
-                <h2 className="text-xl font-semibold mb-4">Team Members</h2>
+                <h1 className="text-xl font-semibold mb-4">Team Members</h1>
                 {teamMembers.map((team, index) => (
                     <div key={index} className="relative my-2 p-2 rounded-md border border-gray-900">
 						<Button
@@ -195,55 +244,22 @@ const AdminAboutPage = () => {
 								type="text"
 								className="w-full p-2 border rounded mb-2"
 								value={team?.name}
-								onChange={(e) => {
-									const updatedTeamMembers = [...teamMembers];
-									updatedTeamMembers[index].name = e.target.value;
-									setTeamMembers(updatedTeamMembers);
-								}}
+								onChange={(e) => handleChangeTeamMembersData(e.target.value,'name',index)}
 								placeholder="Team Member Name"
 							/>
 							<Input
 								type="text"
+								placeholder="Team Member Designation"
 								className="w-full p-2 border rounded mb-2"
 								value={team?.designation}
-								onChange={(e) => {
-									const updatedTeamMembers = [...teamMembers];
-									updatedTeamMembers[index].designation = e.target.value;
-									setTeamMembers(updatedTeamMembers);
-								}}
-								placeholder="Team Member Designation"
+								onChange={(e) => handleChangeTeamMembersData(e.target.value,'designation',index)}
 							/>
 							
 							<FileUploadComponent
 								maxFiles={1}
 								tag={`tag-${index}`}
 								sizeTag={`team-${index}`}
-								onSetImageUrls={(file) => {
-									if(!file){
-										checkAndCreateToast("error",'No Images Files found!');
-										return;
-									}
-									if(file.length <= 0){
-										checkAndCreateToast("error",'No files Found!');
-										return;
-									}
-
-									const urls = file[0];
-
-									if(!urls){
-										checkAndCreateToast("error",'No url found!');
-										return;
-									}
-									if (index >= 0 && index < teamMembers.length) {
-										const updatedTeamMembers = teamMembers.map((member, i) => 
-											i === index ? { ...member, image: urls?.url } : member
-										);
-										setTeamMembers(updatedTeamMembers);
-									} else {
-										checkAndCreateToast("error","Invalid index.");
-									}
-
-								}}
+								onSetImageUrls={(file)=> handleHandleUploadAddTeamMembers(file,index)}
 								isLoading = {imageLoading}
 								setIsLoading={setImageLoading}
 							/>
@@ -252,18 +268,18 @@ const AdminAboutPage = () => {
                     </div>
                 ))}
                 <Button
-                    className="bg-green-500 text-white px-6 py-3"
+                    className="bg-green-500 w-full text-center flex text-white px-6 py-3"
                     onClick={handleAddTeamMember}
                 >
                 	Add Team Member
                 </Button>
             </div>
 			<div className="mb-8 bg-white p-4 rounded shadow">
-				<h2 className="text-xl font-semibold mb-4">Founder Data</h2>
+				<h1 className="text-xl font-semibold mb-4">Founder Data</h1>
 				<div className="mb-4">
 					<img
 						src={founderData?.image}
-						alt="Founder Image"
+						alt="Founder-Image"
 						className="w-32 h-32 object-cover rounded-full mb-4"
 					/>
 					<FileUploadComponent
@@ -333,7 +349,7 @@ const AdminAboutPage = () => {
                         className="w-full p-2 border rounded mb-2"
                         value={founderData?.promises}
                         onChange={(e) => setFounderData({...founderData, promises: e.target.value })}
-						placeholder="Add Founde's promises"
+						placeholder="Add Founder's promises"
 						rows={5}
 						cols={30}
 						required
@@ -344,7 +360,7 @@ const AdminAboutPage = () => {
             {/* Save Button */}
             <div className="text-center">
                 <Button
-                    className="bg-blue-500 w-full  text-white px-6 py-3 rounded hover:bg-blue-600"
+                    className="bg-blue-500 w-full text-white px-6 py-3 rounded hover:bg-blue-600"
                     onClick={handleSave}
                 >
                 	Update Details
