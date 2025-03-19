@@ -106,10 +106,10 @@ const Login = () => {
     };
     return (
 		<Fragment>
-			<div className="w-full h-screen bg-gray-50 flex items-center justify-center py-16">
+			<div className="w-full h-screen font-kumbsan bg-gray-50 flex items-center justify-center py-16">
 				<div className="bg-white w-full sm:w-[70%] md:w-[50%] lg:w-[40%] xl:w-[35%] 2xl:w-[30%] rounded-lg shadow-lg p-8">
 					<form onSubmit={continues} className="mx-auto w-full">
-						<h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Login or Sign Up</h1>
+						<h1 className="text-3xl font-semibold text-center text-gray-800 mb-6">Login</h1>
 						<input
 							type="email"
 							required

@@ -52,9 +52,9 @@ const Registeruser = () => {
     }, [error, dispatch]);
     return (
 		<form onSubmit={onsubmit}>
-			<div className="w-full min-h-screen bg-gray-100 py-10">
+			<div className="w-full font-kumbsan min-h-screen bg-gray-100 py-10">
 				<div className="max-w-md mx-auto bg-white p-8 rounded-lg shadow-xl">
-					<h1 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register New User</h1>
+					<h1 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register User</h1>
 					<div className="space-y-6">
 						{/* Email Input */}
 						<input
