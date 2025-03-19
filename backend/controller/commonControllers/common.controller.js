@@ -24,6 +24,9 @@ export const updateFeaturesIndex = async(req,res)=>{
 		if(!categoryType){
 			return res.status(400).json({Success: false, message:"Not category type specified"});
 		}
+		if(sourceIndex === destinationIndex){
+			return res.status(400).json({Success: false, message:"Source and Destination index cannot be same"});
+		}
 		if(sourceIndex < 0){
             return res.status(400).json({Success: false, message:"Not source index specified"});
         }
