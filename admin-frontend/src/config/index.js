@@ -696,7 +696,6 @@ export const sortOptions = [
     {id: 'most-viewed', label: 'Most Viewed'},
 ]
 export function capitalizeFirstLetterOfEachWord(str) {
-    console.log(str);
     if(!str){
         return "-"
     }

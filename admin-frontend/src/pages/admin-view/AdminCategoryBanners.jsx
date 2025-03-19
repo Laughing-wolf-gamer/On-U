@@ -529,7 +529,7 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
                                                 {...provided.dragHandleProps}
                                             >
                                                 {loadingStates[index] && (
-                                                    <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
+                                                    <div className="absolute w-full top-1/2 translate-y-1/2 left-1/2 h-full bg-gray-300 animate-pulse rounded-lg">
                                                         <p className="text-black font-bold">Loading...</p>
                                                     </div>
                                                 )}

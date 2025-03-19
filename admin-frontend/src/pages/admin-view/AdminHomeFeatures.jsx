@@ -158,93 +158,14 @@ const AdminHomeFeatures = () => {
 	console.log("Filtered items: " , filteredList)
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
-            {/* Image Upload Section */}
-            {/* <div className="w-full">
-                <h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-                    Upload / Edit Home Page Banners
-                </h1>
-                <div className='w-full h-fit justify-center mx-auto px-4 flex flex-row items-center space-x-5 mb-7'>
-                    <h1 className='font-bold text-center text-gray-700'>Bulk Upload</h1>
-                    <Input
-                        type="checkbox"
-                        checked={toggleBulkUpload}
-                        onChange={() => setToggleBulkUpload(!toggleBulkUpload)}
-                        label="Upload Multiple Images"
-                        className="w-4 h-4"
-                    />
-                </div>
-                
-                {toggleBulkUpload ? (
-                    <div className='w-full justify-center items-center flex flex-col'>
-                        <FileUploadComponent
-                            maxFiles={10}
-                            tag={`home-carousal-upload`}
-                            sizeTag={`carousal-upload ${imageUrlsCategory}`}
-                            onSetImageUrls={(urlArray) => {
-                                console.log('Image Urls: ', urlArray);
-                                setMultipleImages(urlArray);
-                            }}
-                            isLoading={imageLoading}
-                            onReset={resetImageUpload}
-                            setIsLoading={setImageLoading}
-                        />
-                        <Button
-                            disabled={imageLoading}
-                            onClick={HandleMultipleImagesUpload}
-                            className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
-                        >
-                            Upload All Images
-                        </Button>
-                    </div>
-                ) : (
-                    <div className='w-full justify-center items-center flex flex-col'>
-                        <ImageUpload
-                            file={imageFile}
-                            setFile={setImageFile}
-                            imageLoading={imageLoading}
-                            setImageLoading={setImageLoading}
-                            uploadedImageUrl={imageUrls}
-                            setUploadedImageUrl={setImageUrls}
-                            newStyling="w-full h-auto bg-slate-200 rounded-lg"
-                        />
-                        <Button
-                            disabled={imageLoading}
-                            onClick={() => handleImageUpload(imageUrls)}
-                            className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
-                        >
-                            Upload
-                        </Button>
-                    </div>
-                )}
-				<div className="w-full p-6 bg-white rounded-lg shadow-md">
-					<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-						Select a Category Name
-					</h1>
-					<select
-						value={currentImageCategoryName}
-						onChange={(e) => setCurrentImageCategoryName(e.target.value)}
-						className="w-full h-12 p-3  border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-					>
-						<option value="none">All Categoryies Names</option>
-							{allProductsCategory.map((category, index) => (
-								<option key={index} value={category.label}>
-									{capitalizeFirstLetterOfEachWord(category.label)}
-								</option>
-							))}
-					</select>
-				</div>
-                <Input
-                    type="text"
-                    value={imageHeader}
-                    onChange={(e) => setImageHeader(e.target.value)}
-                    placeholder="Enter Header"
-                    className="w-full h-12 mt-4 p- border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-                />
-				
-            </div> */}
-			<Button className='px-4 py-3 bg-black text-white' onClick={() => setIsModalOpen(true)}>
-				Add New Home Page Image/Video
-			</Button>
+			<div className='space-y-1 justify-center flex flex-col items-center'>
+				{
+					selectedCategory === '' && <span className='text-xs text-red-600 font-bold'>Please Select a category to Add New Home Page Image/Video</span>
+				}
+				<Button disabled = {selectedCategory === ''} className='px-4 py-3 bg-black text-white' onClick={() => setIsModalOpen(true)}>
+					Add New Home Page Image/Video
+				</Button>
+			</div>
 			<PopupModal
 				isOpen={isModalOpen}
 				setIsModelOpen = {setIsModalOpen}
@@ -561,7 +482,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 												className="relative group w-full border border-gray-800 bg-gray-50 h-40 rounded-lg overflow-hidden"
 											>
 												{loadingStates[index] && (
-													<div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
+													<div className="absolute w-full h-full top-1/2 translate-y-1/2 bg-gray-300 animate-pulse rounded-lg">
 														<p className="text-black font-bold">Loading...</p>
 													</div>
 												)}
