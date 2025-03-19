@@ -64,7 +64,7 @@ const generateAwb = async(awbData)=>{
 const getAllServicalibiltyties = async (servicesData) => {
 	if (!token) await getAuthToken();
 	try {
-		// console.log("Check Serviciablity ",servicesData);
+		// console.log("Check Serviceability ",servicesData);
 		const response = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`,{
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -72,6 +72,7 @@ const getAllServicalibiltyties = async (servicesData) => {
 			params: servicesData,  // Use `params` for query parameters in GET requests
         })
 		// console.dir(response?.data,{depth:null});
+		console.log("Response Check Serviceability",response?.data)
 		return response?.data?.data;
 	} catch (error) {
 		console.error('Error fetching all serviceabilityties:', error?.response?.data);
@@ -80,14 +81,14 @@ const getAllServicalibiltyties = async (servicesData) => {
 		return null;
 	}
 }
-export const generateOrderPicketUpRequest =async(order,orderData,bestCourior)=>{
+/* export const generateOrderPicketUpRequest =async(order,orderData,bestCourior)=>{
 	if (!token) await getAuthToken();
 	try {
 		const {shipment_id,order_id} = orderData;
 		let bestCourier = bestCourior;
 		if(!bestCourier){
 			// const order = await OrderModel.findOne({order_id:order_id,shipment_id:shipment_id})
-			console.log("Delivary Pincode Address: ",order);
+			console.log("Delivery Pincode Address: ",order);
 			const pickup_locations = await getPickUpLocation();
 			const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
 			const allAvailableCourier = await getAllServicalibiltyties({
@@ -125,7 +126,82 @@ export const generateOrderPicketUpRequest =async(order,orderData,bestCourior)=>{
 		// logger.error(`Error generating order picket up request ${getStringFromObject(error?.response?.data || error?.message)}`);
 		return null;
 	}
-}
+} */
+export const generateOrderPicketUpRequest = async (order, orderData, bestCourier) => {
+    if (!token) await getAuthToken();
+
+    try {
+		console.log("Pick up order Data: ",order,orderData,bestCourier);
+
+        const { shipment_id, order_id } = orderData;
+        let selectedCourier = bestCourier;
+
+        // Check if bestCourier is provided
+        if (!selectedCourier) {
+            console.log("No best courier provided, fetching available couriers...");
+            // Check for primary pickup location and available couriers
+            const pickup_locations = await getPickUpLocation();
+            const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
+
+            if (!primaryLocation) {
+                throw new Error("No primary pickup location found.");
+            }
+
+            console.log("Delivery Pincode Address: ", order);
+
+            const allAvailableCourier = await getAllServicalibiltyties({
+                pickup_postcode: primaryLocation?.pin_code,
+                delivery_postcode: order?.address?.pincode,
+                order_id: order_id,
+            });
+			console.log("All Available Courier: ",allAvailableCourier);
+            if (!allAvailableCourier?.available_courier_companies || allAvailableCourier?.available_courier_companies.length === 0) {
+                throw new Error("No available couriers found.");
+            }
+
+            selectedCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
+
+            // Fallback if no best courier found
+            if (!selectedCourier) {
+                console.error("No suitable best courier found, falling back to first available courier.");
+                selectedCourier = allAvailableCourier?.available_courier_companies[0];
+            }
+        }
+
+        // Generate AWB code for the selected courier
+        const awbCode = await generateAwb({
+            shipment_id: shipment_id,
+            courier_id: selectedCourier?.courier_company_id,
+        });
+
+        if (!awbCode) {
+            console.error("Error generating AWB code.");
+            return null;
+        }
+
+        console.log("AWB Code generated:", awbCode);
+        console.log("Generating Pickup Request for Shipment: ", orderData);
+
+        // Send request to generate the pickup
+        const response = await axios.post(`${SHIPROCKET_API_URL}/courier/generate/pickup`, { shipment_id: [shipment_id] }, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        if (!response?.data?.response) {
+            throw new Error("Error generating pickup request.");
+        }
+
+        console.log("Generated Pickup Request for Shipment: ", response.data);
+        return { awbCode, picketUpResponseData: response.data.response };
+
+    } catch (error) {
+        console.error('Error generating order pickup request:', error.message || error);
+        return null;
+    }
+};
+
 
 export const generateInvoice = async (orderData) => {
 	if (!token) await getAuthToken();
@@ -188,117 +264,6 @@ const formatDate = (date) => {
 	return `${year}-${month}-${day} ${hours}:${minutes}`;
 };
 /* export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
-    if (!token) await getAuthToken();
-
-    try {
-        // console.log("User Id: ", userId);
-
-        // Fetch user data
-        const userData = await User.findById(userId);
-        if (!userData) {
-            console.error("User not found");
-            return null;
-        }
-
-        // Helper function to calculate totals for order items
-        const calculateTotal = (key) => {
-            return shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
-        };
-
-        // Calculate various totals
-        const subTotal = calculateTotal('price');
-        const totalOrderWeight = calculateTotal('weight');
-        const totalOrderHeight = calculateTotal('height');
-        const totalOrderLength = calculateTotal('length');
-        const totalBredth = calculateTotal('breadth');
-        // Map order items to required format
-		const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-        const orderItems = shipmentData.orderItems.map(item => ({
-            name: item?.productId?.title,
-            selling_price: item.productId.salePrice || item.productId.price,
-            units: item.quantity,
-            discount: item?.productId?.DiscountedPercentage || 0,
-            sku: item?.productId?.sku || item?.productId?._id,
-            tax: item?.productId?.gst || 0,
-            hsn: item?.productId?.sku || generateRandomId().toString()
-        }));
-		console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
-
-        
-		const pickup_locations = await getPickUpLocation();
-		console.log("Response Picketup Location",pickup_locations);
-		const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
-		console.log("Check Is Primary Location: ",primaryLocation)
-        const orderDetails = {
-            order_id: randomOrderId,
-            shipment_id: randomShipmentId,
-            order_date: formatDate(new Date()),
-            pickup_location: primaryLocation?.pickup_location,
-			reseller_name: primaryLocation?.pickup_location,
-			company_name: primaryLocation?.pickup_location,
-			channel_id:'6282866',
-			category:"Clothes",
-			billing_isd_code: "+91",
-            billing_customer_name: shipmentData.address.Firstname,
-            billing_last_name: shipmentData.address.Lastname,
-            billing_address: shipmentData.address.address1,
-            billing_city: shipmentData.address.address2,
-            billing_pincode: shipmentData.address.pincode,
-            billing_state: shipmentData.address.state,
-			units:orderItems.length,
-            billing_country: 'In',
-            billing_phone: shipmentData.address.phoneNumber,
-            billing_alternate_phone: userData?.phoneNumber,
-            shipping_is_billing: true,
-            order_items: [...orderItems],
-            payment_method: shipmentData?.paymentMode,
-            sub_total: subTotal,
-            length: totalOrderLength,
-            breadth: totalBredth,
-            height: totalOrderHeight,
-            weight: totalOrderWeight / 1000,
-			order_type:'NON ESSENTIALS',
-			hsn: '441122',
-        };
-
-        console.log("ShipRocket Order data: ", orderDetails);
-
-        // Send the request to ShipRocket API
-        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`, orderDetails, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-		
-        console.log("Shipment Created Response: ",response.data);
-		const allAvailableCourior = await getAllServicalibiltyties({
-			pickup_postcode:primaryLocation?.pin_code,
-			delivery_postcode:shipmentData.address.pincode, 
-			order_id:response?.data?.order_id,
-		});
-		console.log("All Available Courier: ",allAvailableCourior?.available_courier_companies);
-		const getBestCourir = getBestCourierPartners(allAvailableCourior?.available_courier_companies)
-		const bestCourior = getBestCourir[0];
-		console.log("Best Courier: ",bestCourior);
-		
-		const createPicketUpResponse = await generateOrderPicketUpRequest({
-			order_id:response?.data?.order_id,
-            shipment_id:response?.data?.shipment_id,
-			status:response?.data?.status,
-			status_code:response?.data?.status_code,
-			onboarding_completed_now:response?.data?.onboarding_completed_now,
-			courier_company_id:bestCourior?.courier_company_id
-		},bestCourior);
-        // console.log("createPicketUpResponse: ", createPicketUpResponse);
-		const manifest = await generateInvoice(response.data);
-        return {shipmentCreatedResponseData:response.data,bestCourior,manifest,warehouse_name:primaryLocation,PickupData:createPicketUpResponse};
-
-    } catch (error) {
-        console.error("Error creating order:", error?.response?.data);
-        return null;
-    }
-}; */
-export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
     // Check if token exists and fetch it if not
     if (!token) await getAuthToken();
 
@@ -404,17 +369,19 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             console.error("No suitable courier found");
 			bestCourier = allAvailableCourier?.available_courier_companies[0];
         }
+		let createPickUpResponse = null;
+		if(bestCourier){
+			// Create pickup request with the best courier
+			createPickUpResponse = await generateOrderPicketUpRequest(null,{
+				order_id: response?.data?.order_id,
+				shipment_id: response?.data?.shipment_id,
+				status: response?.data?.status,
+				status_code: response?.data?.status_code,
+				onboarding_completed_now: response?.data?.onboarding_completed_now,
+				courier_company_id: bestCourier?.courier_company_id
+			}, bestCourier);
+		}
 
-        // Create pickup request with the best courier
-        const createPickUpResponse = await generateOrderPicketUpRequest(null,{
-            order_id: response?.data?.order_id,
-            shipment_id: response?.data?.shipment_id,
-            status: response?.data?.status,
-            status_code: response?.data?.status_code,
-            onboarding_completed_now: response?.data?.onboarding_completed_now,
-            courier_company_id: bestCourier?.courier_company_id
-        }, bestCourier);
-		console.log("createPickUpResponse: ", createPickUpResponse);
         return {
             shipmentCreatedResponseData: response.data,
             bestCourier,
@@ -425,7 +392,155 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 
     } catch (error) {
         console.error("Error creating order:", error?.response?.data || error.message);
-		// logger.error(`Error creating order: ${getStringFromObject(error?.response?.data || error.message)}`)
+        return null;
+    }
+} */
+export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
+    try {
+        // Fetch token if it's missing
+        if (!token) {
+            await getAuthToken(); // Assuming this function sets a global token
+        }
+
+        // Fetch user data
+        const userData = await User.findById(userId);
+        if (!userData) {
+            console.error("User not found");
+            return null;
+        }
+
+        // Helper function to calculate totals for order items
+        const calculateTotal = (key) => shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
+
+        // Calculate various totals
+        const [subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth] = await Promise.all([
+            calculateTotal('price'),
+            calculateTotal('weight'),
+            calculateTotal('height'),
+            calculateTotal('length'),
+            calculateTotal('breadth')
+        ]);
+
+        // Generate random ID for HSN and SKU if needed
+        const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
+
+        console.log("Order Items: ", shipmentData.orderItems);
+
+        // Map order items to required format
+        const orderItems = shipmentData.orderItems.map(item => ({
+            name: item?.productId?.title,
+            selling_price: item.productId.salePrice || item.productId.price,
+            units: item.quantity,
+            discount: item?.productId?.DiscountedPercentage || 0,
+            sku: item?.productId?.sku || item?.productId?._id,
+            tax: item?.productId?.gst || 0,
+            hsn: item?.productId?.sku || generateRandomId().toString()
+        }));
+
+        // Get available pickup locations
+        const pickup_locations = await getPickUpLocation();
+        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
+        if (!primaryLocation) {
+            console.error("Primary pickup location not found");
+            return null; // Avoid proceeding if primary location is not found
+        }
+
+        console.log("Shipment Address:", shipmentData.address);
+
+        // Prepare order details
+        const orderDetails = {
+            order_id: randomOrderId,
+            shipment_id: randomShipmentId,
+            order_date: formatDate(new Date()), // Ensure formatDate is defined
+            pickup_location: primaryLocation?.pickup_location,
+            reseller_name: primaryLocation?.pickup_location,
+            company_name: primaryLocation?.pickup_location,
+            channel_id: '6282866',
+            category: "Clothes",
+            billing_isd_code: "+91",
+            billing_customer_name: shipmentData.address.Firstname,
+            billing_last_name: shipmentData.address.Lastname,
+            billing_address: shipmentData.address.address1,
+            billing_city: shipmentData.address.address2,
+            billing_pincode: shipmentData.address.pincode,
+            billing_state: shipmentData.address.state,
+            units: orderItems.length,
+            billing_country: 'In',
+            billing_phone: shipmentData.address.phoneNumber,
+            billing_alternate_phone: userData?.phoneNumber,
+            shipping_is_billing: true,
+            order_items: orderItems,
+            payment_method: shipmentData?.paymentMode,
+            sub_total: subTotal,
+            length: totalOrderLength,
+            breadth: totalBredth,
+            height: totalOrderHeight,
+            weight: totalOrderWeight / 1000, // Convert weight to KG
+            order_type: 'NON ESSENTIALS',
+            hsn: '441122', // Static HSN, but can be dynamically generated based on your needs
+        };
+
+        // Send the request to ShipRocket API
+        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/adhoc`, orderDetails, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        console.log("Shipment Created Response: ", response.data);
+
+        // Fetch available couriers and generate invoice in parallel
+        const [allAvailableCourier, invoice] = await Promise.all([
+            getAllServicalibiltyties({
+                pickup_postcode: primaryLocation?.pin_code,
+                delivery_postcode: shipmentData.address.pincode,
+                order_id: response?.data?.order_id,
+            }),
+            generateInvoice(response.data)
+        ]);
+
+        console.log("All Available Courier: ", allAvailableCourier?.available_courier_companies);
+		
+        // Get the best courier based on available options
+        let bestCourier = null;
+		if(allAvailableCourier && allAvailableCourier.available_courier_companies.length > 0){
+			bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0]
+		}
+        if (!bestCourier) {
+            console.error("No suitable courier found");
+            bestCourier = allAvailableCourier?.available_courier_companies[0];
+        }
+
+        if (bestCourier) {
+            // Create pickup request with the best courier
+            const createPickUpResponse = await generateOrderPicketUpRequest(null, {
+                order_id: response?.data?.order_id,
+                shipment_id: response?.data?.shipment_id,
+                status: response?.data?.status,
+                status_code: response?.data?.status_code,
+                onboarding_completed_now: response?.data?.onboarding_completed_now,
+                courier_company_id: bestCourier?.courier_company_id
+            }, bestCourier);
+
+            return {
+                shipmentCreatedResponseData: response.data,
+                bestCourier,
+                manifest:invoice,
+                warehouse_name: primaryLocation,
+                PickupData: createPickUpResponse
+            };
+        } else {
+            return {
+                shipmentCreatedResponseData: response.data,
+                bestCourier: null,
+                manifest: invoice,
+                warehouse_name: primaryLocation,
+                PickupData: null
+            };
+        }
+
+    } catch (error) {
+        console.error("Error creating order:", error?.response?.data || error.message);
         return null;
     }
 };
@@ -470,11 +585,11 @@ export const generateOrderCancel = async(orderId)=>{
             },
         });
 
-        console.log("Cancel Order Response: ", response.data);
-        return response.data?.status_code === 200 ? true : false;
+		const dataToReturn = response.data;
+        return dataToReturn
     } catch (error) {
         console.error("Error cancelling order:", error?.response?.data || error.message);
-        return false;
+        return error?.response?.data;
     }
 }
 export const generateOrderRetrunShipment = async (shipmentData, userId) => {

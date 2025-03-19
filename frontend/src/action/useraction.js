@@ -12,9 +12,6 @@ import {
     SUCCESS_UPDATE_DETAILS_USER,
     FAIL_UPDATE_DETAILS_USER,
     CLEAR_ERRORS,
-    REGISTER_USER_DATA,
-    SUCCESS_REGISTER_USER,
-    FAIL_REGISTER_USER,
     LOGIN_USER_DATA,
     SUCCESS_LOGIN_USER,
     FAIL_LOGIN_USER,
@@ -27,11 +24,10 @@ import {
 } from '../const/userconst'
 import axios from 'axios'
 
-export const loginmobile = ({logInData}) => async () => {
+export const loginmobile = (sendingData) => async () => {
     try {
-        console.log("logIn Data: ", logInData)
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, {logInData})
-        console.log("Login Data: ", data)
+        console.log("logIn Data: ", sendingData)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile`, sendingData)
         return data;
     } catch (error) {
         return null;
@@ -39,10 +35,8 @@ export const loginmobile = ({logInData}) => async () => {
 }
 export const loginVerify = (verifyData)=> async(dispatch)=>{
     try {
-        console.log("verify OTP Data: ", verifyData)
         dispatch({ type: LOGIN_USER_DATA })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile/verify`, verifyData)
-        console.log("Verify OTP Data: ", data)
         const token = data?.result?.token
         sessionStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
@@ -54,19 +48,19 @@ export const loginVerify = (verifyData)=> async(dispatch)=>{
 }
 export const registerUser = (userData) => async (dispatch) => {
     try {
-        console.log("registermobile Data: ", userData)
-        dispatch({ type: REGISTER_USER_DATA })
+        // dispatch({ type: REGISTER_USER_DATA })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/registermobile`, userData)
-        dispatch({ type: SUCCESS_REGISTER_USER, payload: data?.result, message: data?.message })
+        // dispatch({ type: SUCCESS_REGISTER_USER, payload: data?.result, message: data?.message })
+		return data?.result;
     } catch (error) {
-        dispatch({ type: FAIL_REGISTER_USER, payload: null ,message: "Error Occurred"})
+        // dispatch({ type: FAIL_REGISTER_USER, payload: null ,message: "Error Occurred"})
+		return null;
     }
 }
 
 export const getuser = () => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
-        console.log(token);
         dispatch({ type: REQUEST_USER })
         if(!token){
             dispatch({ type: FAIL_USER, payload: null})
@@ -88,7 +82,6 @@ export const getuser = () => async (dispatch) => {
 export const updateAddress = (address) => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
-        // console.log("Address Data: ", address)
         dispatch({ type: REQUEST_UPDATE_ADDRESS })
         const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
             withCredentials:true,
@@ -140,12 +133,11 @@ export const getConvinceFees = ()=>async()=>{
     }
 }
 
-export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
+export const otpverifie = (sendingData) => async (dispatch) => {
     try {
         // dispatch({ type: REQUEST_VERIFY_OTP })
-        console.log("Otp: ",otp, "MobileNo. ",mobileno)
-        const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify/${mobileno}/${otp}`)
-        console.log("Data: ", data)
+        console.log("Otp: MobileNo. ",sendingData)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/otpverify`,sendingData)
         if(data?.result?.verify === 'verified'){
             const token = data?.token
             console.log("Token: ", token)
@@ -161,11 +153,11 @@ export const otpverifie = ({otp,mobileno}) => async (dispatch) => {
     }
 }
 
-export const resendotp = ({email}) => async () => {
+export const resendotp = (sendingData) => async () => {
     try {
-        console.log("Received: ", email)
+        console.log("Received: ", sendingData)
         // dispatch({ type: REQUEST_RESEND_OTP })
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/resendotp?email=${email}`)
+        const { data } = await axios.post(`${BASE_API_URL}/api/auth/resendotp`,sendingData)
         return data
         // dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
     } catch (Error) {

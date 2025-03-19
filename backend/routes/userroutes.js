@@ -9,8 +9,8 @@ route.post('/registermobile',registermobile)
 route.post('/loginmobile',loginMobileNumber)
 route.post('/loginmobile/verify',loginOtpCheck)
 route.get('/check-auth',isAuthenticateuser, getuser)
-route.post('/otpverify/:id/:otp', optverify)
-route.get('/resendotp', resendotp)
+route.post('/otpverify', optverify)
+route.post('/resendotp', resendotp)
 
 
 route.put('/updateAddress',isAuthenticateuser,updateAddress);

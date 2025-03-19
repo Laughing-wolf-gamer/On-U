@@ -2,12 +2,11 @@ import nodemailer from 'nodemailer';
 import User from '../model/usermodel.js';
 import { promisify } from 'util';
 
-
 // Setup nodemailer transport
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Replace with your email provider (Gmail, SendGrid, etc.)
     secure: false,
-    port:8000,
+    port: 8000,
     auth: {
         user: process.env.ADMIN_EMAIL,
         pass: process.env.ADMIN_PASSWORD
@@ -16,255 +15,148 @@ const transporter = nodemailer.createTransport({
 
 const sendMailAsync = promisify(transporter.sendMail.bind(transporter));
 
+// Generic function to send an email
+const sendEmail = async (to, subject, text, html = '') => {
+    const mailOptions = {
+        from: process.env.ADMIN_EMAIL,
+        to,
+        subject,
+        text,
+        html,
+    };
+    try {
+        const response = await sendMailAsync(mailOptions);
+		console.log("Email Sent REsponse: ",response);
+        return true;
+    } catch (error) {
+        console.error('Error sending email:', error.message);
+        return false;
+    }
+};
+
 // Controller to send email verification
 export const sendVerificationEmail = async (email, otp) => {
-    let sendingEmailSuccess = false;
-    const mailOptions = {
-        from: process.env.ADMIN_EMAIL,
-        to: email,
-        subject: 'Email OTP Verification',
-        text: `Your OTP is: ${otp}`,
-        html: `<p>Your OTP for email verification is: <strong>${otp}</strong></p>`
-        // Uncomment and customize if using a verification link:
-        // html: `<p>Please verify your email by clicking the link: <a href="${verificationLink}">Verify Email</a></p>`
-    };
-    try {
-        const info = await sendMailAsync(mailOptions);
-        console.log('email sent successfully:', info);
-        sendingEmailSuccess = true;
-    } catch (error) {
-        console.error('Error sending email: ', error.message);
-        sendingEmailSuccess = false;
-    }
-    return sendingEmailSuccess;
+    const subject = 'Email OTP Verification';
+    const text = `Your OTP is: ${otp}`;
+    const html = `<p>Your OTP for email verification is: <strong>${otp}</strong></p>`;
+    return await sendEmail(email, subject, text, html);
 };
 
+// Send coupon email
 export const sendCouponMail = async (fullName, toEmail, couponCode) => {
-    let sendingEmailSuccess = false;
-    const mailOptions = {
-        from: process.env.ADMIN_EMAIL,
-        to: toEmail,
-        subject: 'Your Exclusive Coupon Code!',
-        text: `${fullName},\n\nWe’re excited to offer you an exclusive coupon code! Use the code below to save on your next purchase.\n\nCoupon Code: ${couponCode}\n\nHurry, it’s valid for a limited time! Don’t miss out on this special offer.\n\nThank you for being a valued customer!`,
-        html: `
-            <p>Hello <strong>${fullName}</strong>,</p>
-            <p>We’re excited to offer you an exclusive coupon code! Use the code below to save on your next purchase:</p>
-            <p><strong>Coupon Code: ${couponCode}</strong></p>
-            <p><em>Hurry, it’s valid for a limited time! Don’t miss out on this special offer.</em></p>
-            <p>Thank you for being a valued customer. We appreciate your support!</p>
-            <p>Best regards,</p>
-            <p>Your On U Team</p>
-        `
-    };
-
-    try {
-        const info = await sendMailAsync(mailOptions);
-        console.log('Coupon email sent successfully:', info);
-        sendingEmailSuccess = true;
-    } catch (error) {
-        console.error('Error sending email: ', error.message);
-        sendingEmailSuccess = false;
-    }
-    return sendingEmailSuccess;
+    const subject = 'Your Exclusive Coupon Code!';
+    const text = `${fullName},\n\nWe’re excited to offer you an exclusive coupon code! Use the code below to save on your next purchase.\n\nCoupon Code: ${couponCode}\n\nHurry, it’s valid for a limited time! Don’t miss out on this special offer.\n\nThank you for being a valued customer!`;
+    const html = `
+        <p>Hello <strong>${fullName}</strong>,</p>
+        <p>We’re excited to offer you an exclusive coupon code! Use the code below to save on your next purchase:</p>
+        <p><strong>Coupon Code: ${couponCode}</strong></p>
+        <p><em>Hurry, it’s valid for a limited time! Don’t miss out on this special offer.</em></p>
+        <p>Thank you for being a valued customer. We appreciate your support!</p>
+        <p>Best regards,</p>
+        <p>Your On U Team</p>
+    `;
+    return await sendEmail(toEmail, subject, text, html);
 };
-export const sendUpdateOrderStatus = async(userId, orderData) => {
-    let sendingEmailSuccess = false;
+
+// Send order status update email
+export const sendUpdateOrderStatus = async (userId, orderData) => {
     try {
         const userData = await User.findById(userId);
         if (!userData) {
             throw new Error("User not found");
         }
 
-        // Initialize the base message
         let message = `Dear ${userData.name},\n\n`;
 
-        // Handle different order statuses
         switch(orderData?.status) {
             case 'Processing':
-                message += `Your order is currently being processed. We are preparing your items for shipment.Here are the details:`;
+                message += `Your order is currently being processed. We are preparing your items for shipment.`;
                 break;
             case 'Order Confirmed':
-                message += `Your order has been confirmed. We are getting ready to ship your items. Here are the details:`;
+                message += `Your order has been confirmed. We are getting ready to ship your items.`;
                 break;
             case 'Order Shipped':
-                message += `Great news! Your order has been dispatched and is on its way. Here are the details:`;
+                message += `Great news! Your order has been dispatched and is on its way.`;
                 break;
             case 'Out for Delivery':
-                message += `Your order is out for delivery. It should be arriving soon. Here are the details:`;
+                message += `Your order is out for delivery. It should be arriving soon.`;
                 break;
             case 'Delivered':
-                message += `Your order has been successfully delivered! We hope you enjoy your purchase. Here are the details:`;
+                message += `Your order has been successfully delivered! We hope you enjoy your purchase.`;
                 break;
             default:
-                message += `We have received your order and it is being processed. Here are the details:`;
+                message += `We have received your order and it is being processed.`;
                 break;
         }
 
-        // Add order items to the message
         orderData.orderItems.forEach(item => {
             message += `\nProduct: ${item.productId.title}\nSize: ${item.size}\n Color: ${item?.color}\n Quantity: ${item.quantity}\n`;
         });
 
-        // Final message and thank you note
-        message += `
-            Thank you for shopping with us! We will notify you of any further updates.
+        message += `\nThank you for shopping with us! We will notify you of any further updates.\nBest regards,\nOn U`;
 
-            Best regards,
-            On U
-        `;
+        const subject = `Order Status Update: ${orderData.status}`;
+        const text = message;
 
-        // Set up the email options
-        const mailOptions = {
-            from: process.env.ADMIN_EMAIL,
-            to: userData.email,
-            subject: `Order Status Update: ${orderData.status}`,
-            text: message,
-        };
-        
-        try {
-            // Send the email
-            const info = await sendMailAsync(mailOptions);
-            console.log('Email sent successfully:', info);
-            sendingEmailSuccess = true;
-        } catch (error) {
-            console.error('Error sending email:', error.message);
-            sendingEmailSuccess = false;
-        }
-
+        return await sendEmail(userData.email, subject, text);
     } catch (error) {
         console.error("Error:", error);
-        sendingEmailSuccess = false;
+        return false;
     }
-    
-    return sendingEmailSuccess;
-}
-export const sendMainifestMail = async (userId,manifestLink) => {
-	let sendingEmailSuccess = false;
+};
+
+// Send manifest email
+export const sendMainifestMail = async (userId, manifestLink) => {
     try {
         const userData = await User.findById(userId);
         if (!userData) {
             throw new Error("User not found");
         }
 
-        // Initialize the base message
-        let message = `Dear ${userData.name},\n\n`;
+        let message = `Dear ${userData.name},\n\nThank you for shopping with us! We will notify you of any further updates.\nBest regards,\nOn U`;
 
-        // Final message and thank you note
-        message += `
-            Thank you for shopping with us! We will notify you of any further updates.
-            Best regards,
-            On U
+        const subject = 'Your Order Manifest';
+        const text = message;
+        const html = `
+            <p>${message}</p>
+            <p>Click the link below to download your manifest:</p>
+            <a href="${manifestLink}" download="order_manifest">Download Manifest</a>
         `;
 
-        // Set up the email options
-        const mailOptions = {
-            from: process.env.ADMIN_EMAIL,
-            to: userData.email,
-            subject: `Your Order Manifest`,
-            text: message,
-			html: `
-                <p>${message}</p>
-                <p>Click the link below to download your manifest:</p>
-                <a href="${manifestLink}" download="order_manifest">Download Manifest</a>
-			`
-        };
-        
-        try {
-            // Send the email
-            const info = await sendMailAsync(mailOptions);
-            console.log('Email sent successfully:', info);
-            sendingEmailSuccess = true;
-        } catch (error) {
-            console.error('Error sending email:', error.message);
-            sendingEmailSuccess = false;
-        }
-
+        return await sendEmail(userData.email, subject, text, html);
     } catch (error) {
         console.error("Error:", error);
-        sendingEmailSuccess = false;
+        return false;
     }
-    
-    return sendingEmailSuccess;
-}
+};
 
-export const sendOrderPlacedMail = async (userId,orderData)=>{
-    let sendingEmailSuccess = false;
+// Send order placed confirmation email
+export const sendOrderPlacedMail = async (userId, orderData) => {
     try {
         const userData = await User.findById(userId);
-        console.log("order Data",orderData);
-        if(!userData){
-            console.error("User not found");
-            return;
+        if (!userData) {
+            throw new Error("User not found");
         }
-        let message = `
-            Dear ${userData.name},
 
-            Thank you for your order! We have successfully processed it. Here are the details:
-
-        `;
+        let message = `Dear ${userData.name},\n\nThank you for your order! We have successfully processed it. Here are the details:\n`;
 
         orderData.orderItems.forEach(item => {
-            message += `
-				Product: ${item.productId.title}
-				Size: ${item.size}
-				Quantity: ${item.quantity}
-				Status:${orderData.status}
-			`;
+            message += `\nProduct: ${item.productId.title}\nSize: ${item.size}\nQuantity: ${item.quantity}\nStatus: ${orderData.status}\n`;
         });
 
-        message += `
-            We will notify you once your order is shipped.
+        message += `\nWe will notify you once your order is shipped.\nThank you for shopping with us!\nBest regards,\nOn U`;
 
-            Thank you for shopping with us!
+        const subject = 'Order Placed Successfully';
+        const text = message;
 
-            Best regards,
-            On U
-        `;
-        const mailOptions = {
-            from: process.env.ADMIN_EMAIL,
-            to: userData.email,
-            subject: 'Order Placed Successfully',
-            text: message,
-        };
-        
-        try {
-            const info = await sendMailAsync(mailOptions);
-            console.log('Order Placed Successfully:', info);
-            sendingEmailSuccess = true;
-        } catch (error) {
-            console.error('Error sending email: ', error.message);
-            sendingEmailSuccess = false;
-        }
-    } catch (error) {
-        console.error("Error sending message: ", error);
-        sendingEmailSuccess = false;
-    }
-    return sendingEmailSuccess;
-}
-
-export const sendCustomMail = async(toEmail, subject, text) => {
-	let sendingEmailSuccess = false;
-    try {
-        const mailOptions = {
-            from: process.env.ADMIN_EMAIL,
-            to: toEmail,
-            subject: subject,
-            text: text,
-        };
-        
-        try {
-            const info = await sendMailAsync(mailOptions);
-            console.log('Email sent successfully:', info);
-            sendingEmailSuccess = true;
-        } catch (error) {
-            console.error('Error sending email:', error.message);
-            sendingEmailSuccess = false;
-        }
-
+        return await sendEmail(userData.email, subject, text);
     } catch (error) {
         console.error("Error:", error);
-        sendingEmailSuccess = false;
+        return false;
     }
-    
-    return sendingEmailSuccess;
-}
+};
+
+// Send custom email
+export const sendCustomMail = async (toEmail, subject, text) => {
+    return await sendEmail(toEmail, subject, text);
+};

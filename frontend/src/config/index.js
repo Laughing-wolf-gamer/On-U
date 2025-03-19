@@ -1,5 +1,4 @@
 export function capitalizeFirstLetterOfEachWord(str) {
-    console.log(str);
     if(!str){
         return "NO TEXT"
     }
@@ -7,7 +6,7 @@ export function capitalizeFirstLetterOfEachWord(str) {
 }
 export function getRandomItems(array, numItems) {
     if (!Array.isArray(array) || array.length === 0 || numItems <= 0) {
-      return [];
+      	return [];
     }
   
     const shuffled = array.slice().sort(() => Math.random() - 0.5); // Shuffle the array
@@ -17,8 +16,8 @@ function filterImageFiles(files) {
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.svg', '.webp'];
   
     return files.filter(file => {
-      const fileExtension = file.url.toLowerCase().split('.').pop();
-      return imageExtensions.includes('.' + fileExtension); // Only allow image files
+		const fileExtension = file.url.toLowerCase().split('.').pop();
+		return imageExtensions.includes('.' + fileExtension); // Only allow image files
     });
 }
 export function getStatusDescription(statusNumber) {
@@ -86,38 +85,38 @@ export function getStatusDescription(statusNumber) {
 	return statusMap[statusNumber] || 'Unknown Status';
 }
 export function getImagesArrayFromProducts(product) {
-  // Helper function to check if a file is a video based on its extension
-  // console.log("all colors",product)
-  const isVideoFile = (fileName) => {
-    const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'];
-    return videoExtensions.some(extension => fileName.url.toLowerCase().endsWith(extension));
-  };
+	// Helper function to check if a file is a video based on its extension
+	// console.log("all colors",product)
+	const isVideoFile = (fileName) => {
+		const videoExtensions = ['.mp4', '.avi', '.mov', '.mkv', '.webm', '.flv'];
+		return videoExtensions.some(extension => fileName.url.toLowerCase().endsWith(extension));
+	};
 
-  // Function to collect images, excluding video files
-  const getImagesFromProduct = (product) => {
-    let images = [];
+	// Function to collect images, excluding video files
+	const getImagesFromProduct = (product) => {
+		let images = [];
 
-    // Iterate over the sizes
-    if (product.size && Array.isArray(product.size)) {
-      product.size.forEach(s => {
-        // Iterate over the colors for each size
-        if (s.colors && Array.isArray(s.colors)) {
-          s.colors.forEach(c => {
-            // Filter out video files from color images
-            if (c.images && Array.isArray(c.images)) {
-              const filteredImages = c.images.filter(image => !isVideoFile(image));
-              images = [...images, ...filteredImages];
-            }
-          });
-        }
-      });
-    }
+		// Iterate over the sizes
+		if (product.size && Array.isArray(product.size)) {
+		product.size.forEach(s => {
+			// Iterate over the colors for each size
+			if (s.colors && Array.isArray(s.colors)) {
+			s.colors.forEach(c => {
+				// Filter out video files from color images
+				if (c.images && Array.isArray(c.images)) {
+				const filteredImages = c.images.filter(image => !isVideoFile(image));
+				images = [...images, ...filteredImages];
+				}
+			});
+			}
+		});
+		}
 
-    return images;
-  };
+		return images;
+	};
 
-  // Get and return filtered images
-  return getImagesFromProduct(product);
+	// Get and return filtered images
+	return getImagesFromProduct(product);
 }
   
 
@@ -206,46 +205,43 @@ export const getLocalStorageBag = ()=>{
 }
 export const getLocalStorageWishListItem = ()=>{
   const wishList = JSON.parse(sessionStorage.getItem("wishListItem")) || [];
-  console.log("WishList",wishList);
   return wishList;
 }
 export const setSessionStorageBagListItem = (orderData,productId)=>{
-  let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
-  if (!bagItem) {
-      bagItem = [];
-  }
-  // console.log("bag: ",b)
-  let index = bagItem?.findIndex((item) => item.productId === productId);
-  if (index !== -1) {
-      if(bagItem[index].size._id === orderData.size._id && bagItem[index].color._id === orderData.color._id) {
-          bagItem[index].quantity += 1;
-      }else{
-          bagItem.push(orderData);
-      }
+	let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+	if (!bagItem) {
+		bagItem = [];
+	}
+	let index = bagItem?.findIndex((item) => item.productId === productId);
+	if (index !== -1) {
+		if(bagItem[index].size._id === orderData.size._id && bagItem[index].color._id === orderData.color._id) {
+			bagItem[index].quantity += 1;
+		}else{
+			bagItem.push(orderData);
+		}
 
-  } else {
-      bagItem.push(orderData);
-  }
-  sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+	} else {
+		bagItem.push(orderData);
+	}
+	sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
 }
 export const setWishListProductInfo = (product,productId)=>{
-  const wishListData = {
-    productId: {...product},
-  };
-  let wishListItem = JSON.parse(sessionStorage.getItem("wishListItem"));
-  if (!wishListItem) {
-      wishListItem = [];
-  }
-  // console.log("bag: ",b)
-  let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
-  if (index === -1) {
-    wishListItem.push(wishListData);
-    sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
-  }else{
-    wishListItem.splice(index,1);
-    sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
-  }
-  console.log("wishListItem Addded or remove: ",wishListItem);
+	const wishListData = {
+		productId: {...product},
+	};
+	let wishListItem = JSON.parse(sessionStorage.getItem("wishListItem"));
+	if (!wishListItem) {
+		wishListItem = [];
+	}
+	// console.log("bag: ",b)
+	let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
+	if (index === -1) {
+		wishListItem.push(wishListData);
+		sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+	}else{
+		wishListItem.splice(index,1);
+		sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+	}
 }
 
 export const formattedSalePrice = (price)=>{

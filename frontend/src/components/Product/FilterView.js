@@ -476,7 +476,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // Check if any filters are selected from URL and update UI accordingly
     const check = () => {
         const params = new URLSearchParams(window.location.search);
-        console.log("Params: ",params);
+        // console.log("Params: ",params);
         // Set category checkboxes based on URL params
         const selectedCategories = params.getAll('category');
         selectedCategories.forEach((cat) => {
@@ -704,7 +704,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const selectedCategories = params.getAll('specialCategory'); // Get all categories from URL
 
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
-						console.log("Filter Amount: ",specialCategorynewarray);
+						// console.log("Filter Amount: ",specialCategorynewarray);
                         return (
                             <div key={i} onClick={(event) => {
                                 event.preventDefault();

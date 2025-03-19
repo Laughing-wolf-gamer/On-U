@@ -293,7 +293,7 @@ const SideBarBag = ({OnChangeing}) => {
             }
         }
     },[allAddresses,dispatch])
-	console.log("Bag: ",bag);
+	// console.log("Bag: ",bag);
 	
 	return (
 		<div className="flex w-full flex-row font1 justify-start items-start min-h-screen gap-2 px-2 pt-1">

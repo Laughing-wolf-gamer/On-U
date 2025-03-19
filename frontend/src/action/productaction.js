@@ -37,7 +37,6 @@ export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
     try {
         dispatch({ type: REQUEST_RANDOM_PRODUCT })
         const res = await axios.get(`${BASE_API_URL}/api/shop/products/random`)
-        console.log("Random products: ", res.data);
         const data = res.data;
         dispatch({ type: SUCCESS_RANDOM_PRODUCT, payload: data?.result})
     } catch (error) {

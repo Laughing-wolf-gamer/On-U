@@ -166,7 +166,7 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
                 "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
         });
-        console.log("Update Bag: ",data)
+        // console.log("Update Bag: ",data)
         dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
@@ -178,7 +178,7 @@ export const itemCheckUpdate = (checkedData) => async () => {
         // dispatch({ type: REQUEST_UPDATE_QTY_BAG })
         // const token = sessionStorage.getItem('token');
 		
-        console.log("Update Bag: ",checkedData)
+        // console.log("Update Bag: ",checkedData)
         const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bagItemChecked`,checkedData, headerConfig());
 		return data.success;
         // dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
@@ -193,7 +193,7 @@ export const deleteBag = (deletingProductData) => async (dispatch) => {
         const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
         const res = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/removeBagItem`,deletingProductData,headerConfig());
-        console.log("Delete Bag: ",res)
+        // console.log("Delete Bag: ",res)
         dispatch({ type: REQUEST_DELETE_BAG, payload: res?.data?.success || false})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_BAG, payload: error?.response?.data?.message || "Failed To Delete BAg" })

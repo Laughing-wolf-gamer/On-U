@@ -9,7 +9,7 @@ const SettingContext = createContext();
 // Provider component
 export const SettingsProvider = ({ children }) => {
     const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message) => {
+    const checkAndCreateToast = (type,message,appearDuration = 1000) => {
         const style = {
             border: '1px solid #fff',
             padding: '16px',
@@ -24,7 +24,7 @@ export const SettingsProvider = ({ children }) => {
             'aria-live': 'polite',
         };
         const removeDelay = 500;
-        const appearDuration = 1000;
+        // const appearDuration = 1000;
         const position = 'top-center'
         // console.log("check Toast: ",type, message,activeToast);
         if(!activeToast){

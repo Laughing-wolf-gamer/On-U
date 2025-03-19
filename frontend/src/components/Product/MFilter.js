@@ -168,7 +168,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         }
     }
     function subCategoriesarray() {
-        console.log("Product: ",product);
+        // console.log("Product: ",product);
         if (product && product.length > 0) {
             product.forEach(p => {
 				subcategory.push(p.subCategory)
@@ -221,7 +221,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         product.forEach(p => {
             spARRAY.push(p.price);
         });
-        console.log("Prices: ", spARRAY);
+        // console.log("Prices: ", spARRAY);
     }
     useEffect(()=>{
         categoriesarray()
@@ -318,7 +318,6 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         }
     }
     function discountedAmountfun(e) {
-        console.log("E-Amount:", e);
         // Check if the main URL contains a '?'
         if (MMainlink.includes('?')) {
             // Check if the URL already contains 'discountedAmount'
@@ -422,7 +421,6 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     }
 
     function addclass1(e) {
-        console.log("Add Class 1: ",e);
         let f = e.replace(/ /g, "")
 
         var font = document.querySelector(`.font${f}`)
@@ -432,7 +430,6 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     }
     function addclass1Discounted(e) {
-        console.log("Add Class 1: ",e);
         let f = e;
 
         var font = document.querySelector(`.font${f}`)
@@ -534,7 +531,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 			divElement.removeEventListener('scroll', handleScroll); // Clean up the event listener
 		};
 	}, []);
-	console.log('scrollPosition: ', scrollPosition);
+	// console.log('scrollPosition: ', scrollPosition);
     return (
         <Fragment>
 			<div

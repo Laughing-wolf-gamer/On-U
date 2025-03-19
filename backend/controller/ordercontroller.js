@@ -447,7 +447,7 @@ export const createOrder = async (req, res) => {
             status: 'Confirmed',
         }, randomOrderShipRocketId, randomShipmentId);
 
-        const { shipmentCreatedResponseData, bestCourior, manifest, warehouse_name, PickupData } = createdShipRocketOrder;
+        const { shipmentCreatedResponseData, bestCourier, manifest, warehouse_name, PickupData } = createdShipRocketOrder;
 
         // Create order entry in the database
         const orderData = new OrderModel({
@@ -463,7 +463,7 @@ export const createOrder = async (req, res) => {
             paymentMode:paymentMode || 'COD',
             status: 'Confirmed',
             PicketUpData: PickupData,
-            BestCourior: bestCourior,
+            BestCourior: bestCourier,
             ShipmentCreatedResponseData: shipmentCreatedResponseData,
             manifest: manifest,
         });
@@ -876,7 +876,7 @@ export const addItemsArrayToBag = async (req, res) => {
             await userBag.save();
         }
 
-        console.log("User Bag: ", userBag);
+        // console.log("User Bag: ", userBag);
         res.status(200).json({ success: true, message: "Items added to bag" });
     } catch (error) {
         console.error("Failed to add items array: ", error);
@@ -1116,7 +1116,7 @@ export const addItemsToBag = async (req, res) => {
                 ConvenienceFees: convenienceFees?.ConvenienceFees || 0,
                 orderItems: [{ productId, quantity, color, size, isChecked: true }]
             });
-            console.log("Creating New Bag: ", newBag);
+            // console.log("Creating New Bag: ", newBag);
 
             // Get item data and update the bag
             const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = await getItemsData(newBag);
@@ -1486,7 +1486,7 @@ export const updateItemCheckedInBag = async (req, res, next) => {
         if (!product) {
             return res.status(400).json({ message: "Product not found in bag" });
         }
-		console.log("Product in Bag: ", product);
+		// console.log("Product in Bag: ", product);
 		// Update the checkedIn status
 		product.isChecked = !product.isChecked;
 		const TotalBagAmount = calculateTotalAmount(bag.orderItems);
@@ -1685,6 +1685,16 @@ export const createOrderCancel = async(req,res)=>{
 		const order = await OrderModel.findById(orderId);
 		if(!order) return res.status(404).json({ success: false, message: "Order not found", result: null });
 		const cancelRequest = await generateOrderCancel(order.order_id);
+		if(!cancelRequest) return res.status(404).json({ success: false, message: "Failed to cancel order"});
+		if(cancelRequest?.status_code === 200){
+			order.IsCancelled = true;
+		}else{
+			if(cancelRequest.message === 'Cannot cancel order when shipment status is Cancellation Requested'){
+				order.IsCancelled = true;
+			}else{
+				order.IsCancelled = false;
+			}
+		}
 		console.log("Cancel Request Success: ", cancelRequest);
 		if(!cancelRequest) {
             return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
@@ -1695,7 +1705,6 @@ export const createOrderCancel = async(req,res)=>{
 			refundGeneration = await generateRefundOrder(order);
 		}
 		order.RefundData = refundGeneration;
-		order.IsCancelled = cancelRequest;
 		await order.save();
 		res.status(200).json({ success: true, message: "Order Canceled successfully"});
 	} catch (error) {
@@ -1710,8 +1719,8 @@ export const exchangeOrder = async(req, res) => {
 		console.log("Exchanging Order: ", orderId);
 		res.status(200).json({ success: true, message: "Successfully received order exchange request"});
 	} catch (error) {
-		console.error("Error Occured during exchanging order ", error.message);
-		logger.error(`Error occured during exchanging order ${error.message}`);
+		console.error("Error Occurred during exchanging order ", error.message);
+		logger.error(`Error occurred during exchanging order ${error.message}`);
 		res.status(500).json({success:false,message: "Internal Server Error" });
 	}
 }
@@ -1721,7 +1730,7 @@ export const tryCreatePickupResponse = async(req,res)=>{
 	try {
 		const {orderId,BestCourior,ShipmentCreatedResponseData} = req.body;
 		const order = await OrderModel.findById(orderId);
-		console.log("PickeUp Request Data: ",req.body,order);
+		// console.log("PickUp Request Data: ",order);
 		const pickupRequest = await generateOrderPicketUpRequest(order,ShipmentCreatedResponseData,BestCourior);
 		console.log("Created Pickup Request: ", pickupRequest);
 		if(!pickupRequest){
@@ -1738,7 +1747,7 @@ export const tryCreatePickupResponse = async(req,res)=>{
 export const retryRefundData = async(req,res)=>{
 	try {
 		const{orderId} = req.params;
-		console.log("Returynging Refund: ",orderId);
+		console.log("Returning Refund: ",orderId);
 		const order = await OrderModel.findById(orderId);
 		const refundData = await generateRefundOrder(order);
 		if(!refundData){

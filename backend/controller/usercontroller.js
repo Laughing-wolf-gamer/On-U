@@ -13,16 +13,19 @@ export const registermobile = async (req, res) => {
     try {
         const {email,name,gender, phonenumber } = req.body
     
-        console.log("Authenticating with: ",req.body )
-        const existingUser = await User.findOne({phoneNumber:phonenumber})
+        console.log("Authenticating with: ",req.body)
+        const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
+		const otp = Math.floor((1 + Math.random()) * 90000)
         if(existingUser){
-            console.log("Existing: ",existingUser)
             if(existingUser.verify === 'verified'){
                 return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
             }
-            return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:existingUser.otp,user:existingUser}})
+			existingUser.otp = otp;
+			await existingUser.save();
+			await sendVerificationEmail(existingUser.email, otp)
+            return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
         }
-        const otp = Math.floor((1 + Math.random()) * 90000)
+        
         await sendVerificationEmail(email, otp)
 		// https://avatar-placeholder.iran.liara.run/
 		const profilePic = `https://avatar.iran.liara.run/public/${gender === 'men' ? "boy":'girl'}?username=${removeSpaces(name)}`
@@ -48,8 +51,8 @@ export const registermobile = async (req, res) => {
 }
 export const loginMobileNumber = async(req, res) => {
     try {
-		const { logInData} = req.body;
-		const isPhoneNumber = CheckIsPhoneNumber(logInData);
+		const { logInEmail} = req.body;
+		const isPhoneNumber = CheckIsPhoneNumber(logInEmail);
 		console.log("Login Type: ",isPhoneNumber);
 		let phoneNumber = null;
 		let email = null;
@@ -58,14 +61,14 @@ export const loginMobileNumber = async(req, res) => {
 			return res.status(400).json({ success: false, message: 'Invalid LogIn Data' });
 		}
 		if(isPhoneNumber === 'phone'){
-			phoneNumber = logInData;
-			user = await User.findOne({phoneNumber:logInData});
+			phoneNumber = logInEmail;
+			user = await User.findOne({phoneNumber:logInEmail});
 		}else{
-			email = logInData;
-			user = await User.findOne({email:logInData});
+			email = logInEmail;
+			user = await User.findOne({email:logInEmail});
 		}
 		if(!user){
-			return res.status(200).json({success:false,message: 'No User Found ',result:null})
+			return res.status(200).json({success:false,message: 'No User Found',result:null})
 		}
 		if(user.verify !== 'verified'){
 			return res.status(200).json({success:false,message: 'User Not Verified',result:null})
@@ -81,16 +84,17 @@ export const loginMobileNumber = async(req, res) => {
 		} catch (error) {
 			console.error("Error Sending otp");
 		}
-		sendVerificationEmail(user.email, otp);
+		const isEmailSentSuccess = await sendVerificationEmail(user.email, otp);
+		if(!isEmailSentSuccess){
+            return res.status(200).json({success:false,message: 'Failed to Send Verification Email! Try Again',result:null})
+        }
 		if(user.profilePic === ''){
-			//${gender === 'men' ? "boy":'girl'}
 			const profilePic = `https://avatar.iran.liara.run/public/${user.gender === 'men' ? "boy":'girl'}?${user.name}`
 			user.profilePic = profilePic;
 		}
-		console.log("Loging In User: ",user);
 		user.otp = otp;
 		await user.save();
-		return res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
+		res.status(200).json({success:true,message: 'OTP Sent Successfully',result:{otp,phoneNumber:user.phoneNumber,email:user.email}})
 	} catch (error) {
 		console.error("Error Login User: ",error);
 		logger.error(`Error Login User: ${error.message}`);
@@ -102,7 +106,7 @@ export const updateProfilePic = async(req,res)=>{
 	try {
 		const id = req.user.id;
 		const {profilePic} = req.body;
-		console.log("Updateing Profile Pic: ",req.body);
+		console.log("Updating Profile Pic: ",req.body);
 		const user = await User.findByIdAndUpdate(id, {profilePic: profilePic}, {new: true});
 		console.log("Updated User: ",user);
 		if(!user){
@@ -119,7 +123,7 @@ export const updateProfilePic = async(req,res)=>{
 export const loginOtpCheck = async(req,res)=>{
 	try {
 		const{otp,phoneNumber,email} = req.body;
-		let user = await User.findOne({phoneNumber:phoneNumber});
+		let user = await User.findOne({phoneNumber:phoneNumber,email:email});
 		if(!user){
 			// return next( new Errorhandler('Mobile Number not found', 404))
 			user = await User.findOne({email:email});
@@ -127,7 +131,6 @@ export const loginOtpCheck = async(req,res)=>{
 				return res.status(404).json({error: 'Mobile Number not found'});
 			}
 		}
-		console.log("user: ",user);
 		if(!user.otp){
 			return res.status(404).json({error: 'OTP Not found!'});
 		}
@@ -204,8 +207,8 @@ export const getuser = async(req, res)=>{
 export const optverify = async (req, res)=>{
     try {
 		// const {otp} = req.body
-		const{id,otp} = req.params;
-		const user = await User.findOne({phoneNumber: id})
+		const{phoneNumber,email,otp} = req.body;
+		const user = await User.findOne({phoneNumber: phoneNumber,email:email})
 		console.log("OTP: ",user);
 		if (!user.otp) {
 			// return next( new Errorhandler("Your OTP has been expired or not has been genrated pls regenrate OTP", 400))
@@ -213,7 +216,7 @@ export const optverify = async (req, res)=>{
 		}
 		if (user.otp.toString() !== otp) {
 			// return next( new Errorhandler("You entered expire or wrong OTP", 400))
-			res.status(200).json({success:false,message: 'OTP Do not Match'});
+			return res.status(200).json({success:false,message: 'OTP Do not Match'});
 		}
 		user.otp = null;
 		user.verify = 'verified';
@@ -231,15 +234,14 @@ export const optverify = async (req, res)=>{
 
 export const resendotp = async (req, res)=>{
 	try {
-		// console.log(req.params.id)
-		const{email} = req.query;
-		// console.log("Resend Otp Email: ",req.query)
+		const{email} = req.body;
+		console.log("Resend Otp Email: ",req.body)
 		if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
 		const existingUser = await User.findOne({email:email})
 		if(!existingUser){
 			return res.status(401).json({success:true,message:"OTP Sent Successfully",result:null})
 		}
-		console.log("Existing: ",existingUser)
+		console.log("Existing: User Otp resend ",existingUser)
 		if(existingUser.verify === 'verified'){
 			return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
 		}

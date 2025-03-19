@@ -412,7 +412,7 @@ export const paymentVerification = async (req, res) => {
             ConveenianceFees: alreadyPresentConvenenceFees?.ConvenienceFees || 0,
         }, randomOrderShipRocketId, randomShipmentId);
 
-        const { manifest, warehouse_name, PickupData, bestCourior, shipmentCreatedResponseData } = createdShipRocketOrder || {};
+        const { manifest, warehouse_name, PickupData, bestCourier, shipmentCreatedResponseData } = createdShipRocketOrder || {};
 
         // Create the order in the database
         const orderData = new OrderModel({
@@ -431,7 +431,7 @@ export const paymentVerification = async (req, res) => {
             status: 'Confirmed',
             PicketUpData: PickupData,
             ShipmentCreatedResponseData: shipmentCreatedResponseData,
-            BestCourior: bestCourior,
+            BestCourior: bestCourier,
             manifest:manifest,
         });
 
