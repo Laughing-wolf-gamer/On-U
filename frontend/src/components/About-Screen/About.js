@@ -120,7 +120,7 @@ const FounderSection = ({ founderData }) => {
 					<img
 						src={founderData?.image}
 						alt="Founder"
-						className="w-full h-full object-cover rounded-lg shadow-md transition-transform duration-300 ease-in-out hover:scale-110 cursor-pointer"
+						className="w-full h-full object-contain transition-transform duration-300 ease-in-out hover:scale-110"
 					/>
 					</div>
 
