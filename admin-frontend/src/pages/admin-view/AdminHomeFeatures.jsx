@@ -135,7 +135,6 @@ const AdminHomeFeatures = () => {
         }
     };
 	const UpdateCategoryNameIndex = async (data)=>{
-		console.log("UpdateCategoryNameIndex: ",data);
 		await dispatch(updateFeatureImageIndex(data));
 		dispatch(getFeatureImage());
 	}
@@ -145,13 +144,11 @@ const AdminHomeFeatures = () => {
     };
 	useEffect(()=>{
 		if(featuresList){
-			setFilteredList(featuresList.filter(item => selectedCategory === '' || item.CategoryType === selectedCategory));
+			if(featuresList.length > 0){
+				setFilteredList(featuresList.filter(item => selectedCategory === '' || item.CategoryType === selectedCategory));
+			}
 		}
 	},[featuresList])
-    /* let filteredItems = [];
-    if(featuresList && featuresList.length > 0) {
-        filteredItems = featuresList.filter(item => selectedCategory === '' || item.CategoryType === selectedCategory);
-    } */
 	useEffect(() => {
         dispatch(getFeatureImage());
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
