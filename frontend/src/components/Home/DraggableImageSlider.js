@@ -73,7 +73,7 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
             behavior: 'smooth',  // This makes the scroll smooth
         });
     };
-
+	if(!images || images.length < 0 ) return null;
     return (
         <div className="w-full font-kumbsan max-w-screen-2xl mx-auto justify-self-center">
             <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-1 sm:px-1 md:px-14">

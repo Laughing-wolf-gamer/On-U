@@ -541,85 +541,84 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 	},[item]); // Re-run the observer when URLs change
     return (
         <DragDropContext onDragEnd={onDragEnd}>
-            <Droppable droppableId="droppable" direction="horizontal">
-                {(provided) => (
-                    <div
-                        className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 relative"
-                        {...provided.droppableProps}
-                        ref={provided.innerRef}
-                    >
-                        {items.length > 0 ? (
-                            items.map((url, index) => {
-                                const { isImage, isVideo } = getFileType(url);
-                                return (
-                                    <Draggable key={index} draggableId={String(index)} index={index}>
-                                        {(provided) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                className="relative group w-full border border-gray-800 bg-gray-50 h-40 rounded-lg overflow-hidden"
-                                            >
-                                                {loadingStates[index] && (
-                                                    <div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
-                                                        <p className="text-black font-bold">Loading...</p>
-                                                    </div>
-                                                )}
-												<RxHamburgerMenu className='absolute top-2 left-2'/>
+			<Droppable droppableId="droppable" direction="horizontal">
+				{(provided) => (
+					<div
+						className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-4 relative"
+						{...provided.droppableProps}
+						ref={provided.innerRef}
+					>
+						{items.length > 0 ? (
+							items.map((url, index) => {
+								const { isImage, isVideo } = getFileType(url);
+								return (
+									<Draggable key={index} draggableId={String(index)} index={index}>
+										{(provided) => (
+											<div
+												ref={provided.innerRef}
+												{...provided.draggableProps}
+												{...provided.dragHandleProps}
+												className="relative group w-full border border-gray-800 bg-gray-50 h-40 rounded-lg overflow-hidden"
+											>
+												{loadingStates[index] && (
+													<div className="absolute w-full h-full bg-gray-300 animate-pulse rounded-lg">
+														<p className="text-black font-bold">Loading...</p>
+													</div>
+												)}
+												<RxHamburgerMenu className="absolute top-2 left-2" />
 
-                                                {/* Image */}
-                                                {isImage ? (
-                                                    <img
-                                                        src={url}
-                                                        alt={`Image ${index + 1}`}
-                                                        className="w-full h-full object-contain rounded-lg shadow-sm"
-                                                        onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
-                                                    />
-                                                ) : isVideo ? (
-                                                    <ReactPlayer
-                                                        ref={(el) => (videoRefs.current[index] = el)} // Assign ref for lazy loading
-														url={url} 
-														type={`video/${url.split('.').pop()}`} 
-                                                        className="w-full h-full object-contain rounded-lg shadow-sm"
-                                                        controls
+												{/* Image */}
+												{isImage ? (
+													<img
+														src={url}
+														alt={`Image ${index + 1}`}
+														className="w-full h-full object-contain rounded-lg shadow-sm"
+														onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
+													/>
+												) : isVideo ? (
+													<ReactPlayer
+														ref={(el) => (videoRefs.current[index] = el)} // Assign ref for lazy loading
+														url={url}
+														type={`video/${url.split('.').pop()}`}
+														className="w-full h-full object-contain rounded-lg shadow-sm"
+														controls
 														loading="lazy"
-                                                        muted
+														muted
 														width="100%"
-                            							height="100%"
-                                                        playing={false}
-                                                        onReady={() => handleMediaLoad(index)} // Trigger loading state on video load
-                                                    />
-                                                    
-                                                ) : (
-                                                    <p>Unsupported file type</p>
-                                                )}
+														height="100%"
+														playing={false}
+														onReady={() => handleMediaLoad(index)} // Trigger loading state on video load
+													/>
+												) : (
+													<p>Unsupported file type</p>
+												)}
 
-                                                {/* Delete Button */}
-                                                <Button
-                                                    onClick={() => {
-                                                        setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-                                                        setDeletingImageCategory({ itemId: item._id, idx: index });
-                                                    }}
-                                                    className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg"
-                                                >
-                                                    <X size={16} />
-                                                </Button>
+												{/* Delete Button */}
+												<Button
+													onClick={() => {
+														setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+														setDeletingImageCategory({ itemId: item._id, idx: index });
+													}}
+													className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg"
+												>
+													<X size={16} />
+												</Button>
 												{provided.placeholder}
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                );
-                            })
-                        ) : (
-                            <div className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden">
-                                <p>No Images Uploaded!</p>
-                            </div>
-                        )}
-                        {provided.placeholder}
-                    </div>
-                )}
-            </Droppable>
-        </DragDropContext>
+											</div>
+										)}
+									</Draggable>
+								);
+							})
+						) : (
+							<div className="relative group w-full bg-gray-50 h-40 rounded-lg overflow-hidden">
+								<p>No Images Uploaded!</p>
+							</div>
+						)}
+						{provided.placeholder}
+					</div>
+				)}
+			</Droppable>
+		</DragDropContext>
     );
 }
 export default AdminHomeFeatures;
