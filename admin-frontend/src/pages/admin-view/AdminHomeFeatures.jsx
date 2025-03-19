@@ -134,8 +134,10 @@ const AdminHomeFeatures = () => {
 			setIsModalOpen(false);
         }
     };
-	const UpdateCategoryNameIndex = (data)=>{
-		dispatch(updateFeatureImageIndex(data));
+	const UpdateCategoryNameIndex = async (data)=>{
+		console.log("UpdateCategoryNameIndex: ",data);
+		await dispatch(updateFeatureImageIndex(data));
+		dispatch(getFeatureImage());
 	}
     const handleSelectedCategory = (e) => {
         setSelectedCategory(e.target.value);
@@ -525,15 +527,12 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
         const { destination, source } = result;
         if (!destination) return; // If dropped outside the list, do nothing
 
+		updateCategoryIndex({sourceIndex: source.index, destinationIndex:destination.index});
         // Reorder the items array
         const reorderedItems = Array.from(items);
         const [removed] = reorderedItems.splice(source.index, 1);
         reorderedItems.splice(destination.index, 0, removed);
-
         setItems(reorderedItems); // Update state with new order
-		if(updateCategoryIndex){
-			updateCategoryIndex({sourceIndex: source.index, destinationIndex:destination.index});
-		}
     };
 	useEffect(()=>{
 		if(item){

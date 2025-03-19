@@ -24,10 +24,10 @@ export const updateFeaturesIndex = async(req,res)=>{
 		if(!categoryType){
 			return res.status(400).json({Success: false, message:"Not category type specified"});
 		}
-		if(!sourceIndex){
+		if(sourceIndex < 0){
             return res.status(400).json({Success: false, message:"Not source index specified"});
         }
-		if(!destinationIndex){
+		if(destinationIndex < 0){
 			return res.status(400).json({Success: false, message:"Not destination index specified"});
 		}
 		const bannerModel = await BannerModel.findOne({CategoryType:categoryType});

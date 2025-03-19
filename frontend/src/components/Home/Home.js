@@ -180,7 +180,7 @@ const Home = ({user}) => {
         Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
     }
     
-    console.log("All categoryBanners ",WideScreen_Video,MobileScreen_CategorySlider);
+    console.log("All categoryBanners ",banners);
     
 
     const [showComponent, setShowComponent] = useState(null);
@@ -191,7 +191,7 @@ const Home = ({user}) => {
         setShowComponent(randomComponent);
     }, []);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
-
+	
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-slate-200 overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
@@ -252,6 +252,7 @@ const Home = ({user}) => {
                                 </div>
                             </div>
                         </div>
+                        <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header} bannerLoading = {bannerLoading}/> 
