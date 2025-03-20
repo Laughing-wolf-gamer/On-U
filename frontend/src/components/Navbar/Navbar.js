@@ -118,7 +118,7 @@ const Navbar = ({user}) => {
 				setBagCount(0);
 			}
 		}
-	},[wishlist,bag])
+	},[wishlist,bag,user])
 	useEffect(() => {
 	  dispatch(fetchAllOptions());
 	}, [dispatch]);
@@ -127,7 +127,7 @@ const Navbar = ({user}) => {
 			setWishListCount(sessionData.length);
 			setBagCount(sessionBagData.length);
 		}
-    }, [sessionData,sessionBagData]);
+    }, [sessionData,sessionBagData,user]);
     return (
         <Fragment>
             <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">
