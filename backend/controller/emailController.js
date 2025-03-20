@@ -26,7 +26,7 @@ const sendEmail = async (to, subject, text, html = '') => {
     };
     try {
         const response = await sendMailAsync(mailOptions);
-		console.log("Email Sent REsponse: ",response);
+		console.log("Email Sent Response: ",response);
         return true;
     } catch (error) {
         console.error('Error sending email:', error.message);
