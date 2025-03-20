@@ -1274,7 +1274,7 @@ export const addItemsToBag = async (req, res) => {
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
 }; */
 const getItemsData = async (bag) => {
-    console.log("getItemsData Bag Items: ", bag.orderItems);
+    // console.log("getItemsData Bag Items: ", bag.orderItems);
     
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0, totalGst = 0;  // If GST is needed, implement it
@@ -1298,7 +1298,7 @@ const getItemsData = async (bag) => {
                     continue; // Skip this item if product is not found
                 }
 
-                console.log("Deconstruct Product data: ", productData);
+                // console.log("Deconstruct Product data: ", productData);
                 const { salePrice, price } = productData;
 
                 // Calculate item totals
@@ -1586,20 +1586,25 @@ export const updateqtybag = async (req, res, next) => {
 export const deletebag = async (req, res) => {
     try {
         const {productId,size,color} = req.body
-        const bag = await Bag.findOne({userId: req.user.id});
+        const bag = await Bag.findOne({userId: req.user.id}).populate('Coupon');
 		console.log("Deleting Bag Data: ", productId, size, color,bag)
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
 		if(bagItem === -1) return res.status(400).json({message: "Product not found in bag"})
 		bag.orderItems.splice(bagItem, 1);
-		console.log("Bag after delete: ",bag)
 
         // bag.orderItems = bag.orderItems.filter(p => p.productId.toString() !== productId && p.size._id.toString() !== size?._id && p.color?._id.toString() !== color?._id);
         if(bag.orderItems.length === 0){
             await Bag.findOneAndDelete({userId: req.user.id})
             return res.status(200).json({success:true,message:"Successfully deleted Bag"})
         }
-        console.log("Bag Items: ",bag)
-        await bag.save()
+		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
+		console.log("Update Bag Quantity  Data ",bag.TotalBagAmount);
+		if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
+		if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+		if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
+		if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
+		if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
+		await bag.save()
         res.status(200).json({success:true,message:"Successfully deleted Bag",bag})
         
     } catch (error) {
