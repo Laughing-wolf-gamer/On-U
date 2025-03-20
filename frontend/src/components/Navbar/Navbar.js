@@ -26,7 +26,6 @@ const Navbar = ({user}) => {
     const { sessionData,sessionBagData } = useSessionStorage();
     const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
-    const { product, pro, loading, error, length } = useSelector(state => state.Allproducts)
     const { options } = useSelector((state) => state.AllOptions);
     const [showbagView, setBagShow] = useState(false);
     const [Menu1, setMenu1] = useState('hidden')
@@ -106,12 +105,28 @@ const Navbar = ({user}) => {
             dispatch(getbag());
         }
     }, [state]);
+	useEffect(()=>{
+		if(user){
+			if(wishlist && wishlist?.orderItems && wishlist?.orderItems.length > 0){
+				setWishListCount(wishlist?.orderItems.length);
+			}else{
+				setWishListCount(0);
+			}
+			if(bag && bag?.orderItems && bag?.orderItems.length > 0){
+				setBagCount(bag?.orderItems.length);
+			}else{
+				setBagCount(0);
+			}
+		}
+	},[wishlist,bag])
 	useEffect(() => {
 	  dispatch(fetchAllOptions());
 	}, [dispatch]);
     useEffect(() => {
-        setWishListCount(sessionData.length);
-        setBagCount(sessionBagData.length);
+		if(!user){
+			setWishListCount(sessionData.length);
+			setBagCount(sessionBagData.length);
+		}
     }, [sessionData,sessionBagData]);
     return (
         <Fragment>
@@ -174,16 +189,11 @@ const Navbar = ({user}) => {
                                 </div>
                             </li>
                             <li onClick={()=> setIsSearchVisible(false)} className="w-max flex justify-center items-center  font-semibold capitalize no-underline text-sm border-4 border-transparent relative">
-                                {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
-                                    <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{wishlist?.orderItems?.length}</span>
-                                    </div>
-                                )}
-                                {!user && currentWishListCount > 0 && (
+                                {currentWishListCount > 0 && (
                                     <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
                                         <span>{currentWishListCount}</span>
                                     </div>
-                                )}
+								)}
                                 <div onClick={()=> setIsSearchVisible(false)} className="flex flex-row w-full h-6 mb-5 mx-4 hover:animate-vibrateScale">
                                     <Link to="/my_wishlist">
                                         <FaHeart className='w-full h-full justify-self-center text-slate-800'/>
@@ -191,16 +201,12 @@ const Navbar = ({user}) => {
                                 </div>
                             </li>
                             <li className="w-max flex justify-center items-center pb-1.5  font-semibold font-kumbsan capitalize no-underline text-sm border-4 border-transparent relative">
-                                {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
-                                    <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{bag.orderItems.length}</span>
-                                    </div>
-                                )}
-                                {!user && currentBagCount > 0 && (
-                                    <div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{currentBagCount}</span>
-                                    </div>
-                                )}
+                                {
+									currentBagCount > 0 && (
+									<div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+										<span>{currentBagCount}</span>
+									</div>
+								)}
                                 <div className="flex flex-row w-full h-7 mb-5 mx-4 hover:animate-vibrateScale">
                                     <div onClick={()=> {
 										setIsSearchVisible(false);
