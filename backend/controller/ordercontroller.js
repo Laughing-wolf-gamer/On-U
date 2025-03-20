@@ -1586,7 +1586,8 @@ export const updateqtybag = async (req, res, next) => {
 export const deletebag = async (req, res) => {
     try {
         const {productId,size,color} = req.body
-        const bag = await Bag.findOne({userId: req.user.id});
+		const userId = req.user.id;
+        const bag = await Bag.findOne({userId: userId});
 		// console.log("Deleting Bag Data: ", productId,bag)
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
 		if(bagItem === -1) {
@@ -1597,10 +1598,10 @@ export const deletebag = async (req, res) => {
 		bag.orderItems.splice(bagItem, 1);
 
         if(bag.orderItems.length === 0){
-            await Bag.findOneAndDelete({userId: req.user.id})
+            await Bag.findOneAndDelete({userId: userId})
             return res.status(200).json({success:true,message:"Successfully deleted Bag"})
         }
-		const updatedBag = await Bag.findOne({userId: req.user.id}).populate('orderItems.productId Coupon');
+		const updatedBag = await Bag.findOne({userId: userId}).populate('orderItems.productId Coupon');
 		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(updatedBag);
 		// console.log("After Deleting Update Bag Data ",bag.TotalBagAmount);
 		if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
