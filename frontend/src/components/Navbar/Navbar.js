@@ -100,8 +100,9 @@ const Navbar = ({user}) => {
     }
     useEffect(() => {
         
-        fetchAllWishList();
+        // fetchAllWishList();
         if(user){
+			dispatch(getwishlist())
             dispatch(getbag());
         }
     }, [state]);
