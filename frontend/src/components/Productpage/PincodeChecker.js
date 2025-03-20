@@ -9,13 +9,13 @@ const PincodeChecker = ({productId}) => {
     const [message, setMessage] = useState("");
 	const {checkAndCreateToast} = useSettingsContext();
     const [customPincode, setCustomPincode] = useState(pincode);
+	const [isLoading,setIsLoading] = useState(false);
     const handleInputChange = (e) => {
         setCustomPincode(e.target.value);
     };
-
     const handleSubmit = async (e) => {
         e.preventDefault();
-
+		setIsLoading(true);
         try {
 			let currentPincode = pincode;
 			if(customPincode) currentPincode = customPincode;
@@ -33,13 +33,14 @@ const PincodeChecker = ({productId}) => {
             }
         } catch (error) {
             setMessage("Pincode not found!, Please try different PinCode and try again");
-        }
+        }finally{
+			setIsLoading(false);
+		}
     }
 	useEffect(()=>{
 		if(pincode){
 			// setMessage(`Delivery is available for this pincode Within days`);
             setCustomPincode(pincode);
-            console.log("Pincode is set from context: ",position);
 		}
 	},[pincode])
     return (
@@ -58,9 +59,13 @@ const PincodeChecker = ({productId}) => {
 			
 			<button
 				type="submit"
-				className="w-full sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
+				className="w-full justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
 			>
-			Check
+				{isLoading ? (
+					<div className="w-6 h-6 border-4 border-t-4 border-white border-t-gray-800 rounded-full animate-spin"></div>
+				) : (
+					<span>Check</span>
+				)}
 			</button>
 		</form>
 		

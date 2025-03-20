@@ -1065,9 +1065,6 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
             },
             params: shipmentData,  // Use `params` for query parameters in GET requests
         });
-
-        // console.log(res?.data);
-        // console.dir(res.data,{ depth: null})
         return res.data;
     } catch (error) {
         // console.dir(error, { depth: null});
@@ -1103,7 +1100,7 @@ export const GetWalletBalance = async(req,res)=>{
         });
 		console.log("Wallet: ",walletResponse.data?.data?.balance_amount);
 		const balance = walletResponse.data?.data?.balance_amount;
-		res.status(200).json({success: true,message:"Succefully Get Wallet Balance", result: balance || 0});
+		res.status(200).json({success: true,message:"Successfully Get Wallet Balance", result: balance || 0});
 	} catch (error) {
 		console.error("Error getting Wallet Balance.: ",error)
 		res.status(500).json({success: false,message:"Error Getting Wallet Balance"});
