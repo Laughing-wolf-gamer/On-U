@@ -1591,26 +1591,27 @@ export const deletebag = async (req, res) => {
 		// console.log("Deleting Bag Data: ", productId,bag)
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
 		if(bagItem === -1) {
-			// console.log("Invalid Items: ",bag);
+			console.log("Invalid Items: ",bag);
 			logger.error(`Invalid bag: ${productId}`);
 			return res.status(400).json({message: "Product not found in bag"})
 		}
 		bag.orderItems.splice(bagItem, 1);
 
-        if(bag.orderItems.length === 0){
+        if(bag.orderItems.length <= 0){
             await Bag.findOneAndDelete({userId: userId})
             return res.status(200).json({success:true,message:"Successfully deleted Bag"})
         }
+		await bag.save();
 		const updatedBag = await Bag.findOne({userId: userId}).populate('orderItems.productId Coupon');
 		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(updatedBag);
-		// console.log("After Deleting Update Bag Data ",bag.TotalBagAmount);
-		if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
-		if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
+		console.log("After Deleting Update Bag Data ",updatedBag);
+		if(totalProductSellingPrice && totalProductSellingPrice !== 0) updatedBag.totalProductSellingPrice = totalProductSellingPrice;
+		if(totalSP && totalSP !== 0) updatedBag.totalSP = totalSP;
 		if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-		if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
-		if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
-		await bag.save()
-        res.status(200).json({success:true,message:"Successfully deleted Bag",bag})
+		if(totalMRP && totalMRP !== 0) updatedBag.totalMRP = totalMRP;
+		if(totalGst && totalGst !== 0) updatedBag.totalGst = totalGst;
+		await updatedBag.save()
+        res.status(200).json({success:true,message:"Successfully deleted Bag",updatedBag})
     } catch (error) {
         console.error("Error Occurred during deleting bag ", error.message);
         logger.error(`Error occurred during deleting bag ${error.message}`);
