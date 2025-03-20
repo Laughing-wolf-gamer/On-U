@@ -1399,7 +1399,7 @@ function calculateTotalAmount(products) {
     }, 0) || 0;
 }
 
-export const getbag = async (req, res) => {
+/* export const getbag = async (req, res) => {
     try {
         // const { userId } = req.params;
 		const userId = req.user.id;
@@ -1461,7 +1461,73 @@ export const getbag = async (req, res) => {
 		logger.error(`Error while getting bag: ${error.message}`)
         res.status(500).json({ success:true, message: "Internal Server Error" });
     }
+}; */
+export const getbag = async (req, res) => {
+    try {
+        const userId = req.user.id;
+
+        // Log the userId to ensure it's correct
+        console.log("User ID:", userId);
+
+        // Fetch the bag with populated orderItems.productId and Coupon
+        const bag = await Bag.findOne({ userId: userId }).populate('orderItems.productId Coupon').exec();
+
+        if (!bag) {
+            return res.status(404).json({ success: false, message: "Bag not found" });
+        }
+
+        // Log the bag object to see if it was found
+        console.log("Bag found:", bag);
+
+        // Fetch all products from the bag's orderItems at once
+        const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString());
+        console.log("Product IDs:", productIds);
+
+        const products = await ProductModel.find({ _id: { $in: productIds } });
+
+        // Create a map for fast lookup of product sizes
+        const productMap = products.reduce((acc, product) => {
+            acc[product._id.toString()] = product;
+            return acc;
+        }, {});
+
+        // Update size quantities based on original product data
+        for (let o of bag.orderItems) {
+            const originalProductData = productMap[o.productId?._id.toString()];
+
+            if (!originalProductData) {
+                console.error(`Product with ID ${o.productId?._id} not found`);
+                continue;
+            }
+
+            const originalProductSize = originalProductData.size.find(s => s._id.toString() === o.size?._id);
+
+            if (!originalProductSize) {
+                console.error(`Size with ID ${o.size?._id} not found for product ${o.productId?._id}`);
+                continue;
+            }
+
+            if (o?.size?.quantity !== originalProductSize?.quantity) {
+                console.log("Updating size quantity");
+                o.size.quantity = originalProductSize.quantity;
+            }
+        }
+
+        // Save the updated bag
+        await bag.save();
+
+        res.status(200).json({
+            success: true,
+            bag
+        });
+
+    } catch (error) {
+        console.error("Error occurred during getting bag: ", error);
+        logger.error(`Error while getting bag: ${error.message}`);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
 };
+
 
 
 export const updateItemCheckedInBag = async (req, res, next) => {
