@@ -31,7 +31,8 @@ const userModelSchema = new mongoose.Schema({
         type:String
     },
     DOB:{
-        type:Date
+        type:Date,
+		default:new Date()
     },
     addresses:[],
     TOA:{

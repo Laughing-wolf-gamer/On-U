@@ -5,8 +5,6 @@ import { Calendar, Edit, Mail, MapPin, Phone, User } from "lucide-react";
 import { FaMars, FaVenus } from "react-icons/fa";
 import { BASE_API_URL, headerConfig } from "../../../config";
 import axios from "axios";
-import { useSettingsContext } from "../../../Contaxt/SettingsContext";
-import Loader from "../../Loader/Loader";
 
 const EditableField = ({
   label,
@@ -14,11 +12,9 @@ const EditableField = ({
   value,
   onChange,
   isEditing,
-  setTempValue,
-  tempValue,
   Icon
 }) => {
-	console.log("tempValue:", value);
+	console.log("tempValue:",name, value);
 	return (
 		<div className="bg-gray-50 border-2 p-4 w-full rounded-lg">
 			<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">

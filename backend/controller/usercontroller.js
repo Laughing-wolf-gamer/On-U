@@ -195,8 +195,14 @@ export const registerUser = A(async (req, res) => {
 
 export const getuser = async(req, res)=>{
 	try {
-		const user = req.user;
-		return res.status(200).json({Success:true,message: 'User is Authenticated',user});
+		const user = await User.findById(req.user.id);
+		const data = {
+			id:req.user.id,
+			role:req.user.role,
+			user:user,
+		}
+		console.log("User Found! ",user);
+		return res.status(200).json({Success:true,message: 'User is Authenticated',user:data});
 	} catch (error) {
 		console.error("OTP Error while getting user", error);
 		logger.error(`Error OTP Error while getting user: ${error.message}`);
@@ -286,11 +292,15 @@ export const updateuser = async(req,res)=>{
 	try {
 		console.log("User: ",req.user);
 		console.log("Updating User: ",req.body)
-		const{ name, gender,dob,profilePic} = req.body
-		const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dob,gender:gender,profilePic:profilePic}},{new:true})
+		const{ name, gender,DOB,profilePic} = req.body
+		const dobParsed = new Date(DOB);
+		console.log("DOB, ",dobParsed)
+		const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dobParsed,gender:gender,profilePic:profilePic}},{new:true})
 		if(!user){
 			return res.status(303).json({success:false,message: 'User not found'});
 		}
+		await user.save();
+		console.log("User saved successfully!",user);
 		res.status(200).json({success:true,message: 'User Updated Successfully',result:user,token:sendtoken(user)})
 	} catch (error) {
 		console.error(`Error Logging in user ${error.message}`);
