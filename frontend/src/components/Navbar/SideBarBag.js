@@ -172,7 +172,7 @@ const SideBarBag = ({OnChangeing}) => {
         }
     };
     const updateChecked = async (e, itemId,size,color) => {
-        console.log("Upadting Checked Item ", itemId,size,color);
+        console.log("Updating Checked Item ", itemId,size,color);
 		e.stopPropagation();
         // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){

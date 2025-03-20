@@ -1464,26 +1464,41 @@ function calculateTotalAmount(products) {
 }; */
 export const getbag = async (req, res) => {
     try {
-        const userId = req.user.id;
-
-        // Log the userId to ensure it's correct
-        console.log("User ID:", userId);
-
+        const userId = mongoose.Types.ObjectId(req.user.id); // Ensure it's an ObjectId
+		if(!userId){
+			return res.status(400).json({ success: false, message: "Invalid user ID" });
+		}
         // Fetch the bag with populated orderItems.productId and Coupon
-        const bag = await Bag.findOne({ userId: userId }).populate('orderItems.productId Coupon').exec();
+        const bag = await Bag.findOne({userId}).populate('orderItems.productId Coupon').exec();
+        // console.log("Bag found:", bag);
 
         if (!bag) {
-            return res.status(404).json({ success: false, message: "Bag not found" });
+			console.log("No Bag Found!");
+            return res.status(400).json({ success: false, message: "Bag not found" });
         }
+		if(bag.orderItems.length < 0){
+			return res.status(400).json({ success: true, message: "Bag is empty" ,bag});
+		}
 
         // Log the bag object to see if it was found
-        console.log("Bag found:", bag);
 
         // Fetch all products from the bag's orderItems at once
-        const productIds = bag.orderItems.map(o => o.productId?._id.toString() || o.productId.toString());
-        console.log("Product IDs:", productIds);
+        const productIds = bag.orderItems.map(o => {
+			// Check if productId is an ObjectId, and ensure it's correctly converted
+			if (o.productId && o.productId._id) {
+				return o.productId._id.toString();
+			} else if (o.productId) {
+				// If productId is not an object but a string, use it directly
+				return o.productId.toString();
+			} else {
+				// If productId is invalid or missing, log an error and skip
+				console.error("Invalid productId:", o.productId);
+				return null; // Return null for invalid productId, will filter it out later
+			}
+		}).filter(id => id !== null); // Filter out any null values
 
-        const products = await ProductModel.find({ _id: { $in: productIds } });
+		console.log("Product IDs:", productIds);
+		const products = await ProductModel.find({ _id: { $in: productIds } });
 
         // Create a map for fast lookup of product sizes
         const productMap = products.reduce((acc, product) => {
@@ -1516,10 +1531,7 @@ export const getbag = async (req, res) => {
         // Save the updated bag
         await bag.save();
 
-        res.status(200).json({
-            success: true,
-            bag
-        });
+        res.status(200).json({success: true,message:"Bag Found!",bag});
 
     } catch (error) {
         console.error("Error occurred during getting bag: ", error);
