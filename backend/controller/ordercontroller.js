@@ -1586,19 +1586,23 @@ export const updateqtybag = async (req, res, next) => {
 export const deletebag = async (req, res) => {
     try {
         const {productId,size,color} = req.body
-        const bag = await Bag.findOne({userId: req.user.id}).populate('Coupon');
-		console.log("Deleting Bag Data: ", productId, size, color,bag)
+        const bag = await Bag.findOne({userId: req.user.id});
+		// console.log("Deleting Bag Data: ", productId,bag)
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
-		if(bagItem === -1) return res.status(400).json({message: "Product not found in bag"})
+		if(bagItem === -1) {
+			// console.log("Invalid Items: ",bag);
+			logger.error(`Invalid bag: ${productId}`);
+			return res.status(400).json({message: "Product not found in bag"})
+		}
 		bag.orderItems.splice(bagItem, 1);
 
-        // bag.orderItems = bag.orderItems.filter(p => p.productId.toString() !== productId && p.size._id.toString() !== size?._id && p.color?._id.toString() !== color?._id);
         if(bag.orderItems.length === 0){
             await Bag.findOneAndDelete({userId: req.user.id})
             return res.status(200).json({success:true,message:"Successfully deleted Bag"})
         }
-		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
-		console.log("Update Bag Quantity  Data ",bag.TotalBagAmount);
+		const updatedBag = await Bag.findOne({userId: req.user.id}).populate('orderItems.productId Coupon');
+		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(updatedBag);
+		// console.log("After Deleting Update Bag Data ",bag.TotalBagAmount);
 		if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
 		if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
 		if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
@@ -1606,10 +1610,9 @@ export const deletebag = async (req, res) => {
 		if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
 		await bag.save()
         res.status(200).json({success:true,message:"Successfully deleted Bag",bag})
-        
     } catch (error) {
         console.error("Error Occurred during deleting bag ", error.message);
-        logger.error(`Error occured during deleting bag ${error.message}`);
+        logger.error(`Error occurred during deleting bag ${error.message}`);
         res.status(500).json({message: "Internal Server Error"})
     }
 }
