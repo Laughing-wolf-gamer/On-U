@@ -65,6 +65,18 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 			}
 		}
 	},[])
+	const handelSectionChange = (value)=>{
+		console.log("Value Change Sidebar: ",value);
+		switch(value){
+			case 'Saved-Addresses':
+			case 'Orders-Returns':
+				navigate(`/dashboard?sideTab=${value}`);
+			break;
+			default:
+				navigate('/dashboard')
+			break;
+		}
+	}
 	const handleLogout = async () => {
 		await dispatch(logout())
 		navigate('/Login');
@@ -101,7 +113,7 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 				<div
 					className={`w-full lg:w-[20%] mt-4 flex-col justify-start p-6 rounded-lg border-r-2 bg-white`}
 				>
-					<OverViewSideBar setActiveSection={setActiveSection} activeSection={activeSection} />
+					<OverViewSideBar onChange = {handelSectionChange} setActiveSection={setActiveSection} activeSection={activeSection} />
 				</div>
 
 				{/* Profile Details */}

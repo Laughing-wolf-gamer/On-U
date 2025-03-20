@@ -46,7 +46,7 @@ const EditableField = ({
 const UserDetails = ({ user }) => {
 	const dispatch = useDispatch();
 	const[isLoadingImage,setImageLoading] = useState(false);
-	const {checkAndCreateToast} = useSettingsContext();
+	// const {checkAndCreateToast} = useSettingsContext();
 	const [editedUser, setEditedUser] = useState(null);
 	const [isEditingAll, setIsEditingAll] = useState(false); // Flag to toggle editing for all fields
 	const [tempValue, setTempValue] = useState(""); // Temporary value for input

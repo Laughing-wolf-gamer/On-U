@@ -1,7 +1,7 @@
 import React from 'react';
 import { FaUser, FaBox, FaMapMarkedAlt } from 'react-icons/fa'; // Importing the icons
 
-const OverViewSideBar = ({ activeSection, setActiveSection }) => {
+const OverViewSideBar = ({ activeSection, setActiveSection,onChange }) => {
 	return (
 		<div className="w-full font-kumbsan bg-white md:shadow-md md:h-screen md:sticky top-0 p-4">
 		<ul className="space-y-4">
@@ -9,8 +9,9 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
 			<li>
 			<button
 				onClick={(e) => {
-				e.preventDefault();
-				setActiveSection('User-Details');
+					// e.preventDefault();
+					onChange('User-Details');
+					setActiveSection('User-Details');
 				}}
 				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
 				activeSection === 'User-Details'
@@ -29,8 +30,9 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
 			<li>
 			<button
 				onClick={(e) => {
-				e.preventDefault();
-				setActiveSection('Orders-Returns');
+					// e.preventDefault();
+					onChange('Orders-Returns')
+					setActiveSection('Orders-Returns');
 				}}
 				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
 				activeSection === 'Orders-Returns'
@@ -49,8 +51,9 @@ const OverViewSideBar = ({ activeSection, setActiveSection }) => {
 			<li>
 			<button
 				onClick={(e) => {
-				e.preventDefault();
-				setActiveSection('Saved-Addresses');
+					// e.preventDefault();
+					setActiveSection('Saved-Addresses');
+					onChange('Saved-Addresses');
 				}}
 				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
 				activeSection === 'Saved-Addresses'
