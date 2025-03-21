@@ -1,9 +1,8 @@
-import React, { Fragment, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './Login.css';
 import { clearErrors, registerUser } from '../../action/useraction';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { fetchAddressForm } from '../../action/common.action';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 

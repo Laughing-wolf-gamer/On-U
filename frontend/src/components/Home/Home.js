@@ -468,7 +468,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 			if (entry.isIntersecting) {
 				// Add category name if it's not already in the visibleCategories array
 				setVisibleCategories((prev) =>
-				prev.includes(categoryName) ? prev : [...prev, categoryName]
+					prev.includes(categoryName) ? prev : [...prev, categoryName]
 				);
 			} else {
 				// Remove category name from the visibleCategories array
@@ -497,7 +497,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 	};
 
 	return (
-		<div className='bg-slate-200 px-2 font-kumbsan'>
+		<div className='bg-slate-200 px-2 font-kumbsan px-2'>
 			{/* Category */}
 			<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
 				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
