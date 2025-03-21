@@ -5,6 +5,7 @@ import { Calendar, Edit, Mail, MapPin, Phone, User } from "lucide-react";
 import { FaMars, FaVenus } from "react-icons/fa";
 import { BASE_API_URL, headerConfig } from "../../../config";
 import axios from "axios";
+import { useSettingsContext } from "../../../Contaxt/SettingsContext";
 
 const EditableField = ({
   label,
@@ -12,7 +13,8 @@ const EditableField = ({
   value,
   onChange,
   isEditing,
-  Icon
+  Icon,
+  maxLength = 100,
 }) => {
 	console.log("tempValue:",name, value);
 	return (
@@ -20,10 +22,11 @@ const EditableField = ({
 			<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">
 				<Icon className="text-gray-500" size={20} />
 				<label className="font-semibold text-lg sm:text-base text-gray-700">{label}:</label>
-				{isEditing ? (
+				{isEditing && name !== 'email' && name !== 'gender' ? (
 					<input
-						type={name === "DOB" ? "date" : "text"} // Automatically adjusts input type for dob
+						type={name === "DOB" ? "date" : name === 'phoneNumber' ? "number":"text"} // Automatically adjusts input type for dob
 						name={name}
+						maxLength={maxLength}
 						className="border px-3 py-2 rounded-md w-full sm:w-80"
 						value={value}
 						onChange={onChange}
@@ -42,7 +45,7 @@ const EditableField = ({
 const UserDetails = ({ user }) => {
 	const dispatch = useDispatch();
 	const[isLoadingImage,setImageLoading] = useState(false);
-	// const {checkAndCreateToast} = useSettingsContext();
+	const {checkAndCreateToast} = useSettingsContext();
 	const [editedUser, setEditedUser] = useState(null);
 	const [isEditingAll, setIsEditingAll] = useState(false); // Flag to toggle editing for all fields
 	const [tempValue, setTempValue] = useState(""); // Temporary value for input
@@ -112,6 +115,14 @@ const UserDetails = ({ user }) => {
 
 	const handleSave = () => {
 		setIsEditingAll(false);
+		const digitsOnly = editedUser?.phoneNumber.replace(/\D/g, '');
+
+		// Check if the length is greater than 10
+		if (digitsOnly.length !== 10) {
+			// console.log("Phone number is greater than 10 digits.");
+			checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+			return;
+		}
 		dispatch(updateuser(editedUser));
 	};
 
@@ -195,27 +206,28 @@ const UserDetails = ({ user }) => {
 				/>
 
 				<EditableField
-				label="Email"
-				name="email"
-				value={editedUser?.email}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={Mail}
+					label="Email"
+					name="email"
+					value={editedUser?.email}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={Mail}
 				/>
 			</div>
 
 			<div className="space-y-6 mb-8">
 				<EditableField
-				label="Phone"
-				name="phoneNumber"
-				value={editedUser?.phoneNumber}
-				onChange={handleInputChange}
-				isEditing={isEditingAll}
-				setTempValue={setTempValue}
-				tempValue={tempValue}
-				Icon={Phone}
+					label="Phone"
+					name="phoneNumber"
+					value={editedUser?.phoneNumber}
+					onChange={handleInputChange}
+					isEditing={isEditingAll}
+					setTempValue={setTempValue}
+					tempValue={tempValue}
+					Icon={Phone}
+					maxLength = {10}
 				/>
 
 				<EditableField
