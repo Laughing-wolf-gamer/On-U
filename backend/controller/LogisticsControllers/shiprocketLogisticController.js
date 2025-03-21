@@ -446,7 +446,8 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         }
 
         console.log("Shipment Address:", shipmentData.address);
-
+		const phoneNumber = userData?.phoneNumber;
+		const first10Digits = phoneNumber ? phoneNumber.replace(/\D/g, '').slice(0, 10) : '';
         // Prepare order details
         const orderDetails = {
             order_id: randomOrderId,
@@ -467,7 +468,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             units: orderItems.length,
             billing_country: 'In',
             billing_phone: shipmentData.address.phoneNumber,
-            billing_alternate_phone: userData?.phoneNumber,
+            billing_alternate_phone: first10Digits,
             shipping_is_billing: true,
             order_items: orderItems,
             payment_method: shipmentData?.paymentMode,
