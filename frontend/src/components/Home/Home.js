@@ -457,38 +457,9 @@ const Home = ({user}) => {
 }
 
 const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) => {
-	const [visibleCategories, setVisibleCategories] = useState([]);
 	const navigation = useNavigate();
 
-	useEffect(() => {
-		const observer = new IntersectionObserver(
-		(entries) => {
-			entries.forEach((entry) => {
-			const categoryName = entry.target.getAttribute('data-category');
-			if (entry.isIntersecting) {
-				// Add category name if it's not already in the visibleCategories array
-				setVisibleCategories((prev) =>
-				prev.includes(categoryName) ? prev : [...prev, categoryName]
-				);
-			} else {
-				// Remove category name from the visibleCategories array
-				setVisibleCategories((prev) =>
-				prev.filter((category) => category !== categoryName)
-				);
-			}
-			});
-		},
-		{ threshold: 0.5 } // Trigger when 50% of the image is in view
-		);
-
-		// Observe each image
-		const images = document.querySelectorAll('.category-image');
-		images.forEach((image) => observer.observe(image));
-
-		// Cleanup observer
-		return () => observer.disconnect();
-	}, [MobileScreen_CategorySlider]);
-
+	// Handle the query params for navigation
 	const handleQueryParams = (image) => {
 		const queryParams = new URLSearchParams();
 		if (image.name) queryParams.set('category', image.name.toLowerCase());
@@ -496,48 +467,52 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 		navigation(url);
 	};
 
+	// Intersection Observer for detecting when the images come into view
+
 	return (
 		<div className="bg-slate-200 px-2 font-kumbsan">
 			{/* Category */}
-			<ul className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600">
+			<ul
+				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
+				style={{ height: '300px' }}
+			>
 				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
-					<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
-						{MobileScreen_CategorySlider.urls.map((image, index) => {
-						const isVisible = visibleCategories.includes(image.name.toLowerCase());
-
-						return (
-							<li
-								key={`image_icons${index}`}
-								onClick={() => handleQueryParams(image)}
-								className="flex-shrink-0 w-24 px-0.5 justify-center relative items-center"
+				<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+					{MobileScreen_CategorySlider.urls.map((image, index) => {
+					return (
+						<li
+						key={`image_icons${index}`}
+						onClick={() => handleQueryParams(image)}
+						className="flex-shrink-0 w-28 min-h-[110px] px-0.5 justify-center relative items-center overflow-hidden"
+						>
+						
+						<LazyLoadImage
+							effect="blur"
+							src={image.url || image}
+							alt={`image_icons_${index}`}
+							className="category-image w-full justify-self-center h-full object-cover"
+							data-category={image.name.toLowerCase()} // Store the category name
+						/>
+						{/* Display the banner if the category is in view */}
+						{image.name && (
+							<div
+							className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
 							>
-								{/* Display the banner if the category is in view */}
-								{image.name && (
-									<div
-									className={`category-banner px-4 rounded-sm absolute bottom-1 justify-self-center left-0 z-10 right-0 bg-gray-800 text-white text-center text-[9px] transition-all duration-500 ease-out
-										${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
-									>
-										{image.name}
-									</div>
-								)}
-								<LazyLoadImage
-									effect="blur"
-									src={image.url || image}
-									alt={`image_icons_${index}`}
-									className="category-image w-full h-[110px] object-cover"
-									data-category={image.name.toLowerCase()} // Store the category name
-								/>
-							</li>
-						);
-						})}
-					</div>
+							{image.name}
+							</div>
+						)}
+						</li>
+					);
+					})}
+				</div>
 				) : (
-					<Fragment></Fragment>
+				<Fragment></Fragment>
 				)}
 			</ul>
 		</div>
 	);
 };
+
 
 const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) => {
     const [inView, setInView] = useState([]);
