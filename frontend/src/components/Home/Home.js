@@ -468,7 +468,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 			if (entry.isIntersecting) {
 				// Add category name if it's not already in the visibleCategories array
 				setVisibleCategories((prev) =>
-					prev.includes(categoryName) ? prev : [...prev, categoryName]
+				prev.includes(categoryName) ? prev : [...prev, categoryName]
 				);
 			} else {
 				// Remove category name from the visibleCategories array
@@ -478,7 +478,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 			}
 			});
 		},
-			{ threshold: 0.5 } // Trigger when 50% of the image is in view
+		{ threshold: 0.5 } // Trigger when 50% of the image is in view
 		);
 
 		// Observe each image
@@ -497,12 +497,12 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 	};
 
 	return (
-		<div className='bg-slate-200 px-2 font-kumbsan px-2'>
+		<div className="bg-slate-200 px-2 font-kumbsan">
 			{/* Category */}
-			<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+			<ul className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600">
 				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
-				<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
-					{MobileScreen_CategorySlider.urls.map((image, index) => {
+					<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+						{MobileScreen_CategorySlider.urls.map((image, index) => {
 						const isVisible = visibleCategories.includes(image.name.toLowerCase());
 
 						return (
@@ -514,8 +514,8 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 								{/* Display the banner if the category is in view */}
 								{image.name && (
 									<div
-										className={`category-banner w-[95%] rounded-sm absolute bottom-5 justify-self-center left-0 z-10 right-0 bg-gray-800 text-white text-center text-[9px] opacity-0 transform translate-y-4 transition-all duration-500 ease-out
-										${isVisible ? 'opacity-100 translate-y-0' : ''}`}
+									className={`category-banner px-4 rounded-sm absolute bottom-1 justify-self-center left-0 z-10 right-0 bg-gray-800 text-white text-center text-[9px] transition-all duration-500 ease-out
+										${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'}`}
 									>
 										{image.name}
 									</div>
@@ -524,13 +524,13 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 									effect="blur"
 									src={image.url || image}
 									alt={`image_icons_${index}`}
-									className="category-image w-full h-fit min-h-[110px] object-fill relative"
+									className="category-image w-full h-[110px] object-cover"
 									data-category={image.name.toLowerCase()} // Store the category name
 								/>
 							</li>
 						);
-					})}
-				</div>
+						})}
+					</div>
 				) : (
 					<Fragment></Fragment>
 				)}

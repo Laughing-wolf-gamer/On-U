@@ -681,6 +681,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 );
 const AddAddress = ({onSave }) => {
+	const{checkAndCreateToast} = useSettingsContext();
     const [formInitState, setFormInitState] = useState(null);
     const [newAddress, setNewAddress] = useState({});
     const { formData } = useSelector(state => state.fetchFormBanners);
@@ -722,7 +723,17 @@ const AddAddress = ({onSave }) => {
     };
 
     const handleSave = () => {
+		console.log("Check New Address! ",newAddress);
         if (Object.values(newAddress).every(value => value.trim() !== '')) {
+			// Remove non-digit characters from phoneNumber
+			const digitsOnly = newAddress['phoneNumber'].replace(/\D/g, '');
+
+			// Check if the length is greater than 10
+			if (digitsOnly.length !== 10) {
+				// console.log("Phone number is greater than 10 digits.");
+				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+				return;
+			}
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
             // onClose(); // Close modal

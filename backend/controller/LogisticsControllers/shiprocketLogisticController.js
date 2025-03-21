@@ -460,7 +460,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             channel_id: '6282866',
             category: "Clothes",
             billing_isd_code: "+91",
-            billing_customer_name: shipmentData.address.Firstname,
+            billing_customer_name: shipmentData.address.Firstname || shipmentData.address.FirstName,
             billing_last_name: shipmentData.address.Lastname,
             billing_address: shipmentData.address.address1,
             billing_city: shipmentData.address.address2,

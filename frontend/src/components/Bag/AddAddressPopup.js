@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { fetchAddressForm } from '../../action/common.action';
 import { removeSpaces } from '../../config';
 import { Input, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
 const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
     const [formInitState, setFormInitState] = useState(null);
@@ -10,6 +11,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
     const { formData } = useSelector(state => state.fetchFormBanners);
     const dispatch = useDispatch();
     const [error, setError] = useState('');
+	const{checkAndCreateToast} = useSettingsContext();
 
     // Handle changes in form fields
     const handleChange = (e) => {
@@ -21,7 +23,17 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
     };
 
     const handleSave = () => {
+		console.log("Check New Address!",newAddress);
         if (Object.values(newAddress).every(value => value.trim() !== '')) {
+			// Remove non-digit characters from phoneNumber
+			const digitsOnly = newAddress['phoneNumber'].replace(/\D/g, '');
+
+			// Check if the length is greater than 10
+			if (digitsOnly.length !== 10) {
+				// console.log("Phone number is greater than 10 digits.");
+				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+				return;
+			}
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
             onClose(); // Close modal
