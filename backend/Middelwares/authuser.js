@@ -1,5 +1,4 @@
 import jwt from 'jsonwebtoken'
-import logger from '../utilis/loggerUtils.js';
 
 export const isAuthenticateuser = async(req, res, next)=>{
     const header = req.headers['authorization'];

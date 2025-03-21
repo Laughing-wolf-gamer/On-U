@@ -24,6 +24,21 @@ const Registeruser = () => {
             checkAndCreateToast('error', 'All Fields are required!');
             return;
         }
+		if (phoneNumber) {
+			// Remove non-digit characters from phoneNumber
+			const digitsOnly = phoneNumber.replace(/\D/g, '');
+
+			// Check if the length is greater than 10
+			if (digitsOnly.length > 10) {
+				// console.log("Phone number is greater than 10 digits.");
+				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+                return;
+			} else {
+				console.log("Phone number is 10 digits or fewer.");
+				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+				return;
+			}
+		}
         const myForm = {
             phonenumber: phoneNumber,
             name: name,
@@ -70,6 +85,8 @@ const Registeruser = () => {
 						<input
 							type="number"
 							name="PhoneNumber"
+							minLength={'10'}
+							maxLength={'10'}
 							required
 							className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-4"
 							placeholder="Phone Number"
