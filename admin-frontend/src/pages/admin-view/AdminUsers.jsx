@@ -54,7 +54,6 @@ const UserTable = () => {
 	const handleSetActiveKeywords = (e) => {
 		e.preventDefault();
 		if(inputKeyWoards.trim() === ''){
-			
 			return;
 		}
 		if(inputKeyWoards.toLowerCase() === 'clear'){
@@ -103,16 +102,13 @@ const UserTable = () => {
             handleFetchAllUser();
         }
     };
-	console.log("selectedCustomer: ",selectedCustomer,isModalOpen);
     return (
         <div className="py-6 px-4 sm:px-6 lg:px-8">
             {isLoading ? <LoadingView /> : (
                 <div className="overflow-x-auto min-w-[300px] min-h-full justify-start flex items-center flex-col">
-
-					{/* Search Bar */}
-					<form onSubmit={handleSetActiveKeywords} className="mb-4 items-center flex flex-col space-y-2">
+					<form onSubmit={handleSetActiveKeywords} className="mb-4 items-center flex flex-col space-y-2 ">
 						<Label className = {"underline text-xs text-gray-600"}>Type "Clear" to Show All Customers.</Label>
-						<div className="w-fit justify-center items-center flex">
+						<div className="w-fit justify-center items-center flex space-x-2">
 							<label htmlFor="search" className="mr-2">Keyword:</label>
 							<Input
 								type="text"
@@ -122,6 +118,7 @@ const UserTable = () => {
 								placeholder="Search by Name, Email, Phone..."
 								className="border px-4 py-2 rounded-lg w-64"
 							/>
+							<Button type="submit" className="w-fit">Search</Button>
 						</div>
 					</form>
 
@@ -192,30 +189,7 @@ const UserTable = () => {
 							Next Page
 						</Button>
 					</div>
-					
-					{/* Modal - User Details */}
-					{/* {isModalOpen && selectedCustomer && (
-						<div
-							className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50"
-							onClick={closeModal}
-						>
-							<div
-								className="w-full max-w-4xl sm:max-w-6xl relative bg-white rounded-lg p-4"
-								onClick={(e) => e.stopPropagation()}
-							>
-								<CustomerDetailsSingle user={selectedCustomer} />
-								<div className="mt-4 text-right absolute top-0 right-4">
-									<Button
-										onClick={closeModal}
-										className="bg-gray-500 text-white px-4 py-2 rounded-lg hover:bg-gray-600"
-									>
-										Close
-									</Button>
-								</div>
-							</div>
-						</div>
-					)} */}
-					</div>
+				</div>
 
             )}
 			<Dialog open = {isModalOpen && selectedCustomer !== null} onOpenChange={()=>{

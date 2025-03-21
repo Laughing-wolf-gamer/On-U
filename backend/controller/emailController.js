@@ -5,7 +5,7 @@ import { promisify } from 'util';
 // Setup nodemailer transport
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Replace with your email provider (Gmail, SendGrid, etc.)
-    secure: false,
+    secure: true,
     port: 8000,
     auth: {
         user: process.env.ADMIN_EMAIL,

@@ -13,9 +13,10 @@ export const registermobile = async (req, res) => {
     try {
         const {email,name,gender, phonenumber } = req.body
     
-        console.log("Authenticating with: ",req.body)
         const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
 		const otp = Math.floor((1 + Math.random()) * 90000)
+        console.log("Authenticating with: ",req.body);
+		console.log("Existing User: ",existingUser);
         if(existingUser){
             if(existingUser.verify === 'verified'){
                 return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
@@ -308,16 +309,6 @@ export const updateuser = async(req,res)=>{
 		res.status(500).json({Success:false,message: 'Internal Server Error'});
 	}
 }
-
-/* export const updateuserdetails =A( async(req,res)=>{
-    console.log(req.body)
-    const {name, pincode, address1, address2, citystate, phonenumber} = req.body
-    
-    res.status(200).json({
-        success:'Addres Update Successfully'
-    })
-  
-}) */
 export const removeAddress = async(req, res) => {
     try {
         const user = req.user;
