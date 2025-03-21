@@ -1787,7 +1787,6 @@ export const createOrderCancel = async(req,res)=>{
 		if(!cancelRequest) {
             return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
         }
-		// https://api.razorpay.com/v1/payments/{pay_id}/refund;
 		let refundGeneration = null;
 		if(order.paymentMode === 'prepaid'){
 			refundGeneration = await generateRefundOrder(order);

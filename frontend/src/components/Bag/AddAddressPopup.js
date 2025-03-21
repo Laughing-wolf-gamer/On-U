@@ -32,6 +32,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 			if (digitsOnly.length !== 10) {
 				// console.log("Phone number is greater than 10 digits.");
 				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+				setError('Phone number should be 10 digits or fewer!')
 				return;
 			}
             onSave(newAddress);

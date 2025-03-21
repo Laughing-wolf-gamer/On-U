@@ -3,7 +3,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { applyCouponToBag, deleteBag, getbag, getqtyupdate, itemCheckUpdate, removeCouponFromBag } from '../../action/orderaction';
-import { getAddress, getConvinceFees, getuser, updateAddress } from '../../action/useraction';
+import { getAddress, getConvinceFees, getuser, removeAddress, updateAddress } from '../../action/useraction';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
@@ -337,6 +337,7 @@ const CheckoutPage = () => {
 								handleSaveAddress={handleSaveAddress}
 								user={user}
 								handleAddressSelection={handleAddressSelection}
+								onAddressDelete={()=> dispatch(getAddress())}
 							/>
 						}
 						
@@ -403,42 +404,61 @@ const AddressAndPaymentComponent = ({
 	user, 
 	allAddresses, 
 	buttonPressed, 
-	handleAddressSelection 
-}) => (
-	<div className="flex flex-col w-full gap-6 font-kumbsan">
-		{/* Address List */}
-		<div className={`mt-6 bg-white p-6 rounded-lg shadow-md transition-all duration-500 ease-in-out border-2 ${buttonPressed && !selectedAddress ? 'border-opacity-100 border-gray-900 scale-105' : 'border-opacity-0 scale-100'}`}>
-			<h3 className="text-lg font-semibold mb-4">
-				{user?.user && allAddresses?.length > 0 ? "Your Addresses" : "No Addresses Available"}
-			</h3>
+	handleAddressSelection,
+	onAddressDelete,
+}) => {
+	const dispatch = useDispatch();
+	const{checkAndCreateToast} = useSettingsContext();
+	const removeAddressByIndex = async (addressIndex) => {
+        await dispatch(removeAddress(addressIndex));
+        checkAndCreateToast("success",'Address removed successfully');
+		if(onAddressDelete){
+			onAddressDelete();
+		}
+    };
+	return (
+		<div className="flex flex-col w-full gap-6 font-kumbsan">
+			{/* Address List */}
+			<div className={`mt-6 bg-white p-6 rounded-lg shadow-md transition-all duration-500 ease-in-out border-2 ${buttonPressed && !selectedAddress ? 'border-opacity-100 border-gray-900 scale-105' : 'border-opacity-0 scale-100'}`}>
+				<h3 className="text-lg font-semibold mb-4">
+					{user?.user && allAddresses?.length > 0 ? "Your Addresses" : "No Addresses Available"}
+				</h3>
 
-			<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-200`}>
-				{/* Address Display */}
-				{user?.user && allAddresses && allAddresses?.length > 0 && (
-					allAddresses.map((addr, index) => {
-						const active = addr;
-						return (
-							<div
-								key={index}
-								className={`p-4 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
-								onClick={() => handleAddressSelection(active)}
-							>
-								{Object.entries(active).map(([key, value]) => (
-									<div key={key} className="flex justify-between mb-1">
-										<span className="font-medium text-[12px] sm:text-base md:text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
-										<span className="text-[10px] sm:text-base md:text-lg">{value}</span>
-									</div>
+				<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-200`}>
+					{/* Address Display */}
+					{user?.user && allAddresses && allAddresses?.length > 0 && (
+						allAddresses.map((addr, index) => {
+							const active = addr;
+							return (
+								<div
+									key={index}
+									className={`p-4 space-y-1 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
+									onClick={() => handleAddressSelection(active)}
+								>
+									
+									{Object.entries(active).map(([key, value]) => (
+										<div key={key} className="flex justify-between m-1">
+											<span className="font-medium text-[12px] sm:text-base md:text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
+											<span className="text-[10px] sm:text-base md:text-lg">{value}</span>
+										</div>
 
-								))}
-								{selectedAddress === active && <span className="text-xs text-white mt-2 block">Selected Address</span>}
-							</div>
-						)
-					})
-				)}
+									))}
+									{selectedAddress === active && <span className="text-xs text-white mt-2 block">Selected Address</span>}
+									<button
+										className="flex justify-self-center items-center bg-red-500 text-white rounded-full w-fit px-2 py-2 text-xs font-semibold hover:bg-red-600 transition-colors duration-300"
+										onClick={(e) => removeAddressByIndex(index)}
+									>
+										<span>Remove Address</span>
+									</button>
+								</div>
+							)
+						})
+					)}
+				</div>
 			</div>
 		</div>
-	</div>
-);
+	);
+}
 
 
 
@@ -520,12 +540,12 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 						{
 							selectedAddress ? <Fragment>
 								{showPayment ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>
-										{user ? "Process Payment":"Login"}
+										{user ? "Process Order":"Login"}
 									</span>
 								}
 							</Fragment>:(
 								<span>
-									{user ? "Process Payment":"Log In"}
+									{user ? "Process Order":"Log In"}
 								</span>
 							)
 						}
@@ -732,6 +752,7 @@ const AddAddress = ({onSave }) => {
 			if (digitsOnly.length !== 10) {
 				// console.log("Phone number is greater than 10 digits.");
 				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
+				setError('Phone number should be 10 digits or fewer!')
 				return;
 			}
             onSave(newAddress);

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, useCallback, Fragment } from 'react';
+import React, { useEffect, useState, useMemo, Fragment } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog } from '../ui/dialog';
@@ -7,12 +7,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { adminGetAllOrders, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
 import { Badge } from '../ui/badge';
 import { Copy, TruckIcon } from 'lucide-react';
-import { toast } from 'react-toastify';
 import newStyled from '@emotion/styled';
 import { Slider } from '@mui/material';
 import LogisticsLoginView from './LogisticsLoginView';
 import LoadingView from '@/pages/admin-view/LoadingView';
-import { getStatusDescription } from '@/config';
+import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config';
+import { useSettingsContext } from '@/Context/SettingsContext';
 
 const orderStatus = [
   { id: 'Confirmed', label: 'Confirmed' },
@@ -54,6 +54,7 @@ const CustomSlider = newStyled(Slider)({
 });
 
 const AdminOrderLayout = () => {
+	const{checkAndCreateToast} = useSettingsContext();
 	const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
 	const [openLoginDialogue, setOpenLoginDialogue] = useState(false);
 	const [logisticsToken, setLogisticsToken] = useState('');
@@ -66,7 +67,7 @@ const AdminOrderLayout = () => {
 
 	const { user } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
-	const {isLoading, orderList, orderDetails } = useSelector((state) => state.adminOrder);
+	const {isLoading,token, orderList, orderDetails } = useSelector((state) => state.adminOrder);
 
 	useEffect(() => {
 		dispatch(adminGetAllOrders());
@@ -85,13 +86,20 @@ const AdminOrderLayout = () => {
 	const handleLoginComplete = (data) => {
 		setLogisticsToken(data);
 	};
+	useEffect(()=>{
+		if(token){
+			if(!logisticsToken){
+            	setLogisticsToken(token);
+			}
+        }
+	},[token,dispatch])
 
 	// Sorting and filtering orders
 	const sortedOrderList = useMemo(() => {
 		return [...orderList].sort((a, b) => {
-		const dateA = new Date(a?.createdAt);
-		const dateB = new Date(b?.createdAt);
-		return filters.sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
+			const dateA = new Date(a?.createdAt);
+			const dateB = new Date(b?.createdAt);
+			return filters.sortOrder === 'latest' ? dateB - dateA : dateA - dateB;
 		});
 	}, [orderList, filters.sortOrder]);
 
@@ -107,7 +115,6 @@ const AdminOrderLayout = () => {
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
 
 	const isNoOrders = displayedOrders.length === 0;
-
 	return (
 		<Card className="w-full">
 			{isLoading  ? <LoadingView/> :(
@@ -117,8 +124,7 @@ const AdminOrderLayout = () => {
 						<div className="absolute right-3 top-4 space-x-4 flex flex-col lg:flex-row lg:space-x-4 lg:space-y-0 space-y-2">
 							<Button
 								onClick={() => setOpenLoginDialogue(true)}
-								variant="outline"
-								className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+								className="flex items-center justify-center space-x-2 py-4 px-2 border border-gray-300 rounded-md"
 							>
 								<TruckIcon /><span className='md:block hidden'>Get ShipRocket API Token</span>
 							</Button>
@@ -126,13 +132,12 @@ const AdminOrderLayout = () => {
 								<Button
 									onClick={() => {
 										navigator.clipboard.writeText(logisticsToken);
-										toast.success('Logistics Token copied to clipboard!');
+										checkAndCreateToast('success','Logistics Token copied to clipboard!');
 									}}
-									variant="outline"
-									className="flex items-center justify-center space-x-2 py-4 px-2 bg-black border border-gray-300 rounded-md text-white"
+									className="flex items-center justify-center space-x-2 py-4 px-2 border border-gray-300 rounded-md"
 								>
 									<Copy />
-									<span>{logisticsToken.slice(0, 20)}....</span>
+									<span>{logisticsToken.slice(0, 10)}....</span>
 								</Button>
 							)}
 						</div>
@@ -145,7 +150,7 @@ const AdminOrderLayout = () => {
 						{/* No Orders Banner */}
 						{isNoOrders && (
 							<div className="text-center p-4 mb-4 border border-gray-200 rounded-lg shadow-sm bg-gray-100">
-							<span className="text-lg font-semibold text-gray-800">No Orders Available</span>
+								<span className="text-lg font-semibold text-gray-800">No Orders Available</span>
 							</div>
 						)}
 
@@ -162,22 +167,32 @@ const AdminOrderLayout = () => {
 									<div className="flex flex-col space-y-3">
 									<div className="flex justify-between">
 										<span className="font-semibold text-sm">Order Id:</span>
-										<span className="text-sm">{order?._id}</span>
+										<span className="text-sm">{order?.order_id}</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="font-semibold text-sm">Order Date:</span>
 										<span className="text-sm">{new Date(order?.createdAt).toLocaleString()}</span>
 									</div>
 									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Order By:</span>
+										<div className="text-sm sm:text-base truncate">{order?.address?.Firstname} {order?.address?.Lastname}</div>
+									</div>
+									<div className="flex justify-between">
+										<span className="font-semibold text-sm">Payment Method:</span>
+										<span className="text-sm">
+											<Badge className={`py-1 px-3 text-white`}>{order?.paymentMode}</Badge>
+										</span>
+									</div>
+									<div className="flex justify-between">
 										<span className="font-semibold text-sm">Order Status:</span>
 										<span className="text-sm">
-										<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
+											<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
 										</span>
 									</div>
 									<div className="flex justify-between">
 										<span className="font-semibold text-sm">Order Shipment Status:</span>
 										<span className="text-sm">
-										<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
+											<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
 										</span>
 									</div>
 									<div className="flex justify-between">
@@ -251,9 +266,10 @@ const OrderFilter = ({ filters, setFilters, orderStatus,filteredOrderList }) => 
 );
 
 const OrderTable = ({ orders, handleFetchOrderDetails }) => (
-	<div className="grid grid-cols-7 gap-2 p-3 bg-gray-100 font-semibold text-sm sm:text-base">
+	<div className="grid grid-cols-8 gap-2 p-3 bg-gray-100 font-semibold text-sm sm:text-base">
 		<div>Order Id</div>
 		<div>Order Date</div>
+		<div>Order By</div>
 		<div>Payment Method</div>
 		<div>Order Status</div>
 		<div>Shipment Status Code</div>
@@ -264,9 +280,10 @@ const OrderTable = ({ orders, handleFetchOrderDetails }) => (
 const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
 	<Fragment>
 		{orders.map((order) => (
-			<div key={order?._id} className="grid grid-cols-7 gap-2 p-3">
-				<div className="text-sm sm:text-base truncate">{order?._id}</div>
-				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleDateString()}</div>
+			<div key={order?._id} className="grid grid-cols-8 justify-center items-center gap-2 p-3">
+				<div className="text-sm sm:text-base truncate">{order?.order_id}</div>
+				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleString()}</div>
+				<div className="text-sm sm:text-base truncate">{order?.address?.Firstname} {order?.address?.Lastname}</div>
 				<div className="text-sm sm:text-base">
 					<Badge className={`justify-center items-center py-1 px-3 text-white bg-green-500`}>{order?.paymentMode}</Badge>
 				</div>
@@ -285,6 +302,15 @@ const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
 			</div>
 		))}
 	</Fragment>
+)
+const ShippingInfo = ({ address }) => (
+	<ul className="grid gap-0.5">
+		{address && Object.keys(address).map((key, index) => (
+			<span key={index}>
+				{capitalizeFirstLetterOfEachWord(key)}: {address[key] || 'No-Data'}
+			</span>
+		))}
+	</ul>
 )
 
 export default AdminOrderLayout;

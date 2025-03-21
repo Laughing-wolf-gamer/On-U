@@ -183,14 +183,14 @@ export const loginLogistics = async (req,res)=>{
             console.error("Email and password are required");
             return res.status(400).json({Success: false, message: 'Email and password are required'});
         }
-        const resposse = await getAuthToken(email,password);
-		// console.log("Logging in: ",resposse);
-		if(!resposse){
-            console.error("Error getting ShipRocket auth token: ",resposse);
+        const response = await getAuthToken(email,password);
+		// console.log("Logging in: ",response);
+		if(!response){
+            console.error("Error getting ShipRocket auth token: ",response);
             return res.status(500).json({Success: false, message: 'Error getting ShipRocket auth token'});
         }
-		console.log("ShipRocket auth token: ",resposse);
-		res.status(200).json({Success: true, message: 'Logged in successfully', result: resposse});
+		console.log("ShipRocket auth token: ",response);
+		res.status(200).json({Success: true, message: 'Logged in successfully', result: response});
     } catch (error) {
         console.error("Error getting ShipRocket auth token: ",error);
 		logger.error(`Error occured during login ${error.message}`);

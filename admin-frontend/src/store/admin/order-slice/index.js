@@ -5,6 +5,7 @@ import axios from "axios";
 
 const initialState = {
 	isLoading:false,
+	token:'',
 	orders:null,
     orderId:null,
     cartId:null,
@@ -26,6 +27,7 @@ const adminOrderSlice = createSlice({
         }).addCase(adminGetAllOrders.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.orderList = action?.payload?.result || [];
+			state.token = action?.payload?.token || null;
         }).addCase(adminGetAllOrders.rejected,(state)=>{
             state.isLoading = false;
         }).addCase(adminGetUsersOrdersById.pending,(state)=>{
@@ -105,6 +107,16 @@ export const adminRequestTryPickUp = createAsyncThunk('/admin/orders/tryPickUp',
 		return {error: error.response.data.message};
     }
 })
+export const adminSendOrderCancel = ({orderId}) => async () => {
+	try {
+        const {data} = await axios.post(`${BASE_URL}/admin/orders/cancelOrder/${orderId}`,{}, Header());
+        console.log("Cancel Order: ",data);
+        return data?.success;
+    } catch (error) {
+        console.error("Error Creating Order Cancellation: ",error);
+        return false;
+    }
+}
 export const adminCreateRefundRequest = ({orderId}) => async()=>{
 	try {
         console.log("Refund Request: ",orderId);

@@ -1,4 +1,3 @@
-import { X } from 'lucide-react';
 import React from 'react';
 import { IoCloseCircle } from 'react-icons/io5';
 import { useNavigate } from 'react-router-dom';

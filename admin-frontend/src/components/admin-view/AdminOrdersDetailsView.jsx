@@ -1,12 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { DialogContent, DialogTitle } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
-import { adminCreateRefundRequest, adminGetAllOrders, adminGetUsersOrdersById, adminRequestTryCreateManifest, adminRequestTryPickUp, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
-import { capitalizeFirstLetterOfEachWord, GetBadgeColor, getStatusDescription } from '@/config'
-import { toast } from 'react-toastify'
+import { adminCreateRefundRequest, adminGetAllOrders, adminRequestTryCreateManifest, adminRequestTryPickUp, adminSendOrderCancel, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
+import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config'
 import { useSettingsContext } from '@/Context/SettingsContext'
 import { Button } from '../ui/button'
 
@@ -37,9 +36,9 @@ const OrderItemList = ({ items }) => (
 const ShippingInfo = ({ address }) => (
 	<ul className="grid gap-0.5">
 		{address && Object.keys(address).map((key, index) => (
-		<span key={index}>
-			{capitalizeFirstLetterOfEachWord(key)}: {address[key] || 'No-Data'}
-		</span>
+			<span key={index}>
+				{capitalizeFirstLetterOfEachWord(key)}: {address[key] || 'No-Data'}
+			</span>
 		))}
 	</ul>
 )
@@ -81,6 +80,22 @@ const AdminOrdersDetailsView = ({ order }) => {
 			checkAndCreateToast("error",response.payload?.error)
 		}else{
 			checkAndCreateToast('error',"Successfully created response:");
+		}
+	}
+	const createCancelOrder = async(e)=>{
+		e.preventDefault();
+		if(!order?.IsCancelled){
+			console.log("Updating Cancel Order: ", order);
+			const response = await dispatch(adminSendOrderCancel({ orderId: order?._id }));
+			if(response){
+				if (order?.IsCancelled) {
+					checkAndCreateToast("success", 'Order Cancelled Successfully');
+				} else {
+					checkAndCreateToast("success", 'Order Refunded Successfully');
+				}
+			}else{
+				checkAndCreateToast('error','Failed to Cancel Order')
+			}
 		}
 	}
 	const handleCreateManifest = async()=>{
@@ -175,7 +190,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 					{!order?.PicketUpData && (
 						<div className="w-full flex justify-center items-center">
 							<Button
-								className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+								className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
 								onClick={() => handlePickupResponse()}
 							>
 								Re-Try Pickup
@@ -192,6 +207,26 @@ const AdminOrdersDetailsView = ({ order }) => {
 							</Button>
 						</div>
 					}
+					{
+						!order?.IsCancelled ? <div className="w-full flex justify-center items-center">
+							<Button
+								className="bg-red-500 text-white px-4 py-2 rounded-md hover:bg-red-600"
+								onClick={createCancelOrder}
+							>
+								Cancel Order
+							</Button>
+						</div> : (
+							<div className="w-full flex justify-center items-center">
+                                <div
+                                    className="bg-gray-400 text-white px-4 py-2 rounded-md hover:bg-gray-500"
+                                    disabled
+                                >
+                                    Order Cancelled
+                                </div>
+                            </div>
+						)
+					}
+					
 					{
 						order?.IsCancelled && order?.paymentMode === 'prepaid' && !order?.RefundData && <div className="w-full flex justify-center items-center">
 							<Button

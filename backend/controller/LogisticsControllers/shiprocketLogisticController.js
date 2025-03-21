@@ -1088,7 +1088,7 @@ export const getShipmentTrackingStatus = async(shipmentId)=>{
         return returningTrackingData;
     } catch (error) {
         // console.dir(error, { depth: null});
-        console.error("Error Checking Shipment Status.: ",error)
+        console.error("Error Checking Shipment Status.: ",error.response?.date)
     }
 }
 
@@ -1107,4 +1107,7 @@ export const GetWalletBalance = async(req,res)=>{
 		console.error("Error getting Wallet Balance.: ",error)
 		res.status(500).json({success: false,message:"Error Getting Wallet Balance"});
 	}
+}
+export const getShipRocketToken = ()=>{
+	return token;
 }

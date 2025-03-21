@@ -522,7 +522,7 @@ const SwipeToConfirmPaymentButton = ({ disabled = false, OnSwipeComplete, HasSta
 					{isPaymentStart ? (
 						<span>Processing Started....</span>
 					) : (
-						<Fragment >{HasStarted ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-800 rounded-full animate-spin"></div> : <span>Swipe Right to Start Payment</span>}</Fragment>
+						<Fragment >{HasStarted ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-gray-800 rounded-full animate-spin"></div> : <span>Swipe Right to Order</span>}</Fragment>
 					)}
 				</span>
 			</button>

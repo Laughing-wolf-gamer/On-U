@@ -5,7 +5,7 @@ import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendUpdateOrderStatus } from "../emailController.js";
 import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
-import { getShipmentOrderByOrderId, getShipmentTrackingStatus } from "../LogisticsControllers/shiprocketLogisticController.js";
+import { getShipmentOrderByOrderId, getShipmentTrackingStatus, getShipRocketToken } from "../LogisticsControllers/shiprocketLogisticController.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
 
@@ -1011,10 +1011,9 @@ export const getallOrders = async (req, res) => {
 				scans:status?.shipment_track,
 			};
         }));
-		// console.log("order Status Updated: ", orderStatus);
-
+		console.log("order Status Updated: ", getShipRocketToken());
         // Send the updated orders with current status
-        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] });
+        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] ,token:getShipRocketToken()});
 
     } catch (error) {
         console.error("Error Getting All Orders", error);
