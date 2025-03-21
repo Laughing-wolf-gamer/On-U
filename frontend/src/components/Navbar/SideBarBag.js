@@ -446,6 +446,7 @@ const SideBarBag = ({OnChangeing}) => {
 
 }
 const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDeleteBag }) => {
+	const navigate = useNavigate();
 	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 
 	// Check if the URL is a valid image
@@ -470,7 +471,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 							<div className="flex flex-row justify-start items-start space-x-2">
 								{/* Product Image */}
 								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-									<Link to={`/products/${active?.ProductData?._id}`} className="block w-full h-full">
+									<div onClick={() => navigate(`/products/${active?.ProductData?._id}`)} className="block w-full h-full">
 										<div className="relative w-full h-full">
 											<img
 												src={validImage?.url}
@@ -484,11 +485,10 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 													type="checkbox"
 													className="w-full h-full cursor-pointer"
 													defaultChecked={active.isChecked} // Set checkbox checked if it's selected in the URL
-													// onChange={(e) => {}}
 												/>
 											</div>
 										</div>
-									</Link>
+									</div>
 									<div
 										className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
 										onClick={(e) => {
@@ -563,144 +563,147 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 };
 
 
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => (
-	<div className="flex flex-col space-y-4 w-full">
-		{bag?.orderItems?.map((item, i) => {
-			const active = item;
-			const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-			const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
+	const navigate = useNavigate();
+	return (
+		<div className="flex flex-col space-y-4 w-full">
+			{bag?.orderItems?.map((item, i) => {
+				const active = item;
+				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+				const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 
-			const getImageExtensionsFile = () => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
+				const getImageExtensionsFile = () => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
 
-			const validImage = getImageExtensionsFile();
+				const validImage = getImageExtensionsFile();
 
-			return (
-				<div key={i}  className={`flex flex-col md:px-4 lg:px-3 2xl:px-4 px-1 items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
-					{/* Product Image */}
-					<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
-						<div className="flex flex-row justify-start items-start space-x-2">
-						
-							<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-								<Link to={`/products/${active.productId?._id}`} className="relative">
-									{validImage ? (
-										<div className="relative">
-											<img
-												src={validImage?.url}
-												alt={active?.productId?.title}
-												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
-											/>
-											{/* Checkbox positioned at the top-right corner */}
-											<div onClick={(e)=>{
-												updateChecked(e, active?.productId?._id,active?.size,active?.color);
-											}} className={`absolute top-1 left-1 w-5 cursor-pointerbg-black h-5 ${bagLoading ? "pointer-events-none":""}`}>
-												<input
-													type="checkbox"
-													className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
-													defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
-													// onChange={(e) => {
-													// 	// updateChecked(e, active.productId?._id);
-													// 	// console.log("")
-													// }} // We can add the change handler if needed, or leave empty
+				return (
+					<div key={i}  className={`flex flex-col md:px-4 lg:px-3 2xl:px-4 px-1 items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
+						{/* Product Image */}
+						<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
+							<div className="flex flex-row justify-start items-start space-x-2">
+							
+								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
+									<div onClick={()=> navigate(`/products/${active.productId?._id}`)} className="relative">
+										{validImage ? (
+											<div className="relative">
+												<img
+													src={validImage?.url}
+													alt={active?.productId?.title}
+													className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
 												/>
+												{/* Checkbox positioned at the top-right corner */}
+												<div onClick={(e)=>{
+													updateChecked(e, active?.productId?._id,active?.size,active?.color);
+												}} className={`absolute top-1 left-1 w-5 cursor-pointerbg-black h-5 ${bagLoading ? "pointer-events-none":""}`}>
+													<input
+														type="checkbox"
+														className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
+														defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+														// onChange={(e) => {
+														// 	// updateChecked(e, active.productId?._id);
+														// 	// console.log("")
+														// }} // We can add the change handler if needed, or leave empty
+													/>
+												</div>
 											</div>
+										) : (
+											<p>No valid image available</p>
+										)}
+										<button
+											className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+											onClick={(e) => {
+												e.stopPropagation();
+												handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)
+											}}
+										>
+											<Trash size={15} />
+										</button>
+									</div>
+								</div>
+
+								{/* Product Info */}
+								<div className="flex-1 space-y-1 text-left whitespace-nowrap sm:text-left">
+									<h3 className="font-semibold space-x-1 text-xs sm:text-sm md:text-base text-gray-800"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
+									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
+									<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
+
+									{/* Price and Discount Info */}
+									<div className="flex items-center justify-start space-x-2 whitespace-nowrap text-[10px] sm:text-base md:text-lg text-red-600 mt-1">
+										{active?.productId?.salePrice ? (
+											<Fragment>
+												<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+												<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId?.price)}</span>
+												<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active?.productId?.price, active?.productId?.salePrice)}% OFF)</span>
+											</Fragment>
+										) : (
+											<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+										)}
+									</div>
+
+									{/* Quantity Selector */}
+									<div className="mt-2 flex w-fit items-center space-x-2 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
+										<div className="flex w-fit px-2 items-center space-x-3 justify-between">
+											{/* Decrease Button */}
+											<button
+												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active?.productId._id,active?.size,active?.color)}
+												className="h-fit rounded-full text-black disabled:text-gray-300"
+												disabled={active?.quantity <= 1}
+											>
+												<Minus strokeWidth={1.5} />
+											</button>
+
+											{/* Display Current Quantity */}
+											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
+
+											{/* Increase Button */}
+											<button
+												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active?.productId?._id,active?.size,active?.color)}
+												className="h-fit rounded-full text-black disabled:text-gray-300"
+												disabled={active?.quantity >= active?.size?.quantity}
+											>
+												<Plus strokeWidth={1.5} />
+											</button>
 										</div>
-									) : (
-										<p>No valid image available</p>
-									)}
-									<div
-										className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
-										onClick={(e) => {
-											e.stopPropagation();
-											handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)
-										}}
-									>
-									<Trash size={15} />
-									</div>
-								</Link>
-							</div>
-
-							{/* Product Info */}
-							<div className="flex-1 space-y-1 text-left whitespace-nowrap sm:text-left">
-								<h3 className="font-semibold space-x-1 text-xs sm:text-sm md:text-base text-gray-800"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
-								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Size: {active?.size?.label}</p>
-								<p className="text-[10px] sm:text-base md:text-lg text-gray-600">Color: {active?.color?.name}</p>
-
-								{/* Price and Discount Info */}
-								<div className="flex items-center justify-start space-x-2 whitespace-nowrap text-[10px] sm:text-base md:text-lg text-red-600 mt-1">
-									{active?.productId?.salePrice ? (
-										<Fragment>
-											<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-											<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId?.price)}</span>
-											<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active?.productId?.price, active?.productId?.salePrice)}% OFF)</span>
-										</Fragment>
-									) : (
-										<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
-									)}
-								</div>
-
-								{/* Quantity Selector */}
-								<div className="mt-2 flex w-fit items-center space-x-2 shadow-sm rounded-full border-gray-700 border-opacity-40 hover:border-opacity-75 border">
-									<div className="flex w-fit px-2 items-center space-x-3 justify-between">
-										{/* Decrease Button */}
-										<button
-											onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active?.productId._id,active?.size,active?.color)}
-											className="h-fit rounded-full text-black disabled:text-gray-300"
-											disabled={active?.quantity <= 1}
-										>
-											<Minus strokeWidth={1.5} />
-										</button>
-
-										{/* Display Current Quantity */}
-										<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
-
-										{/* Increase Button */}
-										<button
-											onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active?.productId?._id,active?.size,active?.color)}
-											className="h-fit rounded-full text-black disabled:text-gray-300"
-											disabled={active?.quantity >= active?.size?.quantity}
-										>
-											<Plus strokeWidth={1.5} />
-										</button>
 									</div>
 								</div>
+							
 							</div>
-						
+
+							{/* Delete Button for larger screens */}
+							<Trash
+								size={20}
+								className="text-black cursor-pointer sm:block hidden hover:scale-105 mr-3"
+								onClick={(e) => handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)}
+							/>
 						</div>
-
-						{/* Delete Button for larger screens */}
-						<Trash
-							size={20}
-							className="text-black cursor-pointer sm:block hidden hover:scale-105 mr-3"
-							onClick={(e) => handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)}
-						/>
 					</div>
+				);
+			})}
+
+			{/* Coupon Section */}
+			{/* <div className="mt-6 space-y-2">
+				<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
+				<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
+					<input
+						type="text"
+						value={coupon}
+						onChange={(e) => setCoupon(e.target.value)}
+						className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
+						placeholder="Add Voucher Code."
+					/>
+
+					<button
+						onClick={applyCoupon}
+						className="w-full sm:w-[20%] h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
+					>
+						<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>
+					</button>
 				</div>
-			);
-		})}
-
-		{/* Coupon Section */}
-		{/* <div className="mt-6 space-y-2">
-			<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
-			<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
-				<input
-					type="text"
-					value={coupon}
-					onChange={(e) => setCoupon(e.target.value)}
-					className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
-					placeholder="Add Voucher Code."
-				/>
-
-				<button
-					onClick={applyCoupon}
-					className="w-full sm:w-[20%] h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
-				>
-					<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>
-				</button>
 			</div>
-		</div>
 
-		<CouponsDisplay user={user} /> */}
-	</div>
-);
+			<CouponsDisplay user={user} /> */}
+		</div>
+	);
+}
 
 export default SideBarBag
