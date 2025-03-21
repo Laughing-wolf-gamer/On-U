@@ -312,27 +312,8 @@ const Home = ({user}) => {
                                     )}
                             </Carousel>
                         </div>
-						
-                        {/* <div className='px-2'>
-                            {!bannerLoading && Small_Screen_Section_2.header && <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_2.header}</h1>}
-                            <ul className='flex overflow-x-scroll'>
-                                {!bannerLoading && Small_Screen_Section_2 && Small_Screen_Section_2.urls.length > 0 ? 
-                                    Small_Screen_Section_2.urls.map((d, index) => (
-                                        <Link key={`${Small_Screen_Section_2.header}_banners${index}`} to='/products'>
-                                            <li className='w-max mr-2'>
-                                                <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_2.header}_${index}`} className="w-[50vw] min-h-[200px]" />
-                                            </li>
-                                        </Link>
-                                )) : (
-                                    Array(6).fill(0).map((_, index) =>(
-                                        <div key={index} className='w-[300px] m-1 h-[200px] bg-gray-200 p-1 animate-pulse' >
-                                            <div className="w-[280px] h-[90%] bg-gray-400 animate-pulse rounded-lg" />
-                                        </div>
-                                    ))
-                                )}
-                            </ul>
-                        </div> */}
-						<div className='bg-slate-200 px-2'>{/* Category */}
+						{/* Category */}
+						{/* <div className='bg-slate-200 px-2'>
 							<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
 								{
 									!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
@@ -345,7 +326,7 @@ const Home = ({user}) => {
 													navigation(url);
 												}
 												return (
-													<li key={`image_icons${index}`} onClick={handleQueryParmams} className="flex-shrink-0 w-24 px-0.5 justify-center items-center"> {/* Fixed width for images */}
+													<li key={`image_icons${index}`} onClick={handleQueryParmams} className="flex-shrink-0 w-24 px-0.5 justify-center items-center">
 														<LazyLoadImage
 															effect="blur"
 															src={image.url || image}
@@ -361,7 +342,8 @@ const Home = ({user}) => {
 									)
 								}
 							</ul>
-						</div>
+						</div> */}
+						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategorybannerLoading={CategorybannerLoading} />
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-full justify-center items-center flex pr-3 pl-3 '>
 								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
@@ -474,6 +456,88 @@ const Home = ({user}) => {
     )
 }
 
+const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) => {
+	const [visibleCategories, setVisibleCategories] = useState([]);
+	const navigation = useNavigate();
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+		(entries) => {
+			entries.forEach((entry) => {
+			const categoryName = entry.target.getAttribute('data-category');
+			if (entry.isIntersecting) {
+				// Add category name if it's not already in the visibleCategories array
+				setVisibleCategories((prev) =>
+				prev.includes(categoryName) ? prev : [...prev, categoryName]
+				);
+			} else {
+				// Remove category name from the visibleCategories array
+				setVisibleCategories((prev) =>
+				prev.filter((category) => category !== categoryName)
+				);
+			}
+			});
+		},
+			{ threshold: 0.5 } // Trigger when 50% of the image is in view
+		);
+
+		// Observe each image
+		const images = document.querySelectorAll('.category-image');
+		images.forEach((image) => observer.observe(image));
+
+		// Cleanup observer
+		return () => observer.disconnect();
+	}, [MobileScreen_CategorySlider]);
+
+	const handleQueryParams = (image) => {
+		const queryParams = new URLSearchParams();
+		if (image.name) queryParams.set('category', image.name.toLowerCase());
+		const url = `/products?${queryParams.toString()}`;
+		navigation(url);
+	};
+
+	return (
+		<div className='bg-slate-200 px-2 font-kumbsan'>
+			{/* Category */}
+			<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
+				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
+				<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+					{MobileScreen_CategorySlider.urls.map((image, index) => {
+						const isVisible = visibleCategories.includes(image.name.toLowerCase());
+
+						return (
+							<li
+								key={`image_icons${index}`}
+								onClick={() => handleQueryParams(image)}
+								className="flex-shrink-0 w-24 px-0.5 justify-center relative items-center"
+							>
+								{/* Display the banner if the category is in view */}
+								{image.name && (
+									<div
+										className={`category-banner w-[95%] rounded-sm absolute bottom-5 justify-self-center left-0 z-10 right-0 bg-gray-800 text-white text-center text-[9px] opacity-0 transform translate-y-4 transition-all duration-500 ease-out
+										${isVisible ? 'opacity-100 translate-y-0' : ''}`}
+									>
+										{image.name}
+									</div>
+								)}
+								<LazyLoadImage
+									effect="blur"
+									src={image.url || image}
+									alt={`image_icons_${index}`}
+									className="category-image w-full h-fit min-h-[110px] object-fill relative"
+									data-category={image.name.toLowerCase()} // Store the category name
+								/>
+							</li>
+						);
+					})}
+				</div>
+				) : (
+					<Fragment></Fragment>
+				)}
+			</ul>
+		</div>
+	);
+};
 
 const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) => {
     const [inView, setInView] = useState([]);

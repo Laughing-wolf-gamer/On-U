@@ -904,7 +904,7 @@ export const fetchAllCustomerUsers = async (req, res) => {
 			Object.assign(filter, keywordFilter);
 		}
 
-		console.log("User Page Query: ", filter, page, pageSize);
+		
 
         const skip = (page - 1) * pageSize; // Calculate the number of records to skip
         const limit = parseInt(pageSize); // Parse pageSize to an integer for limiting
@@ -954,7 +954,7 @@ export const fetchAllCustomerUsers = async (req, res) => {
                 return userNew;
             })
         );
-
+		console.log("User Current Page : ", page,'total Page: ',Math.ceil(totalUsers / pageSize));
         // Respond with the paginated user data and additional metadata
         res.status(200).json({
             Success: true,
@@ -977,7 +977,6 @@ export const fetchAllCustomerUsers = async (req, res) => {
 export const removingCustomer = async(req,res)=>{
     try {
         const {removingCustomerArray} = req.body;
-        console.log("Remvoing user: ",removingCustomerArray);
         if (removingCustomerArray && removingCustomerArray.length > 0) {
             const removeUser = await User.deleteMany({
                 _id: { $in: removingCustomerArray }
