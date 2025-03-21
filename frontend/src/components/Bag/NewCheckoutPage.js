@@ -432,9 +432,10 @@ const AddressAndPaymentComponent = ({
 							return (
 								<div
 									key={index}
-									className={`p-4 space-y-1 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
+									className={`p-4 border rounded-lg bg-gray-100 transition-transform duration-300 ease-in-out transform cursor-pointer ${selectedAddress === active ? 'border-white bg-gray-800 border-dashed text-white' : 'hover:bg-gray-100'}`}
 									onClick={() => handleAddressSelection(active)}
 								>
+									{selectedAddress === active && <label className="text-xs text-white underline mt-4 block">Selected Address</label>}
 									
 									{Object.entries(active).map(([key, value]) => (
 										<div key={key} className="flex justify-between m-1">
@@ -443,9 +444,8 @@ const AddressAndPaymentComponent = ({
 										</div>
 
 									))}
-									{selectedAddress === active && <span className="text-xs text-white mt-2 block">Selected Address</span>}
 									<button
-										className="flex justify-self-center items-center bg-red-500 text-white rounded-full w-fit px-2 py-2 text-xs font-semibold hover:bg-red-600 transition-colors duration-300"
+										className="flex justify-self-center items-center bg-red-500 mt-2 text-white rounded-full w-fit px-3 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm md:px-5 md:py-3 md:text-base hover:bg-red-600 transition-colors duration-300"
 										onClick={(e) => removeAddressByIndex(index)}
 									>
 										<span>Remove Address</span>
