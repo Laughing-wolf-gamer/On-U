@@ -45,7 +45,7 @@ const Registeruser = () => {
 		if(ReceivedUser){
 			if(ReceivedUser.verify === 'verified'){
 				checkAndCreateToast('success','You are Already Registered!');
-				navigation('/');
+				navigation('/Login');
 				return;
 			}
 			navigation('/verifying',{state:{email:ReceivedUser.email,phoneNumber:ReceivedUser.phoneNumber}});
@@ -142,9 +142,9 @@ const Registeruser = () => {
 						{/* Login Link */}
 						<Link
 							to="/Login"
-							className="text-center block text-gray-600 font-semibold mt-4 hover:underline"
+							className="text-center block text-gray-600 font-semibold mt-4 "
 						>
-							Already have an account? Log In
+							Already have an account? <span className='font-bold hover:underline'>LogIn</span>
 						</Link>
 
 						{/* Social Media Links */}
