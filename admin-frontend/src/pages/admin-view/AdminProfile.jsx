@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { BASE_URL, capitalizeFirstLetterOfEachWord, Header } from '@/config';
+import { useSettingsContext } from '@/Context/SettingsContext';
 import { checkAuth, resetTokenCredentials, updateUserData } from '@/store/auth-slice';
 import axios from 'axios';
 import { Edit, EditIcon, LogOut } from 'lucide-react';
@@ -66,7 +67,7 @@ const ProfileActions = ({ onEdit, onLogout }) => {
 };
 
 // EditProfileModal Component
-const EditProfileModal = ({ onClose, user, onSave }) => {
+const EditProfileModal = ({  user, onSave }) => {
     const [formData, setFormData] = useState(null);
 	const[isLoadingImage,setImageLoading] = useState(false);
 	const handleUploadImage = async (file) => {
@@ -112,7 +113,6 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
     const handleSubmit = (e) => {
         e.preventDefault();
         onSave(formData);  // Save the edited information
-        onClose();  // Close the modal after saving
     };
 	const setRandomImage = ()=>{
 		const randomNm = Math.floor(Math.random() * 100 + 1); //
@@ -123,7 +123,6 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 		const file = e.target.files[0];
 		if (file) {
 			const newProfileImage = await handleUploadImage(file);
-			console.log("New Profile Pic: ", newProfileImage);
 			if(newProfileImage){
 				setFormData({...formData,profilePic: newProfileImage});
 				setImageLoading(false);
@@ -152,7 +151,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
     return (
 		<DialogContent>
 			<DialogTitle className="text-2xl font-semibold text-gray-800 mb-6">Edit Profile</DialogTitle>
-			<div className="bg-white max-h-[37vw] overflow-y-auto w-full">
+			<div className="bg-white max-h-fit overflow-y-auto w-full">
 				<div className="flex justify-center items-center space-y-2 my-2 flex-col mt-5 mb-6">
 					<Button className='rounded-md h-10 px-2' 
 						onClick={()=> {
@@ -169,6 +168,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 								<img
 									src={formData?.profilePic} // Fallback to default image if no profile picture
 									alt="Profile"
+									loading='lazy'
 									className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
 								/>
 							)
@@ -195,7 +195,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 					</div>
 				</div>
 				<form onSubmit={handleSubmit}>
-					<div className="mb-4">
+					<div className="mb-4 space-y-2">
 						<Label className="block text-gray-700" htmlFor="name">Name</Label>
 						<Input
 							type="text"
@@ -207,7 +207,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 							required
 						/>
 					</div>
-					<div className="mb-4">
+					<div className="mb-4 space-y-2">
 						<Label className="block text-gray-700" htmlFor="email">Email</Label>
 						<Input
 							type="email"
@@ -219,8 +219,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 							required
 						/>
 					</div>
-					<div className="mb-4">
-						<Label className="block text-gray-700" htmlFor="address">Previous Password</Label>
+					<div className="mb-4 space-y-2">
+						<Label className="block text-gray-700" htmlFor="prevPassword">Previous Password</Label>
 						<Input
 							id="prevPassword"
 							name="prevPassword"
@@ -230,8 +230,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 							className="w-full p-3 border border-gray-300 rounded-lg"
 						/>
 					</div>
-					<div className="mb-4">
-						<Label className="block text-gray-700" htmlFor="address">New Password</Label>
+					<div className="mb-4 space-y-2">
+						<Label className="block text-gray-700" htmlFor="newPassword">New Password</Label>
 						<Input
 							id="newPassword"
 							name="newPassword"
@@ -241,20 +241,12 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 							className="w-full p-3 border border-gray-300 rounded-lg"
 						/>
 					</div>
-					<div className="flex justify-end space-x-4">
-						<Button
-							onClick={onClose}
-							className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
-						>
-							Cancel
-						</Button>
-						<Button
-							type="submit"
-							className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
-						>
-							Save
-						</Button>
-					</div>
+					<Button
+						type="submit"
+						className="px-6 py-2 w-full text-center flex rounded-lg"
+					>
+						Save
+					</Button>
 				</form>
 			</div>
 		</DialogContent>
@@ -265,7 +257,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 const AdminProfile = ({ user }) => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
-
+	const{checkAndCreateToast} = useSettingsContext();
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleEdit = () => {
@@ -281,9 +273,18 @@ const AdminProfile = ({ user }) => {
 
     const handleSave = async (updatedData) => {
         // Handle the save action (for example, call an API to save the updated data)
-        console.log("Updated Profile:", updatedData);
-		await dispatch(updateUserData(updatedData))
-		dispatch(checkAuth());
+		const response =  await dispatch(updateUserData(updatedData))
+        console.log("Updated Profile:", response?.payload);
+		if(response?.payload?.Success){
+			console.log("User Updated Successfully")
+			checkAndCreateToast('success',response?.payload?.message || "User Updated Successfully");  // Show a success message after saving the updated data
+            setIsModalOpen(false);  // Close the modal after saving
+			dispatch(checkAuth());
+		}else{
+			console.log("Failed to Update User")
+			checkAndCreateToast('error',response?.payload?.message || "Failed to Update User"); // Show a
+            setIsModalOpen(true);  // Show the modal again if update fails, for example, show an error message or display the updated data in the modal.
+		}
     };
 
     const handleCloseModal = () => {
@@ -297,9 +298,8 @@ const AdminProfile = ({ user }) => {
                 <ProfileDetails admin={user} />
                 <ProfileActions onEdit={handleEdit} onLogout={handleLogOut} />
             </div>
-			<Dialog open = {isModalOpen} onOpenChange={handleCloseModal}>
+			<Dialog open = {isModalOpen && user !== null} onOpenChange={handleCloseModal}>
 				<EditProfileModal
-					onClose={handleCloseModal}
 					user={user}
 					onSave={handleSave}
 				/>

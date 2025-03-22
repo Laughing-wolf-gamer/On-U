@@ -5,7 +5,6 @@ import { loginUser } from '@/store/auth-slice';
 import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
 
 const AuthLogIn = () => {
     const [formData, setFormData] = useState({
@@ -32,7 +31,7 @@ const AuthLogIn = () => {
             });
             navigate('/admin/dashboard');
         } else {
-            toast.error(`LogIn Failed! ${res?.payload?.message}`);
+            checkAndCreateToast("error",`LogIn Failed! ${res?.payload?.message}`);
         }
         } catch (error) {
         	console.error(`Error Occurred While LogIn User: ${error.message}`);
@@ -46,7 +45,7 @@ const AuthLogIn = () => {
                 {/* Header Section */}
                 <div className="text-center mb-6">
 					<h1 className="text-3xl font-semibold text-gray-800">
-						Log In to Your Admin Account
+						Log In to Your Account
 					</h1>
 					<p className="mt-2 text-sm text-gray-600">
 						Don't have an Account?{' '}

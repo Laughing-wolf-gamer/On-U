@@ -24,9 +24,9 @@ export const updateAdminData = async(req,res)=>{
         }
 		console.log("Admin data: ", admin)
         if(prevPassword && newPassword){
-            const isMatch = await bcrypt.compare(prevPassword, admin.password);
+            const isMatch = await bcrypt.compare(prevPassword, admin.password || '');
             if(!isMatch){
-				console.log("NOt Matched Password!");
+				console.log("Admin password is Not Match! ")
                 return res.status(401).json({Success: false, message: 'Incorrect Password'});
             }
             const hashedPassword = await bcrypt.hash(newPassword,10);
@@ -52,7 +52,6 @@ export const updateAdminData = async(req,res)=>{
 export const registerNewAdmin = async(req,res)=>{
     try {
         const {userName,email,password,phoneNumber,role} = req.body;
-        // console.log("Authenticating with: ",name,email,password,phoneNumber)
         if(role){
             if(role !== 'admin' && role !== 'superAdmin'){
                 return res.status(401).json({Success:false,message: 'Invalid Role'});
@@ -60,19 +59,14 @@ export const registerNewAdmin = async(req,res)=>{
         }else{
             return res.status(401).json({Success:false,message: 'Please enter a valid role'});
         }
+        let user = await User.findOne({email: email});
+        if(user){
+			return res.status(409).json({Success: false, message: 'Email already exists'});
+        }
 		const otp = Math.floor((1 + Math.random()) * 90000)
 		await sendVerificationEmail("onuclothing2@gmail.com", otp)
         const hashedPassword = await bcrypt.hash(password,10);
-		//https://avatar.iran.liara.run/public/job/[job title]/[gender]
 		const profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(userName)}`
-        let user = await User.findOne({email: email});
-        if(user){
-			user.otp = otp;
-			await user.save();
-            // return res.status(401).json({Success:false,message: 'User already exists'});
-			return res.status(200).json({Success:true,message: 'User registered successfully',otp:otp,email:email});
-        }
-		
         user = new User({name:userName,phoneNumber,email,password:hashedPassword,profilePic:profilePic,otp:otp,role:role});
         await user.save();
         res.status(200).json({Success:true,message: 'User registered successfully',otp:otp,email:email});

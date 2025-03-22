@@ -77,10 +77,12 @@ const AuthRegister = () => {
         setIsLoading(true)
         try {
             const res = await dispatch(registerUser(formData))
+			console.log("On U submit",res);
             if (res?.payload?.Success) {
                 checkAndCreateToast("success",'Sent OTP to registered Email. Please verify it.')
                 setCheckOtp(true)
             } else {
+				checkAndCreateToast("error",res?.payload?.message)
                 setCheckOtp(false)
             }
         } catch (error) {

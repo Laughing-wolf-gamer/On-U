@@ -64,8 +64,7 @@ export const registerUser = createAsyncThunk('/auth/register',
             console.log('response',response);
             return response.data;
         } catch (error) {
-            console.error(error);
-            return {Success:false,message:error.message};
+            return {Success:false,message:error?.response?.data?.message};
         }
     }
 )
@@ -113,7 +112,8 @@ export const updateUserData = createAsyncThunk('/auth/user/updateUserData',async
         console.log('Update User Data Response: ',response);
         return response.data;
     } catch (error) {
-        console.error(error);
+        // console.error(error);
+		return error?.response.data;
     }
 })
 export const checkAuth = createAsyncThunk('/auth/checkAuth',

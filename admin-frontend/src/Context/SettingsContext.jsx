@@ -8,7 +8,6 @@ const SettingContext = createContext();
 
 // Provider component
 export const SettingsProvider = ({ children }) => {
-	const [activeToast, setActiveToast] = useState(null);
     const checkAndCreateToast = (type,message,closeTime = 1000) => {
 		// console.log("Log type: ", type, "message: ", message,);
 		switch(type){
