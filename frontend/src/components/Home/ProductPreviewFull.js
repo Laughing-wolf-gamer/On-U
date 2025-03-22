@@ -93,7 +93,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                                 <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base md:font-semibold sm:font-semibold font-normal 2xl:font-semibold xl:font-semibold font-kumbsan text-gray-800 text-left truncate">
-                                        {p?.shortTitle?.length > 26 ? `${p?.shortTitle.slice(0, 10)}` : p?.shortTitle}
+                                        {p?.shortTitle || p?.title}
                                     </h2>
                                     
                                     <div className="w-full justify-start gap-y-1 items-center flex flex-row space-x-2">
