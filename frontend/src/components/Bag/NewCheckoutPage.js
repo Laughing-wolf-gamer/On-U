@@ -337,7 +337,10 @@ const CheckoutPage = () => {
 								handleSaveAddress={handleSaveAddress}
 								user={user}
 								handleAddressSelection={handleAddressSelection}
-								onAddressDelete={()=> dispatch(getAddress())}
+								onAddressDelete={()=> {
+									setSelectedAddress(null);
+									dispatch(getAddress())
+								}}
 							/>
 						}
 						
@@ -811,7 +814,7 @@ const AddAddress = ({onSave }) => {
 							required
 							placeholder={`Enter ${removeSpaces(item)}`}
 						/>
-						{error && <FormHelperText>{error}</FormHelperText>}
+						{/* {error && <FormHelperText>{error}</FormHelperText>} */}
 					</FormControl>
 				))}
 			</form>

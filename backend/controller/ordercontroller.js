@@ -1497,7 +1497,7 @@ export const getbag = async (req, res) => {
 			}
 		}).filter(id => id !== null); // Filter out any null values
 
-		console.log("Product IDs:", productIds);
+		// console.log("Product IDs:", productIds);
 		const products = await ProductModel.find({ _id: { $in: productIds } });
 
         // Create a map for fast lookup of product sizes
