@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from 'react';
+import React, { useState, useCallback, useMemo, memo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomItem } from '../../config';
 import ReactPlayer from 'react-player';
@@ -14,7 +14,7 @@ const clothingItems = [
     "Cargo"
 ];
 
-const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPlaying = false,categoryName }) => {
+const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = false,categoryName }) => {
     // const activeClothingItem = useMemo(() => getRandomItem(categoriesOptions) || getRandomItem(clothingItems), [categoriesOptions]);
     const navigation = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
@@ -36,11 +36,10 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
     return (
         <div onClick={handleMoveToQuery} className="relative font-kumbsan w-full h-full rounded-lg overflow-hidden cursor-pointer">
             <div className="min-w-xs h-full relative">
-                {isLoading && !isError && (
+                {/* {isLoading && !isError && (
                     <div className="w-[200px] h-[300px] overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow animate-pulse">
-                        {/* Skeleton loader */}
                     </div>
-                )}
+                )} */}
                 {isError ? (
                     <span className="text-red-600">Failed to Load Media</span>
                 ) : (
@@ -67,7 +66,7 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
                                 width="100%"
                                 height="100%"
                                 light={false}
-                                onReady={handleMediaLoad}
+                                // onReady={handleMediaLoad}
                                 onError={handleError}
                             />
                         ) : (
@@ -81,6 +80,6 @@ const GridImageView = React.memo(({ imageToShow, categoriesOptions = [], startPl
             </div>
         </div>
     );
-});
+}
 
 export default GridImageView;

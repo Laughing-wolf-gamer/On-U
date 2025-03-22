@@ -536,7 +536,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
             });
         };
     }, [WideScreen_Video?.urls.length]);
-  
+	const isMobileView = window.innerWidth <= 1024;
     return (
         <div className="grid font-kumbsan grid-cols-2 justify-center items-center gap-3 p-2">
             {bannerLoading? (
@@ -554,7 +554,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                 ))
             ) : (
                 // Actual content when URLs are available
-                WideScreen_Video && WideScreen_Video.urls.length > 0 && WideScreen_Video.urls.slice(0, window.screen.width > 1024 ? 8 : 4).map((url, index) => (
+                WideScreen_Video && WideScreen_Video.urls.length > 0 && WideScreen_Video.urls.slice(0, !isMobileView ? 8 : 4).map((url, index) => (
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
