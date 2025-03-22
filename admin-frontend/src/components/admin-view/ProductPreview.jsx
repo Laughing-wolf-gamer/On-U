@@ -35,7 +35,6 @@ const ProductPreview = ({
   }) => {
 	const{checkAndCreateToast} = useSettingsContext();
     const [isRatingModalOpen, setRatingIsModalOpen] = useState(false);
-    const [productRatings, setProductsRatings] = useState([]);
 
     const[isConfirmDeleteWindow,setIsConfirmDeleteWindow] = useState(false);
     const [productData, setProductData] = useState(null);

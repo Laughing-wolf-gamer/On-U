@@ -245,7 +245,7 @@ const Home = ({user}) => {
                                 </div>
                             </div>
                         </div>
-                        {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/>  */}
+                        <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header} bannerLoading = {bannerLoading}/> 

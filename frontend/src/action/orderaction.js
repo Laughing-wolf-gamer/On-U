@@ -134,7 +134,6 @@ export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
 }
 
 export const getbag = () => async (dispatch) => {
-
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
@@ -149,7 +148,6 @@ export const getbag = () => async (dispatch) => {
         // console.log("Bag Data: ",res.data);
         dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})
     } catch (error) {
-        console.error("error: ",error);
         dispatch({ type: FAIL_GET_BAG, payload: error.message})
     }
 }
