@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAddressForm } from '../../action/common.action';
-import { removeSpaces } from '../../config';
+import { capitalizeFirstLetterOfEachWord, removeSpaces } from '../../config';
 import { Input, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 
@@ -34,6 +34,12 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
 				setError('Phone number should be 10 digits or fewer!')
 				return;
+			}
+			const pincodeDigistOnly = newAddress['pincode'].replace(/\D/g, '');
+			if(pincodeDigistOnly.length !== 6){
+				checkAndCreateToast('error', 'Pincode should be 6 digits!');
+                setError('Pincode should be 6 digits!')
+                return;
 			}
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
@@ -75,11 +81,12 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
                         <Fragment key={index}>
                             <div>
                                 <FormControl fullWidth error={error}>
-                                    <InputLabel htmlFor={removeSpaces(item)}>{item}</InputLabel>
+                                    <InputLabel htmlFor={item}>{capitalizeFirstLetterOfEachWord(item)} <span className='text-gray-800 text-xs'>*</span></InputLabel>
                                     <Input
                                         id={removeSpaces(item)}
                                         name={removeSpaces(item)}
                                         value={newAddress[removeSpaces(item)] || ''}
+										type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
                                         onChange={handleChange}
                                         placeholder={`Enter ${removeSpaces(item)}`}
                                     />

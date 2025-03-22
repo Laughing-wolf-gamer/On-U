@@ -23,9 +23,13 @@ const PincodeChecker = ({productId}) => {
 				checkAndCreateToast('error','Please enter a valid pincode');
 				return;
 			}
+			const pincodeDigistOnly = currentPincode.replace(/\D/g, '');
+			if(pincodeDigistOnly.length !== 6){
+				checkAndCreateToast('error', 'Pincode should be 6 digits!');
+                return;
+			}
             const response = await axios.get(`${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${productId}`);
             if (response.data.result) {
-                console.log("Delivery is available! ",response.data.result);
                 const result = response.data.result;
                 setMessage(`Delivery is available for this pincode Within ${result?.edd} days`);
             } else {
@@ -54,7 +58,7 @@ const PincodeChecker = ({productId}) => {
 				value={customPincode}
 				onChange={handleInputChange}
 				className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
-				maxLength="6"
+				maxLength={"6"}
 			/>
 			
 			<button

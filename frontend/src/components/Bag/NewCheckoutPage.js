@@ -11,7 +11,7 @@ import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachW
 import { Minus, Plus, Trash, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
-import { FormHelperText } from '@mui/material';
+import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
 import { fetchAddressForm } from '../../action/common.action';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import BackToTopButton from '../Home/BackToTopButton';
@@ -755,6 +755,12 @@ const AddAddress = ({onSave }) => {
 				setError('Phone number should be 10 digits or fewer!')
 				return;
 			}
+			const pincodeDigistOnly = newAddress['pincode'].replace(/\D/g, '');
+			if(pincodeDigistOnly.length !== 6){
+				checkAndCreateToast('error', 'Pincode should be 6 digits!');
+                setError('Pincode should be 6 digits!')
+                return;
+			}
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
             // onClose(); // Close modal
@@ -791,22 +797,22 @@ const AddAddress = ({onSave }) => {
 			
 			<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
 				{formData && formData.map((item, index) => (
-					<div key={index} className='w-full flex flex-col space-y-3'>
-						<label className="text-sm font-medium text-left">{capitalizeFirstLetterOfEachWord(item)}
-							{!newAddress[removeSpaces(item)] && <span className='text-red-600'>*</span>}
-						</label>
-						<input
-							type="text"
+					<FormControl key={index} className='w-full flex flex-col space-y-3'>
+						<InputLabel htmlFor={item} className="text-sm font-medium text-left">{capitalizeFirstLetterOfEachWord(item)}
+							{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
+						</InputLabel>
+						<Input
+							type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
 							value={newAddress[removeSpaces(item)] || ''}
 							id={removeSpaces(item)}
 							name={removeSpaces(item)}
 							onChange={handleChange}
-							className="border p-2 rounded-md mt-1 w-full"
+							className="p-2 rounded-md mt-1 w-full"
 							required
 							placeholder={`Enter ${removeSpaces(item)}`}
 						/>
 						{error && <FormHelperText>{error}</FormHelperText>}
-					</div>
+					</FormControl>
 				))}
 			</form>
 			
