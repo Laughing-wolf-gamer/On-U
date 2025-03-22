@@ -1011,9 +1011,10 @@ export const getallOrders = async (req, res) => {
 				scans:status?.shipment_track,
 			};
         }));
-		console.log("order Status Updated: ", getShipRocketToken());
+		const token = await getShipRocketToken();
+		console.log("order Status Updated Token: ", token);
         // Send the updated orders with current status
-        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] ,token:getShipRocketToken()});
+        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] ,token:token});
 
     } catch (error) {
         console.error("Error Getting All Orders", error);

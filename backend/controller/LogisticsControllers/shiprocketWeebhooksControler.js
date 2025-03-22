@@ -1,6 +1,7 @@
 import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
+import WebSiteModel from "../../model/websiteData.model.js";
 import logger from "../../utilis/loggerUtils.js";
 import { addNewPicketUpLocation, checkShipmentAvailability, fetchAllPickupLocation, getAuthToken } from "./shiprocketLogisticController.js";
 
@@ -12,7 +13,6 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
         const dbOrder = await OrderModel.findOne({order_id:order_id});
         if(dbOrder){
             console.error(`No order found with ShipRocket Order ID: ${order_id}`);
-			// Update the order status in the database
 			dbOrder.status = current_status;
 			dbOrder.current_status = shipment_status;
 			dbOrder.shipment_status = shipment_status_id;
@@ -191,6 +191,18 @@ export const loginLogistics = async (req,res)=>{
             console.error("Error getting ShipRocket auth token: ",response);
             return res.status(500).json({Success: false, message: 'Error getting ShipRocket auth token'});
         }
+		const alreadySetShipRocketToken = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });
+		if (!alreadySetShipRocketToken) {
+			// No existing Shiprocket-token, create a new entry
+            const newWebsiteData = new WebSiteModel({
+                ShiprocketToken: response,
+                tag: 'Shiprocket-token',
+            });
+			await newWebsiteData.save();
+		}else{
+			alreadySetShipRocketToken.ShiprocketToken = token;
+            await alreadySetShipRocketToken.save();
+		}
 		console.log("ShipRocket auth token: ",response);
 		res.status(200).json({Success: true, message: 'Logged in successfully', result: response});
     } catch (error) {

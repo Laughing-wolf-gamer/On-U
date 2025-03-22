@@ -1205,5 +1205,4 @@ export const getCouponBannerData = async (req,res)=>{
 		res.status(500).json({ success: false, message: 'Failed to get coupon banner data' });
 	}
 }
-
   

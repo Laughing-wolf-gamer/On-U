@@ -4,6 +4,7 @@ import User from '../../model/usermodel.js';
 import { getBestCourierPartners, getStringFromObject } from '../../utilis/basicUtils.js';
 import logger from '../../utilis/loggerUtils.js';
 import OrderModel from '../../model/ordermodel.js';
+import WebSiteModel from '../../model/websiteData.model.js';
 
 dotenv.config();
 
@@ -12,8 +13,15 @@ dotenv.config();
 const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
-let token = '';
+// let token = '';
 
+export const getShipRocketToken = async()=>{
+	const alreadySetShipRocketToken = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });
+	if(alreadySetShipRocketToken){
+        return alreadySetShipRocketToken.ShiprocketToken;
+    }
+	return null;
+}
 export const getAuthToken = async (email,password) => {
     try {
         const response = await axios.post(`${SHIPROCKET_API_URL}/auth/login`, {
@@ -21,12 +29,7 @@ export const getAuthToken = async (email,password) => {
             password: password || SHIPROCKET_PASSWORD
         });
 
-        token = response?.data?.token; // Store the token
-        console.log('Connected to Shiprocket');
-		if(token !== null){
-			return token;
-		}
-		return '';
+		return response?.data?.token;
     } catch (error) {
         console.error('Error fetching auth token:', error);
         return '';
@@ -43,8 +46,9 @@ export const logoutAuthToken = async ()=>{
     }
 }
 const generateAwb = async(awbData)=>{
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
 	try {
+		const token = await getShipRocketToken();
 		console.log("Check AWB ",awbData);
 		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/assign/awb`,awbData,{
             headers: {
@@ -62,8 +66,9 @@ const generateAwb = async(awbData)=>{
 	}
 }
 const getAllServicalibiltyties = async (servicesData) => {
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
 	try {
+		const token = await getShipRocketToken();
 		// console.log("Check Serviceability ",servicesData);
 		const response = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`,{
             headers: {
@@ -128,9 +133,10 @@ const getAllServicalibiltyties = async (servicesData) => {
 	}
 } */
 export const generateOrderPicketUpRequest = async (order, orderData, bestCourier) => {
-    if (!token) await getAuthToken();
+    // if (!token) await getAuthToken();
 
     try {
+		const token = await getShipRocketToken();
 		console.log("Pick up order Data: ",order,orderData,bestCourier);
 
         const { shipment_id, order_id } = orderData;
@@ -204,8 +210,9 @@ export const generateOrderPicketUpRequest = async (order, orderData, bestCourier
 
 
 export const generateInvoice = async (orderData) => {
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
 	try {
+		const token = await getShipRocketToken();
 		console.log("Generating order Invoice:", orderData)
 		const{order_id} = orderData;
 		const response = await axios.post(`${SHIPROCKET_API_URL}/orders/print/invoice`, {ids:[order_id]},{
@@ -221,9 +228,9 @@ export const generateInvoice = async (orderData) => {
 	}
 }
 export const generateManifest = async (orderData) => {
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
 	try {
-
+		const token = await getShipRocketToken();
 		const{shipment_id} = orderData;
 		console.log("Generating order Manifest:", shipment_id)
 		const response = await axios.post(`${SHIPROCKET_API_URL}/manifests/generate`, {shipment_id:[Number(shipment_id)]},{
@@ -239,8 +246,9 @@ export const generateManifest = async (orderData) => {
 	}
 }
 export const fetchAllPickupLocation =async()=>{
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
         console.log("Fetching all pickup locations");
         const response = await axios.get(`${SHIPROCKET_API_URL}/settings/company/pickup`,{
             headers: {
@@ -398,9 +406,7 @@ const formatDate = (date) => {
 export const generateOrderForShipment = async (userId, shipmentData, randomOrderId, randomShipmentId) => {
     try {
         // Fetch token if it's missing
-        if (!token) {
-            await getAuthToken(); // Assuming this function sets a global token
-        }
+        const token = await getShipRocketToken();
 
         // Fetch user data
         const userData = await User.findById(userId);
@@ -581,8 +587,9 @@ export const generateRefundOrder = async (order) => {
 };
 
 export const generateOrderCancel = async(orderId)=>{
-	if (!token) await getAuthToken();
+	// if (!token) await getAuthToken();
 	try {
+		const token = await getShipRocketToken();
         const response = await axios.post(`${SHIPROCKET_API_URL}/orders/cancel`, {ids: [orderId]}, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -597,9 +604,10 @@ export const generateOrderCancel = async(orderId)=>{
     }
 }
 export const generateOrderRetrunShipment = async (shipmentData, userId) => {
-    if (!token) await getAuthToken();
+    // if (!token) await getAuthToken();
 
     try {
+		const token = await getShipRocketToken();
         // Check if user exists, skip if not needed for the process
         if (!userId) {
             throw new Error("User ID is required");
@@ -703,9 +711,9 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
 
 export const generateExchangeShipment = async (shipmentData, userId) => {
     // Check and fetch token only if it's not available
-    if (!token) await getAuthToken();
-
+    // if (!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
         // If userId is passed, no need to fetch user data from DB unless necessary
         if (!userId) {
             throw new Error("User ID is required");
@@ -803,8 +811,9 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
 };
 
 export const getAllShipRocketOrder = async()=>{
-    if(!token) await getAuthToken();
+    // if(!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
         
         const response = await axios.get(`${SHIPROCKET_API_URL}/orders`,
             {
@@ -822,8 +831,9 @@ export const getAllShipRocketOrder = async()=>{
 }
 
 export const getShipmentOrderByOrderId = async(orderId)=>{
-	if(!token) await getAuthToken();
+	// if(!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
 		const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track?order_id=${orderId}&channel_id=6282866`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -837,8 +847,9 @@ export const getShipmentOrderByOrderId = async(orderId)=>{
     }
 }
 export const getPickUpLocation = async()=>{
-	if(!token) await getAuthToken();
+	// if(!token) await getAuthToken();
 	try {
+		const token = await getShipRocketToken();
 		const res = await axios.get(`${SHIPROCKET_API_URL}/settings/company/pickup`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -852,8 +863,9 @@ export const getPickUpLocation = async()=>{
 	}
 }
 export const addNewPicketUpLocation = async(locationData)=>{
-	if(!token) await getAuthToken();
+	// if(!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
         const res = await axios.post(`${SHIPROCKET_API_URL}/settings/company/addpickup`, locationData, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -870,6 +882,7 @@ export const addNewPicketUpLocation = async(locationData)=>{
 
 export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
+		const token = await getShipRocketToken();
 		const pickup_locations =  await getPickUpLocation();
 		// console.log("Response Picketup Location",pickup_locations);
         if(!token) await getAuthToken();
@@ -896,8 +909,9 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     }
 }
 export const getShipmentTrackingStatus = async(shipmentId)=>{
-	if(!token) await getAuthToken();
+	// if(!token) await getAuthToken();
     try {
+		const token = await getShipRocketToken();
         const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track/shipment/${shipmentId}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -916,7 +930,8 @@ export const getShipmentTrackingStatus = async(shipmentId)=>{
 
 export const GetWalletBalance = async(req,res)=>{
 	try {
-		if(!token) await getAuthToken();
+		// if(!token) await getAuthToken();
+		const token = await getShipRocketToken();
         const walletResponse = await axios.get(`${SHIPROCKET_API_URL}/account/details/wallet-balance`, {
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -929,7 +944,4 @@ export const GetWalletBalance = async(req,res)=>{
 		console.error("Error getting Wallet Balance.: ",error)
 		res.status(500).json({success: false,message:"Error Getting Wallet Balance"});
 	}
-}
-export const getShipRocketToken = ()=>{
-	return token;
 }
