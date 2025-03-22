@@ -36,10 +36,6 @@ const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = fal
     return (
         <div onClick={handleMoveToQuery} className="relative font-kumbsan w-full h-auto rounded-lg overflow-hidden cursor-pointer">
             <div className="min-w-xs h-full relative">
-                {/* {isLoading && !isError && (
-                    <div className="w-[200px] h-[300px] overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow animate-pulse">
-                    </div>
-                )} */}
                 {isError ? (
                     <span className="text-red-600">Failed to Load Media</span>
                 ) : (
@@ -66,7 +62,7 @@ const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = fal
                                 width="100%"
                                 height="100%"
                                 light={false}
-                                // onReady={handleMediaLoad}
+                                onReady={handleMediaLoad}
                                 onError={handleError}
                             />
                         ) : (

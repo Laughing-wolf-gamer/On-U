@@ -210,7 +210,7 @@ const Home = ({user}) => {
                             </div>
                         }
                         
-                        <div className="w-full justify-self-center max-w-screen-2xl h-fit flex flex-col justify-center items-center pb-7 space-y-3 px-14">
+                        <div className="w-full justify-self-center flex flex-col justify-center items-center pb-7 space-y-3 px-14">
                             <h1 className='text-3xl font-bold text-center  tracking-widest text-gray-700 mb-10'>
                                 {WideScreen_Video.header}
                             </h1>
@@ -232,12 +232,9 @@ const Home = ({user}) => {
                                             WideScreen_Video.urls.slice(0, 8).map((url, index) => (
                                                 <div
                                                     key={`Index_${index}`}
-                                                    className={`h-auto w-full relative flex flex-col justify-center items-center transform transition-all duration-300`}
+                                                    className={`h-auto w-auto relative flex flex-col justify-center items-center`}
                                                 >
-                                                    {
-                                                        url && <GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
-                                                    }
-                                                    
+                                                    <GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
                                                 </div>
                                             ))
                                         )
