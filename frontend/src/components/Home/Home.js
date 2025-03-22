@@ -556,7 +556,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                        className="h-auto w-[20vw] relative flex flex-col justify-center items-center"
+                        className="h-auto w-[45vw] relative flex flex-col justify-center items-center"
                     >
                         {inView[index] ? (
                             <GridImageView imageToShow={url.url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url?.name} />
