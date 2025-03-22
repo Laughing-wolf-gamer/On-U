@@ -245,31 +245,39 @@ const Home = ({user}) => {
                                 </div>
                             </div>
                         </div>
-                        <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/> 
+                        {/* <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/>  */}
                         <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_6.urls} headers={Wide_Screen_Section_6.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_7.urls} headers={Wide_Screen_Section_7.header} bannerLoading = {bannerLoading}/>
+                        {
+							bannerLoading ? <Fragment>
+								{
+									Array(8).fill(0).map((_, index) => (
+										<div key={`skeleton_${index}`} className="w-[300px] h-[700px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
+										</div>
+									))
+								}
+							
+							</Fragment>:(
+								<Fragment>
+									{
+										Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 && <div className=' w-full max-w-screen-2xl justify-self-center justify-center items-center flex flex-col px-14'>
+											<h1 className='text-4xl font-bold text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+											<div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
+												{Wide_Screen_Section_8.urls.map((j, index) => (
+														<Link key={`j_banners_${index}`} to='/products' className='m-1'>
+															<LazyLoadImage effect='blur' src={j} alt={`${Wide_Screen_Section_8.header}_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md"/>
+														</Link>
+													))
+												}
+											</div>
+										</div>
+									}
+								</Fragment>
+							)
+						}
                         
-                        <div className=' w-full max-w-screen-2xl justify-self-center justify-center items-center flex flex-col px-14'>
-                            <h1 className='text-4xl font-bold text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
-                            <div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
-                                {
-                                    !bannerLoading && Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 ? 
-                                    Wide_Screen_Section_8.urls.map((j, index) => (
-                                        <Link key={`j_banners_${index}`} to='/products' className='m-1'>
-                                            <LazyLoadImage effect='blur' src={j} alt={`${Wide_Screen_Section_8.header}_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md"/>
-                                        </Link>
-                                    )) : (
-                                        // Skeleton Loader View when no URLs
-                                        Array(8).fill(0).map((_, index) => (
-                                            <div key={`skeleton_${index}`} className="w-[300px] h-[700px] relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-4 animate-pulse">
-                                            </div>
-                                        ))
-                                    )
-                                }
-                            </div>
-                        </div>
                         <DraggableImageSlider images={Wide_Screen_Section_9.urls} headers={Wide_Screen_Section_9.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_10.urls} headers={Wide_Screen_Section_10.header} bannerLoading = {bannerLoading}/>
                         <DraggableImageSlider images={Wide_Screen_Section_11.urls} headers={Wide_Screen_Section_11.header} showArrows={false} bannerLoading = {bannerLoading}/> 

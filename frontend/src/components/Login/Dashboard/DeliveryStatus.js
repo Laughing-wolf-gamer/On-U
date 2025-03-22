@@ -14,8 +14,6 @@ const DeliveryStatus = ({ status }) => {
 
     // Calculate the progress percentage
     const progress = (currentStepIndex / (steps.length - 1)) * 100;
-    console.log("Current Step Index: ", currentStepIndex);
-    console.log("Progress: ", progress);
 
     return (
         <div className="w-full mb-4 px-4 py-6 justify-self-start shadow-lg rounded-lg">

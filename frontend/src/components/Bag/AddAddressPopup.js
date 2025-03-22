@@ -4,13 +4,14 @@ import { fetchAddressForm } from '../../action/common.action';
 import { capitalizeFirstLetterOfEachWord, removeSpaces } from '../../config';
 import { Input, Button, FormControl, InputLabel, FormHelperText } from '@mui/material';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { X } from 'lucide-react';
 
 const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
     const [formInitState, setFormInitState] = useState(null);
     const [newAddress, setNewAddress] = useState({});
     const { formData } = useSelector(state => state.fetchFormBanners);
     const dispatch = useDispatch();
-    const [error, setError] = useState('');
+    const [error, setError] = useState(null);
 	const{checkAndCreateToast} = useSettingsContext();
 
     // Handle changes in form fields
@@ -32,21 +33,23 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 			if (digitsOnly.length !== 10) {
 				// console.log("Phone number is greater than 10 digits.");
 				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
-				setError('Phone number should be 10 digits or fewer!')
+				setError({errorTag:'phoneNumber',error:'Phone number should be 10 digits or fewer!'})
 				return;
 			}
 			const pincodeDigistOnly = newAddress['pincode'].replace(/\D/g, '');
 			if(pincodeDigistOnly.length !== 6){
 				checkAndCreateToast('error', 'Pincode should be 6 digits!');
-                setError('Pincode should be 6 digits!')
+				setError({errorTag:'pincode',error:'Pincode should be 6 digits!'})
                 return;
 			}
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
             onClose(); // Close modal
-            setError(''); // Clear any previous errors
+            setError(null); // Clear any previous errors
         } else {
-            setError('Please fill out all the fields.');
+            // setError('Please fill out all the fields.');
+			checkAndCreateToast('error', 'Please fill out all the fields.');
+            setError({errorTag:null,error:'Please fill out all the fields.'})
         }
     };
 
@@ -74,7 +77,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 
     return (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-            <div className="bg-white p-6 w-96 max-w-full mx-4 sm:mx-0">
+            <div className="bg-white p-6 w-96 max-w-full mx-4 sm:mx-0 relative">
                 <h2 className="text-xl font-semibold mb-4 text-center">Add New Address</h2>
                 <form className="space-y-4">
                     {formData && formData.map((item, index) => (
@@ -91,33 +94,33 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
                                         placeholder={`Enter ${removeSpaces(item)}`}
                                     />
                                     {error && (
-                                        <FormHelperText>{error}</FormHelperText>
+                                        <FormHelperText>{
+											error.errorTag === item ? error.error :''
+										}</FormHelperText>
                                     )}
                                 </FormControl>
                             </div>
                         </Fragment>
                     ))}
                 </form>
-                <div className="flex justify-end mt-4 space-x-2">
-                    <button
-                        onClick={() => {
-                            onClose();
-                            setNewAddress(formInitState || {}); // Reset form when closing
-                            setError(''); // Reset error on cancel
-                        }}
-                        color="secondary"
-                        className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
-                    >
-                        Cancel
-                    </button>
-                    <button
-                        onClick={handleSave}
-                        color="primary"
-                        className="px-4 py-2 bg-black rounded-md hover:bg-gray-600 text-white"
-                    >
-                        Save
-                    </button>
-                </div>
+				<button
+					onClick={handleSave}
+					color="primary"
+					className="px-4 py-2 bg-black w-full flex text-center mt-2 items-center justify-center rounded-md hover:bg-gray-600 text-white"
+				>
+					Save
+				</button>
+				<button
+					onClick={() => {
+						onClose();
+						setNewAddress(formInitState || {}); // Reset form when closing
+						setError(null); // Reset error on cancel
+					}}
+					color="secondary"
+					className="p-2 rounded-full absolute top-2 right-2 items-center justify-center text-black"
+				>
+					<X/>
+				</button>
             </div>
         </div>
     );

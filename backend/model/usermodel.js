@@ -34,7 +34,10 @@ const userModelSchema = new mongoose.Schema({
         type:Date,
 		default:new Date()
     },
-    addresses:[],
+    addresses:[{
+        type: mongoose.Schema.Types.Mixed, // Allows custom, flexible address fields
+        default: []
+    }],
     TOA:{
         type:String
     },
