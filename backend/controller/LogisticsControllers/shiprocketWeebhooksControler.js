@@ -7,13 +7,15 @@ import { addNewPicketUpLocation, checkShipmentAvailability, fetchAllPickupLocati
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
     try {
         console.log("Shiprocket order Status Update Receving Data: ",req.body);
-        const { order_id, current_status } = req.body;
+        const { order_id, current_status,shipment_status,shipment_status_id } = req.body;
         // console.log(`Order ID: ${order_id}, Status: ${current_status}`);
-        const dbOrder = await OrderModel.findOne({ShipRocketOrderId:order_id});
+        const dbOrder = await OrderModel.findOne({order_id:order_id});
         if(dbOrder){
             console.error(`No order found with ShipRocket Order ID: ${order_id}`);
 			// Update the order status in the database
 			dbOrder.status = current_status;
+			dbOrder.current_status = shipment_status;
+			dbOrder.shipment_status = shipment_status_id;
 			await dbOrder.save();
 			console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
         }
