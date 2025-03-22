@@ -432,9 +432,9 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
-			color:item?.productId?.color.name,
-			size:item?.productId?.size?.label,
-            sku: item?.productId?.color?.sku,
+			color:item?.color.name,
+			size:item?.size?.label,
+            sku: item?.color?.sku,
             tax: item?.productId?.gst || 0,
             hsn: item?.productId?.sku || generateRandomId().toString()
         }));

@@ -80,3 +80,5 @@
 2025-03-22T08:47:36.204Z error: Error getting Banners: Operation `banner.images.find()` buffering timed out after 10000ms
 2025-03-22T08:47:36.238Z error: Error fetching Category Banners: Operation `category.banners.find()` buffering timed out after 10000ms
 2025-03-22T08:47:36.238Z error: Error fetching Category Banners: Operation `category.banners.find()` buffering timed out after 10000ms
+2025-03-22T09:58:47.195Z error: Error creating Order: Cannot destructure property 'shipmentCreatedResponseData' of 'createdShipRocketOrder' as it is null.
+2025-03-22T09:58:47.195Z error: Error creating Order: Cannot destructure property 'shipmentCreatedResponseData' of 'createdShipRocketOrder' as it is null.
