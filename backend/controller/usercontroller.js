@@ -50,6 +50,8 @@ export const registermobile = async (req, res) => {
         }
     }
 }
+
+
 export const loginMobileNumber = async(req, res) => {
     try {
 		const { logInEmail} = req.body;
@@ -121,6 +123,8 @@ export const updateProfilePic = async(req,res)=>{
 
 	}
 }
+
+
 export const loginOtpCheck = async(req,res)=>{
 	try {
 		const{otp,phoneNumber,email} = req.body;
@@ -135,8 +139,6 @@ export const loginOtpCheck = async(req,res)=>{
 		if(!user.otp){
 			return res.status(404).json({error: 'OTP Not found!'});
 		}
-		console.log("otp Verify Data: ",req.body)
-		console.log("otp Verify: ",user.otp);
 		if(user.otp.toString() !== otp){
 			return res.status(200).json({success:false, message:"OTP Do not Match"});
 		}
@@ -152,9 +154,6 @@ export const loginOtpCheck = async(req,res)=>{
 	}
 
 }
-
-
-
 
 export const registerUser = A(async (req, res) => {
     
@@ -291,8 +290,6 @@ export const logInUser = async (req,res) =>{
 
 export const updateuser = async(req,res)=>{
 	try {
-		console.log("User: ",req.user);
-		console.log("Updating User: ",req.body)
 		const{ name, gender,DOB,profilePic} = req.body
 		const dobParsed = new Date(DOB);
 		console.log("DOB, ",dobParsed)

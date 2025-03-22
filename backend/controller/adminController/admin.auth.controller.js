@@ -10,6 +10,44 @@ import { removeSpaces } from "../../utilis/basicUtils.js";
 import { sendVerificationEmail } from "../emailController.js";
 
 
+export const updateAdminData = async(req,res)=>{
+	try {
+
+        const {userId,profilePic,name,email,prevPassword,newPassword} = req.body;
+		console.log("Update admin data: ", req.body);
+		if(!userId){
+			return res.status(400).json({Success: false, message: 'User ID is required'});
+        }
+        let admin = await User.findById(userId);
+        if(!admin){
+            return res.status(404).json({Success: false, message: 'Admin not found'});
+        }
+		console.log("Admin data: ", admin)
+        if(prevPassword && newPassword){
+            const isMatch = await bcrypt.compare(prevPassword, admin.password);
+            if(!isMatch){
+				console.log("NOt Matched Password!");
+                return res.status(401).json({Success: false, message: 'Incorrect Password'});
+            }
+            const hashedPassword = await bcrypt.hash(newPassword,10);
+            admin = await User.findByIdAndUpdate(userId, {password: hashedPassword}, {new: true});
+        }
+		if(name){
+            admin = await User.findByIdAndUpdate(userId, {name: name}, {new: true});
+        }
+		if(email){
+			admin = await User.findByIdAndUpdate(userId, {email: email}, {new: true});
+		}
+		if(profilePic){
+            admin = await User.findByIdAndUpdate(userId, {profilePic: profilePic}, {new: true});
+        }
+        return res.status(200).json({Success:true, message: 'Admin data updated successfully'});
+    } catch (error) {
+        logger.error(error);
+        return res.status(500).json({Success:false, message: 'Server Error'});
+    }
+}
+
 
 export const registerNewAdmin = async(req,res)=>{
     try {
@@ -108,11 +146,17 @@ export const logInUser = async (req,res) =>{
 		logger.error(`Error Logging in user: ${error.message}`);
     }
 }
-export const getuser = (async(req, res, next)=>{
-    const user = req.user;
-    console.log("user",user);
-    res.status(200).json({Success:true,message: 'User is Authenticated',user});
-})
+export const getuser = async(req, res)=>{
+	try {
+		const user = await User.findById(req.user.id).select('-password');
+		console.log("Admin User Found! ",user);
+		res.status(200).json({Success:true,message: 'User is Authenticated',user:user});
+	} catch (error) {
+		console.error(`Error getting user ${error.message}`);
+		logger.error(`Error getting user: ${error.message}`);
+        res.status(500).json({Success:false,message: 'Internal Server Error'});
+	}
+}
 export const getTotalOrders = async (req,res)=>{
     try {
         const orders = await OrderModel.find({});

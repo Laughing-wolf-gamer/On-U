@@ -107,6 +107,15 @@ export const logoutUser = createAsyncThunk('/auth/logout',
         }
     }
 )
+export const updateUserData = createAsyncThunk('/auth/user/updateUserData',async(updateData)=>{
+	try {
+        const response = await axios.put(`${BASE_URL}/admin/auth/user/update`,updateData,Header());
+        console.log('Update User Data Response: ',response);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+    }
+})
 export const checkAuth = createAsyncThunk('/auth/checkAuth',
     async ()=>{
         try {

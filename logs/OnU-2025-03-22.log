@@ -84,3 +84,21 @@
 2025-03-22T09:58:47.195Z error: Error creating Order: Cannot destructure property 'shipmentCreatedResponseData' of 'createdShipRocketOrder' as it is null.
 2025-03-22T11:01:22.882Z error: Error occured during login token is not defined
 2025-03-22T11:01:22.882Z error: Error occured during login token is not defined
+2025-03-22T12:07:14.046Z error: admin is not defined - ReferenceError: admin is not defined
+    at updateAdminData (file:///D:/Github-Proj/On-U/backend/controller/adminController/admin.auth.controller.js:19:96)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:137:13)
+    at file:///D:/Github-Proj/On-U/backend/Middelwares/adminProtectRoute.js:36:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-03-22T12:07:14.046Z error: admin is not defined - ReferenceError: admin is not defined
+    at updateAdminData (file:///D:/Github-Proj/On-U/backend/controller/adminController/admin.auth.controller.js:19:96)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:137:13)
+    at file:///D:/Github-Proj/On-U/backend/Middelwares/adminProtectRoute.js:36:5
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-03-22T12:22:27.571Z error: userName is not defined - ReferenceError: userName is not defined
+    at updateAdminData (file:///D:/Github-Proj/On-U/backend/controller/adminController/admin.auth.controller.js:35:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
+2025-03-22T12:22:27.571Z error: userName is not defined - ReferenceError: userName is not defined
+    at updateAdminData (file:///D:/Github-Proj/On-U/backend/controller/adminController/admin.auth.controller.js:35:3)
+    at process.processTicksAndRejections (node:internal/process/task_queues:105:5)
