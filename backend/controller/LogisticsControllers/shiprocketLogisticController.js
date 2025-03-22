@@ -432,7 +432,9 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
-            sku: item?.productId?.sku || item?.productId?._id,
+			color:item?.productId?.color.name,
+			size:item?.productId?.size?.label,
+            sku: item?.productId?.color?.sku,
             tax: item?.productId?.gst || 0,
             hsn: item?.productId?.sku || generateRandomId().toString()
         }));
@@ -630,9 +632,9 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
-            sku: item?.sku || generateRandomId().toString() || item?.productId?.sku || item?.productId?._id,
+            sku: item?.color?.sku,
             tax: item?.productId?.gst || 0,
-            hsn: item?.productId?.sku || generateRandomId().toString()
+            hsn: generateRandomId().toString()
         }));
 
         // Extract the active pickup location
@@ -697,186 +699,6 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
 };
 
 
-/* export const generateOrderRetrunShipment = async (shipmentData,userId) => {
-	if(!token) await getAuthToken();
-	try {
-		// Fetch user data
-        const userData = await User.findById(userId);
-        if (!userData) {
-            // console.error("User not found");
-            // return null;
-			throw new Error("User not found");
-        }
-
-        // Helper function to calculate totals for order items
-        const calculateTotal = (key) => {
-            return shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
-        };
-
-        // Calculate various totals
-        const subTotal = calculateTotal('price');
-        const totalOrderWeight = calculateTotal('weight');
-        const totalOrderHeight = calculateTotal('height');
-        const totalOrderLength = calculateTotal('length');
-        const totalBredth = calculateTotal('breadth');
-
-        // Map order items to required format
-		const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-        const orderItems = shipmentData.orderItems.map(item => ({
-            name: item?.productId?.title,
-            selling_price: item.productId.salePrice || item.productId.price,
-            units: item.quantity,
-            discount: item?.productId?.DiscountedPercentage || 0,
-            sku: item?.productId?.sku || item?.productId?._id,
-            tax: item?.productId?.gst || 0,
-            hsn: item?.productId?.sku || generateRandomId().toString()
-        }));
-		// const pickup_locations = await getPickUpLocation();
-		// console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
-		const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
-		console.log("Active Pickup Location: ", activePickUpLocation);
-        const orderDetails = {
-            order_id: shipmentData.order_id,
-            order_date: formatDate(shipmentData.createdAt),
-			reseller_name: "On U",
-			company_name: "On U",
-			channel_id:'6282866',
-			category:"Clothes",
-			pickup_isd_code: "+91",
-            pickup_customer_name: shipmentData.address.Firstname,
-            pickup_last_name: shipmentData.address.Lastname,
-            pickup_address: shipmentData.address.address1,
-            pickup_city: shipmentData.address.address2,
-            pickup_pincode: shipmentData.address.pincode,
-            pickup_state: shipmentData.address.state,
-            pickup_country: 'India',
-            pickup_phone: shipmentData.address.phoneNumber,
-
-			shipping_customer_name:activePickUpLocation.name,
-			shipping_last_name:'',
-			shipping_address:activePickUpLocation.address,
-			shipping_address_2:activePickUpLocation.address_2,
-			shipping_city:activePickUpLocation.city,
-			shipping_country:activePickUpLocation.country,
-			shipping_pincode:activePickUpLocation.pin_code,
-            shipping_state:activePickUpLocation.state,
-			shipping_email:activePickUpLocation.email,
-            shipping_phone:activePickUpLocation.phone,
-			units:orderItems.length,
-            order_items: [...orderItems],
-            payment_method: shipmentData?.paymentMode,
-            sub_total: subTotal,
-            length: totalOrderLength,
-            breadth: totalBredth,
-            height: totalOrderHeight,
-            weight: totalOrderWeight / 1000,
-			hsn: '441122',
-        };
-		console.log("ShipRocket Order returning data: ", orderDetails);
-        const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/return`, orderDetails, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        console.log("Return Shipment Created Response: ", response.data);
-        return response.data;
-    } catch (error) {
-        // console.dir(error,{depth:null});
-		console.error("Error creating return shipment:", error?.response?.data);
-		logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
-        return null;
-    }
-} */
-
-/* export const generateExchangeShipment = async (shipmentData, userId) => {
-	if(!token) await getAuthToken();
-	try {
-		
-		const userData = await User.findById(userId);
-        if (!userData) {
-            // console.error("User not found");
-			throw new Error("User not found");
-        }
-
-        // Helper function to calculate totals for order items
-        const calculateTotal = (key) => {
-            return shipmentData.orderItems.reduce((total, item) => total + item.productId[key], 0);
-        };
-
-        // Calculate various totals
-        const subTotal = calculateTotal('price');
-        const totalOrderWeight = calculateTotal('weight');
-        const totalOrderHeight = calculateTotal('height');
-        const totalOrderLength = calculateTotal('length');
-        const totalBredth = calculateTotal('breadth');
-        // Map order items to required format
-		// const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-        const orderItems = shipmentData.orderItems.map(item => ({
-            name: item?.productId?.title,
-            sku: item?.productId?._id,
-            selling_price: item.productId.salePrice || item.productId.price,
-            units: item.quantity,
-			qc_enable:true,
-			qc_product_name: item?.productId?.title,
-            qc_product_image: item?.productId?.image,
-            qc_brand: item?.productId?.brand,
-            qc_color: item?.productId?.color?.name,
-            qc_size: item?.productId?.size?.lable,
-            discount: item?.productId?.DiscountedPercentage,
-            tax: 0,
-        }));
-		// const pickup_locations = await getPickUpLocation();
-		// console.log("Order Courior Details: ",orderItems, subTotal, totalOrderWeight, totalOrderHeight, totalOrderLength, totalBredth);
-		const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
-		console.log("Active Pickup Location: ", activePickUpLocation);
-        const orderDetails = {
-            order_id: shipmentData.order_id,
-            order_date: formatDate(shipmentData.createdAt),
-			reseller_name: "On U",
-			company_name: "On U",
-			channel_id:'6282866',
-			category:"Clothes",
-			pickup_isd_code: "+91",
-            pickup_customer_name: shipmentData.address.Firstname,
-            pickup_last_name: shipmentData.address.Lastname,
-            pickup_address: shipmentData.address.address1,
-            pickup_city: shipmentData.address.address2,
-            pickup_pincode: shipmentData.address.pincode,
-            pickup_state: shipmentData.address.state,
-            pickup_country: 'India',
-            pickup_phone: shipmentData.address.phoneNumber,
-
-			shipping_customer_name:activePickUpLocation.name,
-			shipping_last_name:'',
-			shipping_address:activePickUpLocation.address,
-			shipping_address_2:activePickUpLocation.address_2,
-			shipping_city:activePickUpLocation.city,
-			shipping_country:activePickUpLocation.country,
-			shipping_pincode:activePickUpLocation.pin_code,
-            shipping_state:activePickUpLocation.state,
-			shipping_email:activePickUpLocation.email,
-            shipping_phone:activePickUpLocation.phone,
-			units:orderItems.length,
-            order_items: [...orderItems],
-            payment_method: shipmentData?.paymentMode,
-            sub_total: subTotal,
-            length: totalOrderLength,
-            breadth: totalBredth,
-            height: totalOrderHeight,
-            weight: totalOrderWeight / 1000,
-        };
-		console.log("ShipRocket Exchange data: ", orderDetails);
-		const response = await axios.post(`${SHIPROCKET_API_URL}/orders/create/exchange`, orderDetails, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        console.log("Return Shipment Created Response: ", response.data);
-
-	} catch (error) {
-		console.error("Error creating exchange shipment:", error?.response?.data);
-	}
-} */
 
 
 export const generateExchangeShipment = async (shipmentData, userId) => {

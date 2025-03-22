@@ -62,7 +62,6 @@ export const fetchAllOptions = () => async (dispatch) => {
         // const { data } = await axios.get(`/api/v1/options`)
         const res = await axios.get(`${BASE_API_URL}/api/common/options/get/all`);
         const data = res?.data;
-        console.log("Options: ", data.result);
         dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
     } catch (error) {
         dispatch({ type: FAIL_OPTIONS, payload: error.response?.data?.message })
@@ -74,7 +73,6 @@ export const getOptionsByType = ({type}) => async () => {
         // const { data } = await axios.get(`/api/v1/options`)
         const res = await axios.get(`${BASE_API_URL}/api/common/options/getByType/${type}`);
         const data = res?.data;
-        console.log("Single Options: ", data.result);
         return data.result || null;
         // dispatch({ type: SUCCESS_OPTIONS, payload: data?.result })
     } catch (error) {

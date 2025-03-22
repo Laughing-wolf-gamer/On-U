@@ -22,16 +22,35 @@ const OrderDetail = ({ label, value,url = '',downloadEnable = false }) => (
 )
 
 const OrderItemList = ({ items }) => (
-	<ul className="flex flex-row justify-between items-center gap-3">
-		{items?.map((item, index) => (
-			<li key={index} className="flex items-center justify-between">
-				<span>{item?.title}</span>
-				<span>Quantity: {item?.quantity}</span>
-				<span>Price: ₹{item?.productId?.salePrice || item?.productId?.price}</span>
-			</li>
-		))}
-	</ul>
-)
+	<div className="space-y-4 w-full p-2">
+			{items?.map((item, index) => (
+			<div key={index} className="border p-4 rounded-lg shadow-md bg-white">
+				<div className="flex flex-col gap-2">
+				<div className="flex justify-between">
+					<Label className="font-semibold">Title:</Label>
+					<span className="text-sm text-gray-600">{item?.productId?.title}</span>
+				</div>
+				<div className="flex justify-between">
+					<Label className="font-semibold">Size:</Label>
+					<span className="text-sm text-gray-600">{item?.size}</span>
+				</div>
+				<div className="flex justify-between">
+					<Label className="font-semibold">Color:</Label>
+					<span className="text-sm text-gray-600">{item?.color?.name}</span>
+				</div>
+				<div className="flex justify-between">
+					<Label className="font-semibold">Quantity:</Label>
+					<span className="text-sm text-gray-600">{item?.quantity}</span>
+				</div>
+				<div className="flex justify-between">
+					<Label className="font-semibold">Price:</Label>
+					<span className="text-sm text-gray-600">₹ {item?.productId?.salePrice || item?.productId?.price}</span>
+				</div>
+				</div>
+			</div>
+			))}
+	</div>
+);
 
 const ShippingInfo = ({ address }) => (
 	<ul className="grid gap-0.5">
@@ -61,7 +80,6 @@ const AdminOrdersDetailsView = ({ order }) => {
 	const handleInitiateRefund = async(e) =>{
 		e.preventDefault();
 		const response = await dispatch(adminCreateRefundRequest({ orderId: order._id }))
-		console.log("response:",response);
 		if(response){
 			checkAndCreateToast("success","Refund Request Initiated Successfully")
             dispatch(adminGetAllOrders())
@@ -76,7 +94,6 @@ const AdminOrdersDetailsView = ({ order }) => {
 			ShipmentCreatedResponseData:order?.ShipmentCreatedResponseData
 		}))
 		if(response.payload?.error){
-			console.log("Pickup response: ", response);
 			checkAndCreateToast("error",response.payload?.error)
 		}else{
 			checkAndCreateToast('error',"Successfully created response:");
@@ -85,7 +102,6 @@ const AdminOrdersDetailsView = ({ order }) => {
 	const createCancelOrder = async(e)=>{
 		e.preventDefault();
 		if(!order?.IsCancelled){
-			console.log("Updating Cancel Order: ", order);
 			const response = await dispatch(adminSendOrderCancel({ orderId: order?._id }));
 			if(response){
 				if (order?.IsCancelled) {
@@ -170,10 +186,10 @@ const AdminOrdersDetailsView = ({ order }) => {
 				<Separator />
 				<OrderDetail label="Manifest Data" value={"Manifest Details"} url={order?.manifest && order?.manifest?.invoice_url} downloadEnable />
 				{/* Order Items */}
-				<div className="grid grid-cols-2 gap-4">
-					<div className="font-medium">Order Details</div>
-						<OrderItemList items={order?.orderItems} />
-					</div>
+				<div className="flex flex-col justify-center items-center space-y-2 font-extrabold w-full uppercase underline">
+					<h1 >Order Details</h1>
+					<OrderItemList items={order?.orderItems} />
+				</div>
 					<Separator />
 					
 					{/* Shipping Information */}

@@ -86,13 +86,10 @@ export const addItemArrayBag = (options) => async()=>{
         // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
     }
 }
-export const createbag = (option) => async (dispatch) => {
+export const createbag = (option) => async () => {
     console.log(option)
     try {
         const token = sessionStorage.getItem('token');
-        // console.log(token);
-        // console.log(option)
-        // dispatch({ type: REQUEST_CREATE_BAG })
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, {
             withCredentials:true,
             headers: {
@@ -100,35 +97,24 @@ export const createbag = (option) => async (dispatch) => {
                 "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
         })
-
-        // dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
         return data?.success || false;
     } catch (error) {
-
-        // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
         return false;
-
     }
 }
 export const applyCouponToBag = ({bagId,couponCode}) => async()=>{
     try {
-        // console.log("applyCoupon: ", bagId, couponCode);
         const res = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/applyCoupon/${bagId}`,{couponCode},headerConfig())
-        console.log("applyCoupon: ", res.data);
         return res.data;
     } catch (error) {
-        console.error("Error applying coupon: ",error);
         return false;
     }
 }
 export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
     try {
-        console.log("remove Coupon: ", bagId, couponCode);
         const res = await axios.patch(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/removeCoupon/${bagId}`,{couponCode},headerConfig())
-        console.log("Remove Coupon: ", res.data);
         return res.data;
     } catch (error) {
-        console.error("Error applying coupon: ",error);
         return false;
     }
 }
@@ -137,7 +123,6 @@ export const getbag = () => async (dispatch) => {
     try {
         const token = sessionStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
-        // console.log("Asking Bag: ",userId);
         const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,{
             withCredentials:true,
             headers: {
@@ -145,7 +130,6 @@ export const getbag = () => async (dispatch) => {
                 "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
             },
         });
-        // console.log("Bag Data: ",res.data);
         dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})
     } catch (error) {
         dispatch({ type: FAIL_GET_BAG, payload: error.message})
@@ -156,15 +140,7 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
 
     try {
         dispatch({ type: REQUEST_UPDATE_QTY_BAG })
-        const token = sessionStorage.getItem('token');
-        const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bag`,qtydata, {
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        });
-        // console.log("Update Bag: ",data)
+        const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bag`,qtydata, headerConfig());
         dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
         dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
@@ -173,25 +149,17 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
 export const itemCheckUpdate = (checkedData) => async () => {
 
     try {
-        // dispatch({ type: REQUEST_UPDATE_QTY_BAG })
-        // const token = sessionStorage.getItem('token');
-		
-        // console.log("Update Bag: ",checkedData)
         const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bagItemChecked`,checkedData, headerConfig());
 		return data.success;
-        // dispatch({ type: SUCCESS_UPDATE_QTY_BAG, payload: data.success,})
     } catch (error) {
-        // dispatch({ type: FAIL_UPDATE_QTY_BAG, payload: error.response.data.message })
 		return false;
     }
 }
 
 export const deleteBag = (deletingProductData) => async (dispatch) => {
     try {
-        const token = sessionStorage.getItem('token');
         dispatch({ type: SUCCESS_DELETE_BAG })
         const res = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/removeBagItem`,deletingProductData,headerConfig());
-        // console.log("Delete Bag: ",res)
         dispatch({ type: REQUEST_DELETE_BAG, payload: res?.data?.success || false})
     } catch (error) {
         dispatch({ type: FAIL_DELETE_BAG, payload: error?.response?.data?.message || "Failed To Delete BAg" })
@@ -200,7 +168,6 @@ export const deleteBag = (deletingProductData) => async (dispatch) => {
 
 export const deletewish = ({deletingProductId}) => async (dispatch) => {
     try {
-        console.log("Deleting WishList...",deletingProductId)
         dispatch({ type: SUCCESS_DELETE_WISH })
         const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/delete_wishlist`,{deletingProductId}, headerConfig());
         dispatch({ type: REQUEST_DELETE_WISH, payload: data.success,})
@@ -209,22 +176,16 @@ export const deletewish = ({deletingProductId}) => async (dispatch) => {
     }
 }
 
-export const create_order = (orderdata) => async (dispatch) => {
+export const create_order = (orderdata) => async () => {
     try {
-        // dispatch({ type: REQUEST_CREATE_ORDER })
-        console.log("Order Data: ",orderdata);
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_order`, orderdata, headerConfig())
-        console.log("Order Data: ",data)
 		return data;
-        // dispatch({ type: SUCCESS_CREATE_ORDER, payload: data.result})
-
     } catch (error) {
-        // dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
+		return null;
     }
 }
-export const createPaymentOrder = (orderdata) => async (dispatch) => {
+export const createPaymentOrder = (orderdata) => async () => {
     try {
-        // const token = sessionStorage.getItem('token');
         console.log("Payment Order Data: ",orderdata);
         const res = await axios.post(`${BASE_API_URL}/api/payment/create_cashFreeOrder`, orderdata, headerConfig())
         console.log("Payment Order Data: ",res.data)
@@ -232,8 +193,6 @@ export const createPaymentOrder = (orderdata) => async (dispatch) => {
     } catch (error) {
         console.error("Error: ",error);
         return null;
-        // dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
-
     }
 }
 export const verifyingOrder = (orderdata) => async (dispatch) => {
@@ -246,15 +205,12 @@ export const verifyingOrder = (orderdata) => async (dispatch) => {
     } catch (error) {
         console.error("Error: ",error);
         return null;
-        // dispatch({ type: FAIL_CREATE_ORDER, payload: error.response.data.message })
-
     }
 }
 export const fetchAllOrders = () => async (dispatch) => {
     try {
         dispatch({ type: REQUEST_GET_ALL_ORDER })
         const { data } = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/orders/all`, headerConfig())
-        console.log("Orders: ",data);
         dispatch({ type: SUCCESS_GET_ALL_ORDER, payload: data.result})
     } catch (error) {
         dispatch({ type: FAIL_GET_ALL_ORDER, payload: error.response.data.message })

@@ -107,19 +107,19 @@ const TermsAndConditions = () => {
 						<section>
 							<h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-3">11. Modifications to Terms</h2>
 							<p className="text-gray-700">
-							{termsAndCondition?.modificationsToTerms}
+								{termsAndCondition?.modificationsToTerms}
 							</p>
 						</section>
 
 						<section>
 							<h2 className="text-xl md:text-2xl font-semibold text-gray-800 mb-3">12. Contact Us</h2>
 							<p className="text-gray-700">
-							For any questions or concerns about these Terms and Conditions, please contact us at:
+								For any questions or concerns about these Terms and Conditions, please contact us at:
 							</p>
 							<ul className="text-gray-700 space-y-2">
-							<li>Email: <a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-blue-500">{termsAndCondition?.contactInfo}</a></li>
-							<li>Phone: {termsAndCondition?.phoneNumber}</li>
-							<li>Address: {termsAndCondition?.businessAddress}</li>
+								<p>Email: <a href={`mailto:${termsAndCondition?.contactInfo}`} className="text-blue-500">{termsAndCondition?.contactInfo}</a></p>
+								<li>Phone: {termsAndCondition?.phoneNumber}</li>
+								<li>Address: {termsAndCondition?.businessAddress}</li>
 							</ul>
 						</section>
 						</div>

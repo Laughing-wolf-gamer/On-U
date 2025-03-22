@@ -1046,7 +1046,6 @@ export const removeOptionsByType = async (req, res) => {
 		// const parseData = JSON.parse(req.body);
 		const { removingData} = req.body;
 		const {type,value} = JSON.parse(removingData);
-		console.log("Delete Options: ",type,value);
 		if (!['category', 'subcategory', 'color', 'clothingSize','footWearSize', 'gender'].includes(type)) {
 			return res.status(400).json({ message: 'Invalid option type' });
 		}

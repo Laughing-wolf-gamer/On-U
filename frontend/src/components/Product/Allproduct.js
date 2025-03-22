@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
 import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
-import { useNavigate } from 'react-router-dom';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -20,11 +19,9 @@ const Allproductpage = ({user}) => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
-    // const [sortBy, setSortBy] = useState('newest');  // Default value
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const { wishlist } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
     const [sortvalue, setSortValue] = useState('What`s New');
-    const Redirect = useNavigate();
     const [currentPage, setCurrentPage] = useState(1);
 
     const setCurrentPageNo = (e) => {
@@ -35,22 +32,6 @@ const Allproductpage = ({user}) => {
     const dispatchFetchAllProduct = () => {
         dispatch(getproduct(currentPage));
     };
-    /* const pricefun = (e) => {
-        let url = window.location.search;
-        if (url.includes('?')) {
-            if (url.includes('sortBy')) {
-                let newurl = url.includes(`&low=1`) ? url.replace(`&low=1`, `&low=${e}`) : null;
-                let newurl2 = url.includes(`&low=-1`) ? url.replace(`&low=-1`, `&low=${e}`) : null;
-                let newurlsuccess = (newurl === null ? newurl2 : newurl);
-                // Redirect(newurlsuccess);
-                dispatch(getproduct());
-            }
-        } else {
-            let newurl = window.location.search += `&low=${e}`;
-            // Redirect(newurl);
-            dispatch(getproduct());
-        }
-    }; */
     const handleSortChange = (newSortBy) => {
         // Set the new sortBy value in your component state
         // setSortBy(newSortBy);
@@ -107,8 +88,6 @@ const Allproductpage = ({user}) => {
             }
         }
     },[pro])
-    console.log("All product: ",product);
-
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 2xl:pr-10">
             <div className='w-full max-w-screen-2xl justify-self-center'>
@@ -212,15 +191,6 @@ const Allproductpage = ({user}) => {
         </div>
     );
 };
-/*  <div className='min-h-[100vw] flex flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
-                                <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-7 sm:gap-5 md:gap-6 lg:gap-12 2xl:gap-14 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
-                                    {Array(10).fill(0).map((_, index) => (
-                                        <li key={`productId_Skeleton_${index}`} className="w-full">
-                                            <ProductCardSkeleton/>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div> */
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     const [openView,setOpenView] = useState(false);
     return (

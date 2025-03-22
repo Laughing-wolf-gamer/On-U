@@ -208,9 +208,11 @@ const SideBarBag = ({OnChangeing}) => {
             }
             setAddress(user?.user?.addresses[0]);
         }
-        dispatch(getRandomArrayOfProducts());
+        
     }, [dispatch,deleteBagResult, user, isAuthentication]);
-
+	useEffect(()=>{
+		dispatch(getRandomArrayOfProducts());
+	},[])
     const handleOnChange = ()=>{
 		if(OnChangeing){
 			OnChangeing();
