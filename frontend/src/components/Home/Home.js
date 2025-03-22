@@ -232,7 +232,7 @@ const Home = ({user}) => {
                                             WideScreen_Video.urls.slice(0, 8).map((url, index) => (
                                                 <div
                                                     key={`Index_${index}`}
-                                                    className={`h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out hover:scale-105`}
+                                                    className={`h-auto w-full relative flex flex-col justify-center items-center transform transition-all duration-300`}
                                                 >
                                                     {
                                                         url && <GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
@@ -337,7 +337,7 @@ const Home = ({user}) => {
 								</div>
 							</div>
                         }
-                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3 overflow-x-hidden">
+                        <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
 							<h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
 								{WideScreen_Video.header}
 							</h1>
@@ -559,7 +559,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                        className="h-auto min-w-full relative flex flex-col justify-center items-center hover:shadow-md transform transition-all duration-300 ease-in-out focus:scale-95"
+                        className="h-auto min-w-full relative flex flex-col justify-center items-center transform transition-all duration-300 ease-in-out"
                     >
                         {inView[index] ? (
                             <GridImageView imageToShow={url.url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url?.name} />

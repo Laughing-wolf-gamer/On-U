@@ -212,12 +212,11 @@ const Navbar = ({user}) => {
 										setIsSearchVisible(false);
 										setBagShow(true)
 									}}>
-										{/* <img
+										<img
 											src={bagCartIcon}
 											alt='bag-icon'
 											className='w-full h-full justify-self-center text-slate-800'
-										/> */}
-                                        <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/>
+										/>
                                     </div>
                                 </div>
                             </li>
