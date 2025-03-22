@@ -1011,10 +1011,10 @@ export const getallOrders = async (req, res) => {
 				scans:status?.shipment_track,
 			};
         }));
-		const token = await getShipRocketToken();
-		console.log("order Status Updated Token: ", token);
+		// const token = await getShipRocketToken();
+		// console.log("order Status Updated Token: ", token);
         // Send the updated orders with current status
-        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || [] ,token:token});
+        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || []});
 
     } catch (error) {
         console.error("Error Getting All Orders", error);
@@ -1022,5 +1022,17 @@ export const getallOrders = async (req, res) => {
         res.status(500).json({ Success: false, message: "Internal Server Error" });
     }
 };
+
+export const getShipmtRocketTokenFromDb = async(req,res)=>{
+	try {
+		const token = await getShipRocketToken();
+		console.log("order Status Updated Token: ", token);
+		res.status(200).json({ Success: true, message: "ShipRocket Token Fetched", result: token});
+	} catch (error) {
+		console.error("Error Getting ShipRocket Token from DB: ", error);
+        logger.error("Error Getting ShipRocket Token from DB: " + error.message);
+        res.status(500).json({ Success: false, message: "Internal Server Error" });
+	}
+}
 
 

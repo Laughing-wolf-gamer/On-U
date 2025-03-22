@@ -27,7 +27,6 @@ const adminOrderSlice = createSlice({
         }).addCase(adminGetAllOrders.fulfilled,(state,action)=>{
             state.isLoading = false;
             state.orderList = action?.payload?.result || [];
-			state.token = action?.payload?.token || null;
         }).addCase(adminGetAllOrders.rejected,(state)=>{
             state.isLoading = false;
         }).addCase(adminGetUsersOrdersById.pending,(state)=>{
@@ -53,7 +52,15 @@ const adminOrderSlice = createSlice({
             state.Warehouses = action?.payload?.result;
         }).addCase(fetchAllWareHouses.rejected,(state,action)=>{
             state.isLoading = false;
-        })
+        }).addCase(admingetShiprocketToken.pending,(state)=>{
+			state.isLoading = true;
+		}).addCase(admingetShiprocketToken.fulfilled,(state,action)=>{
+			state.isLoading = false;
+            state.token = action?.payload?.result;
+		}).addCase(admingetShiprocketToken.rejected,(state)=>{
+			state.isLoading = false;
+			state.token = null;
+		});
     }
 })
 export const loginLogistics = createAsyncThunk('/logistic/warehouse/getAllWareHouses',async(logisticsLoginForm)=>{
@@ -75,6 +82,15 @@ export const adminGetAllOrders = createAsyncThunk('/orders/adminGetAllOrders',as
         return response.data;
     } catch (error) {
         console.error(`Error Admin fetching orders: `,error);
+    }
+})
+export const admingetShiprocketToken = createAsyncThunk('/stats/admingetShiprocketToken',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/admin/stats/getShiprocketToken`,Header());
+        console.log("Admin Get Shiprocket Token",response.data);
+        return response.data;
+    } catch (error) {
+        console.error(`Error adminGetShiprocketToken: `,error);
     }
 })
 export const adminGetUsersOrdersById = createAsyncThunk('/orders/adminGetOrderById',async(orderId)=>{

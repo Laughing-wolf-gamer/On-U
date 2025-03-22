@@ -199,7 +199,7 @@ export const loginLogistics = async (req,res)=>{
             });
 			await newWebsiteData.save();
 		}else{
-			alreadySetShipRocketToken.ShiprocketToken = token;
+			alreadySetShipRocketToken.ShiprocketToken = response;
             await alreadySetShipRocketToken.save();
 		}
 		console.log("ShipRocket auth token: ",response);

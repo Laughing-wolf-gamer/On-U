@@ -4,7 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Dialog } from '../ui/dialog';
 import AdminOrdersDetailsView from './AdminOrdersDetailsView';
 import { useDispatch, useSelector } from 'react-redux';
-import { adminGetAllOrders, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
+import { adminGetAllOrders, admingetShiprocketToken, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
 import { Badge } from '../ui/badge';
 import { Copy, TruckIcon } from 'lucide-react';
 import newStyled from '@emotion/styled';
@@ -71,6 +71,7 @@ const AdminOrderLayout = () => {
 
 	useEffect(() => {
 		dispatch(adminGetAllOrders());
+		dispatch(admingetShiprocketToken());
 	}, [dispatch]);
 
 	const handleFetchOrderDetails = async (orderId)=>{
@@ -86,7 +87,7 @@ const AdminOrderLayout = () => {
 	const handleLoginComplete = (data) => {
 		setLogisticsToken(data);
 		setOpenLoginDialogue(false);
-		dispatch(adminGetAllOrders());
+		dispatch(admingetShiprocketToken());
 	};
 	useEffect(()=>{
 		if(token){
@@ -115,7 +116,7 @@ const AdminOrderLayout = () => {
 	const displayedOrders = useMemo(() => {
 		return filteredOrderList.slice(filters.minOrders, filters.maxOrders);
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
-
+	console.log("Shiprocket Token, ",token);
 	const isNoOrders = displayedOrders.length === 0;
 	return (
 		<Card className="w-full">
