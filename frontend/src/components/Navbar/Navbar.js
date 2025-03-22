@@ -200,24 +200,24 @@ const Navbar = ({user}) => {
                                     </Link>
                                 </div>
                             </li>
-                            <li className="w-max flex justify-center items-center pb-1.5  font-semibold font-kumbsan capitalize no-underline text-sm border-4 border-transparent relative">
+                            <li className="w-max flex justify-center items-center pb-1.5 font-semibold font-kumbsan capitalize no-underline text-sm border-4 border-transparent relative">
                                 {
 									currentBagCount > 0 && (
 									<div className="absolute top-0 right-2 bg-gray-900 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
 										<span>{currentBagCount}</span>
 									</div>
 								)}
-                                <div className="flex flex-row w-full h-7 mb-5 mx-4 hover:animate-vibrateScale">
+                                <div className="flex flex-row w-7 h-7 mb-5 mx-4 hover:animate-vibrateScale">
                                     <div onClick={()=> {
 										setIsSearchVisible(false);
 										setBagShow(true)
 									}}>
-										<img
+										{/* <img
 											src={bagCartIcon}
 											alt='bag-icon'
 											className='w-full h-full justify-self-center text-slate-800'
-										/>
-                                        {/* <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/> */}
+										/> */}
+                                        <IoBagRemoveSharp size={30} className='w-full h-full justify-self-center text-slate-800'/>
                                     </div>
                                 </div>
                             </li>

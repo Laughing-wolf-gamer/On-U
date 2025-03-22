@@ -4,7 +4,6 @@ import {Link} from 'react-router-dom'
 import { logout } from '../../../action/useraction'
 import { useDispatch} from 'react-redux'
 import { useSettingsContext } from '../../../Contaxt/SettingsContext'
-import '../Navbar.css'
 const Profile = ({show, CMenu, parentCallback, user}) => {
     const dispatch = useDispatch()
     const {checkAndCreateToast} = useSettingsContext();

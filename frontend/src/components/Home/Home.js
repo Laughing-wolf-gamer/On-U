@@ -337,14 +337,15 @@ const Home = ({user}) => {
 								</div>
 							</div>
                         }
-                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
-                            <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
-                                {WideScreen_Video.header}
-                            </h1>
-                            <div className='w-screen justify-center items-center flex'>
-                                <GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
-                            </div>
-                        </div>
+                        <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3 overflow-x-hidden">
+							<h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
+								{WideScreen_Video.header}
+							</h1>
+							<div className='justify-center items-center flex flex-shrink-0'>
+								<GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
+							</div>
+						</div>
+
 						<div className='px-2'>
                             <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
                             <ul className='flex overflow-x-scroll'>
