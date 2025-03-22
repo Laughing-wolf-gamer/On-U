@@ -18,7 +18,9 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
 			dbOrder.shipment_status = shipment_status_id;
 			await dbOrder.save();
 			console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
-        }
+        }else{
+			console.log(`Order Not found! Order ID: ${order_id}`);
+		}
         res.status(200).send('Webhook received');
     } catch (error) {
         console.error("Error updating order status: ",error);
