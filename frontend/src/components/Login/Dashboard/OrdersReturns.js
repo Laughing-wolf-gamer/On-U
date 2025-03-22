@@ -7,25 +7,25 @@ import DeliveryStatus from './DeliveryStatus';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
-		<div
-		
-		className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 cursor-pointer hover:shadow-xl transition duration-300"
-		>
+		<div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 cursor-pointer hover:shadow-xl transition duration-300">
 			{/* Delivery Status Progress Bar */}
 			<div className="w-full flex-wrap justify-center items-center">
 				<DeliveryStatus status={order?.status} />
 			</div>
-			<div className="flex justify-between items-center space-x-6">
+
+			{/* Order Details */}
+			<div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-6">
 				<div className="flex-1">
 					<img
-						src={order.orderItems[0].color.images[0].url}
-						alt='order preview image'
-						className='w-32 h-32 object-cover rounded-md'					
+						src={order?.orderItems[0]?.color?.images[0]?.url}
+						alt="order preview image"
+						className="w-32 h-32 object-cover rounded-md"
 					/>
 				</div>
+
 				<div className="flex-1 space-y-2">
 					<p className="text-gray-700">
-						<strong>Order ID:</strong> {order?._id || 'Not Available'}
+						<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
 					</p>
 					<p className="text-gray-700">
 						<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
@@ -34,20 +34,23 @@ const OrderCard = ({ order, onViewDetails }) => {
 						<strong>Order Status:</strong> {order?.status || 'Pending'}
 					</p>
 				</div>
+
 				<div className="flex-1 space-y-2">
-					<button onClick={(e) => {
+					<button
+						onClick={(e) => {
 						e.preventDefault();
 						onViewDetails(order);
-					}} className='px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800'>
-						<span>
-							View Details
-						</span>
+						}}
+						className="px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800"
+					>
+						<span>View Details</span>
 					</button>
 				</div>
 			</div>
 		</div>
 	);
 };
+
 
 const OrdersReturns = () => {
     const { allorder, loading: orderLoading } = useSelector((state) => state.getallOrders);
