@@ -334,14 +334,14 @@ const Home = ({user}) => {
 								</div>
 							</div>
                         }
-                        <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
+                        {/* <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
 							<h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
 								{WideScreen_Video.header}
 							</h1>
 							<div className='justify-center items-center flex flex-shrink-0'>
 								<GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
 							</div>
-						</div>
+						</div> */}
 
 						<div className='px-2'>
                             <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
@@ -536,7 +536,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
     }, [WideScreen_Video?.urls.length]);
 	const isMobileView = window.innerWidth <= 1024;
     return (
-        <div className="grid font-kumbsan grid-cols-2 justify-center items-center gap-3 p-2">
+        <div className="grid grid-cols-2 justify-center items-center gap-3 p-2">
             {bannerLoading? (
                 // Skeleton Loader View when no URLs
                 Array(8).fill(0).map((_, index) => (
