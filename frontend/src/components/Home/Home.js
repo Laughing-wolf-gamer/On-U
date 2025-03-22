@@ -334,14 +334,14 @@ const Home = ({user}) => {
 								</div>
 							</div>
                         }
-                        {/* <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
+                        <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
 							<h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
 								{WideScreen_Video.header}
 							</h1>
 							<div className='justify-center items-center flex flex-shrink-0'>
 								<GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
 							</div>
-						</div> */}
+						</div>
 
 						<div className='px-2'>
                             <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
@@ -362,7 +362,7 @@ const Home = ({user}) => {
                                 )}
                             </ul>
                         </div>
-                        <div className='mt-1 grid grid-cols-1 min-h-[200px] '>
+                        <div className='mt-1 grid grid-cols-1 min-h-[200px]'>
                             <h1 className='text-2xl font-extrabold text-center text-gray-700 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
                             <div className='w-full px-2 flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
@@ -556,7 +556,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                     <div
                         key={`Index_${index}`}
                         ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-                        className="h-auto min-w-full relative flex flex-col justify-center items-center transform transition-all duration-300 ease-in-out"
+                        className="h-auto w-[20vw] relative flex flex-col justify-center items-center"
                     >
                         {inView[index] ? (
                             <GridImageView imageToShow={url.url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url?.name} />
