@@ -13,7 +13,6 @@ dotenv.config();
 const SHIPROCKET_API_URL = process.env.SHIPROCKET_API_URL;
 const SHIPROCKET_EMAIL = process.env.SHIPROCKET_EMAIL;
 const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
-// let token = '';
 
 export const getShipRocketToken = async()=>{
 	const alreadySetShipRocketToken = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });

@@ -34,23 +34,23 @@ const orderStatus = [
 ];
 
 const CustomSlider = newStyled(Slider)({
-  '& .MuiSlider-thumb': {
-    backgroundColor: '#333333',
-    border: '2px solid #212121',
-    '&:hover': {
-      backgroundColor: '#555555',
-    },
-  },
-  '& .MuiSlider-rail': {
-    backgroundColor: '#E0E0E0',
-  },
-  '& .MuiSlider-track': {
-    backgroundColor: '#212121',
-  },
-  '& .MuiSlider-valueLabel': {
-    backgroundColor: '#212121',
-    color: 'white',
-  },
+	'& .MuiSlider-thumb': {
+		backgroundColor: '#333333',
+		border: '2px solid #212121',
+		'&:hover': {
+		backgroundColor: '#555555',
+		},
+	},
+	'& .MuiSlider-rail': {
+		backgroundColor: '#E0E0E0',
+	},
+	'& .MuiSlider-track': {
+		backgroundColor: '#212121',
+	},
+	'& .MuiSlider-valueLabel': {
+		backgroundColor: '#212121',
+		color: 'white',
+	},
 });
 
 const AdminOrderLayout = () => {
@@ -85,6 +85,8 @@ const AdminOrderLayout = () => {
 
 	const handleLoginComplete = (data) => {
 		setLogisticsToken(data);
+		setOpenLoginDialogue(false);
+		dispatch(adminGetAllOrders());
 	};
 	useEffect(()=>{
 		if(token){
