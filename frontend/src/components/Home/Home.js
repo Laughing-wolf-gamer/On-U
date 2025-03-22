@@ -474,39 +474,38 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 			{/* Category */}
 			<ul
 				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
-				style={{ height: '300px' }}
 			>
 				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
-				<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
-					{MobileScreen_CategorySlider.urls.map((image, index) => {
-					return (
-						<li
-						key={`image_icons${index}`}
-						onClick={() => handleQueryParams(image)}
-						className="flex-shrink-0 w-28 min-h-[110px] px-0.5 justify-center relative items-center overflow-hidden"
-						>
-						
-						<LazyLoadImage
-							effect="blur"
-							src={image.url || image}
-							alt={`image_icons_${index}`}
-							className="category-image w-full justify-self-center h-full object-cover"
-							data-category={image.name.toLowerCase()} // Store the category name
-						/>
-						{/* Display the banner if the category is in view */}
-						{image.name && (
-							<div
-							className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
+					<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+						{MobileScreen_CategorySlider.urls.map((image, index) => {
+							return (
+								<li
+								key={`image_icons${index}`}
+								onClick={() => handleQueryParams(image)}
+								className="flex-shrink-0 w-28 min-h-[110px] px-0.5 justify-center relative items-center overflow-hidden"
 							>
-							{image.name}
-							</div>
-						)}
-						</li>
-					);
-					})}
-				</div>
+								
+								<LazyLoadImage
+									effect="blur"
+									src={image.url || image}
+									alt={`image_icons_${index}`}
+									className="category-image w-full justify-self-center h-full object-cover"
+									data-category={image.name.toLowerCase()} // Store the category name
+								/>
+								{/* Display the banner if the category is in view */}
+								{image.name && (
+									<div
+										className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
+									>
+										{image.name}
+									</div>
+								)}
+								</li>
+							);
+						})}
+					</div>
 				) : (
-				<Fragment></Fragment>
+					<Fragment></Fragment>
 				)}
 			</ul>
 		</div>
