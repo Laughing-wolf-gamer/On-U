@@ -93,15 +93,15 @@ const UserTable = () => {
 
     // Pagination Handlers
     const handlePrevPage = () => {
-        if (page > 1) {
-            setPage(page - 1);
+        if (pagination?.currentPage > 1) {
+            setPage(pagination?.currentPage - 1);
             handleFetchAllUser();
         }
     };
 
     const handleNextPage = () => {
-        if (page < pagination?.totalPages) {
-            setPage(page + 1);
+        if (pagination?.currentPage < pagination?.totalPages) {
+            setPage(pagination?.currentPage + 1);
             handleFetchAllUser();
         } else {
             checkAndCreateToast('error', "No More Pages Available");

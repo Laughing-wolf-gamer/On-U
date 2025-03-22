@@ -15,7 +15,7 @@ import { useSettingsContext } from '@/Context/SettingsContext';
 import { FaProductHunt } from 'react-icons/fa';
 import { Dialog } from '@/components/ui/dialog';
 
-const maxAmountPerPage = 50;
+const maxAmountPerPage = 10;
 
 const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData, setFormData, onSubmit, handleOpenCloseWindow }) => {
     const [categories, setCategories] = useState([]);
@@ -152,8 +152,8 @@ const AdminProducts = () => {
     });
     const setCurrentPageNo = (e) => {
         setCurrentPage(e);
-        console.log("change Page Number.");
-        dispatch(fetchAllProducts({pageNo:currentPage}));
+        console.log("change Page Number.",e);
+        dispatch(fetchAllProducts({pageNo:e}));
     };
 
     const [currentPreviewProductId, setCurrentPreviewProduct] = useState(null);
@@ -221,8 +221,7 @@ const AdminProducts = () => {
         e.preventDefault();
         if (!currentEditingId) {
             try {
-                console.log("Form Validation: ",isFormValid());
-                const data = await dispatch(addNewProduct({ ...formData }));
+                const data = await dispatch(addNewProduct({...formData}));
                 if (!data?.payload?.Success) {
                     throw new Error(`Missing Fields ${data?.payload?.reasons}`);
                 }
@@ -577,14 +576,14 @@ const PaginatedProductList = ({
 	// Slice the products for the current page
 	const startIndex = (currentPage - 1) * maxAmountPerPage;
 	const endIndex = startIndex + maxAmountPerPage;
-	const currentPageProducts = sortedProducts.slice(startIndex, endIndex);
-
+	const currentPageProducts = sortedProducts;
+	console.log("Current page: " + currentPageProducts,sortedProducts)
 	return (
 		<div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
 			<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
 				Total Products: {totalProducts}
 			</h1>
-			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
+			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
 				{currentPageProducts.length > 0 ? (
 					currentPageProducts.map((product, i) => (
 						<AdminProductTile
@@ -612,8 +611,8 @@ const PaginatedProductList = ({
 					<button
 						className="mb-2 sm:mb-0 sm:mr-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
 						onClick={() => {
-						setCurrentPage(currentPage - 1);
-						setCurrentPageNo(currentPage - 1);
+							setCurrentPage(currentPage - 1);
+							setCurrentPageNo(currentPage - 1);
 						}}
 					>
 						<ChevronLeft />
@@ -628,8 +627,8 @@ const PaginatedProductList = ({
 					<button
 						className="mb-2 sm:mb-0 sm:ml-5 text-lg flex items-center border-[1px] border-gray-500 py-2 px-5 rounded-[4px] hover:border-black"
 						onClick={() => {
-						setCurrentPage(currentPage + 1);
-						setCurrentPageNo(currentPage + 1);
+							setCurrentPage(currentPage + 1);
+							setCurrentPageNo(currentPage + 1);
 						}}
 					>
 						<h1>Next</h1>
