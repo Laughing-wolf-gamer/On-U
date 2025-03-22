@@ -14,7 +14,7 @@ const clothingItems = [
     "Cargo"
 ];
 
-const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = false,categoryName }) => {
+const GridImageView = memo(({ imageToShow, categoriesOptions = [], startPlaying = false,categoryName }) => {
     // const activeClothingItem = useMemo(() => getRandomItem(categoriesOptions) || getRandomItem(clothingItems), [categoriesOptions]);
     const navigation = useNavigate();
     const [isLoading, setIsLoading] = useState(true);
@@ -57,7 +57,7 @@ const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = fal
                                 className="w-full h-full object-cover rounded-lg"
                                 loop = {true}
                                 controls = {false}
-                                playing={startPlaying}
+                                playing={true}
                                 muted
                                 width="100%"
                                 height="100%"
@@ -76,6 +76,6 @@ const GridImageView = ({ imageToShow, categoriesOptions = [], startPlaying = fal
             </div>
         </div>
     );
-}
+})
 
 export default GridImageView;
