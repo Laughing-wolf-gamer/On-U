@@ -24,11 +24,11 @@ import WhatsAppButton from './WhatsAppButton';
 
 
 const Home = ({user}) => {
+	const [showComponent, setShowComponent] = useState(null);
     const { product,loading:productLoading} = useSelector(state => state.Allproducts)
-    // const { AllOptions} = useSelector(state => state.allOptions)
     const [categoriesOptions,setCategoryOptions] = useState([]);
     const { banners,loading:bannerLoading} = useSelector(state => state.banners)
-    const { categoryBanners,loading:CategorybannerLoading} = useSelector(state => state.categoryBanners)
+    const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
     const navigation = useNavigate();
     const dispatch = useDispatch();
     const indicatorStyles: CSSProperties = {
@@ -167,9 +167,6 @@ const Home = ({user}) => {
         Small_Screen_Section_1.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Url || []
         Small_Screen_Section_1.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 1")?.Header || ""
 
-        /* Small_Screen_Section_2.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Url || []
-        Small_Screen_Section_2.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 2")?.Header || "" */
-
         Small_Screen_Section_3.urls = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Url || []
         Small_Screen_Section_3.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 3")?.Header || ""
 
@@ -180,10 +177,6 @@ const Home = ({user}) => {
         Small_Screen_Section_5.header = banners.find((ma_cat)=> ma_cat?.CategoryType === "Small Screen Section- 5")?.Header || ""
     }
     
-    console.log("All categoryBanners ",banners);
-    
-
-    const [showComponent, setShowComponent] = useState(null);
 
     // Randomly decide which component to show
     useEffect(() => {
@@ -225,7 +218,7 @@ const Home = ({user}) => {
 
                                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
                                     {
-                                        CategorybannerLoading || !WideScreen_Video || WideScreen_Video.urls.length <= 0 ? (
+                                        CategoryBannerLoading || !WideScreen_Video || WideScreen_Video.urls.length <= 0 ? (
                                             Array(8).fill(0).map((_, index) => (
                                                 <div key={`skeleton_${index}`} className="w-[300px] h-[520px] flex flex-col justify-start items-center bg-gray-300 rounded-lg animate-pulse">
                                                     <div className="w-full h-full relative">
@@ -284,66 +277,44 @@ const Home = ({user}) => {
                     </Fragment >
                 :
                     <Fragment>
-                        <div className='w-[100vw] pb-7'>
-                            <Carousel
-                                preventMovementUntilSwipeScrollTolerance
-                                className='' 
-                                autoPlay={5000}
-                                swipeable
-                                infiniteLoop={true}
-                                showThumbs={false} 
-                                showStatus={false} 
-                                showArrows={false} 
-                                showIndicators={true} 
-                                renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
-                                    {!bannerLoading &&  Small_Screen_Section_1 && Small_Screen_Section_1.urls && Small_Screen_Section_1.urls.length > 0 ? (
-                                        Small_Screen_Section_1.urls.map((mb, index) => (
-                                            <Link key={`mb_banners_${index}`} to='/products'>
-                                                <LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
-                                            </Link>
-                                        ))
-                                    ) : (
-                                        // Skeleton Loader for the Carousel Items
-                                        Array(8).fill(0).map((_, index) => (
-                                            <div key={index} className='w-full p-1 animate-pulse'>
-												<div  className="w-full h-[200px] sm:h-[250px] md:h-[300px] lg:h-[350px] xl:h-[400px] bg-gray-300 animate-pulse rounded-lg" />
-											</div>
-                                        ))
-                                    )}
-                            </Carousel>
-                        </div>
-						{/* Category */}
-						{/* <div className='bg-slate-200 px-2'>
-							<ul className='flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600'>
-								{
-									!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
-										<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
-											{MobileScreen_CategorySlider.urls.map((image, index) => {
-												const handleQueryParmams = () => {
-													const queryParams = new URLSearchParams();
-													if (image.name) queryParams.set('category', image.name.toLowerCase());
-													const url = `/products?${queryParams.toString()}`;
-													navigation(url);
-												}
-												return (
-													<li key={`image_icons${index}`} onClick={handleQueryParmams} className="flex-shrink-0 w-24 px-0.5 justify-center items-center">
-														<LazyLoadImage
-															effect="blur"
-															src={image.url || image}
-															alt={`image_icons_${index}`}
-															className="w-full h-fit min-h-[110px] object-fill" 
-														/>
-													</li>
-												)
-											})}
+						{
+							bannerLoading ? <div className="flex overflow-x-auto bg-slate-200 pt-6 items-start">
+								{/* Skeleton Loader for each item */}
+								{[...Array(5)].map((_, index) => (
+									<li
+										key={`skeleton_loader_${index}`}
+										className="flex-shrink-0 px-0.5 justify-center relative items-center"
+									>
+										<div className="min-w-[210px] min-h-[210px] bg-gray-400 animate-pulse">
 										</div>
-									):(
-										<Fragment></Fragment>
-									)
-								}
-							</ul>
-						</div> */}
-						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategorybannerLoading={CategorybannerLoading} />
+									</li>
+								))}
+							</div>:(
+								<div className='w-[100vw] pb-7'>
+									<Carousel
+										preventMovementUntilSwipeScrollTolerance
+										className='' 
+										autoPlay={5000}
+										swipeable
+										infiniteLoop={true}
+										showThumbs={false} 
+										showStatus={false} 
+										showArrows={false} 
+										showIndicators={true} 
+										renderIndicator={(onClickHandler, isSelected, index, label) => indicator(onClickHandler, isSelected, index, label)}>
+											{Small_Screen_Section_1 && Small_Screen_Section_1.urls && Small_Screen_Section_1.urls.length > 0 && (
+												Small_Screen_Section_1.urls.map((mb, index) => (
+													<Link key={`mb_banners_${index}`} to='/products'>
+														<LazyLoadImage effect='blur' src={mb} loading='lazy' width='100%' alt='Banner_Image' className='min-h-[200px]' />
+													</Link>
+												))
+											)}
+									</Carousel>
+								</div>
+							)
+						}
+						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
+
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
                             <div className='w-full justify-center items-center flex pr-3 pl-3 '>
 								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
@@ -357,17 +328,13 @@ const Home = ({user}) => {
 									}
 								</div>
 							</div>
-
                         }
-						{/* <OurMotoData/> */}
-
-                        
                         <div className="w-full flex flex-col justify-center items-center pb-2 space-y-3">
                             <h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
                                 {WideScreen_Video.header}
                             </h1>
                             <div className='w-screen justify-center items-center flex'>
-                                <GridVideoBox bannerLoading={CategorybannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
+                                <GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
                             </div>
                         </div>
 						<div className='px-2'>
@@ -456,7 +423,7 @@ const Home = ({user}) => {
     )
 }
 
-const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) => {
+const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) => {
 	const navigation = useNavigate();
 
 	// Handle the query params for navigation
@@ -470,43 +437,60 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategorybannerLoading }) 
 	// Intersection Observer for detecting when the images come into view
 
 	return (
-		<div className="bg-slate-200 px-2 font-kumbsan">
+		<div className="px-2 font-kumbsan">
 			{/* Category */}
 			<ul
 				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
 			>
-				{!CategorybannerLoading && MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 ? (
-					<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
-						{MobileScreen_CategorySlider.urls.map((image, index) => {
-							return (
+				{CategoryBannerLoading ? (
+						<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+							{/* Skeleton Loader for each item */}
+							{[...Array(5)].map((_, index) => (
 								<li
-								key={`image_icons${index}`}
-								onClick={() => handleQueryParams(image)}
-								className="flex-shrink-0 w-28 min-h-[110px] px-0.5 justify-center relative items-center overflow-hidden"
-							>
-								
-								<LazyLoadImage
-									effect="blur"
-									src={image.url || image}
-									alt={`image_icons_${index}`}
-									className="category-image w-full justify-self-center h-full object-cover"
-									data-category={image.name.toLowerCase()} // Store the category name
-								/>
-								{/* Display the banner if the category is in view */}
-								{image.name && (
-									<div
-										className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
-									>
-										{image.name}
+									key={`skeleton_loader_${index}`}
+									className="flex-shrink-0 px-0.5 justify-center relative items-center"
+								>
+									<div className="w-[105px] min-h-[110px] bg-gray-400 animate-pulse">
 									</div>
-								)}
 								</li>
-							);
-						})}
-					</div>
-				) : (
-					<Fragment></Fragment>
-				)}
+							))}
+						</div>
+					):(
+						<Fragment>
+							{MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 && (
+								<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+									{MobileScreen_CategorySlider.urls.map((image, index) => {
+										return (
+											<li
+											key={`image_icons${index}`}
+											onClick={() => handleQueryParams(image)}
+											className="flex-shrink-0 w-28 min-h-[110px] px-0.5 justify-center relative items-center overflow-hidden"
+										>
+											
+											<LazyLoadImage
+												effect="blur"
+												loading='lazy'
+												src={image.url || image}
+												alt={`image_icons_${index}`}
+												className="category-image w-full justify-self-center h-full object-cover"
+												data-category={image.name.toLowerCase()} // Store the category name
+											/>
+											{/* Display the banner if the category is in view */}
+											{image.name && (
+												<div
+													className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
+												>
+													{image.name}
+												</div>
+											)}
+											</li>
+										);
+									})}
+								</div>
+							)}
+						</Fragment>
+					)
+				}
 			</ul>
 		</div>
 	);
