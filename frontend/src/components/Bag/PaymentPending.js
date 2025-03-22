@@ -58,7 +58,8 @@ const PaymentPending = () => {
 				</div>
 					<h1 className="text-4xl font-semibold text-gray-900 mb-4">Verifying Payment...</h1>
 					<p className="text-lg text-gray-700 mb-6">
-						Your payment is being processed. Please wait while we verify your transaction.
+						Your payment is being processed. Please wait while, we verify your transaction.
+						Do not refresh the Page!
 					</p>
 			</div>
 		</div>

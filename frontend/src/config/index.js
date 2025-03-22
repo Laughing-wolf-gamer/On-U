@@ -288,6 +288,9 @@ export const clothingSizeChartData = [
   { size: '5XL', chest: '62-64"', waist: '56-58"', hips: '50-52"' },
   { size: '6XL', chest: '66-68"', waist: '60-62"', hips: '52-54"' },
 ];
+export const sanitizeInput = (input) => {
+  return input.replace(/[^a-zA-Z0-9]/g, ''); // Removes anything that's not alphanumeric
+};
 export const BASE_CLIENT_URL = process.env.REACT_APP_CLIENT_URL;
 export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? true : false;
 

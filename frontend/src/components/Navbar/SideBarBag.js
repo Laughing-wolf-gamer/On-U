@@ -10,6 +10,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -368,6 +369,7 @@ const SideBarBag = ({OnChangeing}) => {
 								updateQty={updateQty}
 								handleDeleteBag={handleDeleteBag}
 								updateChecked = {updateChecked}
+								onClickedImage = {()=> OnChangeing()}
 								user={user}
 							
 							/>
@@ -380,6 +382,7 @@ const SideBarBag = ({OnChangeing}) => {
 									updateQty={updateQty}
 									updateChecked = {updateChecked}
 									handleDeleteBag={handleDeleteBag}
+									onClickedImage = {()=> OnChangeing()}
 								/>
 							):(
 								<div className="flex min-h-[470px] font-medium text-base sm:text-base md:text-base justify-start items-start text-left">
@@ -445,8 +448,9 @@ const SideBarBag = ({OnChangeing}) => {
 	);
 
 }
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
+const ProductListingComponent = ({ bag,onClickedImage, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
 	const navigate = useNavigate();
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
 	return (
 		<div className="flex flex-col space-y-4 w-full">
 			{bag?.orderItems?.map((item, i) => {
@@ -457,7 +461,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 				const getImageExtensionsFile = () => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
 
 				const validImage = getImageExtensionsFile();
-
+				const productEncryption = encrypt(active.productId?._id);
 				return (
 					<div key={i} className={`flex flex-col md:px-4 lg:px-3 2xl:px-4 px-1 items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
 						{/* Product Image */}
@@ -465,7 +469,12 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 							<div className="flex flex-row justify-start items-start space-x-2">
 							
 								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-									<div onClick={()=> navigate(`/products/${active.productId?._id}`)} className="relative">
+									<div onClick={()=> {
+										navigate(`/products/${productEncryption}`)
+										if(onClickedImage){
+											onClickedImage();
+										}
+									}} className="relative cursor-pointer">
 										{validImage ? (
 											<div className="relative">
 												<img
@@ -583,7 +592,8 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 		</div>
 	);
 }
-const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDeleteBag }) => {
+const OfflineBagContent = ({ sessionBagData,onClickedImage,updateChecked, updateQty, handleDeleteBag }) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
 	const navigate = useNavigate();
 	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 
@@ -602,6 +612,7 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 			{sessionBagData.map((item, i) => {
 				const active = item;
 				const validImage = getImageExtensionsFile(active?.color);
+				const productEncryption = encrypt(active?.ProductData?._id);
 				return (
 					<div key={i}  className={`flex flex-col items-start justify-self-start ${i >= sessionBagData.length - 1 ? "border-b":""} py-3 space-y-4 sm:space-x-4 sm:space-y-0`}>
 						{/* Product Item */}
@@ -609,7 +620,10 @@ const OfflineBagContent = ({ sessionBagData,updateChecked, updateQty, handleDele
 							<div className="flex flex-row justify-start items-start space-x-2">
 								{/* Product Image */}
 								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
-									<div onClick={() => navigate(`/products/${active?.ProductData?._id}`)} className="block w-full h-full">
+									<div onClick={() => {
+										navigate(`/products/${productEncryption}`)
+										onClickedImage();
+									}} className="block w-full h-full cursor-pointer">
 										<div className="relative w-full h-full">
 											<img
 												src={validImage?.url}

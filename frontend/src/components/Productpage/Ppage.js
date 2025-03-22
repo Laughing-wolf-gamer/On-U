@@ -23,6 +23,7 @@ import StarRatingInput from './StarRatingInput'
 import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 import WhatsAppButton from '../Home/WhatsAppButton'
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
 
 const reviews = [
     {
@@ -89,6 +90,7 @@ const reviews = [
 
 const maxScrollAmount = 1272,maxScrollWithReviewInput = 1500, LargeScreenSize = 916.7999877929688
 const Ppage = () => {
+	const {decrypt} = useEncryptionDecryptionContext();
     const { sessionData,sessionBagData, setWishListProductInfo,setSessionStorageBagListItem } = useSessionStorage();
     const[currentMaxScrollAmount,setCurrentMaxScrollAmount] = useState(maxScrollAmount);
 
@@ -124,7 +126,6 @@ const Ppage = () => {
     const [scrollPosition, setScrollPosition] = useState(0);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
 
-
     function Addclass() {
         var foo1 = document.querySelector(`.imgfulldiv`)
         elementClass(foo1).add('visible')
@@ -158,7 +159,7 @@ const Ppage = () => {
         if (user) {
             const orderData = {
                 userId: user.id,
-                productId: param.id,
+                productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
@@ -176,14 +177,14 @@ const Ppage = () => {
         } else {
             // Add to localStorage logic
             const orderData = {
-                productId: param.id,
+                productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
                 ProductData: product,
 				isChecked:true,
             };
-            setSessionStorageBagListItem(orderData, param.id);
+            setSessionStorageBagListItem(orderData, decrypt(param.id));
             checkAndCreateToast("success", "Product successfully in Bag");
         }
         updateButtonStates();
@@ -245,7 +246,7 @@ const Ppage = () => {
     };
     const addToWishList = async () => {
         if (user) {
-            const response = await dispatch(createwishlist({ productId: param.id }));
+            const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
             await dispatch(getwishlist());
             checkAndCreateToast("success", "Wishlist Updated Successfully");
             console.log("Wishlist Updated Successfully: ",response);
@@ -253,7 +254,7 @@ const Ppage = () => {
                 setIsInWishList(response);
             }
         } else {
-            setWishListProductInfo(product, param.id);
+            setWishListProductInfo(product, decrypt(param.id));
             checkAndCreateToast("success", "Bag is Updated Successfully");
             updateButtonStates();
         }
@@ -272,7 +273,7 @@ const Ppage = () => {
             if (user) {
                 const orderData = {
                     userId: user.id,
-                    productId: param.id,
+                    productId: decrypt(param.id),
                     quantity: 1,
                     color: currentColor,
                     size: currentSize,
@@ -285,13 +286,13 @@ const Ppage = () => {
             } else {
                 // Add to localStorage logic
                 const orderData = {
-                    productId: param.id,
+                    productId: decrypt(param.id),
                     quantity: 1,
                     color: currentColor,
                     size: currentSize,
                     ProductData: product,
                 };
-                setSessionStorageBagListItem(orderData, param.id);
+                setSessionStorageBagListItem(orderData, decrypt(param.id));
                 navigation("/bag");
                 checkAndCreateToast("success", "Product successfully in Bag");
             }
@@ -311,7 +312,7 @@ const Ppage = () => {
             try {
                 e.preventDefault();
                 await dispatch(postRating({productId:product?._id, ratingData}))
-                dispatch(singleProduct(param.id))
+                dispatch(singleProduct(decrypt(param.id)))
                 toast.success("Your Rating Has been Added");
             } catch (error) {
                 checkAndCreateToast("error","Error Posting Rating");
@@ -371,7 +372,7 @@ const Ppage = () => {
     useEffect(() => {
         if (state === false) {
             dispatch(getuser())
-            dispatch(singleProduct(param.id))
+            dispatch(singleProduct(decrypt(param.id)))
             setstate(true)
         }
         
@@ -431,7 +432,7 @@ const Ppage = () => {
         }
     },[selectedSize])
 	useEffect(() => {
-		dispatch(singleProduct(param.id));
+		dispatch(singleProduct(decrypt(param.id)));
 		if (scrollableDivRef.current) {
 			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
@@ -460,9 +461,7 @@ const Ppage = () => {
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
     },[hasPurchased])
-    // console.log("isIn Bag / is In Wishlist",isInBagList,isInWishList,user);
-    // console.log("current Scroll Amount: ",scrollPosition);
-	console.log("Selected Color: ", currentColor);
+	console.log("Decrypted Parma Id: ",decrypt(param.id));
     
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">

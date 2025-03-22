@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true ,refreshTwice = false}) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     const{updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -35,7 +37,10 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
     const { salePrice, price } = pro;
 
     const handleNavigation = () => {
-        navigation(`/products/${pro._id}`);
+		const productEncryption = encrypt(pro._id);
+		const decrypted = decrypt(productEncryption);
+		console.log("Encrypted Product Id: ",productEncryption,"Decrypted: ",decrypted);
+        navigation(`/products/${productEncryption}`);
         updateRecentlyViewProducts(pro);
 		if(refreshTwice){
         	window.location.reload();

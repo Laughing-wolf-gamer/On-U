@@ -8,6 +8,7 @@ import CouponsDisplay from './CouponDisplay';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { applyCouponToBag, removeCouponFromBag } from '../../action/orderaction';
 import { useDispatch } from 'react-redux';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const OfflineBagContent = ({ 
 	bag,
@@ -116,6 +117,7 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 
 // ProductListing Component
 const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteBag,setCoupon,applyCoupon,coupon  }) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
 	return (
 		<div className="flex-1 space-y-6 max-h-[700px]">
 			<div className="flex-1 space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
@@ -127,13 +129,14 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 					};
 					const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
 					const validImage = imagesOnly[0]?.url;
+					const productEncryption = encrypt(active?.ProductData?._id);
 					return(
 						<div key={i} className="relative flex flex-row w-full items-center justify-between border-b py-6 space-y-2 sm:space-y-0 sm:space-x-6">
 							<div className="relative flex-row flex border-2 rounded-lg flex-shrink-0 w-20 sm:w-36 h-28 sm:h-36">
 								<div className='w-fit flex flex-row justify-start items-start space-x-4'>
 									{/* Product Image */}
 									<div className="w-20 sm:w-36 h-28 sm:h-36 relative bg-black border-2 rounded-lg flex-shrink-0">
-										<Link to={`/products/${active?.ProductData?._id}`} className="block bg-black w-full h-full">
+										<Link to={`/products/${productEncryption}`} className="block bg-black w-full h-full">
 											<div className="relative w-full h-full">
 												<img
 													src={validImage}

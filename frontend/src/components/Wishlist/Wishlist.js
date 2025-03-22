@@ -10,8 +10,10 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import Footer from '../Footer/Footer';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const Wishlist = () => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
    	const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
 	const [currentWishListItem, setCurrentWishListItem] = useState([]);
 	const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
@@ -73,9 +75,6 @@ const Wishlist = () => {
 			setCurrentWishListItem(sessionData);
 		}
 	}, [dispatch, sessionData, user, wishlist, isAuthentication]);
-
-
-
     return (
         <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
             <div className="w-full justify-self-center max-w-screen-2xl justify-center items-center px-4">
@@ -97,33 +96,37 @@ const Wishlist = () => {
                                 </h1>
                                 <div className="w-full flex justify-start items-start">
                                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8 md:gap-10 mt-5">
-                                        {currentWishListItem.map((pro) => (
-                                            <li
-                                                key={pro?.productId?._id || pro?.productId}
-                                                className="w-full h-full group relative"
-                                            >
-                                                <div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
-                                                    <div
-                                                        className="w-full h-full flex-1"
-                                                        onClick={(e) => {
-                                                            const productId = pro?.productId?._id || pro?.productId;
-                                                            navigation(`/products/${productId}`);
-                                                        }}
-                                                    >
-														{pro && pro.productId && <Single_product pro={pro.productId} user={user} showWishList={false} />}
-                                                        
-                                                    </div>
+                                        {currentWishListItem.map((pro) => {
+											
+											return (
+												<li
+													key={pro?.productId?._id || pro?.productId}
+													className="w-full h-full group relative"
+												>
+													<div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
+														<div
+															className="w-full h-full flex-1"
+															onClick={(e) => {
+																const productId = pro?.productId?._id || pro?.productId;
+																const productEncryption = encrypt(productId);
+																navigation(`/products/${productEncryption}`);
+															}}
+														>
+															{pro && pro.productId && <Single_product pro={pro.productId} user={user} showWishList={false} />}
+															
+														</div>
 
-                                                    {/* Remove button */}
-                                                    <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:block hidden">
-                                                        <MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
-                                                    </div>
-                                                    <div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:hidden block">
-                                                        <MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        ))}
+														{/* Remove button */}
+														<div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:block hidden">
+															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
+														</div>
+														<div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:hidden block">
+															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
+														</div>
+													</div>
+												</li>
+											)
+										})}
                                     </ul>
                                 </div>
                             </div>

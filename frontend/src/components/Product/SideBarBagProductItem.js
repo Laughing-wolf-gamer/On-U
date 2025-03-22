@@ -2,8 +2,10 @@ import React, { memo, useEffect, useMemo, useState } from 'react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     const { updateRecentlyViewProducts } = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -33,7 +35,8 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) =
     const { salePrice, price } = pro;
 
     const handleNavigation = () => {
-        navigation(`/products/${pro._id}`);
+		const productEncryption = encrypt(pro._id);
+        navigation(`/products/${productEncryption}`);
         updateRecentlyViewProducts(pro);
 		if(refreshTwice){
             // window.location.reload();

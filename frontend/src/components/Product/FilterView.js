@@ -562,7 +562,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     // console.log("All specialCategorynewarray: ",specialCategorynewarray);
     return (
         <div>
-            <div className='space-y-4 uppercase font-kumbsan ml-4'>
+            <div className='space-y-4 uppercase font-kumbsan ml-6'>
 				
                 {/* Gender Filter */}
                 <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>

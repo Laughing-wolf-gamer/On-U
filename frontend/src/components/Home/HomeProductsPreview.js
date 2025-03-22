@@ -9,9 +9,11 @@ import toast from 'react-hot-toast';
 import ShareView from '../Productpage/ShareView';
 import { calculateDiscountPercentage } from '../../config';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     const [isInWishList, setIsInWishList] = useState(false);
     const navigation = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
@@ -122,7 +124,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const handleMediaLoad = () => {
         setIsMediaLoaded(true); // Set media as loaded when it's ready
     };
-
+	const productEncryption = encrypt(product?._id);
     return (
         <div
             className={`w-full h-full font-kumbsan overflow-hidden relative flex flex-col hover:shadow-md hover:shadow-slate-500 shadow hover:rounded-md`}
@@ -168,7 +170,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                             </button>
                         </div>
                         <div className="w-full h-8 md:h-10 flex items-center justify-center">
-                            <button onClick={(e) => { navigation(`/products/${product?._id}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
+                            <button onClick={(e) => { navigation(`/products/${productEncryption}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
                                 <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm hover:animate-vibrateScale' />
                                 <span className="font-kumbsan text-[10px] md:text-sm">Add to Cart</span>
                             </button>
@@ -192,6 +194,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 };
 
 const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigation ,onLoad}) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     // State to track whether the media is loaded
     const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
@@ -213,8 +216,11 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
 
     // Handle the navigation on click, memoized to avoid unnecessary re-renders
     const handleClick = useCallback((e) => {
+		const productEncryption = encrypt(product?._id);
+		// const decrypted = decrypt(productEncryption);
+		// console.log("Encrypted Product Id: ",productEncryption,"Decrypted: ",decrypted);
         if(product){
-            navigation(`/products/${product?._id}`);
+            navigation(`/products/${productEncryption}`);
         }
     }, [navigation, product]);
 

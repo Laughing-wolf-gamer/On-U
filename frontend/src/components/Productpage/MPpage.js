@@ -23,6 +23,7 @@ import SizeChartModal from './SizeChartModal';
 import BackToTopButton from '../Home/BackToTopButton';
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 import WhatsAppButton from '../Home/WhatsAppButton';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 const reviews = [
     {
         rating: 5,
@@ -89,6 +90,7 @@ const reviews = [
 
 const maxScrollAmount = 1024
 const MPpage = () => {
+	const {decrypt} = useEncryptionDecryptionContext();
     const navigation = useNavigate();
     const param = useParams();
     const dispatch = useDispatch();
@@ -119,7 +121,6 @@ const MPpage = () => {
 
     const divRef = useRef(null);
     const scrollContainerRef = useRef(null);
-    
     
 
     const indicatorStyles: CSSProperties = {
@@ -180,7 +181,7 @@ const MPpage = () => {
         if (user) {
             const orderData = {
                 userId: user.id,
-                productId: param.id,
+                productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
@@ -192,14 +193,14 @@ const MPpage = () => {
         } else {
             // Add to localStorage logic
             const orderData = {
-                productId: param.id,
+                productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,
                 size: currentSize,
                 ProductData: product,
 				isChecked:true,
             };
-            setSessionStorageBagListItem(orderData, param.id);
+            setSessionStorageBagListItem(orderData, decrypt(param.id));
         }
         checkAndCreateToast("success", "Product successfully in Bag");
         updateButtonStates();
@@ -310,7 +311,7 @@ const MPpage = () => {
     };
     const addToWishList = async () => {
         if (user) {
-            const response = await dispatch(createwishlist({ productId: param.id }));
+            const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
             // await dispatch(getbag({ userId: user.id }));
             await dispatch(getwishlist());
             checkAndCreateToast("success", "Wishlist Updated Successfully");
@@ -320,7 +321,7 @@ const MPpage = () => {
                 setIsInWishList(response);
             }
         } else {
-            setWishListProductInfo(product, param.id);
+            setWishListProductInfo(product, decrypt(param.id));
             checkAndCreateToast("success", "Bag is Updated Successfully");
             updateButtonStates();
         }
@@ -341,7 +342,7 @@ const MPpage = () => {
 
 				const orderData = {
 					userId: user.id,
-					productId: param.id,
+					productId: decrypt(param.id),
 					quantity: 1,
 					color: currentColor,
 					size: currentSize,
@@ -355,14 +356,14 @@ const MPpage = () => {
 			}else{
 				// Add to localStorage logic
 				const orderData = {
-					productId: param.id,
+					productId: decrypt(param.id),
 					quantity: 1,
 					color: currentColor,
 					size: currentSize,
 					ProductData: product,
 					isChecked:true,
 				};
-				setSessionStorageBagListItem(orderData, param.id);
+				setSessionStorageBagListItem(orderData, decrypt(param.id));
 				navigation('/bag')
 			}
         } catch (error) {
@@ -445,7 +446,7 @@ const MPpage = () => {
         try {
             // Dispatch actions in parallel if they are independent
             const ratingPromise = dispatch(postRating({ productId: product?._id, ratingData }));
-            const productPromise = dispatch(singleProduct(param.id));
+            const productPromise = dispatch(singleProduct(decrypt(param.id)));
             // Wait for both actions to complete
             await Promise.all([ratingPromise, productPromise]);
             checkAndCreateToast("success", "Rating Posted Successfully");
@@ -537,9 +538,9 @@ const MPpage = () => {
     
     useEffect(() => {
         // Fetch the product and reset scroll position on param.id change
-        dispatch(singleProduct(param.id));
+        dispatch(singleProduct(decrypt(param.id)));
         document.documentElement.scrollTop = 0;
-    }, [dispatch, param.id]); // Depend on `param.id` instead of `param` to avoid unnecessary calls
+    }, [dispatch, param]); // Depend on `param.id` instead of `param` to avoid unnecessary calls
     
 
 
@@ -608,6 +609,7 @@ const MPpage = () => {
             }
         };
     }, []);
+	console.log("Decrypted Parma Id: ",decrypt(param.id),param.id);
     return (
 		<div ref={scrollContainerRef} className="w-screen max-w-screen-2xl font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 			{loading === false ? (

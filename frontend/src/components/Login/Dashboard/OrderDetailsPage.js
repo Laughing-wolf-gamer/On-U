@@ -10,6 +10,7 @@ import BackToTopButton from '../../Home/BackToTopButton';
 import { ChevronLeft } from 'lucide-react';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
+import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -17,40 +18,44 @@ const formatDate = (date) => {
     return new Date(date).toLocaleDateString(undefined, options);
 };
 
-const OrderItem = ({ item }) => (
-    <div key={item._id} className="border-b pb-6">
-        <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
-            <Link to={`/products/${item?.productId?._id}`} className="w-full md:w-1/4 flex justify-center">
-                <img
-                    src={item?.color.images[0].url}
-                    alt="Product"
-                    className="w-28 h-28 object-contain rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
-                />
-            </Link>
-            <div className="flex-1">
-                <h3 className="text-lg font-semibold text-gray-800 truncate hover:text-blue-500 cursor-pointer">
-                    {capitalizeFirstLetterOfEachWord(item?.productId?.title)}
-                </h3>
-                
-                <div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
-                    <span className="font-semibold">Color:</span>
-                    <span
-                        className="w-5 h-5 border-2 rounded-full"
-                        style={{backgroundColor: item?.color?.name}}
-                        title={`Color: ${item?.color?.name}`}
-                    />
-                </div>
-                <div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
-                    <span className="font-semibold">Size:</span>
-                    <span className="ml-2 w-10 h-5 border-2 text-center flex items-center justify-center rounded-md bg-gray-100">
-                        {item.size}
-                    </span>
-                </div>
-            </div>
-            <div className="text-lg font-semibold text-gray-800 mt-2">₹ {formattedSalePrice(item.productId?.salePrice || item.productId?.price)}</div>
-        </div>
-    </div>
-);
+const OrderItem = ({ item }) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const productEncryption = encrypt(item?.productId?._id);
+	return (
+		<div key={item._id} className="border-b pb-6">
+			<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
+				<Link to={`/products/${productEncryption}`} className="w-full md:w-1/4 flex justify-center">
+					<img
+						src={item?.color.images[0].url}
+						alt="Product"
+						className="w-28 h-28 object-contain rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
+					/>
+				</Link>
+				<div className="flex-1">
+					<h3 className="text-lg font-semibold text-gray-800 truncate hover:text-blue-500 cursor-pointer">
+						{capitalizeFirstLetterOfEachWord(item?.productId?.title)}
+					</h3>
+					
+					<div className="flex items-center space-x-2 text-sm text-gray-600 mt-2">
+						<span className="font-semibold">Color:</span>
+						<span
+							className="w-5 h-5 border-2 rounded-full"
+							style={{backgroundColor: item?.color?.name}}
+							title={`Color: ${item?.color?.name}`}
+						/>
+					</div>
+					<div className="flex items-center space-x-2 text-sm text-gray-600 mt-1">
+						<span className="font-semibold">Size:</span>
+						<span className="ml-2 w-10 h-5 border-2 text-center flex items-center justify-center rounded-md bg-gray-100">
+							{item.size}
+						</span>
+					</div>
+				</div>
+				<div className="text-lg font-semibold text-gray-800 mt-2">₹ {formattedSalePrice(item.productId?.salePrice || item.productId?.price)}</div>
+			</div>
+		</div>
+	);
+}
 
 const AddressSection = ({ address, userName }) => (
     <div className="mb-6 border p-2 rounded-md">

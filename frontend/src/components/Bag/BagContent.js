@@ -11,6 +11,7 @@ import AddAddressPopup from './AddAddressPopup';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import CouponsDisplay from './CouponDisplay';
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 const BagContent = ({ 
 	bag, 
 	bagLoading, 
@@ -151,149 +152,155 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 		</div>
 	</div>
 );
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,applyingCoupon }) => (
-	<div className="flex-1 space-y-6 max-h-[700px]">
-		<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
-			{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
-				const active = item;
-				// const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-				// const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,applyingCoupon }) => {
+	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	return(
+	
+		<div className="flex-1 space-y-6 max-h-[700px]">
+			<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
+				{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
+					const active = item;
+					// const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+					// const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
 
-				// const getImageExtensionsFile = () => active?.color?.images.find((image) => image.url && isValidImage(image.url));
+					// const getImageExtensionsFile = () => active?.color?.images.find((image) => image.url && isValidImage(image.url));
 
-				// const validImage = getImageExtensionsFile();
-				const isVideo = (url) => {
-					const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
-					return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
-				};
-				const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
-				const validImage = imagesOnly[0]?.url;
-
-				return (
-					<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
-						{/* Product Image */}
-						<div className="relative bg-black border-2 rounded-lg flex-shrink-0 w-20 sm:w-36 h-28 sm:h-36">
-							<Link to={`/products/${active.productId?._id}`}>
-							{validImage ? (
-								<div className="relative w-full h-full">
-									<img
-										src={validImage}
-										alt={active?.productId?.title}
-										className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
-									/>
-									<div
-										onClick={(e) => {
-											updateChecked(e, active.productId?._id,active.size,active.color);
-										}}
-										className="absolute top-2 left-2 w-5 h-5"
-									>
-										<input
-											type="checkbox"
-											className="w-full h-full cursor-pointer"
-											defaultChecked={active?.isChecked}
-											// onChange={(e) => {}}
+					// const validImage = getImageExtensionsFile();
+					const isVideo = (url) => {
+						const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
+						return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
+					};
+					const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
+					const validImage = imagesOnly[0]?.url;
+					const productEncryption = encrypt(active.productId?._id);
+					const decrypted = decrypt(productEncryption);
+					console.log("Encrypted Product Id: ",productEncryption,"Decrypted: ",decrypted);
+					return (
+						<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
+							{/* Product Image */}
+							<div className="relative bg-black border-2 rounded-lg flex-shrink-0 w-20 sm:w-36 h-28 sm:h-36">
+								<Link to={`/products/${productEncryption}`}>
+								{validImage ? (
+									<div className="relative w-full h-full">
+										<img
+											src={validImage}
+											alt={active?.productId?.title}
+											className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 										/>
+										<div
+											onClick={(e) => {
+												updateChecked(e, active.productId?._id,active.size,active.color);
+											}}
+											className="absolute top-2 left-2 w-5 h-5"
+										>
+											<input
+												type="checkbox"
+												className="w-full h-full cursor-pointer"
+												defaultChecked={active?.isChecked}
+												// onChange={(e) => {}}
+											/>
+										</div>
 									</div>
-								</div>
-							) : (
-								<p>No valid image available</p>
-							)}
-							</Link>
-							{/* Delete Button on the Image (Mobile) */}
-							<div
-								className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
-								onClick={(e) => {
-									e.stopPropagation();
-									handleDeleteBag(active.productId._id, active._id,active.size,active.color);
-								}}
-							>
-								<Trash size={15} />
-							</div>
-						</div>
-
-						{/* Product Info */}
-						<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
-							<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate space-x-1"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
-							<p className="text-xs sm:text-sm text-gray-600">Size: {active?.size?.label}</p>
-							<p className="text-xs sm:text-sm text-gray-600">Color: {active?.color?.name}</p>
-
-							{/* Price and Discount Info */}
-							<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
-								{active?.productId?.salePrice ? (
-									<>
-									<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
-									<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
-									<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
-									</>
 								) : (
-									<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+									<p>No valid image available</p>
 								)}
+								</Link>
+								{/* Delete Button on the Image (Mobile) */}
+								<div
+									className="absolute top-[-10px] right-[-10px] text-white bg-black p-1 rounded-full cursor-pointer sm:hidden"
+									onClick={(e) => {
+										e.stopPropagation();
+										handleDeleteBag(active.productId._id, active._id,active.size,active.color);
+									}}
+								>
+									<Trash size={15} />
+								</div>
 							</div>
 
-							{/* Quantity Selector */}
-							<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
-								{/* Decrease Button */}
-								<button
-									onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
-									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-									disabled={active?.quantity <= 1}
-								>
-									<Minus />
-								</button>
+							{/* Product Info */}
+							<div className="ml-6 flex-1 w-full justify-center items-start flex-col">
+								<h3 className="font-semibold text-base sm:text-lg text-gray-800 truncate space-x-1"><span>{active?.color?.name}</span><span>{active?.productId?.title}</span></h3>
+								<p className="text-xs sm:text-sm text-gray-600">Size: {active?.size?.label}</p>
+								<p className="text-xs sm:text-sm text-gray-600">Color: {active?.color?.name}</p>
 
-								{/* Display Current Quantity */}
-								<span className="text-xs sm:text-sm">{active?.quantity}</span>
+								{/* Price and Discount Info */}
+								<div className="flex items-center md:space-x-4 space-x-2 xl:space-x-3 2xl:space-x-3 text-xs sm:text-sm lg:text-base text-red-500 mt-2">
+									{active?.productId?.salePrice ? (
+										<>
+										<span>₹ {formattedSalePrice(active?.productId?.salePrice)}</span>
+										<span className="line-through text-gray-400">₹{formattedSalePrice(active.productId.price)}</span>
+										<span className="text-gray-700 font-normal">(₹{calculateDiscountPercentage(active.productId?.price, active.productId?.salePrice)}% OFF)</span>
+										</>
+									) : (
+										<span>₹ {formattedSalePrice(active?.productId?.price)}</span>
+									)}
+								</div>
 
-								{/* Increase Button */}
-								<button
-									onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
-									className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-									disabled={active?.quantity >= active?.size?.quantity}
-								>
-									<Plus />
-								</button>
+								{/* Quantity Selector */}
+								<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
+									{/* Decrease Button */}
+									<button
+										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
+										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
+										disabled={active?.quantity <= 1}
+									>
+										<Minus />
+									</button>
+
+									{/* Display Current Quantity */}
+									<span className="text-xs sm:text-sm">{active?.quantity}</span>
+
+									{/* Increase Button */}
+									<button
+										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
+										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
+										disabled={active?.quantity >= active?.size?.quantity}
+									>
+										<Plus />
+									</button>
+								</div>
 							</div>
+
+							{/* Delete Button for larger screens */}
+							<Trash
+								className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
+								onClick={(e) => handleDeleteBag(active.productId._id, active._id,active.size,active.color)}
+							/>
 						</div>
 
-						{/* Delete Button for larger screens */}
-						<Trash
-							className="text-xl text-gray-700 hover:text-gray-500 cursor-pointer sm:block hidden mt-4 sm:mt-0"
-							onClick={(e) => handleDeleteBag(active.productId._id, active._id,active.size,active.color)}
-						/>
-					</div>
-
-				);
-			})}
+					);
+				})}
 
 
-		</div>
-		{/* Coupon Section */}
-		<div className="mt-6 space-y-2">
-			<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
-			<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
-				{/* Coupon Input */}
-				<input
-					type="text"
-					value={coupon}
-					onChange={(e) => setCoupon(e.target.value)}
-					className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
-					placeholder="Add Voucher Code."
-				/>
-
-				{/* Apply Coupon Button */}
-				<button
-					onClick={applyCoupon}
-					className="w-full sm:w-[20%] items-center flex justify-center flex-row h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
-				>
-					{applyingCoupon ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> :<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>}
-					
-				</button>
 			</div>
+			{/* Coupon Section */}
+			<div className="mt-6 space-y-2">
+				<label className="block text-xs sm:text-sm md:text-base font-semibold">Have a coupon?</label>
+				<div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-x-2 sm:space-y-0">
+					{/* Coupon Input */}
+					<input
+						type="text"
+						value={coupon}
+						onChange={(e) => setCoupon(e.target.value)}
+						className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
+						placeholder="Add Voucher Code."
+					/>
+
+					{/* Apply Coupon Button */}
+					<button
+						onClick={applyCoupon}
+						className="w-full sm:w-[20%] items-center flex justify-center flex-row h-12 bg-black text-white rounded-md hover:bg-gray-800 focus:ring-2 focus:ring-black"
+					>
+						{applyingCoupon ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> :<span className="whitespace-nowrap text-[10px] sm:text-sm md:text-base text-center">Apply Coupon</span>}
+						
+					</button>
+				</div>
+			</div>
+			{/* Display Coupons */}
+			<CouponsDisplay user={user} bag={bag}/>
 		</div>
-		{/* Display Coupons */}
-		<CouponsDisplay user={user} bag={bag}/>
-	</div>
-);
+	);
+}
 
 const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon }) => {
 	console.log("Bag totalDiscount:", bag?.totalDiscount);
