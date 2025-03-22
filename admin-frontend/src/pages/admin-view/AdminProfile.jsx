@@ -1,5 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogTitle } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { BASE_URL, capitalizeFirstLetterOfEachWord, Header } from '@/config';
 import { checkAuth, resetTokenCredentials, updateUserData } from '@/store/auth-slice';
 import axios from 'axios';
@@ -150,7 +152,7 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
     return (
 		<DialogContent>
 			<DialogTitle className="text-2xl font-semibold text-gray-800 mb-6">Edit Profile</DialogTitle>
-			<div className="bg-white p-8 rounded-lg shadow-lg max-w-lg max-h-[37vw] overflow-y-auto w-full">
+			<div className="bg-white max-h-[37vw] overflow-y-auto w-full">
 				<div className="flex justify-center items-center space-y-2 my-2 flex-col mt-5 mb-6">
 					<Button className='rounded-md h-10 px-2' 
 						onClick={()=> {
@@ -194,8 +196,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 				</div>
 				<form onSubmit={handleSubmit}>
 					<div className="mb-4">
-						<label className="block text-gray-700" htmlFor="name">Name</label>
-						<input
+						<Label className="block text-gray-700" htmlFor="name">Name</Label>
+						<Input
 							type="text"
 							id="name"
 							name="name"
@@ -206,8 +208,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="block text-gray-700" htmlFor="email">Email</label>
-						<input
+						<Label className="block text-gray-700" htmlFor="email">Email</Label>
+						<Input
 							type="email"
 							id="email"
 							name="email"
@@ -218,8 +220,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="block text-gray-700" htmlFor="address">Previous Password</label>
-						<input
+						<Label className="block text-gray-700" htmlFor="address">Previous Password</Label>
+						<Input
 							id="prevPassword"
 							name="prevPassword"
 							type='password'
@@ -229,8 +231,8 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 						/>
 					</div>
 					<div className="mb-4">
-						<label className="block text-gray-700" htmlFor="address">New Password</label>
-						<input
+						<Label className="block text-gray-700" htmlFor="address">New Password</Label>
+						<Input
 							id="newPassword"
 							name="newPassword"
 							type='password'
@@ -240,19 +242,18 @@ const EditProfileModal = ({ onClose, user, onSave }) => {
 						/>
 					</div>
 					<div className="flex justify-end space-x-4">
-						<button
-							type="button"
+						<Button
 							onClick={onClose}
 							className="px-6 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
 						>
 							Cancel
-						</button>
-						<button
+						</Button>
+						<Button
 							type="submit"
 							className="px-6 py-2 bg-primary text-white rounded-lg hover:bg-primary-dark"
 						>
 							Save
-						</button>
+						</Button>
 					</div>
 				</form>
 			</div>
