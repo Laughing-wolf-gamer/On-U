@@ -1,5 +1,5 @@
 import React from 'react'
-import { adminSideBarMenu, capitalizeFirstLetterOfEachWord } from '@/config'
+import { adminSideBarMenu, capitalizeFirstLetterOfEachWord, hexToRgba } from '@/config'
 import { ChartArea, ListOrdered } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '../ui/sheet'
@@ -70,7 +70,29 @@ const MenuItems = ({ setOpen, user }) => {
         </nav>
     );
 }
+const AdminHeader = ({user,setOpen}) => {
+	const navigation = useNavigate();
+	return (
+		<button onClick={() => {
+			navigation('/admin/profile')
+			setOpen(); // Close the menu if `setOpen` exists
+		}} className="flex justify-between items-center space-x-6">
+			<img
+				src={user?.profilePic}
+				alt="User Profile"
+				className="w-12 h-12 rounded-full bg-gray-400 object-cover"
+				style={{ filter: `drop-shadow(0 0 5px ${hexToRgba('#000', 0.2)})`,objectFit: "cover" }}
+			/>
+			<span
+				
+				className="text-lg font-medium text-gray-700 hover:text-gray-900 transition-all duration-200"
+			>
+				Profile
+			</span>
+		</button>
 
+	);
+};
 const AdminSidebarLayout = ({ sheetOpen, setOpen, user }) => {
     const navigate = useNavigate();
     return (
@@ -81,7 +103,7 @@ const AdminSidebarLayout = ({ sheetOpen, setOpen, user }) => {
                     <div className='flex flex-col h-full'>
                         <SheetHeader className="border-b border-gray-600">
                             <SheetTitle className="border-b py-3">
-                                <ChartArea size={30} className="text-gray-500" />
+								<AdminHeader user={user} setOpen = {setOpen}/>
                                 <h1 className='text-xl font-extrabold mt-5 mb-3'>
                                     {capitalizeFirstLetterOfEachWord(user.role)} Panel
                                 </h1>
