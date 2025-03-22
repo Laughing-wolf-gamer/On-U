@@ -577,13 +577,13 @@ const PaginatedProductList = ({
 	const startIndex = (currentPage - 1) * maxAmountPerPage;
 	const endIndex = startIndex + maxAmountPerPage;
 	const currentPageProducts = sortedProducts;
-	console.log("Current page: " + currentPageProducts,sortedProducts)
+	console.log("Current page: ",startIndex,endIndex);
 	return (
 		<div className="min-h-screen flex flex-col justify-between items-start px-4 sm:px-6 md:px-8 lg:px-10 xl:px-12">
 			<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
 				Total Products: {totalProducts}
 			</h1>
-			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-4 sm:gap-5 md:gap-6 lg:gap-8 xl:gap-10 px-2 py-3">
+			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 xl:grid-cols-5 gap-2 sm:gap-5 md:gap-3 lg:gap-2 xl:gap-2 px-2 py-3">
 				{currentPageProducts.length > 0 ? (
 					currentPageProducts.map((product, i) => (
 						<AdminProductTile

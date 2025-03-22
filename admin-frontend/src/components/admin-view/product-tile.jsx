@@ -26,7 +26,7 @@ const AdminProductTile = ({
     }, [selectedSize]);
 
     return (
-        <Card className="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg xl:max-w-xl 2xl:max-w-2xl h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
+        <Card className="w-full h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
             <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
 				
