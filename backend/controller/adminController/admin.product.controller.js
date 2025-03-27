@@ -1016,7 +1016,7 @@ export const getallOrders = async (req, res) => {
         const orderStatus = await Promise.all(allOrders.map(async (order) => {
             const shipmentTracking = await getShipmentTrackingStatus(order);
 			let trackingData = shipmentTracking.tracking_data;
-			if(shipmentTracking){
+			if(!shipmentTracking){
 				return null;
 			}
 			if(shipmentTracking.tracking_data){
