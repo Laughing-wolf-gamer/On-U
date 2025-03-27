@@ -296,6 +296,7 @@ export const inProduction = process.env.REACT_APP_NODE_ENV === 'production' ? tr
 
 
 export const SECREAT_KEY = process.env.REACT_APP_SECREAT_KEY;
+export const ORDER_ENCRYPTION_SECREAT_KEY = process.env.REACT_APP_ORDER_ENCRYPTION_SECREAT_KEY;
 export const RAZERPAY_KEY = process.env.REACT_APP_RAZERPAY_KEY;
 
 

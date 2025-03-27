@@ -355,7 +355,7 @@ const MNavbar = ({ user }) => {
                                         e.stopPropagation();
                                         setMenuShow(false);
                                         setClass("hidden");
-                                        navigation(`/dashboard?sideTab=Orders-Returns`);
+                                        navigation(`/dashboard?activetab=Orders-Returns`);
                                     }}
                                 >
                                     <span className="float-left">Order & Returns</span>
@@ -368,7 +368,7 @@ const MNavbar = ({ user }) => {
                                         e.stopPropagation();
                                         setMenuShow(false);
                                         setClass("hidden");
-                                        navigation(`/dashboard?sideTab=Saved-Addresses`);
+                                        navigation(`/dashboard?activetab=Saved-Addresses`);
                                     }}
                                 >
                                     <span className="float-left">Saved Addresses</span>

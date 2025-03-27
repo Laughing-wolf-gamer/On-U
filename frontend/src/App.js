@@ -98,7 +98,7 @@ function App() {
 				<Route path='/tc' element={<TermsAndConditions />}/>
 				<Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
 				<Route path="*" element={<NotFoundPage />} /> {/* Catch-all route for 404 */}
-				{user && <Route path="/order/details" element = {<OrderDetailsPage user={user}/>}/>}
+				{user && <Route path="/order/details/:orderId" element = {<OrderDetailsPage user={user}/>}/>}
 				{window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
 				{window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
             </Routes>

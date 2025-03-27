@@ -4,6 +4,8 @@ import { fetchAllOrders } from '../../../action/orderaction';
 import { useNavigate } from 'react-router-dom';
 import { FaFilter, FaSortAmountDown, FaRegClock, FaRegCheckCircle } from 'react-icons/fa'; // Importing icons
 import DeliveryStatus from './DeliveryStatus';
+import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
+import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
@@ -53,22 +55,17 @@ const OrderCard = ({ order, onViewDetails }) => {
 
 
 const OrdersReturns = () => {
+	const{encryptWithKey} = useEncryptionDecryptionContext();
     const { allorder, loading: orderLoading } = useSelector((state) => state.getallOrders);
     const dispatch = useDispatch();
     const navigation = useNavigate();
-    const [selectedOrder, setSelectedOrder] = useState(null);
     const [filter, setFilter] = useState('');
     const [sort, setSort] = useState('');
 
     const handleViewDetails = (order) => {
-        setSelectedOrder(order);
-        navigation(`/order/details`,{state:{id:order._id}});
+		const productEncryption = encryptWithKey(order?._id,ORDER_ENCRYPTION_SECREAT_KEY);
+        navigation(`/order/details/${productEncryption}`);
     };
-
-    const handleCloseModal = () => {
-        setSelectedOrder(null);
-    };
-
     useEffect(() => {
         dispatch(fetchAllOrders());
     }, [dispatch, filter, sort]);

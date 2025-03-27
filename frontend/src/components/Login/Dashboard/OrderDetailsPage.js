@@ -1,10 +1,10 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { fetchOrderById, sendExchangeRequest, sendOrderCancel, sendOrderReturn } from '../../../action/orderaction';
 import DeliveryStatus from './DeliveryStatus';
 import Loader from '../../Loader/Loader';
-import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../../config';
+import { capitalizeFirstLetterOfEachWord, formattedSalePrice, ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import Footer from '../../Footer/Footer';
 import BackToTopButton from '../../Home/BackToTopButton';
 import { ChevronLeft, MapIcon } from 'lucide-react';
@@ -73,21 +73,22 @@ const AddressSection = ({ address, userName }) => (
 
 const OrderDetailsPage = ({ user }) => {
     const { checkAndCreateToast } = useSettingsContext();
-    const location = useLocation();
+	const{decryptWithKey} = useEncryptionDecryptionContext();
+    const params = useParams();
     const scrollableDivRef = useRef(null);
     const navigate = useNavigate(); 
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
     const [orderItems, setOrderItems] = useState([]);
     const dispatch = useDispatch();
-    const { id } = location.state;
 
     useEffect(() => {
-        if (id) {
-            dispatch(fetchOrderById(id))
+        if (params) {
+			console.log("Decryption Data: ",decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY))
+            dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)))
         } else {
             navigate(-1);
         }
-    }, [dispatch, location]);
+    }, [dispatch, params]);
 
     useEffect(() => {
         if (orderbyid) {
@@ -99,7 +100,7 @@ const OrderDetailsPage = ({ user }) => {
         if (!orderbyid?.IsReturning) {
             const response = await dispatch(sendOrderReturn({ orderId: orderbyid._id }));
 			if(response){
-            	await dispatch(fetchOrderById(id));
+            	await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
 				if (orderbyid?.IsReturning) {
 					checkAndCreateToast("success", 'Order Returned Successfully');
 				} else {
@@ -115,7 +116,7 @@ const OrderDetailsPage = ({ user }) => {
 	const createCancelOrder = async(e)=>{
 		if(!orderbyid?.IsCancelled){
 			const response = await dispatch(sendOrderCancel({ orderId: orderbyid._id }));
-            await dispatch(fetchOrderById(id));
+            await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
 			if(response){
 				if (orderbyid?.IsCancelled) {
 					checkAndCreateToast("success", 'Order Cancelled Successfully');
@@ -131,7 +132,7 @@ const OrderDetailsPage = ({ user }) => {
     const createOrderExchange = async (e) => {
         if (!orderbyid?.IsInExcnage) {
             await dispatch(sendExchangeRequest({ orderId: orderbyid._id }));
-            await dispatch(fetchOrderById(id));
+            await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
             if (orderbyid?.IsInExcnage) {
                 checkAndCreateToast("success", 'Order Exchanged Successfully');
             } else {

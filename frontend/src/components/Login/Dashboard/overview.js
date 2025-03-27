@@ -60,8 +60,8 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 	useEffect(()=>{
 		if(location){
 			const queryParams = new URLSearchParams(location.search);
-			if(queryParams.has('sideTab')){
-				setActiveSection(queryParams.get('sideTab'))
+			if(queryParams.has('activetab')){
+				setActiveSection(queryParams.get('activetab'))
 			}
 		}
 	},[location])
@@ -70,7 +70,7 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 		switch(value){
 			case 'Saved-Addresses':
 			case 'Orders-Returns':
-				navigate(`/dashboard?sideTab=${value}`);
+				navigate(`/dashboard?activetab=${value}`);
 			break;
 			default:
 				navigate('/dashboard')

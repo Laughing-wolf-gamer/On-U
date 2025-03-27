@@ -178,7 +178,7 @@ const Footer = () => {
                     <div className="md:border-r hidden sm:block lg:border-r xl:border-r 2xl:border-r border-gray-200 pr-4">
                         <h1 className="text-lg font-bold text-gray-800 mb-4">USEFULL LINKS</h1>
                         <ul className="text-sm space-y-4">
-                            <Link to={`/dashboard?sideTab=Orders-Returns`}>
+                            <Link to={`/dashboard?activetab=Orders-Returns`}>
                                 <li className="hover:underline text-gray-600">Orders & Returns</li>
                             </Link>
                             <Link to="/about">
@@ -208,7 +208,7 @@ const Footer = () => {
 							{
 								openDropdown["services"] && (
 									<ul className="text-sm space-y-4 mt-3 justify-start items-start flex flex-col w-full">
-										<Link to="/dashboard?sideTab=Orders-Returns">
+										<Link to="/dashboard?activetab=Orders-Returns">
 										<li className="hover:underline text-gray-600">Orders & Returns</li>
 									</Link>
 									<Link to="/about">
