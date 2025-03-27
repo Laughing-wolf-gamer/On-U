@@ -14,7 +14,7 @@ import {
 	generateOrderCancel, 
 	generateOrderForShipment, 
 	generateOrderPicketUpRequest, 
-	generateOrderRetrunShipment, 
+	generateOrderReturnShipment, 
 	generateRefundOrder, 
 	getShipmentOrderByOrderId 
 } from './LogisticsControllers/shiprocketLogisticController.js'
@@ -634,6 +634,7 @@ export const getOrderById = async (req, res) => {
         if(order.userId.toString() !== req.user.id){
             return res.status(400).json({success:false,message:`Not the User Order ${req.user.id}`});
         }
+		let lastStatus = order.status;
 		try {
 			console.log("Shipment Order Id: ",order.order_id);
 			const shipmentTracking = await getShipmentOrderByOrderId(order)
@@ -651,7 +652,14 @@ export const getOrderById = async (req, res) => {
 			order.etd = trackingData.etd;
 			order.trackingUrl = trackingData.track_url
 			await order.save();
-			
+			if(lastStatus !== order.status){
+				try {
+					sendOrderStatusUpdateMail(order.userId,order);
+				} catch (error) {
+					console.error("Error sending order status update mail:", error);
+					logger.error("Error sending order status update mail: " + error.message);
+				}
+			}
 		} catch (error) {
 			console.error("Error Getting Shipment Status: ", error);
 		}
@@ -1765,8 +1773,9 @@ export const returnOrder = async (req, res) => {
 			return res.status(400).json({ success: false, message: "User ID is required" });
 		}
 		const order = await OrderModel.findById(orderId);
-		const returnSuccess = await generateOrderRetrunShipment(order,userId);
-		console.log("Return Order Success: ", returnSuccess);
+		const returnSuccess = await generateOrderReturnShipment(order,userId);
+		// console.log("Return Order Success: ", returnSuccess);
+		let lastStatus = order.status;
 		if(!returnSuccess) {
 			return res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
 		}
@@ -1774,14 +1783,16 @@ export const returnOrder = async (req, res) => {
 		order.shipment_status = returnSuccess.status_code;
 		order.current_status = getStatusDescription(returnSuccess.status_code)
 		order.IsReturning = true;
-		try {
-			sendOrderStatusUpdateMail(order.userId,order);
-		} catch (error) {
-			console.error("Error sending order status update mail!", error);
-			logger.error("Error sending order status update mail! " + error.message);
-		}
 		await order.save();
-		return res.status(200).json({ success: true, message: "Successfully returned order" });
+		if(lastStatus !== order.status){
+			try {
+				sendOrderStatusUpdateMail(order.userId,order);
+			} catch (error) {
+				console.error("Error sending order status update mail:", error);
+				logger.error("Error sending order status update mail: " + error.message);
+			}
+		}
+		res.status(200).json({ success: true, message: "Successfully returned order" });
 	} catch (error) {
 		console.error("Error Occured during returning order ", error.message);
 		logger.error("Error occured during returning order"+ error.message);

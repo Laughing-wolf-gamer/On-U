@@ -945,6 +945,7 @@ export const getOrderById = async(req,res)=>{
         if(!order){
             return res.status(200).json({Success:true,message:"No Orders Found Yet",order:{}})
         }
+		let lastStatus = order.status;
 		try {
 			const shipmenetOrder = await getShipmentOrderByOrderId(order)
 			if(shipmenetOrder){
@@ -967,11 +968,13 @@ export const getOrderById = async(req,res)=>{
 					await order.save();
 				}
 			}
-			try {
-				sendOrderStatusUpdateMail(order.userId,order);
-			} catch (error) {
-				console.error("Error sending order status update mail!", error);
-				logger.error("Error sending order status update mail! " + error.message);
+			if(lastStatus !== order.status){
+				try {
+					sendOrderStatusUpdateMail(order.userId,order);
+				} catch (error) {
+					console.error("Error sending order status update mail:", error);
+					logger.error("Error sending order status update mail: " + error.message);
+				}
 			}
 		} catch (error) {
 			console.error("Error while getting shipment Status Shiprocket: ",error);

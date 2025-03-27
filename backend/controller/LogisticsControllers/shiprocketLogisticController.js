@@ -598,7 +598,7 @@ export const generateOrderCancel = async(orderId)=>{
         return error?.response?.data;
     }
 }
-export const generateOrderRetrunShipment = async (shipmentData, userId) => {
+export const generateOrderReturnShipment = async (shipmentData, userId) => {
     // if (!token) await getAuthToken();
 
     try {
