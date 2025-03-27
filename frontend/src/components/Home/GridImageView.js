@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo, memo } from 'react';
+import React, { useState, useCallback, useMemo, memo, Fragment } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getRandomItem } from '../../config';
 import ReactPlayer from 'react-player';
@@ -37,9 +37,12 @@ const GridImageView = memo(({ imageToShow, categoriesOptions = [], startPlaying 
         <div onClick={handleMoveToQuery} className="relative font-kumbsan w-full h-auto rounded-lg overflow-hidden cursor-pointer">
             <div className="min-w-xs h-full relative">
                 {isError ? (
-                    <span className="text-red-600">Failed to Load Media</span>
+                    <div className="error-message-container">
+						<span className="text-red-600 text-xl font-semibold">Failed to Load Media</span>
+						<p className="error-description">There was an issue loading the media. Please try again later.</p>
+					</div>
                 ) : (
-                    <>
+                    <Fragment>
                         {isImage ? (
                             <img
                                 src={imageToShow}
@@ -66,9 +69,11 @@ const GridImageView = memo(({ imageToShow, categoriesOptions = [], startPlaying 
                                 onError={handleError}
                             />
                         ) : (
-                            <span className="text-red-600">Unsupported file type</span>
+                            <div className="error-message-container">
+								<p className="error-description">Unsupported File Type</p>
+							</div>
                         )}
-                    </>
+                    </Fragment>
                 )}
                 <div className="w-full text-black bg-white opacity-50 uppercase bottom-5 left-0 justify-start absolute h-30 items-start px-2 flex flex-row font-bold 2xl:text-xl sm:text-sm text-[10px] md:text-xl">
                     <span>{categoryName}</span>

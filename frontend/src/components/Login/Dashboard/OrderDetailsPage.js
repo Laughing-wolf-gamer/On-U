@@ -7,7 +7,7 @@ import Loader from '../../Loader/Loader';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '../../../config';
 import Footer from '../../Footer/Footer';
 import BackToTopButton from '../../Home/BackToTopButton';
-import { ChevronLeft } from 'lucide-react';
+import { ChevronLeft, MapIcon } from 'lucide-react';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
@@ -62,9 +62,9 @@ const AddressSection = ({ address, userName }) => (
         <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
         <div className="py-2 w-full space-y-2">
             {Object.entries(address).map(([key, value]) => (
-                <div key={key} className="flex justify-between text-sm text-gray-600">
-                    <span className="font-medium text-base">{capitalizeFirstLetterOfEachWord(key)}:</span>
-                    <span className="font-normal">{value}</span>
+                <div key={key} className="flex justify-between gap-2 text-sm text-gray-600">
+                    <span className="font-medium text-base text-right">{capitalizeFirstLetterOfEachWord(key)}:</span>
+                    <span className="font-normal text-xs text-left">{value}</span>
                 </div>
             ))}
         </div>
@@ -167,7 +167,7 @@ const OrderDetailsPage = ({ user }) => {
 							{orderbyid?.createdAt && (
 								<div className="space-y-2">
 									<h2 className="text-xl font-semibold text-gray-800">Order Date</h2>
-									<p className="text-lg text-gray-600">{formatDate(orderbyid.createdAt)}</p>
+									<p className="text-lg text-gray-600">{new Date(orderbyid.createdAt).toDateString()}</p>
 								</div>
 							)}
 
@@ -206,41 +206,41 @@ const OrderDetailsPage = ({ user }) => {
 								</div>
 							</div>
 
-							{/* Tracking URL Section */}
-							{orderbyid?.trackingUrl && (
-								<div className="space-y-2">
-									<h2 className="text-xl font-semibold text-gray-800">Track Your Order</h2>
-									<a
-										href={orderbyid?.trackingUrl}
-										target="_blank"
-										rel="noopener noreferrer"
-										className="text-blue-500 hover:underline font-medium"
-									>
-										Click here to track your order
-									</a>
-								</div>
-							)}
 						</div>
 
 						{/* Sidebar - Order Summary */}
 						<div className="col-span-1 lg:col-span-4 justify-between flex flex-col bg-white p-2 sm:p-3 md:p-6 xl:p-5 2xl:p-6 rounded-lg space-y-6 border border-gray-600">
-							<div className="rounded-md space-y-4">
+							<div className="rounded-md space-y-4 flex-1 flex-col">
 								<h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
 								{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
-								<div className="space-y-2">
+								<div className="space-y-2 justify-between flex items-center">
 									<p className="font-semibold text-gray-800">Total Items:</p>
-									<p className="text-base text-gray-600">{orderbyid?.orderItems?.length}</p>
+									<p className="text-base text-gray-600 font-extrabold">{orderbyid?.orderItems?.length}</p>
 								</div>
-								<div className="space-y-2">
+								
+								<div className="space-y-2 justify-between flex items-center">
 									<p className="font-semibold text-gray-800">Total Amount:</p>
 									<p className="text-base text-gray-600">₹{formattedSalePrice(orderbyid?.TotalAmount)}</p>
 								</div>
-								<div className="space-y-2">
+								<div className="space-y-2 justify-between flex items-center">
 									<p className="font-semibold text-gray-800">Shipping:</p>
 									<p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
 								</div>
+								{/* Tracking URL Section */}
+								{orderbyid?.trackingUrl && (
+									<div className="space-y-2 ">
+										<h2 className="text-xl font-semibold text-gray-800">Track Your Order</h2>
+										<a
+											href={orderbyid?.trackingUrl}
+											target="_blank"
+											rel="noopener noreferrer"
+											className="text-blue-500 hover:underline font-medium flex gap-2"
+										>
+											Click here to track your order <MapIcon/>
+										</a>
+									</div>
+								)}
 							</div>
-
 							<div className="space-y-2">
 								{
 									orderbyid?.status === 'Delivered' ? (

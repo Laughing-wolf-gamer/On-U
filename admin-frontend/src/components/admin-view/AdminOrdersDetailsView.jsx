@@ -187,7 +187,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="ETD (Estimated Delivery Date)"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white bg-blue-500">
-							{order?.etd || "No-Data"}
+							{new Date(order?.etd).toDateString() || "No-Data"}
 							</Badge>
 						}
 					/>

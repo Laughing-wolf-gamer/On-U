@@ -47,6 +47,47 @@ code {
     }
 }
 
+/* Style for error message container */
+.error-message-container {
+  position: absolute;
+  top: 20%;
+  left: 0;
+  right: 0;
+  background-color: rgba(255, 0, 0, 0.1); /* Light red background */
+  color: #721c24; /* Dark red text */
+  border: 1px solid #f5c6cb; /* Border color for emphasis */
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  font-family: Arial, sans-serif;
+  font-size: 18px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* Optional: Style for error description under the title */
+.error-description {
+  font-size: 14px;
+  color: #721c24;
+  margin-top: 10px;
+  font-weight: normal;
+}
+
+/* Style for unsupported file type message */
+.text-red-600 {
+  color: #e53e3e; /* More vivid red */
+}
+
+/* Small fix for responsive text scaling */
+@media (max-width: 640px) {
+  .error-message-container {
+    font-size: 16px;
+    padding: 15px;
+  }
+
+  .error-description {
+    font-size: 12px;
+  }
+}
 
 /* index.css or similar */
 @import url('https://unpkg.com/leaflet@1.7.1/dist/leaflet.css');

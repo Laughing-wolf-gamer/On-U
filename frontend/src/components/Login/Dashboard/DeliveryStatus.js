@@ -9,14 +9,15 @@ const DeliveryStatus = ({ status }) => {
         "Out for Delivery",
         "Delivered",
     ];
-	if(!steps.includes(status)){
+	if (!steps.includes(status)) {
 		console.error(`Invalid delivery status: ${status}`);
-        return <div
-				className="p-[20px] bg-[#f8d7da] text-[#721c24] rounded-[5px] border-[#f5c6cb] text-center mb-3 h-fit" 
-			>
-				<h1 className="underline text-lg font-extrabold animate-pulse">{status}</h1>
+		return (
+			<div className="error-container p-6 bg-red-100 text-red-800 rounded-lg border border-red-300 shadow-lg text-center mb-4">
+				<h1 className="error-title text-xl font-bold animate-pulse underline mb-2">{`${status}`}</h1>
 			</div>
+		);
 	}
+
 
     // Determine the current step index based on the status
     const currentStepIndex = steps.indexOf(status);
