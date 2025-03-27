@@ -6,7 +6,7 @@ import ProductModel from '../model/productmodel.js'
 import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
 import Coupon from '../model/Coupon.model.js'
 import WebSiteModel from '../model/websiteData.model.js'
-import { sendMainifestMail, sendOrderPlacedMail } from './emailController.js'
+import { sendMainifestMail, sendOrderPlacedMail, sendOrderStatusUpdateMail } from './emailController.js'
 import mongoose from 'mongoose'
 import logger from '../utilis/loggerUtils.js'
 import { 
@@ -1481,7 +1481,7 @@ export const getbag = async (req, res) => {
         // console.log("Bag found:", bag);
 
         if (!bag) {
-			console.log("No Bag Found!");
+			// console.log("No Bag Found!");
             return res.status(400).json({ success: false, message: "Bag not found" });
         }
 		if(bag.orderItems.length < 0){
@@ -1772,7 +1772,14 @@ export const returnOrder = async (req, res) => {
 		}
 		order.status = returnSuccess.status;
 		order.shipment_status = returnSuccess.status_code;
+		order.current_status = getStatusDescription(returnSuccess.status_code)
 		order.IsReturning = true;
+		try {
+			sendOrderStatusUpdateMail(order.userId,order);
+		} catch (error) {
+			console.error("Error sending order status update mail!", error);
+			logger.error("Error sending order status update mail! " + error.message);
+		}
 		await order.save();
 		return res.status(200).json({ success: true, message: "Successfully returned order" });
 	} catch (error) {

@@ -44,6 +44,11 @@
             "date": 1743089346313,
             "name": "logs\\OnU-2025-03-27.log",
             "hash": "353c71a4e5b0d599903a2ee0fe0132593ae44850032dc98168be53cc8960cd6e"
+        },
+        {
+            "date": 1743100261605,
+            "name": "logs\\OnU-2025-03-28.log",
+            "hash": "dcfbc2d611774e8dc73689d25232d114e6a86223f1ec96d71291856a0fd638bd"
         }
     ],
     "hashType": "sha256"

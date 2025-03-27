@@ -3,6 +3,7 @@ import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
 import WebSiteModel from "../../model/websiteData.model.js";
 import logger from "../../utilis/loggerUtils.js";
+import { sendOrderStatusUpdateMail } from "../emailController.js";
 import { addNewPicketUpLocation, checkShipmentAvailability, fetchAllPickupLocation, getAuthToken } from "./shiprocketLogisticController.js";
 
 export const updateOrderStatusFromShipRokcet = async (req,res)=>{
@@ -12,11 +13,15 @@ export const updateOrderStatusFromShipRokcet = async (req,res)=>{
         // console.log(`Order ID: ${order_id}, Status: ${current_status}`);
         const dbOrder = await OrderModel.findOne({order_id:order_id});
         if(dbOrder){
-            console.error(`No order found with ShipRocket Order ID: ${order_id}`);
 			dbOrder.status = current_status;
 			dbOrder.current_status = shipment_status;
 			dbOrder.shipment_status = shipment_status_id;
 			await dbOrder.save();
+			try {
+				sendOrderStatusUpdateMail(dbOrder.userId,dbOrder);
+			} catch (error) {
+				console.error(`Error saving order ${order_id}`)
+			}
 			console.log(`Order status updated to ${current_status} for ShipRocket Order ID: ${order_id}`);
         }else{
 			console.log(`Order Not found! Order ID: ${order_id}`);

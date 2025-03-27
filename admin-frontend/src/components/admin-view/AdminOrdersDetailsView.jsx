@@ -264,7 +264,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 					</Button>
 
 					<Button
-						disabled={order?.IsReturning}
+						// disabled={order?.IsReturning}
 						className="text-white px-4 py-2 rounded-md"
 						onClick={createOrderReturnFromUser}
 					>

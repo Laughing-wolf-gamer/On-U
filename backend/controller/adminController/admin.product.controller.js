@@ -3,7 +3,7 @@ import OrderModel from "../../model/ordermodel.js";
 import logger from "../../utilis/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
-import { sendUpdateOrderStatus } from "../emailController.js";
+import { sendOrderStatusUpdateMail, sendUpdateOrderStatus } from "../emailController.js";
 import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
 import { getShipmentOrderByOrderId, getShipmentTrackingStatus, getShipRocketToken } from "../LogisticsControllers/shiprocketLogisticController.js";
 import Bag from "../../model/bag.js";
@@ -967,6 +967,12 @@ export const getOrderById = async(req,res)=>{
 					await order.save();
 				}
 			}
+			try {
+				sendOrderStatusUpdateMail(order.userId,order);
+			} catch (error) {
+				console.error("Error sending order status update mail!", error);
+				logger.error("Error sending order status update mail! " + error.message);
+			}
 		} catch (error) {
 			console.error("Error while getting shipment Status Shiprocket: ",error);
 		}
@@ -1014,11 +1020,11 @@ export const getallOrders = async (req, res) => {
 
         // Fetch order status for each order and update the order with the new status
         const orderStatus = await Promise.all(allOrders.map(async (order) => {
-            const shipmentTracking = await getShipmentTrackingStatus(order);
-			let trackingData = shipmentTracking.tracking_data;
+            /* const shipmentTracking = await getShipmentTrackingStatus(order);
 			if(!shipmentTracking){
 				return null;
 			}
+			let trackingData = shipmentTracking?.tracking_data;
 			if(shipmentTracking.tracking_data){
 				trackingData = shipmentTracking.tracking_data
 			}else{
@@ -1029,14 +1035,14 @@ export const getallOrders = async (req, res) => {
 			order.current_status = getStatusDescription(trackingData.shipment_status);
 			order.etd = trackingData.etd;
 			order.trackingUrl = trackingData.track_url
-			await order.save();
+			await order.save(); */
 			return {
 				...order.toObject(),
-				status: getStatusDescription(trackingData.shipment_status),
+				/* status: getStatusDescription(trackingData.shipment_status),
 				shipment_status: trackingData.shipment_status,
 				current_status: getStatusDescription(trackingData.shipment_status),
 				etd: trackingData.etd,
-				trackingUrl: trackingData.track_url,
+				trackingUrl: trackingData.track_url, */
 			};
         }));
 		// const token = await getShipRocketToken();

@@ -259,6 +259,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Home</span>
                                 </div>
                             </Ripples>
+                            
 
                             <Ripples color="#2C3930" className="w-full">
                                 <li
@@ -347,6 +348,32 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">On Sale</span>
                                 </li>
                             </Ripples>
+							<Ripples color="#2C3930" className="w-full">
+                                <div
+                                    className="text-black  px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMenuShow(false);
+                                        setClass("hidden");
+                                        navigation(`/dashboard?sideTab=Orders-Returns`);
+                                    }}
+                                >
+                                    <span className="float-left">Order & Returns</span>
+                                </div>
+                            </Ripples>
+                            <Ripples color="#2C3930" className="w-full">
+                                <div
+                                    className="text-black  px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMenuShow(false);
+                                        setClass("hidden");
+                                        navigation(`/dashboard?sideTab=Saved-Addresses`);
+                                    }}
+                                >
+                                    <span className="float-left">Saved Addresses</span>
+                                </div>
+                            </Ripples>
                             <Ripples color="re" className="w-full">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
@@ -372,6 +399,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Contact</span>
                                 </li>
                             </Ripples>
+							
 
                             <Mhome Mhome={Menu4} fun1={handleMenuClose} fun2={classunchange} />
                         </ul>

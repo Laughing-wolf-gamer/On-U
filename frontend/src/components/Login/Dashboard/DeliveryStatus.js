@@ -4,10 +4,19 @@ const DeliveryStatus = ({ status }) => {
     const steps = [
         "Confirmed",
         "Processing",
-        "Order Shipped",
+        "Out For Pickup",
+        "Shipped",
         "Out for Delivery",
         "Delivered",
     ];
+	if(!steps.includes(status)){
+		console.error(`Invalid delivery status: ${status}`);
+        return <div
+				className="p-[20px] bg-[#f8d7da] text-[#721c24] rounded-[5px] border-[#f5c6cb] text-center mb-3 h-fit" 
+			>
+				<h1 className="underline text-lg font-extrabold animate-pulse">{status}</h1>
+			</div>
+	}
 
     // Determine the current step index based on the status
     const currentStepIndex = steps.indexOf(status);
@@ -47,7 +56,7 @@ const DeliveryStatus = ({ status }) => {
                             <div
                                 className={`w-7 h-7 rounded-full font-bold mx-auto mb-3 flex items-center justify-center transition-colors duration-300 ${
                                     index <= currentStepIndex
-                                        ? "bg-[#32A76B] text-white"
+                                        ? "bg-[#32A76B] text-white animate-pulse"
                                         : "bg-gray-300 text-gray-600"
                                 }`}
                             >
@@ -61,7 +70,7 @@ const DeliveryStatus = ({ status }) => {
                             <p
                                 className={`text-sm font-bold text-center flex-wrap ${
                                     index <= currentStepIndex
-                                        ? "text-[#32A76B]"
+                                        ? "text-[#32A76B] animate-pulse"
                                         : "text-gray-500"
                                 }`}
                             >

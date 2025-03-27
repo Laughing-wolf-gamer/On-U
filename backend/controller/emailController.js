@@ -155,6 +155,23 @@ export const sendOrderPlacedMail = async (userId, orderData) => {
         return false;
     }
 };
+export const sendOrderStatusUpdateMail = async (userId, orderData) => {
+    try {
+        const userData = await User.findById(userId);
+        if (!userData) {
+            throw new Error("User not found");
+        }
+
+        let message = `Dear ${userData.name},\n\nWe wanted to let you know that the status of your order has been updated to "${orderData?.status}".\n\nThank you for choosing us for your shopping needs! If you have any questions or need further assistance, feel free to reach out.\n\nBest regards,\nThe On U Team`;
+
+		const subject = 'Your Order Status Has Been Updated!';
+		const text = message;
+        return await sendEmail(userData.email, subject, text);
+    } catch (error) {
+        console.error("Error:", error);
+        return false;
+    }
+};
 
 // Send custom email
 export const sendCustomMail = async (toEmail, subject, text) => {

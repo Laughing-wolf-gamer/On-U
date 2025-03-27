@@ -5,8 +5,8 @@ import SavedAddresses from './SavedAddresses';
 import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { AlignJustify, LogOut } from 'lucide-react';
-import { FaExclamationTriangle, FaUser, FaUserAltSlash } from 'react-icons/fa'; // Import the react-icon for logout
+import { LogOut } from 'lucide-react';
+import { FaUser, FaUserAltSlash } from 'react-icons/fa'; // Import the react-icon for logout
 import BackToTopButton from '../../Home/BackToTopButton';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
@@ -64,7 +64,7 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 				setActiveSection(queryParams.get('sideTab'))
 			}
 		}
-	},[])
+	},[location])
 	const handelSectionChange = (value)=>{
 		console.log("Value Change Sidebar: ",value);
 		switch(value){
