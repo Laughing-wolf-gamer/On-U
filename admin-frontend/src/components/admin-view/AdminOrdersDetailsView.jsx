@@ -8,6 +8,7 @@ import { adminCreateOrderReturns, adminCreateRefundRequest, adminGetAllOrders, a
 import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config'
 import { useSettingsContext } from '@/Context/SettingsContext'
 import { Button } from '../ui/button'
+import { Map } from 'lucide-react'
 
 const initialFormData = {
   status: '',
@@ -16,7 +17,7 @@ const initialFormData = {
 const OrderDetail = ({ label, value,url = '',downloadEnable = false }) => (
 	<div className="flex mt-2 items-center justify-between">
 		<p className="font-medium">{label}</p>
-		<Label className = {"text-base text-gray-500"}>{value}</Label>
+		<Label className = {"text-base text-left text-gray-500"}>{!value ? "-":value}</Label>
 		{url && <a href={url} download={downloadEnable} target="_blank" className="text-blue-500">Download {value}</a>}
 	</div>
 )
@@ -121,7 +122,6 @@ const AdminOrdersDetailsView = ({ order }) => {
 	const handleCreateManifest = async()=>{
 		const response = await dispatch(adminRequestTryCreateManifest({ orderId: order._id }))
         if(response.payload?.error){
-            console.log("Manifest response: ", response);
             checkAndCreateToast("error",response.payload?.error)
         }else{
             checkAndCreateToast('success',"Successfully created manifest:");
@@ -150,8 +150,8 @@ const AdminOrdersDetailsView = ({ order }) => {
 					{
 						order?.trackingUrl && <a href={order?.trackingUrl}
 							target='_blank' 
-							className='text-blue-600 underline font-thin text-lg'
-						>Track The Shipment</a>
+							className='text-blue-600 underline font-thin text-lg flex flex-1 gap-2'
+						>Track The Shipment <Map/></a>
 					}
 					<OrderDetail label="Order Database Id" value={order?._id} />
 					<OrderDetail label="Order Id" value={order?.order_id} />
