@@ -1789,7 +1789,7 @@ export const createOrderCancel = async(req,res)=>{
 		if(!order) return res.status(404).json({ success: false, message: "Order not found", result: null });
 		const cancelRequest = await generateOrderCancel(order.order_id);
 		if(!cancelRequest) return res.status(404).json({ success: false, message: "Failed to cancel order"});
-		if(cancelRequest?.status_code === 200){
+		if(cancelRequest?.status_code === 200 || cancelRequest?.status === 200){
 			order.IsCancelled = true;
 		}else{
 			if(cancelRequest.message === 'Cannot cancel order when shipment status is Cancellation Requested'){
@@ -1798,7 +1798,6 @@ export const createOrderCancel = async(req,res)=>{
 				order.IsCancelled = false;
 			}
 		}
-		console.log("Cancel Request Success: ", cancelRequest);
 		if(!cancelRequest) {
             return res.status(400).json({ success: false, message: "Failed to create cancel request", result: null});
         }
