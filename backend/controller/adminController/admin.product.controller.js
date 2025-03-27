@@ -946,15 +946,27 @@ export const getOrderById = async(req,res)=>{
             return res.status(200).json({Success:true,message:"No Orders Found Yet",order:{}})
         }
 		try {
-			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
-			// console.log("Admin Checking Shipment Order: ",)
-			shipmenetOrder.map(shipOrder => {
-				console.log("Admin Shipment Order: ");
-				// Log each key-value pair in shipOrder
-				Object.entries(shipOrder).forEach(([key, value]) => {
-					console.log(`${key}:`, value.tracking_data);
-				});
-			});
+			const shipmenetOrder = await getShipmentOrderByOrderId(order)
+			if(shipmenetOrder){
+				if(shipmenetOrder.tracking_data){
+					const trackingData = shipmenetOrder.tracking_data;
+					order.status = getStatusDescription(trackingData.shipment_status)
+					order.shipment_status = trackingData.shipment_status;
+					order.current_status = getStatusDescription(trackingData.shipment_status);
+					order.etd = trackingData.etd;
+					order.trackingUrl = trackingData.track_url
+					await order.save();
+				}else{
+					const trackingData = shipmenetOrder[order.shipment_id].tracking_data;
+					console.log("Admin Checking shipment Tracking Data: ",trackingData);
+					order.status = getStatusDescription(trackingData.shipment_status)
+					order.shipment_status = trackingData.shipment_status;
+					order.current_status = getStatusDescription(trackingData.shipment_status);
+					order.etd = trackingData.etd;
+					order.trackingUrl = trackingData.track_url
+					await order.save();
+				}
+			}
 		} catch (error) {
 			console.error("Error while getting shipment Status Shiprocket: ",error);
 		}
@@ -1002,24 +1014,39 @@ export const getallOrders = async (req, res) => {
 
         // Fetch order status for each order and update the order with the new status
         const orderStatus = await Promise.all(allOrders.map(async (order) => {
-            const status = await getShipmentTrackingStatus(order?.shipment_id);
-			// console.log("Shipment Tracking Status: ",order?.shipment_id, status);
-			const statusSimplified = getStatusDescription(status?.shipment_status);
-            return {
+            const shipmentTracking = await getShipmentTrackingStatus(order);
+			let trackingData = shipmentTracking.tracking_data;
+			if(shipmentTracking){
+				return null;
+			}
+			if(shipmentTracking.tracking_data){
+				trackingData = shipmentTracking.tracking_data
+			}else{
+				trackingData = shipmentTracking[order.shipment_id].tracking_data;
+			}
+			order.status = getStatusDescription(trackingData.shipment_status)
+			order.shipment_status = trackingData.shipment_status;
+			order.current_status = getStatusDescription(trackingData.shipment_status);
+			order.etd = trackingData.etd;
+			order.trackingUrl = trackingData.track_url
+			await order.save();
+			return {
 				...order.toObject(),
-				current_status:statusSimplified || order?.current_status,
-				shipment_status:status?.shipment_status,
-				scans:status?.shipment_track,
+				status: getStatusDescription(trackingData.shipment_status),
+				shipment_status: trackingData.shipment_status,
+				current_status: getStatusDescription(trackingData.shipment_status),
+				etd: trackingData.etd,
+				trackingUrl: trackingData.track_url,
 			};
         }));
 		// const token = await getShipRocketToken();
 		// console.log("order Status Updated Token: ", token);
         // Send the updated orders with current status
-        res.status(200).json({ Success: true, message: "All Orders", result: orderStatus || []});
-
+		const refreshedNull = orderStatus.filter(stat => stat !== null)
+        res.status(200).json({ Success: true, message: "All Orders", result: refreshedNull || []});
     } catch (error) {
         console.error("Error Getting All Orders", error);
-        logger.error("Error Getting All Orders: " + error.message);
+        logger.error(`Error Getting All Orders: ${error.message}`);
         res.status(500).json({ Success: false, message: "Internal Server Error" });
     }
 };

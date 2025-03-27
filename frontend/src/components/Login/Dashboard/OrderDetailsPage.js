@@ -150,90 +150,108 @@ const OrderDetailsPage = ({ user }) => {
         <div ref={scrollableDivRef} className="w-full min-h-screen overflow-y-auto bg-gray-50 font-sans scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {!loading && orderbyid ? (
                 <div className="max-w-screen-2xl w-full mx-auto py-8 px-6">
-                    <h1 className="text-3xl font-bold text-gray-800 mb-6">Order Details</h1>
+					<h1 className="text-3xl font-bold text-gray-800 mb-6">Order Details</h1>
 
-                    {/* Back Button */}
-                    <button
-                        onClick={handleBackButtonClick}
-                        className="text-sm hover:underline font-semibold text-gray-600 mb-6 flex items-center space-x-2"
-                    >
-                        <ChevronLeft />
-                        <span>Back to Orders</span>
-                    </button>
+					{/* Back Button */}
+					<button
+						onClick={handleBackButtonClick}
+						className="text-sm hover:underline font-semibold text-gray-600 mb-6 flex items-center space-x-2"
+					>
+						<ChevronLeft />
+						<span>Back to Orders</span>
+					</button>
 
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                        <div className="col-span-1 lg:col-span-8 bg-white rounded-lg p-2 sm:p-3 md:p-6 xl:p-5 2xl:p-6 space-y-6 border border-gray-600">
-                            {/* Order Created Date */}
-                            {orderbyid?.createdAt && (
-                                <div className="space-y-2">
-                                    <h2 className="text-xl font-semibold text-gray-800">Order Date</h2>
-                                    <p className="text-lg text-gray-600">{formatDate(orderbyid.createdAt)}</p>
-                                </div>
-                            )}
+					<div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+						<div className="col-span-1 lg:col-span-8 bg-white rounded-lg p-2 sm:p-3 md:p-6 xl:p-5 2xl:p-6 space-y-6 border border-gray-600">
+							{/* Order Created Date */}
+							{orderbyid?.createdAt && (
+								<div className="space-y-2">
+									<h2 className="text-xl font-semibold text-gray-800">Order Date</h2>
+									<p className="text-lg text-gray-600">{formatDate(orderbyid.createdAt)}</p>
+								</div>
+							)}
 
-                            {/* Address Section */}
-                            {orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
+							{/* Address Section */}
+							{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
 
-                            {/* Order Items Section */}
-                            <div className="space-y-4">
-                                <h2 className="text-xl font-semibold text-gray-800">Order Items</h2>
-                                {orderItems?.length > 0 && orderItems.map((item, index) => (
-                                    <OrderItem key={item._id || index} item={item} />
-                                ))}
-                            </div>
+							{/* Order Items Section */}
+							<div className="space-y-4">
+								<h2 className="text-xl font-semibold text-gray-800">Order Items</h2>
+								{orderItems?.length > 0 && orderItems.map((item, index) => (
+									<OrderItem key={item._id || index} item={item} />
+								))}
+							</div>
 
-                            {/* Delivery Status */}
-                            <div className="space-y-4">
-                                <h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
-                                <DeliveryStatus status={orderbyid?.status || "Processing"} />
-                            </div>
+							{/* Delivery Status */}
+							<div className="space-y-4">
+								<h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
+								<DeliveryStatus status={orderbyid?.status || "Processing"} />
+							</div>
 
-                            {/* Total Amount Section */}
-                            <div className="space-y-2">
-                                <h2 className="text-xl font-semibold text-gray-800">Total Amount</h2>
-                                <p className="text-lg font-bold text-gray-800">₹ {formattedSalePrice(orderbyid?.TotalAmount)}</p>
-                            </div>
+							{/* Total Amount Section */}
+							<div className="space-y-2">
+								<h2 className="text-xl font-semibold text-gray-800">Total Amount</h2>
+								<p className="text-lg font-bold text-gray-800">₹ {formattedSalePrice(orderbyid?.TotalAmount)}</p>
+							</div>
 
-                            {/* Payment and Delivery Status */}
-                            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                                <div className="space-y-2">
-                                    <h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
+							{/* Payment and Delivery Status */}
+							<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+								<div className="space-y-2">
+									<h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
 									<p>{orderbyid?.status}</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
-                                    <p>{orderbyid?.paymentMode}</p>
-                                </div>
-                            </div>
-                        </div>
+								</div>
+								<div className="space-y-2">
+									<h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
+									<p>{orderbyid?.paymentMode}</p>
+								</div>
+							</div>
 
-                        {/* Sidebar - Order Summary */}
-                        <div className="col-span-1 lg:col-span-4 justify-between flex flex-col bg-white p-2 sm:p-3 md:p-6 xl:p-5 2xl:p-6 rounded-lg space-y-6 border border-gray-600">
-                            <div className="rounded-md  space-y-4">
-                            	<h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
-                                {orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
-                                <div className="space-y-2">
-                                    <p className="font-semibold text-gray-800">Total Items:</p>
-                                    <p className="text-base text-gray-600">{orderbyid?.orderItems?.length}</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <p className="font-semibold text-gray-800">Total Amount:</p>
-                                    <p className="text-base text-gray-600">₹{formattedSalePrice(orderbyid?.TotalAmount)}</p>
-                                </div>
-                                <div className="space-y-2">
-                                    <p className="font-semibold text-gray-800">Shipping:</p>
-                                    <p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
-                                </div>
-                            </div>
-                            <div className="space-y-2">
-								{
-									orderbyid?.status === 'Delivered' ? (<button
-										disabled={!orderbyid || orderbyid?.IsReturning}
-										onClick={createOrderReturn}
-										className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
+							{/* Tracking URL Section */}
+							{orderbyid?.trackingUrl && (
+								<div className="space-y-2">
+									<h2 className="text-xl font-semibold text-gray-800">Track Your Order</h2>
+									<a
+										href={orderbyid?.trackingUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-blue-500 hover:underline font-medium"
 									>
-										{orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
-									</button>):(
+										Click here to track your order
+									</a>
+								</div>
+							)}
+						</div>
+
+						{/* Sidebar - Order Summary */}
+						<div className="col-span-1 lg:col-span-4 justify-between flex flex-col bg-white p-2 sm:p-3 md:p-6 xl:p-5 2xl:p-6 rounded-lg space-y-6 border border-gray-600">
+							<div className="rounded-md space-y-4">
+								<h2 className="text-xl font-semibold text-gray-800">Order Summary</h2>
+								{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
+								<div className="space-y-2">
+									<p className="font-semibold text-gray-800">Total Items:</p>
+									<p className="text-base text-gray-600">{orderbyid?.orderItems?.length}</p>
+								</div>
+								<div className="space-y-2">
+									<p className="font-semibold text-gray-800">Total Amount:</p>
+									<p className="text-base text-gray-600">₹{formattedSalePrice(orderbyid?.TotalAmount)}</p>
+								</div>
+								<div className="space-y-2">
+									<p className="font-semibold text-gray-800">Shipping:</p>
+									<p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
+								</div>
+							</div>
+
+							<div className="space-y-2">
+								{
+									orderbyid?.status === 'Delivered' ? (
+										<button
+											disabled={!orderbyid || orderbyid?.IsReturning}
+											onClick={createOrderReturn}
+											className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
+										>
+											{orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
+										</button>
+									) : (
 										<button
 											disabled={!orderbyid || orderbyid?.IsCancelled}
 											onClick={createCancelOrder}
@@ -243,11 +261,11 @@ const OrderDetailsPage = ({ user }) => {
 										</button>
 									)
 								}
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
+							</div>
+						</div>
+					</div>
+				</div>
+
             ) : (
                 <Loader />
             )}

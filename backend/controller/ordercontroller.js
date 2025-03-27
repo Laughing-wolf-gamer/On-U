@@ -18,6 +18,7 @@ import {
 	generateRefundOrder, 
 	getShipmentOrderByOrderId 
 } from './LogisticsControllers/shiprocketLogisticController.js'
+import { getStatusDescription } from '../utilis/basicUtils.js'
 export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -635,14 +636,21 @@ export const getOrderById = async (req, res) => {
         }
 		try {
 			console.log("Shipment Order Id: ",order.order_id);
-			const shipmenetOrder = await getShipmentOrderByOrderId(order.order_id)
-			shipmenetOrder.map(shipOrder => {
-				console.log("Admin Shipment Order: ",);
-				// Log each key-value pair in shipOrder
-				Object.entries(shipOrder).forEach(([key, value]) => {
-					console.log(`${key}:`, value.tracking_data);
-				});
-			});
+			const shipmentTracking = await getShipmentOrderByOrderId(order)
+			let trackingData = null;
+			if(shipmentTracking){
+				if(shipmentTracking.tracking_data){
+					trackingData = shipmentTracking.tracking_data;
+				}else{
+					trackingData = shipmentTracking[order.shipment_id].tracking_data;
+				}
+			}
+			order.status = getStatusDescription(trackingData.shipment_status)
+			order.shipment_status = trackingData.shipment_status;
+			order.current_status = getStatusDescription(trackingData.shipment_status);
+			order.etd = trackingData.etd;
+			order.trackingUrl = trackingData.track_url
+			await order.save();
 			
 		} catch (error) {
 			console.error("Error Getting Shipment Status: ", error);
@@ -1749,14 +1757,21 @@ export const deletewish = async (req, res) => {
 export const returnOrder = async (req, res) => {
 	try {
 		const { orderId } = req.body;
-        console.log("Returning Order: ", orderId);
+		let userId = req.user.id;
+		if(!userId){
+			userId = req.query.userId;
+		}
+		if(!userId){
+			return res.status(400).json({ success: false, message: "User ID is required" });
+		}
 		const order = await OrderModel.findById(orderId);
-		const returnSuccess = await generateOrderRetrunShipment(order,req.user.id);
+		const returnSuccess = await generateOrderRetrunShipment(order,userId);
 		console.log("Return Order Success: ", returnSuccess);
 		if(!returnSuccess) {
 			return res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
 		}
 		order.status = returnSuccess.status;
+		order.shipment_status = returnSuccess.status_code;
 		order.IsReturning = true;
 		await order.save();
 		return res.status(200).json({ success: true, message: "Successfully returned order" });

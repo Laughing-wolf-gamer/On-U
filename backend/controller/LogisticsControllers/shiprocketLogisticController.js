@@ -649,6 +649,9 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
         if (!activePickUpLocation) {
             throw new Error("Pickup location is missing");
         }
+		/* const alternatePhoneOriginal = userData?.phoneNumber;
+		const alternatePhoneWith10Digit = alternatePhoneOriginal ? alternatePhoneOriginal.replace(/\D/g, '').slice(0, 10) : '';
+		console.log("Alternate Phone:", alternatePhoneOriginal) */
 
         // Construct the order details for the return shipment
         const orderDetails = {
@@ -659,7 +662,7 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
             channel_id: '6282866',
             category: "Clothes",
             pickup_isd_code: "+91",
-            pickup_customer_name: shipmentData.address.Firstname,
+            pickup_customer_name: shipmentData.address.Firstname || shipmentData.address.FirstName,
             pickup_last_name: shipmentData.address.Lastname,
             pickup_address: shipmentData.address.address1,
             pickup_city: shipmentData.address.address2,
@@ -829,11 +832,12 @@ export const getAllShipRocketOrder = async()=>{
     }
 }
 
-export const getShipmentOrderByOrderId = async(orderId)=>{
-	// if(!token) await getAuthToken();
+export const getShipmentOrderByOrderId = async(order)=>{
     try {
+		const{shipment_id} = order;
 		const token = await getShipRocketToken();
-		const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track?order_id=${orderId}&channel_id=6282866`, {
+		//${SHIPROCKET_API_URL}/courier/track?order_id=${order_id}&channel_id=6282866
+		const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track/shipment/${shipment_id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -907,11 +911,12 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
         console.error("Error Checking Pincode.: ",error)
     }
 }
-export const getShipmentTrackingStatus = async(shipmentId)=>{
+export const getShipmentTrackingStatus = async(order)=>{
 	// if(!token) await getAuthToken();
     try {
+		const{shipment_id} = order;
 		const token = await getShipRocketToken();
-        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track/shipment/${shipmentId}`, {
+        const res = await axios.get(`${SHIPROCKET_API_URL}/courier/track/shipment/${shipment_id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },
@@ -919,11 +924,11 @@ export const getShipmentTrackingStatus = async(shipmentId)=>{
 
         // console.log(res?.data);
         // console.dir(res.data,{ depth: null})
-		const returningTrackingData = res.data[shipmentId]?.tracking_data;
+		const returningTrackingData = res.data;
         return returningTrackingData;
     } catch (error) {
         // console.dir(error, { depth: null});
-        console.error("Error Checking Shipment Status.: ",error.response?.date)
+        console.error("Error Checking Shipment Status.: ",error.response?.date || error)
     }
 }
 

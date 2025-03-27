@@ -237,13 +237,7 @@ const AdminOrderLayout = () => {
 									<div className="flex justify-between">
 										<span className="font-semibold text-sm">Order Status:</span>
 										<span className="text-sm">
-											<Badge className={`py-1 px-3 text-white`}>{order?.status}</Badge>
-										</span>
-									</div>
-									<div className="flex justify-between">
-										<span className="font-semibold text-sm">Order Shipment Status:</span>
-										<span className="text-sm">
-											<Badge className={`py-1 px-3 text-white`}>{getStatusDescription(order?.shipment_status)}</Badge>
+											<Badge className={`py-1 px-3 text-center uppercase text-white`}>{order?.status}</Badge>
 										</span>
 									</div>
 									<div className="flex justify-between">
@@ -317,13 +311,12 @@ const OrderFilter = ({ filters, setFilters, orderStatus,filteredOrderList }) => 
 );
 
 const OrderTable = ({ orders, handleFetchOrderDetails }) => (
-	<div className="grid grid-cols-8 gap-2 p-3 bg-gray-100 font-semibold text-sm sm:text-base">
+	<div className="grid grid-cols-7 gap-2 p-3 bg-gray-100 font-semibold text-sm sm:text-base">
 		<div>Order Id</div>
 		<div>Order Date</div>
 		<div>Order By</div>
 		<div>Payment Method</div>
 		<div>Order Status</div>
-		<div>Shipment Status Code</div>
 		<div>Total Amount</div>
 		<div className="text-center">Details</div>
 	</div>
@@ -331,18 +324,15 @@ const OrderTable = ({ orders, handleFetchOrderDetails }) => (
 const OrderTableRow = ({ orders, handleFetchOrderDetails }) => (
 	<Fragment>
 		{orders.map((order) => (
-			<div key={order?._id} className="grid grid-cols-8 justify-center items-center gap-2 p-3">
-				<div className="text-sm sm:text-base truncate">{order?.order_id}</div>
+			<div key={order?._id} className="grid grid-cols-7 justify-center items-center gap-2 p-3">
+				<div className="text-sm sm:text-base">{order?.order_id}</div>
 				<div className="text-sm sm:text-base">{new Date(order?.createdAt).toLocaleString()}</div>
-				<div className="text-sm sm:text-base truncate">{order?.address?.Firstname} {order?.address?.Lastname}</div>
-				<div className="text-sm sm:text-base">
-					<Badge className={`justify-center items-center py-1 px-3 text-white bg-green-500`}>{order?.paymentMode}</Badge>
+				<div className="text-sm sm:text-base">{order?.address?.Firstname || order?.address?.FirstName} {order?.address?.Lastname}</div>
+				<div className="text-sm sm:text-base justify-center flex items-center">
+					<Badge className={`justify-center items-center py-1 text-center uppercase px-3 text-white bg-green-500`}>{order?.paymentMode}</Badge>
 				</div>
-				<div className="text-sm sm:text-base">
-					<Badge className={`justify-center items-center py-1 px-3 text-white`}>{order?.status}</Badge>
-				</div>
-				<div className="text-sm sm:text-base">
-					<Badge className={`justify-center items-center py-1 px-3 text-white bg-red-500`}>{getStatusDescription(order?.shipment_status)}</Badge>
+				<div className="text-sm sm:text-base text-center uppercase justify-center flex items-center">
+					<Badge className={`justify-center items-center w-min`}>{order?.status}</Badge>
 				</div>
 				<div className="text-sm sm:text-base">₹ {order?.TotalAmount}</div>
 				<div className="text-sm sm:text-base text-center">

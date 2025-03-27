@@ -152,6 +152,16 @@ export const adminRequestTryCreateManifest = createAsyncThunk('/admin/orders/try
         return {error: error.response.data.message};
     }
 })
+export const adminCreateOrderReturns = createAsyncThunk('/admin/orders/createOrderReturns',async({orderId,userId})=>{
+	try {
+		const {data} = await axios.post(`${BASE_URL}/api/shop/order_bag_wishList/order/returnOrder?userId=${userId}`,{orderId}, Header());
+		console.log("Return Order: ",data);
+		return data?.success;
+	} catch (error) {
+		console.error("Error Creating Order Return: ",error);
+		return false;
+	}
+})
 
 
 
