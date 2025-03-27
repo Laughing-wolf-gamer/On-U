@@ -159,18 +159,13 @@ export const generateOrderPicketUpRequest = async (order, orderData, bestCourier
                 delivery_postcode: order?.address?.pincode,
                 order_id: order_id,
             });
-			console.log("All Available Courier: ",allAvailableCourier);
+			// console.log("All Available Courier: ",allAvailableCourier);
             if (!allAvailableCourier?.available_courier_companies || allAvailableCourier?.available_courier_companies.length === 0) {
                 throw new Error("No available couriers found.");
             }
-
-            selectedCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
-
-            // Fallback if no best courier found
-            if (!selectedCourier) {
-                console.error("No suitable best courier found, falling back to first available courier.");
-                selectedCourier = allAvailableCourier?.available_courier_companies[0];
-            }
+			const shiprocket_recommended_courier_id = allAvailableCourier.shiprocket_recommended_courier_id; 
+            // selectedCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0];
+            selectedCourier = allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id);
         }
 
         // Generate AWB code for the selected courier
@@ -507,8 +502,8 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             }),
             generateInvoice(response.data)
         ]);
-
-        console.log("All Available Courier: ", allAvailableCourier?.available_courier_companies);
+		const shiprocket_recommended_courier_id = allAvailableCourier.shiprocket_recommended_courier_id; 
+        console.log("All Available Courier: ", allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id));
 		
         // Get the best courier based on available options
         let bestCourier = null;
@@ -517,8 +512,9 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 		}
         if (!bestCourier) {
             console.error("No suitable courier found");
-            bestCourier = allAvailableCourier?.available_courier_companies[0];
+            bestCourier = allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id);
         }
+
 
         if (bestCourier) {
             // Create pickup request with the best courier
@@ -703,7 +699,7 @@ export const generateOrderRetrunShipment = async (shipmentData, userId) => {
 
     } catch (error) {
         console.error("Error creating return shipment:", error?.response?.data || error.message);
-        logger.error(`Error creating return shipment: ${getStringFromObject(error?.response?.data || error.message)}`);
+        logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
         return null;
     }
 };
