@@ -66,6 +66,15 @@ const ShippingInfo = ({ address }) => (
 		))}
 	</ul>
 )
+const ReturningDataInfo = ({ ReturningData }) => (
+	<ul className="grid gap-0.5">
+		{ReturningData && Object.keys(ReturningData).map((key, index) => (
+			<span key={index}>
+				{capitalizeFirstLetterOfEachWord(key)}: {ReturningData[key] || 'No-Data'}
+			</span>
+		))}
+	</ul>
+)
 
 const AdminOrdersDetailsView = ({ order }) => {
 	const{checkAndCreateToast} = useSettingsContext();
@@ -241,6 +250,14 @@ const AdminOrdersDetailsView = ({ order }) => {
 				{/* Pickup Data (Optional) */}
 				{order?.PicketUpData && <PicketUpDataDisplay picketUpData={order?.PicketUpData} />}
 
+				<Separator />
+				{
+					order?.ReturningData && <div className="grid grid-cols-2 gap-4">
+						<div className="font-medium">Return Info</div>
+						<ReturningDataInfo ReturningData={order?.ReturningData} />
+					</div>
+				}
+				
 				{/* Action Buttons */}
 				<div className="flex flex-wrap gap-3 h-fit justify-center items-center">
 					<Button
@@ -269,7 +286,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						onClick={createOrderReturnFromUser}
 					>
 						{
-							order?.IsReturning? "Order Returned" : "Return Order"
+							order?.IsReturning? "Order Returned" : "Try Return Order"
 						}
 					</Button>
 
