@@ -743,7 +743,11 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             weight:totalOrderWeight,
             is_return:1,
         });
-        console.log("Avaialbele Couriors",allAvailableCourier);
+		let dataToSend = null;
+		if(allAvailableCourier){
+			dataToSend = getStringFromObject(allAvailableCourier);
+		}
+        // console.log("Avaialbele Couriors",allAvailableCourier);
         /* let bestCourier = allAvailableCourier?.available_courier_companies[0];
 		if(allAvailableCourier && allAvailableCourier.available_courier_companies.length > 0){
             bestCourier = allAvailableCourier?.available_courier_companies[0];
@@ -756,8 +760,11 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             is_return:1,
         }); */
         // console.log("Return Awb Response Result: ",result);
-
-        return {...returnResponseData,returningCourior:allAvailableCourier};
+		if(allAvailableCourier){
+        	return {...returnResponseData,['Return Result Message']:dataToSend};
+		}else{
+			return returnResponseData;
+		}
     } catch (error) {
         console.error("Error creating return shipment:", error?.response?.data || error.message);
         logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);

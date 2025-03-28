@@ -65,7 +65,7 @@ const ShippingInfo = ({ address }) => (
 	<ul className="grid gap-0.5">
 		{address && Object.keys(address).map((key, index) => (
 			<span key={index}>
-				{capitalizeFirstLetterOfEachWord(key)}: {address[key] || 'No-Data'}
+				{capitalizeFirstLetterOfEachWord(key)}: {address[key] || '-'}
 			</span>
 		))}
 	</ul>
@@ -74,7 +74,7 @@ const ReturningDataInfo = ({ ReturningData }) => (
 	<ul className="grid gap-0.5">
 		{ReturningData && Object.keys(ReturningData).map((key, index) => (
 			<span key={index}>
-				{capitalizeFirstLetterOfEachWord(key)}: {ReturningData[key] || 'No-Data'}
+				{capitalizeFirstLetterOfEachWord(key)}: {ReturningData[key] || '-'}
 			</span>
 		))}
 	</ul>

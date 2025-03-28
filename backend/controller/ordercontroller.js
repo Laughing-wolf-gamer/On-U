@@ -1774,7 +1774,7 @@ export const returnOrder = async (req, res) => {
 		}
 		const order = await OrderModel.findById(orderId);
 		const returnSuccess = await generateOrderReturnShipment(order,userId);
-		// console.log("Return Order Success: ", returnSuccess);
+		console.log("Return Order Success: ", returnSuccess);
 		let lastStatus = order.status;
 		if(!returnSuccess) {
 			return res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
