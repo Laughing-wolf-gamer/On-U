@@ -754,6 +754,16 @@ const AddAddress = ({onSave }) => {
     const handleSave = () => {
 		console.log("Check New Address! ",newAddress);
         if (Object.values(newAddress).every(value => value.trim() !== '')) {
+			if(newAddress['address1'].length > 30){
+                checkAndCreateToast('error', 'Address should be less Then 30 Characters!');
+				setError('Address should be 30 Characters!')
+                return;
+            }
+            if(newAddress['address2'].length > 30){
+                checkAndCreateToast('error', 'Address should be Less then 30 Characters!');
+				setError('Address should be 30 Characters!')
+                return;
+            }
 			// Remove non-digit characters from phoneNumber
 			const digitsOnly = newAddress['phoneNumber'].replace(/\D/g, '');
 
@@ -773,7 +783,7 @@ const AddAddress = ({onSave }) => {
             onSave(newAddress);
             setNewAddress(formInitState || {}); // Reset form
             // onClose(); // Close modal
-            setError(''); // Clear any previous errors
+            setError(null); // Clear any previous errors
         } else {
             setError('Please fill out all the fields.');
         }
@@ -818,6 +828,7 @@ const AddAddress = ({onSave }) => {
 							onChange={handleChange}
 							className="p-2 rounded-md mt-1 w-full"
 							required
+							maxLength={'30'}
 							placeholder={`Enter ${removeSpaces(item)}`}
 						/>
 						{/* {error && <FormHelperText>{error}</FormHelperText>} */}

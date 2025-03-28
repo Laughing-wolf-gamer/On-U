@@ -26,6 +26,16 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
     const handleSave = () => {
 		console.log("Check New Address!",newAddress);
         if (Object.values(newAddress).every(value => value.trim() !== '')) {
+            if(newAddress['address1'].length > 30){
+                checkAndCreateToast('error', 'Address should be less then 30 Characters!');
+				setError({errorTag:'address1',error:'Address should be 30 Characters!'})
+                return;
+            }
+            if(newAddress['address2'].length > 30){
+                checkAndCreateToast('error', 'Address should be less then 30 Characters!');
+				setError({errorTag:'address2',error:'Address should be 30 Characters!'})
+                return;
+            }
 			// Remove non-digit characters from phoneNumber
 			const digitsOnly = newAddress['phoneNumber'].replace(/\D/g, '');
 
@@ -92,6 +102,7 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 										type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
                                         onChange={handleChange}
                                         placeholder={`Enter ${removeSpaces(item)}`}
+                                        maxLength={'30'}
                                     />
                                     {error && (
                                         <FormHelperText>{
