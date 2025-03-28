@@ -564,7 +564,27 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
         return null;
     }
 };
-
+export const getOrderReturnServicesablity = async (servicesData) => {
+	// if (!token) await getAuthToken();
+	try {
+		const token = await getShipRocketToken();
+		// console.log("Check Serviceability ",servicesData);
+		const response = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+			params: servicesData,  // Use `params` for query parameters in GET requests
+        })
+		// console.dir(response?.data,{depth:null});
+		console.log("Response Check Serviceability",response?.data)
+		return response?.data?.data;
+	} catch (error) {
+		console.error('Error fetching all serviceabilityties:', error?.response?.data);
+		// console.dir(error,{depth:null});
+		// logger.error(`Failed to fetch all serviceabilityties ${getStringFromObject(error?.response?.data)}`)
+		return null;
+	}
+}
 export const generateRefundOrder = async (order) => {
 	try {
 		const { paymentId, TotalAmount } = order;
@@ -709,12 +729,28 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
                 Authorization: `Bearer ${token}`,
             },
         });
+        
 
         console.log("Return Shipment Created Response: ", response.data);
         const returnResponseData = response.data;
-        const result = await generateReturnAwb(returnResponseData);
+        const allAvailableCourier = await getOrderReturnServicesablity({
+            pickup_postcode: shipmentData.address.pincode,
+            delivery_postcode: activePickUpLocation.pin_code,
+            order_id: returnResponseData.order_id,
+            cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
+            weight:totalOrderWeight * 1000,
+            is_return:1,
+        });
+        const shiprocket_recommended_courier_id = allAvailableCourier.shiprocket_recommended_courier_id; 
+        console.log("Recomended Returing Available Courier: ", allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id));
+        /* const result = await generateReturnAwb({
+            shipment_id:returnResponseData.shipment_id,
+            courier_id:'',
+            status:returnResponseData.status,
+            is_return:1,
+        }); */
 
-        return {...returnResponseData,awbCode:result};
+        return {...returnResponseData};
     } catch (error) {
         console.error("Error creating return shipment:", error?.response?.data || error.message);
         logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
