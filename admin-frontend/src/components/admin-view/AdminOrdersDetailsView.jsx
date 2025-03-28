@@ -4,7 +4,7 @@ import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
 import { Badge } from '../ui/badge'
 import { useDispatch } from 'react-redux'
-import { adminCreateOrderReturns, adminCreateRefundRequest, adminGetAllOrders, adminRequestTryCreateManifest, adminRequestTryPickUp, adminSendOrderCancel, adminUpdateUsersOrdersById } from '@/store/admin/order-slice'
+import { adminCreateOrderReturns, adminCreateRefundRequest, adminGetAllOrders, adminRequestTryCreateManifest, adminRequestTryPickUp, adminSendOrderCancel, adminUpdateUsersOrdersById,adminGetUsersOrdersById } from '@/store/admin/order-slice'
 import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config'
 import { useSettingsContext } from '@/Context/SettingsContext'
 import { Button } from '../ui/button'
@@ -104,6 +104,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 		}else{
 			checkAndCreateToast('error',"Failed to initiate refund request")
 		}
+		handleFetchOrderDetails(order?._id)
 	}
 	const handlePickupResponse = async () => {
 		const response = await dispatch(adminRequestTryPickUp({
@@ -116,6 +117,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 		}else{
 			checkAndCreateToast('error',"Successfully created response:");
 		}
+		handleFetchOrderDetails(order?._id)
 	}
 	const createCancelOrder = async(e)=>{
 		e.preventDefault();
@@ -131,6 +133,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 				checkAndCreateToast('error','Failed to Cancel Order')
 			}
 		}
+		handleFetchOrderDetails(order?._id)
 	}
 	const handleCreateManifest = async()=>{
 		const response = await dispatch(adminRequestTryCreateManifest({ orderId: order._id }))
@@ -139,6 +142,7 @@ const AdminOrdersDetailsView = ({ order }) => {
         }else{
             checkAndCreateToast('success',"Successfully created manifest:");
         }
+		handleFetchOrderDetails(order?._id)
 	}
 	const createOrderReturnFromUser = async()=>{
 		const response = await dispatch(adminCreateOrderReturns({ orderId: order?._id, userId: order?.userId}));
@@ -151,7 +155,11 @@ const AdminOrdersDetailsView = ({ order }) => {
         }else{
             checkAndCreateToast('error','Failed to Cancel Order')
         }
+		handleFetchOrderDetails(order?._id)
 	}
+	const handleFetchOrderDetails = async (orderId)=>{
+		await dispatch(adminGetUsersOrdersById(orderId));
+	};
 
 	return (
 		<DialogContent className="sm:max-w-[600px] max-h-[500px] overflow-y-auto">

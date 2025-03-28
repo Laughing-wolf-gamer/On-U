@@ -737,7 +737,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
         const allAvailableCourier = await getOrderReturnServicesablity({
             pickup_postcode: returnResponseData?.shipment_id,
-            delivery_postcode: primaryLocation?.pin_code,
+            delivery_postcode: 10,
             order_id:returnResponseData?.order_id,
             is_return:1,
         });
