@@ -677,6 +677,8 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         }));
 
         // Extract the active pickup location
+        /* const pickup_locations = await getPickUpLocation();
+        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location); */
         const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
         if (!activePickUpLocation) {
             throw new Error("Pickup location is missing");
@@ -735,7 +737,9 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         const returnResponseData = response.data;
         const allAvailableCourier = await getOrderReturnServicesablity({
             pickup_postcode: returnResponseData.shipment_id,
-            // delivery_postcode: activePickUpLocation.pin_code,
+            delivery_postcode: activePickUpLocation.pin_code,
+            cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
+            weight:totalOrderWeight,
             is_return:1,
         });
         let bestCourier = allAvailableCourier?.available_courier_companies[0];
@@ -748,8 +752,8 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             courier_id:bestCourier?.courier_company_id,
             status:returnResponseData.status,
             is_return:1,
-        });
-        console.log("Return Awb Response Result: ",result); */
+        }); */
+        console.log("Return Awb Response Result: ",result);
 
         return {...returnResponseData};
     } catch (error) {
