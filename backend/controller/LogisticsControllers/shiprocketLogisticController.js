@@ -741,8 +741,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             weight:totalOrderWeight * 1000,
             is_return:1,
         });
-        const shiprocket_recommended_courier_id = allAvailableCourier.shiprocket_recommended_courier_id; 
-        console.log("Recomended Returing Available Courier: ", allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id));
+        console.log("Recomended Returing Available Courier: ", allAvailableCourier?.available_courier_companies);
         /* const result = await generateReturnAwb({
             shipment_id:returnResponseData.shipment_id,
             courier_id:'',
