@@ -57,6 +57,7 @@ const generateReturnAwb = async(awbData)=>{
 		const awb_code = response?.data?.response?.data?.awb_code
 		return awb_code || null;
     } catch (error) {
+        console.error('Error Creating Return AWB: ', error?.response?.data);
         return null;
     }
 }
