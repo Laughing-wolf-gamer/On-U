@@ -568,7 +568,7 @@ export const getOrderReturnServicesablity = async (servicesData) => {
 	// if (!token) await getAuthToken();
 	try {
 		const token = await getShipRocketToken();
-		// console.log("Check Serviceability ",servicesData);
+		console.log("Check Serviceability ",servicesData);
 		const response = await axios.get(`${SHIPROCKET_API_URL}/courier/serviceability/`,{
             headers: {
                 Authorization: `Bearer ${token}`,
