@@ -36,7 +36,8 @@ const ordersSchema = new mongoose.Schema({
 	IsInExcnage:{type:Boolean,default:false},
 	IsCancelled:{type:Boolean,default:false},
 	RefundData:{type:Object,default:null},
-	trackingUrl:{type:String,default:''}
+	trackingUrl:{type:String,default:''},
+    ReturningData:Object
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

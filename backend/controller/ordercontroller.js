@@ -1783,6 +1783,7 @@ export const returnOrder = async (req, res) => {
 		order.shipment_status = returnSuccess.status_code;
 		order.current_status = getStatusDescription(returnSuccess.status_code)
 		order.IsReturning = true;
+        order.ReturningData = returnSuccess;
 		await order.save();
         try {
             sendOrderStatusUpdateMail(order.userId,order);

@@ -545,6 +545,10 @@ export const filterOptions = {
 }
 export function getStatusDescription(statusNumber) {
 	const statusMap = {
+        1:"New",
+        2:'Invoiced',
+        3:"Ready To Ship",
+        4:"Pickup Scheduled",
 		6: 'Shipped',
 		7: 'Delivered',
 		8: 'Canceled',

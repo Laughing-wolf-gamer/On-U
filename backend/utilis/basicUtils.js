@@ -12,6 +12,10 @@ export function getOriginalAmount(gstRate, amountWithGST) {
 export const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
 export function getStatusDescription(statusNumber) {
   const statusMap = {
+    1:"New",
+    2:'Invoiced',
+    3:"Ready To Ship",
+    4:"Pickup Scheduled",
     6: 'Shipped',
     7: 'Delivered',
     8: 'Canceled',
