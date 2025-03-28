@@ -733,27 +733,15 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
 
         console.log("Return Shipment Created Response: ", response.data);
         const returnResponseData = response.data;
-        const pickup_locations = await getPickUpLocation();
-        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
-        const allAvailableCourier = await getOrderReturnServicesablity({
-            pickup_postcode: returnResponseData?.shipment_id,
-            delivery_postcode: primaryLocation?.pin_code,
-            cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
-            weight:totalOrderWeight,
-            is_return:1,
-        });
-        let bestCourier = allAvailableCourier?.available_courier_companies[0];
-		if(allAvailableCourier && allAvailableCourier.available_courier_companies.length > 0){
-            bestCourier = allAvailableCourier?.available_courier_companies[0];
-		}
+        const bestCourier = shipmentData.BestCourior.courier_company_id;
         console.log('Best Crourior: ',bestCourier);
-        /* const result = await generateReturnAwb({
+        const result = await generateReturnAwb({
             shipment_id:returnResponseData.shipment_id,
-            courier_id:bestCourier?.courier_company_id,
+            courier_id:shipmentData.BestCourior.courier_company_id,
             status:returnResponseData.status,
             is_return:1,
-        }); */
-        // console.log("Return Awb Response Result: ",result);
+        });
+        console.log("Return Awb Response Result: ",result);
 
         return {...returnResponseData};
     } catch (error) {
