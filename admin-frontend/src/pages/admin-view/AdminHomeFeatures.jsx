@@ -397,10 +397,14 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 
     // Helper function to determine if the file is a video or an image
     const getFileType = useCallback((url) => {
-        const fileExtension = url.split('.').pop().toLowerCase();
-        const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
-        const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
-        return { isImage, isVideo };
+		if(url){
+			const fileExtension = url.split('.').pop().toLowerCase();
+			const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+			const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
+			return { isImage, isVideo };
+		}else{
+			{isImage:false, isVideo:false}
+		}
     }, []);
 
     // Lazy load images and videos when they come into view
@@ -468,6 +472,9 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 					>
 						{items.length > 0 ? (
 							items.map((url, index) => {
+								if(!url){
+									return <p>No Url Provided</p>
+								}
 								const { isImage, isVideo } = getFileType(url);
 								return (
 									<Draggable key={index} draggableId={String(index)} index={index}>

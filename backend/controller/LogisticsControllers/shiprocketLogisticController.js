@@ -737,7 +737,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
         console.log("Pickup Locations: : ",pickup_locations);
         const allAvailableCourier = await getOrderReturnServicesablity({
-            pickup_postcode: returnResponseData?.shipment_id,
+            pickup_postcode: shipmentData.address.pincode+,
             delivery_postcode: primaryLocation?.pin_code,
             cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
             weight:totalOrderWeight,
