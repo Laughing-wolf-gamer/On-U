@@ -738,7 +738,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             delivery_postcode: activePickUpLocation.pin_code,
             order_id: returnResponseData.order_id,
             cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
-            weight:totalOrderWeight * 1000,
+            weight:totalOrderWeight,
             is_return:1,
         });
         let bestCourier = allAvailableCourier?.available_courier_companies[0];
