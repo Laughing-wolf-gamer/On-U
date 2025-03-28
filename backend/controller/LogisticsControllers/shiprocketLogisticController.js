@@ -479,7 +479,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
             length: totalOrderLength,
             breadth: totalBredth,
             height: totalOrderHeight,
-            weight: totalOrderWeight / 1000, // Convert weight to KG
+            weight: totalOrderWeight, // Convert weight to KG
             order_type: 'NON ESSENTIALS',
             hsn: '441122', // Static HSN, but can be dynamically generated based on your needs
         };
@@ -684,7 +684,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             length: totalOrderLength,
             breadth: totalBreadth,
             height: totalOrderHeight,
-            weight: totalOrderWeight / 1000, // Convert weight to KG
+            weight: totalOrderWeight, // Convert weight to KG
             // hsn: '441122' // Use a predefined HSN code
         };
         // Create return shipment by calling ShipRocket API
@@ -742,7 +742,7 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
             qc_color: item?.productId?.color?.name,
             qc_size: item?.productId?.size?.label,
             discount: item?.productId?.DiscountedPercentage,
-            tax: 0,
+            tax: item?.productId?.gst || 0,
         }));
 
         // Get pickup location from shipment data
@@ -786,7 +786,7 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
             length: totalOrderLength,
             breadth: totalBredth,
             height: totalOrderHeight,
-            weight: totalOrderWeight / 1000,  // Convert weight to KG
+            weight: totalOrderWeight,  // Convert weight to KG
         };
 
         console.log("ShipRocket Exchange Data: ", orderDetails);
