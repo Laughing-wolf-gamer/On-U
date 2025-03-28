@@ -677,8 +677,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         }));
 
         // Extract the active pickup location
-        /* const pickup_locations = await getPickUpLocation();
-        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location); */
+        
         const activePickUpLocation = shipmentData.picketUpLoactionWareHouseName;
         if (!activePickUpLocation) {
             throw new Error("Pickup location is missing");
@@ -735,9 +734,11 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
 
         console.log("Return Shipment Created Response: ", response.data);
         const returnResponseData = response.data;
+        const pickup_locations = await getPickUpLocation();
+        const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
         const allAvailableCourier = await getOrderReturnServicesablity({
-            pickup_postcode: returnResponseData.shipment_id,
-            delivery_postcode: activePickUpLocation.pin_code,
+            pickup_postcode: shipmentData.address.pincode,
+            delivery_postcode: primaryLocation?.pin_code,
             cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
             weight:totalOrderWeight,
             is_return:1,
