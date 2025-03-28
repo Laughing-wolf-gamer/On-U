@@ -44,12 +44,12 @@ const OrderItemList = ({ items }) => (
 							<span className="text-sm text-gray-600">{item?.color?.sku}</span>
 						</div>
 						<div className="flex justify-between">
-							<Label className="font-semibold">HSN:</Label>
-							<span className="text-sm text-gray-600">{item?.productId?.hsn}</span>
-						</div>
-						<div className="flex justify-between">
 							<Label className="font-semibold">Quantity:</Label>
 							<span className="text-sm text-gray-600">{item?.quantity}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">HSN:</Label>
+							<span className="text-sm text-gray-600">{item?.productId?.hsn}</span>
 						</div>
 						<div className="flex justify-between">
 							<Label className="font-semibold">Price:</Label>
