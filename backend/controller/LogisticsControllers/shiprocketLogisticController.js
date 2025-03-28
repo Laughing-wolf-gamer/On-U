@@ -754,7 +754,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             status:returnResponseData.status,
             is_return:1,
         }); */
-        console.log("Return Awb Response Result: ",result);
+        // console.log("Return Awb Response Result: ",result);
 
         return {...returnResponseData};
     } catch (error) {
