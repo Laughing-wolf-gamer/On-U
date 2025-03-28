@@ -44,6 +44,22 @@ export const logoutAuthToken = async ()=>{
         console.error('Error logging out auth token:', error.message);
     }
 }
+const generateReturnAwb = async(awbData)=>{
+    try {
+        const token = await getShipRocketToken();
+		console.log("Check Return AWB ",awbData);
+		const response = await axios.post(`${SHIPROCKET_API_URL}/courier/assign/awb`,awbData,{
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        console.log("Return Awb Generationg response: ",response?.data?.response?.data);
+		const awb_code = response?.data?.response?.data?.awb_code
+		return awb_code || null;
+    } catch (error) {
+        return null;
+    }
+}
 const generateAwb = async(awbData)=>{
 	// if (!token) await getAuthToken();
 	try {
@@ -596,6 +612,7 @@ export const generateOrderCancel = async(orderId)=>{
         return error?.response?.data;
     }
 }
+
 export const generateOrderReturnShipment = async (shipmentData, userId) => {
     // if (!token) await getAuthToken();
 
@@ -693,8 +710,10 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         });
 
         console.log("Return Shipment Created Response: ", response.data);
-        return response.data;
+        const returnResponseData = response.data;
+        const result = await generateReturnAwb(returnResponseData);
 
+        return {...returnResponseData,awbCode:result};
     } catch (error) {
         console.error("Error creating return shipment:", error?.response?.data || error.message);
         logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
