@@ -397,14 +397,10 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 
     // Helper function to determine if the file is a video or an image
     const getFileType = useCallback((url) => {
-		if(url){
-			const fileExtension = url.split('.').pop().toLowerCase();
-			const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
-			const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
-			return { isImage, isVideo };
-		}else{
-			return {isImage:false, isVideo:false}
-		}
+		const fileExtension = url.split('.').pop().toLowerCase();
+		const isVideo = ['mp4', 'webm', 'ogg'].includes(fileExtension);
+		const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
+		return {isImage,isVideo };
     }, []);
 
     // Lazy load images and videos when they come into view
@@ -473,7 +469,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 						{items.length > 0 ? (
 							items.map((url, index) => {
 								if(!url){
-									return <p>No Url Provided</p>
+									return (<p>No Url Provided</p>)
 								}
 								const { isImage, isVideo } = getFileType(url);
 								return (
@@ -500,7 +496,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 														className="w-full h-full object-contain rounded-lg shadow-sm"
 														onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
 													/>
-												) : isVideo && url ? (
+												) : isVideo ? (
 													<ReactPlayer
 														ref={(el) => (videoRefs.current[index] = el)} // Assign ref for lazy loading
 														url={url}
