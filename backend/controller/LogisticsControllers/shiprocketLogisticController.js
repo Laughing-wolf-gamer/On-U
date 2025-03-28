@@ -512,10 +512,8 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 		}
         if (!bestCourier) {
             console.error("No suitable courier found");
-            bestCourier = allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id);
         }
-
-
+        bestCourier = allAvailableCourier?.available_courier_companies.find(courier_id => courier_id.courier_company_id === shiprocket_recommended_courier_id);
         if (bestCourier) {
             // Create pickup request with the best courier
             const createPickUpResponse = await generateOrderPicketUpRequest(null, {
