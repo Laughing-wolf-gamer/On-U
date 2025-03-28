@@ -734,11 +734,8 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         console.log("Return Shipment Created Response: ", response.data);
         const returnResponseData = response.data;
         const allAvailableCourier = await getOrderReturnServicesablity({
-            pickup_postcode: shipmentData.address.pincode,
+            pickup_postcode: returnResponseData.shipment_id,
             delivery_postcode: activePickUpLocation.pin_code,
-            order_id: returnResponseData.order_id,
-            cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
-            weight:totalOrderWeight,
             is_return:1,
         });
         let bestCourier = allAvailableCourier?.available_courier_companies[0];
@@ -746,13 +743,13 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             bestCourier = allAvailableCourier?.available_courier_companies[0];
 		}
         console.log('Best Crourior: ',bestCourier);
-        const result = await generateReturnAwb({
+        /* const result = await generateReturnAwb({
             shipment_id:returnResponseData.shipment_id,
             courier_id:bestCourier?.courier_company_id,
             status:returnResponseData.status,
             is_return:1,
         });
-        console.log("Return Awb Response Result: ",result);
+        console.log("Return Awb Response Result: ",result); */
 
         return {...returnResponseData};
     } catch (error) {
