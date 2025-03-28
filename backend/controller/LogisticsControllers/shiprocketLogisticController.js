@@ -577,7 +577,7 @@ export const getOrderReturnServicesablity = async (servicesData) => {
         })
 		// console.dir(response?.data,{depth:null});
 		console.log("Response Check Serviceability",response?.data)
-		return response?.data?.data;
+		return response?.data;
 	} catch (error) {
 		console.error('Error fetching all serviceabilityties:', error?.response?.data);
 		// console.dir(error,{depth:null});
@@ -757,7 +757,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         }); */
         // console.log("Return Awb Response Result: ",result);
 
-        return {...returnResponseData};
+        return {...returnResponseData,returningCourior:allAvailableCourier};
     } catch (error) {
         console.error("Error creating return shipment:", error?.response?.data || error.message);
         logger.error(`Error creating return shipment: ${error?.response?.data || error.message}`);
