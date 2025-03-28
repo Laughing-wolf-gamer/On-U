@@ -64,18 +64,26 @@ const OrderItemList = ({ items }) => (
 const ShippingInfo = ({ address }) => (
 	<ul className="grid gap-0.5">
 		{address && Object.keys(address).map((key, index) => (
-			<span key={index}>
-				{capitalizeFirstLetterOfEachWord(key)}: {address[key] || '-'}
-			</span>
+			<div key={index}
+				className='flex flex-row items-start gap-3'
+			>
+				<h1
+					className='text-gray-700 font-extrabold underline'
+				>{capitalizeFirstLetterOfEachWord(key)}: </h1> : <span>{address[key] || '-'}</span>
+			</div>
 		))}
 	</ul>
 )
 const ReturningDataInfo = ({ ReturningData }) => (
 	<ul className="grid gap-0.5">
 		{ReturningData && Object.keys(ReturningData).map((key, index) => (
-			<span key={index}>
-				{capitalizeFirstLetterOfEachWord(key)}: {ReturningData[key] || '-'}
-			</span>
+			<div key={index}
+				className='flex flex-row items-start gap-3'
+			>
+				<h1
+					className='text-gray-700 text-lg font-bold underline'
+				>{capitalizeFirstLetterOfEachWord(key)}: </h1> : <span>{ReturningData[key] || '-'}</span>
+			</div>
 		))}
 	</ul>
 )
