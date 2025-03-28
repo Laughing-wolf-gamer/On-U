@@ -661,10 +661,9 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             calculateTotal('length'),
             calculateTotal('breadth')
         ]);
-
+        console.log("Shipment Data: ",shipmentData);
         // Generate random ID for HSN and SKU if needed
         const generateRandomId = () => Math.floor(10000000 + Math.random() * 90000000);
-		console.log("Order Items: ",shipmentData.orderItems);
         // Map order items to required format in a single pass
         const orderItems = shipmentData.orderItems.map(item => ({
             name: item?.productId?.title,
@@ -737,7 +736,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         const pickup_locations = await getPickUpLocation();
         const primaryLocation = pickup_locations.find(loc => loc.is_primary_location);
         const allAvailableCourier = await getOrderReturnServicesablity({
-            pickup_postcode: shipmentData.address.pincode,
+            pickup_postcode: returnResponseData?.shipment_id,
             delivery_postcode: primaryLocation?.pin_code,
             cod:shipmentData.paymentMode === 'prepaid' ? 0 : 1,
             weight:totalOrderWeight,

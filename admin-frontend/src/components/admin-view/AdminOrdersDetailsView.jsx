@@ -295,7 +295,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 					</Button>
 
 					<Button
-						disabled={order?.IsCancelled || order?.paymentMode !== 'prepaid' || order?.RefundData}
+						disabled={order?.IsCancelled}
 						className="text-white px-4 py-2 rounded-md"
 						onClick={createCancelOrder}
 					>
