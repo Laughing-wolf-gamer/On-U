@@ -735,7 +735,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
         const returnResponseData = response.data;
         const allAvailableCourier = await getOrderReturnServicesablity({
             pickup_postcode: returnResponseData.shipment_id,
-            delivery_postcode: activePickUpLocation.pin_code,
+            // delivery_postcode: activePickUpLocation.pin_code,
             is_return:1,
         });
         let bestCourier = allAvailableCourier?.available_courier_companies[0];
