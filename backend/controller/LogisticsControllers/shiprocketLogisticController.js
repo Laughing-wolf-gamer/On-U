@@ -436,7 +436,7 @@ export const generateOrderForShipment = async (userId, shipmentData, randomOrder
 			size:item?.size?.label,
             sku: item?.color?.sku,
             tax: item?.productId?.gst || 0,
-            hsn: item?.productId?.sku || generateRandomId().toString()
+            hsn: item?.productId?.hsn || generateRandomId().toString()
         }));
 
         // Get available pickup locations
@@ -637,7 +637,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             discount: item?.productId?.DiscountedPercentage || 0,
             sku: item?.color?.sku,
             tax: item?.productId?.gst || 0,
-            hsn: generateRandomId().toString()
+            hsn: item?.productId?.hsn || generateRandomId().toString()
         }));
 
         // Extract the active pickup location

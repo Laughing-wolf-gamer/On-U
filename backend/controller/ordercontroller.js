@@ -1784,14 +1784,12 @@ export const returnOrder = async (req, res) => {
 		order.current_status = getStatusDescription(returnSuccess.status_code)
 		order.IsReturning = true;
 		await order.save();
-		if(lastStatus !== order.status){
-			try {
-				sendOrderStatusUpdateMail(order.userId,order);
-			} catch (error) {
-				console.error("Error sending order status update mail:", error);
-				logger.error("Error sending order status update mail: " + error.message);
-			}
-		}
+        try {
+            sendOrderStatusUpdateMail(order.userId,order);
+        } catch (error) {
+            console.error("Error sending order status update mail:", error);
+            logger.error("Error sending order status update mail: " + error.message);
+        }
 		res.status(200).json({ success: true, message: "Successfully returned order" });
 	} catch (error) {
 		console.error("Error Occured during returning order ", error.message);
