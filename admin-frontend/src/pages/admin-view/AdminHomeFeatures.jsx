@@ -403,7 +403,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 			const isImage = ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'].includes(fileExtension);
 			return { isImage, isVideo };
 		}else{
-			{isImage:false, isVideo:false}
+			return {isImage:false, isVideo:false}
 		}
     }, []);
 
@@ -500,7 +500,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 														className="w-full h-full object-contain rounded-lg shadow-sm"
 														onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load
 													/>
-												) : isVideo ? (
+												) : isVideo && url ? (
 													<ReactPlayer
 														ref={(el) => (videoRefs.current[index] = el)} // Assign ref for lazy loading
 														url={url}
