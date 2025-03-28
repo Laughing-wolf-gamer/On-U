@@ -741,13 +741,18 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             weight:totalOrderWeight * 1000,
             is_return:1,
         });
-        console.log("Recomended Returing Available Courier: ", allAvailableCourier?.available_courier_companies);
-        /* const result = await generateReturnAwb({
+        let bestCourier = null;
+		if(allAvailableCourier && allAvailableCourier.available_courier_companies.length > 0){
+            bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0]
+		}
+        console.log('Best Crourior: ',bestCourier);
+        const result = await generateReturnAwb({
             shipment_id:returnResponseData.shipment_id,
-            courier_id:'',
+            courier_id:bestCourier?.courier_company_id,
             status:returnResponseData.status,
             is_return:1,
-        }); */
+        });
+        console.log("Return Awb Response Result: ",result);
 
         return {...returnResponseData};
     } catch (error) {
