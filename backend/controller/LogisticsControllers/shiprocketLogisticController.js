@@ -741,9 +741,9 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             weight:totalOrderWeight * 1000,
             is_return:1,
         });
-        let bestCourier = null;
+        let bestCourier = allAvailableCourier?.available_courier_companies[0];
 		if(allAvailableCourier && allAvailableCourier.available_courier_companies.length > 0){
-            bestCourier = getBestCourierPartners(allAvailableCourier?.available_courier_companies)[0]
+            bestCourier = allAvailableCourier?.available_courier_companies[0];
 		}
         console.log('Best Crourior: ',bestCourier);
         const result = await generateReturnAwb({
