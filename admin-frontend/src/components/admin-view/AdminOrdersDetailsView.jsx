@@ -25,38 +25,38 @@ const OrderDetail = ({ label, value,url = '',downloadEnable = false }) => (
 const OrderItemList = ({ items }) => (
 	<div className="space-y-4 w-full p-2">
 			{items?.map((item, index) => (
-			<div key={index} className="border p-4 rounded-lg shadow-md bg-white">
-				<div className="flex flex-col gap-2">
-				<div className="flex justify-between">
-					<Label className="font-semibold">Title:</Label>
-					<span className="text-sm text-gray-600">{item?.productId?.title}</span>
+				<div key={index} className="border p-4 rounded-lg shadow-md bg-white">
+					<div className="flex flex-col gap-2">
+						<div className="flex justify-between">
+							<Label className="font-semibold">Title:</Label>
+							<span className="text-sm text-gray-600">{item?.productId?.title}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">Size:</Label>
+							<span className="text-sm text-gray-600">{item?.size}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">Color:</Label>
+							<span className="text-sm text-gray-600">{item?.color?.name}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">SKU:</Label>
+							<span className="text-sm text-gray-600">{item?.color?.sku}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">HSN:</Label>
+							<span className="text-sm text-gray-600">{item?.productId?.hsn}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">Quantity:</Label>
+							<span className="text-sm text-gray-600">{item?.quantity}</span>
+						</div>
+						<div className="flex justify-between">
+							<Label className="font-semibold">Price:</Label>
+							<span className="text-sm text-gray-600">₹ {item?.productId?.salePrice || item?.productId?.price}</span>
+						</div>
+					</div>
 				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">Size:</Label>
-					<span className="text-sm text-gray-600">{item?.size}</span>
-				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">Color:</Label>
-					<span className="text-sm text-gray-600">{item?.color?.name}</span>
-				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">SKU:</Label>
-					<span className="text-sm text-gray-600">{item?.color?.sku}</span>
-				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">Quantity:</Label>
-					<span className="text-sm text-gray-600">{item?.quantity}</span>
-				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">HSN:</Label>
-					<span className="text-sm text-gray-600">{item?.productId?.hsn}</span>
-				</div>
-				<div className="flex justify-between">
-					<Label className="font-semibold">Price:</Label>
-					<span className="text-sm text-gray-600">₹ {item?.productId?.salePrice || item?.productId?.price}</span>
-				</div>
-				</div>
-			</div>
 			))}
 	</div>
 );
@@ -180,7 +180,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="Order Status"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white bg-red-500">
-							{order?.status || "No-Data"}
+								{order?.status || "-"}
 							</Badge>
 						}
 					/>
@@ -190,7 +190,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="Order Current Status"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white bg-yellow-500">
-							{order?.current_status || "No-Data"}
+							{order?.current_status || "-"}
 							</Badge>
 						}
 					/>
@@ -200,7 +200,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="ETD (Estimated Delivery Date)"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white bg-blue-500">
-							{new Date(order?.etd).toDateString() || "No-Data"}
+							{new Date(order?.etd).toDateString() || "-"}
 							</Badge>
 						}
 					/>
@@ -210,7 +210,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="Order Payment Mode"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white bg-green-500">
-							{order?.paymentMode}
+								{order?.paymentMode}
 							</Badge>
 						}
 					/>
@@ -220,7 +220,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						label="Order Shipment Status"
 						value={
 							<Badge className="justify-center items-center py-1 px-3 text-white">
-							{getStatusDescription(order?.shipment_status)}
+								{getStatusDescription(order?.shipment_status)}
 							</Badge>
 						}
 					/>
