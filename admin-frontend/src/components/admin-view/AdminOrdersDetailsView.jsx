@@ -48,6 +48,10 @@ const OrderItemList = ({ items }) => (
 					<span className="text-sm text-gray-600">{item?.quantity}</span>
 				</div>
 				<div className="flex justify-between">
+					<Label className="font-semibold">HSN:</Label>
+					<span className="text-sm text-gray-600">{item?.productId?.hsn}</span>
+				</div>
+				<div className="flex justify-between">
 					<Label className="font-semibold">Price:</Label>
 					<span className="text-sm text-gray-600">₹ {item?.productId?.salePrice || item?.productId?.price}</span>
 				</div>
@@ -261,12 +265,12 @@ const AdminOrdersDetailsView = ({ order }) => {
 				{/* Action Buttons */}
 				<div className="flex flex-wrap gap-3 h-fit justify-center items-center">
 					<Button
-						disabled={order?.PicketUpData}
+						disabled={order?.PicketUpData && order?.status === 'Delivered'}
 						className="text-white px-4 py-2 rounded-md"
 						onClick={handlePickupResponse}
 					>
 						{
-							order?.PicketUpData? "Delivery PicketUp DataResponse Sent" : "Send Pickup Response"
+							order?.PicketUpData ? "Delivery PicketUp Response Sent" : "Send Pickup Response"
 						}
 					</Button>
 
@@ -286,7 +290,7 @@ const AdminOrdersDetailsView = ({ order }) => {
 						onClick={createOrderReturnFromUser}
 					>
 						{
-							order?.IsReturning? "Order Returned" : "Try Return Order"
+							order?.IsReturning ? "Order Returned Already Generated" : "Try Return Order"
 						}
 					</Button>
 
