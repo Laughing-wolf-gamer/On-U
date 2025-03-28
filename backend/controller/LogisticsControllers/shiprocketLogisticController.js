@@ -773,7 +773,21 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
 };
 
 
-
+export const getAllReturnOrdersShiprockets = async()=>{
+	try {
+		const token = await getShipRocketToken();
+		const response = await axios.get(`${SHIPROCKET_API_URL}/orders/processing/return`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+		console.log("All Return Orders: ", response.data);
+		return response.data;
+	} catch (error) {
+		console.error("Error fetching all return orders:", error?.response?.data || error.message);
+		return [];
+	}
+}
 
 export const generateExchangeShipment = async (shipmentData, userId) => {
     // Check and fetch token only if it's not available

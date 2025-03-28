@@ -9,6 +9,7 @@ const initialState = {
 	orders:null,
     orderId:null,
     cartId:null,
+	returnOrderList:[],
     orderList: [],
     orderDetails:null,
     Warehouses:[]
@@ -60,7 +61,14 @@ const adminOrderSlice = createSlice({
 		}).addCase(admingetShiprocketToken.rejected,(state)=>{
 			state.isLoading = false;
 			state.token = null;
-		});
+		}).addCase(adminFetchAllShiprocketCancleOrder.pending,(state,action)=>{
+			state.isLoading = true;
+		}).addCase(adminFetchAllShiprocketCancleOrder.fulfilled,(state,action)=>{
+			state.isLoading = false;
+            state.returnOrderList = action?.payload?.result;
+		}).addCase(adminFetchAllShiprocketCancleOrder.rejected,(state,action)=>{
+			state.isLoading = false;
+		})
     }
 })
 export const loginLogistics = createAsyncThunk('/logistic/warehouse/getAllWareHouses',async(logisticsLoginForm)=>{
@@ -133,6 +141,14 @@ export const adminSendOrderCancel = ({orderId}) => async () => {
         return false;
     }
 }
+export const adminFetchAllShiprocketCancleOrder = createAsyncThunk('/admin/orders/shiprocket/AllCancelOrder',async()=>{
+	try {
+        const response = await axios.get(`${BASE_URL}/admin/orders/shiprocket/AllCancelOrder`,Header());
+        return response.data;
+    } catch (error) {
+        console.error(`Error fetching Shiprocket Cancle Order: `,error);
+    }
+})
 export const adminCreateRefundRequest = ({orderId}) => async()=>{
 	try {
         console.log("Refund Request: ",orderId);

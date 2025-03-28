@@ -5,7 +5,7 @@ import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendOrderStatusUpdateMail, sendUpdateOrderStatus } from "../emailController.js";
 import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
-import { getShipmentOrderByOrderId, getShipmentTrackingStatus, getShipRocketToken } from "../LogisticsControllers/shiprocketLogisticController.js";
+import { getShipmentOrderByOrderId, getShipmentTrackingStatus, getShipRocketToken ,getAllReturnOrdersShiprockets} from "../LogisticsControllers/shiprocketLogisticController.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
 
@@ -1069,6 +1069,18 @@ export const getShipmtRocketTokenFromDb = async(req,res)=>{
 		console.error("Error Getting ShipRocket Token from DB: ", error);
         logger.error("Error Getting ShipRocket Token from DB: " + error.message);
         res.status(500).json({ Success: false, message: "Internal Server Error" });
+	}
+}
+
+export const fetchAllReturnOrders = async(req,res) =>{
+	try {
+		const allReturnOrders = await getAllReturnOrdersShiprockets();
+		console.log("All Cancel Orders",allReturnOrders);
+		res.status(200).json({ Success: true, message: "Fetched All Return Orders", result: allReturnOrders});
+	} catch (error) {
+		console.error("Error fetching all return orders:",error);
+		logger.error("Error fetching all return orders: " + error.message);
+		res.status(500).json({ Success: false, message: "Internal Server Error" });
 	}
 }
 

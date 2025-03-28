@@ -1,5 +1,5 @@
 import express from 'express';
-import { addCustomProductsRating, addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, getallOrders, getOrderById, getProductById, getShipmtRocketTokenFromDb, removeCoupon, removeCustomProductsRating, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
+import { addCustomProductsRating, addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, fetchAllReturnOrders, getallOrders, getOrderById, getProductById, getShipmtRocketTokenFromDb, removeCoupon, removeCustomProductsRating, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
 import { addNewColorToSize, addNewSizeToProduct, adminRegisterOtpCheck, fetchAllCustomerUsers, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getRecentOrders, getTopSellingProducts, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, removingCustomer, updateAdminData, updateColorSku, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 import { upload } from '../../utilis/cloudinaryUtils.js';
@@ -35,6 +35,7 @@ route.post('/orders/tryPickUp',isAuthenticateuser,ProtectAdminRoute,tryCreatePic
 route.post('/order/refundRequest/:orderId',ProtectAdminRoute,isAuthenticateuser,retryRefundData);
 route.patch('/orders/tryCreateManifest/:orderId',isAuthenticateuser,ProtectAdminRoute,createAndSendOrderManifest);
 route.post('/orders/cancelOrder/:orderId',isAuthenticateuser,ProtectAdminRoute,createOrderCancel);
+route.get('/orders/shiprocket/AllCancelOrder',isAuthenticateuser,ProtectAdminRoute,fetchAllReturnOrders)
 
 route.get('/stats/getRecentOrders',isAuthenticateuser,ProtectAdminRoute,getRecentOrders);
 route.get('/stats/getTopSellingProducts',isAuthenticateuser,ProtectAdminRoute,getTopSellingProducts);

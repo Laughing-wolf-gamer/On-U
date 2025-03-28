@@ -99,149 +99,267 @@ const ProductPreview = ({
     const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
     const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
     
-    return <DialogContent className = "h-screen mx-auto min-w-[50vw] max-w-[70vw]">
+    return <DialogContent className = "h-screen max-w-max max-h-[600px] overflow-y-auto">
 		<DialogTitle>Product Details</DialogTitle>
-            <div className="bg-white rounded-lg p-4 w-full h-full overflow-y-auto">
-				<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-					<div className="relative flex flex-col gap-2 w-full sm:w-auto">
-						<span>ProductId: {productData?.productId}</span>
+			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
+				<div className="relative flex flex-col gap-2 w-full sm:w-auto">
+					<span>ProductId: {productData?.productId}</span>
 
-						<h2 className="text-2xl font-bold">
-							{isEditing ? (
-								<Input
-									type="text"
-									value={productData?.title}
-									onChange={(e) => handleInputChange(e, 'title')}
-									className="text-2xl font-bold w-full sm:w-auto"
-								/>
-							) : (
-								`Title: ${productData?.title}`
-							)}
-						</h2>
+					<h2 className="text-2xl font-bold">
+						{isEditing ? (
+							<Input
+								type="text"
+								value={productData?.title}
+								onChange={(e) => handleInputChange(e, 'title')}
+								className="text-2xl font-bold w-full sm:w-auto"
+							/>
+						) : (
+							`Title: ${productData?.title}`
+						)}
+					</h2>
 
-						<h3 className="text-xl font-normal">
-							{isEditing ? (
-								<Input
-									type="text"
-									value={productData?.shortTitle}
-									onChange={(e) => handleInputChange(e, 'shortTitle')}
-									className="text-xl font-normal w-full sm:w-auto"
-								/>
-							) : (
-								`Short Title: ${productData?.shortTitle}`
-							)}
-						</h3>
-					</div>
+					<h3 className="text-xl font-normal">
+						{isEditing ? (
+							<Input
+								type="text"
+								value={productData?.shortTitle}
+								onChange={(e) => handleInputChange(e, 'shortTitle')}
+								className="text-xl font-normal w-full sm:w-auto"
+							/>
+						) : (
+							`Short Title: ${productData?.shortTitle}`
+						)}
+					</h3>
 				</div>
+			</div>
 
-				<div className="flex flex-col w-full space-x-4">
-					<h3 className="font-semibold">All Sizes</h3>
-					{productData && (
-						<SizeDisplay
-							productId={productData?._id}
-							SizesArray={productData?.size}
-							OnRefresh={() => {
-								fetchProductData();
-							}}
-						/>
-					)}
+			<div className="flex flex-col w-full space-x-4">
+				<h3 className="font-semibold">All Sizes</h3>
+				{productData && (
+					<SizeDisplay
+						productId={productData?._id}
+						SizesArray={productData?.size}
+						OnRefresh={() => {
+							fetchProductData();
+						}}
+					/>
+				)}
 
-					{/* Product Details Section */}
-					<div className="col-span-10 px-2 rounded-lg">
-						<div className="mb-6 space-y-4">
-							<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Descriptions:</h3>
-								{isEditing ? (
-									<textarea
-										type="text"
-										rows={4}
-										value={productData?.description}
-										placeholder='Enter product description'
-										onChange={(e) => handleInputChange(e, 'description')}
-										className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg text-center md:text-right font-medium text-gray-600">
-										{productData?.description}
-									</p>
-								)}
-							</div>
-							<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Brand:</h3>
+				{/* Product Details Section */}
+				<div className="col-span-10 px-2 rounded-lg">
+					<div className="mb-6 space-y-4">
+						<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3">Descriptions:</h3>
+							{isEditing ? (
+								<textarea
+									type="text"
+									rows={4}
+									value={productData?.description}
+									placeholder='Enter product description'
+									onChange={(e) => handleInputChange(e, 'description')}
+									className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+								/>
+							) : (
+								<p className="text-lg text-center md:text-right font-medium text-gray-600">
+									{productData?.description}
+								</p>
+							)}
+						</div>
+						<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3">Brand:</h3>
+							{isEditing ? (
+								<Input
+									type="text"
+									value={productData?.brand}
+									placeholder='Enter product brand'
+									onChange={(e) => handleInputChange(e, 'brand')}
+									className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+								/>
+							) : (
+								<p className="text-lg text-center md:text-right font-medium text-gray-600">
+									{productData?.brand}
+								</p>
+							)}
+						</div>
+
+						{/* Specification */}
+						<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3">Specification:</h3>
+							{isEditing ? (
+								<Textarea
+									type="text"
+									rows={4}
+									value={productData?.specification}
+									placeholder='Enter product specification'
+									onChange={(e) => handleInputChange(e, 'specification')}
+									className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+								/>
+							) : (
+								<p className="text-lg font-medium text-gray-600">
+									{productData?.specification}
+								</p>
+							)}
+						</div>
+						
+
+						{/* Care Instructions */}
+						<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3">Care Instructions:</h3>
+							{isEditing ? (
+								<Textarea
+									type="text"
+									rows={4}
+									value={productData?.careInstructions}
+									placeholder='Enter product CareInstructions'
+									onChange={(e) => handleInputChange(e, 'careInstructions')}
+									className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+								/>
+							) : (
+								<p className="text-lg font-medium text-gray-600">
+									{productData?.careInstructions}
+								</p>
+							)}
+						</div>
+
+						{/* GST, SKU, HSN, Price, Sale Price */}
+						{['gst', 'hsn'].map((field) => (
+							<div key={field} className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
 								{isEditing ? (
 									<Input
 										type="text"
-										value={productData?.brand}
-										placeholder='Enter product brand'
-										onChange={(e) => handleInputChange(e, 'brand')}
-										className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+										value={productData?.[field]}
+										onChange={(e) => handleInputChange(e, field)}
+										className="text-lg w-full sm:w-2/3 text-yellow-600 border-2"
 									/>
 								) : (
-									<p className="text-lg text-center md:text-right font-medium text-gray-600">
-										{productData?.brand}
-									</p>
+									<p className="text-lg font-medium text-yellow-600">{productData?.[field]}</p>
 								)}
 							</div>
+						))}
 
-							{/* Specification */}
+						{/* Price and Sale Price */}
+						{['price', 'salePrice'].map((field) => (
+							<div key={field} className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
+								{isEditing ? (
+									<Input
+										type="number"
+										value={productData?.[field]}
+										onChange={(e) => handleInputChange(e, field)}
+										placeholder = {`Enter ${field}`}
+										className="text-lg w-full sm:w-2/3 font-medium text-green-600 border-2"
+									/>
+								) : (
+									<p className="text-lg font-medium text-green-600">₹ {formattedSalePrice(productData?.[field])}</p>
+								)}
+							</div>
+						))}
+						
+						{/* Additional Info Section */}
+						<div className="mb-6 space-y-4">
 							<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Specification:</h3>
+								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Material:</h3>
 								{isEditing ? (
 									<Textarea
 										type="text"
-										rows={4}
-										value={productData?.specification}
-										placeholder='Enter product specification'
-										onChange={(e) => handleInputChange(e, 'specification')}
-										className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
+										rows = {4}
+										value={productData?.material}
+										onChange={(e) => handleInputChange(e, 'material')}
+										className="text-lg w-full sm:w-2/3 text-gray-600"
 									/>
 								) : (
-									<p className="text-lg font-medium text-gray-600">
-										{productData?.specification}
-									</p>
+									<p className="text-lg text-gray-600">{productData?.material}</p>
 								)}
 							</div>
-							
-
-							{/* Care Instructions */}
-							<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Care Instructions:</h3>
-								{isEditing ? (
-									<Textarea
-										type="text"
-										rows={4}
-										value={productData?.careInstructions}
-										placeholder='Enter product CareInstructions'
-										onChange={(e) => handleInputChange(e, 'careInstructions')}
-										className="text-lg w-full sm:w-2/3 font-medium text-gray-600 border-2"
-									/>
-								) : (
-									<p className="text-lg font-medium text-gray-600">
-										{productData?.careInstructions}
-									</p>
-								)}
-							</div>
-
-							{/* GST, SKU, HSN, Price, Sale Price */}
-							{['gst', 'hsn'].map((field) => (
-								<div key={field} className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-									<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
-									{isEditing ? (
-										<Input
-											type="text"
-											value={productData?.[field]}
-											onChange={(e) => handleInputChange(e, field)}
-											className="text-lg w-full sm:w-2/3 text-yellow-600 border-2"
-										/>
-									) : (
-										<p className="text-lg font-medium text-yellow-600">{productData?.[field]}</p>
-									)}
+						</div>
+						<div className="flex justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Subcategory:</h3>
+							{isEditing ? (
+								<div className='w-2/3'>
+									<CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
+										console.log("Changed category",e);
+										handleInputChange({target:{value:e}},"subCategory")
+									}}/>
 								</div>
-							))}
-
-							{/* Price and Sale Price */}
-							{['price', 'salePrice'].map((field) => (
-								<div key={field} className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
+							) : (
+								<p className="text-lg text-gray-600">{productData?.subCategory}</p>
+							)}
+						</div>
+						<div className="flex justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Gender:</h3>
+								{isEditing ? (
+									<div className='w-2/3'>
+										<CustomSelect defaultValue={productData?.gender} controlItems={gendersOptions} setChangeData={(e)=>{
+											console.log("Changed category",e);
+											handleInputChange({target:{value:e}},"gender")
+										}}/>
+									</div>
+								) : (
+									<p className="text-lg text-gray-600">{productData?.gender}</p>
+								)}
+						</div>
+						<div className="flex justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Category:</h3>
+							
+							{isEditing ? (
+								<div className='w-2/3'>
+									<CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
+										handleInputChange({target:{value:e}},"category")
+									}}/>
+								</div>
+							) : (
+								<p className="text-lg text-gray-600">{productData?.category}</p>
+							)}
+						</div>
+						<div className="flex justify-between items-center border-b pb-4">
+							<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Special Category:</h3>
+							{isEditing ? (
+								<div className='w-2/3'>
+									<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
+										handleInputChange({target:{value:e}},"specialCategory")
+									}}/>
+								</div>
+							) : (
+								<p className="text-lg text-gray-600">{productData?.specialCategory}</p>
+							)}
+						</div>
+						<div className="flex w-full justify-between items-center border-b pb-4">
+							<div className='space-x-3 justify-between flex flex-row'>
+								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Average Rating: </h3>
+								<Edit onClick={()=>{
+									setRatingIsModalOpen(true);
+								}} className='cursor-pointer'/>
+							</div>
+							<p className="text-lg text-gray-600">
+								{productData?.averageRating}
+							</p>
+						</div>
+						<div className='justify-center items-start space-y-2 flex flex-col'>
+							<Label className = {"text-base text-gray-700"}>Dynamic-Data (Non-Editing)</Label>
+							<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-700 text-lg mr-3">Discounted Percentage:</h3>
+								<p className="text-lg font-medium text-gray-600">
+									{productData?.DiscountedPercentage}
+								</p>
+							</div>
+							<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Total Stock:</h3>
+								<p className="text-lg font-medium text-gray-600">
+									{productData?.totalStock}
+								</p>
+							</div>
+							<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Total Product Sold Amount:</h3>
+								<p className="text-lg font-medium text-gray-600">
+									{productData?.TotalSoldAmount}
+								</p>
+							</div>
+						</div>
+						<div className='justify-center items-start space-y-2 flex flex-col'>
+							<Label className = {"text-base text-gray-700"}>Dimensions (Logistics)</Label>
+							{['width', 'height','length','weight','breadth'].map((field) => (
+								<div key={field} className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
 									<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
 									{isEditing ? (
 										<Input
@@ -249,192 +367,71 @@ const ProductPreview = ({
 											value={productData?.[field]}
 											onChange={(e) => handleInputChange(e, field)}
 											placeholder = {`Enter ${field}`}
-											className="text-lg w-full sm:w-2/3 font-medium text-green-600 border-2"
+											className="text-lg w-full sm:w-2/3 font-medium border-2"
 										/>
 									) : (
-										<p className="text-lg font-medium text-green-600">₹ {formattedSalePrice(productData?.[field])}</p>
+										<p className="text-lg font-medium text-gray-600">{formattedSalePrice(productData?.[field])} {field !== 'weight' ? "cm":'gm'}</p>
 									)}
 								</div>
 							))}
-							
-							{/* Additional Info Section */}
-							<div className="mb-6 space-y-4">
-								<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
-									<h3 className="font-extrabold text-gray-700 text-lg mr-3">Material:</h3>
-									{isEditing ? (
-										<Textarea
-											type="text"
-											rows = {4}
-											value={productData?.material}
-											onChange={(e) => handleInputChange(e, 'material')}
-											className="text-lg w-full sm:w-2/3 text-gray-600"
-										/>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.material}</p>
-									)}
-								</div>
-							</div>
-							<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Subcategory:</h3>
-								{isEditing ? (
-									<div className='w-2/3'>
-										<CustomSelect defaultValue={productData?.subCategory} controlItems={subcategoriesOptions} setChangeData={(e)=>{
-											console.log("Changed category",e);
-											handleInputChange({target:{value:e}},"subCategory")
-										}}/>
-									</div>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.subCategory}</p>
-								)}
-							</div>
-							<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Gender:</h3>
-									{isEditing ? (
-										<div className='w-2/3'>
-											<CustomSelect defaultValue={productData?.gender} controlItems={gendersOptions} setChangeData={(e)=>{
-												console.log("Changed category",e);
-												handleInputChange({target:{value:e}},"gender")
-											}}/>
-										</div>
-									) : (
-										<p className="text-lg text-gray-600">{productData?.gender}</p>
-									)}
-							</div>
-							<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Category:</h3>
-								
-								{isEditing ? (
-									<div className='w-2/3'>
-										<CustomSelect defaultValue={productData?.category} controlItems={categoryOptions} setChangeData={(e)=>{
-											handleInputChange({target:{value:e}},"category")
-										}}/>
-									</div>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.category}</p>
-								)}
-							</div>
-							<div className="flex justify-between items-center border-b pb-4">
-								<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Special Category:</h3>
-								{isEditing ? (
-									<div className='w-2/3'>
-										<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
-											handleInputChange({target:{value:e}},"specialCategory")
-										}}/>
-									</div>
-								) : (
-									<p className="text-lg text-gray-600">{productData?.specialCategory}</p>
-								)}
-							</div>
-							<div className="flex w-full justify-between items-center border-b pb-4">
-								<div className='space-x-3 justify-between flex flex-row'>
-									<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Average Rating: </h3>
-									<Edit onClick={()=>{
-										setRatingIsModalOpen(true);
-									}} className='cursor-pointer'/>
-								</div>
-								<p className="text-lg text-gray-600">
-									{productData?.averageRating}
-								</p>
-							</div>
-							<div className='justify-center items-start space-y-2 flex flex-col'>
-								<Label className = {"text-base text-gray-700"}>Dynamic-Data (Non-Editing)</Label>
-								<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
-									<h3 className="font-extrabold text-gray-700 text-lg mr-3">Discounted Percentage:</h3>
-									<p className="text-lg font-medium text-gray-600">
-										{productData?.DiscountedPercentage}
-									</p>
-								</div>
-								<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
-									<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Total Stock:</h3>
-									<p className="text-lg font-medium text-gray-600">
-										{productData?.totalStock}
-									</p>
-								</div>
-								<div className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
-									<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Total Product Sold Amount:</h3>
-									<p className="text-lg font-medium text-gray-600">
-										{productData?.TotalSoldAmount}
-									</p>
-								</div>
-							</div>
-							<div className='justify-center items-start space-y-2 flex flex-col'>
-								<Label className = {"text-base text-gray-700"}>Dimensions (Logistics)</Label>
-								{['width', 'height','length','weight','breadth'].map((field) => (
-									<div key={field} className="flex w-full flex-col sm:flex-row justify-between items-center border-b pb-4">
-										<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">{field}:</h3>
-										{isEditing ? (
-											<Input
-												type="number"
-												value={productData?.[field]}
-												onChange={(e) => handleInputChange(e, field)}
-												placeholder = {`Enter ${field}`}
-												className="text-lg w-full sm:w-2/3 font-medium border-2"
-											/>
-										) : (
-											<p className="text-lg font-medium text-gray-600">{formattedSalePrice(productData?.[field])} {field !== 'weight' ? "cm":'gm'}</p>
-										)}
-									</div>
-								))}
-							</div>
-							
 						</div>
-						{/* Bullet Points */}
-						<div className="mb-6 space-y-4">
-							{isEditing ? (
-								<BulletPointsForm
-									defaultPoinst={productData?.bulletPoints}
-									onChange={(e) => {
-										setProductData({
-											...productData,
-											bulletPoints: e,
-										});
-									}}
-								/>
-							) : (
-								productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
-									<BulletPointView points={productData?.bulletPoints} />
-								)
-							)}
-						</div>
+						
+					</div>
+					{/* Bullet Points */}
+					<div className="mb-6 space-y-4">
+						{isEditing ? (
+							<BulletPointsForm
+								defaultPoinst={productData?.bulletPoints}
+								onChange={(e) => {
+									setProductData({
+										...productData,
+										bulletPoints: e,
+									});
+								}}
+							/>
+						) : (
+							productData?.bulletPoints && productData?.bulletPoints.length > 0 && (
+								<BulletPointView points={productData?.bulletPoints} />
+							)
+						)}
+					</div>
 
-						{/* Action Buttons */}
-						<div className="flex flex-col sm:flex-row justify-between w-full p-4 px-6 mt-8">
+					{/* Action Buttons */}
+					<div className="flex flex-col sm:flex-row justify-between w-full p-4 px-6 mt-8">
+						<Button
+							className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
+							onClick={() => {
+								if (isEditing) {
+									UpdateEditedData(productData._id, productData);
+								}
+								setIsEditing(!isEditing); // Toggle editing state
+								setCurrentPreviewProduct && setCurrentPreviewProduct(null);
+							}}
+						>
+							{isEditing ? 'Save Product' : 'Edit Product'}
+						</Button>
+						{isEditing && (
 							<Button
-								className="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-all duration-300"
+								className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
 								onClick={() => {
-									if (isEditing) {
-										UpdateEditedData(productData._id, productData);
-									}
 									setIsEditing(!isEditing); // Toggle editing state
-									setCurrentPreviewProduct && setCurrentPreviewProduct(null);
 								}}
 							>
-								{isEditing ? 'Save Product' : 'Edit Product'}
+								Cancel Edit
 							</Button>
-							{isEditing && (
-								<Button
-									className="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition duration-300"
-									onClick={() => {
-										setIsEditing(!isEditing); // Toggle editing state
-									}}
-								>
-									Cancel Edit
-								</Button>
-							)}
+						)}
 
-							<Button
-								className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
-								onClick={() => {
-									setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
-								}}
-							>
-								Remove Product
-							</Button>
-						</div>
+						<Button
+							className="px-6 py-3 bg-red-600 text-white rounded-lg hover:bg-red-700 transition duration-300"
+							onClick={() => {
+								setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+							}}
+						>
+							Remove Product
+						</Button>
 					</div>
 				</div>
 			</div>
-
             <ConfirmDeletePopup isOpen={isConfirmDeleteWindow} onCancel={()=>{
                 setIsConfirmDeleteWindow(false);	
             }} onConfirm={()=>{
@@ -790,7 +787,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 	}
 
 	return (
-		<div className="min-w-full m-7 p-4 flex flex-col gap-7"> 
+		<div className="min-w-full m-1 flex flex-col gap-7"> 
 			{/* Container for the button to toggle New Size */}
 			<div className="flex justify-center items-center gap-4">
 				<Button

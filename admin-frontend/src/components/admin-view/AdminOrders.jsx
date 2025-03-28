@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useMemo, Fragment } from 'react';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Dialog } from '../ui/dialog';
+import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import AdminOrdersDetailsView from './AdminOrdersDetailsView';
 import { useDispatch, useSelector } from 'react-redux';
-import { adminGetAllOrders, admingetShiprocketToken, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
+import { adminFetchAllShiprocketCancleOrder, adminGetAllOrders, admingetShiprocketToken, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
 import { Badge } from '../ui/badge';
 import { Copy, MenuSquareIcon, TruckIcon } from 'lucide-react';
 import newStyled from '@emotion/styled';
@@ -14,6 +14,7 @@ import LoadingView from '@/pages/admin-view/LoadingView';
 import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config';
 import { useSettingsContext } from '@/Context/SettingsContext';
 import { Label } from '../ui/label';
+import { IoIosReturnLeft } from 'react-icons/io';
 
 const orderStatus = [
   { id: 'Confirmed', label: 'Confirmed' },
@@ -57,6 +58,7 @@ const CustomSlider = newStyled(Slider)({
 const AdminOrderLayout = () => {
 	const{checkAndCreateToast} = useSettingsContext();
 	const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
+	const [openReturnOrderDialogue, setOpenReturnOrdersDialogue] = useState(false);
 	const [openLoginDialogue, setOpenLoginDialogue] = useState(false);
 	const [logisticsToken, setLogisticsToken] = useState('');
 	const [filters, setFilters] = useState({
@@ -68,11 +70,12 @@ const AdminOrderLayout = () => {
 
 	const { user } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
-	const {isLoading,token, orderList, orderDetails } = useSelector((state) => state.adminOrder);
+	const {isLoading,token, orderList, orderDetails,returnOrderList } = useSelector((state) => state.adminOrder);
 
 	useEffect(() => {
 		dispatch(adminGetAllOrders());
 		dispatch(admingetShiprocketToken());
+		dispatch(adminFetchAllShiprocketCancleOrder())
 	}, [dispatch]);
 
 	const handleFetchOrderDetails = async (orderId)=>{
@@ -119,13 +122,14 @@ const AdminOrderLayout = () => {
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
 	const isNoOrders = displayedOrders.length === 0;
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	console.log("Returnign Orders: ",returnOrderList)
 	return (
 		<Card className="w-full">
 			{isLoading  ? <LoadingView/> :(
 				<Fragment>
-					<CardHeader className="text-center p-4 relative">
+					<CardHeader className="text-center flex flex-row items-center p-4 justify-between">
 						<CardTitle className="text-2xl font-semibold mb-4">All Orders</CardTitle>
-						<div className="absolute right-3 top-4 flex flex-col lg:flex-row lg:space-x-4 space-x-0 space-y-2 lg:space-y-0">
+						<div className="flex flex-col lg:flex-row lg:space-x-4 space-x-0 space-y-2 lg:space-y-0">
 							{/* Toggle Button for smaller screens */}
 							<Button
 								onClick={() => setIsDropdownOpen(!isDropdownOpen)}
@@ -147,11 +151,11 @@ const AdminOrderLayout = () => {
 
 									{logisticsToken && (
 										<Button
-										onClick={() => {
-											navigator.clipboard.writeText(logisticsToken);
-											checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
-										}}
-										className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
+											onClick={() => {
+												navigator.clipboard.writeText(logisticsToken);
+												checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
+											}}
+											className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
 										>
 										<Copy />
 											<span>{logisticsToken.slice(0, 10)}....</span>
@@ -191,6 +195,9 @@ const AdminOrderLayout = () => {
 								)}
 							</div>
 						</div>
+						<Button className = {"animate-pulse"} onClick = {()=> setOpenReturnOrdersDialogue(!openReturnOrderDialogue)}>
+							Retuning Orders <IoIosReturnLeft/>
+						</Button>
 
 					</CardHeader>
 
@@ -257,6 +264,9 @@ const AdminOrderLayout = () => {
 							<AdminOrdersDetailsView order={orderDetails} user={user} />
 						)}
 					</Dialog>
+					<Dialog open ={openReturnOrderDialogue} onOpenChange={()=> {setOpenReturnOrdersDialogue(false); dispatch(adminFetchAllShiprocketCancleOrder())}}>
+						{returnOrderList && <ReturningOrderDialogWindow orderData={returnOrderList.data}/> }
+					</Dialog>
 
 					{/* Dialog for login */}
 					<Dialog open={openLoginDialogue} onOpenChange={() => { setOpenLoginDialogue(false); }}>
@@ -267,6 +277,46 @@ const AdminOrderLayout = () => {
 		</Card>
 	);
 };
+const ReturningOrderDialogWindow = ({ orderData = [] }) => {
+	return (
+		<DialogContent className="max-w-min max-h-[500px] overflow-y-auto">
+			<DialogTitle className="font-bold">Returning Orders Info</DialogTitle>
+			{/* Make sure orderData is an array and map through it */}
+			{orderData && orderData.length > 0 ? (
+				<div className="container mx-auto p-4">
+				<table className="min-w-full table-auto text-center border-collapse border border-gray-200">
+					<thead>
+					<tr className="bg-gray-100">
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Order ID</th>
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Customer Name</th>
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Customer Phone Number</th>
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Pickup Pincode</th>
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
+						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Total</th>
+					</tr>
+					</thead>
+					<tbody>
+					{/* Iterate over orderData array and render each row */}
+					{orderData.map((item, index) => (
+						<tr key={index} className="border-t border-gray-200">
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.channel_order_id}</td>
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_name}</td>
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_phone}</td>
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_code}</td>
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.status}</td>
+						<td className="px-4 py-2 text-sm text-gray-600">{item?.total}</td>
+						</tr>
+					))}
+					</tbody>
+				</table>
+				</div>
+			) : (
+				<p className="text-center text-gray-600">No returning orders available.</p>
+			)}
+		</DialogContent>
+	);
+};
+
 
 const OrderFilter = ({ filters, setFilters, orderStatus,filteredOrderList }) => (
 	<div className="mb-4 text-center space-x-4 flex flex-col sm:flex-row justify-center sm:justify-between px-3 items-center">
