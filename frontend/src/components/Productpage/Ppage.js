@@ -664,7 +664,7 @@ const Ppage = () => {
 													<RotateCw />
 												</h1>
 												<h1 className="text-gray-500">
-													Return within 45 days of purchase. Duties & taxes are non-refundable.
+													Return within 7 days of purchase. Duties & taxes are non-refundable.
 												</h1>
 											</div>
 											{/* Tracking Notifications */}

@@ -1764,7 +1764,7 @@ export const deletewish = async (req, res) => {
 
 export const returnOrder = async (req, res) => {
 	try {
-		const { orderId } = req.body;
+		const { orderId,refundOptionsData} = req.body;
 		let userId = req.user.id;
 		if(!userId){
 			userId = req.query.userId;
@@ -1784,6 +1784,9 @@ export const returnOrder = async (req, res) => {
 		order.current_status = getStatusDescription(returnSuccess.status_code)
 		order.IsReturning = true;
         order.ReturningData = returnSuccess;
+		if(refundOptionsData){
+			order.RefundData = refundOptionsData;
+		}
 		await order.save();
         try {
             sendOrderStatusUpdateMail(order.userId,order);

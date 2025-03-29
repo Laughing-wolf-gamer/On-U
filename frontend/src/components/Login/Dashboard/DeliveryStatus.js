@@ -5,6 +5,7 @@ const DeliveryStatus = ({ status }) => {
         "Confirmed",
         "Processing",
         "Out For Pickup",
+		"Ready To Ship",
         "Shipped",
         "Out for Delivery",
         "Delivered",

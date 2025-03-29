@@ -77,9 +77,15 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
     return (
         <div className="w-full font-kumbsan max-w-screen-2xl mx-auto justify-self-center">
             <div className="grid grid-cols-1 min-h-[200px] bg-slate-200 relative px-1 sm:px-1 md:px-14">
-                <h1 className="text-3xl font-bold tracking-widest uppercase text-slate-800 mb-8">
-                    {headers}
-                </h1>
+                {headers && (
+					<strong 
+						className="text-4xl hover:underline uppercase text-left font-bold text-transparent 
+						bg-clip-text bg-gradient-to-r from-gray-800 to-gray-500 mb-8"
+					>
+						{headers}
+					</strong>
+				)}
+
                 <div className="relative w-full flex justify-start items-center">
                     {/* Left and Right Arrow Buttons */}
                     {showArrows && !bannerLoading && (

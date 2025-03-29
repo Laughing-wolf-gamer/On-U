@@ -246,7 +246,7 @@ const MNavbar = ({ user }) => {
                                 </div>
                             </Ripples>
 
-                            <Ripples color="#2C3930" className="w-full">
+                            <Ripples color="#2C3930" className="w-full border-b border-gray-700 border-opacity-20 rounded-lg">
                                 <div
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -261,7 +261,7 @@ const MNavbar = ({ user }) => {
                             </Ripples>
                             
 
-                            <Ripples color="#2C3930" className="w-full">
+                            <Ripples color="#2C3930" className={`w-full ${Menu2 === "hidden" ? "border-b border-black border-opacity-20 rounded-lg":""}`}>
                                 <li
                                     className="text-black px-5 py-4 w-full flex flex-row justify-between items-center"
                                     onClick={() => {
@@ -270,7 +270,7 @@ const MNavbar = ({ user }) => {
                                     }}
                                 >
                                     <span className="">Shop</span>
-                                    <ChevronRight size={20} className={` duration-300 transition-all ease-ease-out-expo ${Menu2 === "block"? "rotate-90" : ""}`} />
+                                    <ChevronRight size={20} className={`duration-300 transition-all ease-ease-out-expo ${Menu2 === "block"? "rotate-90" : ""}`} />
                                 </li>
                             </Ripples>
 
@@ -282,7 +282,7 @@ const MNavbar = ({ user }) => {
                                     setMenu2("hidden");
                                 }}
                             />
-                            <Ripples color="re" className="w-full">
+                            <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -304,7 +304,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">New Arrivals</span>
                                 </li>
                             </Ripples>
-                            <Ripples color="re" className="w-full">
+                            <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -326,7 +326,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Best Sellers</span>
                                 </li>
                             </Ripples>
-                            <Ripples color="re" className="w-full">
+                            <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -348,7 +348,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">On Sale</span>
                                 </li>
                             </Ripples>
-							<Ripples color="#2C3930" className="w-full">
+							<Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <div
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -361,7 +361,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Order & Returns</span>
                                 </div>
                             </Ripples>
-                            <Ripples color="#2C3930" className="w-full">
+                            <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <div
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -374,7 +374,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Saved Addresses</span>
                                 </div>
                             </Ripples>
-                            <Ripples color="re" className="w-full">
+                            <Ripples color="re" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -387,7 +387,7 @@ const MNavbar = ({ user }) => {
                                 </li>
                             </Ripples>
 
-                            <Ripples color="black" className="w-full">
+                            <Ripples color="black" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black px-5 py-4 relative w-full flex"
                                     onClick={(e) => {

@@ -158,8 +158,8 @@ const ProductPreviewFull = ({ product ,user}) => {
                     })
                 }
             </div>
-            <div className='w-full text-center flex flex-row justify-center items-center text-white font-kumbsan text-xl relative transform transition-all py-4'>
-                <div onClick={handleMoveToQuery} className='px-8 w-fit flex text-sm md:text-lg bg-gray-900 rounded-full hover:bg-gray-700 p-4 cursor-pointer hover:scale-110 duration-300 hover:animate-shine'>
+            <div className='w-full text-center flex flex-row justify-center items-center text-white md:text-black font-kumbsan text-xl relative transform transition-all py-4'>
+                <div onClick={handleMoveToQuery} className='px-10 flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-4 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
                     <span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>View More</span>
                 </div>
             </div>

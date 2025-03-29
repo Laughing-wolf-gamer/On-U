@@ -209,39 +209,42 @@ const Home = ({user}) => {
                                 </div>
                             </div>
                         }
-                        
-                        <div className="w-full justify-self-center flex flex-col justify-center items-center pb-7 space-y-3 px-14">
-                            <h1 className='text-3xl font-bold text-center  tracking-widest text-gray-700 mb-10'>
-                                {WideScreen_Video.header}
-                            </h1>
-                            <div className='w-full justify-center items-center flex'>
+                        {
+							WideScreen_Video && WideScreen_Video.urls.length > 0 && (
+								<div className="w-full justify-self-center flex flex-col justify-center uppercase items-center pb-7 space-y-3 px-14">
+									{
+										WideScreen_Video.header && <strong className='text-4xl hover:underline text-left font-bold text-gray-700 mb-8'>{WideScreen_Video.header}</strong>
+									}
+									<div className='w-full justify-center items-center flex'>
 
-                                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
-                                    {
-                                        CategoryBannerLoading || !WideScreen_Video || WideScreen_Video.urls.length <= 0 ? (
-                                            Array(8).fill(0).map((_, index) => (
-                                                <div key={`skeleton_${index}`} className="w-[300px] h-[520px] flex flex-col justify-start items-center bg-gray-300 rounded-lg animate-pulse">
-                                                    <div className="w-full h-full relative">
-                                                        <div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))
-                                        ) : (
-                                            // Actual content when URLs are available
-                                            WideScreen_Video.urls.slice(0, 8).map((url, index) => (
-                                                <div
-                                                    key={`Index_${index}`}
-                                                    className={`h-auto w-auto relative flex flex-col justify-center items-center`}
-                                                >
-                                                    <GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
-                                                </div>
-                                            ))
-                                        )
-                                    }
-                                </div>
-                            </div>
-                        </div>
+										<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
+											{
+												CategoryBannerLoading ? (
+													Array(8).fill(0).map((_, index) => (
+														<div key={`skeleton_${index}`} className="w-[300px] h-[520px] flex flex-col justify-start items-center bg-gray-300 rounded-lg animate-pulse">
+															<div className="w-full h-full relative">
+																<div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+																</div>
+															</div>
+														</div>
+													))
+												) : (
+													// Actual content when URLs are available
+													WideScreen_Video.urls.slice(0, 8).map((url, index) => (
+														<div
+															key={`Index_${index}`}
+															className={`h-auto w-auto relative flex flex-col justify-center items-center`}
+														>
+															<GridImageView imageToShow={url.url || url} startPlaying = {true} categoriesOptions={categoriesOptions} categoryName = {url.name} />
+														</div>
+													))
+												)
+											}
+										</div>
+									</div>
+								</div>
+							)
+						}
                         <DraggableImageSlider images={Wide_Screen_Section_2.urls} headers={Wide_Screen_Section_2.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_4.urls} headers={Wide_Screen_Section_4.header} bannerLoading = {bannerLoading}/> 
                         <DraggableImageSlider images={Wide_Screen_Section_5.urls} headers={Wide_Screen_Section_5.header} bannerLoading = {bannerLoading}/>
@@ -318,10 +321,15 @@ const Home = ({user}) => {
 								</div>
 							)
 						}
+						<div className='w-full text-center flex flex-row justify-center px-3 items-center text-white md:text-black font-kumbsan text-xl transform transition-all'>
+							<div className='w-full justify-center items-center flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-2 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
+								<span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>Categories</span>
+							</div>
+						</div>
 						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
 
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
-                            <div className='w-full justify-center items-center flex pr-3 pl-3 '>
+                            <div className='w-full justify-center items-center flex pr-3 pl-3'>
 								<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2 justify-center items-center sm:px-1 md:px-2 lg:px-2 px-2">
 									{
 										Array(6).fill(0).map((_, index) => (
@@ -335,21 +343,23 @@ const Home = ({user}) => {
 							</div>
                         }
                         <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
-							<h1 className='text-2xl font-extrabold text-center tracking-widest text-gray-700 py-3'>
-								{WideScreen_Video.header}
-							</h1>
+							{
+								WideScreen_Video.header && <strong className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-3'>{WideScreen_Video.header}</strong>
+							}
 							<div className='justify-center items-center flex flex-shrink-0'>
 								<GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
 							</div>
 						</div>
 
-						<div className='px-2'>
-                            <h1 className='text-2xl px-8 font-extrabold text-center text-gray-700 pb-6 pt-6'>{Small_Screen_Section_3.header}</h1>
-                            <ul className='flex overflow-x-scroll'>
+						<div className='mt-1 grid grid-cols-1 min-h-[200px] px-4 rounded-xl'>
+                            {
+								Small_Screen_Section_3.header && <strong className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_3.header}</strong>
+							}
+                            <ul className='flex flex-row overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
                                     Small_Screen_Section_3.urls.map((d, index) => (
-                                        <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products'>
-                                            <li className='w-max mr-2'>
+                                        <Link key={`${Small_Screen_Section_3.header}_banners${index}`} to='/products' className='m-2'>
+                                            <li className='w-max'>
                                                 <LazyLoadImage effect='blur' loading='lazy' src={d} alt={`${Small_Screen_Section_3.header}_${index}`} className="w-[50vw] min-h-[200px]" />
                                             </li>
                                         </Link>
@@ -362,8 +372,8 @@ const Home = ({user}) => {
                                 )}
                             </ul>
                         </div>
-                        <div className='mt-1 grid grid-cols-1 min-h-[200px]'>
-                            <h1 className='text-2xl font-extrabold text-center text-gray-700 mb-6 mt-6'>{Small_Screen_Section_4.header}</h1>
+                        <div className='mt-1 grid grid-cols-1 min-h-[200px] rounded-xl'>
+                            {Small_Screen_Section_4.header && <h1 className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_4.header}</h1>} 
                             <div className='w-full px-2 flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
@@ -428,6 +438,26 @@ const Home = ({user}) => {
         </div>
     )
 }
+const TextWithOutline = ({ text }) => {
+	const [isVisible, setIsVisible] = useState(true);
+
+	// Trigger the opening animation when the component mounts
+	useEffect(() => {
+		setIsVisible(true);
+	}, []);
+
+	return (
+		<div className="overflow-hidden">
+		<div
+			className={`transition-all duration-700 ease-out transform ${
+			isVisible ? 'w-full' : 'w-0'
+			} bg-blue-500 text-white text-3xl font-bold text-center py-4 px-6 rounded-md`}
+		>
+			{text}
+		</div>
+		</div>
+	);
+};
 
 const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) => {
 	const navigation = useNavigate();
@@ -571,8 +601,6 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
 									</div>
 								</div>
 							</div>
-
-
                         )}
                     </div>
                 ))

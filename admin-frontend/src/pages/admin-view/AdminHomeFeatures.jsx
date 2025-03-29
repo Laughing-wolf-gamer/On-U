@@ -469,7 +469,18 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 						{items.length > 0 ? (
 							items.map((url, index) => {
 								if(!url){
-									return (<p>No Url Provided</p>)
+									return (<div className='relative'>
+										<span>No Url provided!</span>
+										<Button
+											onClick={() => {
+												setIsConfirmDeleteWindow(!isConfirmDeleteWindow);
+												setDeletingImageCategory({ itemId: item._id, idx: index });
+											}}
+											className="absolute top-2 right-2 bg-red-600 hover:bg-red-400 text-white w-5 h-5 rounded-full shadow-lg"
+										>
+											<X size={16} />
+										</Button>
+									</div>)
 								}
 								const { isImage, isVideo } = getFileType(url);
 								return (

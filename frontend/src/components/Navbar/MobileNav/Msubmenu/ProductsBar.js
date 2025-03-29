@@ -15,11 +15,11 @@ const MProductsBar = ({ showProducts, onClose }) => {
 	const navigation = useNavigate();
 
 	// Function to handle the query update when a user selects a subcategory
-	const handleSetQuery = (gender, subcategory, category) => {
+	const handleSetQuery = (gender, category) => {
 		const queryParams = new URLSearchParams();
 		if (gender) queryParams.set('gender', gender.toLowerCase());
 		if (category) queryParams.set('category', category.toLowerCase());
-		if (subcategory) queryParams.set('subcategory', subcategory.toLowerCase());
+		// if (subcategory) queryParams.set('subcategory', subcategory.toLowerCase());
 
 		// Construct the URL for the /products page and navigate
 		navigation(`/products?${queryParams.toString()}`);
@@ -76,7 +76,7 @@ const MProductsBar = ({ showProducts, onClose }) => {
 	}
 	// console.log("productsOptions: ",productsOptions);
 	return (
-		<div className={`ml-2 font-kumbsan w-full ${showProducts}`}>
+		<div className={`ml-2 font-kumbsan w-full ${showProducts} border-b border-black border-opacity-20`}>
 		{productsOptions.length > 0 &&
 			productsOptions.map((product) => (
 				<div key={product.Gender} className="space-y-2">
@@ -101,32 +101,34 @@ const MProductsBar = ({ showProducts, onClose }) => {
 								<div key={i} className="space-y-2">
 									<Ripples
 										className="text-black font-normal px-5 py-4 relative w-full flex"
-										onClick={() => toggleCategory(product.Gender, category.title)}
+										// onClick={() => toggleCategory(product.Gender, category.title)}
+										onClick={() => handleSetQuery(activeGender, category.title)}
 									>
-									{category.title}
-									<span className="absolute mx-5 right-0">
-										{activeCategory[`${product.Gender}-${category.title}`] ? (
-											<IoIosArrowDown />
-										) : (
-											<IoIosArrowForward />
-										)}
-									</span>
+										{/* {category.title} */}
+										<span>{category.title}</span>
+										{/* <span className="absolute mx-5 right-0">
+											{activeCategory[`${product.Gender}-${category.title}`] ? (
+												<IoIosArrowDown />
+											) : (
+												<IoIosArrowForward />
+											)}
+										</span> */}
 									</Ripples>
 
 									{/* Subcategories Dropdown */}
-									{activeCategory[`${product.Gender}-${category.title}`] && (
+									{/* {activeCategory[`${product.Gender}-${category.title}`] && (
 										<div className="pl-6 space-y-1">
 											{category.subcategories.map((subcategory) => (
-											<Ripples
-												key={subcategory}
-												onClick={() => handleSetQuery(activeGender, subcategory, category.title)}
-												className="text-black font-extralight px-5 py-4 relative w-full flex"
-											>
-												<span>{subcategory}</span>
-											</Ripples>
+												<Ripples
+													key={subcategory}
+													onClick={() => handleSetQuery(activeGender, category.title)}
+													className="text-black font-extralight px-5 py-4 relative w-full flex"
+												>
+													<span>{subcategory}</span>
+												</Ripples>
 											))}
 										</div>
-									)}
+									)} */}
 								</div>
 							))}
 						</div>

@@ -37,7 +37,8 @@ const ordersSchema = new mongoose.Schema({
 	IsCancelled:{type:Boolean,default:false},
 	RefundData:{type:Object,default:null},
 	trackingUrl:{type:String,default:''},
-    ReturningData:{type:Object}
+    ReturningData:{type:Object},
+    RefundData:Object
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

@@ -11,6 +11,7 @@ import { ChevronLeft, MapIcon } from 'lucide-react';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
+import ReturnsOptionsWindow from './ReturnsOptionsWindow';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -72,18 +73,19 @@ const AddressSection = ({ address, userName }) => (
 );
 
 const OrderDetailsPage = ({ user }) => {
-    const { checkAndCreateToast } = useSettingsContext();
-	const{decryptWithKey} = useEncryptionDecryptionContext();
     const params = useParams();
-    const scrollableDivRef = useRef(null);
     const navigate = useNavigate(); 
-    const { orderbyid, loading } = useSelector(state => state.getOrderById);
-    const [orderItems, setOrderItems] = useState([]);
     const dispatch = useDispatch();
+	const{decryptWithKey} = useEncryptionDecryptionContext();
+    const { checkAndCreateToast } = useSettingsContext();
+    const { orderbyid, loading } = useSelector(state => state.getOrderById);
+
+	const[openReturnOptionWindow,setOpenReturnOptionWindow] = useState(false);
+    const scrollableDivRef = useRef(null);
+    const [orderItems, setOrderItems] = useState([]);
 
     useEffect(() => {
         if (params) {
-			console.log("Decryption Data: ",decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY))
             dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)))
         } else {
             navigate(-1);
@@ -96,9 +98,9 @@ const OrderDetailsPage = ({ user }) => {
         }
     }, [orderbyid]);
 
-    const createOrderReturn = async (e) => {
+    const createOrderReturn = async (refundOptionsData) => {
         if (!orderbyid?.IsReturning) {
-            const response = await dispatch(sendOrderReturn({ orderId: orderbyid._id }));
+            const response = await dispatch(sendOrderReturn({orderId: orderbyid._id,refundOptionsData }));
 			if(response){
             	await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
 				if (orderbyid?.IsReturning) {
@@ -112,6 +114,7 @@ const OrderDetailsPage = ({ user }) => {
         } else {
             checkAndCreateToast('error', 'Order is already in return process');
         }
+		setOpenReturnOptionWindow(false);
     }
 	const createCancelOrder = async(e)=>{
 		if(!orderbyid?.IsCancelled){
@@ -247,7 +250,7 @@ const OrderDetailsPage = ({ user }) => {
 									orderbyid?.status === 'Delivered' ? (
 										<button
 											disabled={!orderbyid || orderbyid?.IsReturning}
-											onClick={createOrderReturn}
+											onClick={(e)=> setOpenReturnOptionWindow(!openReturnOptionWindow)}
 											className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
 										>
 											{orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
@@ -270,9 +273,14 @@ const OrderDetailsPage = ({ user }) => {
             ) : (
                 <Loader />
             )}
-            <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
             <WhatsAppButton scrollableDivRef={scrollableDivRef} />
+            <Footer />
+			{
+				openReturnOptionWindow && <ReturnsOptionsWindow OnSubmit={(data)=>{
+					createOrderReturn(data);
+				}} OnClose={()=> setOpenReturnOptionWindow(false)}/>
+			}
         </div>
     );
 };

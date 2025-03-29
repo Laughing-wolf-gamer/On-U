@@ -228,9 +228,9 @@ export const fetchOrderById = (id) => async (dispatch) => {
         dispatch({ type: FAIL_GET_ORDER, payload: error?.response?.data?.message })
     }
 }
-export const sendOrderReturn = ({orderId}) => async () => {
+export const sendOrderReturn = (returnData) => async () => {
 	try {
-		const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/returnOrder`,{orderId}, headerConfig());
+		const {data} = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/order/returnOrder`,returnData, headerConfig());
 		console.log("Return Order: ",data);
 		return data?.success;
 	} catch (error) {

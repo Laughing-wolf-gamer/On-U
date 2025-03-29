@@ -42,8 +42,8 @@ const AddAddressPopup = ({ isOpen, onClose, onSave }) => {
 			// Check if the length is greater than 10
 			if (digitsOnly.length !== 10) {
 				// console.log("Phone number is greater than 10 digits.");
-				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
-				setError({errorTag:'phoneNumber',error:'Phone number should be 10 digits or fewer!'})
+				checkAndCreateToast('error', 'Phone number should be 10 digits!');
+				setError({errorTag:'phoneNumber',error:'Phone number should be 10 digits!'})
 				return;
 			}
 			const pincodeDigistOnly = newAddress['pincode'].replace(/\D/g, '');
