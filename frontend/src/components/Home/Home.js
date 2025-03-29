@@ -212,7 +212,7 @@ const Home = ({user}) => {
                         {
 							WideScreen_Video && WideScreen_Video.urls.length > 0 && (
 								<div className="w-full justify-self-center flex flex-col justify-center uppercase items-center pb-7 space-y-3 px-14">
-									<div className='w-full justify-center items-center flex border border-gray-700 rounded-md'>
+									<div className='w-full justify-center items-center flex rounded-md'>
 										{
 											WideScreen_Video.header && <strong className='text-4xl hover:underline text-left font-bold text-gray-700 mb-8'>{WideScreen_Video.header}</strong>
 										}
