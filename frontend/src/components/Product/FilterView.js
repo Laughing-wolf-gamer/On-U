@@ -373,8 +373,8 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     
         // Clear the existing 'subcategory' parameters and append the updated array
         url.searchParams.delete('color');
-        selectColor.forEach(sub => {
-            url.searchParams.append('color', sub);
+        selectColor.forEach(col => {
+            url.searchParams.append('color', col);
         });
     
         // Update the URL in the browser's address bar without reloading the page

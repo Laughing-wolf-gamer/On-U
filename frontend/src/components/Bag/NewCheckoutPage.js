@@ -716,32 +716,30 @@ const AddAddress = ({onSave }) => {
     const { formData } = useSelector(state => state.fetchFormBanners);
     const dispatch = useDispatch();
     const [error, setError] = useState('');
-	/* const handleInputChange = (e) => {
-		setCustomPincode(e.target.value);
-	};
+	const fetchStateAndCountry = async (pincode) => {
+        try {
+            // Assuming we have an API that returns state and country for a given pincode
+            const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
+			const responseData = response.data.length > 0 ? response.data[0] : null;
+			if(!responseData) throw new Error("Invalid Pincode");
+			if(responseData.PostOffice.length === 0) throw new Error("Invalid Pincode");
+            const data = responseData?.PostOffice[0];
+			console.log("Country Data: ",data);
 
-	const handleSubmit = async (e) => {
-		e.preventDefault();
-
-		try {
-			let currentPincode = pincode;
-			if(customPincode) currentPincode = customPincode;
-			if(!currentPincode){
-				checkAndCreateToast('error','Please enter a valid pincode');
-				return;
-			}
-			const response = await axios.get(`${BASE_API_URL}/api/logistic/logistic/checkAvailability/?pincode=${currentPincode}&productId=${productId}`);
-			if (response.data.result) {
-				console.log("Delivery is available! ",response.data.result);
-				const result = response.data.result;
-				setMessage(`Delivery is available for this pincode Within ${result?.edd} days`);
-			} else {
-				setMessage("Sorry, delivery is not available for this pincode.");
-			}
-		} catch (error) {
-			setMessage("Pincode not found!, Please try different PinCode and try again");
-		}
-	} */
+            if (data && data.State && data.Country && data.District) {
+				handleChange({ target: { name: 'state', value: data.State } });
+				handleChange({ target: { name: 'City', value: data.District} });
+				handleChange({ target: { name: 'country', value: data.Country } });
+                setError(null); // Clear any previous errors
+            } else {
+                checkAndCreateToast('error', 'Invalid Pincode');
+                setError({ errorTag: 'pincode', error: 'Invalid Pincode' });
+            }
+        } catch (error) {
+			console.error("Error fetching state and country:", error);
+            checkAndCreateToast('error', 'Failed to fetch state and country');
+        }
+    };
     // Handle changes in form fields
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -749,6 +747,9 @@ const AddAddress = ({onSave }) => {
             ...prev,
             [name]: value,
         }));
+		if (name === 'pincode' && value.length === 6) {
+            fetchStateAndCountry(value);
+        }
     };
 
     const handleSave = () => {
