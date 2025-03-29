@@ -1,89 +1,59 @@
 import React from "react";
 
 const DeliveryStatus = ({ status }) => {
-    const steps = [
-        "Confirmed",
-        "Processing",
-        "Out For Pickup",
-		"Ready To Ship",
-        "Shipped",
-        "Out for Delivery",
-        "Delivered",
-    ];
-	if (!steps.includes(status)) {
-		console.error(`Invalid delivery status: ${status}`);
-		return (
+	const steps = [
+		{title:'Confirmed', label: "Confirmed", icon: "📦" },
+		{title:'RTS', label: "Ready To Ship", icon: "🚚" },
+		{title:'Shipped', label: "Shipped", icon: "✈️" },
+		{title:'OFD', label: "Out for Delivery", icon: "📬" },
+		{title:'Delivered', label: "Delivered", icon: "✅" },
+	];
+
+	const currentStepIndex = steps.findIndex((step) => step.label === status);
+
+	if (currentStepIndex < 0) {
+		/* return (
 			<div className="error-container p-6 bg-red-100 text-red-800 rounded-lg border border-red-300 shadow-lg text-center mb-4">
 				<h1 className="error-title text-xl font-bold animate-pulse underline mb-2">{`${status}`}</h1>
 			</div>
-		);
+		); */
+		return null;
 	}
 
-
-    // Determine the current step index based on the status
-    const currentStepIndex = steps.indexOf(status);
-
-    // Calculate the progress percentage
-    const progress = (currentStepIndex / (steps.length - 1)) * 100;
-
-    return (
-        <div className="w-full mb-4 px-4 py-6 justify-self-start shadow-lg rounded-lg">
-            {/* Progress Bar */}
-            <div className="relative overflow-hidden">
-                {/* Progress bar connector for horizontal view (larger screens) */}
-                <div className="absolute hidden sm:block top-1/2 my-auto left-0 right-0 h-1 bg-gray-300 z-10">
-                    <div
-                        className={`absolute top-1/2 transform -translate-y-1/2 h-1 bg-[#32A76B]`}
-                        style={{
-                            width: `${progress}%`, // Fill the bar to the current step
-                        }}
-                    />
-                </div>
-
-                {/* Steps */}
-                <div className="flex flex-col sm:flex-row h-fit mb-5 sm:space-y-0 overflow-hidden space-y-10 items-center justify-between sm:space-x-6">
-                    {/* Vertical progress bar for smaller screens */}
-                    <div className="absolute sm:hidden left-1/2 top-0 bottom-0 transform -translate-x-1/2 w-1 bg-gray-300 z-0">
-                        <div
-                            className="h-full bg-black rounded-md"
-                            style={{
-                                height: `${progress}%`, // Fill the bar to the current step
-                            }}
-                        />
-                    </div>
-
-                    {steps.map((step, index) => (
-                        <div key={index} className="text-center bg-gray-50 flex flex-col items-center z-10">
-                            {/* Circle representing the step */}
-                            <div
-                                className={`w-7 h-7 rounded-full font-bold mx-auto mb-3 flex items-center justify-center transition-colors duration-300 ${
-                                    index <= currentStepIndex
-                                        ? "bg-[#32A76B] text-white animate-pulse"
-                                        : "bg-gray-300 text-gray-600"
-                                }`}
-                            >
-                                {index < currentStepIndex ? (
-                                    <span className="text-white text-xl">✓</span>
-                                ) : (
-                                    <span className="text-xl">{index + 1}</span>
-                                )}
-                            </div>
-                            {/* Step label */}
-                            <p
-                                className={`text-sm font-bold text-center flex-wrap ${
-                                    index <= currentStepIndex
-                                        ? "text-[#32A76B] animate-pulse"
-                                        : "text-gray-500"
-                                }`}
-                            >
-                                {step}
-                            </p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
-    );
+	return (
+		<div className="rounded-lg mb-2 px-2 w-full">
+			<div className="w-full">
+				<div className="flex items-center justify-between relative">
+					{/* Progress Bar */}
+					<div className="absolute top-1/2 transform -translate-y-1/2 left-4 right-4 h-1 bg-gray-300">
+						<div
+						className="h-1 bg-red-400"
+						style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
+						></div>
+					</div>
+					{/* Steps */}
+					{steps.map((step, index) => (
+						<div key={index} className="flex flex-col items-center z-10">
+							<div
+								className={`flex items-center justify-center rounded-full text-white font-bold shadow-md transition-all duration-300 ${
+								index <= currentStepIndex ? "bg-red-400" : "bg-gray-300"
+								} w-8 h-8 sm:w-10 sm:h-10 text-sm sm:text-lg`}
+							>
+								{step.icon}
+							</div>
+							<p
+								className={`mt-2 text-xs font-semibold ${
+								index <= currentStepIndex ? "text-gray-700" : "text-gray-400"
+								}`}
+							>
+								{step.title}
+							</p>
+						</div>
+					))}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default DeliveryStatus;

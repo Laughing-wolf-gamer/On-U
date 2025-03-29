@@ -18,7 +18,7 @@ const authSlice = createSlice({
             state.isAuthenticated = false;
             state.user = null;
             state.token = null;
-            // sessionStorage.removeItem("token")
+            // localStorage.removeItem("token")
         }
 	},
     extraReducers:(builder)=>{
@@ -30,13 +30,13 @@ const authSlice = createSlice({
             state.user = !action?.payload?.Success ? null:action?.payload?.user;
             state.token = action?.payload?.token;
             console.log("tokens: ",action?.payload?.token)
-            sessionStorage.setItem("token",action?.payload?.token)
+            localStorage.setItem("token",action?.payload?.token)
         }).addCase(loginUser.rejected,(state,action)=>{
             state.isLoading = false;
             state.isAuthenticated = false;
             state.user = null;
             state.token = null;
-            // sessionStorage.removeItem("token")
+            // localStorage.removeItem("token")
         }).addCase(checkAuth.pending,(state)=>{
             state.isLoading = true;
         }).addCase(checkAuth.fulfilled,(state,action)=>{

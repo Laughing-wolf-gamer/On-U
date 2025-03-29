@@ -16,7 +16,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
 
     const logoutBTN = () =>{
         dispatch(logout())
-        sessionStorage.removeItem('token')
+        localStorage.removeItem('token')
         checkAndCreateToast("Logout Successfully")
     }
         

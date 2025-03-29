@@ -11,7 +11,6 @@ export const useEncryptionDecryptionContext = ()=> useContext(EncryptionDecrypti
 export const EncryptionDecryptionProvider = ({children})=>{
     // Encryption function
 	const encrypt = (data) => {
-		console.log("data to encrypt: ",data);
 		// Encrypt the data using AES and the SECREAT_KEY
 		const ciphertext = CryptoJS.AES.encrypt(data, SECREAT_KEY).toString();
 

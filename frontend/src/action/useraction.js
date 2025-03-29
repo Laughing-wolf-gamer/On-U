@@ -38,7 +38,7 @@ export const loginVerify = (verifyData)=> async(dispatch)=>{
         dispatch({ type: LOGIN_USER_DATA })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/loginmobile/verify`, verifyData)
         const token = data?.result?.token
-        sessionStorage.setItem('token', token)
+        localStorage.setItem('token', token)
         dispatch({ type: SUCCESS_LOGIN_USER, payload: data?.result, message: data?.message })
         return data;
     } catch (error) {
@@ -60,7 +60,7 @@ export const registerUser = (userData) => async (dispatch) => {
 
 export const getuser = () => async (dispatch) => {
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_USER })
         if(!token){
             dispatch({ type: FAIL_USER, payload: null})
@@ -81,7 +81,7 @@ export const getuser = () => async (dispatch) => {
 }
 export const updateAddress = (address) => async (dispatch) => {
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_ADDRESS })
         const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
             withCredentials:true,
@@ -98,7 +98,7 @@ export const updateAddress = (address) => async (dispatch) => {
 }
 export const removeAddress = (addressIndex) => async (dispatch) => {
     try {
-        // const token = sessionStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         console.log("Address Index: ", addressIndex)
         dispatch({ type: REQUEST_UPDATE_ADDRESS })
         const { data } = await axios.patch(`${BASE_API_URL}/api/auth/removeAddress`,{addressId:addressIndex},headerConfig())
@@ -110,7 +110,7 @@ export const removeAddress = (addressIndex) => async (dispatch) => {
 }
 export const getAddress = () => async (dispatch) => {
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         // console.log(token);
         dispatch({ type: REQUEST_ALL_ADDRESS })
         if(!token){
@@ -142,7 +142,7 @@ export const otpverifie = (sendingData) => async (dispatch) => {
             const token = data?.token
             console.log("Token: ", token)
             if(token){
-                sessionStorage.setItem('token', token)
+                localStorage.setItem('token', token)
             }
         }
 		return data
@@ -174,8 +174,8 @@ export const updateuser = (userdata) => async (dispatch) => {
         if(data.token){
             const token = data?.token
             console.log("Token: ", token)
-            sessionStorage.removeItem('token');
-            sessionStorage.setItem('token', data.token)
+            localStorage.removeItem('token');
+            localStorage.setItem('token', data.token)
 
         }
         dispatch({ type: SUCCESS_UPDATE_USER, payload: data.result })
@@ -211,7 +211,7 @@ export const logout = () => async (dispatch) => {
         console.log("logout")
         const res = await axios.post(`${BASE_API_URL}/api/auth/logout`)
         console.log("Loggin Aoutine");
-        sessionStorage.removeItem("token");
+        localStorage.removeItem("token");
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
     } catch (Error) {
         dispatch({ type: FAIL_LOGOUT, payload: Error.response.data.message })

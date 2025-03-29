@@ -68,7 +68,7 @@ export const fetchAllProducts = createAsyncThunk('/products/fetchAllProducts',as
 })
 export const editProducts = createAsyncThunk('/products/edit',async ({id,formData})=>{
     try {
-        // const token = sessionStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         console.log(formData);
         const response = await axios.put(`${BASE_URL}/admin/product/edit/${id}`,formData,Header());
         return response?.data;
@@ -78,7 +78,7 @@ export const editProducts = createAsyncThunk('/products/edit',async ({id,formDat
 })
 export const delProducts = createAsyncThunk('/products/del',async (id)=>{
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         console.log(token);
         const response = await axios.delete(`${BASE_URL}/admin/product/del/${id}`,Header());
         return response?.data;
@@ -90,7 +90,7 @@ export const delProducts = createAsyncThunk('/products/del',async (id)=>{
 
 export const createNewCoupon = createAsyncThunk('/admin/product/createCoupon',async({couponData}) =>{
     try {
-        // const token = sessionStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         // console.log(token);
         const response = await axios.post(`${BASE_URL}/admin/product/coupons/create`,couponData,Header());
         return response?.data;
@@ -100,7 +100,7 @@ export const createNewCoupon = createAsyncThunk('/admin/product/createCoupon',as
 })
 export const editCoupon = createAsyncThunk('/admin/product/coupons/edit',async({couponId,couponData})=>{
     try {
-        // const token = sessionStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         // console.log(token);
         const response = await axios.put(`${BASE_URL}/admin/product/coupons/edit/${couponId}`,couponData,Header());
         return response?.data;
@@ -111,7 +111,7 @@ export const editCoupon = createAsyncThunk('/admin/product/coupons/edit',async({
 
 export const deleteCoupon = createAsyncThunk('/admin/product/coupons/delete',async({couponId})=>{
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         console.log(token);
         const response = await axios.delete(`${BASE_URL}/admin/product/coupons/remove/${couponId}`,Header());
         return response?.data;
@@ -122,7 +122,7 @@ export const deleteCoupon = createAsyncThunk('/admin/product/coupons/delete',asy
 
 export const fetchAllCoupons = createAsyncThunk('/admin/product/coupons/all',async()=>{
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         console.log(token);
         const response = await axios.get(`${BASE_URL}/admin/product/coupons/all`,Header());
         return response?.data;

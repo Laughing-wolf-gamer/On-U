@@ -188,7 +188,7 @@ export const extractSpecificWord = (inputString) => {
     return matches ? matches[0] : null; // Return the first match or null if no match is found
 };
 export const headerConfig = ()=>{
-    const token = sessionStorage.getItem("token");
+    const token = localStorage.getItem("token");
     // console.log("Header Token: ",token);
     const headers = {
         withCredentials:true,
@@ -204,15 +204,15 @@ export const removeSpaces = (inputString) => {
 }
 
 export const getLocalStorageBag = ()=>{
-  const bag = JSON.parse(sessionStorage.getItem("bagItem")) || [];
+  const bag = JSON.parse(localStorage.getItem("bagItem")) || [];
   return bag;
 }
 export const getLocalStorageWishListItem = ()=>{
-  const wishList = JSON.parse(sessionStorage.getItem("wishListItem")) || [];
+  const wishList = JSON.parse(localStorage.getItem("wishListItem")) || [];
   return wishList;
 }
 export const setSessionStorageBagListItem = (orderData,productId)=>{
-	let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+	let bagItem = JSON.parse(localStorage.getItem("bagItem"));
 	if (!bagItem) {
 		bagItem = [];
 	}
@@ -227,13 +227,13 @@ export const setSessionStorageBagListItem = (orderData,productId)=>{
 	} else {
 		bagItem.push(orderData);
 	}
-	sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+	localStorage.setItem("bagItem", JSON.stringify(bagItem));
 }
 export const setWishListProductInfo = (product,productId)=>{
 	const wishListData = {
 		productId: {...product},
 	};
-	let wishListItem = JSON.parse(sessionStorage.getItem("wishListItem"));
+	let wishListItem = JSON.parse(localStorage.getItem("wishListItem"));
 	if (!wishListItem) {
 		wishListItem = [];
 	}
@@ -241,10 +241,10 @@ export const setWishListProductInfo = (product,productId)=>{
 	let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
 	if (index === -1) {
 		wishListItem.push(wishListData);
-		sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+		localStorage.setItem("wishListItem", JSON.stringify(wishListItem));
 	}else{
 		wishListItem.splice(index,1);
-		sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+		localStorage.setItem("wishListItem", JSON.stringify(wishListItem));
 	}
 }
 

@@ -269,28 +269,6 @@ const Bag = () => {
     }, [dispatch,deleteBagResult, user, isAuthentication]);
 
     
-    /* const verifyAnyOrdersPayment = async()=>{
-        if(!sessionStorage.getItem("checkoutData")) return;
-		const data = JSON.parse(sessionStorage.getItem("checkoutData"))
-        try {
-            console.log("Verifying Order Response: ",data);
-            const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
-            sessionStorage.removeItem("checkoutData")
-            if(response?.data.success){
-                checkAndCreateToast("success","Payment Successful");
-                if(user){
-                    setTimeout(() => {
-                        dispatch(getbag({ userId: user.id }));
-                    }, 1000);
-                }
-            }else{
-                checkAndCreateToast("error","Payment Failed");
-            }
-            
-        } catch (error) {
-            console.error(`Error Verifying order: `,error);
-        }
-    } */
     const handleConvenienceFeesChange = async () => {
         try {
             const fees = await dispatch(getConvinceFees())

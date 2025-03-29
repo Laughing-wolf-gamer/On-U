@@ -60,7 +60,7 @@ export const addToCart = createAsyncThunk('shoppingCart/addToCart', async ({user
 });
 export const updateToCart = createAsyncThunk('shoppingCart/updateToCart', async ({userId,productId,quantity,size,color,}) => {
     // Simulate adding product to the cart
-    const token = sessionStorage.getItem('token');
+    const token = localStorage.getItem('token');
     console.log(token);
     const result = await axios.put(`${BASE_URL}/api/cart/update-cart`,{
         userId,

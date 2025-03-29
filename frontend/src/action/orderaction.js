@@ -70,7 +70,7 @@ export const getwishlist = () => async (dispatch) => {
 export const addItemArrayBag = (options) => async()=>{
     // console.log("Bag Items Array",options)
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/addItemArrayBag`,options, {
             withCredentials:true,
             headers: {
@@ -89,7 +89,7 @@ export const addItemArrayBag = (options) => async()=>{
 export const createbag = (option) => async () => {
     console.log(option)
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, {
             withCredentials:true,
             headers: {
@@ -121,7 +121,7 @@ export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
 
 export const getbag = () => async (dispatch) => {
     try {
-        const token = sessionStorage.getItem('token');
+        const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
         const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,{
             withCredentials:true,
@@ -197,7 +197,7 @@ export const createPaymentOrder = (orderdata) => async () => {
 }
 export const verifyingOrder = (orderdata) => async (dispatch) => {
     try {
-        // const token = sessionStorage.getItem('token');
+        // const token = localStorage.getItem('token');
         console.log("Payment Order Data: ",orderdata);
         const res = await axios.post(`${BASE_API_URL}/api/payment/verify_payment`, orderdata, headerConfig())
         console.log("Payment Order Data: ",res.data)

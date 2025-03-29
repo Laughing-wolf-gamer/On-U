@@ -9,11 +9,9 @@ import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
-		<div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 cursor-pointer hover:shadow-xl transition duration-300">
+		<div className="w-full justify-between py-4 px-2 bg-white shadow-lg rounded-lg mt-6 cursor-pointer transition duration-300">
 			{/* Delivery Status Progress Bar */}
-			<div className="w-full flex-wrap justify-center items-center">
-				<DeliveryStatus status={order?.status} />
-			</div>
+			<DeliveryStatus status={order?.status} />
 
 			{/* Order Details */}
 			<div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-6">
@@ -25,16 +23,16 @@ const OrderCard = ({ order, onViewDetails }) => {
 					/>
 				</div>
 
-				<div className="flex-1 space-y-2">
-					<p className="text-gray-700">
+				<div className="flex-1 w-max h-max space-y-2">
+					<p className="text-gray-700 text-sm sm:text-base">
 						<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
 					</p>
-					<p className="text-gray-700">
+					<p className="text-gray-700 text-sm sm:text-base">
 						<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
 					</p>
-					<p className="text-gray-700">
-						<strong>Order Status:</strong> {order?.status || 'Pending'}
-					</p>
+					<div className="text-gray-700 h-fit space-x-1">
+						<strong className='text-sm sm:text-base'>Order Status:</strong><span className='bg-black text-white text-[10px] animate-pulse rounded-full px-3 py-2'>{order?.status}</span>
+					</div>
 				</div>
 
 				<div className="flex-1 space-y-2">
@@ -43,7 +41,7 @@ const OrderCard = ({ order, onViewDetails }) => {
 						e.preventDefault();
 						onViewDetails(order);
 						}}
-						className="px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800"
+						className="px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800 text-sm sm:text-base"
 					>
 						<span>View Details</span>
 					</button>
@@ -52,6 +50,7 @@ const OrderCard = ({ order, onViewDetails }) => {
 		</div>
 	);
 };
+
 
 
 const OrdersReturns = () => {
@@ -125,7 +124,7 @@ const OrdersReturns = () => {
     const ordersToDisplay = filteredOrders();
 
     return (
-        <div className="space-y-6 w-full flex flex-col items-center px-4 sm:px-6 md:px-8">
+        <div className="space-y-6 w-full flex flex-col items-center sm:px-6 md:px-8">
             <h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
 
             {/* Filter and Sort Dropdowns */}
@@ -161,9 +160,9 @@ const OrdersReturns = () => {
             {orderLoading ? (
                 Array(9).fill(0).map((_, index) => <OrderCardSkeleton key={index} />)
             ) : (
-                <Fragment>
+                <div className='w-full'>
                     {ordersToDisplay && ordersToDisplay.length > 0 ? (
-                        <div className="grid grid-cols-1 w-full">
+                        <Fragment>
                             {ordersToDisplay.map((order, index) => (
                                 <OrderCard
                                     key={index}
@@ -171,11 +170,11 @@ const OrdersReturns = () => {
                                     onViewDetails={handleViewDetails}
                                 />
                             ))}
-                        </div>
+                        </Fragment>
                     ) : (
                         <p className="text-gray-500">No orders yet.</p>
                     )}
-                </Fragment>
+                </div>
             )}
         </div>
     );
@@ -183,7 +182,7 @@ const OrdersReturns = () => {
 
 const OrderCardSkeleton = () => {
 	return (
-		<div className="w-full justify-between mx-auto p-6 bg-white shadow-lg rounded-lg mt-6 animate-pulse">
+		<div className="w-full justify-between p-2 bg-white shadow-lg space-y-2 rounded-lg mt-6 animate-pulse">
 			<div className="w-full flex-wrap justify-center items-center">
 				<div className="h-6 w-3/4 bg-gray-300 rounded"></div>
 			</div>

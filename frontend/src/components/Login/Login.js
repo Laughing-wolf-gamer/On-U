@@ -87,8 +87,8 @@ const Login = () => {
             const response = dispatch(createAndSendProductsArrayWishList(wishListData));
             if(response){
                 if(response.success){
-                    // sessionStorage.setItem("bagItem", JSON.stringify([]));
-                    sessionStorage.setItem("wishListItem", JSON.stringify([]));
+                    // localStorage.setItem("bagItem", JSON.stringify([]));
+                    localStorage.setItem("wishListItem", JSON.stringify([]));
                 }
             }
         }
@@ -97,7 +97,7 @@ const Login = () => {
         const savedBagData = sessionBagData;
         const response = await dispatch(addItemArrayBag(savedBagData));        
         if(response && response.success){
-            sessionStorage.setItem("bagItem", JSON.stringify([]));
+            localStorage.setItem("bagItem", JSON.stringify([]));
         }
     }
     const handleCloseOtpModal = () => {

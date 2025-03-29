@@ -12,23 +12,23 @@ export const useSessionStorage = () => {
 export const SessionStorageProvider = ({ children }) => {
     const [sessionData, setSessionData] = useState(() => {
         // Initialize state with session storage data
-        return JSON.parse(sessionStorage.getItem('wishListItem')) || [];
+        return JSON.parse(localStorage.getItem('wishListItem')) || [];
     });
     const [sessionBagData, setBagSessionData] = useState(() => {
         // Initialize state with session storage data
-        return JSON.parse(sessionStorage.getItem('bagItem')) || [];
+        return JSON.parse(localStorage.getItem('bagItem')) || [];
     });
     const [sessionRecentlyViewProducts, setRecentlyViewProducts] = useState(() => {
         // Initialize state with session storage data
-        return JSON.parse(sessionStorage.getItem('recentlyViewProducts')) || [];
+        return JSON.parse(localStorage.getItem('recentlyViewProducts')) || [];
     });
 
     useEffect(() => {
         // Listen for changes in session storage
         const handleStorageChange = () => {
-            const updatedData = JSON.parse(sessionStorage.getItem('wishListItem')) || [];
-            const updatedBagData = JSON.parse(sessionStorage.getItem('bagItem')) || [];
-            const updatedRecentlyViewProducts = JSON.parse(sessionStorage.getItem('recentlyViewProducts')) || [];
+            const updatedData = JSON.parse(localStorage.getItem('wishListItem')) || [];
+            const updatedBagData = JSON.parse(localStorage.getItem('bagItem')) || [];
+            const updatedRecentlyViewProducts = JSON.parse(localStorage.getItem('recentlyViewProducts')) || [];
             setSessionData(updatedData);
             setBagSessionData(updatedBagData);
             setRecentlyViewProducts(updatedRecentlyViewProducts);
@@ -43,7 +43,7 @@ export const SessionStorageProvider = ({ children }) => {
         };
     }, []);
     const updateBagQuantity = (productId,size,color,quantity)=>{
-        let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+        let bagItem = JSON.parse(localStorage.getItem("bagItem"));
         if (!bagItem) {
             bagItem = [];
         }
@@ -51,12 +51,12 @@ export const SessionStorageProvider = ({ children }) => {
         // console.log("Sesseon bag: ",bagItem)
         if (index !== -1) {
             bagItem[index].quantity = quantity;
-            sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+            localStorage.setItem("bagItem", JSON.stringify(bagItem));
             setBagSessionData(bagItem)
         }
     }
 	const toggleBagItemCheck = (productId,size,color)=>{
-		let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+		let bagItem = JSON.parse(localStorage.getItem("bagItem"));
 		if (!bagItem) {
 			bagItem = [];
 		}
@@ -64,12 +64,12 @@ export const SessionStorageProvider = ({ children }) => {
 		let index = bagItem?.findIndex((item) => item.productId === productId && item.color._id === color._id && item.size._id === size._id);
 		if (index!== -1) {
 			bagItem[index].isChecked = !bagItem[index].isChecked;
-			sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+			localStorage.setItem("bagItem", JSON.stringify(bagItem));
 			setBagSessionData(bagItem)
 		}
 	}
     const removeBagSessionStorage = (productId,size,color)=>{
-        let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+        let bagItem = JSON.parse(localStorage.getItem("bagItem"));
         if (!bagItem) {
             bagItem = [];
         }
@@ -77,12 +77,12 @@ export const SessionStorageProvider = ({ children }) => {
         let index = bagItem?.findIndex((item) => item.productId === productId && item.color._id === color._id && item.size._id === size._id);
         if (index!== -1) {
             bagItem.splice(index,1);
-            sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+            localStorage.setItem("bagItem", JSON.stringify(bagItem));
             setBagSessionData(bagItem)
         }
     }
     const setSessionStorageBagListItem = (orderData,productId)=>{
-        let bagItem = JSON.parse(sessionStorage.getItem("bagItem"));
+        let bagItem = JSON.parse(localStorage.getItem("bagItem"));
         if (!bagItem) {
             bagItem = [];
         }
@@ -97,14 +97,14 @@ export const SessionStorageProvider = ({ children }) => {
         } else {
             bagItem.push(orderData);
         }
-        sessionStorage.setItem("bagItem", JSON.stringify(bagItem));
+        localStorage.setItem("bagItem", JSON.stringify(bagItem));
         setBagSessionData(bagItem)
     }
     const setWishListProductInfo = (product,productId)=>{
         const wishListData = {
           productId: {...product},
         };
-        let wishListItem = JSON.parse(sessionStorage.getItem("wishListItem"));
+        let wishListItem = JSON.parse(localStorage.getItem("wishListItem"));
         if (!wishListItem) {
             wishListItem = [];
         }
@@ -112,16 +112,16 @@ export const SessionStorageProvider = ({ children }) => {
         let index = wishListItem?.findIndex((item) => item.productId?._id === productId);
         if (index === -1) {
             wishListItem.push(wishListData);
-            sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+            localStorage.setItem("wishListItem", JSON.stringify(wishListItem));
         }else{
             wishListItem.splice(index,1);
-            sessionStorage.setItem("wishListItem", JSON.stringify(wishListItem));
+            localStorage.setItem("wishListItem", JSON.stringify(wishListItem));
         }
         console.log("wishListItem Added or remove: ",wishListItem);
-        setSessionData(JSON.parse(sessionStorage.getItem("wishListItem")));
+        setSessionData(JSON.parse(localStorage.getItem("wishListItem")));
     }
     const updateRecentlyViewProducts = (product)=>{
-        let recentlyViewProductStorage = JSON.parse(sessionStorage.getItem("recentlyViewProducts"));
+        let recentlyViewProductStorage = JSON.parse(localStorage.getItem("recentlyViewProducts"));
         if (!recentlyViewProductStorage) {
             recentlyViewProductStorage = [];
         }
@@ -129,19 +129,19 @@ export const SessionStorageProvider = ({ children }) => {
         let index = recentlyViewProductStorage?.findIndex((item) => item?._id === product._id);
         if (index !== -1) {
             recentlyViewProductStorage.splice(index,1);
-            sessionStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
+            localStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
             setRecentlyViewProducts(recentlyViewProductStorage)
         }else{
             recentlyViewProductStorage.unshift(product);
             if(recentlyViewProductStorage.length > 10){
                 recentlyViewProductStorage.pop();
             }
-            sessionStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
+            localStorage.setItem("recentlyViewProducts", JSON.stringify(recentlyViewProductStorage));
             setRecentlyViewProducts(recentlyViewProductStorage)
         }
     }
     const updateSessionStorage = (newData) => {
-        sessionStorage.setItem('wishListItem', JSON.stringify(newData));
+        localStorage.setItem('wishListItem', JSON.stringify(newData));
         setSessionData(newData);
     };
 

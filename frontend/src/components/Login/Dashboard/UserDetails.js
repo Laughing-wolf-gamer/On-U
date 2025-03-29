@@ -55,7 +55,7 @@ const UserDetails = ({ user }) => {
         try {
             const formData = new FormData();
             formData.append('my_file', file);
-            // const token = sessionStorage.getItem('token');
+            // const token = localStorage.getItem('token');
             // console.log(token);
             const res = await axios.post(`${BASE_API_URL}/admin/upload-image`,formData,headerConfig());
             console.log("REsponse",res.data);
