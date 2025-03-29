@@ -122,7 +122,6 @@ const AdminOrderLayout = () => {
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
 	const isNoOrders = displayedOrders.length === 0;
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	console.log("Returnign Orders: ",returnOrderList)
 	return (
 		<Card className="w-full">
 			{isLoading  ? <LoadingView/> :(
@@ -278,6 +277,7 @@ const AdminOrderLayout = () => {
 	);
 };
 const ReturningOrderDialogWindow = ({ orderData = [] }) => {
+	console.log("Returnign Orders: ",orderData)
 	return (
 		<DialogContent className="max-w-min max-h-[500px] overflow-y-auto">
 			<DialogTitle className="font-bold">Returning Orders Info</DialogTitle>
@@ -287,26 +287,26 @@ const ReturningOrderDialogWindow = ({ orderData = [] }) => {
 				<table className="min-w-full table-auto text-center border-collapse border border-gray-200">
 					<thead>
 					<tr className="bg-gray-100">
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Order ID</th>
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Customer Name</th>
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Customer Phone Number</th>
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Pickup Pincode</th>
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Status</th>
-						<th className="px-4 py-2 text-left text-sm font-medium text-gray-700">Total</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Order ID</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Customer Name</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Customer Ph.</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Pickup Pincode</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Status</th>
+						<th className="px-4 py-2 text-center text-sm font-medium text-gray-700">Total</th>
 					</tr>
 					</thead>
 					<tbody>
-					{/* Iterate over orderData array and render each row */}
-					{orderData.map((item, index) => (
-						<tr key={index} className="border-t border-gray-200">
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.channel_order_id}</td>
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_name}</td>
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_phone}</td>
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_code}</td>
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.status}</td>
-						<td className="px-4 py-2 text-sm text-gray-600">{item?.total}</td>
-						</tr>
-					))}
+						{/* Iterate over orderData array and render each row */}
+						{orderData.map((item, index) => (
+							<tr key={index} className="border-t border-gray-200">
+							<td className="px-4 py-2 text-sm text-gray-600">{item?.channel_order_id}</td>
+							<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_name}</td>
+							<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_person_phone}</td>
+							<td className="px-4 py-2 text-sm text-gray-600">{item?.pickup_code}</td>
+							<td className="px-4 py-2 text-sm text-gray-600"><Badge className={`animate-pulse`}>{item?.status}</Badge></td>
+							<td className="px-4 py-2 text-sm text-gray-600">{item?.total}</td>
+							</tr>
+						))}
 					</tbody>
 				</table>
 				</div>
