@@ -24,15 +24,15 @@ const OrderItem = ({ item }) => {
 	const productEncryption = encrypt(item?.productId?._id);
 	return (
 		<div key={item._id} className="border-b pb-6">
-			<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 md:space-x-4">
-				<Link to={`/products/${productEncryption}`} className="w-full md:w-1/4 flex justify-center">
+			<div className="flex w-full flex-row space-x-4 justify-start items-center">
+				<Link to={`/products/${productEncryption}`}>
 					<img
 						src={item?.color.images[0].url}
 						alt="Product"
-						className="w-28 h-28 object-contain rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
+						className="w-28 h-28 object-cover rounded-lg shadow-lg hover:scale-105 transition-transform duration-300 ease-in-out"
 					/>
 				</Link>
-				<div className="flex-1">
+				<div className="space-y-1 w-min">
 					<h3 className="text-lg font-semibold text-gray-800 truncate hover:text-blue-500 cursor-pointer">
 						{capitalizeFirstLetterOfEachWord(item?.productId?.title)}
 					</h3>
@@ -51,8 +51,8 @@ const OrderItem = ({ item }) => {
 							{item.size}
 						</span>
 					</div>
+					<strong className="text-lg font-semibold text-gray-800 mt-2">₹ {formattedSalePrice(item.productId?.salePrice || item.productId?.price)}</strong>
 				</div>
-				<div className="text-lg font-semibold text-gray-800 mt-2">₹ {formattedSalePrice(item.productId?.salePrice || item.productId?.price)}</div>
 			</div>
 		</div>
 	);
@@ -179,7 +179,7 @@ const OrderDetailsPage = ({ user }) => {
 							{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
 
 							{/* Order Items Section */}
-							<div className="space-y-4">
+							<div className={`space-y-4 max-h-[400px] overflow-y-auto ${orderItems?.length > 5 ? "scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200":''}`}>
 								<h2 className="text-xl font-semibold text-gray-800">Order Items</h2>
 								{orderItems?.length > 0 && orderItems.map((item, index) => (
 									<OrderItem key={item._id || index} item={item} />
@@ -205,6 +205,13 @@ const OrderDetailsPage = ({ user }) => {
 									<h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
 									<p>{orderbyid?.paymentMode}</p>
 								</div>
+								{
+									orderbyid?.etd && <div className="space-y-2">
+										<h2 className="text-xl font-semibold text-gray-800">ETD (Estimated Time Delivery)</h2>
+										<p>{new Date(orderbyid?.etd).toDateString()}</p>
+									</div>
+								}
+								
 							</div>
 
 						</div>

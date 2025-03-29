@@ -2,63 +2,85 @@ import React, { Fragment, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOrders } from '../../../action/orderaction';
 import { useNavigate } from 'react-router-dom';
-import { FaFilter, FaSortAmountDown, FaRegClock, FaRegCheckCircle } from 'react-icons/fa'; // Importing icons
-import DeliveryStatus from './DeliveryStatus';
+import { FaFilter, FaSortAmountDown } from 'react-icons/fa'; // Importing icons
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
+import { ChevronRight } from 'lucide-react';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
-		<div className="w-full justify-between py-4 px-2 bg-white shadow-lg rounded-lg mt-6 cursor-pointer transition duration-300">
-			{/* Delivery Status Progress Bar */}
-			<DeliveryStatus status={order?.status} />
-
-			{/* Order Details */}
-			<div className="flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0 sm:space-x-6">
-				<div className="flex-1">
+		<div 
+			onClick={(e) => {
+				onViewDetails(order);
+			}}
+			className="w-full justify-between items-center flex py-4 px-2 bg-white rounded-md border-b-[1px] border-gray-300 space-y-2 cursor-pointer transition duration-300">
+				{/* Order Details */}
+				<div className="flex flex-row flex-1 justify-start items-center space-x-2">
 					<img
 						src={order?.orderItems[0]?.color?.images[0]?.url}
 						alt="order preview image"
-						className="w-32 h-32 object-cover rounded-md"
+						className="w-20 h-min sm:w-40 sm:h-40 object-cover rounded-md"
 					/>
-				</div>
-
-				<div className="flex-1 w-max h-max space-y-2">
-					<p className="text-gray-700 text-sm sm:text-base">
-						<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
-					</p>
-					<p className="text-gray-700 text-sm sm:text-base">
-						<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
-					</p>
-					<div className="text-gray-700 h-fit space-x-1">
-						<strong className='text-sm sm:text-base'>Order Status:</strong><span className='bg-black text-white text-[10px] animate-pulse rounded-full px-3 py-2'>{order?.status}</span>
+					<div className="space-y-2 sm:space-y-4">
+						<div className="text-gray-700 text-sm sm:text-base">
+							<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
+						</div>
+						<div className="text-gray-700 text-sm sm:text-base">
+							<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
+						</div>
+						<div className="text-gray-700 h-fit space-x-1">
+							<strong className='text-sm sm:text-base'>Status:</strong>
+							<span className='bg-black text-white text-[7px] sm:text-xs animate-pulse rounded-full px-3 py-2'>
+								{order?.status}
+							</span>
+						</div>
+						{
+							order?.etd && 
+							<div className="space-x-2 flex justify-start items-start">
+								<strong className="text-sm text-gray-800">ETD : </strong>
+								<span>{new Date(order?.etd).toDateString()}</span>
+							</div>
+						}
 					</div>
 				</div>
-
-				<div className="flex-1 space-y-2">
-					<button
-						onClick={(e) => {
-							e.preventDefault();
-							onViewDetails(order);
-						}}
-						className="px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800 text-sm sm:text-base"
-					>
-						<span>View Details</span>
-					</button>
-				</div>
-			</div>
+				<ChevronRight onClick={(e) => {
+					e.stopPropagation();
+					onViewDetails(order);
+				}} className='text-black text-2xl hover:animate-vibrateScale transition-all ease-in-out hover:scale-105' size={20}/>
 		</div>
 	);
 };
 
 
 
+
 const OrdersReturns = () => {
+	const orderStatus = [
+		{ id: 'Confirmed', label: 'Confirmed' },
+		{ id: 'Processing', label: 'Processing' },
+		{ id: 'Pickup Scheduled', label: 'Pickup Scheduled' },
+		{ id: "Ready To Ship", label: 'Ready To Ship' },
+		{ id: 'Shipped', label: 'Shipped' },
+		{ id: 'Delivered', label: 'Delivered' },
+		{ id: 'Canceled', label: 'Canceled' },
+		{ id: 'Delivered', label: 'Delivered' },
+		{ id: 'RTO Initiated', label: 'RTO Initiated' },
+		{ id: 'Lost', label: 'Lost' },
+		{ id: 'Pickup Error', label: 'Pickup Error' },
+		{ id: 'RTO Acknowledged', label: 'RTO Acknowledged' },
+		{ id: 'Pickup Rescheduled', label: 'Pickup Rescheduled' },
+		{ id: 'Cancellation Requested', label: 'Cancellation Requested' },
+		{ id: 'Out For Delivery', label: 'Out For Delivery' },
+		{ id: 'In Transit', label: 'In Transit' },
+		{ id: 'Out For Pickup', label: 'Out For Pickup' },
+		{ id: 'Pickup Exception', label: 'Pickup Exception' },
+	];
 	const{encryptWithKey} = useEncryptionDecryptionContext();
     const { allorder, loading: orderLoading } = useSelector((state) => state.getallOrders);
     const dispatch = useDispatch();
     const navigation = useNavigate();
     const [filter, setFilter] = useState('');
+    const [statusFilter, setStatusFilter] = useState('');
     const [sort, setSort] = useState('');
 
     const handleViewDetails = (order) => {
@@ -71,6 +93,9 @@ const OrdersReturns = () => {
 
     const handleFilterChange = (e) => {
         setFilter(e.target.value);
+    };
+    const handleStatusFilterChange = (e) => {
+        setStatusFilter(e.target.value);
     };
 
     const handleSortChange = (e) => {
@@ -117,6 +142,10 @@ const OrdersReturns = () => {
                 orders = orders.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
             }
         }
+		if(statusFilter && orders){
+			if(statusFilter === '') return orders;
+			orders = orders.filter((order) => order?.status === statusFilter);
+		}
 
         return orders;
     };
@@ -128,18 +157,31 @@ const OrdersReturns = () => {
             <h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
 
             {/* Filter and Sort Dropdowns */}
-            <div className="flex justify-center md:justify-start sm:justify-start xl:justify-start 2xl:justify-start space-x-7 w-full mb-6">
-                <div className="w-fit flex items-center">
+            <div className="flex sm:flex-row flex-col justify-between md:justify-start sm:justify-start xl:justify-start 2xl:justify-start gap-3 w-full mb-6">
+                <div className="flex space-x-2 items-center">
                     <FaFilter className="mr-2 text-gray-600" /> {/* Filter Icon */}
                     <select
                         value={filter}
                         onChange={handleFilterChange}
                         className="border p-2 rounded-md"
                     >
-                        <option value="">Filter by</option>
+                        <option value="">Filter by Date</option>
                         <option value="thisMonth">This Month</option>
                         <option value="last7Days">Last 7 Days</option>
                         <option value="yesterday">Yesterday</option>
+                    </select>
+                </div>
+                <div className="flex space-x-2 items-center">
+                    <FaFilter className="mr-2 text-gray-600" /> {/* Filter Icon */}
+                    <select
+                        value={statusFilter}
+                        onChange={handleStatusFilterChange}
+                        className="border p-2 rounded-md"
+                    >
+						<option value="">Filter by Status</option>
+						{orderStatus.map((status, index) => (
+							<option key={index} value={status.id}>{status.label}</option>
+						))}
                     </select>
                 </div>
 
@@ -160,7 +202,7 @@ const OrdersReturns = () => {
             {orderLoading ? (
                 Array(9).fill(0).map((_, index) => <OrderCardSkeleton key={index} />)
             ) : (
-                <div className='w-full'>
+                <div className='w-full space-y-2'>
                     {ordersToDisplay && ordersToDisplay.length > 0 ? (
                         <Fragment>
                             {ordersToDisplay.map((order, index) => (
