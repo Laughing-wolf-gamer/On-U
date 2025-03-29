@@ -468,9 +468,12 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 	// Intersection Observer for detecting when the images come into view
 
 	return (
-		<div className="px-2 font-kumbsan">
+		<div className="px-2">
 			{/* Category */}
-			<h1 className='underline w-full text-center flex justify-center items-center text-black font-kumbsan font-semibold text-2xl py-2'>Categories</h1>
+			<div className='w-full flex justify-center items-center my-3 flex-col'>
+				<header className='text-center text-gray-800 font-bold text-base'>Categories You Might Like</header>
+				<Link to='/products' className='text-center underline underline-offset-4 text-gray-700 font-thin text-sm'>View All</Link>
+			</div>
 			<ul
 				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
 			>
