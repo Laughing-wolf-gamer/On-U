@@ -282,6 +282,19 @@ const MNavbar = ({ user }) => {
                                     setMenu2("hidden");
                                 }}
                             />
+							<Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
+                                <div
+                                    className="text-black  px-5 py-4 relative w-full flex"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        setMenuShow(false);
+                                        setClass("hidden");
+                                        navigation(`/dashboard?activetab=Orders-Returns`);
+                                    }}
+                                >
+                                    <span className="float-left">Order & Returns</span>
+                                </div>
+                            </Ripples>
                             <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
@@ -326,7 +339,7 @@ const MNavbar = ({ user }) => {
                                     <span className="float-left">Best Sellers</span>
                                 </li>
                             </Ripples>
-                            <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
+                            {/* <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
                                     onClick={(e) => {
@@ -347,20 +360,8 @@ const MNavbar = ({ user }) => {
                                 >
                                     <span className="float-left">On Sale</span>
                                 </li>
-                            </Ripples>
-							<Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
-                                <div
-                                    className="text-black  px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        setMenuShow(false);
-                                        setClass("hidden");
-                                        navigation(`/dashboard?activetab=Orders-Returns`);
-                                    }}
-                                >
-                                    <span className="float-left">Order & Returns</span>
-                                </div>
-                            </Ripples>
+                            </Ripples> */}
+							
                             <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <div
                                     className="text-black  px-5 py-4 relative w-full flex"

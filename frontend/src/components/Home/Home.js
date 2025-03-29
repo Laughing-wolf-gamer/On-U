@@ -298,7 +298,7 @@ const Home = ({user}) => {
 									</li>
 								))}
 							</div>:(
-								<div className='w-[100vw] pb-7'>
+								<div className='w-[100vw]'>
 									<Carousel
 										preventMovementUntilSwipeScrollTolerance
 										className='' 
@@ -321,11 +321,11 @@ const Home = ({user}) => {
 								</div>
 							)
 						}
-						<div className='w-full text-center flex flex-row justify-center px-3 items-center text-white md:text-black font-kumbsan text-xl transform transition-all'>
+						{/* <div className='w-full text-center flex flex-row justify-center px-3 items-center text-white md:text-black font-kumbsan text-xl transform transition-all'>
 							<div className='w-full justify-center items-center flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-2 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
 								<span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>Categories</span>
 							</div>
-						</div>
+						</div> */}
 						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
 
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
@@ -494,7 +494,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 					):(
 						<Fragment>
 							{MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 && (
-								<div className="flex overflow-x-auto bg-slate-200 pt-6 items-start scrollbar-hide">
+								<div className="flex overflow-x-auto bg-slate-200 pt-8 items-start scrollbar-hide">
 									{MobileScreen_CategorySlider.urls.map((image, index) => {
 										return (
 											<li
@@ -511,14 +511,14 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 												className="category-image w-full justify-self-center h-full object-cover"
 												data-category={image.name.toLowerCase()} // Store the category name
 											/>
-											{/* Display the banner if the category is in view */}
-											{image.name && (
-												<div
-													className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
-												>
-													{image.name}
-												</div>
-											)}
+												{/* Display the banner if the category is in view */}
+												{image.name && (
+													<div
+														className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
+													>
+														{image.name}
+													</div>
+												)}
 											</li>
 										);
 									})}
