@@ -403,22 +403,34 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     }
 
     function colorfun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.label.replace(/ /g, '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&color=${newtext}`) ? MMainlink.replace(`&color=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?color=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                let newtext = e.label.replace(/ /g, '%20')
-                setMMainlink(`${MMainlink}&color=${newtext}`)
-            }
-        } else {
-            let newtext = e.label.replace(/ /g, '%20')
-            setMMainlink(`${MMainlink}?color=${newtext}`)
-        }
-    }
+		let newtext = e.label.replace(/ /g, '%20'); // Replace spaces with '%20'
+		newtext = encodeURIComponent(newtext); // Ensure the color is properly encoded
+
+		console.log("New Text: ", newtext);
+
+		if (MMainlink.includes('?')) {
+			// If the URL already contains query parameters, handle the color part
+			if (MMainlink.includes(`&color=${newtext}`)) {
+				// If the color is already in the URL, remove it
+				let newurl = MMainlink.replace(`&color=${newtext}`, '');
+				setMMainlink(newurl);
+			} else if (MMainlink.includes(`?color=${newtext}`)) {
+				// If the color is already in the URL but with '?color=...', remove it
+				let newurl = MMainlink.replace(`?color=${newtext}`, '');
+				setMMainlink(newurl);
+			} else {
+				// If the color is not present, add it to the URL
+				let separator = MMainlink.includes('&') ? '&' : '?';
+				let newurl = `${MMainlink}${separator}color=${newtext}`;
+				setMMainlink(newurl);
+			}
+		} else {
+			// If no query parameters exist, add the color as the first query parameter
+			let newurl = `${MMainlink}?color=${newtext}`;
+			setMMainlink(newurl);
+		}
+	}
+
 
     function addclass1(e) {
         let f = e.replace(/ /g, "")

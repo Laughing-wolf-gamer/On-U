@@ -358,22 +358,22 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         let url = new URL(window.location.href);
 
         // Get the current 'subcategory' array from the URL (if any)
-        let selectedSubcategories = url.searchParams.getAll('color'); // This will return an array
+        let selectColor = url.searchParams.getAll('color'); // This will return an array
     
         // Check if the subcategory is already in the array
-        const isSelected = selectedSubcategories.includes(e);
+        const isSelected = selectColor.includes(e);
     
         if (isSelected) {
             // If the subcategory is already selected, remove it from the array
-            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
+            selectColor = selectColor.filter(col => col !== e);
         } else {
             // If the subcategory is not selected, add it to the array
-            selectedSubcategories.push(e);
+            selectColor.push(e);
         }
     
         // Clear the existing 'subcategory' parameters and append the updated array
         url.searchParams.delete('color');
-        selectedSubcategories.forEach(sub => {
+        selectColor.forEach(sub => {
             url.searchParams.append('color', sub);
         });
     

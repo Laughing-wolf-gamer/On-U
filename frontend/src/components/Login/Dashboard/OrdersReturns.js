@@ -38,8 +38,8 @@ const OrderCard = ({ order, onViewDetails }) => {
 				<div className="flex-1 space-y-2">
 					<button
 						onClick={(e) => {
-						e.preventDefault();
-						onViewDetails(order);
+							e.preventDefault();
+							onViewDetails(order);
 						}}
 						className="px-5 text-black flex justify-center items-center py-3 rounded-md border border-gray-800 text-sm sm:text-base"
 					>

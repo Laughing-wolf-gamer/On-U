@@ -212,9 +212,11 @@ const Home = ({user}) => {
                         {
 							WideScreen_Video && WideScreen_Video.urls.length > 0 && (
 								<div className="w-full justify-self-center flex flex-col justify-center uppercase items-center pb-7 space-y-3 px-14">
-									{
-										WideScreen_Video.header && <strong className='text-4xl hover:underline text-left font-bold text-gray-700 mb-8'>{WideScreen_Video.header}</strong>
-									}
+									<div className='w-full justify-center items-center flex border border-gray-700 rounded-md'>
+										{
+											WideScreen_Video.header && <strong className='text-4xl hover:underline text-left font-bold text-gray-700 mb-8'>{WideScreen_Video.header}</strong>
+										}
+									</div>
 									<div className='w-full justify-center items-center flex'>
 
 										<div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-3 2xl:grid-cols-4 justify-center items-center">
@@ -338,9 +340,11 @@ const Home = ({user}) => {
 							</div>
                         }
                         <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
-							{
-								WideScreen_Video.header && <strong className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-3'>{WideScreen_Video.header}</strong>
-							}
+							<div className='px-4 py-2 justify-center items-center flex border border-gray-700 rounded-md mb-3'>
+								{
+									WideScreen_Video.header && <strong className='text-3xl hover:underline text-center font-extrabold text-gray-700'>{WideScreen_Video.header}</strong>
+								}
+							</div>
 							<div className='justify-center items-center flex flex-shrink-0'>
 								<GridVideoBox bannerLoading={CategoryBannerLoading} WideScreen_Video ={WideScreen_Video} categoriesOptions = {categoriesOptions} />
 							</div>
@@ -368,7 +372,7 @@ const Home = ({user}) => {
                             </ul>
                         </div>
                         <div className='mt-1 grid grid-cols-1 min-h-[200px] rounded-xl'>
-                            {Small_Screen_Section_4.header && <h1 className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_4.header}</h1>} 
+                            {Small_Screen_Section_4.header && <h1 className='text-3xl hover:underline text-center font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_4.header}</h1>} 
                             <div className='w-full px-2 flex justify-start items-center'>
                                 <ul className='flex flex-row overflow-x-scroll'>
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
@@ -470,9 +474,8 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 	return (
 		<div className="px-2">
 			{/* Category */}
-			<div className='w-full flex justify-center items-center my-3 flex-col'>
-				<header className='text-center text-gray-800 font-bold text-base'>Categories You Might Like</header>
-				<Link to='/products' className='text-center underline underline-offset-4 text-gray-700 font-thin text-sm'>View All</Link>
+			<div className='px-2 py-2 my-2 w-full justify-center items-center bg-gray-100 flex-col border border-gray-700 rounded-md'>
+				<h1 className='text-center text-black font-medium text-base'>ON U Exclusive Categories</h1>
 			</div>
 			<ul
 				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
@@ -485,7 +488,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 									key={`skeleton_loader_${index}`}
 									className="flex-shrink-0 px-0.5 justify-center relative items-center"
 								>
-									<div className="w-[105px] min-h-[110px] bg-gray-400 animate-pulse">
+									<div className="w-[120px] min-h-[110px] bg-gray-400 animate-pulse">
 									</div>
 								</li>
 							))}
@@ -513,7 +516,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 												{/* Display the banner if the category is in view */}
 												{image.name && (
 													<div
-														className={`category-banner text-black bg-white font-bold uppercase text-[8px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%]  text-center transition-opacity duration-500 ease-out`}
+														className={`category-banner text-black bg-white font-bold uppercase h-min max-h-min text-[12px] w-[90%] opacity-70 rounded-sm absolute bottom-1/3 left-1/2 translate-x-[-50%] translate-y-[-50%] text-center transition-opacity duration-500 ease-out`}
 													>
 														{image.name}
 													</div>

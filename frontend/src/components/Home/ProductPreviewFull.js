@@ -58,9 +58,9 @@ const ProductPreviewFull = ({ product ,user}) => {
     }
 
     return (
-        <div className='max-w-screen-2xl font-kumbsan w-full flex flex-col justify-self-center justify-center space-y-5 items-center bg-slate-200'>
+        <div className='max-w-screen-2xl font-kumbsan w-full flex flex-col justify-self-center justify-center items-center bg-slate-200'>
             {/* Preview Headers Section */}
-            <div className="min-w-fit flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 my-2 max-w-full">
+            <div className="min-w-fit flex justify-center items-center gap-3 sm:gap-4 md:gap-5 mb-6 font1 px-6 mt-5 my-2 max-w-full">
                 {previewHeader && previewHeader.length > 0 &&
                     previewHeader.map((h, index) => (
                         <button
@@ -158,7 +158,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                     })
                 }
             </div>
-            <div className='w-full text-center flex flex-row justify-center items-center text-white md:text-black font-kumbsan text-xl relative transform transition-all py-4'>
+            <div className='w-full text-center flex flex-row justify-center items-center mt-2 text-white md:text-black font-kumbsan text-xl relative transform transition-all py-4'>
                 <div onClick={handleMoveToQuery} className='px-10 flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-4 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
                     <span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>View More</span>
                 </div>

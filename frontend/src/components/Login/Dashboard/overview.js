@@ -102,7 +102,8 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 							onClick={handleLogout}
 							className="flex items-center bg-gray-900 text-white px-6 py-3 rounded-lg hover:bg-red-600 transition-colors"
 						>
-						<LogOut size={20} /> {/* Logout icon */}
+							<LogOut size={20} /> {/* Logout icon */}
+							<span className="ml-2">Logout</span>
 						</button>
 					</div>
 				</div>
