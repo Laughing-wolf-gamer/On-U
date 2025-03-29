@@ -263,7 +263,7 @@ const Home = ({user}) => {
 								<Fragment>
 									{
 										Wide_Screen_Section_8 && Wide_Screen_Section_8.urls.length > 0 && <div className=' w-full max-w-screen-2xl justify-self-center justify-center items-center flex flex-col px-14'>
-											<h1 className='text-4xl font-bold text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</h1>
+											{Wide_Screen_Section_8.header && <strong className='text-4xl hover:underline text-center font-bold text-gray-700 mb-8'>{Wide_Screen_Section_8.header}</strong>} 
 											<div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
 												{Wide_Screen_Section_8.urls.map((j, index) => (
 														<Link key={`j_banners_${index}`} to='/products' className='m-1'>
@@ -321,11 +321,6 @@ const Home = ({user}) => {
 								</div>
 							)
 						}
-						{/* <div className='w-full text-center flex flex-row justify-center px-3 items-center text-white md:text-black font-kumbsan text-xl transform transition-all'>
-							<div className='w-full justify-center items-center flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-2 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
-								<span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>Categories</span>
-							</div>
-						</div> */}
 						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
 
                         {!productLoading && product && product.length > 0 ? <ProductPreviewFull product={product} user={user}/> : 
@@ -353,7 +348,7 @@ const Home = ({user}) => {
 
 						<div className='mt-1 grid grid-cols-1 min-h-[200px] px-4 rounded-xl'>
                             {
-								Small_Screen_Section_3.header && <strong className='text-2xl hover:underline text-center font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_3.header}</strong>
+								Small_Screen_Section_3.header && <strong className='text-2xl text-left hover:underline font-extrabold text-gray-700 mb-8'>{Small_Screen_Section_3.header}</strong>
 							}
                             <ul className='flex flex-row overflow-x-scroll'>
                                 {!bannerLoading && Small_Screen_Section_3 && Small_Screen_Section_3.urls.length > 0 ? 
@@ -475,6 +470,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 	return (
 		<div className="px-2 font-kumbsan">
 			{/* Category */}
+			<h1 className='underline w-full text-center flex justify-center items-center text-black font-kumbsan font-semibold text-2xl py-2'>Categories</h1>
 			<ul
 				className="flex overflow-x-scroll hide-scroll-bar scrollbar-track-black scrollbar-thumb-gray-600"
 			>
@@ -494,7 +490,7 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 					):(
 						<Fragment>
 							{MobileScreen_CategorySlider && MobileScreen_CategorySlider.urls.length > 0 && (
-								<div className="flex overflow-x-auto bg-slate-200 pt-8 items-start scrollbar-hide">
+								<div className="flex overflow-x-auto bg-slate-200 pt-2 items-start scrollbar-hide">
 									{MobileScreen_CategorySlider.urls.map((image, index) => {
 										return (
 											<li
