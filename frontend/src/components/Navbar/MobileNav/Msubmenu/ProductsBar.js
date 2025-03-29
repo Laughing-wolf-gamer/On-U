@@ -28,11 +28,11 @@ const MProductsBar = ({ showProducts, onClose }) => {
 
 	// Memoizing options filtering to avoid unnecessary recomputations
 	const categories = useMemo(
-		() => (options ? options.filter((item) => item.type === 'category') : []),
+		() => (options ? options.filter((item) => item.isActive && item.type === 'category') : []),
 		[options]
 	);
 	const subcategories = useMemo(
-		() => (options ? options.filter((item) => item.type === 'subcategory') : []),
+		() => (options ? options.filter((item) => item.isActive && item.type === 'subcategory') : []),
 		[options]
 	);
 	const genders = useMemo(
@@ -97,7 +97,7 @@ const MProductsBar = ({ showProducts, onClose }) => {
 					{/* Categories Dropdown */}
 					{activeGender === product.Gender && (
 						<div className="pl-4 space-y-2">
-							{product.category.map((category, i) => (
+							{product.category.slice(0, 6).map((category, i) => (
 								<div key={i} className="space-y-2">
 									<Ripples
 										className="text-black font-normal px-5 py-4 relative w-full flex"

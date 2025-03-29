@@ -21,8 +21,8 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
   
 	const memoizedProductsOptions = useMemo(() => {
 		if (options && options.length > 0) {
-			const categories = options.filter((item) => item.type === 'category');
-			const subcategories = options.filter((item) => item.type === 'subcategory');
+			const categories = options.filter((item) => item.isActive && item.type === 'category');
+			const subcategories = options.filter((item) => item.isActive && item.type === 'subcategory');
 			const genders = options.filter((item) => item.isActive && item.type === 'gender');
 	
 			return genders.map((g) => ({
@@ -93,14 +93,14 @@ const ProductCatView = ({ show, CMenu, parentCallback ,options}) => {
 const CategorySection = ({ title, categories, parentCallback, handelSetQuery }) => (
 	<div>
 		<h1 className="text-gray-900 text-base font-extrabold py-1 mx-2">{title}</h1>
-		{categories && categories.slice(0, 4).map((category, i) => (
+		{categories && categories.slice(0, 6).map((category, i) => (
 				<div onClick={(e) => handelSetQuery(title, category.title)} key={i}>
-				<li
-					className="litext list-none py-0.5 m-2 text-gray-600 hover:font-semibold"
-					onClick={() => parentCallback('hidden', false)}
-				>
-					{category.title}
-				</li>
+					<li
+						className="litext list-none py-0.5 m-2 text-gray-600 hover:font-semibold"
+						onClick={() => parentCallback('hidden', false)}
+					>
+						{category.title}
+					</li>
 				</div>
 			))}
 	</div>
