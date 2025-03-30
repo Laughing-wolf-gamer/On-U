@@ -11,8 +11,8 @@ process.on('uncaughtException', (err)=>{
 const PORT = process.env.PORT || 8004;
 let server = null
 connectdatabse().then(()=>{
-	server = App.listen(process.env.PORT, ()=>{
-		console.log(`Server on ${process.env.API_URL}`)
+	server = App.listen(PORT, ()=>{
+		console.log(`Server running on ${process.env.API_URL}`)
 	})
 })
 
