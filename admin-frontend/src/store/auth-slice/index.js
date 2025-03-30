@@ -30,7 +30,7 @@ const authSlice = createSlice({
             state.user = !action?.payload?.Success ? null:action?.payload?.user;
             state.token = action?.payload?.token;
             console.log("tokens: ",action?.payload?.token)
-            localStorage.setItem("token",action?.payload?.token)
+            sessionStorage.setItem("token",action?.payload?.token)
         }).addCase(loginUser.rejected,(state,action)=>{
             state.isLoading = false;
             state.isAuthenticated = false;
