@@ -1075,8 +1075,17 @@ export const getShipmtRocketTokenFromDb = async(req,res)=>{
 export const fetchAllReturnOrders = async(req,res) =>{
 	try {
 		const allReturnOrders = await getAllReturnOrdersShiprockets();
-		console.log("All Cancel Orders",allReturnOrders);
-		res.status(200).json({ Success: true, message: "Fetched All Return Orders", result: allReturnOrders});
+		const returningOrdersData = allReturnOrders.data;
+		console.log("All Cancel Orders",returningOrdersData);
+		const allDbOrders = await OrderModel.find({});
+		if(!allDbOrders){
+			return res.status(200).json({ Success: true, message: "Fetched All Return Orders", result: returningOrdersData || []});
+		}
+		const commonIds = returningOrdersData.map(order => order.shipment_id);
+		const notFoundOrders = allDbOrders.filter(order => !commonIds.includes(order.shipment_id));
+		console.log("Not Found Orders: ",notFoundOrders)
+		
+		res.status(200).json({ Success: true, message: "Fetched All Return Orders", result: returningOrdersData || []});
 	} catch (error) {
 		console.error("Error fetching all return orders:",error);
 		logger.error("Error fetching all return orders: " + error.message);

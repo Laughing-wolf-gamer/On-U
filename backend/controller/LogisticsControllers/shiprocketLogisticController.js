@@ -773,6 +773,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
 };
 
 
+
 export const getAllReturnOrdersShiprockets = async()=>{
 	try {
 		const token = await getShipRocketToken();
@@ -1000,8 +1001,6 @@ export const getShipmentTrackingStatus = async(order)=>{
             },
         });
 
-        // console.log(res?.data);
-        // console.dir(res.data,{ depth: null})
 		const returningTrackingData = res.data;
         return returningTrackingData;
     } catch (error) {

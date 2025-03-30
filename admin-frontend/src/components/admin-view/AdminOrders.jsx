@@ -264,7 +264,7 @@ const AdminOrderLayout = () => {
 						)}
 					</Dialog>
 					<Dialog open ={openReturnOrderDialogue} onOpenChange={()=> {setOpenReturnOrdersDialogue(false); dispatch(adminFetchAllShiprocketCancleOrder())}}>
-						{returnOrderList && <ReturningOrderDialogWindow orderData={returnOrderList.data}/> }
+						{returnOrderList && <ReturningOrderDialogWindow orderData={returnOrderList}/> }
 					</Dialog>
 
 					{/* Dialog for login */}
