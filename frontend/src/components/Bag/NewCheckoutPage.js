@@ -428,9 +428,9 @@ const AddressAndPaymentComponent = ({
 					{user?.user && allAddresses?.length > 0 ? "Your Addresses" : "No Addresses Available"}
 				</h3>
 
-				<div className={`space-y-4 max-h-72 bg-slate-50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-200`}>
+				<div className={`space-y-4 max-h-[400px] bg-slate-50 overflow-y-auto scrollbar-thin scrollbar-thumb-gray-900 scrollbar-track-gray-200`}>
 					{/* Address Display */}
-					{user?.user && allAddresses && allAddresses?.length > 0 && (
+					{allAddresses?.length > 0 && (
 						allAddresses.map((addr, index) => {
 							const active = addr;
 							return (
@@ -443,16 +443,16 @@ const AddressAndPaymentComponent = ({
 									
 									{Object.entries(active).map(([key, value]) => (
 										<div key={key} className="flex justify-between m-1">
-											<span className="font-medium text-[12px] sm:text-base md:text-lg">{capitalizeFirstLetterOfEachWord(key)}:</span>
-											<span className="text-[10px] sm:text-base md:text-lg">{value}</span>
+											<span className="font-medium text-[12px] sm:text-base md:text-base">{capitalizeFirstLetterOfEachWord(key)}:</span>
+											<span className="text-[10px] sm:text-base md:text-base">{value}</span>
 										</div>
 
 									))}
 									<button
-										className="flex justify-self-center items-center bg-red-500 mt-2 text-white rounded-full w-fit px-3 py-1 text-xs sm:px-4 sm:py-2 sm:text-sm md:px-5 md:py-3 md:text-base hover:bg-red-600 transition-colors duration-300"
+										className="flex justify-self-center items-center bg-red-500 mt-2 text-white rounded-full w-fit px-3 py-1 text-xs sm:px-2 sm:py-1 sm:text-sm md:px-2 md:py-2 md:text-base hover:bg-red-600 transition-colors duration-300"
 										onClick={(e) => removeAddressByIndex(index)}
 									>
-										<span>Remove Address</span>
+										Remove Address
 									</button>
 								</div>
 							)

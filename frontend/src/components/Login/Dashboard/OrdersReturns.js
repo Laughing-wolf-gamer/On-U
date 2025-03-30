@@ -37,8 +37,8 @@ const OrderCard = ({ order, onViewDetails }) => {
 						{
 							order?.etd && 
 							<div className="space-x-2 flex justify-start items-start">
-								<strong className="text-sm text-gray-800">ETD : </strong>
-								<span>{new Date(order?.etd).toDateString()}</span>
+								<strong className="text-xs md:text-base text-gray-700">ETD : </strong>
+								<span className='whitespace-nowrap text-xs md:text-sm'>{new Date(order?.etd).toDateString()}</span>
 							</div>
 						}
 					</div>
@@ -157,13 +157,13 @@ const OrdersReturns = () => {
             <h2 className="font-semibold text-2xl text-gray-800 mb-6">Orders & Returns</h2>
 
             {/* Filter and Sort Dropdowns */}
-            <div className="flex sm:flex-row flex-col justify-between md:justify-start sm:justify-start xl:justify-start 2xl:justify-start gap-3 w-full mb-6">
-                <div className="flex space-x-2 items-center">
+            <div className="flex sm:flex-row flex-col justify-center items-center md:justify-between gap-3 w-full mb-6">
+                <div className="flex w-full space-x-2 items-center px-2">
                     <FaFilter className="mr-2 text-gray-600" /> {/* Filter Icon */}
                     <select
                         value={filter}
                         onChange={handleFilterChange}
-                        className="border p-2 rounded-md"
+                        className="border w-full p-2 rounded-md"
                     >
                         <option value="">Filter by Date</option>
                         <option value="thisMonth">This Month</option>
@@ -171,12 +171,12 @@ const OrdersReturns = () => {
                         <option value="yesterday">Yesterday</option>
                     </select>
                 </div>
-                <div className="flex space-x-2 items-center">
+                <div className="flex w-full space-x-2 items-center px-2">
                     <FaFilter className="mr-2 text-gray-600" /> {/* Filter Icon */}
                     <select
                         value={statusFilter}
                         onChange={handleStatusFilterChange}
-                        className="border p-2 rounded-md"
+                        className="border w-full p-2 rounded-md"
                     >
 						<option value="">Filter by Status</option>
 						{orderStatus.map((status, index) => (
@@ -185,12 +185,12 @@ const OrdersReturns = () => {
                     </select>
                 </div>
 
-                <div className="w-fit flex items-center">
+                <div className="w-full flex items-center space-x-2 px-2">
                     <FaSortAmountDown className="mr-2 text-gray-600" /> {/* Sort Icon */}
                     <select
                         value={sort}
                         onChange={handleSortChange}
-                        className="border p-2 rounded-md"
+                        className="border w-full p-2 rounded-md"
                     >
                         <option value="">Sort by</option>
                         <option value="latest">Latest</option>
