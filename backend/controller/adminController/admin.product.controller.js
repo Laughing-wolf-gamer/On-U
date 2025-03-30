@@ -1082,8 +1082,8 @@ export const fetchAllReturnOrders = async(req,res) =>{
 		}
 		const commonIds = returningOrdersData.map(order => order.shipment_id);
 		const allDbOrderShipId = allDbOrders.map(order => order.shipment_id);
-		const similarOrders = allDbOrders.filter(order => commonIds.includes(order.shipment_id)); */
-		console.log("Not Found Orders: ",returningOrdersData)
+		const similarOrders = allDbOrders.filter(order => commonIds.includes(order.shipment_id));
+		console.log("Not Found Orders: ",returningOrdersData) */
 		res.status(200).json({ Success: true, message: "Fetched All Return Orders", result: returningOrdersData || []});
 	} catch (error) {
 		console.error("Error fetching all return orders:",error);
