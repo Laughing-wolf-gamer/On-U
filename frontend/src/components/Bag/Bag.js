@@ -4,8 +4,7 @@ import { getbag, getqtyupdate, deleteBag, itemCheckUpdate } from '../../action/o
 import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
 import { useNavigate } from 'react-router-dom';
 import './bag.css';
-import { BASE_API_URL, getOriginalAmount, headerConfig } from '../../config';
-import axios from 'axios';
+import { getOriginalAmount } from '../../config';
 import Footer from '../Footer/Footer';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import SingleProduct from '../Product/Single_product';

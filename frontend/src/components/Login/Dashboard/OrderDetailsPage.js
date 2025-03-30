@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
 import { fetchOrderById, sendExchangeRequest, sendOrderCancel, sendOrderReturn } from '../../../action/orderaction';
@@ -7,11 +7,13 @@ import Loader from '../../Loader/Loader';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import Footer from '../../Footer/Footer';
 import BackToTopButton from '../../Home/BackToTopButton';
-import { ChevronLeft, MapIcon } from 'lucide-react';
+import { ChevronLeft, ChevronRight, MapIcon } from 'lucide-react';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 import ReturnsOptionsWindow from './ReturnsOptionsWindow';
+import { getRandomArrayOfProducts } from '../../../action/productaction';
+import SingleProduct from '../../Product/Single_product';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -79,7 +81,7 @@ const OrderDetailsPage = ({ user }) => {
 	const{decryptWithKey} = useEncryptionDecryptionContext();
     const { checkAndCreateToast } = useSettingsContext();
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
-
+	const { randomProducts } = useSelector(state => state.RandomProducts);
 	const[openReturnOptionWindow,setOpenReturnOptionWindow] = useState(false);
     const scrollableDivRef = useRef(null);
     const [orderItems, setOrderItems] = useState([]);
@@ -97,6 +99,9 @@ const OrderDetailsPage = ({ user }) => {
             setOrderItems(orderbyid.orderItems);
         }
     }, [orderbyid]);
+	useEffect(()=>{
+		dispatch(getRandomArrayOfProducts());
+	},[])
 
     const createOrderReturn = async (refundOptionsData) => {
         if (!orderbyid?.IsReturning) {
@@ -174,10 +179,6 @@ const OrderDetailsPage = ({ user }) => {
 									<p className="text-lg text-gray-600">{new Date(orderbyid.createdAt).toDateString()}</p>
 								</div>
 							)}
-
-							{/* Address Section */}
-							{orderbyid?.address && <AddressSection address={orderbyid.address} userName={user?.user?.name} />}
-
 							{/* Order Items Section */}
 							<div className={`space-y-4 max-h-[400px] overflow-y-auto ${orderItems?.length > 5 ? "scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200":''}`}>
 								<h2 className="text-xl font-semibold text-gray-800">Order Items</h2>
@@ -188,7 +189,20 @@ const OrderDetailsPage = ({ user }) => {
 
 							{/* Delivery Status */}
 							<DeliveryStatus status={orderbyid?.status} />
-
+							{/* Tracking URL Section */}
+							{orderbyid?.trackingUrl && (
+								<div className="space-y-2 ">
+									<h2 className="text-xl font-semibold text-gray-800">Track Your Order</h2>
+									<a
+										href={orderbyid?.trackingUrl}
+										target="_blank"
+										rel="noopener noreferrer"
+										className="text-blue-500 hover:underline font-medium flex gap-2"
+									>
+										Click here to track your order <MapIcon/>
+									</a>
+								</div>
+							)}
 							{/* Total Amount Section */}
 							<div className="space-y-2">
 								<h2 className="text-xl font-semibold text-gray-800">Total Amount</h2>
@@ -213,7 +227,6 @@ const OrderDetailsPage = ({ user }) => {
 								}
 								
 							</div>
-
 						</div>
 
 						{/* Sidebar - Order Summary */}
@@ -234,20 +247,7 @@ const OrderDetailsPage = ({ user }) => {
 									<p className="font-semibold text-gray-800">Shipping:</p>
 									<p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
 								</div>
-								{/* Tracking URL Section */}
-								{orderbyid?.trackingUrl && (
-									<div className="space-y-2 ">
-										<h2 className="text-xl font-semibold text-gray-800">Track Your Order</h2>
-										<a
-											href={orderbyid?.trackingUrl}
-											target="_blank"
-											rel="noopener noreferrer"
-											className="text-blue-500 hover:underline font-medium flex gap-2"
-										>
-											Click here to track your order <MapIcon/>
-										</a>
-									</div>
-								)}
+								
 							</div>
 							<div className="space-y-2">
 								{
@@ -271,7 +271,9 @@ const OrderDetailsPage = ({ user }) => {
 								}
 							</div>
 						</div>
+						{/* Address Section */}
 					</div>
+					<RandomProductsDisplay randomProducts={randomProducts}/>
 				</div>
 
             ) : (
@@ -285,8 +287,94 @@ const OrderDetailsPage = ({ user }) => {
 					createOrderReturn(data);
 				}} OnClose={()=> setOpenReturnOptionWindow(false)}/>
 			}
+			
         </div>
     );
+};
+const RandomProductsDisplay = ({ randomProducts }) => {
+	const [isMouseDown, setIsMouseDown] = useState(false);
+	const [startX, setStartX] = useState(0);
+	const [scrollLeft, setScrollLeft] = useState(0);
+	const scrollContainerRef = useRef(null);
+
+	const handleMouseDown = (e) => {
+		setIsMouseDown(true);
+		setStartX(e.pageX - e.target.offsetLeft);
+		setScrollLeft(e.target.scrollLeft);
+	};
+
+	const handleMouseLeave = () => {
+		setIsMouseDown(false);
+	};
+
+	const handleMouseUp = () => {
+		setIsMouseDown(false);
+	};
+
+	const handleMouseMove = (e) => {
+		if (!isMouseDown) return;
+		e.preventDefault();
+		e.stopPropagation();
+		const x = e.pageX - e.target.offsetLeft;
+		const walk = (x - startX) * 2; // Adjust multiplier for scrolling speed
+		e.target.scrollLeft = scrollLeft - walk;
+	};
+
+	const scrollLeftHandler = () => {
+		if (scrollContainerRef.current) {
+			scrollContainerRef.current.scrollBy({ left: -300, behavior: 'smooth' }); // Change 300 to adjust scroll speed
+		}
+	};
+
+	const scrollRightHandler = () => {
+		if (scrollContainerRef.current) {
+			scrollContainerRef.current.scrollBy({ left: 300, behavior: 'smooth' }); // Change 300 to adjust scroll speed
+		}
+	};
+
+	return (
+		randomProducts && randomProducts.length > 0 && (
+		<div className="mt-2 mb-7 w-full pb-6 pt-4 px-4">
+			<div className="w-full justify-center items-center flex px-1 py-2">
+			<h1 className="flex text-center mt-4 font-semibold">MORE YOU LIKE</h1>
+			</div>
+
+			<div className="relative">
+			<button
+				onClick={scrollLeftHandler}
+				className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full z-10"
+			>
+				<ChevronLeft/>
+			</button>
+
+			<div
+				ref={scrollContainerRef}
+				className="justify-center items-start overflow-x-auto"
+				onMouseDown={handleMouseDown}
+				onMouseLeave={handleMouseLeave}
+				onMouseUp={handleMouseUp}
+				onMouseMove={handleMouseMove}
+				style={{ cursor: 'grab',userSelect: 'none'  }}
+			>
+				<ul className="flex gap-4 py-2 sm:gap-2 md:gap-8 lg:gap-6">
+				{randomProducts.map((pro, index) => (
+					<li key={pro?._id || index} className="flex-shrink-0 w-[200px] md:w-max lg:w-max">
+					<SingleProduct pro={pro} />
+					</li>
+				))}
+				</ul>
+			</div>
+
+			<button
+				onClick={scrollRightHandler}
+				className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full z-10"
+			>
+				<ChevronRight/>
+			</button>
+			</div>
+		</div>
+		)
+	);
 };
 
 export default OrderDetailsPage;

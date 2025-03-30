@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Clock, Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, TruckIcon } from 'lucide-react';
+import { Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';

@@ -151,7 +151,7 @@ const ReturnsOptionsWindow = ({ OnSubmit,OnClose }) => {
 						<FormControl fullWidth variant="outlined" className="mb-4">
 							<InputLabel htmlFor="upiId" className="block font-medium text-gray-700">UPI ID</InputLabel>
 							<Input
-								type="upiId"
+								type="email"
 								name="upiId"
 								id="upiId"
 								value={formData.upiId}

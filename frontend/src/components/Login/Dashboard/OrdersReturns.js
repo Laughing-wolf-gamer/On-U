@@ -6,6 +6,8 @@ import { FaFilter, FaSortAmountDown } from 'react-icons/fa'; // Importing icons
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import { ChevronRight } from 'lucide-react';
+import DeliveryStatus from './DeliveryStatus';
+import DeliveryStatusAllOrders from './DeliveryStatusAllOrders';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
@@ -21,13 +23,13 @@ const OrderCard = ({ order, onViewDetails }) => {
 						alt="order preview image"
 						className="w-20 h-min sm:w-40 sm:h-40 object-cover rounded-md"
 					/>
-					<div className="space-y-2 sm:space-y-4">
+					<div className="space-y-2 sm:space-y-3">
 						<div className="text-gray-700 text-sm sm:text-base">
 							<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
 						</div>
-						<div className="text-gray-700 text-sm sm:text-base">
+						{/* <div className="text-gray-700 text-sm sm:text-base">
 							<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
-						</div>
+						</div> */}
 						<div className="text-gray-700 h-fit space-x-1">
 							<strong className='text-sm sm:text-base'>Status:</strong>
 							<span className='bg-black text-white text-[7px] sm:text-xs animate-pulse rounded-full px-3 py-2'>
@@ -41,6 +43,8 @@ const OrderCard = ({ order, onViewDetails }) => {
 								<span className='whitespace-nowrap text-xs md:text-sm'>{new Date(order?.etd).toDateString()}</span>
 							</div>
 						}
+						
+						<DeliveryStatusAllOrders status={order?.status} hiddenText = {window.screen.width < 1024} />
 					</div>
 				</div>
 				<ChevronRight onClick={(e) => {
@@ -197,6 +201,7 @@ const OrdersReturns = () => {
                         <option value="oldest">Oldest</option>
                     </select>
                 </div>
+				
             </div>
 
             {orderLoading ? (

@@ -1,6 +1,6 @@
-import React from "react";
+import React from 'react'
 
-const DeliveryStatus = ({ status , hiddenText }) => {
+const DeliveryStatusAllOrders = ({ status , hiddenText }) => {
 	const steps = [
 		{title:'Confirmed', label: "Confirmed", icon: "📦" },
 		{title:'RTS', label: "Ready To Ship", icon: "🚚" },
@@ -20,7 +20,7 @@ const DeliveryStatus = ({ status , hiddenText }) => {
 			<div className="w-full overflow-hidden">
 				<div className="flex items-center justify-between relative overflow-hidden">
 					{/* Progress Bar */}
-					<div className="absolute top-1/2 transform -translate-y-[10px] left-4 right-4 h-1 bg-gray-300 rounded-md">
+					<div className="absolute top-1/2 transform -translate-y-1/2 left-4 right-4 h-1 bg-gray-300 rounded-md">
 						<div
 						className="sm:h-0.5 md:h-1 bg-red-400"
 						style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
@@ -56,4 +56,4 @@ const DeliveryStatus = ({ status , hiddenText }) => {
 	);
 };
 
-export default DeliveryStatus;
+export default DeliveryStatusAllOrders
