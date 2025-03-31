@@ -118,7 +118,7 @@ const Allproductpage = ({user}) => {
                         {productLoading ? (
                             <Loader/>
                         ) : (
-                            <div className='min-h-[200vw] flex mt-[45px] sm:mt-[45px] md:mt-0 lg:mt-0 xl:mt-0 2xl:mt-0 flex-col justify-between items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
+                            <div className='min-h-[200vw] flex mt-[45px] sm:mt-[45px] md:mt-0 lg:mt-0 xl:mt-0 2xl:mt-0 flex-col h-min items-start 2xl:px-3 sm:px-3 md:px-4 lg:px-2'>
                                 <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-5 gap-2 sm:gap-5 md:gap-5 lg:gap-5 xl:gap-5 px-2 py-3 md:px-1 lg:px-1 sm:px-1 2xl:px-0">
                                     {pro && pro.length > 0 && pro.map((p, index) => (
                                         <li key={`productId_${p._id}_${index}`} className="w-full">
@@ -129,7 +129,7 @@ const Allproductpage = ({user}) => {
 
 
 
-                                <div className="paginationBox  border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center justify-center sm:justify-between">
+                                <div className="paginationBox border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center  justify-center sm:justify-between">
                                     {/* Pagination Info */}
                                     <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
                                         Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}
