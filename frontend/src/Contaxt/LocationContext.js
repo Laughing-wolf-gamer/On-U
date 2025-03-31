@@ -114,7 +114,7 @@ export const LocationContextProvider = ({ children }) => {
                 `https://nominatim.openstreetmap.org/reverse?lat=${latitude}&lon=${longitude}&format=json`
             );
             const data = await response.json();
-            console.log("Data is Not Set Pincode: ",data);
+            // console.log("Data is Not Set Pincode: ",data);
             if (data && data.address && data.address.postcode) {
                 setPincode(data.address.postcode);  // Set the pincode state
             } else {

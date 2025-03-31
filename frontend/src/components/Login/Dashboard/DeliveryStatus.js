@@ -21,9 +21,9 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 			<div className="w-full overflow-hidden">
 				<div className="flex items-center justify-between relative overflow-hidden">
 				{/* Progress Bar */}
-				<div className="absolute top-1/2 transform -translate-y-[10px] left-6 right-5 h-1 bg-gray-300 rounded-md">
+				<div className="absolute top-1/2 transform -translate-y-1/2 left-6 right-5 h-1 bg-gray-300 rounded-md">
 					<div
-					className="sm:h-0.5 md:h-1 bg-red-400"
+					className=" h-0.5 md:h-1 bg-red-400"
 					style={{ width: `${(currentStepIndex / (steps.length - 1)) * 100}%` }}
 					></div>
 				</div>

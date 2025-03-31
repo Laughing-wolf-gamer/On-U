@@ -14,6 +14,7 @@ import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionConte
 import ReturnsOptionsWindow from './ReturnsOptionsWindow';
 import { getRandomArrayOfProducts } from '../../../action/productaction';
 import SingleProduct from '../../Product/Single_product';
+import { fetchTermsAndCondition } from '../../../action/common.action';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -78,6 +79,9 @@ const OrderDetailsPage = ({ user }) => {
     const params = useParams();
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
+	const{ termsAndCondition } = useSelector(state => state.TermsAndConditions);
+	const [phoneNumber,setPhoneNumber] = useState('919326727797'); // replace with your phone number
+	const message = 'Hi'; // replace with your message
 	const{decryptWithKey} = useEncryptionDecryptionContext();
     const { checkAndCreateToast } = useSettingsContext();
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
@@ -155,8 +159,18 @@ const OrderDetailsPage = ({ user }) => {
         navigate(-1); 
     };
 	useEffect(()=>{
+		if(termsAndCondition){
+			setPhoneNumber(termsAndCondition?.phoneNumber);
+		}
+	},[termsAndCondition])
+	useEffect(()=>{
 		scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+		dispatch(fetchTermsAndCondition());
 	},[])
+	const handleOpenWhatsAppClick = () => {
+		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+		window.open(url, '_blank');
+	};
 
     return (
         <div ref={scrollableDivRef} className="w-full min-h-screen overflow-y-auto bg-gray-50 font-sans scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
@@ -256,12 +270,20 @@ const OrderDetailsPage = ({ user }) => {
 									<p className="text-xs sm:text-sm md:text-base text-gray-500 mt-2">
 										If any issue arises, feel free to reach out to our support team.
 									</p>
-									<Link 
-										to="/contact" 
-										className="mt-4 inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
-									>
-										Contact Us
-									</Link>
+									<div className='gap-2 w-full flex md:flex-row flex-col justify-between items-center'>
+										<Link 
+											to="/contact" 
+											className="mt-4 w-full inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+										>
+											Contact Us
+										</Link>
+										<button
+											onClick={handleOpenWhatsAppClick}
+											className="mt-4 w-full inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+										>
+											Whats App
+										</button>
+									</div>
 								</div>
 								
 							</div>
@@ -290,7 +312,7 @@ const OrderDetailsPage = ({ user }) => {
 						
 						{/* Address Section */}
 					</div>
-					<RandomProductsDisplay randomProducts={randomProducts}/>
+					{randomProducts && randomProducts.length > 0 && <RandomProductsDisplay randomProducts={randomProducts}/>} 
 				</div>
 
             ) : (

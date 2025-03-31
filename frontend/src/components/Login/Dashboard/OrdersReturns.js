@@ -22,13 +22,10 @@ const OrderCard = ({ order, onViewDetails }) => {
 						alt="order preview image"
 						className="w-20 h-min sm:w-40 sm:h-40 object-cover rounded-md"
 					/>
-					<div className="space-y-2 sm:space-y-3">
+					<div className="space-y-2 w-full sm:space-y-3">
 						<div className="text-gray-700 text-sm sm:text-base">
 							<strong>Order ID:</strong> {order?.order_id || 'Not Available'}
 						</div>
-						{/* <div className="text-gray-700 text-sm sm:text-base">
-							<strong>Total Items:</strong> {order?.orderItems?.length || 'Not Available'}
-						</div> */}
 						<div className="text-gray-700 h-fit space-x-1">
 							<strong className='text-sm sm:text-base'>Status:</strong>
 							<span className='bg-black text-white text-[7px] sm:text-xs animate-pulse rounded-full px-3 py-2'>

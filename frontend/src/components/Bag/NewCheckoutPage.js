@@ -344,8 +344,6 @@ const CheckoutPage = () => {
 								}}
 							/>
 						}
-						
-						
 						{/* User Information Section */}
 						<AddAddress onSave={handleSaveAddress} />
 					</div>
