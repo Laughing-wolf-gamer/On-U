@@ -247,6 +247,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                             className="w-full h-full object-cover"
                             alt={`Product ${hoveredImageIndex}`}
                             onLoad={handleMediaLoad} // Trigger media load completion
+							onContextMenu={(e) => e.preventDefault()}
                         />
                     )}
                 </Fragment>

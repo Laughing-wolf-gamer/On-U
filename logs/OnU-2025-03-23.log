@@ -1,2 +1,0 @@
-2025-03-22T19:25:23.617Z error: Error Getting Products: Cast to ObjectId failed for value "c|TH" (type string) at path "_id" for model "product"
-2025-03-22T19:25:23.617Z error: Error Getting Products: Cast to ObjectId failed for value "c|TH" (type string) at path "_id" for model "product"

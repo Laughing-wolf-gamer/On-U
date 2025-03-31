@@ -70,6 +70,21 @@ function App() {
         
     }, [dispatch, isAuthentication]);
     console.log("Base Server API",BASE_API_URL);
+	/* const [isInstalled, setIsInstalled] = useState(false);
+
+	useEffect(() => {
+		// Check if the app is installed
+		const isPWAInstalled = window.matchMedia('(display-mode: standalone)').matches;
+		setIsInstalled(isPWAInstalled);
+
+		// Optionally listen for changes to display-mode
+		const mediaQuery = window.matchMedia('(display-mode: standalone)');
+		const handleChange = () => setIsInstalled(mediaQuery.matches);
+		mediaQuery.addEventListener('change', handleChange);
+
+		// Cleanup
+		return () => mediaQuery.removeEventListener('change', handleChange);
+	}, []); */
     return (
         <FunctionProvider>
         <Router>

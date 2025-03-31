@@ -70,14 +70,19 @@
   },
   "browserslist": {
     "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+		">0.2%",
+		"not dead",
+		"not op_mini all",
+		"Firefox ESR",
+		"Safari >= 11",
+		"iOS >= 11"   
     ],
     "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
+      	"last 2 Chrome versions",
+		"last 2 Firefox versions",
+		"last 2 Safari versions",
+		"last 2 Edge versions",
+		"last 2 iOS versions" 
     ]
   },
   "devDependencies": {

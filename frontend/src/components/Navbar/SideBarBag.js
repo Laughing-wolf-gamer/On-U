@@ -485,11 +485,14 @@ const ProductListingComponent = ({ bag,onClickedImage, updateQty,updateChecked, 
 												{/* Checkbox positioned at the top-right corner */}
 												<div onClick={(e)=>{
 													updateChecked(e, active?.productId?._id,active?.size,active?.color);
-												}} className={`absolute top-1 left-1 w-5 cursor-pointer bg-black h-5 ${bagLoading ? "pointer-events-none":""}`}>
+												}} className={`absolute top-1 left-1 w-5 h-5 md:w-5 md:h-5 cursor-pointer ${bagLoading ? "pointer-events-none":""}`}>
 													<input
 														type="checkbox"
-														className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
-														defaultChecked={active?.isChecked || false} // Set checkbox checked if it's selected in the URL
+														className={`w-full h-full cursor-pointer border-2 rounded-md 
+															${bagLoading ? "pointer-events-none" : "hover:border-gray-500 focus:ring-2 focus:ring-gray-500"} 
+															${active?.isChecked ? "bg-gray-500 border-gray-500" : "bg-white border-gray-300"} 
+															transition-colors duration-300 ease-in-out`}
+														defaultChecked={active?.isChecked || false}
 													/>
 												</div>
 											</div>
