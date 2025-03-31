@@ -626,6 +626,7 @@ export const editProduct = async (req, res) => {
 			gst,
 			sku,
 			hsn,
+			tags,
             description,
             specification,
             careInstructions,
@@ -643,8 +644,6 @@ export const editProduct = async (req, res) => {
             weight,
             breadth,
         } = req.body;
-        console.log("Editing: ", req.body);
-
         // Initialize updateFields object
         const updateFields = {};
 
@@ -664,6 +663,7 @@ export const editProduct = async (req, res) => {
         addToUpdate('sku', sku);
         addToUpdate('hsn', hsn);
         addToUpdate('gst', gst);
+        addToUpdate('tags', tags);
         addToUpdate('specification', specification);
         addToUpdate('careInstructions', careInstructions);
         addToUpdate('material', material);

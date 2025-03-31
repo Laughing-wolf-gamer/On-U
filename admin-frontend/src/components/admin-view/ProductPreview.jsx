@@ -22,6 +22,7 @@ import { Textarea } from '../ui/textarea';
 import { MdWarning } from 'react-icons/md';
 import { IoMdAlert, IoMdWarning } from 'react-icons/io';
 import { Badge } from '../ui/badge';
+import AdminTagInput from './AdminTagInput';
 const ProductPreview = ({
 	categories,
 	genders,
@@ -45,7 +46,6 @@ const ProductPreview = ({
         try {
             if (!productDataId) return;
             const response = await dispatch(getProductsById(productDataId));
-            // console.log("Product Data: ", response?.payload?.result);
             setProductData(response?.payload?.result || null);
         } catch (error) {
             console.error("Error Fetching Product Data: ", error);
@@ -86,6 +86,7 @@ const ProductPreview = ({
             fetchProductData();
         }
     }, [dispatch, productDataId]);
+	console.log("Product Data: ", productData);
 
     // Handle input changes
     const handleInputChange = (e, field) => {
@@ -135,7 +136,7 @@ const ProductPreview = ({
 
 			<div className="flex flex-col w-full space-x-4">
 				<h3 className="font-semibold">All Sizes</h3>
-				{productData && (
+				{productData && productData?.size && productData?._id && (
 					<SizeDisplay
 						productId={productData?._id}
 						SizesArray={productData?.size}
@@ -316,8 +317,8 @@ const ProductPreview = ({
 							<h3 className="font-extrabold text-gray-700 text-lg mr-3 uppercase">Special Category:</h3>
 							{isEditing ? (
 								<div className='w-2/3'>
-									<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(e)=>{
-										handleInputChange({target:{value:e}},"specialCategory")
+									<CustomSelect defaultValue={productData?.specialCategory} controlItems={specialCategory} setChangeData={(selectedItems)=>{
+										handleInputChange({target:{value:selectedItems}},"specialCategory")
 									}}/>
 								</div>
 							) : (
@@ -355,6 +356,15 @@ const ProductPreview = ({
 									{productData?.TotalSoldAmount}
 								</p>
 							</div>
+							<div className="flex w-full flex-col justify-center items-center border-b pb-4">
+								<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Tags:</h3>
+								{
+									productData?.tags && productData?.tags.length > 0 && <AdminTagInput defaultTags={productData?.tags} OnSubmit = {(tag) => {
+										handleInputChange({target:{value:tag}},'tags')
+									}} isEditing = {isEditing} />
+								}
+								
+							</div>
 						</div>
 						<div className='justify-center items-start space-y-2 flex flex-col'>
 							<Label className = {"text-base text-gray-700"}>Dimensions (Logistics)</Label>
@@ -370,7 +380,7 @@ const ProductPreview = ({
 											className="text-lg w-full sm:w-2/3 font-medium border-2"
 										/>
 									) : (
-										<p className="text-lg font-medium text-gray-600">{formattedSalePrice(productData?.[field])} {field !== 'weight' ? "cm":'gm'}</p>
+										<p className="text-lg font-medium text-gray-600">{formattedSalePrice(productData?.[field])} {field !== 'weight' ? "cm":'kg'}</p>
 									)}
 								</div>
 							))}

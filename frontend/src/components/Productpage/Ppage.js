@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Clock, Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Truck} from 'lucide-react'
+import { Clock, Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Tags, Truck} from 'lucide-react'
 import SizeChartModal from './SizeChartModal'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
@@ -24,6 +24,7 @@ import BackToTopButton from '../Home/BackToTopButton'
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 import WhatsAppButton from '../Home/WhatsAppButton'
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
+import { BsTag } from 'react-icons/bs'
 
 const reviews = [
     {
@@ -832,17 +833,43 @@ const ProductDetails = ({ product ,ratingData,setRatingData,isPostingReview,Post
                                 Seller: <span className="text-gray-600 font-normal">{capitalizeFirstLetterOfEachWord(product?.brand?.toUpperCase())}</span>
                             </h1>
                         </div>
-
-                        <div className="border-b-[1px] border-slate-200 pb-6 pt-4">
-                            {product?.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e, index) => (
-                                <ul key={index} className="space-y-4">
-                                    <h1 className="font-semibold text-lg text-gray-800">{e?.header}</h1>
-                                    <span className="text-gray-600">
-                                        <li className="list-disc ml-6">{e?.body}</li>
-                                    </span>
-                                </ul>
-                            ))}
-                        </div>
+						{
+							product?.bulletPoints && product.bulletPoints.length > 0 && (
+								<Fragment>
+									<h1 className="font-semibold text-lg text-gray-800 flex items-center">
+										BULLET POINTS <BsTag className="ml-2 text-xl" />
+									</h1>
+									<div className="border-b-[1px] border-slate-200 pb-6 pt-4">
+										{ product.bulletPoints.map((e, index) => (
+											<ul key={index} className="space-y-4">
+												<h1 className="font-semibold text-lg text-gray-800">{e?.header}</h1>
+												<span className="text-gray-600">
+													<li className="list-disc ml-6">{e?.body}</li>
+												</span>
+											</ul>
+										))}
+									</div>
+								
+								</Fragment>
+							)
+						}
+						{
+							product?.tags && product.tags.length > 0 && (
+								<div className='space-y-1'>
+									<h1 className="font-semibold text-lg text-gray-800 flex items-center">
+										TAGS <Tags className="ml-2 text-xl" />
+									</h1>
+									<div className="border-b-[1px] flex-row flex justify-start items-start flex-wrap gap-3 border-slate-200 pb-6 pt-4">
+										{ product.tags.map((tag, index) => (
+											<ul key={index} className="bg-gray-200 w-fit px-2 py-1 rounded-full">
+												<h1 className="font-medium text-base text-gray-800">{tag}</h1>
+											</ul>
+										))}
+									</div>
+								
+								</div>
+							)
+						}
 
                         <div className="border-b-[1px] border-slate-200 pb-6 pt-4">
                             <h1 className="font-semibold text-lg text-gray-800 flex items-center">

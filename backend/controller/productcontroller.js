@@ -122,6 +122,9 @@ export const getallproducts = async (req, res) => {
 					}
 				}
 			});
+			keywordFilter.$or.push({
+				tags:regx
+			})
             Object.assign(filter, keywordFilter);
         }
 		if(req.query.keyword && getHexValue(req.query.keyword.toLowerCase())){

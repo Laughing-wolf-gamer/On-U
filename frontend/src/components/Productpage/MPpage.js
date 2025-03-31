@@ -14,7 +14,7 @@ import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingS
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
-import { Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart } from 'lucide-react';
+import { Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Tags } from 'lucide-react';
 
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
@@ -617,7 +617,6 @@ const MPpage = () => {
 										</span>
 										<span className="text-gray-700">
 											{calculateDiscountPercentage(product.price,product.salePrice)} % OFF
-											{/* ( {Math.round((product.salePrice / product.price) * 100 - 100)}% OFF) */}
 										</span>
 									</Fragment>
 								)}
@@ -704,46 +703,46 @@ const MPpage = () => {
 							
 						</div>
 						<PincodeChecker productId={product?._id}/>
-						<div className='mt-2 pt-4 bg-white px-4'>
-							<h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
-						</div>
-						<div className='mt-2 pb-4 pt-4 bg-white px-4'>
-							{
-								product && product.bulletPoints && product.bulletPoints.length > 0 && product.bulletPoints.map((e) =>
-									<Fragment>
-										<h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
-										<span className='mt-4'>
-											<li className='list-disc mt-2'>{e.body}</li>
-										</span>
-									</Fragment>
-								)
-							}
-						</div>
-						{/* <div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-12'>
-							<div className='col-span-12 md:col-span-3'>
-								<div className='absolute bg-[#0db7af]  px-4 py-1 font-semibold text-white text-sm'>OFFER</div>
-								<Bus/>
-							</div>
-							<div className='col-span-12 md:col-span-9 mt-4 md:mt-0'>
-								<h1 className='text-sm  font-semibold'>RETURN WITH IN 45 DAYS</h1>
-							</div>
-						</div>
-
-						<div className='mt-2 pb-6 pt-4 relative bg-white px-4 grid grid-cols-3 sm:grid-cols-1 md:grid-cols-3 gap-4'>
-							<div className="col-span-1 text-center text-xs text-slate-700">
-								<IoShieldCheckmarkSharp color='black' size={75} className='w-[75px] mx-auto'/>
-								Genuine Products
-							</div>
-							<div className="col-span-1 text-center text-xs text-slate-700">
-								<IoIosRibbon color='black' size={75} className='w-[75px] mx-auto'/>
-								7 step Quality Check
-							</div>
-							<div className="col-span-1 text-center text-xs text-slate-700">
-								<RiSecurePaymentFill color='black' size={75} className='w-[75px] mx-auto'  />
-								Secure Payments
-							</div>
-						</div> */}
-
+						{
+							product && product.bulletPoints && product.bulletPoints.length > 0 && (
+								<Fragment>
+								
+									<div className='mt-2 pt-4 bg-white px-4'>
+										<h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
+									</div>
+									<div className='mt-2 pb-4 pt-4 bg-white px-4'>
+										{
+											product.bulletPoints.map((e) =>
+												<Fragment>
+													<h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
+													<span className='mt-4'>
+														<li className='list-disc mt-2'>{e.body}</li>
+													</span>
+												</Fragment>
+											)
+										}
+									</div>
+								</Fragment>
+							)
+						}
+						{
+							product && product.tags && product.tags.length > 0 &&  (
+								<Fragment>
+									<div className='mt-2 pt-4 bg-white px-4'>
+										<h1 className=' flex items-center mt-2 font-semibold'>Tags<Tags className='ml-2' /></h1>
+									</div>
+									<div className='mt-2 pb-4 pt-4 flex-row flex flex-wrap gap-2 bg-white px-4'>
+										{
+											product.tags.map((tag) =>
+												<ul className='bg-gray-200 w-fit px-2 py-1 rounded-full'>
+													<h1 className='font-medium text-base text-gray-800'>{tag}</h1>
+												</ul>
+											)
+										}
+									</div>
+								</Fragment>
+							)
+						}
 						<div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
 						<h1 className=' flex items-center mt-2 font-semibold'>More Information</h1>
 						<li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>

@@ -9,6 +9,7 @@ const productModelSchema = new mongoose.Schema({
 	hsn:String,
     brand:String,
 	gst:Number,
+	tags:[],
     title:{
         type:String,
         required:[true,'Please enter product title'],
