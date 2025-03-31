@@ -197,9 +197,9 @@ const OrderDetailsPage = ({ user }) => {
 										href={orderbyid?.trackingUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="text-blue-500 hover:underline font-medium flex gap-2"
+										className="text-gray-600 hover:underline font-medium flex gap-2"
 									>
-										Click here to track your order <MapIcon/>
+										Click here to track your order <MapIcon className=' animate-pulse'/>
 									</a>
 								</div>
 							)}
@@ -212,20 +212,32 @@ const OrderDetailsPage = ({ user }) => {
 							{/* Payment and Delivery Status */}
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 								<div className="space-y-2">
-									<h2 className="text-xl font-semibold text-gray-800">Delivery Status</h2>
-									<p>{orderbyid?.status}</p>
+									<strong className="text-xl font-semibold text-gray-800">Delivery Status</strong>
+									<span className='animate-pulse'>{orderbyid?.status}</span>
 								</div>
 								<div className="space-y-2">
-									<h2 className="text-xl font-semibold text-gray-800">Payment Mode</h2>
-									<p>{orderbyid?.paymentMode}</p>
+									<strong className="text-xl font-semibold text-gray-800">Payment Mode</strong>
+									<span>{orderbyid?.paymentMode}</span>
 								</div>
 								{
 									orderbyid?.etd && <div className="space-y-2">
-										<h2 className="text-xl font-semibold text-gray-800">ETD (Estimated Time Delivery)</h2>
-										<p>{new Date(orderbyid?.etd).toDateString()}</p>
+										<strong className="text-xl font-semibold text-gray-800">ETD (Estimated Time Delivery)</strong>
+										<span>{new Date(orderbyid?.etd).toDateString()}</span>
 									</div>
 								}
-								
+							</div>
+							{/* Customer Contact Section */}
+							<div className="mt-6 p-4 bg-gray-100 rounded-lg text-center sm:p-6 md:p-8 lg:p-10">
+								<h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700">Having an issue?</h3>
+								<p className="text-sm sm:text-base md:text-lg text-gray-500 mt-2">
+									If any issue arises, feel free to reach out to our support team.
+								</p>
+								<Link 
+									to="/contact" 
+									className="mt-4 inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+								>
+									Contact Us
+								</Link>
 							</div>
 						</div>
 
@@ -271,6 +283,7 @@ const OrderDetailsPage = ({ user }) => {
 								}
 							</div>
 						</div>
+						
 						{/* Address Section */}
 					</div>
 					<RandomProductsDisplay randomProducts={randomProducts}/>
