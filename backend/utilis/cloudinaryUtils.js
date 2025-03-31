@@ -16,7 +16,7 @@ cloudinary.config({
 
 const uploadOptions = {
 	resource_type: 'auto',
-	quality: 90, // Reduce image quality to 60%
+	quality: 60, // Reduce image quality to 60%
 	fetch_format: 'auto', // Automatically selects the best format
 	crop: 'scale', // Scale the image down
 	timeout: 120000, // Timeout for upload request
