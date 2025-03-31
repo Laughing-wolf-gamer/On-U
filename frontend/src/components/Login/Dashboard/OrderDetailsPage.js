@@ -247,7 +247,7 @@ const OrderDetailsPage = ({ user }) => {
 									<p className="text-base text-gray-600">₹{formattedSalePrice(orderbyid?.TotalAmount)}</p>
 								</div>
 								<div className="space-y-2 justify-between flex items-center">
-									<p className="font-semibold text-gray-800">Shipping:</p>
+									<p className="font-semibold text-gray-800">Shipping Cost:</p>
 									<p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
 								</div>
 								{/* Customer Contact Section */}

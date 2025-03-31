@@ -195,13 +195,12 @@ export const registerUser = A(async (req, res) => {
 
 export const getuser = async(req, res)=>{
 	try {
-		const user = await User.findById(req.user.id);
+		const user = await User.findById(req.user.id).select('-password');
 		const data = {
 			id:req.user.id,
 			role:req.user.role,
 			user:user,
 		}
-		console.log("User Found! ",user);
 		return res.status(200).json({Success:true,message: 'User is Authenticated',user:data});
 	} catch (error) {
 		console.error("OTP Error while getting user", error);

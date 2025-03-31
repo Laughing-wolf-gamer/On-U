@@ -142,10 +142,9 @@ export const logInUser = async (req,res) =>{
 export const getuser = async(req, res)=>{
 	try {
 		const user = await User.findById(req.user.id).select('-password');
-		console.log("Admin User Found! ",user);
 		res.status(200).json({Success:true,message: 'User is Authenticated',user:user});
 	} catch (error) {
-		console.error(`Error getting user ${error.message}`);
+		console.error(`Error getting user `,error);
 		logger.error(`Error getting user: ${error.message}`);
         res.status(500).json({Success:false,message: 'Internal Server Error'});
 	}

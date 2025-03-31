@@ -4,70 +4,68 @@ import { FaUser, FaBox, FaMapMarkedAlt } from 'react-icons/fa'; // Importing the
 const OverViewSideBar = ({ activeSection, setActiveSection,onChange }) => {
 	return (
 		<div className="w-full font-kumbsan bg-white md:shadow-md md:h-screen md:sticky top-0 p-4">
-		<ul className="space-y-4">
-			{/* User Details Button */}
-			<li>
-			<button
-				onClick={(e) => {
-					// e.preventDefault();
-					onChange('User-Details');
-					setActiveSection('User-Details');
-				}}
-				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
-				activeSection === 'User-Details'
-					? 'text-white bg-gray-500'
-					: 'text-gray-700 hover:bg-gray-100'
-				}`}
-			>
-				<div className="flex items-center justify-center space-x-2">
-				<FaUser className="text-xl" /> {/* User Icon */}
-				<span>User Details</span>
-				</div>
-			</button>
-			</li>
+			<ul className="space-y-4">
+				{/* User Details Button */}
+				<li>
+					<button
+						onClick={(e) => {
+							// e.preventDefault();
+							onChange('User-Details');
+							setActiveSection('User-Details');
+						}}
+						className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
+						activeSection === 'User-Details'
+							? 'text-white bg-gray-500'
+							: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<div className="flex items-center justify-center space-x-2">
+							<FaUser className="text-xl" /> {/* User Icon */}
+							<span>User Details</span>
+						</div>
+					</button>
+				</li>
 
-			{/* Orders & Returns Button */}
-			<li>
-			<button
-				onClick={(e) => {
-					// e.preventDefault();
-					onChange('Orders-Returns')
-					setActiveSection('Orders-Returns');
-				}}
-				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
-				activeSection === 'Orders-Returns'
-					? 'text-white bg-gray-500'
-					: 'text-gray-700 hover:bg-gray-100'
-				}`}
-			>
-				<div className="flex items-center justify-center space-x-2">
-				<FaBox className="text-xl" /> {/* Orders Icon */}
-				<span>Orders & Returns</span>
-				</div>
-			</button>
-			</li>
+				{/* Orders & Returns Button */}
+				<li>
+					<button
+						onClick={() => {
+							onChange('Orders-Returns')
+							setActiveSection('Orders-Returns');
+						}}
+						className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
+						activeSection === 'Orders-Returns'
+							? 'text-white bg-gray-500'
+							: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<div className="flex items-center justify-center space-x-2">
+							<FaBox className="text-xl" /> {/* Orders Icon */}
+							<span>Orders & Returns</span>
+						</div>
+					</button>
+				</li>
 
-			{/* Saved Addresses Button */}
-			<li>
-			<button
-				onClick={(e) => {
-					// e.preventDefault();
-					setActiveSection('Saved-Addresses');
-					onChange('Saved-Addresses');
-				}}
-				className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
-				activeSection === 'Saved-Addresses'
-					? 'text-white bg-gray-500'
-					: 'text-gray-700 hover:bg-gray-100'
-				}`}
-			>
-				<div className="flex items-center justify-center space-x-2">
-				<FaMapMarkedAlt className="text-xl" /> {/* Map Icon for Addresses */}
-				<span>Saved Addresses</span>
-				</div>
-			</button>
-			</li>
-		</ul>
+				{/* Saved Addresses Button */}
+				<li>
+					<button
+						onClick={() => {
+							setActiveSection('Saved-Addresses');
+							onChange('Saved-Addresses');
+						}}
+						className={`w-full text-center py-3 px-4 rounded-md focus:outline-none transition duration-200 font-semibold ${
+						activeSection === 'Saved-Addresses'
+							? 'text-white bg-gray-500'
+							: 'text-gray-700 hover:bg-gray-100'
+						}`}
+					>
+						<div className="flex items-center justify-center space-x-2">
+							<FaMapMarkedAlt className="text-xl" /> {/* Map Icon for Addresses */}
+							<span>Saved Addresses</span>
+						</div>
+					</button>
+				</li>
+			</ul>
 		</div>
 	);
 };

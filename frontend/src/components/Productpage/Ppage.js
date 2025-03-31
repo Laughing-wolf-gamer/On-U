@@ -375,7 +375,6 @@ const Ppage = () => {
             dispatch(singleProduct(decrypt(param.id)))
             setstate(true)
         }
-        
         document.body.scrollTop = 0
         document.documentElement.scrollTop = 0;
         if(warning){
@@ -387,7 +386,12 @@ const Ppage = () => {
         setSelectedColor(newSize.colors);
         setSelectedSize(newSize);
         setCurrentSize(newSize);
-        setCurrentColor(null);
+		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
+		if(!isAlreadyPresent){
+        	setCurrentColor(null);
+		}else{
+			setCurrentColor(isAlreadyPresent);
+		}
 		
     }
     const handelSetColorImages = (color) => {

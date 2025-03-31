@@ -55,7 +55,9 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 
 	
 	useEffect(() => {
-		window.scrollTo(0, 0);
+		if(scrollableDivRef.current){
+			scrollableDivRef.current.scrollBy({ left: 300, behavior: 'smooth' }); // Change 300 to adjust scroll speed
+		}
 	}, []);
 	useEffect(()=>{
 		if(location){

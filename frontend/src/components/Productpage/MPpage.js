@@ -318,10 +318,15 @@ const MPpage = () => {
     }
 
 
-    const handleSetNewImageArray = (size) => {
-        setCurrentSize(size);
-        setSelectedColor(size.colors);
-        setCurrentColor(null);
+    const handleSetNewImageArray = (newSize) => {
+        setCurrentSize(newSize);
+        setSelectedColor(newSize.colors);
+		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
+		if(!isAlreadyPresent){
+        	setCurrentColor(null);
+		}else{
+			setCurrentColor(isAlreadyPresent);
+		}
     };
 
     const handleSetColorImages = (color) => {
@@ -621,9 +626,9 @@ const MPpage = () => {
 								Inclusive All Taxes.
 							</h1>
 							<div className='w-full flex flex-col justify-start items-center mt-1 space-y-3 mx-auto'>
-								<div className='w-full flex justify-between items-center'>
-									<h3 className='text-sm text-left'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
-									</h3>
+								<div className={`w-full flex justify-between items-center`}>
+									<strong className='text-sm text-left font-bold'>Selected Size: <span className='font-normal'>{currentSize?.label}</span>
+									</strong>
 									<SizeChartModal sizeChartData={clothingSizeChartData} />
 								</div>
 								<div className="w-full flex flex-wrap gap-4 justify-start items-start">
@@ -661,7 +666,7 @@ const MPpage = () => {
 								</div>
 							</div>
 							<div className='w-full flex flex-col justify-start items-center mt-3 py-5 space-y-3 mx-auto'>
-								<div className='w-full justify-start items-start flex'><h3 className='text-sm text-left'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></h3></div>
+								<div className='w-full justify-start items-start flex'><strong className='text-sm text-left font-bold'>Selected Color: <span className='font-normal'>{currentColor?.name}</span></strong></div>
 								<div className="w-full flex flex-wrap gap-4 justify-start items-start">
 									{selectedColor && selectedColor.length > 0 && selectedColor.map((color, index) => {
 										const active = color;

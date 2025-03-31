@@ -53,6 +53,7 @@ const GridImageView = memo(({ imageToShow, categoriesOptions = [], startPlaying 
                                 className="w-full h-full object-cover"
                                 onLoad={handleMediaLoad}
                                 onError={handleError}
+								onContextMenu={(e)=> e.preventDefault()}
                             />
                         ) : isVideo ? (
                             <ReactPlayer
