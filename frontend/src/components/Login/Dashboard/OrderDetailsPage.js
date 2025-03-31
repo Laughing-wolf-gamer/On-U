@@ -15,6 +15,8 @@ import ReturnsOptionsWindow from './ReturnsOptionsWindow';
 import { getRandomArrayOfProducts } from '../../../action/productaction';
 import SingleProduct from '../../Product/Single_product';
 import { fetchTermsAndCondition } from '../../../action/common.action';
+import { IoIosCall } from 'react-icons/io';
+import { FaWhatsapp } from 'react-icons/fa';
 
 // Helper function to format the date
 const formatDate = (date) => {
@@ -273,15 +275,17 @@ const OrderDetailsPage = ({ user }) => {
 									<div className='gap-2 w-full flex md:flex-row flex-col justify-between items-center'>
 										<Link 
 											to="/contact" 
-											className="mt-4 w-full inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+											className="mt-4 space-x-2 justify-center items-center flex w-full whitespace-nowrap bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
 										>
-											Contact Us
+											<IoIosCall size={20}/>
+											<span>Contact Us</span>
 										</Link>
 										<button
 											onClick={handleOpenWhatsAppClick}
-											className="mt-4 w-full inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+											className="mt-4 space-x-2 justify-center items-center flex w-full whitespace-nowrap bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
 										>
-											Whats App
+											<FaWhatsapp size={20}/>
+											<span>Whats App</span>
 										</button>
 									</div>
 								</div>
@@ -292,7 +296,7 @@ const OrderDetailsPage = ({ user }) => {
 									orderbyid?.status === 'Delivered' ? (
 										<button
 											disabled={!orderbyid || orderbyid?.IsReturning}
-											onClick={(e)=> setOpenReturnOptionWindow(!openReturnOptionWindow)}
+											onClick={()=> setOpenReturnOptionWindow(!openReturnOptionWindow)}
 											className="w-full py-4 bg-gray-800 text-white rounded-md active:shadow-md hover:shadow-xl transition-all disabled:bg-gray-400"
 										>
 											{orderbyid?.IsReturning ? "Return Request in Process" : "Request To Return"}
