@@ -489,7 +489,7 @@ const ProductListingComponent = ({ bag,onClickedImage, updateQty,updateChecked, 
 													<input
 														type="checkbox"
 														className={`w-full h-full cursor-pointer ${bagLoading ? "pointer-events-none":""}`}
-														defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+														defaultChecked={active?.isChecked || false} // Set checkbox checked if it's selected in the URL
 													/>
 												</div>
 											</div>

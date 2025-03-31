@@ -491,9 +491,9 @@ const Ppage = () => {
                                     <h1 className='text-2xl font-semibold text-slate-800'>
                                         {currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
                                     </h1>
-                                    <h1 className='text-xl text-[#808080e8] font-light'>
+                                    <strong className='text-xl text-[#808080e8] font-light'>
                                         {capitalizeFirstLetterOfEachWord(product?.gender)}
-                                    </h1>
+                                    </strong>
                                     <AverageRatingView ratings={product?.Rating} />
                                 </div>
 

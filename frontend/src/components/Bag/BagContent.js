@@ -196,7 +196,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 											<input
 												type="checkbox"
 												className="w-full h-full cursor-pointer"
-												defaultChecked={active?.isChecked}
+												defaultChecked={active?.isChecked || false}
 												// onChange={(e) => {}}
 											/>
 										</div>

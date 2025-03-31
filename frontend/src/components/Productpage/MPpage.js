@@ -600,9 +600,9 @@ const MPpage = () => {
 							<h1 className=" text-xl font-semibold text-slate-800">
 								{currentColor?.name} {capitalizeFirstLetterOfEachWord(product?.title)}
 							</h1>
-							<h1 className="text-xl text-gray-500 font-light">
+							<strong className="text-xl text-[#808080e8] font-light">
 								{capitalizeFirstLetterOfEachWord(product?.gender)}
-							</h1>
+							</strong>
 						</div>
 						
 						<div className="border-b border-gray-600 pb-2 pt-2 bg-white">

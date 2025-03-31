@@ -6,7 +6,6 @@ import { FaFilter, FaSortAmountDown } from 'react-icons/fa'; // Importing icons
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import { ChevronRight } from 'lucide-react';
-import DeliveryStatus from './DeliveryStatus';
 import DeliveryStatusAllOrders from './DeliveryStatusAllOrders';
 
 const OrderCard = ({ order, onViewDetails }) => {
@@ -38,7 +37,7 @@ const OrderCard = ({ order, onViewDetails }) => {
 						</div>
 						{
 							order?.etd && 
-							<div className="space-x-2 flex justify-start items-start">
+							<div className="space-x-2 flex items-center justify-start">
 								<strong className="text-xs md:text-base text-gray-700">ETD : </strong>
 								<span className='whitespace-nowrap text-xs md:text-sm'>{new Date(order?.etd).toDateString()}</span>
 							</div>

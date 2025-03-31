@@ -149,7 +149,7 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 													<input
 														type="checkbox"
 														className="w-full h-full cursor-pointer"
-														defaultChecked={active?.isChecked} // Set checkbox checked if it's selected in the URL
+														defaultChecked={active?.isChecked || false} // Set checkbox checked if it's selected in the URL
 														// onChange={(e) => {}}
 													/>
 												</div>
