@@ -8,7 +8,7 @@ import { getRandomArrayOfProducts } from '../../action/productaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
 import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
-import { Minus, Plus, Trash, X } from 'lucide-react';
+import { ChevronUp, Minus, Plus, Trash, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
 import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
@@ -708,148 +708,152 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 
 	);
 }
-const AddAddress = ({onSave }) => {
-	const{checkAndCreateToast} = useSettingsContext();
-    const [formInitState, setFormInitState] = useState(null);
-    const [newAddress, setNewAddress] = useState({});
-    const { formData } = useSelector(state => state.fetchFormBanners);
-    const dispatch = useDispatch();
-    const [error, setError] = useState('');
+const AddAddress = ({ onSave }) => {
+	const { checkAndCreateToast } = useSettingsContext();
+	const [formInitState, setFormInitState] = useState(null);
+	const [newAddress, setNewAddress] = useState({});
+	const { formData } = useSelector(state => state.fetchFormBanners);
+	const dispatch = useDispatch();
+	const [error, setError] = useState('');
+	const [isFormVisible, setIsFormVisible] = useState(window.screen.width > 1024); // State to control form visibility on small screens
+
 	const fetchStateAndCountry = async (pincode) => {
-        try {
-            // Assuming we have an API that returns state and country for a given pincode
-            const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
+		try {
+			const response = await axios.get(`https://api.postalpincode.in/pincode/${pincode}`);
 			const responseData = response.data.length > 0 ? response.data[0] : null;
-			if(!responseData) throw new Error("Invalid Pincode");
-			if(responseData.PostOffice.length === 0) throw new Error("Invalid Pincode");
-            const data = responseData?.PostOffice[0];
-			console.log("Country Data: ",data);
+			if (!responseData) throw new Error("Invalid Pincode");
+			if (responseData.PostOffice.length === 0) throw new Error("Invalid Pincode");
+			const data = responseData?.PostOffice[0];
+			console.log("Country Data: ", data);
 
-            if (data && data.State && data.Country && data.District) {
+			if (data && data.State && data.Country && data.District) {
 				handleChange({ target: { name: 'state', value: data.State } });
-				handleChange({ target: { name: 'City', value: data.District} });
+				handleChange({ target: { name: 'City', value: data.District } });
 				handleChange({ target: { name: 'country', value: data.Country } });
-                setError(null); // Clear any previous errors
-            } else {
-                checkAndCreateToast('error', 'Invalid Pincode');
-                setError({ errorTag: 'pincode', error: 'Invalid Pincode' });
-            }
-        } catch (error) {
+				setError(null); // Clear any previous errors
+			} else {
+				checkAndCreateToast('error', 'Invalid Pincode');
+				setError({ errorTag: 'pincode', error: 'Invalid Pincode' });
+			}
+		} catch (error) {
 			console.error("Error fetching state and country:", error);
-            checkAndCreateToast('error', 'Failed to fetch state and country');
-        }
-    };
-    // Handle changes in form fields
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setNewAddress((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
+			checkAndCreateToast('error', 'Failed to fetch state and country');
+		}
+	};
+
+	const handleChange = (e) => {
+		const { name, value } = e.target;
+		setNewAddress((prev) => ({
+			...prev,
+			[name]: value,
+		}));
 		if (name === 'pincode' && value.length === 6) {
-            fetchStateAndCountry(value);
-        }
-    };
+			fetchStateAndCountry(value);
+		}
+	};
 
-    const handleSave = () => {
-		console.log("Check New Address! ",newAddress);
-        if (Object.values(newAddress).every(value => value.trim() !== '')) {
-			if(newAddress['address1'].length > 30){
-                checkAndCreateToast('error', 'Address should be less Then 30 Characters!');
-				setError('Address should be 30 Characters!')
-                return;
-            }
-            if(newAddress['address2'].length > 30){
-                checkAndCreateToast('error', 'Address should be Less then 30 Characters!');
-				setError('Address should be 30 Characters!')
-                return;
-            }
-			// Remove non-digit characters from phoneNumber
+	const handleSave = () => {
+		console.log("Check New Address! ", newAddress);
+		if (Object.values(newAddress).every(value => value.trim() !== '')) {
+			if (newAddress['address1'].length > 30) {
+				checkAndCreateToast('error', 'Address should be less Than 30 Characters!');
+				setError('Address should be 30 Characters!');
+				return;
+			}
+			if (newAddress['address2'].length > 30) {
+				checkAndCreateToast('error', 'Address should be Less than 30 Characters!');
+				setError('Address should be 30 Characters!');
+				return;
+			}
 			const digitsOnly = newAddress['phoneNumber'].replace(/\D/g, '');
-
-			// Check if the length is greater than 10
 			if (digitsOnly.length !== 10) {
-				// console.log("Phone number is greater than 10 digits.");
 				checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
-				setError('Phone number should be 10 digits or fewer!')
+				setError('Phone number should be 10 digits or fewer!');
 				return;
 			}
 			const pincodeDigistOnly = newAddress['pincode'].replace(/\D/g, '');
-			if(pincodeDigistOnly.length !== 6){
+			if (pincodeDigistOnly.length !== 6) {
 				checkAndCreateToast('error', 'Pincode should be 6 digits!');
-                setError('Pincode should be 6 digits!')
-                return;
+				setError('Pincode should be 6 digits!');
+				return;
 			}
-            onSave(newAddress);
-            setNewAddress(formInitState || {}); // Reset form
-            // onClose(); // Close modal
-            setError(null); // Clear any previous errors
-        } else {
-            setError('Please fill out all the fields.');
-        }
-    };
+			onSave(newAddress);
+			setNewAddress(formInitState || {}); // Reset form
+			setError(null); // Clear any previous errors
+		} else {
+			setError('Please fill out all the fields.');
+		}
+	};
 
-    const handleFormInit = () => {
-        if (formData) {
-            const formInit = {};
-            formData.forEach(item => {
-                // Remove spaces from the key (item)
-                const key = removeSpaces(item); // Replace spaces with empty string
-                formInit[key] = '';
-            });
-            setFormInitState(formInit);
-        }
-    }
+	const handleFormInit = () => {
+		if (formData) {
+			const formInit = {};
+			formData.forEach(item => {
+				const key = removeSpaces(item); // Replace spaces with empty string
+				formInit[key] = '';
+			});
+			setFormInitState(formInit);
+		}
+	}
 
-    useEffect(() => {
-        handleFormInit();
-    }, [formData]);
+	useEffect(() => {
+		handleFormInit();
+	}, [formData]);
 
-    useEffect(() => {
-        dispatch(fetchAddressForm());
-    }, [dispatch]);
+	useEffect(() => {
+		dispatch(fetchAddressForm());
+	}, [dispatch]);
 
-
-    return (
+	return (
 		<div className='w-full flex flex-col items-start'>
-			<h2 className="text-xl w-full font-semibold mb-4 text-left">Add New Address</h2>
-			
-			<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
+			{/* <h2 className="text-xl w-full font-semibold mb-4 text-left">Add New Address</h2> */}
+
+			{/* Toggle Button for Smaller Screens */}
+			<button 
+				className="lg:hidden px-4 w-full py-2 justify-between items-center flex text-white bg-black rounded-md"
+				onClick={() => setIsFormVisible(!isFormVisible)}
+			>
+				<span>Add New Address</span> <ChevronUp className={`${isFormVisible && 'rotate-180'} transition-all duration-200 ease-in-out`}/>
+			</button>
+
+			{/* Form */}
+			{isFormVisible && (
+				<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
 				{formData && formData.map((item, index) => (
 					<FormControl key={index} className='w-full flex flex-col space-y-3'>
-						<InputLabel htmlFor={item} className="text-sm font-medium text-left">{capitalizeFirstLetterOfEachWord(item)}
-							{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
-						</InputLabel>
-						<Input
-							type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
-							value={newAddress[removeSpaces(item)] || ''}
-							id={removeSpaces(item)}
-							name={removeSpaces(item)}
-							onChange={handleChange}
-							className="p-2 rounded-md mt-1 w-full"
-							required
-							maxLength={'30'}
-							placeholder={`Enter ${removeSpaces(item)}`}
-						/>
-						{/* {error && <FormHelperText>{error}</FormHelperText>} */}
+					<InputLabel htmlFor={item} className="text-sm font-medium text-left">
+						{capitalizeFirstLetterOfEachWord(item)}
+						{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
+					</InputLabel>
+					<Input
+						type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
+						value={newAddress[removeSpaces(item)] || ''}
+						id={removeSpaces(item)}
+						name={removeSpaces(item)}
+						onChange={handleChange}
+						className="p-2 rounded-md mt-1 w-full"
+						required
+						maxLength={'30'}
+						placeholder={`Enter ${removeSpaces(item)}`}
+					/>
 					</FormControl>
 				))}
-			</form>
-			
+				</form>
+			)}
+
 			{/* Save Button */}
-			{formData && formData.length > 0 && (
+			{isFormVisible && formData && formData.length > 0 && (
 				<button
-					type='submit'
-					disabled={Object.values(newAddress).every(value => value.trim() === '')}
-					onClick={handleSave}
-					className={`px-4 text-center justify-center flex items-center min-w-full mt-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
+				type='submit'
+				disabled={Object.values(newAddress).every(value => value.trim() === '')}
+				onClick={handleSave}
+				className={`px-4 text-center justify-center flex items-center min-w-full mt-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
 				>
-					<span>SAVE</span>
+				<span>SAVE</span>
 				</button>
 			)}
 		</div>
-
-    );
+	);
 };
 
 export default CheckoutPage;
