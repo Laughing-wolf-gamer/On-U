@@ -806,7 +806,9 @@ const AddAddress = ({ onSave }) => {
 
 	return (
 		<div className='w-full flex flex-col items-start'>
-			{/* <h2 className="text-xl w-full font-semibold mb-4 text-left">Add New Address</h2> */}
+			{window.screen.width > 1024 && (
+				<h2 className="text-xl w-full font-semibold mb-4 text-left">Add New Address</h2>
+			)}
 
 			{/* Toggle Button for Smaller Screens */}
 			<button 
@@ -819,25 +821,25 @@ const AddAddress = ({ onSave }) => {
 			{/* Form */}
 			{isFormVisible && (
 				<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
-				{formData && formData.map((item, index) => (
-					<FormControl key={index} className='w-full flex flex-col space-y-3'>
-					<InputLabel htmlFor={item} className="text-sm font-medium text-left">
-						{capitalizeFirstLetterOfEachWord(item)}
-						{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
-					</InputLabel>
-					<Input
-						type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
-						value={newAddress[removeSpaces(item)] || ''}
-						id={removeSpaces(item)}
-						name={removeSpaces(item)}
-						onChange={handleChange}
-						className="p-2 rounded-md mt-1 w-full"
-						required
-						maxLength={'30'}
-						placeholder={`Enter ${removeSpaces(item)}`}
-					/>
-					</FormControl>
-				))}
+					{formData && formData.map((item, index) => (
+						<FormControl key={index} className='w-full flex flex-col space-y-3'>
+						<InputLabel htmlFor={item} className="text-sm font-medium text-left">
+							{capitalizeFirstLetterOfEachWord(item)}
+							{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
+						</InputLabel>
+						<Input
+							type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
+							value={newAddress[removeSpaces(item)] || ''}
+							id={removeSpaces(item)}
+							name={removeSpaces(item)}
+							onChange={handleChange}
+							className="p-2 rounded-md mt-1 w-full"
+							required
+							maxLength={'30'}
+							placeholder={`Enter ${removeSpaces(item)}`}
+						/>
+						</FormControl>
+					))}
 				</form>
 			)}
 
