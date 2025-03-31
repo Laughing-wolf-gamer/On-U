@@ -24,7 +24,7 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
         <div>
             
             {transitions((styles, item) => item && <animated.div style={styles}>
-                <div className={`container font-kumbsan absolute  top-14 right-20 z-10 font1 max-w-[25%] w-fit h-fit ${CMenu} Mmenu bg-gray-100 justify-start items-center text-gray-900`}
+                <div className={`container font-kumbsan absolute top-14 right-20 z-10 font1 max-w-[55%] w-[270px] h-fit ${CMenu} Mmenu bg-gray-100 justify-start items-center text-gray-900`}
                     onMouseEnter={() => parentCallback('block', true)} onMouseLeave={() => parentCallback('hidden', false)}
                 >
                     <div className='px-8 py-8 '>

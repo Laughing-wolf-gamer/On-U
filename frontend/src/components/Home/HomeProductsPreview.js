@@ -13,37 +13,13 @@ import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
     const [isInWishList, setIsInWishList] = useState(false);
     const navigation = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
 	const {checkAndCreateToast} = useSettingsContext();
-    /* const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type, message) => {
-        console.log("check Toast: ", type, message, activeToast);
-        if (activeToast !== message) {
-            switch (type) {
-                case "error":
-                toast.error(message);
-                break;
-                case "warning":
-                toast.warning(message);
-                break;
-                case "info":
-                toast.info(message);
-                break;
-                case "success":
-                toast.success(message);
-                break;
-                default:
-                toast.info(message);
-                break;
-            }
-            showToast(message);
-        }
-    }; */
     const addToWishList = async (e) => {
         e.stopPropagation();
         if (user) {
@@ -269,7 +245,6 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
                             width="100%"
                             height="100%"
                             className="w-full h-full object-cover"
-                            loading="lazy"
                             alt={`Product ${hoveredImageIndex}`}
                             onLoad={handleMediaLoad} // Trigger media load completion
                         />

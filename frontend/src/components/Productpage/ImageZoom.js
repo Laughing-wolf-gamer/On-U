@@ -38,7 +38,6 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
             <img
                 src={imageSrc}
                 alt="Zoomable"
-				loading='lazy'
                 className="w-full h-full object-cover"
                 onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}
@@ -57,8 +56,6 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
                     }}
                 ></div>
             )}
-            {/* Dropdown Button */}
-            {/* <ShareView/> */}
         </div>
     );
 };

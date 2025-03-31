@@ -460,9 +460,7 @@ const Ppage = () => {
 	},[currentSize,currentColor])
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
-    },[hasPurchased])
-	console.log("Decrypted Parma Id: ",decrypt(param.id));
-    
+    },[hasPurchased])    
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
@@ -480,7 +478,6 @@ const Ppage = () => {
                                         setIsFocused={setIsFocused}
                                     />
                                 )}
-
                             </div>
 
                             {/* Right Column: Product Details */}
@@ -564,14 +561,13 @@ const Ppage = () => {
                                                         <div
                                                             style={{ pointerEvents: active.quantity <= 0 ? 'none' : 'all' }}
                                                             className={`flex flex-col p-1 items-center h-fit w-fit justify-center transition-transform relative duration-300 ease-in-out`}
-                                                            onClick={(e) => {setCurrentColor(active); handelSetColorImages(active);}}
+                                                            onClick={() => {setCurrentColor(active); handelSetColorImages(active);}}
                                                         >
                                                             {
                                                                 active.quantity <= 0 && <div className='w-full h-full place-self-center flex flex-col justify-self-center justify-end items-center rounded-full absolute inset-0 bg-gray-600 z-[5] bg-opacity-70'>
 																	<div className="text-white w-auto justify-center text-[10px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
 																		<span>No Stock</span>
 																	</div>
-																
 																</div>
                                                             }
                                                             <button
@@ -652,7 +648,7 @@ const Ppage = () => {
 												onClick={() => HandleOnShareTypeButtonClick("copyUrl")}
                                                 className="text-gray-700 bg-white shadow-md rounded-full p-3 hover:text-red-600 transition duration-300 text-xl"
                                             >
-                                            <IoIosCopy />
+                                            	<IoIosCopy />
                                             </div>
                                         </div>
                                     </div>
@@ -994,7 +990,6 @@ const NewLeftSideImageContent = ({
                                         ) : (
                                             <img
                                                 src={file?.url}
-												loading='lazy'
                                                 className='w-full h-full object-cover hover:scale-110'
                                                 alt="productImage"
 												onContextMenu={(e) => e.preventDefault()}  // Disable right-click
@@ -1024,7 +1019,6 @@ const NewLeftSideImageContent = ({
                             playing={true}
                             light={false}
                         />
-                        {/* <ShareView/> */}
                     </div>
                 ) : (
                     <ImageZoom imageSrc={selectedImage.url || selectedImage} zoomSize={150}/>

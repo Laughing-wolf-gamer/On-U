@@ -66,14 +66,7 @@ export const getuser = () => async (dispatch) => {
             dispatch({ type: FAIL_USER, payload: null})
             return;
         }
-        const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth`,{
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        })
-        console.log("Check-Auth Data: ", data)
+        const { data } = await axios.get(`${BASE_API_URL}/api/auth/check-auth`,headerConfig())
         dispatch({ type: SUCCESS_USER, payload: data.user })
     } catch (error) {
         dispatch({ type: FAIL_USER, payload: error.response?.data?.message })
@@ -83,13 +76,7 @@ export const updateAddress = (address) => async (dispatch) => {
     try {
         const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_UPDATE_ADDRESS })
-        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,{
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        })
+        const { data } = await axios.put(`${BASE_API_URL}/api/auth/updateAddress`,address,headerConfig())
         console.log("Updated Data: ", data)
         dispatch({ type: SUCCESS_UPDATE_ADDRESS, payload: data?.success })
     } catch (error) {
@@ -155,13 +142,9 @@ export const otpverifie = (sendingData) => async (dispatch) => {
 
 export const resendotp = (sendingData) => async () => {
     try {
-        console.log("Received: ", sendingData)
-        // dispatch({ type: REQUEST_RESEND_OTP })
         const { data } = await axios.post(`${BASE_API_URL}/api/auth/resendotp`,sendingData)
         return data
-        // dispatch({ type: SUCCESS_RESEND_OTP, payload: data.success })
     } catch (Error) {
-        // dispatch({ type: FAIL_RESEND_OTP, payload: Error.response.data.message })
         return false;
     }
 }
@@ -173,9 +156,8 @@ export const updateuser = (userdata) => async (dispatch) => {
         console.log("Update User Data: ", data.result)
         if(data.token){
             const token = data?.token
-            console.log("Token: ", token)
             localStorage.removeItem('token');
-            localStorage.setItem('token', data.token)
+            localStorage.setItem('token', token)
 
         }
         dispatch({ type: SUCCESS_UPDATE_USER, payload: data.result })
@@ -210,7 +192,6 @@ export const logout = () => async (dispatch) => {
     try {
         console.log("logout")
         const res = await axios.post(`${BASE_API_URL}/api/auth/logout`)
-        console.log("Loggin Aoutine");
         localStorage.removeItem("token");
         dispatch({ type: SUCCESS_LOGOUT, payload: null })
     } catch (Error) {

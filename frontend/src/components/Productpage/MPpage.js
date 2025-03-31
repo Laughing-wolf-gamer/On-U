@@ -24,6 +24,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import ImageZoom from './ImageZoom';
 const reviews = [
     {
         rating: 5,
@@ -110,12 +111,10 @@ const MPpage = () => {
     const [isInBagList, setIsInBagList] = useState(false);
     const [currentColor, setCurrentColor] = useState(null);
     const [currentSize, setCurrentSize] = useState(null);
-    const [selectedSize, setSelectedSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState([]);
     const[hasPurchased, setHasPurchased] = useState(false);
     const [selectedSizeColorImageArray, setSelectedSizeColorImageArray] = useState([]);
     const[ratingData,setRatingData] = useState(null);
-    const [isInViewport, setIsInViewport] = useState(false);
     const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
 
 
@@ -188,7 +187,6 @@ const MPpage = () => {
 				isChecked:true,
             };
             await dispatch(createbag(orderData));
-            // await dispatch(getwishlist());
             dispatch(getbag());
         } else {
             // Add to localStorage logic
@@ -205,58 +203,6 @@ const MPpage = () => {
         checkAndCreateToast("success", "Product successfully in Bag");
         updateButtonStates();
     };
-    /* const updateButtonStates = () => {
-        if (user) {
-            // console.log("Updateing wishList: ",wishlist);
-            setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
-			const similarProductsInBag = bag?.orderItems?.filter(item => item.productId?._id === product?._id);
-            let isBag = false;
-
-            // If there are similar products in the bag
-            if (similarProductsInBag?.length > 0) {
-                // If current size and color are provided, find the matching product
-                if (currentSize && currentColor) {
-                    const matchingItem = similarProductsInBag.find(item => 
-                        item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
-                    );
-                    // If matching item found, check its isChecked property
-                    if (matchingItem) {
-                        isBag = matchingItem.isChecked;
-                    }
-                } else {
-                    // If no size or color is selected, check if any similar product is checked
-                    isBag = similarProductsInBag.some(item => item.isChecked);
-                }
-            }
-
-            // Set the result in state
-            setIsInBagList(isBag);
-        } else {
-            setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
-			const similarProductsInBag = getLocalStorageBag().filter(item => item.productId === product?._id);
-            let isBag = false;
-
-            // Check if there are matching items in the bag
-            if (similarProductsInBag?.length > 0) {
-                // If current size and color are provided, check for matching items with the size and color
-                if (currentSize && currentColor) {
-                    const matchingItem = similarProductsInBag.find(item => 
-                        item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
-                    );
-                    // If matching item is found, set isBag based on its 'isChecked' status
-                    if (matchingItem) {
-                        isBag = matchingItem.isChecked;
-                    }
-                } else {
-                    // If no size/color is specified, check if any product is checked
-                    isBag = similarProductsInBag.some(item => item.isChecked);
-                }
-            }
-
-            // Set the result in the state (i.e., update whether the product is in the bag)
-            setIsInBagList(isBag);
-        }
-    }; */
     const updateButtonStates = () => {
         if (user) {
             // console.log("Updateing wishList: ",wishlist);
@@ -314,10 +260,9 @@ const MPpage = () => {
             const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
             // await dispatch(getbag({ userId: user.id }));
             await dispatch(getwishlist());
-            checkAndCreateToast("success", "Wishlist Updated Successfully");
+            checkAndCreateToast("success", "Wishlist Updated Successfully",3000);
             console.log("Wishlist Updated Successfully: ",response);
             if(response){
-                // updateButtonStates();
                 setIsInWishList(response);
             }
         } else {
@@ -375,7 +320,6 @@ const MPpage = () => {
 
     const handleSetNewImageArray = (size) => {
         setCurrentSize(size);
-        setSelectedSize(size);
         setSelectedColor(size.colors);
         setCurrentColor(null);
     };
@@ -391,12 +335,6 @@ const MPpage = () => {
 		const encodedUrl = encodeURIComponent(url); // Encode the URL to make it URL-safe
 		return `https://wa.me/?text=Check%20out%20this%20product!%20${encodedUrl}`;
 	};
-    const getCopyUrl = () => {
-        const productURL = getProductURL(); // Get the active page URL
-        const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
-        return shareLink;
-    };
-
 	// Method to handle the sharing
 	const handleShare = () => {
 		const productURL = getProductURL(); // Get the active page URL
@@ -419,22 +357,6 @@ const MPpage = () => {
 			break;
 		}
 	};
-    /* const PostRating = async (e)=>{
-        e.preventDefault();
-        try {
-            if(ratingData && user && product){
-                setIsPostingReview(true);
-                await dispatch(postRating({productId:product?._id, ratingData}))
-                await dispatch(singleProduct(param.id))
-                checkAndCreateToast("success","Rating Posted Successfully");
-            }
-        } catch (error) {
-            console.error("An error occurred while setting the Rating",error);
-            checkAndCreateToast("error","An error occurred while setting the Rating");
-        }finally{
-            setIsPostingReview(false);
-        }
-    } */
     const PostRating = async (e) => {
         e.preventDefault();
     
@@ -462,44 +384,6 @@ const MPpage = () => {
         const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
         setHasPurchased(didPurchased?.success || false);
     }
-    /* useEffect(() => {
-        // Check if the user is logged in
-        if(!loadingWishList && !bagLoading){
-            updateButtonStates();
-        }
-    }, [user, wishlist, bag, product,loadingWishList,sessionData,sessionBagData]); 
-
-    useEffect(() => {
-        if (product) {
-            const availableSize = product.size.find(item => item.quantity > 0);
-            setSelectedSize(availableSize);
-            setSelectedColor(availableSize.colors);
-            const color = availableSize.colors[0];
-            setSelectedSizeColorImageArray(color.images);
-            // setSelectedColorId(color._id);
-            // setSelectedImage(color.images[0]);
-        }
-        if (selectedSize) {
-            setSelectedColor(selectedSize.colors);
-            const color = selectedSize.colors[0];
-            setSelectedSizeColorImageArray(color.images);
-        }
-        if(product){
-            checkFetchedIsPurchased();
-        }
-        if(user){
-            dispatch(getbag({ userId: user.id }));
-        }
-        dispatch(getwishlist())
-    }, [product, dispatch]);
-
-	useEffect(()=>{
-		updateButtonStates();
-	},[currentSize,currentColor])
-    useEffect(() => {
-        dispatch(singleProduct(param.id));
-        document.documentElement.scrollTop = 0;
-    }, [dispatch, param]); */
     useEffect(() => {
         // Check if the user is logged in and other conditions
         if (!loadingWishList && !bagLoading) {
@@ -513,7 +397,6 @@ const MPpage = () => {
             const availableSize = product.size.find(item => item.quantity > 0);
             
             if (availableSize) {
-                setSelectedSize(availableSize);
                 setSelectedColor(availableSize.colors);
                 const color = availableSize.colors[0];
                 setSelectedSizeColorImageArray(color.images);
@@ -563,7 +446,7 @@ const MPpage = () => {
         rect.left < containerRect.right &&
         rect.right > containerRect.left;
 
-        setIsInViewport(isVisible);
+        // setIsInViewport(isVisible);
 
         // Update scroll position
         setScrollAmount(scrollContainer.scrollTop);  // Log the current scroll position
@@ -609,7 +492,7 @@ const MPpage = () => {
             }
         };
     }, []);
-	console.log("Decrypted Parma Id: ",decrypt(param.id),param.id);
+	// console.log("Decrypted Parma Id: ",decrypt(param.id),param.id);
     return (
 		<div ref={scrollContainerRef} className="w-screen max-w-screen-2xl font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 			{loading === false ? (
@@ -687,16 +570,17 @@ const MPpage = () => {
 									) : (
 										// Render image using LazyLoadImage
 										<div className="relative">
-											
 											<LazyLoadImage
 												effect="blur"
 												src={im.url}
 												alt={`product_${i}`}
-												className="w-full h-full object-contain"
+												wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												className="w-full h-full object-cover"
 												onContextMenu={(e) => e.preventDefault()}  // Disable right-click
 											/>
-											{/* <div className="h-[30px] bg-white"></div> */}
-											{/* <MShareView/> */}
 										</div>
 									)
 									) : (
@@ -749,8 +633,8 @@ const MPpage = () => {
 											<div key={`size_${index}_${active._id}`}>
 												<button
 													style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
-													className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full font-bold shadow-md gap-2 transition-all focus:outline-none duration-500 border-[1px] border-gray-400 ease-in-out 
-													${currentSize?._id === active?._id ? " bg-black text-white" : "bg-slate-100 border-2 text-black"}`}
+													className={`flex relative flex-col w-fit h-fit items-center justify-center rounded-full shadow-md gap-2 transition-all focus:outline-none duration-500 border-[1px] border-gray-400 ease-in-out 
+													${currentSize?._id === active?._id ? " bg-black font-extrabold text-lg text-white" : "bg-slate-100 border-2 font-bold text-black"}`}
 													onClick={() => { handleSetNewImageArray(active); }}
 												>
 													{
@@ -761,7 +645,7 @@ const MPpage = () => {
 														</div>
 													}
 													<button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
-														<span className='text-base font-medium'>{active.label}</span>
+														<span className=''>{active.label}</span>
 													</button>
 													{/* {active?.quantity <= 0 && (
 														<div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
@@ -787,7 +671,7 @@ const MPpage = () => {
 													style={{pointerEvents:active.quantity <= 0 ? 'none':'all'}}
 													className={`flex relative flex-col w-full h-full items-center justify-center rounded-full font-bold shadow-md transition-all duration-500 focus:outline-none border-[1px] border-gray-400 ease-in-out 
 													${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
-													onClick={() => { setCurrentColor(active); handleSetColorImages(active); }}
+													onClick={() => {setCurrentColor(active); handleSetColorImages(active); }}
 												>
 													{
 														active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>

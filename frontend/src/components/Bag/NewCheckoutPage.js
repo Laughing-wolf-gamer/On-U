@@ -470,24 +470,25 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 	const navigate = useNavigate();
 	return (
 		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
-			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
+			<h3 className="font-semibold text-base sm:text-xl md:text-2xl text-gray-800 mb-6">
 				ORDER DETAILS ({bag?.orderItems?.length} ITEMS)
 			</h3>
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Total MRP</span>
-					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+					<strong className='font-semibold'>Total MRP</strong>
+					<span>₹ {formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+				</div>
+				<div className="flex justify-between text-gray-700">
+					<strong className='font-semibold text-left'>You Saved</strong>
+					<span className='text-right text-xs sm:text-base'>
+						{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>}
+					</span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>You Saved</span>
-					{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>}
-				</div>
-				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Coupon</span>
+					<strong className='font-semibold'>Coupon</strong>
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
 						{bag?.Coupon?.CouponCode ? (
 							<div className="space-y-1">
-								{/* Coupon Code and Remove Button */}
 								<button
 									className="flex items-center space-x-1 text-xs sm:text-sm"
 									onClick={(e) => removeCoupon(e, bag?.Coupon?.CouponCode)}
@@ -497,7 +498,7 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 								</button>
 								{/* Discount Information */}
 								<span className="text-xs sm:text-sm text-gray-500 mt-1">
-								{`Saved: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
+									{`Saved: ${bag?.Coupon?.CouponType === "Price" ? "₹" : ""} ${bag?.Coupon?.Discount} ${bag?.Coupon?.CouponType === "Percentage" ? "%" : ""}`}
 								</span>
 							</div>
 						) : (
@@ -508,9 +509,9 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 					</span>
 					</div>
 
-				<div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
-					<span className='text-gray-800'>Convenience Fee</span>
-					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
+				<div className="flex justify-between text-gray-700 mb-5">
+					<strong className='text-gray-800'>Convenience Fee</strong>
+					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700 text-xs sm:text-base"}`}>
 						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
 					</span>
 				</div>

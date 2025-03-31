@@ -73,62 +73,34 @@ const CarousalView = ({ b_banners, indicator, bannerLoading = false }) => {
                                     height="100%"
                                     className='min-h-[480px] bg-gray-300' // Changed to a gray background
                                     alt='Banner_Image'
+									onContextMenu={(e)=> e.preventDefault()}
                                 />
                             </Link>
-                            {/* <div className='h-[80px]' /> */}
                         </div>
                     ))
                 }
             </Carousel>
-
-            {/* <div
-                ref={sectionRef}
-                className={`absolute top-20 left-32 transform z-20 transition-all duration-700 ease-in-out ${
-                animate ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'
-                }`}
-            >
-                <div className='flex flex-col space-y-4 justify-center items-start'>
-                <h3 className='text-xl px-8 font-medium font1 tracking-widest text-gray-800 mt-8'>
-                    Smart Products
-                </h3>
-                <div className='flex flex-col space-y-2'>
-                    <h1 className='text-[42px] px-8 font-bold tracking-widest text-gray-900'>
-                    Winter Offers
-                    </h1>
-                    <h2 className='text-[42px] px-8 font-semibold tracking-widest text-gray-800'>
-                    2024 Collections
-                    </h2>
-                </div>
-                <Link
-                    to={'/products'}
-                    className='border-[1px] text-center flex justify-center items-center border-gray-400 hover:bg-gray-800 ml-8 text-black hover:text-white mt-9 w-44 h-16'
-                >
-                    <button className='text-sm font1 font-thin tracking-widest'>SHOP NOW</button>
-                </Link>
-                </div>
-            </div> */}
-
             {/* Left and Right Buttons */}
             <div className='absolute h-32 top-1/2 left-14 transform -translate-y-1/2 z-10'>
                 <button
-                className='h-full w-full text-white opacity-[90%] transition-color hover:text-black hover:scale-125 duration-300 hover:border'
-                onClick={(e) => {
-                    // e.preventDefault();
-                    setCurrentIndex((currentIndex - 1 + b_banners.length) % b_banners.length);
-                }}
+					className='h-full w-full text-white opacity-[90%] transition-color hover:text-black hover:scale-125 duration-300 hover:border'
+					onClick={(e) => {
+						// e.preventDefault();
+						setCurrentIndex((currentIndex - 1 + b_banners.length) % b_banners.length);
+					}}
                 >
-                <ChevronLeft size={50} />
+                	<ChevronLeft size={50} />
                 </button>
             </div>
             <div className='absolute h-32 top-1/2 right-14 transform -translate-y-1/2 z-10'>
                 <button
-                className='h-full w-full text-white opacity-[90%] transition-color hover:text-black hover:scale-125 duration-300 hover:border'
-                onClick={(e) => {
-                    // e.preventDefault();
-                    setCurrentIndex((currentIndex + 1) % b_banners.length);
-                }}
+					className='h-full w-full text-white opacity-[90%] transition-color hover:text-black hover:scale-125 duration-300 hover:border'
+					onClick={(e) => {
+						// e.preventDefault();
+						setCurrentIndex((currentIndex + 1) % b_banners.length);
+					}}
                 >
-                <ChevronRight size={50} />
+                	<ChevronRight size={50} />
                 </button>
             </div>
         </div>

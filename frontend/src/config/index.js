@@ -102,18 +102,18 @@ export function getImagesArrayFromProducts(product) {
 
 		// Iterate over the sizes
 		if (product.size && Array.isArray(product.size)) {
-		product.size.forEach(s => {
-			// Iterate over the colors for each size
-			if (s.colors && Array.isArray(s.colors)) {
-			s.colors.forEach(c => {
-				// Filter out video files from color images
-				if (c.images && Array.isArray(c.images)) {
-				const filteredImages = c.images.filter(image => !isVideoFile(image));
-				images = [...images, ...filteredImages];
+			product.size.forEach(s => {
+				// Iterate over the colors for each size
+				if (s.colors && Array.isArray(s.colors)) {
+				s.colors.forEach(c => {
+					// Filter out video files from color images
+					if (c.images && Array.isArray(c.images)) {
+					const filteredImages = c.images.filter(image => !isVideoFile(image));
+					images = [...images, ...filteredImages];
+					}
+				});
 				}
 			});
-			}
-		});
 		}
 
 		return images;
