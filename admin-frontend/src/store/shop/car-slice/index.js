@@ -68,13 +68,7 @@ export const updateToCart = createAsyncThunk('shoppingCart/updateToCart', async 
         quantity,
         size,
         color,
-    },{
-        withCredentials:true,
-        headers: {
-            Authorization:`Bearer ${token}`,
-            "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-        },
-    });
+    },headerConfig());
     return result.data;
 });
 export const fetchCartItems = createAsyncThunk('shoppingCart/fetchCarItems', async ({userId}) => {

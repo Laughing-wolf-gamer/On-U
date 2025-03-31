@@ -21,11 +21,8 @@ export const Allproduct = (e=1) => async (dispatch) => {
    
     try {
         dispatch({ type: REQUEST_PRODUCTS })
-        console.log("URL: " ,url)
         let link = url.includes('?') ? `?${url.split("?")[1]}&width=${window.screen.width}&page=${e}` : `?width=${window.screen.width}&page=${e}`
-        //let link1 = link ? link +=  `&width=${window.screen.width}`;
         const res = await axios.get(`${BASE_API_URL}/api/shop/products/all${link}`)
-        // console.log("products: ", res.data);
         const data = res.data;
         dispatch({ type: SUCCESS_PRODUCTS, payload: data?.products, pro:data?.pro, length:data?.length })
     } catch (error) {

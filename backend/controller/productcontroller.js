@@ -30,7 +30,6 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = async (req, res) => {
     try {
-		perfomancenow.
         console.log("Product Query", req.query);
         // Helper function to ensure filters are arrays
         const ensureArray = (value) => Array.isArray(value) ? value : [value];

@@ -1,14 +1,8 @@
 import axios from 'axios'
 import {
-    REQUEST_CREATE_WISHLIST,
-    SUCCESS_CREATE_WISHLIST,
-    FAIL_CREATE_WISHLIST,
     REQUEST_GET_WISHLIST,
     SUCCESS_GET_WISHLIST,
     FAIL_GET_WISHLIST,
-    REQUEST_CREATE_BAG,
-    SUCCESS_CREATE_BAG,
-    FAIL_CREATE_BAG,
     REQUEST_GET_BAG,
     SUCCESS_GET_BAG,
     FAIL_GET_BAG,
@@ -22,9 +16,6 @@ import {
     REQUEST_DELETE_WISH,
     FAIL_DELETE_WISH,
     CLEAR_ERRORS,
-    REQUEST_CREATE_ORDER,
-    SUCCESS_CREATE_ORDER,
-    FAIL_CREATE_ORDER,
     REQUEST_GET_ORDER,
     SUCCESS_GET_ORDER,
     FAIL_GET_ORDER,
@@ -34,14 +25,11 @@ import {
 } from '../const/orderconst'
 import { BASE_API_URL, headerConfig } from '../config'
 
-export const createwishlist = ({productId}) => async (dispatch) => {
+export const createwishlist = ({productId}) => async () => {
     try {
-        // dispatch({ type: REQUEST_CREATE_WISHLIST })
         const res = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_wishlist`,{productId}, headerConfig());
-        // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res?.data?.success})
         return res?.data?.success;
     } catch (error) {
-        // dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
         return false;
     }
 }
@@ -50,9 +38,7 @@ export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
         const res = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_wishlist_array`,{productIdArray}, headerConfig());
         console.log("Wishlist created: ",res?.data);
         return res?.data;
-        // dispatch({ type: SUCCESS_CREATE_WISHLIST, payload: res.data.success})
     } catch (error) {
-        // dispatch({ type: FAIL_CREATE_WISHLIST, payload: error.response.data.message })
         return error?.response?.data;
     }
 }
@@ -68,35 +54,18 @@ export const getwishlist = () => async (dispatch) => {
     }
 }
 export const addItemArrayBag = (options) => async()=>{
-    // console.log("Bag Items Array",options)
     try {
-        const token = localStorage.getItem('token');
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/addItemArrayBag`,options, {
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        })
-        // console.log("successfully: ",data);
-        // dispatch({ type: SUCCESS_CREATE_BAG, payload: data?.success,})
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/addItemArrayBag`,options, headerConfig())
         return data;
     } catch (error) {
         return error?.response?.data?.success;
-        // dispatch({ type: FAIL_CREATE_BAG, payload: error?.response?.data?.message })
     }
 }
 export const createbag = (option) => async () => {
     console.log(option)
     try {
         const token = localStorage.getItem('token');
-        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, {
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        })
+        const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, headerConfig())
         return data?.success || false;
     } catch (error) {
         return false;
@@ -123,13 +92,7 @@ export const getbag = () => async (dispatch) => {
     try {
         const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
-        const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,{
-            withCredentials:true,
-            headers: {
-                Authorization:`Bearer ${token}`,
-                "Cache-Control": "no-cache, must-revalidate, proxy-revalidate"
-            },
-        });
+        const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,headerConfig());
         dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})
     } catch (error) {
         dispatch({ type: FAIL_GET_BAG, payload: error.message})
@@ -147,7 +110,6 @@ export const getqtyupdate = (qtydata) => async (dispatch) => {
     }
 }
 export const itemCheckUpdate = (checkedData) => async () => {
-
     try {
         const { data } = await axios.put(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/update_bagItemChecked`,checkedData, headerConfig());
 		return data.success;
