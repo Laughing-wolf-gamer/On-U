@@ -211,16 +211,16 @@ const OrderDetailsPage = ({ user }) => {
 
 							{/* Payment and Delivery Status */}
 							<div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-								<div className="space-y-2">
+								<div className="space-y-2 flex flex-col">
 									<strong className="text-xl font-semibold text-gray-800">Delivery Status</strong>
 									<span className='animate-pulse'>{orderbyid?.status}</span>
 								</div>
-								<div className="space-y-2">
+								<div className="space-y-2 flex flex-col">
 									<strong className="text-xl font-semibold text-gray-800">Payment Mode</strong>
 									<span>{orderbyid?.paymentMode}</span>
 								</div>
 								{
-									orderbyid?.etd && <div className="space-y-2">
+									orderbyid?.etd && <div className="space-y-2 flex flex-col">
 										<strong className="text-xl font-semibold text-gray-800">ETD (Estimated Time Delivery)</strong>
 										<span>{new Date(orderbyid?.etd).toDateString()}</span>
 									</div>
