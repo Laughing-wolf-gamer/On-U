@@ -1,5 +1,5 @@
-import { Download } from 'lucide-react';
 import React, { Fragment, useEffect, useState } from 'react'
+import { BiDownload } from 'react-icons/bi';
 import { MdInstallMobile } from "react-icons/md";
 const PwaSetup = () => {
 	const [deferredPrompt, setDeferredPrompt] = useState(null);
@@ -46,7 +46,7 @@ const PwaSetup = () => {
 	return <Fragment>
 		{/* Show the install button only if the app is not already installed */}
 		{!isInstalled && deferredPrompt && (
-			<button className={`px-4 py-2 whitespace-nowrap space-x-2 items-center w-full justify-center flex rounded-md bg-black text-white`} onClick={handleInstallClick}>
+			<button className={`px-4 py-2 mb-2 whitespace-nowrap space-x-2 items-center w-full justify-center flex rounded-md bg-black text-white`} onClick={handleInstallClick}>
 				<MdInstallMobile size={20} className='hover:animate-vibrateScale'/> <span>Add to Home Screen</span> 
 			</button>
 		)}

@@ -234,13 +234,13 @@ const Footer = () => {
 					</div>
 
                     {/* App and Social Media */}
-                    <div className="md:border-r h-fit lg:border-r xl:border-r 2xl:border-r border-gray-200 pr-4">
+                    <div className="md:border-r h-fit lg:border-r xl:border-r 2xl:border-r border-gray-200">
                         <h1 className="text-lg font-bold mb-4 text-gray-800">EXPERIENCE ON-U APP</h1>
-                        <div className="flex h-fit gap-4 flex-row mb-6 w-full">
-                            <img src={g1} alt="Google Play" loading="lazy" className="object-contain w-[50%] h-full" />
-                            <img src={g2} alt="Apple Store" loading="lazy" className="object-contain w-[50%] h-full" />
-                        </div>
 						<PwaSetup/>
+                        <div className="flex gap-4 flex-col md:flex-row mb-6 w-full h-[200px]">
+                            <img src={g1} alt="Google Play" loading="lazy" className="object-contain w-full md:w-[50%] h-[50%] md:h-full" />
+                            <img src={g2} alt="Apple Store" loading="lazy" className="object-contain w-full md:w-[50%] h-[50%] md:h-full" />
+                        </div>
                     </div>
 
                     {/* Features */}
