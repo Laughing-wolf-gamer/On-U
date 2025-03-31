@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
-
+import { Download } from 'lucide-react';
+import React, { Fragment, useEffect, useState } from 'react'
+import { MdInstallMobile } from "react-icons/md";
 const PwaSetup = () => {
 	const [deferredPrompt, setDeferredPrompt] = useState(null);
   	const [isInstalled, setIsInstalled] = useState(false);
@@ -42,14 +43,14 @@ const PwaSetup = () => {
 			});
 		}
 	};
-	return <div className={`w-full sr-only h-12 justify-center flex rounded-md bg-black text-white`}>
+	return <Fragment>
 		{/* Show the install button only if the app is not already installed */}
 		{!isInstalled && deferredPrompt && (
-			<button className='font-kumbsan' onClick={handleInstallClick}>
-				Add to Home Screen
+			<button className={`px-4 py-2 whitespace-nowrap space-x-2 items-center w-full justify-center flex rounded-md bg-black text-white`} onClick={handleInstallClick}>
+				<MdInstallMobile size={20} className='hover:animate-vibrateScale'/> <span>Add to Home Screen</span> 
 			</button>
 		)}
-	</div>
+	</Fragment>
 
 }
 
