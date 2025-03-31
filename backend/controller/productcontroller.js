@@ -5,7 +5,7 @@ import ProductModel from '../model/productmodel.js';
 import OrderModel from '../model/ordermodel.js';
 import logger from '../utilis/loggerUtils.js';
 import { getHexValue, handleSort } from '../utilis/basicUtils.js';
-
+import perfomancenow from 'performance-now'
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
 
@@ -30,6 +30,7 @@ export const imagekits = A(async (req, res, next)=>{
 
 export const getallproducts = async (req, res) => {
     try {
+		perfomancenow.
         console.log("Product Query", req.query);
         // Helper function to ensure filters are arrays
         const ensureArray = (value) => Array.isArray(value) ? value : [value];

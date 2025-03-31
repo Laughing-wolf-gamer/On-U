@@ -154,6 +154,9 @@ const OrderDetailsPage = ({ user }) => {
     const handleBackButtonClick = () => {
         navigate(-1); 
     };
+	useEffect(()=>{
+		scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+	},[])
 
     return (
         <div ref={scrollableDivRef} className="w-full min-h-screen overflow-y-auto bg-gray-50 font-sans scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
@@ -226,19 +229,7 @@ const OrderDetailsPage = ({ user }) => {
 									</div>
 								}
 							</div>
-							{/* Customer Contact Section */}
-							<div className="mt-6 p-4 bg-gray-100 rounded-lg text-center sm:p-6 md:p-8 lg:p-10">
-								<h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-gray-700">Having an issue?</h3>
-								<p className="text-sm sm:text-base md:text-lg text-gray-500 mt-2">
-									If any issue arises, feel free to reach out to our support team.
-								</p>
-								<Link 
-									to="/contact" 
-									className="mt-4 inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
-								>
-									Contact Us
-								</Link>
-							</div>
+							
 						</div>
 
 						{/* Sidebar - Order Summary */}
@@ -258,6 +249,19 @@ const OrderDetailsPage = ({ user }) => {
 								<div className="space-y-2 justify-between flex items-center">
 									<p className="font-semibold text-gray-800">Shipping:</p>
 									<p className="text-base text-gray-600">{orderbyid.ConveenianceFees > 0 ? `₹${formattedSalePrice(orderbyid?.ConveenianceFees)}` : "Free"}</p>
+								</div>
+								{/* Customer Contact Section */}
+								<div className="mt-6 p-4 bg-gray-100 rounded-lg text-center sm:p-6 md:p-8 lg:p-10">
+									<h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-700">Having an issue?</h3>
+									<p className="text-xs sm:text-sm md:text-base text-gray-500 mt-2">
+										If any issue arises, feel free to reach out to our support team.
+									</p>
+									<Link 
+										to="/contact" 
+										className="mt-4 inline-block bg-gray-800 text-white py-2 px-6 hover:rounded-lg transition-all duration-300 ease-ease-out-expo text-lg hover:bg-gray-600 sm:text-base md:text-lg lg:text-xl"
+									>
+										Contact Us
+									</Link>
 								</div>
 								
 							</div>
@@ -355,7 +359,7 @@ const RandomProductsDisplay = ({ randomProducts }) => {
 			<div className="relative">
 			<button
 				onClick={scrollLeftHandler}
-				className="absolute left-3 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full z-10"
+				className="absolute left-3 top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 p-2 rounded-full z-10 py-3"
 			>
 				<ChevronLeft/>
 			</button>
@@ -380,7 +384,7 @@ const RandomProductsDisplay = ({ randomProducts }) => {
 
 			<button
 				onClick={scrollRightHandler}
-				className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-500 text-white p-2 rounded-full z-10"
+				className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 p-2 rounded-full py-3 z-10"
 			>
 				<ChevronRight/>
 			</button>
