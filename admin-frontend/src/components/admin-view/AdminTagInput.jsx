@@ -25,14 +25,7 @@ const AdminTagInput = ({defaultTags,OnSubmit,isEditing = false}) => {
 			OnSubmit(tags);
 		}
 	},[tags])
-	/* useEffect(()=>{
-		if(tags.length === 0){
-			if(defaultTags){
-				setTags(defaultTags)
-			}
-		}
-	},[defaultTags]) */
-	console.log("default Tags",defaultTags)
+	console.log("default Tags",isEditing)
 	return (
 		<div className="w-full justify-between items-center mx-auto p-4">
 			{

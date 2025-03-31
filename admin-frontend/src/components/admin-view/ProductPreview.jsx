@@ -359,7 +359,7 @@ const ProductPreview = ({
 							<div className="flex w-full flex-col justify-center items-center border-b pb-4">
 								<h3 className="font-extrabold text-gray-600 text-lg mr-3 uppercase">Tags:</h3>
 								{
-									productData?.tags && productData?.tags.length > 0 && <AdminTagInput defaultTags={productData?.tags} OnSubmit = {(tag) => {
+									productData && productData.tags && <AdminTagInput defaultTags={productData?.tags} OnSubmit = {(tag) => {
 										handleInputChange({target:{value:tag}},'tags')
 									}} isEditing = {isEditing} />
 								}
