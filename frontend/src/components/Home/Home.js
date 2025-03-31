@@ -436,7 +436,6 @@ const Home = ({user}) => {
             {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
 			<BackToTopButton scrollableDivRef={scrollableDivRef} />
 			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
-			<PwaSetup/>
         </div>
     )
 }

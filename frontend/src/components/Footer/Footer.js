@@ -8,6 +8,7 @@ import { ArrowUp, ChevronUp } from "lucide-react";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchTermsAndCondition } from "../../action/common.action";
 import { fetchAllOptions } from "../../action/productaction";
+import PwaSetup from "../Home/PwaSetup";
 
 const Footer = () => {
 	const dispath = useDispatch();
@@ -239,6 +240,7 @@ const Footer = () => {
                             <img src={g1} alt="Google Play" className="object-contain w-full h-full" />
                             <img src={g2} alt="Apple Store" className="object-contain w-full h-full" />
                         </div>
+						<PwaSetup/>
                     </div>
 
                     {/* Features */}
