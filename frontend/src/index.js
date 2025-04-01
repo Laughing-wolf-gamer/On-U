@@ -17,7 +17,6 @@ const option = {
   timeout: 2000,
   position: positions.TOP_CENTER,
   transition: transitions.SCALE
- 
 }
 
 
@@ -27,15 +26,15 @@ ReactDOM.render(
         <React.StrictMode >
             <ToastProvider>
               <SessionStorageProvider>
-				<LocalStorageContextProvider>
-					<LocationContextProvider>
-						<SettingsProvider>
-							<EncryptionDecryptionProvider>
-								<App />
-							</EncryptionDecryptionProvider>
-						</SettingsProvider>
-					</LocationContextProvider>
-				</LocalStorageContextProvider>
+                <LocalStorageContextProvider>
+                  <LocationContextProvider>
+                    <SettingsProvider>
+                      <EncryptionDecryptionProvider>
+                        <App />
+                      </EncryptionDecryptionProvider>
+                    </SettingsProvider>
+                  </LocationContextProvider>
+                </LocalStorageContextProvider>
               </SessionStorageProvider>
             </ToastProvider>
         </React.StrictMode>
