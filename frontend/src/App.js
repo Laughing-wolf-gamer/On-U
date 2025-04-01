@@ -59,8 +59,6 @@ function App() {
             dispatch(getuser())
             setstate(true)
         }
-        
-    
         let url = document.URL
         if (url.includes('&')) {
             if (!url.includes('?')) {
@@ -68,9 +66,7 @@ function App() {
                 window.location = url1
             }
         }
-
         if(isAuthentication){
-            console.log(url)
             if (url === window.location.protocol+"//" + window.location.host + '/Login') {
                 window.location.href = window.location.protocol + "//"+window.location.host
             }
