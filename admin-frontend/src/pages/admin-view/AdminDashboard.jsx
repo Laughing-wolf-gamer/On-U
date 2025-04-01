@@ -383,7 +383,7 @@ const AdminDashboard = ({ user }) => {
 								user && user.role ==='superAdmin' && (
 									<StatsCard
 										title="Shiprocket Wallet Balance"
-										value={`₹${walletBalance}`}
+										value={`₹${walletBalance || 0}`}
 										icon={<IndianRupee strokeWidth={3} className="text-3xl font-bold text-green-600" />}
 										className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 									/>

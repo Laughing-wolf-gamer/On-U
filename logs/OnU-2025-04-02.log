@@ -1,0 +1,28 @@
+2025-04-01T20:28:37.210Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67eaf5e7d71eb1bddfc9d89b") }" on model "Bag"
+2025-04-01T20:28:37.210Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67eaf5e7d71eb1bddfc9d89b") }" on model "Bag"
+2025-04-01T20:28:37.217Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67eaf5e7d71eb1bddfc9d89b") }" on model "Bag"
+2025-04-01T20:28:37.217Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67eaf5e7d71eb1bddfc9d89b") }" on model "Bag"
+2025-04-01T20:28:38.547Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:28:38.547Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:34:34.703Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4dd64d369a483053d2f4") }" on model "Bag"
+2025-04-01T20:34:34.703Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4dd64d369a483053d2f4") }" on model "Bag"
+2025-04-01T20:34:34.718Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4dd64d369a483053d2f4") }" on model "Bag"
+2025-04-01T20:34:34.718Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4dd64d369a483053d2f4") }" on model "Bag"
+2025-04-01T20:34:37.932Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:34:37.932Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:35:59.020Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e034d369a483053e227") }" on model "Bag"
+2025-04-01T20:35:59.020Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e034d369a483053e227") }" on model "Bag"
+2025-04-01T20:35:59.041Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e034d369a483053e227") }" on model "Bag"
+2025-04-01T20:35:59.041Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e034d369a483053e227") }" on model "Bag"
+2025-04-01T20:37:04.840Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e69e900af7868edc692") }" on model "Bag"
+2025-04-01T20:37:04.840Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e69e900af7868edc692") }" on model "Bag"
+2025-04-01T20:37:04.846Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e69e900af7868edc692") }" on model "Bag"
+2025-04-01T20:37:04.846Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4e69e900af7868edc692") }" on model "Bag"
+2025-04-01T20:38:18.629Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4eb116db7f63565dfa72") }" on model "Bag"
+2025-04-01T20:38:18.629Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4eb116db7f63565dfa72") }" on model "Bag"
+2025-04-01T20:38:18.641Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4eb116db7f63565dfa72") }" on model "Bag"
+2025-04-01T20:38:18.641Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec4eb116db7f63565dfa72") }" on model "Bag"
+2025-04-01T20:44:03.870Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:44:03.870Z error: Error occurred during deleting bag Cannot read properties of null (reading 'orderItems')
+2025-04-01T20:50:27.204Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec518bd1e04f27b4e0cd0f") }" on model "Bag"
+2025-04-01T20:50:27.204Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ec518bd1e04f27b4e0cd0f") }" on model "Bag"

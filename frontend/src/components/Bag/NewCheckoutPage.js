@@ -68,6 +68,8 @@ const CheckoutPage = () => {
 	useEffect(()=>{
 		if(bag){
 			setAllBagData(bag)
+		}else{
+			setAllBagData(null)
 		}
 	},[bag])
 	const UpdateSizeQtn = (id,change,size,color)=>{
@@ -153,6 +155,11 @@ const CheckoutPage = () => {
 				setDiscountAmount(totalDiscount);
 				setTotalMRP(totalMRP);
 				setTotalGST(totalGst);
+			}else{
+				setTotalProductSellingPrice(0);
+				setDiscountAmount(0);
+				setTotalMRP(0);
+				setTotalGST(0);
 			}
 		} else if (sessionBagData) {
 			let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
@@ -372,7 +379,7 @@ const CheckoutPage = () => {
 							<h3 className="text-xl font-semibold mb-4">BAG ITEMS 
 							</h3>
 							<span className='text-gray-600 text-base'>
-								{`[${allBagData?.orderItems?.length}]`}
+								{`[${allBagData?.orderItems?.length || 0}]`}
 							</span> 
 						</div>
 						<ProductListingComponent
@@ -508,12 +515,12 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<strong className='font-semibold'>Total MRP</strong>
-					<span>₹ {formattedSalePrice(totalSellingPrice || bag?.totalMRP)}</span>
+					<span>₹ {formattedSalePrice(totalSellingPrice || bag?.totalMRP) || 0}</span>
 				</div>
 				<div className="flex justify-between text-gray-700">
 					<strong className='font-semibold text-left'>You Saved</strong>
 					<span className='text-right text-xs sm:text-base'>
-						{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>}
+						{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount) || 0}</span>:<span>No Discount! Try Some Coupons</span>}
 					</span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
@@ -549,13 +556,18 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
 					<span>Total</span>
-					<span>₹ {formattedSalePrice(totalProductSellingPrice || bag?.totalProductSellingPrice)}</span>
+					<span>₹ {formattedSalePrice(totalProductSellingPrice || bag?.totalProductSellingPrice) || 0}</span>
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button
 						// disabled ={showPayment || !selectedAddress || bag?.orderItems?.filter(item=>item.isChecked).length <= 0}
 						onClick={()=> {
 							if(user){
+								if(!bag || bag?.orderItems?.length < 0){
+									checkAndCreateToast("error","Please select an Atleast on Item")
+									navigate('/products')
+									return;
+								}
 								const checkItems = bag?.orderItems?.filter(item=>item.isChecked)
 								if(checkItems.length <= 0){
 									checkAndCreateToast("error","Please select an Atleast on Item")
@@ -574,17 +586,22 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 						}}
 						className={`w-full bg-black hover:bg-gray-900 focus:bg-gray-600 disabled:bg-gray-600 text-white py-3 rounded-lg shadow-lg justify-center items-center flex transition-all duration-300 ease-in-out transform ${showPayment || !selectedAddress || bag?.orderItems?.filter(item=>item.isChecked).length <= 0 ? "":"hover:scale-105"} text-sm sm:text-base`}
 					>
-						{
-							selectedAddress ? <Fragment>
-								{showPayment ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>
-										{user ? "Process Order":"Login"}
-									</span>
+
+						{!bag || bag?.orderItems?.length < 0 ? "Continue Shopping":<Fragment>
+								{
+									selectedAddress ? <Fragment>
+										{showPayment ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>
+												{user ? "Process Order":"Login"}
+											</span>
+										}
+									</Fragment>: (
+										<span>
+											{user ? "Process Order":"Log In"}
+										</span>
+									) 
 								}
-							</Fragment>:(
-								<span>
-									{user ? "Process Order":"Log In"}
-								</span>
-							)
+							
+							</Fragment>
 						}
 					</button>
 				</div>

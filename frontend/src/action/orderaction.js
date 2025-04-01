@@ -90,7 +90,6 @@ export const removeCouponFromBag = ({bagId,couponCode}) => async()=>{
 
 export const getbag = () => async (dispatch) => {
     try {
-        const token = localStorage.getItem('token');
         dispatch({ type: REQUEST_GET_BAG })
         const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,headerConfig());
         dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})

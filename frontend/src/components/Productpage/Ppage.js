@@ -393,6 +393,7 @@ const Ppage = () => {
         	setCurrentColor(null);
 		}else{
 			setCurrentColor(isAlreadyPresent);
+			setSelectedImage(isAlreadyPresent);
 		}
 		
     }

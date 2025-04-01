@@ -19,6 +19,7 @@ import {
 	getShipmentOrderByOrderId 
 } from './LogisticsControllers/shiprocketLogisticController.js'
 import { getStatusDescription } from '../utilis/basicUtils.js'
+import User from '../model/usermodel.js'
 export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -646,11 +647,20 @@ export const getOrderById = async (req, res) => {
 					trackingData = shipmentTracking[order.shipment_id].tracking_data;
 				}
 			}
-			order.status = getStatusDescription(trackingData.shipment_status)
-			order.shipment_status = trackingData.shipment_status;
-			order.current_status = getStatusDescription(trackingData.shipment_status);
-			order.etd = trackingData.etd;
-			order.trackingUrl = trackingData.track_url
+			if(trackingData){
+				if(trackingData.shipment_status){
+					order.status = getStatusDescription(trackingData.shipment_status)
+					order.shipment_status = trackingData?.shipment_status;
+					order.current_status = getStatusDescription(trackingData.shipment_status);
+				
+				}
+				if(trackingData.etd){
+					order.etd = trackingData.etd;
+				}
+				if(trackingData.track_url){
+					order.trackingUrl = trackingData.track_url
+				}
+			}
 			await order.save();
 			if(lastStatus !== order.status){
 				try {
@@ -1480,6 +1490,12 @@ export const getbag = async (req, res) => {
 		if(!userId){
 			return res.status(400).json({ success: false, message: "Invalid user ID" });
 		}
+		console.log("User Id: ",req.user.id);
+		const isUserExist = await User.findById(userId);
+		if(!isUserExist){
+			console.log("User not found!");
+			return res.status(400).json({ success: false, message: "User not found" });
+		}
         // Fetch the bag with populated orderItems.productId and Coupon
         const bag = await Bag.findOne({userId}).populate('orderItems.productId Coupon').exec();
         // console.log("Bag found:", bag);
@@ -1509,8 +1525,14 @@ export const getbag = async (req, res) => {
 			}
 		}).filter(id => id !== null); // Filter out any null values
 
-		// console.log("Product IDs:", productIds);
-		const products = await ProductModel.find({ _id: { $in: productIds } });
+		console.log("Product IDs:", productIds);
+		let products = []
+		try {
+			products = await ProductModel.find({ _id: { $in: productIds } });
+			
+		} catch (error) {
+			console.error("Error Gettng All Prdouctst")
+		}
 
         // Create a map for fast lookup of product sizes
         const productMap = products.reduce((acc, product) => {
@@ -1677,8 +1699,9 @@ export const deletebag = async (req, res) => {
     try {
         const {productId,size,color} = req.body
 		const userId = req.user.id;
+		console.log("Deleting Bag!",userId);
         const bag = await Bag.findOne({userId: userId});
-		// console.log("Deleting Bag Data: ", productId,bag)
+		if(!bag) return res.status(400).json({success:false,message: "Bag not found"});
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
 		if(bagItem === -1) {
 			console.log("Invalid Items: ",bag);
@@ -1703,7 +1726,7 @@ export const deletebag = async (req, res) => {
 		await updatedBag.save()
         res.status(200).json({success:true,message:"Successfully deleted Bag",updatedBag})
     } catch (error) {
-        console.error("Error Occurred during deleting bag ", error.message);
+        console.error("Error Occurred during deleting bag ", error);
         logger.error(`Error occurred during deleting bag ${error.message}`);
         res.status(500).json({message: "Internal Server Error"})
     }

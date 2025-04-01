@@ -52,6 +52,8 @@ const SideBarBag = ({OnChangeing}) => {
 	useEffect(()=>{
 		if(bag){
 			setAllBagData(bag)
+		}else{
+			setAllBagData(null)
 		}
 	},[bag])
 	const UpdateSizeQtn = (id,change,size,color)=>{
@@ -198,7 +200,7 @@ const SideBarBag = ({OnChangeing}) => {
         // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId ,size,color}));
-			dispatch(getbag({ userId: user.id }));
+			dispatch(getbag());
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -208,7 +210,7 @@ const SideBarBag = ({OnChangeing}) => {
     const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
             await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getbag());
         }else{
             removeBagSessionStorage(productId,size,color)
         }
@@ -217,8 +219,10 @@ const SideBarBag = ({OnChangeing}) => {
 
     useEffect(() => {
         if (user) {
-			dispatch(getbag({ userId: user.id }));
-			dispatch(getAddress())
+			if(isAuthentication){
+				dispatch(getbag());
+				// dispatch(getAddress())
+			}
             setAddress(user?.user?.addresses[0]);
         }else{
             dispatch(getuser());
@@ -378,17 +382,20 @@ const SideBarBag = ({OnChangeing}) => {
 				{
 					isAuthentication && user ? (
 						<ul className={`w-full flex flex-col flex-grow ${bag && bag?.orderItems && bag?.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(90vh-190px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
-							<ProductListingComponent
-								allSizes = {allSizes}
-								UpdateSizeQtn ={UpdateSizeQtn}
-								bag={allBagData}
-								updateQty={updateQty}
-								handleDeleteBag={handleDeleteBag}
-								updateChecked = {updateChecked}
-								onClickedImage = {()=> OnChangeing()}
-								user={user}
-							
-							/>
+							{
+								allBagData && allBagData.orderItems && allBagData.orderItems.length > 0 && (
+									<ProductListingComponent
+										allSizes = {allSizes}
+										UpdateSizeQtn ={UpdateSizeQtn}
+										bag={allBagData}
+										updateQty={updateQty}
+										handleDeleteBag={handleDeleteBag}
+										updateChecked = {updateChecked}
+										onClickedImage = {()=> OnChangeing()}
+										user={user}
+									/>
+								)
+							}
 						</ul>
 					):(
 						<ul className={`w-full flex flex-col flex-grow ${sessionBagData && sessionBagData.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(80vh-180px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200 px-3`}>
@@ -472,7 +479,7 @@ const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, up
 	const getImageExtensionsFile = (active) => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
 	return (
 		<div className="flex flex-col space-y-4 w-full">
-			{bag?.orderItems?.map((item, i) => {
+			{bag.orderItems.map((item, i) => {
 				const active = item;
 				
 

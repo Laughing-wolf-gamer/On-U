@@ -66,6 +66,8 @@ const Bag = () => {
 	useEffect(()=>{
 		if(bag){
 			setAllBagData(bag)
+		}else{
+			setAllBagData(null)
 		}
 	},[bag])
 	const UpdateSizeQtn = (id,change,size,color)=>{
