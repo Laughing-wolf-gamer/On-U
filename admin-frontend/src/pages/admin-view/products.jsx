@@ -99,17 +99,15 @@ const AddProductOverlay = ({ addProductsFromElement, currentEditingId, formData,
                         <X className="w-6 h-6" />
                     </Button>
                 </div>
-                {
-                !isLoading && updatedProductElements &&
-                    <CommonForm
-                        formControls={updatedProductElements}
-                        buttonText={!currentEditingId ? "Add" : "Edit"}
-                        formData={formData}
-                        setFormData={setFormData}
-                        handleSubmit={onSubmit}
-                        isBtnValid={true}
-                    />
-                }
+                {!isLoading && updatedProductElements &&
+                <CommonForm
+                    formControls={updatedProductElements}
+                    buttonText={!currentEditingId ? "Add" : "Edit"}
+                    formData={formData}
+                    setFormData={setFormData}
+                    handleSubmit={onSubmit}
+                    isBtnValid={true}
+                />}
             </div>
         </div>
     );

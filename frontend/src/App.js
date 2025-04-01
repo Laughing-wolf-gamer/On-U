@@ -32,10 +32,24 @@ import PaymentSuccess from "./components/Bag/PaymentSuccess.js";
 import PaymentFailed from "./components/Bag/PaymentFailed.js";
 import PaymentPending from "./components/Bag/PaymentPending.js";
 
-
+const useWindowSize = () => {
+    const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
+  
+    useEffect(() => {
+        const handleResize = () => {
+            setWindowSize({ width: window.innerWidth, height: window.innerHeight });
+        };
+    
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+  
+    return windowSize;
+};
 
 function App() {
     const dispatch = useDispatch()
+    const{width} = useWindowSize();
     const {loading, user, isAuthentication} = useSelector(state => state.user)
 
     const [state, setstate] = useState(false)
@@ -69,61 +83,94 @@ function App() {
         }
         
     }, [dispatch, isAuthentication]);
-    console.log("Base Server API",BASE_API_URL);
-	/* const [isInstalled, setIsInstalled] = useState(false);
-
-	useEffect(() => {
-		// Check if the app is installed
-		const isPWAInstalled = window.matchMedia('(display-mode: standalone)').matches;
-		setIsInstalled(isPWAInstalled);
-
-		// Optionally listen for changes to display-mode
-		const mediaQuery = window.matchMedia('(display-mode: standalone)');
-		const handleChange = () => setIsInstalled(mediaQuery.matches);
-		mediaQuery.addEventListener('change', handleChange);
-
-		// Cleanup
-		return () => mediaQuery.removeEventListener('change', handleChange);
-	}, []); */
+    console.log("Base Server API: ",BASE_API_URL);
+    const isMobile = width < 1024;
     return (
         <FunctionProvider>
-        <Router>
-            <Navbar user={user}/>
-            <MNavbar user={user}/>
             {/* <Coupon /> */}
-            <Routes>
-				<Route path="/" element={<Home user={user}/>}/>
-				<Route path="/Login" element={<Login/>}/>
-				<Route path="/verifying" element={<Otpverify/>}/>
-				<Route path='/registeruser' element={<Registeruser/>}/>
-				<Route path='/dashboard' element={<Overview user={user} loading = {loading}/>}/>
-				{loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication = {isAuthentication}/>}/>)}
-				{loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
-				<Route path='/products' element={<Allproductpage user = {user}/>}/>
-				<Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
-				<Route path='/bag' element={<Bag user={user}/>}/>
-				<Route path='/bag/checkout' element={<CheckoutPage/>}/>
-				<Route path='/bag/checkout/success' element={<PaymentSuccess/>}/>
-				<Route path='/bag/checkout/failure' element={<PaymentFailed/>}/>
-				<Route path='/bag/checkout/pending' element={<PaymentPending/>}/>
-				<Route path='/address/bag' element={<Address user={user}/>}/>
-				<Route path='/about' element={<About />}/>
-				<Route path='/contact' element={<Contact />}/>
-				<Route path='/faq' element={<FAQ />}/>
-				<Route path='/tc' element={<TermsAndConditions />}/>
-				<Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
-				<Route path="*" element={<NotFoundPage />} /> {/* Catch-all route for 404 */}
-				{user && <Route path="/order/details/:orderId" element = {<OrderDetailsPage user={user}/>}/>}
-				{window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
-				{window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
-            </Routes>
-            
-            
-        </Router>
-        <Toaster 
-            position="top-center"
-            reverseOrder={false}
-        />
+            {/* <Router>
+                <Navbar user={user}/>
+                <MNavbar user={user}/>
+                <Routes>
+                    <Route path="/" element={<Home user={user}/>}/>
+                    <Route path="/Login" element={<Login/>}/>
+                    <Route path="/verifying" element={<Otpverify/>}/>
+                    <Route path='/registeruser' element={<Registeruser/>}/>
+                    <Route path='/dashboard' element={<Overview user={user} loading = {loading}/>}/>
+                    {loading === false && (isAuthentication && <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication = {isAuthentication}/>}/>)}
+                    {loading === false && (isAuthentication === false &&<Route path="/dashboard" element={<Navigate to="/" />} />)} 
+                    <Route path='/products' element={<Allproductpage user = {user}/>}/>
+                    <Route path='/my_wishlist' element={<Wishlist user={isAuthentication}/>}/>
+                    <Route path='/bag' element={<Bag user={user}/>}/>
+                    <Route path='/bag/checkout' element={<CheckoutPage/>}/>
+                    <Route path='/bag/checkout/success' element={<PaymentSuccess/>}/>
+                    <Route path='/bag/checkout/failure' element={<PaymentFailed/>}/>
+                    <Route path='/bag/checkout/pending' element={<PaymentPending/>}/>
+                    <Route path='/address/bag' element={<Address user={user}/>}/>
+                    <Route path='/about' element={<About />}/>
+                    <Route path='/contact' element={<Contact />}/>
+                    <Route path='/faq' element={<FAQ />}/>
+                    <Route path='/tc' element={<TermsAndConditions />}/>
+                    <Route path='/privacyPolicy' element={<PrivacyPolicy />}/>
+                    <Route path="*" element={<NotFoundPage />} />
+                    {user && <Route path="/order/details/:orderId" element = {<OrderDetailsPage user={user}/>}/>}
+                    {window.screen.width > 1024 && <Route path='/products/:id' element={ <Ppage/>}/>}
+                    {window.screen.width < 1024 && <Route path='/products/:id' element={<MPpage/>}/>}
+                </Routes>
+            </Router> */}
+            <Router>
+                <Navbar user={user} />
+                <MNavbar user={user} />
+                <Routes>
+                    {/* Public Routes */}
+                    <Route path="/" element={<Home user={user} />} />
+                    <Route path="/Login" element={<Login />} />
+                    <Route path="/verifying" element={<Otpverify />} />
+                    <Route path='/registeruser' element={<Registeruser />} />
+                    
+                    {/* Authenticated Routes */}
+                    {isAuthentication && !loading && (
+                        <>
+                            <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication={isAuthentication} />} />
+                            <Route path='/my_wishlist' element={<Wishlist user={isAuthentication} />} />
+                            <Route path='/bag' element={<Bag user={user} />} />
+                            <Route path='/order/details/:orderId' element={<OrderDetailsPage user={user} />} />
+                        </>
+                    )}
+                    
+                    {/* Non-Authenticated Routes */}
+                    {isAuthentication === false && !loading && (
+                        <Route path="/dashboard" element={<Navigate to="/" />} />
+                    )}
+
+                    {/* Checkout Routes */}
+                    <Route path='/bag/checkout' element={<CheckoutPage />} />
+                    <Route path='/bag/checkout/success' element={<PaymentSuccess />} />
+                    <Route path='/bag/checkout/failure' element={<PaymentFailed />} />
+                    <Route path='/bag/checkout/pending' element={<PaymentPending />} />
+                    
+                    {/* Address Route */}
+                    <Route path='/address/bag' element={<Address user={user} />} />
+                    
+                    {/* Static Pages */}
+                    <Route path='/about' element={<About />} />
+                    <Route path='/contact' element={<Contact />} />
+                    <Route path='/faq' element={<FAQ />} />
+                    <Route path='/tc' element={<TermsAndConditions />} />
+                    <Route path='/privacyPolicy' element={<PrivacyPolicy />} />
+                    
+                    {/* Product Pages */}
+                    <Route path='/products' element={<Allproductpage user={user} />} />
+                    <Route path='/products/:id' element={isMobile ? <MPpage /> : <Ppage />} />
+
+                    {/* Catch-All Route */}
+                    <Route path="*" element={<NotFoundPage />} />
+                </Routes>
+            </Router>
+            <Toaster 
+                position="top-center"
+                reverseOrder={false}
+            />
         </FunctionProvider>
     );
 }
