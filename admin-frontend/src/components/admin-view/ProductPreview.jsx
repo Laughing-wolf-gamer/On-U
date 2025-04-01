@@ -587,7 +587,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 				sizeId: id,
 				updatedAmount: change,
 			}, Header());
-			console.log(`${type} Quantity Updated:`, response.data);
+			// console.log(`${type} Quantity Updated:`, response.data);
 			checkAndCreateToast("success","Quantity Updated Successfully");
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);

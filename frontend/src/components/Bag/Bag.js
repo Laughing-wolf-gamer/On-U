@@ -210,8 +210,8 @@ const Bag = () => {
         console.log("Item ID: ", itemId);
         console.log("Qty Value: ", e.target.value);
         if(isAuthentication){
-            await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
-            dispatch(getbag());
+            dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
+            // dispatch(getbag());
         }else{
             updateBagQuantity(itemId,size,color, e.target.value)
         }
@@ -244,7 +244,6 @@ const Bag = () => {
 
     const placeOrder = () => {
         if (selectedAddress) {
-            // navigate('/processPayment');
             setShowPayment(true);
         } else {
             checkAndCreateToast("error",'Please select a delivery address');
@@ -253,21 +252,17 @@ const Bag = () => {
     useEffect(() => {
         if (!user) {
             dispatch(getuser());
-        }
-        if (user) {
-
-            if (!isAuthentication) {
-                checkAndCreateToast("info",'Log in to access BAG');
-            } else {
-                dispatch(getbag());
+        }else{
+            if (isAuthentication) {
                 dispatch(getAddress())
+                dispatch(getbag());
             }
             setAddress(user?.user?.addresses[0]);
         }
-        dispatch(getRandomArrayOfProducts());
     }, [dispatch,deleteBagResult, user, isAuthentication]);
-
-    
+    useEffect(()=>{
+        dispatch(getRandomArrayOfProducts())
+    },[])
     const handleConvenienceFeesChange = async () => {
         try {
             const fees = await dispatch(getConvinceFees())
