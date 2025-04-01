@@ -25,6 +25,7 @@ import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io'
 import WhatsAppButton from '../Home/WhatsAppButton'
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
 import { BsTag } from 'react-icons/bs'
+import { LazyLoadImage } from 'react-lazy-load-image-component'
 
 const reviews = [
     {
@@ -1019,8 +1020,16 @@ const NewLeftSideImageContent = ({
                                                 config={{ file: { attributes: { loading: 'lazy' } } }}
                                             />
                                         ) : (
-                                            <img
+                                            <LazyLoadImage
+												effect="blur"
+												loading="lazy"
+												useIntersectionObserver = {true}
                                                 src={file?.url}
+												wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
                                                 className='w-full h-full object-cover hover:scale-110'
                                                 alt="productImage"
 												onContextMenu={(e) => e.preventDefault()}  // Disable right-click

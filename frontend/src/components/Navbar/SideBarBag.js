@@ -10,6 +10,7 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -483,7 +484,7 @@ const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, up
 						<div className="flex flex-row w-full justify-between items-center py-4 space-x-2 sm:space-x-4">
 							<div className="flex flex-row justify-start items-start space-x-2">
 							
-								<div className="w-16 h-16 sm:w-24 sm:h-24 relative bg-black border-2 rounded-lg flex-shrink-0">
+								<div className="w-16 h-34 sm:w-24 sm:h-24 relative bg-gray-300 bg-opacity-40 border-2 rounded-lg flex-shrink-0">
 									<div onClick={()=> {
 										navigate(`/products/${productEncryption}`)
 										if(onClickedImage){
@@ -492,7 +493,15 @@ const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, up
 									}} className="relative cursor-pointer">
 										{validImage ? (
 											<div className="relative">
-												<img
+												<LazyLoadImage
+													effect='blur'
+													useIntersectionObserver
+														wrapperProps={{
+														// If you need to, you can tweak the effect transition using the wrapper style.
+														style: {transitionDelay: "1s"},
+													}}
+													placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+													loading='lazy'
 													src={validImage?.url}
 													alt={active?.productId?.title}
 													className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"
@@ -646,7 +655,15 @@ const OfflineBagContent = ({ sessionBagData,onClickedImage,updateChecked, update
 										onClickedImage();
 									}} className="block w-full h-full cursor-pointer">
 										<div className="relative w-full h-full">
-											<img
+											<LazyLoadImage
+												effect='blur'
+                                                useIntersectionObserver
+													wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+												loading='lazy'
 												src={validImage?.url}
 												alt={active?.ProductData?.shortTitle}
 												className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"

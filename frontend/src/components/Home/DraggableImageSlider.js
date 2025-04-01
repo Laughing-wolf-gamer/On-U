@@ -140,10 +140,16 @@ const DraggableImageSlider = ({ images, headers, showArrows = true ,bannerLoadin
                                     >
                                         <li>
                                             <LazyLoadImage
-                                                effect="blur"
+												effect='blur'
+                                                useIntersectionObserver
+													wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+												loading='lazy'
                                                 src={image}
                                                 alt="banners"
-                                                loading="lazy"
                                                 width="100%"
                                                 height="100%"
                                                 onDragStart={handleDragStart} // Prevent image drag

@@ -78,9 +78,16 @@ const About = () => {
                             {aboutData && aboutData.teamMembers.length > 0 && aboutData.teamMembers.map((member, index) => (
                                 <div key={`team-${index}`} className="relative text-center flex flex-col bg-slate-300 p-10 rounded-xl shadow-lg overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-2xl group">
                                     <LazyLoadImage
+										effect='blur'
+										useIntersectionObserver
+											wrapperProps={{
+											// If you need to, you can tweak the effect transition using the wrapper style.
+											style: {transitionDelay: "1s"},
+										}}
+										placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+										loading='lazy'
                                         src={member.image}
                                         alt={`Team_Member_${index+1}`}
-										loading='lazy'
                                         className="w-64 h-64 mx-auto object-cover transition-all duration-500 ease-in-out group-hover:scale-125"
                                     />
                                     <div className="absolute inset-0 top-1/2 h-14 bg-slate-300 bg-opacity-50 opacity-0 group-hover:opacity-100 flex justify-center items-center transition-opacity duration-300 z-20">
@@ -117,7 +124,15 @@ const FounderSection = ({ founderData }) => {
 			<div className="grid grid-cols-1 md:grid-cols-2 gap-8">
 				{/* Founder Image */}
 				<div className="flex max-h-[600px] h-[400px] overflow-hidden justify-center items-center">
-					<img
+					<LazyLoadImage
+						effect='blur'
+						useIntersectionObserver
+							wrapperProps={{
+							// If you need to, you can tweak the effect transition using the wrapper style.
+							style: {transitionDelay: "1s"},
+						}}
+						placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+						loading='lazy'
 						src={founderData?.image}
 						alt="Founder"
 						className="w-full h-full object-contain transition-transform duration-300 ease-in-out hover:scale-110"

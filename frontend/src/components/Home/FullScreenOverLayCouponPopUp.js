@@ -4,6 +4,7 @@ import { fetchCouponBannerData, sendGetCoupon } from '../../action/common.action
 import { useDispatch } from 'react-redux';
 import popUp from '../images/popUp-image.jpg';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const FullScreenOverLayCouponPopUp = () => {
     const dispatch = useDispatch();
@@ -154,7 +155,15 @@ const FullScreenOverLayCouponPopUp = () => {
 
                         {/* Right Column - Image */}
                         <div className="hidden md:block relative">
-                            <img
+                            <LazyLoadImage
+								effect='blur'
+								useIntersectionObserver
+									wrapperProps={{
+									// If you need to, you can tweak the effect transition using the wrapper style.
+									style: {transitionDelay: "1s"},
+								}}
+								placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+								loading='lazy'
                                 src={bannerData?.bannerModelUrl || popUp}
                                 alt="coupon-image"
                                 className="h-full w-full object-cover"

@@ -12,6 +12,7 @@ import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import CouponsDisplay from './CouponDisplay';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const BagContent = ({ 
 	bag, 
 	bagLoading, 
@@ -199,7 +200,15 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked,allSizes,UpdateS
 								<Link to={`/products/${productEncryption}`}>
 									{validImage ? (
 										<div className="relative w-full h-full">
-											<img
+											<LazyLoadImage
+												effect='blur'
+												useIntersectionObserver
+													wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+												loading='lazy'
 												src={validImage}
 												alt={active?.productId?.title}
 												className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"

@@ -8,8 +8,15 @@ const HorizontalScrollingCouponDisplay = ({ user, bag,totalProductSellingPrice }
 	const { loading,AllCoupons } = useSelector((state) => state.AllCoupons);
 	const { checkAndCreateToast } = useSettingsContext();
 	const dispatch = useDispatch();
-	const sliderRef = useRef(null);
   
+	useEffect(() => {
+	  // Fetch all coupons
+	  const queryLink = ``;
+	  dispatch(fetchAllCoupons(queryLink));
+	}, [dispatch]);
+
+	const sliderRef = useRef(null);
+
 	const [dragState, setDragState] = useState({
 		isDragging: false,
 		startX: 0,
@@ -17,11 +24,6 @@ const HorizontalScrollingCouponDisplay = ({ user, bag,totalProductSellingPrice }
 		scrollLeft: 0,
 	});
   
-	useEffect(() => {
-	  // Fetch all coupons
-	  const queryLink = ``;
-	  dispatch(fetchAllCoupons(queryLink));
-	}, [dispatch]);
   
 	// Mouse Down, Mouse Move, Mouse Up Handlers
 	const handleMouseDown = (e) => {
@@ -104,6 +106,7 @@ const HorizontalScrollingCouponDisplay = ({ user, bag,totalProductSellingPrice }
 						onTouchStart={handleTouchStart}
 						onTouchMove={handleTouchMove}
 						onTouchEnd={handleTouchEnd}
+						style={{ cursor: dragState.isDragging ? 'grabbing' : 'grab',userSelect: 'none'  }}
 					>
 						{loading ? (
 							Array(10)
@@ -168,7 +171,7 @@ const CouponCard = ({ coupon, checkAndCreateToast,bag,user,totalProductSellingPr
 		checkAndCreateToast("success", "Coupon Code copied to clipboard!");
 	}
 	return (
-		<div className="flex-shrink-0 w-64 font-kumbsan h-full justify-center flex flex-col bg-white p-1 transform transition-all duration-500 hover:shadow-md border-dashed border-[2px] border-gray-900 border-opacity-60 hover:bg-gray-100 hover:border-gray-500">
+		<div className="flex-shrink-0 w-72 font-kumbsan h-full justify-center flex flex-col bg-white p-1 transform transition-all duration-500 hover:shadow-md border-dashed border-[2px] border-gray-900 border-opacity-60 hover:bg-gray-100 hover:border-gray-500">
 			<div className="flex items-center justify-between mb-4">
 				<h3 className="text-xs sm:text-sm font-bold text-gray-900">
 				{coupon?.FreeShipping ? (

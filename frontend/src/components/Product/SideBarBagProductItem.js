@@ -3,9 +3,10 @@ import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, getImagesArrayFromProducts } from '../../config';
 import { useNavigate } from 'react-router-dom';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
     const { updateRecentlyViewProducts } = useSessionStorage();
     const navigation = useNavigate();
     const imageArray = useMemo(() => getImagesArrayFromProducts(pro), [pro]);
@@ -38,9 +39,6 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) =
 		const productEncryption = encrypt(pro._id);
         navigation(`/products/${productEncryption}`);
         updateRecentlyViewProducts(pro);
-		if(refreshTwice){
-            // window.location.reload();
-        }
 		if(OnPress){
 			OnPress();
 		}
@@ -94,7 +92,6 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) =
 					{productSubCategory}
 				</p>
 				{renderPrice()}
-				{/* {renderSizeOptions()} */}
 			</div>
 
         </div>
@@ -121,15 +118,25 @@ const MediaDisplay = ({ imageArray }) => {
 
     // Determine the file type and render accordingly
     return (
-		<img
-			src={mediaUrl}
-			alt="imageArray"
-			className="w-full h-full object-cover rounded-md hover:scale-105 transition-all duration-500 ease-in-out"
-			style={{ maxWidth: '100%', maxHeight: '100%' }}
-		/>
+		<div className='h-full rounded-md hover:scale-105 transition-all duration-300 ease-in-out'>
+			<LazyLoadImage
+				effect='blur'
+				useIntersectionObserver
+					wrapperProps={{
+					// If you need to, you can tweak the effect transition using the wrapper style.
+					style: {transitionDelay: "1s"},
+				}}
+				placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+				loading='lazy'
+				src={mediaUrl}
+				alt="imageArray"
+				className="w-full h-full object-cover"
+				style={{ maxWidth: '100%', maxHeight: '100%' }}
+			/>
+		</div>
     );
 };
-const ImageSlideshow = ({ imageArray }) => {
+/* const ImageSlideshow = ({ imageArray }) => {
 	const [currentIndex, setCurrentIndex] = useState(0);
 	const [isBlurred, setIsBlurred] = useState(true); // Track the blur state
 
@@ -178,5 +185,5 @@ const ImageSlideshow = ({ imageArray }) => {
 
 
 	);
-};
+}; */
 export default SideBarBagProductItem;

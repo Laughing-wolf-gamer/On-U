@@ -17,6 +17,8 @@ import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import BackToTopButton from '../Home/BackToTopButton';
 import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import RandomProductsDisplay from '../Login/Dashboard/RandomProductsDisplay';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
@@ -373,17 +375,6 @@ const CheckoutPage = () => {
 								{`[${allBagData?.orderItems?.length}]`}
 							</span> 
 						</div>
-						{/* <span className='text-center flex justify-start items-center space-x-2'>
-							<span>
-								Cart
-							</span>
-							<span className='text-gray-600 text-base'>
-								{`[${bag.orderItems.length}]`}
-							</span>
-							<span>
-								items
-							</span>
-						</span> */}
 						<ProductListingComponent
 							allSizes = {allSizes}
 							UpdateSizeQtn = {UpdateSizeQtn}
@@ -413,6 +404,7 @@ const CheckoutPage = () => {
 						/>
 					</div>
 				</div>
+				<RandomProductsDisplay label = {'Some More You May Like'}/> 
 			</div>
 			{user && showPayment && selectedAddress && bag && (
 				<PaymentProcessingPage
@@ -502,7 +494,7 @@ const AddressAndPaymentComponent = ({
 const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon,selectedAddress,showPayment,setShowPayment }) => {
 	const navigate = useNavigate();
 	return (
-		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
+		<div className="w-full font-kumbsan h-fit bg-gray-50 px-2 shadow-sm">
 			<h3 className="font-semibold text-base sm:text-xl md:text-2xl text-gray-800 mb-6">
 				<div className='justify-start items-start flex space-x-1'>
 					<h3 className="text-xl font-semibold mb-4">
@@ -630,7 +622,15 @@ const ProductListingComponent = ({ bag,UpdateSizeQtn,allSizes,updateChecked, han
 								<Link to={`/products/${productEncryption}`}>
 									{validImage ? (
 										<div className="relative w-full h-full">
-										<img
+										<LazyLoadImage
+											effect='blur'
+											useIntersectionObserver
+												wrapperProps={{
+												// If you need to, you can tweak the effect transition using the wrapper style.
+												style: {transitionDelay: "1s"},
+											}}
+											placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+											loading='lazy'
 											src={validImage?.url}
 											alt={active?.productId?.title}
 											className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"

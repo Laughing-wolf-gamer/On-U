@@ -6,6 +6,7 @@ import { FaMars, FaVenus } from "react-icons/fa";
 import { BASE_API_URL, headerConfig } from "../../../config";
 import axios from "axios";
 import { useSettingsContext } from "../../../Contaxt/SettingsContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const EditableField = ({
   label,
@@ -148,7 +149,15 @@ const UserDetails = ({ user }) => {
 						isLoadingImage ? <div className="w-32 h-32 justify-center flex items-center bg-opacity-40 rounded-full bg-gray-300 border border-gray-300">
 							<div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-black rounded-full animate-spin"></div>
 						</div>:(
-							<img
+							<LazyLoadImage
+								effect='blur'
+								useIntersectionObserver
+									wrapperProps={{
+									// If you need to, you can tweak the effect transition using the wrapper style.
+									style: {transitionDelay: "1s"},
+								}}
+								placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+								loading='lazy'
 								src={profilePic || editedUser?.profilePic} // Fallback to default image if no profile picture
 								alt="Profile"
 								className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"

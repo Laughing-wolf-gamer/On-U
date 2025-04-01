@@ -9,6 +9,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { applyCouponToBag, removeCouponFromBag } from '../../action/orderaction';
 import { useDispatch } from 'react-redux';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const OfflineBagContent = ({ 
 	bag,
@@ -138,7 +139,15 @@ const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteB
 									<div className="w-20 sm:w-36 h-28 sm:h-36 relative bg-black border-2 rounded-lg flex-shrink-0">
 										<Link to={`/products/${productEncryption}`} className="block bg-black w-full h-full">
 											<div className="relative w-full h-full">
-												<img
+												<LazyLoadImage
+													effect='blur'
+													useIntersectionObserver
+														wrapperProps={{
+														// If you need to, you can tweak the effect transition using the wrapper style.
+														style: {transitionDelay: "1s"},
+													}}
+													placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+													loading='lazy'
 													src={validImage}
 													alt={active?.ProductData?.shortTitle}
 													className="object-cover w-full h-full bg-gray-50 transition-all duration-500 ease-in-out hover:scale-105"

@@ -7,6 +7,7 @@ import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionConte
 import { ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import { ChevronRight } from 'lucide-react';
 import DeliveryStatusAllOrders from './DeliveryStatusAllOrders';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const OrderCard = ({ order, onViewDetails }) => {
 	return (
@@ -17,10 +18,18 @@ const OrderCard = ({ order, onViewDetails }) => {
 			className="w-full justify-between items-center flex py-4 px-2 bg-white rounded-md border-b-[1px] border-gray-300 space-y-2 cursor-pointer transition duration-300">
 				{/* Order Details */}
 				<div className="flex flex-row flex-1 justify-start items-center space-x-2">
-					<img
+					<LazyLoadImage
+						effect='blur'
+						useIntersectionObserver
+							wrapperProps={{
+							// If you need to, you can tweak the effect transition using the wrapper style.
+							style: {transitionDelay: "0.5s"},
+						}}
+						placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+						loading='lazy'
 						src={order?.orderItems[0]?.color?.images[0]?.url}
 						alt="order preview image"
-						className="w-20 h-min sm:w-40 sm:h-40 object-cover rounded-md"
+						className="w-20 h-min sm:w-40 sm:h-40 object-cover rounded-md hover:scale-105 transition-all duration-500 ease-in-out"
 					/>
 					<div className="space-y-2 w-full sm:space-y-3">
 						<div className="text-gray-700 text-sm sm:text-base">

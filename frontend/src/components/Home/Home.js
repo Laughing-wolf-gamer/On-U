@@ -271,7 +271,15 @@ const Home = ({user}) => {
 											<div className='grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-4'>
 												{Wide_Screen_Section_8.urls.map((j, index) => (
 														<Link key={`j_banners_${index}`} to='/products' className='m-1'>
-															<LazyLoadImage effect='blur' src={j} alt={`${Wide_Screen_Section_8.header}_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md"/>
+															<LazyLoadImage 
+																useIntersectionObserver
+																	wrapperProps={{
+																	// If you need to, you can tweak the effect transition using the wrapper style.
+																	style: {transitionDelay: "1s"},
+																}}
+																placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+																loading='lazy'
+																effect='blur' src={j} alt={`${Wide_Screen_Section_8.header}_${index}`} className="min-h-[200px] w-full rounded-lg shadow-md"/>
 														</Link>
 													))
 												}
@@ -380,7 +388,14 @@ const Home = ({user}) => {
                                     {!bannerLoading && Small_Screen_Section_4 && Small_Screen_Section_4.urls.length > 0 ? Small_Screen_Section_4.urls.map((c, index) => (
                                         <Link key={index} to='/products' className='m-2'>
                                             <li className=''>
-                                                <LazyLoadImage effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
+                                                <LazyLoadImage
+												useIntersectionObserver
+												wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	 
+												effect='blur' loading='lazy' src={c} alt={`${Small_Screen_Section_4.header}_${index}`} className="min-h-[80px] min-w-[120px]" />
                                             </li>
                                         </Link>
                                     )):(
@@ -413,7 +428,18 @@ const Home = ({user}) => {
                                     Small_Screen_Section_5.urls.map((mc, index) => (
                                         <Link key={`mc_banners_${index}`} to='/products'>
                                             <div>
-                                                <LazyLoadImage effect='blur' loading='lazy' src={mc} width='100%' alt='Banner_Image' className='min-h-[200px]' />
+                                                <LazyLoadImage 
+													effect='blur' 
+													loading='lazy' src={mc} 
+													width='100%' 
+													alt='Banner_Image' 
+													className='min-h-[200px]' 
+													wrapperProps={{
+														// If you need to, you can tweak the effect transition using the wrapper style.
+														style: {transitionDelay: "1s"},
+													}}
+													placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
+												/>
                                                 <div className='h-[30px]'></div>
                                             </div>
                                         </Link>
@@ -510,6 +536,11 @@ const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) 
 											<LazyLoadImage
 												effect="blur"
 												loading='lazy'
+												wrapperProps={{
+													// If you need to, you can tweak the effect transition using the wrapper style.
+													style: {transitionDelay: "1s"},
+												}}
+												placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
 												src={image.url || image}
 												alt={`image_icons_${index}`}
 												className="category-image w-full justify-self-center h-full object-cover"
@@ -627,7 +658,19 @@ const OurMotoData = () => {
                     {
                         WebsiteDisclaimer && WebsiteDisclaimer.length > 0 ? WebsiteDisclaimer.map((website, index) => (
                             <div key={`${index}-${website._id}`} className="relative group justify-between md:justify-center sm:justify-center flex flex-col items-center min-w-[140px] p-4 sm:p-6 bg-white rounded-lg shadow-lg transition-transform transform hover:scale-105">
-                                <img src={website?.iconImage} alt={`Disclaimer_Icon_${index}`} className="w-12 h-12 sm:w-16 sm:h-16 transition-transform duration-150 group-hover:scale-110 mb-4"/>
+                                <LazyLoadImage
+									effect="blur"
+									loading="lazy"
+									useIntersectionObserver = {true}
+									src={website?.iconImage} 
+									alt={`Disclaimer_Icon_${index}`} 
+									className="w-12 h-12 sm:w-16 sm:h-16 transition-transform duration-150 group-hover:scale-110 mb-4"
+									wrapperProps={{
+										// If you need to, you can tweak the effect transition using the wrapper style.
+										style: {transitionDelay: "1s"},
+									}}
+									placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
+								/>
                                 <div>
                                     <h3 className="font-semibold text-center text-base sm:text-sm text-gray-800">{website?.header}</h3>
                                     <p className="font-light text-xs sm:text-sm text-gray-600 text-center">{website?.body}</p>

@@ -30,12 +30,12 @@ const AdminCouponFormPage = () => {
     const [validDate, setValidDate] = useState('');
     const [status, setStatus] = useState('Active');
     const [modalCoupon, setModalCoupon] = useState(null);
-    const [statusFilter, setStatusFilter] = useState('');  // To filter orders by status
     
     // State to control the modal visibility
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     // Sorting state
+    const [statusFilter, setStatusFilter] = useState('none');  // To filter orders by status
     const [sortOption, setSortOption] = useState('latest');
     const [sortedCoupons, setSortedCoupons] = useState(Coupons);
 
@@ -144,7 +144,7 @@ const AdminCouponFormPage = () => {
     // Check if there are no orders available
     const isNoCoupons = !Coupons || Coupons.length === 0;
     const filteredOrderList = sortedCoupons && sortedCoupons.length > 0 && sortedCoupons.filter(coupon => {
-        if (statusFilter === '') return true; // No filter selected, show all orders
+        if (statusFilter === 'none') return true; // No filter selected, show all orders
         return coupon?.Status === statusFilter;
     });
 	useEffect(()=>{

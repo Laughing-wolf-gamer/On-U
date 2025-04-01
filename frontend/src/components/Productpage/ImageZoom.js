@@ -1,4 +1,5 @@
 import React, { useState, useCallback } from 'react';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     const [zoomStyle, setZoomStyle] = useState({});
     const [showZoom, setShowZoom] = useState(false);
@@ -35,9 +36,17 @@ const ImageZoom = ({ imageSrc, zoomSize = 120 }) => {
     
     return (
         <div className="relative h-full w-full bg-gray-200 overflow-hidden">
-            <img
+            <LazyLoadImage
                 src={imageSrc}
                 alt="Zoomable"
+				loading="lazy"
+				effect="opacity"
+				useIntersectionObserver = {true}
+				wrapperProps={{
+					// If you need to, you can tweak the effect transition using the wrapper style.
+					style: {transitionDelay: "1s"},
+				}}
+				placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
                 className="w-full h-full object-cover"
                 onMouseEnter={handleMouseEnter}
                 onMouseMove={handleMouseMove}

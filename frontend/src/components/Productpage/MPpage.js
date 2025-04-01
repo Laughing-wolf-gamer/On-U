@@ -11,7 +11,6 @@ import Single_product from '../Product/Single_product';
 import { createbag, createwishlist, getbag, getwishlist} from '../../action/orderaction';
 import Footer from '../Footer/Footer';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
 import PincodeChecker from './PincodeChecker';
 import ReactPlayer from 'react-player';
 import { Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Tags } from 'lucide-react';
@@ -24,7 +23,7 @@ import BackToTopButton from '../Home/BackToTopButton';
 import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
-import ImageZoom from './ImageZoom';
+import { LazyLoadImage } from "react-lazy-load-image-component";
 const reviews = [
     {
         rating: 5,
@@ -576,7 +575,7 @@ const MPpage = () => {
 										// Render image using LazyLoadImage
 										<div className="relative">
 											<LazyLoadImage
-												effect="blur"
+												effect="opacity"
 												src={im.url}
 												alt={`product_${i}`}
 												wrapperProps={{

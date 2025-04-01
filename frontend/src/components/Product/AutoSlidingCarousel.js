@@ -6,6 +6,7 @@ import { createwishlist, getwishlist } from "../../action/orderaction";
 import { useDispatch } from "react-redux";
 import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
+import { LazyLoadImage } from "react-lazy-load-image-component";
 
 const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
     const { sessionData,sessionBagData, setWishListProductInfo } = useSessionStorage();
@@ -128,7 +129,6 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
     };
     useEffect(() => {
         updateButtonStates();
-        // console.log("Wishlist Updated Successfully",sessionData);
     }, [sessionData,sessionBagData]);
 
     return (
@@ -181,13 +181,20 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
                                     className="media-item"
                                     style={{ position: "relative", width: "100%", height: "100%" }}
                                 >
-                                    <img
-                                        loading="lazy"
+                                    <LazyLoadImage
+										effect="blur"
+										loading="lazy"
+										useIntersectionObserver = {true}
                                         src={mediaItem.url}
                                         className="w-full h-full object-contain"
                                         width="100%"
                                         alt="product"
-                                        onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
+										wrapperProps={{
+											// If you need to, you can tweak the effect transition using the wrapper style.
+											style: {transitionDelay: "1s"},
+										}}
+										placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
+                                        // onLoad={() => setVideoInView((prev) => [...prev, true])} // Ensure it stops showing skeleton when image is loaded
 										onContextMenu={(e) => e.preventDefault()}  // Disable right-click
                                     />
                                 </div>

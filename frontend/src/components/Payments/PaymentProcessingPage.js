@@ -337,18 +337,20 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 
                 {/* Total Amount Calculation */}
                 <div className="mt-6 space-y-4">
-                    <p className="flex justify-between text-sm">
-                        <span className="font-semibold">Original Price:</span>
+                    <div className="flex justify-between text-sm">
+                        <strong className="font-semibold">Original Price:</strong>
                         <span>₹{formattedSalePrice(originalsAmount)}</span>
-                    </p>
-                    <p className="flex justify-between text-sm">
-                        <span className="font-semibold">Saved:</span>
-                        <span>{formattedSalePrice(bag?.totalDiscount)}</span>
-                    </p>
-                    <p className="flex justify-between text-lg font-semibold text-gray-800">
-                        <span>Total Amount:</span>
+                    </div>
+
+					<div className="flex justify-between text-sm">
+						<strong className="font-semibold">Saved:</strong>
+						<span>{bag?.totalDiscount <= 0 ? '-' : formattedSalePrice(bag?.totalDiscount)}</span>
+					</div>
+                    
+                    <div className="flex justify-between text-lg font-semibold text-gray-800">
+                        <strong>Total Amount:</strong>
                         <span>₹{formattedSalePrice(totalAmount)}</span>
-                    </p>
+                    </div>
                 </div>
 				<SwipeToConfirmPaymentButton disabled = {isPaymentStart || !paymentMethod || paymentMethod ===  ''} HasStarted={isPaymentStart} OnSwipeComplete={()=> confirmPayment()}/>
             </div>

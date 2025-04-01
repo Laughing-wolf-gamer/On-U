@@ -43,7 +43,8 @@ const WhatsAppButton = ({ scrollableDivRef }) => {
 	},[])
 	
 	const handleClick = () => {
-		const url = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`;
+		const checkedPhoneNumber = phoneNumber.replace(/[^0-9]/g, '')
+		const url = `https://wa.me/${checkedPhoneNumber}?text=${encodeURIComponent(message)}`;
 		window.open(url, '_blank');
 	};
 
