@@ -344,7 +344,7 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<strong>Total MRP</strong>
-					<span>₹{formattedSalePrice(totalSellingPrice)}</span>
+					<span>₹{formattedSalePrice(totalSellingPrice) || 0}</span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<strong>You Saved</strong>
@@ -384,7 +384,7 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
 					<strong>Total</strong>
-					<span>₹ {formattedSalePrice(totalProductSellingPrice)}</span>
+					<span>₹ {formattedSalePrice(totalProductSellingPrice) || 0}</span>
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button

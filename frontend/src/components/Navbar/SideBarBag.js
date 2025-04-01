@@ -138,7 +138,12 @@ const SideBarBag = ({OnChangeing}) => {
                 setDiscountAmount(totalDiscount);
                 setTotalMRP(totalMRP);
 				setTotalGST(totalGst);
-            }
+            }else{
+				setTotalProductSellingPrice(0);
+                setDiscountAmount(0);
+                setTotalMRP(0);
+				setTotalGST(0);
+			}
         } else if (sessionBagData) {
             let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
             let totalMRP = 0,totalGst = 0;
@@ -428,7 +433,7 @@ const SideBarBag = ({OnChangeing}) => {
 							{/* Subtotal */}
 							<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
 								<strong>SubTotal</strong>
-								<span>₹ {formattedSalePrice(totalProductSellingPrice)}</span>
+								<span>₹ {formattedSalePrice(totalProductSellingPrice) || 0}</span>
 							</div>
 							<br />
 							{/* Button Section */}
