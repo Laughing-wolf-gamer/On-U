@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOrders } from '../../../action/orderaction';
 import { useNavigate } from 'react-router-dom';
@@ -32,14 +32,10 @@ const OrderCard = ({ order, onViewDetails }) => {
 								{order?.status}
 							</span>
 						</div>
-						{
-							order?.etd && 
-							<div className="space-x-2 flex items-center justify-start">
-								<strong className="text-xs md:text-base text-gray-700">ETD : </strong>
-								<span className='whitespace-nowrap text-xs md:text-sm'>{new Date(order?.etd).toDateString()}</span>
-							</div>
-						}
-						
+						<div className="space-x-2 flex items-center justify-start">
+							<strong className="text-xs md:text-base text-gray-700">ETD : </strong>
+							<span className='whitespace-nowrap text-xs md:text-sm'>{order?.etd ? new Date(order?.etd).toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' }) : 'Will Update Soon'}</span>
+						</div>						
 						<DeliveryStatusAllOrders status={order?.status} hiddenText = {window.screen.width < 1024} />
 					</div>
 				</div>
@@ -205,7 +201,7 @@ const OrdersReturns = () => {
             ) : (
                 <div className='w-full space-y-2'>
                     {ordersToDisplay && ordersToDisplay.length > 0 ? (
-                        <Fragment>
+                        <>
                             {ordersToDisplay.map((order, index) => (
                                 <OrderCard
                                     key={index}
@@ -213,7 +209,7 @@ const OrdersReturns = () => {
                                     onViewDetails={handleViewDetails}
                                 />
                             ))}
-                        </Fragment>
+                        </>
                     ) : (
                         <p className="text-gray-500">No orders yet.</p>
                     )}

@@ -688,8 +688,6 @@ export const createwishlist = async (req, res) => {
         if(previousWishList){
             const isAlreadyPresent = previousWishList.orderItems.find(item => item.productId.toString() === productId);
             if (isAlreadyPresent) {
-                // console.log("Product already present",isAlreadyPresent);
-                // return res.status(409).json({ success: false, message: "Product already in wishlist" });
                 const index = previousWishList.orderItems.findIndex(item => item.productId.toString() === productId)
                 previousWishList.orderItems.splice(index, 1);
                 await previousWishList.save();
@@ -762,7 +760,6 @@ export const applyCouponToBag = async(req,res)=>{
             return res.status(400).json({message: "Coupon cannot be applied to this bag"})
         }
         bag.Coupon = coupon._id;
-        // coupon.Status = "Inactive";
 		await Promise.all([
 			coupon.save(),
 			bag.save(),
@@ -775,7 +772,7 @@ export const applyCouponToBag = async(req,res)=>{
 		updatedBag.totalDiscount = totalDiscount;
 		updatedBag.totalMRP = totalMRP;
 		await updatedBag.save();
-		console.log("Updated Coupon After Coupon Applied: ",updatedBag)
+		// console.log("Updated Coupon After Coupon Applied: ",updatedBag)
 		// updatedBag.totalGst = totalGst;
 		
         res.status(200).json({success:true,message: "Coupon Applied Successfully",result:{totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst}})
@@ -1290,7 +1287,6 @@ export const addItemsToBag = async (req, res) => {
     return { totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst };
 }; */
 const getItemsData = async (bag) => {
-    // console.log("getItemsData Bag Items: ", bag.orderItems);
     
     let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
     let totalMRP = 0, totalGst = 0;  // If GST is needed, implement it
@@ -1653,7 +1649,7 @@ export const updateqtybag = async (req, res, next) => {
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
-        console.log("Update Bag Qunatity  Data ",bag.TotalBagAmount);
+        console.log("Update Bag Quantity  Data ",bag.TotalBagAmount);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
         if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
         if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;

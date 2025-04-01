@@ -21,7 +21,9 @@ const BagContent = ({
 	convenienceFees, 
 	user, 
 	showPayment, 
-	selectedAddress, 
+	selectedAddress,
+	allSizes,
+	UpdateSizeQtn,
 	handleProceedToPayment, 
 	handleOpenPopup, 
 	handleClosePopup, 
@@ -81,18 +83,25 @@ const BagContent = ({
 		
 					{/* Main Content Section */}
 					<div className="flex flex-col lg:flex-row gap-12 mt-12">
+						{
+							bag && bag.orderItems && bag.orderItems.length > 0 && allSizes && (
+								<ProductListingComponent
+									allSizes = {allSizes}
+									bag={bag} 
+									updateQty={updateQty}
+									UpdateSizeQtn = {UpdateSizeQtn}
+									updateChecked = {updateChecked}
+									handleDeleteBag={handleDeleteBag} 
+									applyCoupon={applyCoupon}
+									user={user}
+									setCoupon={setCoupon}
+									coupon={coupon}
+									applyingCoupon = {applyingCoupon}
+									totalProductSellingPrice = {totalProductSellingPrice}
+								/>
+							)
+						}
 						
-						<ProductListingComponent 
-							bag={bag} 
-							updateQty={updateQty}
-							updateChecked = {updateChecked}
-							handleDeleteBag={handleDeleteBag} 
-							applyCoupon={applyCoupon}
-							user={user}
-							setCoupon={setCoupon}
-							coupon={coupon}
-							applyingCoupon = {applyingCoupon}
-						/>
 			
 						{/* Price Details */}
 						<PriceDetailsComponent 
@@ -153,44 +162,36 @@ const NavigationComponent = ({ showPayment, selectedAddress }) => (
 		</div>
 	</div>
 );
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,applyingCoupon }) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+const ProductListingComponent = ({ bag, updateQty,updateChecked,allSizes,UpdateSizeQtn, handleDeleteBag, user, setCoupon, applyCoupon, coupon,applyingCoupon,totalProductSellingPrice }) => {
+	const {encrypt} = useEncryptionDecryptionContext();
 	const isVideo = (url) => {
 		const videoExtensions = ['.mp4', '.mov', '.avi', '.mkv', '.webm', '.flv','video'];
 		return videoExtensions.some(ext => url.toLowerCase().endsWith(ext));
 	}
-	const[allSizes,setAllSizes] = useState(
-		bag?.orderItems.reduce((acc,item)=>{
-			acc[item?.productId?._id] = item.quantity;
+	/* const[allSizes,setAllSizes] = useState(
+		bag.orderItems.reduce((acc,item)=>{
+			acc[item.productId._id] = item.quantity || 0;
 			return acc;
-		})
+		},{})
 	)
 	const UpdateSizeQtn = (id,change,size,color)=>{
 		setAllSizes(prev => {
 			const newQty = prev[id] + change;
-			updateQty({ target: { value: newQty } }, id,size,color))
+			updateQty({ target: { value: newQty } }, id,size,color)
 			return {
 				...prev,
 				[id]:newQty
 			}
 		})
-	}
+	} */
 	return(
-		<div className="flex-1 space-y-6 max-h-[700px]">
-			<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[400px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
+		<div className="flex-1 space-y-6">
+			<div className="flex-1 font-kumbsan space-y-6 border-r-[1px] max-h-[500px] overflow-y-auto border-r-gray-800 border-opacity-20 pr-5 scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
 				{bag?.orderItems && bag?.orderItems.length > 0 && bag?.orderItems?.map((item, i) => {
-					const active = item;
-					// const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-					// const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
-
-					// const getImageExtensionsFile = () => active?.color?.images.find((image) => image.url && isValidImage(image.url));
-
-					// const validImage = getImageExtensionsFile();
-					
+					const active = item;					
 					const imagesOnly = active?.color?.images.filter((image) => 	image.url && !isVideo(image.url));
 					const validImage = imagesOnly[0]?.url;
 					const productEncryption = encrypt(active.productId?._id);
-					const decrypted = decrypt(productEncryption);
 					return (
 						<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
 							{/* Product Image */}
@@ -257,23 +258,23 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 									{/* Decrease Button */}
 									<button
 										// onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
-										onClick = {()=> UpdateSizeQtn(active.productId._id,+1,active.size,active.color)}
+										onClick = {()=> UpdateSizeQtn(active.productId._id,-1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={active?.quantity <= 1}
+										disabled={allSizes[active.productId._id] <= 1}
 									>
 										<Minus />
 									</button>
 
 									{/* Display Current Quantity */}
 									{/* <span className="text-xs sm:text-sm">{active?.quantity}</span> */}
-									<span className="text-xs sm:text-sm">{allSizes[active.productId._id]?.quantity}</span>
+									<span className="text-xs sm:text-sm">{allSizes[active.productId._id]}</span>
 
 									{/* Increase Button */}
 									<button
 										// onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
-										onClick = {()=> UpdateSizeQtn(active.productId._id,-1,active.size,active.color)}
+										onClick = {()=> UpdateSizeQtn(active.productId._id,+1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={allSizes[active.productId._id]?.quantity >= active?.size?.quantity}
+										disabled={allSizes[active.productId._id] >= active?.size?.quantity}
 									>
 										<Plus />
 									</button>
@@ -316,34 +317,32 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 				</div>
 			</div>
 			{/* Display Coupons */}
-			<CouponsDisplay user={user} bag={bag}/>
+			<CouponsDisplay user={user} bag={bag} totalProductSellingPrice = {totalProductSellingPrice}/>
 		</div>
 	);
 }
 
 const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmount, convenienceFees,checkAndCreateToast, totalProductSellingPrice,removeCoupon }) => {
-	console.log("Bag totalDiscount:", bag?.totalDiscount);
 	const navigation = useNavigate();
 	return (
 		<div className="w-full font-kumbsan lg:w-1/3 h-fit bg-gray-50 md:p-8 xl:p-8 2xl:p-8 p-2 shadow-md">
-			<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
-				ORDER DETAILS ({bag?.orderItems.length} items)
-			</h3>
+			<div className='justify-start items-start flex space-x-1'>
+				<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
+					ORDER DETAILS
+				</h3>
+				<span className='text-xl text-gray-700'>{`[${bag?.orderItems.length}]`}</span>
+			</div>
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Total MRP</span>
-					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
-				</div>
-				{/* <div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Total GST</span>
-					<span>+ {formattedSalePrice(bag?.totalGst || totalGst)}% </span>
-				</div> */}
-				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>You Saved</span>
-					{formattedSalePrice(bag?.totalDiscount || discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>} 
+					<strong>Total MRP</strong>
+					<span>₹{formattedSalePrice(totalSellingPrice)}</span>
 				</div>
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
-					<span>Coupon</span>
+					<strong>You Saved</strong>
+					{formattedSalePrice(discountedAmount) > 0 ? <span>₹{formattedSalePrice(bag?.totalDiscount || discountedAmount)}</span>:<span>No Discount! Try Some Coupons</span>} 
+				</div>
+				<div className="flex justify-between text-sm sm:text-base text-gray-700">
+					<strong>Coupon</strong>
 					<span className={`${bag?.Coupon?.CouponCode ? "text-red-600" : "text-gray-500"}`}>
 						{bag?.Coupon?.CouponCode ? (
 							<div className="space-y-1">
@@ -369,14 +368,14 @@ const PriceDetailsComponent = ({ bag, totalSellingPrice,totalGst , discountedAmo
 				</div>
 
 				<div className="flex justify-between text-sm sm:text-base text-gray-700 mb-5">
-					<span>Convenience Fee</span>
+					<strong>Convenience Fee</strong>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
 						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
 					</span>
 				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
-					<span>Total</span>
-					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+					<strong>Total</strong>
+					<span>₹ {formattedSalePrice(totalProductSellingPrice)}</span>
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button

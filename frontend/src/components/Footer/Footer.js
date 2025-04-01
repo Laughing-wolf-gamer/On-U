@@ -247,7 +247,6 @@ const Footer = () => {
                     {/* Features */}
                     <div className="flex w-full flex-col justify-start items-start">
 						<h1 className="text-lg font-bold text-gray-800 mb-4">KEEP IN TOUCH</h1>
-
 						{/* Social Media Icons */}
 						<div className="flex space-x-6 text-3xl text-gray-800 mb-6">
 							<AiFillFacebook className="transition-transform transform hover:scale-110 hover:text-blue-600" />

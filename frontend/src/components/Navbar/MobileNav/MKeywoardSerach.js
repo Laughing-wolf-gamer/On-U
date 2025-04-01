@@ -63,11 +63,11 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 
 				{/* Search Recommendations */}
 				<div
-				className="w-full font-kumbsan h-[240px] bg-gray-300 fixed top-[48px] z-40 border-b border-r border-l border-white scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
+				className="w-full font-kumbsan h-[240px] bg-gray-100 fixed top-[48px] z-40 border-b border-r border-l border-white scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
 				style={{ maxHeight: "300px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 				>
 				<ul className="p-2">
-					<label className="text-base font-semibold text-gray-800">Recent Searches:</label>
+					<label className="text-sm font-semibold text-gray-800">Recent Searches:</label>
 					{filterSearches.map((search, index) => (
 						<div
 							key={index}
@@ -91,7 +91,7 @@ const MKeywoardSerach = ({setserdiv,state,setstate,searchenter,searchenters}) =>
 								<X />
 							</div>
 							</div>
-							<div className="w-full h-[0.5px] bg-gray-700 bg-opacity-20 my-1" />
+							<div className="w-full h-[0.5px] bg-gray-400 bg-opacity-20 my-1" />
 						</div>
 					))}
 				</ul>

@@ -97,18 +97,19 @@ const Wishlist = () => {
                                 <div className="w-full flex justify-start items-start">
                                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-6 sm:gap-8 md:gap-10 mt-5">
                                         {currentWishListItem.map((pro) => {
-											
+											const active = pro?.productId; 
+											const productId = active?._id || active;
+											const productEncryption = encrypt(productId);
 											return (
 												<li
-													key={pro?.productId?._id || pro?.productId}
+													key={active?._id || active}
 													className="w-full h-full group relative"
 												>
 													<div className="shadow-lg rounded-lg overflow-hidden transition-all hover:shadow-xl">
 														<div
 															className="w-full h-full flex-1"
-															onClick={(e) => {
-																const productId = pro?.productId?._id || pro?.productId;
-																const productEncryption = encrypt(productId);
+															onClick={() => {
+																
 																navigation(`/products/${productEncryption}`);
 															}}
 														>
@@ -118,10 +119,10 @@ const Wishlist = () => {
 
 														{/* Remove button */}
 														<div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:block hidden">
-															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
+															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, active?._id || active, pro)} />
 														</div>
 														<div className="absolute top-3 right-3 bg-gray-900 text-white rounded-full p-2 z-10 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 cursor-pointer group sm:hidden block">
-															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, pro?.productId?._id || pro?.productId, pro)} />
+															<MdClear className="text-base sm:text-lg" onClick={(e) => handleDelWish(e, active?._id || active, pro)} />
 														</div>
 													</div>
 												</li>
@@ -134,17 +135,17 @@ const Wishlist = () => {
                             <div className="flex flex-col w-full h-screen items-center justify-center text-center px-6 py-12">
 								<div className="w-full max-w-md p-10 rounded-xl">
 									<img
-									src={wish} // Replace with your actual image path
-									alt="Empty Bag"
-									className="mx-auto mb-8 w-24 h-24 sm:w-36 sm:h-36 object-contain hover:animate-bounce"
+										src={wish} // Replace with your actual image path
+										alt="Empty Bag"
+										className="mx-auto mb-8 w-24 h-24 sm:w-36 sm:h-36 object-contain hover:animate-bounce"
 									/>
 									<h2 className="text-3xl sm:text-4xl font-semibold text-gray-800 mb-4">No Wish List Products</h2>
 									<p className="text-gray-600 mb-8 text-base sm:text-lg leading-relaxed">It looks like you haven't added anything yet. Browse our collection!</p>
 									<button
-									onClick={() => navigation('/products')}
-									className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all hover:scale-105 duration-300 text-base sm:text-lg shadow-md"
+										onClick={() => navigation('/products')}
+										className="w-full px-4 sm:px-6 py-2 sm:py-3 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition-all hover:scale-105 duration-300 text-base sm:text-lg shadow-md"
 									>
-									Continue Shopping
+										Continue Shopping
 									</button>
 								</div>
 							</div>

@@ -2,3 +2,25 @@
 2025-03-31T19:54:10.902Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ead52ef531963035fd8bb8") }" on model "Bag"
 2025-03-31T19:54:10.912Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ead52ef531963035fd8bb8") }" on model "Bag"
 2025-03-31T19:54:10.912Z error: Error while getting bag: No document found for query "{ _id: new ObjectId("67ead52ef531963035fd8bb8") }" on model "Bag"
+2025-04-01T17:22:44.613Z error: Error getting Coupons:  today is not defined - ReferenceError: today is not defined
+    at fetchCouponsByQuery (file:///D:/Github-Proj/On-U/backend/controller/commonControllers/common.controller.js:1114:24)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:341:12)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:174:3)
+    at router (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:47:12)
+2025-04-01T17:22:44.613Z error: Error getting Coupons:  today is not defined - ReferenceError: today is not defined
+    at fetchCouponsByQuery (file:///D:/Github-Proj/On-U/backend/controller/commonControllers/common.controller.js:1114:24)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:137:13)
+    at Route.dispatch (D:\Github-Proj\On-U\node_modules\express\lib\router\route.js:112:3)
+    at Layer.handle [as handle_request] (D:\Github-Proj\On-U\node_modules\express\lib\router\layer.js:95:5)
+    at D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:281:22
+    at Function.process_params (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:341:12)
+    at next (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:275:10)
+    at Function.handle (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:174:3)
+    at router (D:\Github-Proj\On-U\node_modules\express\lib\router\index.js:47:12)

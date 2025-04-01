@@ -38,7 +38,8 @@ const Bag = () => {
 
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [showPayment,setShowPayment] = useState(false);
-
+	const[allBagData,setAllBagData] = useState(null);
+    const[allSizes,setAllSizes] = useState(null)
 
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
@@ -54,22 +55,43 @@ const Bag = () => {
         checkAndCreateToast("success",'Address added successfully');
     };
 
-    /* useEffect(()=>{
-        console.log("Recently View Products Session Storage: ",sessionRecentlyViewProducts);
-    },[sessionRecentlyViewProducts]) */
-
-
+	useEffect(()=>{
+		if(bag){
+			setAllSizes(bag.orderItems.reduce((acc,item)=>{
+				acc[item.productId._id] = item.quantity || 0;
+				return acc;
+			},{}))
+		}
+	},[bag])
+	useEffect(()=>{
+		if(bag){
+			setAllBagData(bag)
+		}
+	},[bag])
+	const UpdateSizeQtn = (id,change,size,color)=>{
+		setAllSizes(prev => {
+			const newQty = prev[id] + change;
+			updateQty({ target: { value: newQty } }, id,size,color)
+			return {
+				...prev,
+				[id]:newQty
+			}
+		})
+		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[item.productId._id] + change} : item)}
+		setAllBagData(updatedData)
+	}
     useEffect(() => {
-        if (bag) {
-            if (bag?.orderItems) {
+        if (user) {
+            if (allBagData && allBagData.orderItems) {
                 let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
                 let totalMRP = 0,totalGst = 0;
         
-                bag.orderItems.forEach(item => {
+                allBagData.orderItems.forEach(item => {
                     const { productId, quantity,isChecked } = item;
+					console.log("Updated Bags Data: ",productId,quantity);
 					if(isChecked){
 						const { salePrice, price,gst } = productId;
-						const priceWithoutGst = getOriginalAmount(gst,price);
+						// const priceWithoutGst = getOriginalAmount(gst,price);
 						// Use salePrice if available, else fallback to regular price
 						const productSellingPrice = salePrice || price;
 			
@@ -93,19 +115,19 @@ const Bag = () => {
                 });
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
-                totalProductSellingPrice += (bag?.ConvenienceFees || 0);
+                totalProductSellingPrice += (allBagData?.ConvenienceFees || 0);
 				let couponDiscountedAmount = 0;
 
 				// Coupon logic
 				const applyCouponDiscount = () => {
 					let discountedAmount = totalProductSellingPrice;
 
-					if (typeof bag.Coupon?.Discount !== 'number' || bag.Coupon.Discount < 0) {
+					if (typeof allBagData.Coupon?.Discount !== 'number' || allBagData.Coupon.Discount < 0) {
 						console.error('Invalid discount value.');
 						return discountedAmount; // Return the original price if discount is invalid.
 					}
 
-					const { CouponType, Discount } = bag.Coupon;
+					const { CouponType, Discount } = allBagData.Coupon;
 
 					if (CouponType === "Percentage") {
 						// Ensure totalProductSellingPrice is positive
@@ -128,19 +150,10 @@ const Bag = () => {
 					return discountedAmount;
 				};
                 // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
-                if (bag.Coupon) {
-                    const coupon = bag.Coupon;
-                    const { CouponType, Discount, MinOrderAmount } = coupon;
-        
-                    /* const applyCouponDiscount = () => {
-                        if (CouponType === "Percentage") {
-                            totalProductSellingPrice -= totalProductSellingPrice * (Discount / 100);
-                        } else {
-                            totalProductSellingPrice -= Discount;
-                        }
-                    };
-         */
-                    // Apply coupon discount only if applicable
+                if (allBagData.Coupon) {
+                    const coupon = allBagData.Coupon;
+                    const { MinOrderAmount } = coupon;
+					// Apply coupon discount only if applicable
                     if (MinOrderAmount > 0 && totalProductSellingPrice >= MinOrderAmount) {
 							totalProductSellingPrice = applyCouponDiscount();
 						} else if (MinOrderAmount <= 0) {
@@ -149,7 +162,7 @@ const Bag = () => {
         
                     // Apply free shipping discount (only if coupon is valid)
                 }
-				if (bag?.ConvenienceFees > 0 && !bag?.Coupon?.FreeShipping) {
+				if (allBagData?.ConvenienceFees > 0 && !allBagData?.Coupon?.FreeShipping) {
 					totalProductSellingPrice += bag.ConvenienceFees;
 				}
 				totalDiscount += couponDiscountedAmount;
@@ -191,7 +204,6 @@ const Bag = () => {
 						totalGst += gst;
 					}
                 });
-				console.log("Price WithouGst; ",allgst,totalMRP);
                 // Add convenience fees to the total product selling price (only once, not for each item)
                 totalProductSellingPrice += (sessionBagData?.ConvenienceFees || 0);
             
@@ -203,7 +215,7 @@ const Bag = () => {
             }
         }
         
-    }, [bag,sessionBagData]);
+    }, [bag,sessionBagData,allSizes,allBagData]);
 
 
     const updateQty = async (e, itemId,size,color) => {
@@ -295,15 +307,17 @@ const Bag = () => {
             },400)
         }
     };
-    // console.log("Bag Content ",bag);
+    console.log("allBagData ",totalProductSellingPrice);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">
             <div className="w-full max-w-screen-2xl justify-self-center ">
                 {isAuthentication ? (
                     <BagContent 
-                        bag={bag}
+                        bag={allBagData}
+						allSizes={allSizes}
 						totalGst = {allgst}
+						UpdateSizeQtn = {UpdateSizeQtn}
                         bagLoading={bagLoading}
                         totalSellingPrice={totalSellingPrice}
                         discountAmount={discountedAmount}

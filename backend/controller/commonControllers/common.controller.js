@@ -1106,13 +1106,14 @@ export const fetchCouponsByQuery = async (req,res)=>{
             if(req.query.Category){
                 filter.Category = req.query.Category;
             }
-			if(filter.ValidDate){
-				filter.ValidDate = {$lt: Date.now()}
-			}
         }
-        // filter.ValidDate = {$lt: Date.now()}
+		const today = new Date();
+		await Coupon.updateMany(
+			{ ValidDate: { $lt: today } }, // Filter for coupons where ValidDate is less than today's date
+			{ $set: { Status: 'Inactive' } } // Update the status to 'Inactive'
+		);
         const foundCoupons = await Coupon.find(filter).limit(10);
-        // console.log("Fetched Coupons: ",foundCoupons);
+        console.log("Fetched Coupons: ",foundCoupons);
         res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
     } catch (error) {
         console.error(`Error getting Coupons: `,error);

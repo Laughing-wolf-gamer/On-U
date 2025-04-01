@@ -20,7 +20,6 @@ const ProductPreviewFull = ({ product ,user}) => {
 
     const getRandomArrayOfProducts = (previewProductsTitle) => {
         if (product) {
-            // const randomizes = generateArrayOfRandomItems(product, 6);
             const maxProductsAmount = window.screen.width > 1024 ? 5 : 4;
             const itemsOfCategory = product.filter(p => p.specialCategory === previewProductsTitle).slice(0, maxProductsAmount); // filter by bestSeller and take first 6 items
             setSelectedPreviewProducts(itemsOfCategory);
@@ -44,7 +43,6 @@ const ProductPreviewFull = ({ product ,user}) => {
     },[dispatch])
     const handleMoveToQuery = ()=>{
         const queryParams = new URLSearchParams();
-        
         if (activePreview) queryParams.set('specialCategory', activePreview);
         if(!activePreview) {
             navigation("/products")
@@ -64,7 +62,6 @@ const ProductPreviewFull = ({ product ,user}) => {
                         <button
                             onClick={(e) => {
                                 if (h?.id !== activePreview) {
-                                    console.log("Selected New");
                                     getRandomArrayOfProducts(h?.id);
                                 } else {
                                     e.preventDefault();
@@ -156,8 +153,8 @@ const ProductPreviewFull = ({ product ,user}) => {
                     })
                 }
             </div>
-            <div className='w-full text-center flex flex-row justify-center items-center mt-2 text-white md:text-black font-kumbsan text-xl relative transform transition-all py-4'>
-                <div onClick={handleMoveToQuery} className='px-10 flex text-sm md:text-lg md:bg-transparent bg-black rounded-lg p-4 cursor-pointer border border-gray-800 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
+            <div className='w-full text-center flex flex-row justify-center items-center mt-2 relative transform transition-all py-4'>
+                <div onClick={handleMoveToQuery} className='px-10 flex text-sm md:text-lg hover:bg-black focus:bg-black hover:text-white focus:text-white text-gray-800 rounded-lg p-4 cursor-pointer border border-gray-800 hover:border-white focus:border-white hover:border-2 hover:border-opacity-100 border-opacity-50 hover:scale-110 duration-300 hover:animate-shine'>
                     <span className='hover:animate-vibrateScale text-[15px] sm:text-[15px] md:text-[16px]'>View More</span>
                 </div>
             </div>

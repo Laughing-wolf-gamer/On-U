@@ -183,7 +183,7 @@ export const getallproducts = async (req, res) => {
 
         const totalProducts = await ProductModel.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / itemsPerPage);
-        console.dir(filter,{ depth: null });
+        // console.dir(filter,{ depth: null });
 		
 		const currentPageproducts = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
 		let productsPagination = currentPageproducts;

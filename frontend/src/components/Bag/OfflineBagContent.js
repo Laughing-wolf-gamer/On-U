@@ -119,8 +119,8 @@ const NavigationBar = ({ showPayment, selectedAddress }) => {
 const ProductListing = ({ sessionBagData, updateQty,updateChecked, handleDeleteBag,setCoupon,applyCoupon,coupon  }) => {
 	const {encrypt,decrypt} = useEncryptionDecryptionContext();
 	return (
-		<div className="flex-1 space-y-6 max-h-[700px]">
-			<div className="flex-1 space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
+		<div className="flex-1 space-y-6">
+			<div className="flex-1 space-y-6 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200">
 				{sessionBagData.map((item, i) => {
 					const active = item;
 					const isVideo = (url) => {
@@ -256,11 +256,16 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 	console.log("Converenece Fees: ", convenienceFees);
 	return(
 		<div className="w-full h-fit lg:w-1/3 bg-gray-100 md:p-8 xl:p-8 2xl:p-8 p-2 shadow-md">
-			<h3 className="font-semibold text-xl text-gray-800 mb-6">ORDER DETAILS ({sessionBagData.length} items)</h3>
+			<div className='justify-start items-start flex space-x-1'>
+				<h3 className="font-semibold text-lg sm:text-xl md:text-2xl text-gray-800 mb-6">
+					ORDER DETAILS
+				</h3>
+				<span className='text-xl text-gray-700'>{`[${bag?.orderItems.length}]`}</span>
+			</div>
 			<div className="space-y-5">
 				{/* Total MRP Section */}
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
-					<span>Total MRP</span>
+					<strong>Total MRP</strong>
 					<span>₹{formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
 				</div>
 
@@ -270,13 +275,13 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 					<span>+ {Math.round(totalGst)} %</span>
 				</div> */}
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2">
-					<span>Saved</span>
+					<strong>Saved</strong>
 					<span>₹{Math.round(bag?.totalDiscount || discountedAmount)}</span>
 				</div>
 
 				{/* Convenience Fee Section */}
 				<div className="flex justify-between text-sm text-gray-700 border-b border-gray-300 pb-2 mb-5">
-					<span>Convenience Fee</span>
+					<strong>Convenience Fee</strong>
 					<span className={`${bag?.Coupon?.FreeShipping ? "line-through text-gray-400" : "text-gray-700"}`}>
 						{convenienceFees <= 0 ? "Free" : `₹${formattedSalePrice(convenienceFees)}`}
 					</span>
@@ -284,7 +289,7 @@ const PriceDetails = ({ sessionBagData, bag,totalGst, totalSellingPrice, discoun
 
 				{/* Total Section */}
 				<div className="flex justify-between font-semibold text-xl text-gray-900">
-					<span>Total</span>
+					<strong>Total</strong>
 					<span>₹{Math.round(totalProductSellingPrice)}</span>
 				</div>
 			</div>

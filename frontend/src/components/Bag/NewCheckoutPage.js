@@ -22,7 +22,6 @@ const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
 	const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage } = useSessionStorage();
 	const { user, isAuthentication } = useSelector(state => state.user);
-	const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
 	const { bag } = useSelector(state => state.bag_data);
 	const {allAddresses} = useSelector(state => state.getAllAddress)
 	const {checkAndCreateToast} = useSettingsContext();
@@ -39,7 +38,9 @@ const CheckoutPage = () => {
 	const [selectedAddress, setSelectedAddress] = useState(null);
 	const [showPayment,setShowPayment] = useState(false);
 	const [coupon, setCoupon] = useState(null);
-	// const [discount, setDiscount] = useState(0);
+	const scrollableDivRef = useRef(null); // Create a ref to access the div element
+	const[allBagData,setAllBagData] = useState(null);
+	const[allSizes,setAllSizes] = useState(null);
 
 	
 	const handleOpenPopup = () => setIsAddressPopupOpen(true);
@@ -49,26 +50,46 @@ const CheckoutPage = () => {
 		dispatch(getAddress())
 	};
 	const handleSaveAddress = async (newAddress) => {
-		// const updatedAddresses = [...user.user.addresses, newAddress];
-		// Assuming you have a function to update the user's address in the backend
 		await dispatch(updateAddress(newAddress));
 		dispatch(getuser());
 		checkAndCreateToast("success",'Address added successfully');
 	};
 
-	/* useEffect(()=>{
-		console.log("Recently View Products Session Storage: ",sessionRecentlyViewProducts);
-	},[sessionRecentlyViewProducts]) */
-	const scrollableDivRef = useRef(null); // Create a ref to access the div element
+	useEffect(()=>{
+		if(bag){
+			setAllSizes(bag.orderItems.reduce((acc,item)=>{
+				acc[item.productId._id] = item.quantity || 0;
+				return acc;
+			},{}))
+		}
+	},[bag])
+	useEffect(()=>{
+		if(bag){
+			setAllBagData(bag)
+		}
+	},[bag])
+	const UpdateSizeQtn = (id,change,size,color)=>{
+		setAllSizes(prev => {
+			const newQty = prev[id] + change;
+			updateQty({ target: { value: newQty } }, id,size,color)
+			return {
+				...prev,
+				[id]:newQty
+			}
+		})
+		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[item.productId._id] + change} : item)}
+		setAllBagData(updatedData)
+	}
 
 	useEffect(() => {
-		if (bag) {
-			if (bag?.orderItems) {
+		if (user) {
+			if (allBagData && allBagData.orderItems) {
 				let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
 				let totalMRP = 0, totalGst = 0;
 		
-				bag.orderItems.forEach(item => {
+				allBagData.orderItems.forEach(item => {
 					const { productId, quantity,isChecked } = item;
+					console.log("Updated Bags Data: ",productId,quantity);
 					if(isChecked){
 						const { salePrice, price,gst } = productId;
 						
@@ -95,11 +116,11 @@ const CheckoutPage = () => {
 				});
 		
 				// Add convenience fees to the total product selling price (only once, not for each item)
-				totalProductSellingPrice += (bag?.ConvenienceFees || 0);
+				totalProductSellingPrice += (allBagData?.ConvenienceFees || 0);
 		
 				// console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
-				if (bag.Coupon) {
-					const coupon = bag.Coupon;
+				if (allBagData.Coupon) {
+					const coupon = allBagData.Coupon;
 					const { CouponType, Discount, MinOrderAmount } = coupon;
 		
 					const applyCouponDiscount = () => {
@@ -173,7 +194,7 @@ const CheckoutPage = () => {
 			}
 		}
 		
-	}, [bag,sessionBagData]);
+	}, [bag,allBagData,allSizes,sessionBagData]);
 
 
 	const updateQty = async (e, itemId,size,color) => {
@@ -181,7 +202,7 @@ const CheckoutPage = () => {
 		console.log("Qty Value: ", e.target.value);
 		if(isAuthentication){
 			await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
-			dispatch(getbag());
+			// dispatch(getbag());
 		}else{
 			updateBagQuantity(itemId,size,color, e.target.value)
 		}
@@ -222,22 +243,15 @@ const CheckoutPage = () => {
 		}
 	};
 	useEffect(() => {
-		if (!user) {
+		if (user) {
+			dispatch(getbag());
+			dispatch(getAddress())
+			setAddress(user?.user?.addresses[0]);
+		}else{
 			dispatch(getuser());
 		}
-		if (user) {
-
-			if (!isAuthentication) {
-				checkAndCreateToast("info",'Log in to access BAG');
-			} else {
-				dispatch(getbag());
-				dispatch(getAddress())
-			}
-			setAddress(user?.user?.addresses[0]);
-		}
-		dispatch(getRandomArrayOfProducts());
-	}, [dispatch,deleteBagResult, user, isAuthentication]);
-
+		
+	}, [dispatch,deleteBagResult, user]);
 	
 	const verifyAnyOrdersPayment = async()=>{
 		if(!sessionStorage.getItem("checkoutData")) return;
@@ -317,6 +331,7 @@ const CheckoutPage = () => {
 			window.location.reload();
 		}
 	}
+	
 
 	return (
 		<div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300 pb-3">
@@ -351,16 +366,36 @@ const CheckoutPage = () => {
 
 					{/* Right Side: Shopping Cart */}
 					<div className="col-span-5 font-kumbsan lg:col-span-2 md:col-span-2 xl:col-span-2 2xl:col-span-2">
-						<h3 className="text-xl font-semibold mb-4">BAG ITEMS</h3>
+						<div className='justify-start items-start flex space-x-1'>
+							<h3 className="text-xl font-semibold mb-4">BAG ITEMS 
+							</h3>
+							<span className='text-gray-600 text-base'>
+								{`[${allBagData?.orderItems?.length}]`}
+							</span> 
+						</div>
+						{/* <span className='text-center flex justify-start items-center space-x-2'>
+							<span>
+								Cart
+							</span>
+							<span className='text-gray-600 text-base'>
+								{`[${bag.orderItems.length}]`}
+							</span>
+							<span>
+								items
+							</span>
+						</span> */}
 						<ProductListingComponent
+							allSizes = {allSizes}
+							UpdateSizeQtn = {UpdateSizeQtn}
 							updateQty={updateQty}
 							updateChecked = {updateChecked}
-							bag={bag}
+							bag={allBagData}
 							handleDeleteBag={handleDeleteBag}
 							user={user}
 							setCoupon={setCoupon}
 							applyCoupon={applyCoupon}
 							coupon={coupon}
+							totalProductSellingPrice = {totalProductSellingPrice}
 						/>
 						<PriceDetailsComponent
 							user={user}
@@ -469,12 +504,19 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 	return (
 		<div className="w-full font-kumbsan h-fit bg-gray-50 p-8 shadow-md">
 			<h3 className="font-semibold text-base sm:text-xl md:text-2xl text-gray-800 mb-6">
-				ORDER DETAILS ({bag?.orderItems?.length} ITEMS)
+				<div className='justify-start items-start flex space-x-1'>
+					<h3 className="text-xl font-semibold mb-4">
+						ORDER DETAILS 
+					</h3>
+					<span className='text-gray-600 text-base'>
+						{`[${bag?.orderItems?.length || 0}]`}
+					</span> 
+				</div>
 			</h3>
 			<div className="space-y-4 sm:space-y-5">
 				<div className="flex justify-between text-sm sm:text-base text-gray-700">
 					<strong className='font-semibold'>Total MRP</strong>
-					<span>₹ {formattedSalePrice(bag?.totalMRP || totalSellingPrice)}</span>
+					<span>₹ {formattedSalePrice(totalSellingPrice || bag?.totalMRP)}</span>
 				</div>
 				<div className="flex justify-between text-gray-700">
 					<strong className='font-semibold text-left'>You Saved</strong>
@@ -515,7 +557,7 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 				</div>
 				<div className="flex justify-between space-x-4 rounded-xl py-4 bg-white text-gray-900 text-xl sm:text-2xl font-semibold transition-colors">
 					<span>Total</span>
-					<span>₹ {formattedSalePrice(bag?.totalProductSellingPrice || totalProductSellingPrice)}</span>
+					<span>₹ {formattedSalePrice(totalProductSellingPrice || bag?.totalProductSellingPrice)}</span>
 				</div>
 				<div className="flex flex-col space-y-4 mt-6">
 					<button
@@ -561,19 +603,19 @@ const PriceDetailsComponent = ({user, bag,totalSellingPrice, discountedAmount, c
 }
 
 
-const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag,user,setCoupon,applyCoupon,coupon }) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+const ProductListingComponent = ({ bag,UpdateSizeQtn,allSizes,updateChecked, handleDeleteBag,user,setCoupon,applyCoupon,coupon,totalProductSellingPrice }) => {
+	const {encrypt} = useEncryptionDecryptionContext();
+	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+	const isValidImage = (url) => {
+		return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+	};
+	
 	return(
 		<div className="flex-1 font-kumbsan space-y-6">
-			<div className='space-y-2 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200'>
+			<div className='space-y-2 max-h-[500px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-700 scrollbar-track-gray-200'>
 				{bag?.orderItems?.map((item, i) => {
 					const active = item;
-					const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-					const isValidImage = (url) => {
-						return imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
-					};
 					const getImageExtensionsFile = () => {
-						
 						// Find the first valid image URL based on extensions
 						return active?.color?.images.find((image) => 
 							image.url && isValidImage(image.url)
@@ -581,34 +623,33 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 					};
 					const validImage = getImageExtensionsFile();
 					const productEncryption = encrypt(active.productId?._id);
-					const decrypted = decrypt(productEncryption);
 					return(
 						<div key={i} className="relative flex flex-row items-center border-b py-6 space-y-6 sm:space-y-0 sm:space-x-6">
 							{/* Product Image */}
 							<div className="relative w-28 h-28 sm:w-40 sm:h-40 border-2 rounded-lg">
 								<Link to={`/products/${productEncryption}`}>
-								{validImage ? (
-									<div className="relative w-full h-full">
-									<img
-										src={validImage?.url}
-										alt={active?.productId?.title}
-										className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
-									/>
-									<div
-										onClick={(e) => updateChecked(e, active.productId?._id,active.size,active.color)}
-										className="absolute top-2 left-2 w-5 h-5"
-									>
-										<input
-											type="checkbox"
-											className="w-full h-full cursor-pointer"
-											checked={active?.isChecked}
-											onChange={() => {}}
+									{validImage ? (
+										<div className="relative w-full h-full">
+										<img
+											src={validImage?.url}
+											alt={active?.productId?.title}
+											className="w-full h-full object-cover transition-all duration-500 ease-in-out hover:scale-105"
 										/>
-									</div>
-									</div>
-								) : (
-									<p>No valid image available</p>
-								)}
+											<div
+												onClick={(e) => updateChecked(e, active.productId?._id,active.size,active.color)}
+												className="absolute top-2 left-2 w-5 h-5"
+											>
+												<input
+													type="checkbox"
+													className="w-full h-full cursor-pointer"
+													checked={active?.isChecked}
+													onChange={() => {}}
+												/>
+											</div>
+										</div>
+									) : (
+										<p>No valid image available</p>
+									)}
 								</Link>
 
 								{/* Delete Button on the Image (Mobile Only) */}
@@ -647,23 +688,26 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 								<div className="mt-4 w-fit flex flex-row items-center justify-center space-x-1 shadow-md rounded-full border-gray-700 border">
 									{/* Decrease Button */}
 									<button
-										onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
+										// onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
+										onClick={() => UpdateSizeQtn(active.productId._id,-1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
-										disabled={active?.quantity <= 1}
+										disabled={allSizes[active?.productId?._id] <= 1}
 									>
 										<Minus />
 									</button>
 
 									{/* Display Current Quantity */}
-									<span className="text-xs sm:text-sm">{active?.quantity}</span>
+									{/* <span className="text-xs sm:text-sm">{active?.quantity}</span> */}
+									<span className="text-xs sm:text-sm">{allSizes[active?.productId?._id]}</span>
 
 									{/* Increase Button */}
 									<button
-										onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
+										// onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
+										onClick={() => UpdateSizeQtn(active.productId._id,1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
-										disabled={active?.quantity >= active?.size?.quantity}
+										disabled={allSizes[active?.productId?._id] >= active?.size?.quantity}
 									>
-									<Plus />
+										<Plus />
 									</button>
 								</div>
 							</div>
@@ -689,7 +733,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 						value={coupon}
 						onChange={(e) => setCoupon(e.target.value)}
 						className="w-full h-12 border border-gray-300 bg-gray-50 text-black rounded-md px-2 focus:ring-black text-sm sm:text-base"
-						placeholder="Add Voucher Code."
+						placeholder="Add Voucher Code"
 					/>
 
 					{/* Apply Coupon Button */}
@@ -703,7 +747,7 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked, handleDeleteBag
 			</div>
 
 			{/* Display Coupons */}
-			<HorizontalScrollingCouponDisplay user={user} bag={bag} />
+			<HorizontalScrollingCouponDisplay user={user} bag={bag} totalProductSellingPrice = {totalProductSellingPrice} />
 		</div>
 
 	);
@@ -812,7 +856,7 @@ const AddAddress = ({ onSave }) => {
 
 			{/* Toggle Button for Smaller Screens */}
 			<button 
-				className="lg:hidden px-4 w-full py-2 justify-between items-center flex text-white bg-black rounded-md"
+				className="lg:hidden px-4 w-full py-2 justify-between items-center flex text-gray-700 font-bold text-xl border-gray-400 border-t border-b border-opacity-40"
 				onClick={() => setIsFormVisible(!isFormVisible)}
 			>
 				<span>Add New Address</span> <ChevronUp className={`${isFormVisible && 'rotate-180'} transition-all duration-200 ease-in-out`}/>
@@ -823,21 +867,21 @@ const AddAddress = ({ onSave }) => {
 				<form onSubmit={handleSave} className="space-y-4 w-full flex flex-col">
 					{formData && formData.map((item, index) => (
 						<FormControl key={index} className='w-full flex flex-col space-y-3'>
-						<InputLabel htmlFor={item} className="text-sm font-medium text-left">
-							{capitalizeFirstLetterOfEachWord(item)}
-							{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
-						</InputLabel>
-						<Input
-							type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
-							value={newAddress[removeSpaces(item)] || ''}
-							id={removeSpaces(item)}
-							name={removeSpaces(item)}
-							onChange={handleChange}
-							className="p-2 rounded-md mt-1 w-full"
-							required
-							maxLength={'30'}
-							placeholder={`Enter ${removeSpaces(item)}`}
-						/>
+							<InputLabel htmlFor={item} className="text-sm font-medium text-left">
+								{capitalizeFirstLetterOfEachWord(item)}
+								{!newAddress[removeSpaces(item)] && <span className='text-gray-800'>*</span>}
+							</InputLabel>
+							<Input
+								type={item === 'phoneNumber' || item === 'pincode' ? 'number' : 'text'}
+								value={newAddress[removeSpaces(item)] || ''}
+								id={removeSpaces(item)}
+								name={removeSpaces(item)}
+								onChange={handleChange}
+								className="p-2 rounded-md mt-1 w-full"
+								required
+								maxLength={'30'}
+								placeholder={`Enter ${removeSpaces(item)}`}
+							/>
 						</FormControl>
 					))}
 				</form>
@@ -846,12 +890,12 @@ const AddAddress = ({ onSave }) => {
 			{/* Save Button */}
 			{isFormVisible && formData && formData.length > 0 && (
 				<button
-				type='submit'
-				disabled={Object.values(newAddress).every(value => value.trim() === '')}
-				onClick={handleSave}
-				className={`px-4 text-center justify-center flex items-center min-w-full mt-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
+					type='submit'
+					disabled={Object.values(newAddress).every(value => value.trim() === '')}
+					onClick={handleSave}
+					className={`px-4 text-center justify-center flex items-center min-w-full mt-4 py-2 w-full bg-black rounded-md hover:bg-gray-700 text-white disabled:bg-gray-600`}
 				>
-				<span>SAVE</span>
+					<span>SAVE</span>
 				</button>
 			)}
 		</div>

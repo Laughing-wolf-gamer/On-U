@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { getAddress, getConvinceFees, getuser } from '../../action/useraction';
 import { deleteBag, getbag, getqtyupdate, itemCheckUpdate } from '../../action/orderaction';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
-import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
@@ -31,29 +30,49 @@ const SideBarBag = ({OnChangeing}) => {
     const [allgst, setTotalGST] = useState(0);
     const [address, setAddress] = useState(null);
 
-    const [selectedAddress, setSelectedAddress] = useState(null);
-    const [showPayment,setShowPayment] = useState(false);
+	const[allBagData,setAllBagData] = useState(null);
+	const[allSizes,setAllSizes] = useState(null)
 
 
-    const handleOpenPopup = () => setIsAddressPopupOpen(true);
+    /* const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
         dispatch(getbag());
         dispatch(getAddress())
-    };
-    /* const handleSaveAddress = async (newAddress) => {
-        await dispatch(updateAddress(newAddress));
-        dispatch(getuser());
-        checkAndCreateToast("success",'Address added successfully');
     }; */
+	useEffect(()=>{
+		if(bag){
+			setAllSizes(bag.orderItems.reduce((acc,item)=>{
+				acc[item.productId._id] = item.quantity || 0;
+				return acc;
+			},{}))
+		}
+	},[bag])
+	useEffect(()=>{
+		if(bag){
+			setAllBagData(bag)
+		}
+	},[bag])
+	const UpdateSizeQtn = (id,change,size,color)=>{
+		setAllSizes(prev => {
+			const newQty = prev[id] + change;
+			updateQty({ target: { value: newQty } }, id,size,color)
+			return {
+				...prev,
+				[id]:newQty
+			}
+		})
+		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[item.productId._id] + change} : item)}
+		setAllBagData(updatedData)
+	}
 
     useEffect(() => {
-        if (bag) {
-            if (bag?.orderItems) {
+        if (user) {
+            if (allBagData && allBagData?.orderItems) {
                 let totalProductSellingPrice = 0, totalSP = 0, totalDiscount = 0;
                 let totalMRP = 0,totalGst = 0;
         
-                bag.orderItems.forEach(item => {
+                allBagData?.orderItems.forEach(item => {
                     const { productId, quantity,isChecked } = item;
 					if(isChecked){
 						const { salePrice, price,gst } = productId;
@@ -81,11 +100,11 @@ const SideBarBag = ({OnChangeing}) => {
                 });
         
                 // Add convenience fees to the total product selling price (only once, not for each item)
-                totalProductSellingPrice += (bag?.ConvenienceFees || 0);
+                totalProductSellingPrice += (allBagData?.ConvenienceFees || 0);
         
                 // console.log("Before Coupon Total Product Selling Price: ", totalProductSellingPrice);
-                if (bag.Coupon) {
-                    const coupon = bag.Coupon;
+                if (allBagData.Coupon) {
+                    const coupon = allBagData.Coupon;
                     const { CouponType, Discount, MinOrderAmount } = coupon;
         
                     const applyCouponDiscount = () => {
@@ -106,8 +125,8 @@ const SideBarBag = ({OnChangeing}) => {
                     }
         
                     // Apply free shipping discount (only if coupon is valid)
-                    if (bag.Coupon.FreeShipping && totalProductSellingPrice >= MinOrderAmount) {
-                        totalProductSellingPrice -= bag?.ConvenienceFees || 0; // Remove convenience fees if coupon applies free shipping
+                    if (allBagData.Coupon.FreeShipping && totalProductSellingPrice >= MinOrderAmount) {
+                        totalProductSellingPrice -= allBagData?.ConvenienceFees || 0; // Remove convenience fees if coupon applies free shipping
                     }
                 }
         
@@ -160,14 +179,14 @@ const SideBarBag = ({OnChangeing}) => {
             }
         }
         
-    }, [bag,sessionBagData]);
+    }, [bag,sessionBagData,allSizes,allBagData]);
 
 
     const updateQty = async (e, itemId,size,color) => {
         console.log("Update Quantity Data: ", itemId,size,color,e.target.value);
         if(isAuthentication){
-            await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
-            dispatch(getbag({ userId: user.id }));
+            dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
+            // dispatch(getbag({ userId: user.id }));
         }else{
             updateBagQuantity(itemId,size,color, e.target.value)
         }
@@ -196,18 +215,12 @@ const SideBarBag = ({OnChangeing}) => {
     };
 
     useEffect(() => {
-        if (!user) {
-            dispatch(getuser());
-        }
         if (user) {
-
-            if (!isAuthentication) {
-                checkAndCreateToast("info",'Log in to access BAG');
-            } else {
-                dispatch(getbag({ userId: user.id }));
-                dispatch(getAddress())
-            }
+			dispatch(getbag({ userId: user.id }));
+			dispatch(getAddress())
             setAddress(user?.user?.addresses[0]);
+        }else{
+            dispatch(getuser());
         }
         
     }, [dispatch,deleteBagResult, user, isAuthentication]);
@@ -338,13 +351,13 @@ const SideBarBag = ({OnChangeing}) => {
 				{/* Order Details Header */}
 				<h1 className="font-bold text-lg sm:text-xl uppercase font-kumbsan md:text-xl text-gray-800 text-left w-full mb-3">
 				{
-					isAuthentication && bag && bag?.orderItems && bag?.orderItems?.length > 0 ? (
+					isAuthentication && bag && allBagData?.orderItems && allBagData?.orderItems?.length > 0 ? (
 						<span className='text-center flex justify-start items-center space-x-2'>
 							<span>
 								Cart
 							</span>
 							<span className='text-gray-600 text-base'>
-								{`[${bag.orderItems.length}]`}
+								{`[${allBagData.orderItems.length}]`}
 							</span>
 							<span>
 								items
@@ -365,7 +378,9 @@ const SideBarBag = ({OnChangeing}) => {
 					isAuthentication && user ? (
 						<ul className={`w-full flex flex-col flex-grow ${bag && bag?.orderItems && bag?.orderItems.length > 0 ? "overflow-y-scroll":""} max-h-[calc(85vh-185px)] min-h-[calc(90vh-190px)] scrollbar-thin scrollbar-thumb-gray-400 scrollbar-track-gray-200`}>
 							<ProductListingComponent
-								bag={bag}
+								allSizes = {allSizes}
+								UpdateSizeQtn ={UpdateSizeQtn}
+								bag={allBagData}
 								updateQty={updateQty}
 								handleDeleteBag={handleDeleteBag}
 								updateChecked = {updateChecked}
@@ -404,8 +419,8 @@ const SideBarBag = ({OnChangeing}) => {
 						<div className="space-y-2 w-full">
 							{/* Subtotal */}
 							<div className="flex justify-between font-bold border-b border-b-gray-600 border-opacity-30 py-2 text-lg sm:text-xl md:text-xl text-gray-900">
-								<span>SubTotal</span>
-								<span>₹ {Math.round(totalProductSellingPrice)}</span>
+								<strong>SubTotal</strong>
+								<span>₹ {formattedSalePrice(totalProductSellingPrice)}</span>
 							</div>
 							<br />
 							{/* Button Section */}
@@ -434,7 +449,6 @@ const SideBarBag = ({OnChangeing}) => {
 							onClick={(e) => {
 								e.stopPropagation();
 								navigation('/products');
-								window.scrollTo(0, 0);
 								handleOnChange();
 							}}
 							className="w-full cursor-pointer text-black mt-4 py-1 hover:underline text-center transition-all duration-300 ease-in-out transform hover:scale-105 text-[14px] md:text-lg xl:text-lg sm:text-sm"
@@ -448,19 +462,20 @@ const SideBarBag = ({OnChangeing}) => {
 	);
 
 }
-const ProductListingComponent = ({ bag,onClickedImage, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
+const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
 	const navigate = useNavigate();
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
+	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
+	const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+
+	const getImageExtensionsFile = (active) => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
 	return (
 		<div className="flex flex-col space-y-4 w-full">
 			{bag?.orderItems?.map((item, i) => {
 				const active = item;
-				const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
-				const isValidImage = (url) => imageExtensions.some((ext) => url.toLowerCase().endsWith(ext));
+				
 
-				const getImageExtensionsFile = () => active?.color?.images && active?.color?.images.length > 0 && active?.color?.images.find((image) => image.url && isValidImage(image.url));
-
-				const validImage = getImageExtensionsFile();
+				const validImage = getImageExtensionsFile(active);
 				const productEncryption = encrypt(active.productId?._id);
 				return (
 					<div key={i} className={`flex flex-col md:px-4 lg:px-3 2xl:px-4 px-1 items-start justify-self-start ${i >= bag?.orderItems?.length - 1 ? "border-b":""} pb-3 pt-1 space-y-4 sm:space-x-4 sm:space-y-0`}>
@@ -535,21 +550,24 @@ const ProductListingComponent = ({ bag,onClickedImage, updateQty,updateChecked, 
 										<div className="flex w-fit px-2 items-center space-x-3 justify-between">
 											{/* Decrease Button */}
 											<button
-												onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active?.productId._id,active?.size,active?.color)}
+												// onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active?.productId._id,active?.size,active?.color)}
+												onClick={() => UpdateSizeQtn(active?.productId?._id,-1,active?.size,active?.color)}
 												className="h-fit rounded-full text-black disabled:text-gray-300"
-												disabled={active?.quantity <= 1}
+												disabled={allSizes[active?.productId?._id] <= 1}
 											>
 												<Minus strokeWidth={1.5} />
 											</button>
 
 											{/* Display Current Quantity */}
-											<span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span>
+											{/* <span className="text-xs sm:text-sm md:text-base">{active?.quantity}</span> */}
+											<span className="text-xs sm:text-sm md:text-base">{allSizes[active?.productId?._id]}</span>
 
 											{/* Increase Button */}
 											<button
-												onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active?.productId?._id,active?.size,active?.color)}
+												// onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active?.productId?._id,active?.size,active?.color)}
+												onClick={() => UpdateSizeQtn(active?.productId?._id,1,active?.size,active?.color)}
 												className="h-fit rounded-full text-black disabled:text-gray-300"
-												disabled={active?.quantity >= active?.size?.quantity}
+												disabled={allSizes[active?.productId?._id] >= active?.size?.quantity}
 											>
 												<Plus strokeWidth={1.5} />
 											</button>

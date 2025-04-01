@@ -68,7 +68,7 @@ const Search = ({ toggleSearchBar }) => {
 
 			{/* Search Recommendations */}
 			<div
-				className="w-[600px] font-kumbsan h-[240px] bg-gray-300 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
+				className="w-[600px] font-kumbsan h-[240px] bg-gray-100 fixed border border-white rounded-t-md top-16 z-30 scrollbar-thin scrollbar-thumb-gray-800 scrollbar-track-gray-100"
 				style={{ maxHeight: "200px", overflowY: "auto", transition: 'all 0.3s ease-in-out' }}
 			>
 				<ul className="p-2">
@@ -76,7 +76,7 @@ const Search = ({ toggleSearchBar }) => {
 					{filterSearches.map((search, index) => (
 						<li
 							key={index}
-							className="cursor-pointer relative min-w-fit py-2 justify-between items-start flex-col flex p-2 peer-hover:bg-gray-300"
+							className="cursor-pointer relative min-w-fit py-2 justify-between items-start flex-col flex p-2"
 							onClick={(e) => {
 								e.stopPropagation();
 								setState(search); // Set the clicked recommendation in input
@@ -84,7 +84,7 @@ const Search = ({ toggleSearchBar }) => {
 							}}
 						>
 							<div className='w-full justify-between flex items-center'>
-								<span className=' text-sm text-gray-700' >{search}</span>
+								<span className='text-sm text-gray-700' >{search}</span>
 								<div onClick={(e)=>{
 									e.preventDefault();
 									e.stopPropagation();
@@ -93,7 +93,7 @@ const Search = ({ toggleSearchBar }) => {
 									<X/>
 								</div>
 							</div>
-							<div className="w-full h-[0.1px] bg-gray-700 bg-opacity-20" />
+							<div className="w-full h-[0.1px] bg-gray-400 bg-opacity-20 my-1" />
 						</li>
 					))}
 				</ul>

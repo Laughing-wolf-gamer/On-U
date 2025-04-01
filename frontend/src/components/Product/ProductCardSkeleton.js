@@ -3,9 +3,8 @@ import React from 'react'
 const ProductCardSkeleton = () => {
     return (
 		<div
-			className="w-full h-full sm:w-[180px] sm:h-[360px] md:w-[185px] md:h-[350px] lg:w-[210px] lg:h-[390px] 2xl:w-[210px] 2xl:h-[400px] 
-			border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer
-			max-w-xs max-h-[450px] min-w-[180px] min-h-[190px]"
+			className="w-full h-full sm:w-[100px] sm:h-[500px] md:w-[185px] md:h-[350px]
+			border-[3px] border-slate-300 shadow-lg rounded-lg grid-cols-1 relative overflow-hidden hover:shadow-xl transition-all ease-in-out duration-300 cursor-pointer"
 		>
 			{/* Product Image Carousel Skeleton */}
 			<div className="w-full bg-gray-300 animate-pulse flex h-[66%] justify-center items-center">
@@ -22,7 +21,7 @@ const ProductCardSkeleton = () => {
 				<div className="w-[60%] h-[20px] bg-gray-400 rounded-md animate-pulse"></div>
 			</div>
 		</div>
-		);
+	);
 
 }
 
