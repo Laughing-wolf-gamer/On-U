@@ -597,12 +597,9 @@ const Ppage = () => {
                                     </div>
 
                                 </div>
-
                                 
-                                
+                                <PincodeChecker productId={decrypt(param.id)} />
 
-                                {/* Add to Cart & Wishlist Buttons */}
-                                <PincodeChecker productId={product?._id} />
                                 <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
                                     <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>
                                         <button

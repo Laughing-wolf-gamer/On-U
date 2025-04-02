@@ -501,8 +501,7 @@ const MPpage = () => {
 		<div ref={scrollContainerRef} className="w-screen max-w-screen-2xl font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 			{loading === false ? (
 				<div>
-					{
-						scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-30 hidden`}>
+					{scrollAmount < maxScrollAmount  && <div className={`mobilevisible fixed bottom-0 w-full z-30 hidden`}>
 							<div className='grid grid-cols-12 w-full bg-white border-t-[0.5px] border-slate-200 relative z-10'>
 								<div className="col-span-2 flex justify-center items-center p-1">
 									<button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
@@ -650,13 +649,6 @@ const MPpage = () => {
 													<button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
 														<span className=''>{active.label}</span>
 													</button>
-													{/* {active?.quantity <= 0 && (
-														<div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
-															<div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-																<span>Out of Stock</span>
-															</div>
-														</div>
-													)} */}
 												</button>
 											</div>
 										)
@@ -701,47 +693,46 @@ const MPpage = () => {
 							</div>
 							
 						</div>
-						<PincodeChecker productId={product?._id}/>
-						{
-							product && product.bulletPoints && product.bulletPoints.length > 0 && (
-								<Fragment>
-								
-									<div className='mt-2 pt-4 bg-white px-4'>
-										<h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
-									</div>
-									<div className='mt-2 pb-4 pt-4 bg-white px-4'>
-										{
-											product.bulletPoints.map((e) =>
-												<Fragment>
-													<h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
-													<span className='mt-4'>
-														<li className='list-disc mt-2'>{e.body}</li>
-													</span>
-												</Fragment>
-											)
-										}
-									</div>
-								</Fragment>
-							)
-						}
-						{
-							product && product.tags && product.tags.length > 0 &&  (
-								<Fragment>
-									<div className='mt-2 pt-4 bg-white px-4'>
-										<h1 className=' flex items-center mt-2 font-semibold'>Tags<Tags className='ml-2' /></h1>
-									</div>
-									<div className='mt-2 pb-4 pt-4 flex-row flex flex-wrap gap-2 bg-white px-4'>
-										{
-											product.tags.map((tag) =>
-												<ul className='bg-gray-200 w-fit px-2 py-1 rounded-full'>
-													<h1 className='font-medium text-base text-gray-800'>{tag}</h1>
-												</ul>
-											)
-										}
-									</div>
-								</Fragment>
-							)
-						}
+                        {
+                            product && <PincodeChecker productId={decrypt(param.id)}/>
+                        }
+						
+						{product && product.bulletPoints && product.bulletPoints.length > 0 && (
+                            <Fragment>
+                            
+                                <div className='mt-2 pt-4 bg-white px-4'>
+                                    <h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
+                                </div>
+                                <div className='mt-2 pb-4 pt-4 bg-white px-4'>
+                                    {
+                                        product.bulletPoints.map((e) =>
+                                            <Fragment>
+                                                <h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
+                                                <span className='mt-4'>
+                                                    <li className='list-disc mt-2'>{e.body}</li>
+                                                </span>
+                                            </Fragment>
+                                        )
+                                    }
+                                </div>
+                            </Fragment>
+                        )}
+						{product && product.tags && product.tags.length > 0 &&  (
+                            <Fragment>
+                                <div className='mt-2 pt-4 bg-white px-4'>
+                                    <h1 className=' flex items-center mt-2 font-semibold'>Tags<Tags className='ml-2' /></h1>
+                                </div>
+                                <div className='mt-2 pb-4 pt-4 flex-row flex flex-wrap gap-2 bg-white px-4'>
+                                    {
+                                        product.tags.map((tag) =>
+                                            <ul className='bg-gray-200 w-fit px-2 py-1 rounded-full'>
+                                                <h1 className='font-medium text-base text-gray-800'>{tag}</h1>
+                                            </ul>
+                                        )
+                                    }
+                                </div>
+                            </Fragment>
+                        )}
 						<div className='mt-2 pb-6 pt-4 relative bg-white px-4'>
 						<h1 className=' flex items-center mt-2 font-semibold'>More Information</h1>
 						<li className='list-none mt-2'>Product Code:&nbsp;{product?.productId}</li>
