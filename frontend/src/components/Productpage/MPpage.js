@@ -24,7 +24,7 @@ import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { LazyLoadImage } from "react-lazy-load-image-component";
-const reviews = [
+/* const reviews = [
     {
         rating: 5,
         comment: "Excellent product! Exceeded my expectations.",
@@ -85,12 +85,13 @@ const reviews = [
       rating: 1,
       comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
     },
-];
+]; */
 
 
 const maxScrollAmount = 1024
 const MPpage = () => {
 	const {decrypt} = useEncryptionDecryptionContext();
+    const {checkAndCreateToast} = useSettingsContext();
     const navigation = useNavigate();
     const param = useParams();
     const dispatch = useDispatch();
@@ -102,7 +103,6 @@ const MPpage = () => {
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
-    const {checkAndCreateToast} = useSettingsContext();
 
 
     const[isPostingReview,setIsPostingReview] = useState(false);
@@ -116,7 +116,7 @@ const MPpage = () => {
     const[ratingData,setRatingData] = useState(null);
     const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
 
-
+    // useRefs...
     const divRef = useRef(null);
     const scrollContainerRef = useRef(null);
     
@@ -178,7 +178,7 @@ const MPpage = () => {
         }
         if (user) {
             const orderData = {
-                userId: user.id,
+                // userId: user.id,
                 productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,
@@ -249,7 +249,6 @@ const MPpage = () => {
                     isBag = similarProductsInBag.some(item => item.isChecked);
                 }
             }
-
             // Set the result in the state (i.e., update whether the product is in the bag)
             setIsInBagList(isBag);
         }
@@ -260,13 +259,12 @@ const MPpage = () => {
             // await dispatch(getbag({ userId: user.id }));
             await dispatch(getwishlist());
             checkAndCreateToast("success", "Wishlist Updated Successfully",3000);
-            console.log("Wishlist Updated Successfully: ",response);
             if(response){
                 setIsInWishList(response);
             }
         } else {
             setWishListProductInfo(product, decrypt(param.id));
-            checkAndCreateToast("success", "Bag is Updated Successfully");
+            checkAndCreateToast("success", "Bag is Updated Successfully",3000);
             updateButtonStates();
         }
     
@@ -283,9 +281,8 @@ const MPpage = () => {
         }
         try {
 			if(user){
-
 				const orderData = {
-					userId: user.id,
+					// userId: user.id,
 					productId: decrypt(param.id),
 					quantity: 1,
 					color: currentColor,
@@ -331,9 +328,6 @@ const MPpage = () => {
     const handleSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images);
     };
-	const getProductURL = () => {
-		return window.location.href; // Gets the current URL of the page
-	};
 	// Method to generate the WhatsApp share link
 	const generateWhatsAppLink = (url) => {
 		const encodedUrl = encodeURIComponent(url); // Encode the URL to make it URL-safe
@@ -341,7 +335,7 @@ const MPpage = () => {
 	};
 	// Method to handle the sharing
 	const handleShare = () => {
-		const productURL = getProductURL(); // Get the active page URL
+		const productURL = window.location.href; // Get the active page URL
 		const shareLink = generateWhatsAppLink(productURL); // Generate the WhatsApp sharing URL
 		// Open the WhatsApp share link in a new window or tab
 		window.open(shareLink, "_blank");
@@ -426,7 +420,9 @@ const MPpage = () => {
     useEffect(() => {
         // Fetch the product and reset scroll position on param.id change
         dispatch(singleProduct(decrypt(param.id)));
-        document.documentElement.scrollTop = 0;
+        if (scrollContainerRef.current) {
+			scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
+		}
     }, [dispatch, param]); // Depend on `param.id` instead of `param` to avoid unnecessary calls
     
 
@@ -449,8 +445,6 @@ const MPpage = () => {
         rect.bottom > containerRect.top &&
         rect.left < containerRect.right &&
         rect.right > containerRect.left;
-
-        // setIsInViewport(isVisible);
 
         // Update scroll position
         setScrollAmount(scrollContainer.scrollTop);  // Log the current scroll position
@@ -496,7 +490,6 @@ const MPpage = () => {
             }
         };
     }, []);
-	// console.log("Decrypted Parma Id: ",decrypt(param.id),param.id);
     return (
 		<div ref={scrollContainerRef} className="w-screen max-w-screen-2xl font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
 			{loading === false ? (
@@ -505,8 +498,7 @@ const MPpage = () => {
 							<div className='grid grid-cols-12 w-full bg-white border-t-[0.5px] border-slate-200 relative z-10'>
 								<div className="col-span-2 flex justify-center items-center p-1">
 									<button className="bg-gray-100 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
-										{
-											loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
+										{loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>
 												{isInWishList ? 
 													(
 														<div className="text-red-500 animate-shine p-1 rounded-full">
@@ -516,9 +508,7 @@ const MPpage = () => {
 														<Heart size={30}/>
 													)
 												}
-											</Fragment>
-										}
-										
+                                        </Fragment>}
 									</button>
 								</div>
 								<div className="col-span-10 text-lg flex justify-center text-center p-1" >
@@ -529,7 +519,6 @@ const MPpage = () => {
 												<span>{isInBagList ? "GO TO BAG":"ADD TO CART"}</span>
 											</Fragment>
 										}
-										
 									</button>
 								</div>
 							</div>
@@ -604,7 +593,7 @@ const MPpage = () => {
 						</div>
 						
 						<div className="border-b border-gray-600 pb-2 pt-2 bg-white">
-							<h1 className=" text-lg font-semibold text-slate-800">
+							<h1 className="text-lg font-semibold text-slate-800">
 								<span className="mr-4 font-bold">
 									₹ {formattedSalePrice(product?.salePrice && product?.salePrice > 0 ? product?.salePrice : product?.price)}
 								</span>
@@ -668,8 +657,7 @@ const MPpage = () => {
 													${currentColor?._id === active?._id ? "text-white" : "bg-slate-100 border-2 text-black"}`}
 													onClick={() => {setCurrentColor(active); handleSetColorImages(active); }}
 												>
-													{
-														active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>
+													{active.quantity <= 0 && <div className='w-full h-full place-self-center justify-end items-center flex flex-col justify-self-center rounded-full absolute inset-0 bg-gray-700 z-[6] bg-opacity-40'>
 															<div className="text-white w-auto justify-center text-[8px] flex bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
 																Out of Stock
 															</div>

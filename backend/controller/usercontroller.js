@@ -56,7 +56,6 @@ export const loginMobileNumber = async(req, res) => {
     try {
 		const { logInEmail} = req.body;
 		const isPhoneNumber = CheckIsPhoneNumber(logInEmail);
-		console.log("Login Type: ",isPhoneNumber);
 		let phoneNumber = null;
 		let email = null;
 		let user = null;
@@ -109,9 +108,7 @@ export const updateProfilePic = async(req,res)=>{
 	try {
 		const id = req.user.id;
 		const {profilePic} = req.body;
-		console.log("Updating Profile Pic: ",req.body);
 		const user = await User.findByIdAndUpdate(id, {profilePic: profilePic}, {new: true});
-		console.log("Updated User: ",user);
 		if(!user){
             return res.status(404).json({message: "User not found"});
         }
@@ -120,7 +117,6 @@ export const updateProfilePic = async(req,res)=>{
 		console.error("Error getting user id",error);
 		logger.error("Error getting user id: " + error.message);
 		res.status(500).json({success:false,message: "Internal server error"});
-
 	}
 }
 
@@ -184,7 +180,7 @@ export const registerUser = A(async (req, res) => {
         })
         
         } else {
-            console.log(response)
+            console.log("Failed to Register User: ",error);
             res.status(400).json({
                 success: false,
             })

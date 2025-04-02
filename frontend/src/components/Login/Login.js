@@ -87,7 +87,6 @@ const Login = () => {
             const response = dispatch(createAndSendProductsArrayWishList(wishListData));
             if(response){
                 if(response.success){
-                    // localStorage.setItem("bagItem", JSON.stringify([]));
                     localStorage.setItem("wishListItem", JSON.stringify([]));
                 }
             }
@@ -95,10 +94,12 @@ const Login = () => {
     }
     const checkSavedBagData = async()=>{
         const savedBagData = sessionBagData;
-        const response = await dispatch(addItemArrayBag(savedBagData));        
-        if(response && response.success){
-            localStorage.setItem("bagItem", JSON.stringify([]));
-        }
+		if(savedBagData){
+			const response = await dispatch(addItemArrayBag(savedBagData));        
+			if(response && response.success){
+				localStorage.setItem("bagItem", JSON.stringify([]));
+			}
+		}
     }
     const handleCloseOtpModal = () => {
         setOtpData(false);

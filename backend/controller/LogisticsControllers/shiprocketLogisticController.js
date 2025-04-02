@@ -782,7 +782,6 @@ export const getAllReturnOrdersShiprockets = async()=>{
                 Authorization: `Bearer ${token}`,
             },
         });
-		// console.log("All Return Orders: ", response.data);
 		return response.data;
 	} catch (error) {
 		console.error("Error fetching all return orders:", error?.response?.data || error.message);
@@ -792,7 +791,6 @@ export const getAllReturnOrdersShiprockets = async()=>{
 
 export const generateExchangeShipment = async (shipmentData, userId) => {
     // Check and fetch token only if it's not available
-    // if (!token) await getAuthToken();
     try {
 		const token = await getShipRocketToken();
         // If userId is passed, no need to fetch user data from DB unless necessary

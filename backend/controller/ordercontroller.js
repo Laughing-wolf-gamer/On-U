@@ -20,6 +20,7 @@ import {
 } from './LogisticsControllers/shiprocketLogisticController.js'
 import { getStatusDescription } from '../utilis/basicUtils.js'
 import User from '../model/usermodel.js'
+
 export const createPaymentOrder = async (req, res) => {
     try {
         console.log("Order User ID:", req.user?.id);
@@ -1019,13 +1020,12 @@ export const addItemsArrayToWishList = async (req, res) => {
         const { productIdArray } = req.body;
 
         // Check if productIdArray exists
-        if (!productIdArray || !productIdArray.length) {
+        if (!userId && !productIdArray || !productIdArray.length) {
             return res.status(400).json({ success: false, message: "Product Array Not Found" });
         }
 
         // Get the product IDs from the array
         const allProductIds = productIdArray.map(p => mongoose.Types.ObjectId(p.productId._id));
-        console.log("Product IDs to add:", allProductIds);
 
         // Find the user's wishlist
         let previousWishList = await WhishList.findOne({ userId });
@@ -1121,11 +1121,12 @@ export const addItemsArrayToWishList = async (req, res) => {
 export const addItemsToBag = async (req, res) => {
     try {
         console.log("Bag Body", req.body);
-        const { userId, productId, quantity, color, size } = req.body;
+        const userId = req.user.id;
+        const { productId, quantity, color, size } = req.body;
 
         // Validation
         if (!userId || !productId || !quantity || !color || !size) {
-            return res.status(400).json({ message: "Please provide all the required fields" });
+            return res.status(400).json({success:false, message: "Please provide all the required fields" });
         }
 
         // Fetch existing user bag
@@ -1490,7 +1491,7 @@ export const getbag = async (req, res) => {
 		if(!userId){
 			return res.status(400).json({ success: false, message: "Invalid user ID" });
 		}
-		console.log("User Id: ",req.user.id);
+		// console.log("User Id: ",req.user.id);
 		const isUserExist = await User.findById(userId);
 		if(!isUserExist){
 			console.log("User not found!");
@@ -1580,9 +1581,10 @@ export const updateItemCheckedInBag = async (req, res, next) => {
 	try {
 		// Destructure the request body to get the product ID and checkedIn status
         const { id,size,color } = req.body;
-		console.log("updateItemCheckedInBag id: ", id, "isChecked: ", req.body);
+		// console.log("updateItemCheckedInBag id: ", id, "isChecked: ", req.body);
 		// Find the original product from the database
         const originalProductData = await ProductModel.findById(id);
+
         if (!originalProductData) {
             return res.status(400).json({ message: "Product Not Found" });
         }
@@ -1598,21 +1600,20 @@ export const updateItemCheckedInBag = async (req, res, next) => {
         if (!product) {
             return res.status(400).json({ message: "Product not found in bag" });
         }
-		// console.log("Product in Bag: ", product);
 		// Update the checkedIn status
 		product.isChecked = !product.isChecked;
 		const TotalBagAmount = calculateTotalAmount(bag.orderItems);
         bag.TotalBagAmount = TotalBagAmount;
         // console.log("Updated Bag:", bag);
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
-        console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
+        // console.log("Update Bag New Data ",totalProductSellingPrice, totalSP, totalDiscount, totalMRP);
         bag.totalProductSellingPrice = totalProductSellingPrice;
         bag.totalSP = totalSP;
         bag.totalDiscount = totalDiscount;
         bag.totalMRP = totalMRP;
         bag.totalGst = totalGst;
 		await bag.save();
-		console.log("bag after update: ", bag);
+		// console.log("bag after update: ", bag);
 		res.status(200).json({
             success: true,
             message: "Successfully updated Bag",
@@ -1654,10 +1655,6 @@ export const updateqtybag = async (req, res, next) => {
             return res.status(400).json({ message: "Product size not found" });
         }
 
-        // Log the original and updated product details for debugging
-        // console.log("Original Product:", product);
-        // console.log("Original Product Size:", originalProductDataSize);
-
         // If the size quantity in the bag doesn't match the original product size, update it
         if (product.size.quantity !== originalProductDataSize.quantity) {
             // console.log("Updating size quantity");
@@ -1673,10 +1670,10 @@ export const updateqtybag = async (req, res, next) => {
         const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(bag);
         console.log("Update Bag Quantity  Data ",bag.TotalBagAmount);
         if(totalProductSellingPrice && totalProductSellingPrice !== 0) bag.totalProductSellingPrice = totalProductSellingPrice;
-        if(totalSP && totalSP !== 0) bag.totalSP = totalSP;
-        if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-        if(totalMRP && totalMRP !== 0) bag.totalMRP = totalMRP;
-        if(totalGst && totalGst !== 0) bag.totalGst = totalGst;
+        if(totalSP) bag.totalSP = totalSP;
+        if(totalDiscount) bag.totalDiscount = totalDiscount;
+        if(totalMRP) bag.totalMRP = totalMRP;
+        if(totalGst) bag.totalGst = totalGst;
         // Save the updated bag
         await bag.save();
 
@@ -1695,11 +1692,11 @@ export const updateqtybag = async (req, res, next) => {
 };
 
 
-export const deletebag = async (req, res) => {
+/* export const deletebag = async (req, res) => {
     try {
         const {productId,size,color} = req.body
 		const userId = req.user.id;
-		console.log("Deleting Bag!",userId);
+		// console.log("Deleting Bag!",userId);
         const bag = await Bag.findOne({userId: userId});
 		if(!bag) return res.status(400).json({success:false,message: "Bag not found"});
 		const bagItem = bag.orderItems.findIndex(p => p.productId.toString() === productId && p.size._id.toString() === size?._id && p.color?._id === color?._id);
@@ -1718,11 +1715,11 @@ export const deletebag = async (req, res) => {
 		const updatedBag = await Bag.findOne({userId: userId}).populate('orderItems.productId Coupon');
 		const {totalProductSellingPrice, totalSP, totalDiscount, totalMRP,totalGst } = await getItemsData(updatedBag);
 		console.log("After Deleting Update Bag Data ",updatedBag);
-		if(totalProductSellingPrice && totalProductSellingPrice !== 0) updatedBag.totalProductSellingPrice = totalProductSellingPrice;
-		if(totalSP && totalSP !== 0) updatedBag.totalSP = totalSP;
-		if(totalDiscount && totalDiscount !== 0) bag.totalDiscount = totalDiscount;
-		if(totalMRP && totalMRP !== 0) updatedBag.totalMRP = totalMRP;
-		if(totalGst && totalGst !== 0) updatedBag.totalGst = totalGst;
+		if(totalProductSellingPrice) updatedBag.totalProductSellingPrice = totalProductSellingPrice;
+		if(totalSP) updatedBag.totalSP = totalSP;
+		if(totalDiscount) bag.totalDiscount = totalDiscount;
+		if(totalMRP) updatedBag.totalMRP = totalMRP;
+		if(totalGst) updatedBag.totalGst = totalGst;
 		await updatedBag.save()
         res.status(200).json({success:true,message:"Successfully deleted Bag",updatedBag})
     } catch (error) {
@@ -1730,7 +1727,60 @@ export const deletebag = async (req, res) => {
         logger.error(`Error occurred during deleting bag ${error.message}`);
         res.status(500).json({message: "Internal Server Error"})
     }
-}
+} */
+export const deletebag = async (req, res) => {
+    try {
+        const { productId, size, color } = req.body;
+        const userId = req.user.id;
+
+        // Find the user's bag
+        const bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon');
+        if (!bag) return res.status(400).json({ success: false, message: "Bag not found" });
+
+        // Find the index of the item to remove
+        const bagItemIndex = bag.orderItems.findIndex(
+            p => p.productId.toString() === productId &&
+                    p.size._id.toString() === size?._id &&
+                    p.color?._id === color?._id
+        );
+
+        if (bagItemIndex === -1) {
+            logger.warn(`Invalid bag item: ${productId}`);
+            return res.status(400).json({ message: "Product not found in bag" });
+        }
+
+        // Remove the item
+        bag.orderItems.splice(bagItemIndex, 1);
+
+        // If the bag is empty after removal, delete it
+        if (bag.orderItems.length === 0) {
+            await Bag.findOneAndDelete({ userId });
+            return res.status(200).json({ success: true, message: "Bag is empty, deleted successfully" });
+        }
+
+        // Save updated bag
+        await bag.save();
+
+        // Recalculate totals
+        const { totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst } = await getItemsData(bag);
+        const updatedBag = { ...bag.toObject(), totalProductSellingPrice, totalSP, totalDiscount, totalMRP, totalGst };
+
+        // Save the bag again with the new totals
+        await bag.updateOne({ $set: updatedBag });
+
+        res.status(200).json({
+            success: true,
+            message: "Successfully deleted product from bag",
+            updatedBag: updatedBag
+        });
+
+    } catch (error) {
+        console.error("Error deleting product from bag", error);
+        logger.error(`Error deleting product from bag: ${error.message}`);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+    
 
 export const deletewish = async (req, res) => {
     try {
@@ -1811,7 +1861,7 @@ export const returnOrder = async (req, res) => {
             sendOrderStatusUpdateMail(order.userId,order);
         } catch (error) {
             console.error("Error sending order status update mail:", error);
-            logger.error("Error sending order status update mail: " + error.message);
+            logger.warn("Error sending order status update mail: " + error.message);
         }
 		res.status(200).json({ success: true, message: "Successfully returned order" });
 	} catch (error) {
@@ -1870,7 +1920,7 @@ export const tryCreatePickupResponse = async(req,res)=>{
 	try {
 		const {orderId,BestCourior,ShipmentCreatedResponseData} = req.body;
 		const order = await OrderModel.findById(orderId);
-		// console.log("PickUp Request Data: ",order);
+        if(!order) return res.status(404).json({ success: false, message: "Order not found" });
 		const pickupRequest = await generateOrderPicketUpRequest(order,ShipmentCreatedResponseData,BestCourior);
 		console.log("Created Pickup Request: ", pickupRequest);
 		if(!pickupRequest){
@@ -1889,6 +1939,7 @@ export const retryRefundData = async(req,res)=>{
 		const{orderId} = req.params;
 		console.log("Returning Refund: ",orderId);
 		const order = await OrderModel.findById(orderId);
+        if(!order) return res.status(404).json({ success: false, message: "Order not found" });
 		const refundData = await generateRefundOrder(order);
 		if(!refundData){
 			return res.status(400).json({ success: false, message: "Failed to create refund", result: null });
@@ -1908,12 +1959,11 @@ export const createAndSendOrderManifest = async (req, res) => {
 		const{orderId} = req.params;
 		const order = await OrderModel.findById(orderId);
 		if(!order) return res.status(404).json({ success: false, message: "Order not found" });
-		console.log("Order Found! : ", order.order_id);
+		// console.log("Order Found! : ", order.order_id);
 		const manifest = await generateManifest(order);
-		console.log("Manifest: ", manifest);
+		// console.log("Manifest: ", manifest);
 		if (manifest?.is_invoice_created) {
             await sendMainifestMail(req.user.id, manifest?.invoice_url);
-			// console.log("Manifest: ", manifest);
 			return res.status(200).json({success: true, message:"Order Manifest created successfully"});
         }
 		res.status(200).json({ success: false, message: "Failed to create order manifest" });

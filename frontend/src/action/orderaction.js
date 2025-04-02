@@ -62,9 +62,7 @@ export const addItemArrayBag = (options) => async()=>{
     }
 }
 export const createbag = (option) => async () => {
-    console.log(option)
     try {
-        const token = localStorage.getItem('token');
         const { data } = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/create_bag`,option, headerConfig())
         return data?.success || false;
     } catch (error) {

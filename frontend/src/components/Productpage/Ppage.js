@@ -370,15 +370,16 @@ const Ppage = () => {
 		}
 	};
 
-
+    useEffect(()=>{
+        dispatch(singleProduct(decrypt(param.id)))
+    },[dispatch])
     useEffect(() => {
         if (state === false) {
             dispatch(getuser())
-            dispatch(singleProduct(decrypt(param.id)))
             setstate(true)
         }
-        document.body.scrollTop = 0
-        document.documentElement.scrollTop = 0;
+        /* document.body.scrollTop = 0
+        document.documentElement.scrollTop = 0; */
         if(warning){
             checkAndCreateToast("warning",warning)
             dispatch(clearErrors())
@@ -439,7 +440,6 @@ const Ppage = () => {
         }
     },[selectedSize])
 	useEffect(() => {
-		dispatch(singleProduct(decrypt(param.id)));
 		if (scrollableDivRef.current) {
 			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
@@ -462,12 +462,14 @@ const Ppage = () => {
             divElement.removeEventListener('scroll', handleScroll);
         };
     }, []);
+
 	useEffect(()=>{
 		updateButtonStates();
 	},[currentSize,currentColor])
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
-    },[hasPurchased])    
+    },[hasPurchased])
+
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {

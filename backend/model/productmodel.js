@@ -3,7 +3,7 @@ import mongoose from 'mongoose'
 const productModelSchema = new mongoose.Schema({
     productId:{
 		type:String,
-        required:true,
+        required:[true,'Please enter product Id'],
 	},
 	sku:Number,
 	hsn:String,
@@ -47,10 +47,9 @@ const productModelSchema = new mongoose.Schema({
         }
     ],
     AllColors:[{
-        type:Object,default:[],required:true
+        type:Object,default:[]
     }],
-    bulletPoints:[
-        {
+    bulletPoints:[{
             header:{type:String},
             body:{type:String},
         }
@@ -64,7 +63,7 @@ const productModelSchema = new mongoose.Schema({
     material:{
         type:String
     },
-    specification:String,
+    specification:{String},
     gender:{
         type:String
     },
