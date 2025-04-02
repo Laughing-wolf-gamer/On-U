@@ -43,37 +43,37 @@ const PincodeChecker = ({productId}) => {
     }
 	useEffect(()=>{
 		if(pincode){
-			// setMessage(`Delivery is available for this pincode Within days`);
             setCustomPincode(pincode);
 		}
 	},[pincode])
     return (
         <div className="max-w-sm w-full p-4 bg-white">
-		<h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
-		
-		<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
-			<input
-				type="number"
-				placeholder="Enter Pincode"
-				value={customPincode}
-				onChange={handleInputChange}
-				className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
-				maxLength={"6"}
-			/>
+			<h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
 			
-			<button
-				type="submit"
-				className="w-full justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
-			>
-				{isLoading ? (
-					<div className="w-6 h-6 border-4 border-t-4 border-white border-t-gray-800 rounded-full animate-spin"></div>
-				) : (
-					<span>Check</span>
-				)}
-			</button>
-		</form>
-		
-		{message && <p className="mt-4 text-center text-gray-600 text-sm">{message}</p>}
+			<form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+				<input
+					type="number"
+					placeholder="Enter Pincode"
+					value={customPincode}
+					onChange={handleInputChange}
+					className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
+					maxLength={"6"}
+					onFocus={(e) => e.preventDefault()}
+				/>
+				
+				<button
+					type="submit"
+					className="w-full justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
+				>
+					{isLoading ? (
+						<div className="w-6 h-6 border-4 border-t-4 border-white border-t-gray-800 rounded-full animate-spin"></div>
+					) : (
+						<span>Check</span>
+					)}
+				</button>
+			</form>
+			
+			{message && <p className="mt-4 text-center text-gray-600 text-sm">{message}</p>}
 		</div>
 
     );
