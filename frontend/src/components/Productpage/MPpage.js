@@ -116,7 +116,6 @@ const MPpage = () => {
         }
         if (user) {
             const orderData = {
-                // userId: user.id,
                 productId: decrypt(param.id),
                 quantity: 1,
                 color: currentColor,

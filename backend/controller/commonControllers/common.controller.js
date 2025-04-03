@@ -1109,7 +1109,6 @@ export const fetchCouponsByQuery = async (req,res)=>{
 			{ $set: { Status: 'Inactive' } } // Update the status to 'Inactive'
 		);
         const foundCoupons = await Coupon.find(filter).limit(10);
-        console.log("Fetched Coupons: ",foundCoupons);
         res.status(200).json({success:true,message:"Successfully fetched Coupons",result:foundCoupons || []});
     } catch (error) {
         console.error(`Error getting Coupons: `,error);

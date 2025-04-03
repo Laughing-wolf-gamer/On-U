@@ -432,9 +432,11 @@ const Ppage = () => {
 				setSelectedSizeColorImageArray(isAlreadyPresent.images);
 				setSelectedImage(isAlreadyPresent.images[0]);
 			}else{
-				const currentColor = selectedSize.colors[0];
-				setSelectedSizeColorImageArray(currentColor.images);
-				setSelectedImage(currentColor.images[0]);
+				const currentColor = selectedSize.colors.length > 0 ? selectedSize.colors[0] : null;
+				if(currentColor){
+					setSelectedSizeColorImageArray(currentColor.images);
+					setSelectedImage(currentColor.images[0]);
+				}
 
 			}
         }
@@ -980,7 +982,7 @@ const NewLeftSideImageContent = ({
 
     // Memoizing the video detection for the selected image
     const memoIsVideo = useMemo(() => {
-        if (!selectedImage || !selectedImage.url) return false;
+        if (!selectedImage || !selectedImage?.url) return false;
         return isVideoFile(selectedImage);
     }, [selectedImage]);
 
@@ -995,6 +997,9 @@ const NewLeftSideImageContent = ({
                     {
                         selectedSize_color_Image_Array && selectedSize_color_Image_Array.length > 0 &&
                         selectedSize_color_Image_Array.map((file, index) => {
+							if(!file){
+								return <p>No File Founds!</p>
+							}
                             const isVideo = isVideoFile(file); // Use the extracted function
                             return (
                                 <div
