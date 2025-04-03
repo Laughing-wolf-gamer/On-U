@@ -49,10 +49,11 @@ const PincodeChecker = ({productId}) => {
     };
 
     useEffect(() => {
-        if (pincode) {
+        if (pincode && isPermissionGranted) {
             setCustomPincode(pincode);
         }
     }, [pincode]);
+	console.log("isPermissionGranted : ",isPermissionGranted)
 
     return (
         <div className="max-w-sm w-full p-4 bg-white">
@@ -62,6 +63,7 @@ const PincodeChecker = ({productId}) => {
                 <input
                     type="number"
                     placeholder="Enter Pincode"
+					required
                     value={customPincode || ''}
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
