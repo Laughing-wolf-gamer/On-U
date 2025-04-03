@@ -58,7 +58,7 @@ const Bag = () => {
 	useEffect(()=>{
 		if(bag){
 			setAllSizes(bag.orderItems.reduce((acc,item)=>{
-				acc[item.productId._id] = item.quantity || 0;
+				acc[`${item.productId._id}-${item.size._id}-${item.color._id}`] = item.quantity || 0;
 				return acc;
 			},{}))
 		}
@@ -71,15 +71,16 @@ const Bag = () => {
 		}
 	},[bag])
 	const UpdateSizeQtn = (id,change,size,color)=>{
+		console.log("Updating Qty:",id,size,color)
 		setAllSizes(prev => {
-			const newQty = prev[id] + change;
+			const newQty = prev[`${id}-${size._id}-${color._id}`] + change;
 			updateQty({ target: { value: newQty } }, id,size,color)
 			return {
 				...prev,
-				[id]:newQty
+				[`${id}-${size._id}-${color._id}`]:newQty
 			}
 		})
-		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[item.productId._id] + change} : item)}
+		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[`${item.productId._id}-${item.size._id}-${item.color._id}`] + change} : item)}
 		setAllBagData(updatedData)
 	}
     useEffect(() => {
@@ -309,7 +310,7 @@ const Bag = () => {
             },400)
         }
     };
-    console.log("allBagData ",totalProductSellingPrice);
+    console.log("All Sizes Data ",allSizes);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-400 scrollbar-thumb-gray-600 pb-3">

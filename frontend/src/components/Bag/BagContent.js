@@ -269,21 +269,21 @@ const ProductListingComponent = ({ bag, updateQty,updateChecked,allSizes,UpdateS
 										// onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
 										onClick = {()=> UpdateSizeQtn(active.productId._id,-1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={allSizes[active.productId._id] <= 1}
+										disabled={allSizes[`${active.productId._id}-${active.size._id}-${active.color._id}`] <= 1 || !active.isChecked}
 									>
 										<Minus />
 									</button>
 
 									{/* Display Current Quantity */}
 									{/* <span className="text-xs sm:text-sm">{active?.quantity}</span> */}
-									<span className="text-xs sm:text-sm">{allSizes[active.productId._id]}</span>
+									<span className="text-xs sm:text-sm">{allSizes[`${active.productId._id}-${active.size._id}-${active.color._id}`]}</span>
 
 									{/* Increase Button */}
 									<button
 										// onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
 										onClick = {()=> UpdateSizeQtn(active.productId._id,+1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300"
-										disabled={allSizes[active.productId._id] >= active?.size?.quantity}
+										disabled={allSizes[`${active.productId._id}-${active.size._id}-${active.color._id}`] >= active?.size?.quantity || !active.isChecked}
 									>
 										<Plus />
 									</button>

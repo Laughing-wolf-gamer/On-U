@@ -60,7 +60,7 @@ const CheckoutPage = () => {
 	useEffect(()=>{
 		if(bag){
 			setAllSizes(bag.orderItems.reduce((acc,item)=>{
-				acc[item.productId._id] = item.quantity || 0;
+				acc[`${item.productId._id}-${item.size._id}-${item.color._id}`] = item.quantity || 0;
 				return acc;
 			},{}))
 		}
@@ -74,14 +74,14 @@ const CheckoutPage = () => {
 	},[bag])
 	const UpdateSizeQtn = (id,change,size,color)=>{
 		setAllSizes(prev => {
-			const newQty = prev[id] + change;
+			const newQty = prev[`${id}-${size._id}-${color._id}`] + change;
 			updateQty({ target: { value: newQty } }, id,size,color)
 			return {
 				...prev,
-				[id]:newQty
+				[`${id}-${size._id}-${color._id}`]:newQty
 			}
 		})
-		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[item.productId._id] + change} : item)}
+		const updatedData = {...allBagData,orderItems:allBagData.orderItems.map(item=>item.productId._id === id ? {...item,quantity:allSizes[`${item.productId._id}-${item.size._id}-${item.color._id}`] + change} : item)}
 		setAllBagData(updatedData)
 	}
 
@@ -708,21 +708,21 @@ const ProductListingComponent = ({ bag,UpdateSizeQtn,allSizes,updateChecked, han
 										// onClick={() => updateQty({ target: { value: Math.max(active?.quantity - 1, 1) } }, active.productId._id,active.size,active.color)}
 										onClick={() => UpdateSizeQtn(active.productId._id,-1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
-										disabled={allSizes[active?.productId?._id] <= 1}
+										disabled={allSizes[`${active?.productId._id}-${active?.size?._id}-${active?.color?._id}`] <= 1}
 									>
 										<Minus />
 									</button>
 
 									{/* Display Current Quantity */}
 									{/* <span className="text-xs sm:text-sm">{active?.quantity}</span> */}
-									<span className="text-xs sm:text-sm">{allSizes[active?.productId?._id]}</span>
+									<span className="text-xs sm:text-sm">{allSizes[`${active?.productId?._id}-${active?.size?._id}-${active?.color?._id}`]}</span>
 
 									{/* Increase Button */}
 									<button
 										// onClick={() => updateQty({ target: { value: active?.quantity + 1 } }, active.productId._id,active.size,active.color)}
 										onClick={() => UpdateSizeQtn(active.productId._id,1,active.size,active.color)}
 										className="p-2 rounded-full text-sm sm:text-base disabled:text-gray-300 hover:scale-105 transition-all ease-in-out duration-300"
-										disabled={allSizes[active?.productId?._id] >= active?.size?.quantity}
+										disabled={allSizes[`${active?.productId?._id}-${active?.size?._id}-${active?.color?._id}`] >= active?.size?.quantity}
 									>
 										<Plus />
 									</button>

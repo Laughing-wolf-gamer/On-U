@@ -387,17 +387,20 @@ const Ppage = () => {
     }, [dispatch, param, warning]);
     const handleSetNewImageArray = (newSize)=>{
         setSelectedColor(newSize.colors);
-        setSelectedSize(newSize);
         setCurrentSize(newSize);
+        setSelectedSize(newSize);
 		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
 		if(!isAlreadyPresent){
         	setCurrentColor(null);
 		}else{
 			setCurrentColor(isAlreadyPresent);
-			setSelectedImage(isAlreadyPresent);
+			
+			setSelectedSizeColorImageArray(isAlreadyPresent.images)
+        	setSelectedImage(isAlreadyPresent.images[0]);
 		}
 		
     }
+
     const handelSetColorImages = (color) => {
         setSelectedSizeColorImageArray(color.images)
         setSelectedImage(color.images[0]);
@@ -434,9 +437,16 @@ const Ppage = () => {
     useEffect(()=>{
         if(selectedSize){
             setSelectedColor(selectedSize.colors);
-            const currentColor = selectedSize.colors[0];
-            setSelectedSizeColorImageArray(currentColor.images);
-            setSelectedImage(currentColor.images[0]);
+			const isAlreadyPresent = selectedSize.colors.find(item => item?.label === currentColor?.label);
+			if(isAlreadyPresent){
+				setSelectedSizeColorImageArray(isAlreadyPresent.images);
+				setSelectedImage(isAlreadyPresent.images[0]);
+			}else{
+				const currentColor = selectedSize.colors[0];
+				setSelectedSizeColorImageArray(currentColor.images);
+				setSelectedImage(currentColor.images[0]);
+
+			}
         }
     },[selectedSize])
 	useEffect(() => {
@@ -469,7 +479,6 @@ const Ppage = () => {
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
     },[hasPurchased])
-
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto justify-start scrollbar bg-white overflow-x-hidden scrollbar-track-gray-800 scrollbar-thumb-gray-300">
             {
