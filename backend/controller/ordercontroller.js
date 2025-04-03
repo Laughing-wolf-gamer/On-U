@@ -840,8 +840,10 @@ export const removeCouponToBag = async(req,res)=>{
 
 }
 
+
 export const addItemsArrayToBag = async (req, res) => {
     try {
+		console.log("Adding Items to Bag: ",req.body);
         // Check if the user is logged in
         if (!req.user || !req.user.id) {
             return res.status(400).json({ message: "User Not Logged In" });
@@ -899,8 +901,6 @@ export const addItemsArrayToBag = async (req, res) => {
             // Save the updated bag
             await userBag.save();
         }
-
-        // console.log("User Bag: ", userBag);
         res.status(200).json({ success: true, message: "Items added to bag" });
     } catch (error) {
         console.error("Failed to add items array: ", error);
@@ -1018,6 +1018,7 @@ export const addItemsArrayToWishList = async (req, res) => {
     try {
         const userId = req.user.id;
         const { productIdArray } = req.body;
+		console.log("Product Id Array: ", productIdArray);
 
         // Check if productIdArray exists
         if (!userId && !productIdArray || !productIdArray.length) {
@@ -1025,7 +1026,7 @@ export const addItemsArrayToWishList = async (req, res) => {
         }
 
         // Get the product IDs from the array
-        const allProductIds = productIdArray.map(p => mongoose.Types.ObjectId(p.productId._id));
+        const allProductIds = productIdArray.map(p => mongoose.Types.ObjectId(p));
 
         // Find the user's wishlist
         let previousWishList = await WhishList.findOne({ userId });

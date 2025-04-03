@@ -7,6 +7,8 @@ import { BASE_API_URL, headerConfig } from "../../../config";
 import axios from "axios";
 import { useSettingsContext } from "../../../Contaxt/SettingsContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useServerAuth } from "../../../Contaxt/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const EditableField = ({
   label,
@@ -43,27 +45,26 @@ const EditableField = ({
 	);
 };
 
-const UserDetails = ({ user }) => {
+const UserDetails = () => {
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	const navigate = useNavigate();
 	const dispatch = useDispatch();
 	const[isLoadingImage,setImageLoading] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
 	const [editedUser, setEditedUser] = useState(null);
 	const [isEditingAll, setIsEditingAll] = useState(false); // Flag to toggle editing for all fields
 	const [tempValue, setTempValue] = useState(""); // Temporary value for input
-	const [profilePic, setProfilePic] = useState(user?.profilePic || ""); // Store Profile Pic URL
+	const [profilePic, setProfilePic] = useState(user.user?.profilePic || ""); // Store Profile Pic URL
 
 	const handleUploadImage = async (file) => {
         try {
             const formData = new FormData();
             formData.append('my_file', file);
-            // const token = localStorage.getItem('token');
-            // console.log(token);
             const res = await axios.post(`${BASE_API_URL}/admin/upload-image`,formData,headerConfig());
-            console.log("REsponse",res.data);
 			if(res.data?.result){
 				return res.data?.result;
 			}
-            // toast.success("Image uploaded successfully");
+            checkAndCreateToast('success',"Image Loaded successfully");
             return '';
         } catch (error) {
             console.error('An error occurred while uploading: ',error);
@@ -73,7 +74,7 @@ const UserDetails = ({ user }) => {
                 console.log('Error Status Code:', error.response.status);
                 console.log('Error Data:', error.response.data); // The JSON error message from the server
                 console.log('Error Headers:', error.response.headers);
-                // toast.error("Error uploading files: " + error.response.data.message);
+                checkAndCreateToast("error","Error uploading files: " + error.response.data.message);
             } else if (error.request) {
                 // The request was made but no response was received
                 console.log('No response received:', error.request);
@@ -81,7 +82,6 @@ const UserDetails = ({ user }) => {
             } else {
                 // Something happened in setting up the request that triggered an error
                 console.log('Error Message:', error.message);
-                // toast.error("Error uploading files: ", error.message);
             }
 			return '';
         }
@@ -100,7 +100,6 @@ const UserDetails = ({ user }) => {
 		const file = e.target.files[0];
 		if (file) {
 			const newProfileImage = await handleUploadImage(file);
-			console.log("New Profile Pic: ", newProfileImage);
 			if(newProfileImage){
 				// setProfilePic(newProfileImage);
 				await dispatch(updateuser({...editedUser,profilePic:newProfileImage}));
@@ -114,7 +113,7 @@ const UserDetails = ({ user }) => {
 		}
 	};
 
-	const handleSave = () => {
+	const handleSave = async () => {
 		setIsEditingAll(false);
 		const digitsOnly = editedUser?.phoneNumber.replace(/\D/g, '');
 
@@ -124,12 +123,14 @@ const UserDetails = ({ user }) => {
 			checkAndCreateToast('error', 'Phone number should be 10 digits or fewer!');
 			return;
 		}
-		dispatch(updateuser(editedUser));
+		await dispatch(updateuser(editedUser));
+		await checkAuthUser();
+		checkAndCreateToast('success','Profile Updated Successfully!');
 	};
 
 	const handleCancel = () => {
 		setIsEditingAll(false);
-		setEditedUser(user); // Revert to original user data
+		setEditedUser(user.user); // Revert to original user data
 	};
 
 	const handleEditAll = () => {
@@ -137,9 +138,13 @@ const UserDetails = ({ user }) => {
 	};
 
 	useEffect(() => {
-		setEditedUser(user);
+		if(user){
+			setEditedUser(user.user);
+		}else{
+			setEditedUser(null);
+			navigate('/Login')
+		}
 	}, [user]);
-	console.log("Edited User:", user);
 	return (
 		<div className="max-w-4xl mx-auto bg-white p-6 sm:p-8 rounded-lg">
 			{/* Profile Picture Section */}

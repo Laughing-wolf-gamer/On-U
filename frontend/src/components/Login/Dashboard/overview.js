@@ -11,6 +11,7 @@ import BackToTopButton from '../../Home/BackToTopButton';
 import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
 import WhatsAppButton from '../../Home/WhatsAppButton';
+import { useServerAuth } from '../../../Contaxt/AuthContext';
 const NotLoggedInModal = () => {
 	const navigate = useNavigate();
 
@@ -46,7 +47,8 @@ const NotLoggedInModal = () => {
 		</div>
 	);
 };
-const Overview = ({ user ,loading,isAuthentication}) => {
+const Overview = () => {
+	const{checkAuthUser,user,userLoading,isAuthentication} = useServerAuth();
 	const location = useLocation(); // Get the current location
 	const navigate = useNavigate();
 	const dispatch = useDispatch();
@@ -80,10 +82,12 @@ const Overview = ({ user ,loading,isAuthentication}) => {
 		}
 	}
 	const handleLogout = async () => {
-		await dispatch(logout())
+		await dispatch(logout());
+		await checkAuthUser();
+		localStorage.removeItem('token')
 		navigate('/Login');
 	};
-	if(!loading && !isAuthentication && !user){
+	if(!userLoading && !isAuthentication && !user){
 		return <NotLoggedInModal/>;
 	}
 

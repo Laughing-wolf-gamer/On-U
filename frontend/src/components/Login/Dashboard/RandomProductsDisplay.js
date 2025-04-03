@@ -1,17 +1,10 @@
 import { ChevronLeft, ChevronRight } from 'lucide-react';
-import React, { useEffect, useRef, useState } from 'react'
-import { getRandomArrayOfProducts } from '../../../action/productaction';
-import { useDispatch, useSelector } from 'react-redux';
+import React, { useRef, useState } from 'react'
 import SingleProduct from '../../Product/Single_product';
+import { useServerWishList } from '../../../Contaxt/ServerWishListContext';
 
 const RandomProductsDisplay = ({label = ''}) => {
-	const dispatch = useDispatch();
-	const { loading,randomProducts } = useSelector(state => state.RandomProducts);
-
-	useEffect(()=>{
-		dispatch(getRandomArrayOfProducts());
-	},[])
-
+	const{randomProducts,RandomProductLoading } = useServerWishList();
 
 	const sliderRef = useRef(null);
 	
@@ -97,8 +90,7 @@ const RandomProductsDisplay = ({label = ''}) => {
 					onTouchEnd={handleTouchEnd}
 					style={{ cursor: dragState.isDragging ? 'grabbing' : 'grab',userSelect: 'none'  }}
 				>
-					{
-						loading ? (
+					{RandomProductLoading ? (
 							<ul className='flex gap-4 py-2 sm:gap-2 md:gap-8 lg:gap-6'>
 								{Array(10)
 									.fill(0)

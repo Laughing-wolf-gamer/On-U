@@ -13,6 +13,8 @@ import { SettingsProvider } from './Contaxt/SettingsContext';
 import { LocalStorageContextProvider } from './Contaxt/LocalStorageContext';
 import { EncryptionDecryptionProvider } from './Contaxt/EncryptionContext';
 import { SeverWishListProvider } from './Contaxt/ServerWishListContext';
+import { SeverBannersProvider } from './Contaxt/ServerBannerContext';
+import { SeverAuthProvider } from './Contaxt/AuthContext';
 
 const option = {
   timeout: 2000,
@@ -25,21 +27,25 @@ ReactDOM.render(
     <Provider store={store}>
       <Alertprovider template={AlertTemplate} {...option}>
         <React.StrictMode >
-            <ToastProvider>
-              <SessionStorageProvider>
-                <LocalStorageContextProvider>
-                  <LocationContextProvider>
-                    <SettingsProvider>
-                      <EncryptionDecryptionProvider>
-					  	<SeverWishListProvider>
-                        	<App />
-						</SeverWishListProvider>
-                      </EncryptionDecryptionProvider>
-                    </SettingsProvider>
-                  </LocationContextProvider>
-                </LocalStorageContextProvider>
-              </SessionStorageProvider>
-            </ToastProvider>
+			<SeverAuthProvider>
+				<ToastProvider>
+				<SessionStorageProvider>
+					<LocalStorageContextProvider>
+					<LocationContextProvider>
+						<SettingsProvider>
+						<EncryptionDecryptionProvider>
+							<SeverBannersProvider>
+								<SeverWishListProvider>
+									<App />
+								</SeverWishListProvider>
+							</SeverBannersProvider>
+						</EncryptionDecryptionProvider>
+						</SettingsProvider>
+					</LocationContextProvider>
+					</LocalStorageContextProvider>
+				</SessionStorageProvider>
+				</ToastProvider>
+			</SeverAuthProvider>
         </React.StrictMode>
       </Alertprovider>
     </Provider>,

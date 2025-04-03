@@ -1,8 +1,8 @@
 import React, { Fragment, useState } from 'react'
 import EmptyBag from './Emptybag';
 import { calculateDiscountPercentage, formattedSalePrice } from '../../config';
-import { Minus, Plus, Trash, X } from 'lucide-react';
-import { BsCurrencyRupee, BsShieldFillCheck } from 'react-icons/bs';
+import { Minus, Plus, Trash } from 'lucide-react';
+import { BsShieldFillCheck } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 import CouponsDisplay from './CouponDisplay';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';

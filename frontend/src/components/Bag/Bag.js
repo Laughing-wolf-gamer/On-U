@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment, useRef } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { getbag, getqtyupdate, deleteBag, itemCheckUpdate } from '../../action/orderaction';
-import { getAddress, getConvinceFees, getuser, updateAddress } from "../../action/useraction";
+import { getqtyupdate, deleteBag, itemCheckUpdate } from '../../action/orderaction';
+import { getAddress, getConvinceFees, updateAddress } from "../../action/useraction";
 import { useNavigate } from 'react-router-dom';
 import './bag.css';
 import { getOriginalAmount } from '../../config';
@@ -15,14 +15,15 @@ import BagContent from './BagContent';
 import OfflineBagContent from './OfflineBagContent';
 import BackToTopButton from '../Home/BackToTopButton';
 import WhatsAppButton from '../Home/WhatsAppButton';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
-    const { user, isAuthentication } = useSelector(state => state.user);
-    const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	const{bag,bagLoading,fetchBag,randomProducts,RandomProductLoading} = useServerWishList();
     const {allAddresses} = useSelector(state => state.getAllAddress)
     const {checkAndCreateToast} = useSettingsContext();
     const navigation = useNavigate()
@@ -44,14 +45,15 @@ const Bag = () => {
     const handleOpenPopup = () => setIsAddressPopupOpen(true);
     const handleClosePopup = () => {
         setIsAddressPopupOpen(false)
-        dispatch(getbag());
+        // dispatch(getbag());
         dispatch(getAddress())
     };
     const handleSaveAddress = async (newAddress) => {
         // const updatedAddresses = [...user.user.addresses, newAddress];
         // Assuming you have a function to update the user's address in the backend
         await dispatch(updateAddress(newAddress));
-        dispatch(getuser());
+        // dispatch(getuser());
+		checkAuthUser();
         checkAndCreateToast("success",'Address added successfully');
     };
 
@@ -236,7 +238,8 @@ const Bag = () => {
 		e.stopPropagation();
 		if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId,size,color }));
-			dispatch(getbag());
+			// dispatch(getbag());
+			fetchBag();
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -246,7 +249,8 @@ const Bag = () => {
     const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
             await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-            dispatch(getbag());
+            // dispatch(getbag());
+			fetchBag();
         }else{
             removeBagSessionStorage(productId,size,color)
         }
@@ -265,15 +269,16 @@ const Bag = () => {
         }
     };
     useEffect(() => {
-        if (!user) {
-            dispatch(getuser());
-        }else{
+        if (user) {
             if (isAuthentication) {
                 dispatch(getAddress())
-                dispatch(getbag());
+                // dispatch(getbag());
             }
             setAddress(user?.user?.addresses[0]);
-        }
+            // dispatch(getuser());
+        }else{
+			checkAuthUser();
+		}
     }, [dispatch,deleteBagResult, user, isAuthentication]);
     useEffect(()=>{
         dispatch(getRandomArrayOfProducts())

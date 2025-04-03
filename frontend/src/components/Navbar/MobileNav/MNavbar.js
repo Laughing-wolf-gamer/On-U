@@ -24,9 +24,9 @@ const MNavbar = ({ user }) => {
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const {wishlist,fetchWishList} = useServerWishList();
+    const {wishlist,fetchWishList,bag,bagLoading,fetchBag} = useServerWishList();
     const dispatch = useDispatch()
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const navigation = useNavigate()
     const [showMenuView, setMenuShow] = useState(false);
     const [showbagView, setBagShow] = useState(false);
@@ -75,11 +75,11 @@ const MNavbar = ({ user }) => {
 		dispatch(Allproduct())
 		setserdiv('hidden')
     }
-    useEffect(()=>{
+    /* useEffect(()=>{
         if(user){
 			dispatch(getbag());
         }
-    },[user,dispatch])
+    },[user,dispatch]) */
     useEffect(() => {
         // Optionally you can trigger updates based on other session storage events here
         // console.log("Nav Bar sessionBagData: ",sessionBagData);

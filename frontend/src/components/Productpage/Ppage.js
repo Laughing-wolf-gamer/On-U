@@ -27,8 +27,9 @@ import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
 import { BsTag } from 'react-icons/bs'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
 import { useServerWishList } from '../../Contaxt/ServerWishListContext'
+import { useServerAuth } from '../../Contaxt/AuthContext'
 
-const reviews = [
+/* const reviews = [
     {
         rating: 5,
         comment: "Excellent product! Exceeded my expectations.",
@@ -89,7 +90,7 @@ const reviews = [
         rating: 1,
         comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
     },
-];
+]; */
 
 const maxScrollAmount = 1272,maxScrollWithReviewInput = 1500, LargeScreenSize = 916.7999877929688
 const Ppage = () => {
@@ -105,10 +106,10 @@ const Ppage = () => {
     const dispatch = useDispatch()
     
     const [isFocused, setIsFocused] = useState(false);
-    const {wishlist,loadingWishList} = useServerWishList();
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const {wishlist,loadingWishList,bag,bagLoading,fetchBag} = useServerWishList();
     const { product, loading:productLoading, similar } = useSelector(state => state.Sproduct)
-    const {user} = useSelector(state => state.user)
+    // const {user} = useSelector(state => state.user)
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const {error:warning} = useSelector(state => state.wishlist)
     
     
@@ -171,7 +172,8 @@ const Ppage = () => {
             const response = await dispatch(createbag(orderData));
             if(response){
                 // await dispatch(getwishlist());
-                dispatch(getbag());
+                // dispatch(getbag());
+				await fetchBag();
                 checkAndCreateToast("success", "Product successfully in Bag");
             }else{
                 checkAndCreateToast("error", "Product Failed to add in bag");
@@ -376,11 +378,9 @@ const Ppage = () => {
     },[dispatch])
     useEffect(() => {
         if (state === false) {
-            dispatch(getuser())
+            // dispatch(getuser())
             setstate(true)
         }
-        /* document.body.scrollTop = 0
-        document.documentElement.scrollTop = 0; */
         if(warning){
             checkAndCreateToast("warning",warning)
             dispatch(clearErrors())
@@ -425,8 +425,8 @@ const Ppage = () => {
             checkFetchedIsPurchased();
         }
         if(user){
-            dispatch(getbag());
-            dispatch(getwishlist());
+            // dispatch(getbag());
+            // dispatch(getwishlist());
         }
     },[product,user,dispatch])
     useEffect(() => {

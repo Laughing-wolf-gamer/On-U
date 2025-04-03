@@ -7,13 +7,15 @@ import { getuser } from '../../action/useraction';
 import { useNavigate } from 'react-router-dom';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { getbag } from '../../action/orderaction';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const PaymentPending = () => {
-	const dispatch = useDispatch();
 	const navigate = useNavigate();
+	const{fetchBag} = useServerWishList();
 	const[isPaymentChecking,setIsPaymentChecking] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
-	const { user } = useSelector(state => state.user);
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
 	const verifyAnyOrdersPayment = async()=>{
 		setIsPaymentChecking(true);
         if(!sessionStorage.getItem("checkoutData")){
@@ -27,7 +29,8 @@ const PaymentPending = () => {
             sessionStorage.removeItem("checkoutData")
             if(response?.data.success){
                 checkAndCreateToast("success","Payment Successful");
-				await dispatch(getbag());
+				// await dispatch(getbag());
+				await fetchBag();
 				navigate('/bag/checkout/success');
             }else{
                 checkAndCreateToast("error","Payment Failed");
@@ -43,7 +46,9 @@ const PaymentPending = () => {
 		}
     }
 	useEffect(()=>{
-		dispatch(getuser());
+		if(!user){
+			checkAuthUser();
+		}
 	},[])
 	useEffect(()=>{
 		if(user && !isPaymentChecking){

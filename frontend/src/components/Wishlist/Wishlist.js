@@ -1,26 +1,25 @@
 import React, { Fragment, useEffect, useState } from 'react';
 import Single_product from '../Product/Single_product';
 import { useDispatch, useSelector } from 'react-redux';
-import { deletewish, getwishlist } from '../../action/orderaction';
+import { deletewish } from '../../action/orderaction';
 import { MdClear } from 'react-icons/md';
 import wish from '../images/wishlist-bag.png';
 import { Link, useNavigate } from 'react-router-dom';
-import { getuser, clearErrors } from '../../action/useraction';
+import { clearErrors } from '../../action/useraction';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
 import { getRandomArrayOfProducts } from '../../action/productaction';
 import Footer from '../Footer/Footer';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const Wishlist = () => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
    	const { sessionData, sessionRecentlyViewProducts, setWishListProductInfo } = useSessionStorage();
 	const [currentWishListItem, setCurrentWishListItem] = useState([]);
-	// const { wishlist, loading: loadingWishList } = useSelector(state => state.wishlist_data);
-	const{wishlist,loadingWishList,fetchWishList} = useServerWishList();
-	const { isAuthentication, loading: userloading, error, user } = useSelector(state => state.user);
-	const { randomProducts, loading: RandomProductLoading, error: errorRandomProductLoading } = useSelector(state => state.RandomProducts);
+	const{wishlist,loadingWishList,fetchWishList,randomProducts,RandomProductLoading} = useServerWishList();
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
 
 	const navigation = useNavigate();
 	const dispatch = useDispatch();
@@ -32,9 +31,7 @@ const Wishlist = () => {
 		if (isAuthentication && user) {
 			console.log("WishList: ", product);
 			await dispatch(deletewish({ deletingProductId: productId || product._id }));
-			// dispatch(getwishlist()); // Call this once after deletion
 			fetchWishList();
-
 		} else {
 			setWishListProductInfo(product, productId);
 		}
@@ -43,33 +40,17 @@ const Wishlist = () => {
 	useEffect(() => {
 		if (!state1) {
 			// Fetch user data only once when the component mounts and user is not authenticated
-			if (!user && !userloading) {
-				dispatch(getuser());
+			if (!user) {
+				// dispatch(getuser());
+				checkAuthUser();
 			}
 			setState1(true);
 		}
-
-		if (error) {
-			dispatch(clearErrors());
-		}
-
-		if (!state && !userloading) {
+		if (!state && !userLoading) {
 			// Update state based on user authentication status
 			setState(true);
 		}
-	}, [dispatch, error, userloading, isAuthentication, user, state, state1]);
-
-	useEffect(() => {
-		/* if (user) {
-			// Fetch wishlist only once when the user is authenticated
-			if (!wishlist?.orderItems?.length) {
-				dispatch(getwishlist());
-			}
-		} */
-		// dispatch(getwishlist());
-		// Fetch random products if not already loaded
-		dispatch(getRandomArrayOfProducts());
-	}, []);
+	}, [dispatch, userLoading, user, state, state1]);
 
 	useEffect(() => {
 		// Update the wishlist items based on user authentication status or session data

@@ -13,10 +13,14 @@ export const SeverWishListProvider = ({ children }) => {
 	const { randomProducts, loading: RandomProductLoading, error: errorRandomProductLoading } = useSelector(state => state.RandomProducts);
 	const dispatch = useDispatch();
 	const fetchWishList = async () => {
-		dispatch(getwishlist());
+		if(!loadingWishList){
+			dispatch(getwishlist());
+		}
 	}
 	const fetchBag = async () => {
-		dispatch(getbag());
+		if(!bagLoading){
+			dispatch(getbag());
+		}
 	}
 	useEffect(()=>{
 		fetchWishList();

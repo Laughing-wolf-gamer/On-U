@@ -4,8 +4,10 @@ import {Link} from 'react-router-dom'
 import { logout } from '../../../action/useraction'
 import { useDispatch} from 'react-redux'
 import { useSettingsContext } from '../../../Contaxt/SettingsContext'
+import { useServerAuth } from '../../../Contaxt/AuthContext'
 const Profile = ({show, CMenu, parentCallback, user}) => {
     const dispatch = useDispatch()
+	const{checkAuthUser} = useServerAuth();
     const {checkAndCreateToast} = useSettingsContext();
     const transitions = useTransition(show, {
         from: { opacity: 0 },
@@ -14,8 +16,9 @@ const Profile = ({show, CMenu, parentCallback, user}) => {
         delay: 300,
     })
 
-    const logoutBTN = () =>{
-        dispatch(logout())
+    const logoutBTN = async() =>{
+        await dispatch(logout())
+		await checkAuthUser();
         localStorage.removeItem('token')
         checkAndCreateToast("Logout Successfully")
     }

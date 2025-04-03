@@ -6,10 +6,11 @@ import { useSelector, useDispatch } from 'react-redux';
 import { getuser, updatedetailsuser } from "../../action/useraction";
 import { getbag } from '../../action/orderaction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const Address = () => {
     const [edit, setEdit] = useState(false);
-    const { user, userloading, isAuthentication } = useSelector(state => state.user);
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const { bag, bagloading } = useSelector(state => state.bag_data);
     const { success } = useSelector(state => state.updateuser2);
     const {checkAndCreateToast} = useSettingsContext();
@@ -32,22 +33,22 @@ const Address = () => {
     });
 
     useEffect(() => {
-        if (!user) dispatch(getuser());
+        // if (!user) dispatch(getuser());
 
         if (!isAuthentication) {
             checkAndCreateToast('info','Log in to access BAG');
             navigation('/Login');
             
         } else {
-        dispatch(getbag({ userId: user?.id }));
-        setAddressDetails({
-            name: user?.name,
-            phonenumber: user?.phoneNumber,
-            pincode: user?.address?.pincode,
-            address1: user?.address?.address1,
-            address2: user?.address?.address2,
-            citystate: user?.address?.state
-        });
+			// dispatch(getbag({ userId: user?.id }));
+			setAddressDetails({
+				name: user?.name,
+				phonenumber: user?.phoneNumber,
+				pincode: user?.address?.pincode,
+				address1: user?.address?.address1,
+				address2: user?.address?.address2,
+				citystate: user?.address?.state
+			});
         }
     }, [dispatch, user, isAuthentication, checkAndCreateToast, navigation]);
 
@@ -67,10 +68,11 @@ const Address = () => {
         dispatch(updatedetailsuser(addressDetails, user?.id));
         checkAndCreateToast('success',success);
         setEdit(false);
-        dispatch(getuser());
+        // dispatch(getuser());
+		checkAuthUser();
     };
 
-    if (userloading || bagloading) return null;
+    if (userLoading || bagloading) return null;
 
     return (
         <div className="relative">

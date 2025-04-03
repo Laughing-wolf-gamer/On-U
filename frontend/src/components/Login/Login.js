@@ -1,17 +1,21 @@
 import React, { Fragment, useState } from 'react';
 import './Login.css';
 import { useDispatch } from 'react-redux';
-import { loginmobile, loginVerify } from '../../action/useraction';
+import { getuser, loginmobile, loginVerify } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
 import { addItemArrayBag, createAndSendProductsArrayWishList } from '../../action/orderaction';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { X } from 'lucide-react';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 const Login = () => {
 	const[isUpdating,setIsUpdating] = useState(false);
     const [logInEmail, setLogInEmail] = useState('');
     const { sessionData,sessionBagData } = useSessionStorage();
+	const{fetchWishList,fetchBag} = useServerWishList();
+	const{user,checkAuthUser} = useServerAuth();
     const [otpData, setOtpData] = useState(null);
     const [otp, setOtp] = useState('');
     const navigation = useNavigate();
@@ -69,6 +73,9 @@ const Login = () => {
                 }finally{
 					setIsUpdating(false);
 				}
+				if(!user){
+					checkAuthUser();
+				}
                 checkAndCreateToast("success",'Login Successful');
                 setOtpData(null); // Clear OTP data after successful verification
                 setOtp('');
@@ -82,22 +89,24 @@ const Login = () => {
 		}
     };
     const checkSavedWishListData = async()=>{
-        const wishListData = sessionData;
+        const wishListData = sessionData.map(item => item?.productId?._id);
         if(wishListData){
-            const response = dispatch(createAndSendProductsArrayWishList(wishListData));
+            const response = await dispatch(createAndSendProductsArrayWishList(wishListData));
             if(response){
                 if(response.success){
                     localStorage.setItem("wishListItem", JSON.stringify([]));
+					await fetchWishList();
                 }
             }
         }
     }
     const checkSavedBagData = async()=>{
-        const savedBagData = sessionBagData;
+        const savedBagData = sessionBagData.map(item => ({productId:item.productId,size:item?.size,color:item?.color,quantity:item?.quantity,isChecked:item?.isChecked}));
 		if(savedBagData){
 			const response = await dispatch(addItemArrayBag(savedBagData));        
 			if(response && response.success){
 				localStorage.setItem("bagItem", JSON.stringify([]));
+				await fetchBag();
 			}
 		}
     }

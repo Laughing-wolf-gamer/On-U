@@ -88,6 +88,8 @@ const AddressSection = ({ address, userName }) => (
 );
 
 const OrderDetailsPage = ({ user }) => {
+    const [orderItems, setOrderItems] = useState([]);
+    const scrollableDivRef = useRef(null);
     const params = useParams();
     const navigate = useNavigate(); 
     const dispatch = useDispatch();
@@ -99,8 +101,6 @@ const OrderDetailsPage = ({ user }) => {
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
 	
 	const[openReturnOptionWindow,setOpenReturnOptionWindow] = useState(false);
-    const scrollableDivRef = useRef(null);
-    const [orderItems, setOrderItems] = useState([]);
 
     useEffect(() => {
         if (params) {

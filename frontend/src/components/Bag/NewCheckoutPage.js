@@ -19,12 +19,15 @@ import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import RandomProductsDisplay from '../Login/Dashboard/RandomProductsDisplay';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const CheckoutPage = () => {
   	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
 	const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage } = useSessionStorage();
-	const { user, isAuthentication } = useSelector(state => state.user);
-	const { bag } = useSelector(state => state.bag_data);
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	// const { bag } = useSelector(state => state.bag_data);
+	const{bag,fetchBag} = useServerWishList();
 	const {allAddresses} = useSelector(state => state.getAllAddress)
 	const {checkAndCreateToast} = useSettingsContext();
 	const dispatch = useDispatch();
@@ -48,12 +51,14 @@ const CheckoutPage = () => {
 	const handleOpenPopup = () => setIsAddressPopupOpen(true);
 	const handleClosePopup = () => {
 		setIsAddressPopupOpen(false)
-		dispatch(getbag());
+		// dispatch(getbag());
+		fetchBag();
 		dispatch(getAddress())
 	};
 	const handleSaveAddress = async (newAddress) => {
 		await dispatch(updateAddress(newAddress));
-		dispatch(getuser());
+		// dispatch(getuser());
+		checkAuthUser();
 		checkAndCreateToast("success",'Address added successfully');
 	};
 
@@ -222,7 +227,8 @@ const CheckoutPage = () => {
 		// console.log("Is Checked Value: ", e.target.checked);
 		if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId,size,color }));
-			dispatch(getbag());
+			// dispatch(getbag());
+			fetchBag();
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -232,7 +238,8 @@ const CheckoutPage = () => {
 	const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
 		if(isAuthentication){
 			await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-			dispatch(getbag());
+			// dispatch(getbag());
+			fetchBag();
 		}else{
 			removeBagSessionStorage(productId,size,color)
 		}
@@ -253,11 +260,11 @@ const CheckoutPage = () => {
 	};
 	useEffect(() => {
 		if (user) {
-			dispatch(getbag());
 			dispatch(getAddress())
 			setAddress(user?.user?.addresses[0]);
 		}else{
-			dispatch(getuser());
+			// dispatch(getuser());
+			checkAuthUser();
 		}
 		
 	}, [dispatch,deleteBagResult, user]);
@@ -273,7 +280,8 @@ const CheckoutPage = () => {
 				checkAndCreateToast("success","Payment Successful");
 				if(user){
 					setTimeout(() => {
-						dispatch(getbag());
+						// dispatch(getbag());
+						fetchBag();
 					}, 1000);
 				}
 			}else{
@@ -422,7 +430,8 @@ const CheckoutPage = () => {
 					totalAmount={totalProductSellingPrice}
 					originalsAmount={totalSellingPrice}
 					closePopup={() => {
-						dispatch(getbag());
+						// dispatch(getbag());
+						fetchBag();
 						dispatch(getAddress());
 						setShowPayment(false);
 						setSelectedAddress(null);

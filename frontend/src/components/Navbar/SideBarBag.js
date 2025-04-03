@@ -2,22 +2,24 @@ import React, { Fragment, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { useNavigate } from 'react-router-dom';
-import { getAddress, getConvinceFees, getuser } from '../../action/useraction';
-import { deleteBag, getbag, getqtyupdate, itemCheckUpdate } from '../../action/orderaction';
-import { getRandomArrayOfProducts } from '../../action/productaction';
+import { getConvinceFees, getuser } from '../../action/useraction';
+import { deleteBag, getqtyupdate, itemCheckUpdate } from '../../action/orderaction';
 import { Minus, Plus, Trash } from 'lucide-react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { calculateDiscountPercentage, formattedSalePrice, getOriginalAmount } from '../../config';
 import SideBarBagProductItem from '../Product/SideBarBagProductItem';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
-    const { user, isAuthentication } = useSelector(state => state.user);
-    const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+    // const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
+    // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+	const{bag,fetchBag,randomProducts,RandomProductLoading} = useServerWishList();
     const {allAddresses} = useSelector(state => state.getAllAddress)
     const {checkAndCreateToast} = useSettingsContext();
     const navigation = useNavigate()
@@ -200,7 +202,8 @@ const SideBarBag = ({OnChangeing}) => {
         // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId ,size,color}));
-			dispatch(getbag());
+			// dispatch(getbag());
+			fetchBag();
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
 			toggleBagItemCheck(itemId,size,color)
@@ -210,7 +213,8 @@ const SideBarBag = ({OnChangeing}) => {
     const handleDeleteBag = async (productId,bagOrderItemId,size,color) => {
         if(isAuthentication){
             await dispatch(deleteBag({productId,bagOrderItemId,size,color}));
-            dispatch(getbag());
+            // dispatch(getbag());
+			fetchBag();
         }else{
             removeBagSessionStorage(productId,size,color)
         }
@@ -219,18 +223,13 @@ const SideBarBag = ({OnChangeing}) => {
 
     useEffect(() => {
         if (user) {
-			if(isAuthentication){
-				dispatch(getbag());
-				// dispatch(getAddress())
-			}
             setAddress(user?.user?.addresses[0]);
-        }else{
-            dispatch(getuser());
         }
-        
     }, [dispatch,deleteBagResult, user, isAuthentication]);
 	useEffect(()=>{
-		dispatch(getRandomArrayOfProducts());
+		if(!user){
+			checkAuthUser();
+		}
 	},[])
     const handleOnChange = ()=>{
 		if(OnChangeing){

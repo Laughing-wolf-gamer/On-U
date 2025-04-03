@@ -25,68 +25,7 @@ import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useServerWishList } from '../../Contaxt/ServerWishListContext';
-/* const reviews = [
-    {
-        rating: 5,
-        comment: "Excellent product! Exceeded my expectations.",
-    },
-    {
-        rating: 4,
-        comment: "Great quality, but a bit expensive.",
-    },
-    {
-        rating: 3,
-        comment: "Average product. It works, but I was expecting more.",
-    },
-    {
-        rating: 2,
-        comment: "Not as described. Poor quality.",
-    },
-    {
-        rating: 1,
-        comment: "Terrible! It broke after one use.",
-    },
-    {
-      rating: 4,
-      comment: "Really good overall. The performance is great, just wish it had more features.",
-    },
-    {
-      rating: 5,
-      comment: "I love it! Exactly what I needed, and the price was reasonable for the quality.",
-    },
-    {
-      rating: 3,
-      comment: "It's okay, but I expected better durability. It's decent for the price.",
-    },
-    {
-      rating: 2,
-      comment: "Disappointing. It didn’t perform as expected, and the build quality feels cheap.",
-    },
-    {
-      rating: 1,
-      comment: "I regret purchasing this. It stopped working after a couple of days.",
-    },
-    {
-      rating: 4,
-      comment: "Very happy with this! It does what it promises, but the packaging could’ve been better.",
-    },
-    {
-      rating: 5,
-      comment: "Fantastic! I’ll definitely be buying again. This has become my go-to product.",
-    },
-    {
-      rating: 3,
-      comment: "It’s fine, but it doesn’t stand out from other similar products in the market.",
-    },
-    {
-      rating: 2,
-      comment: "Not worth the money. The product was underwhelming and didn’t meet my needs.",
-    },
-    {
-      rating: 1,
-      comment: "Do not buy this! The quality is horrible and it malfunctioned within a week.",
-    },
-]; */
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 
 const maxScrollAmount = 1024
@@ -100,11 +39,9 @@ const MPpage = () => {
 
     const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
     
-    const {wishlist,loadingWishList} = useServerWishList();
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const {wishlist,loadingWishList,bag,bagLoading} = useServerWishList();
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
-    const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);
-
 
     const[isPostingReview,setIsPostingReview] = useState(false);
     const [isInWishList, setIsInWishList] = useState(false);
@@ -187,7 +124,7 @@ const MPpage = () => {
 				isChecked:true,
             };
             await dispatch(createbag(orderData));
-            dispatch(getbag());
+            // dispatch(getbag());
         } else {
             // Add to localStorage logic
             const orderData = {
@@ -404,7 +341,7 @@ const MPpage = () => {
             checkFetchedIsPurchased(); // Checking purchase status when product is loaded
     
             if (user) {
-                dispatch(getbag());
+                // dispatch(getbag());
             }
             
             dispatch(getwishlist()); // Always fetch wishlist data when the product changes

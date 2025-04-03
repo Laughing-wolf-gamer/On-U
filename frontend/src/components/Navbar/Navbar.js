@@ -7,7 +7,7 @@ import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductCatView from './Submenu/ProductCatView.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { getbag, getwishlist } from '../../action/orderaction.js'
+import { getwishlist } from '../../action/orderaction.js'
 import { SearchIcon } from 'lucide-react'
 import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
 import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
@@ -25,8 +25,8 @@ const Navbar = ({user}) => {
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const {wishlist,loadingWishList} = useServerWishList();
-    const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
+    const {wishlist,bag,bagLoading} = useServerWishList();
+    // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { options } = useSelector((state) => state.AllOptions);
     const [showbagView, setBagShow] = useState(false);
     const [Menu1, setMenu1] = useState('hidden')
@@ -83,8 +83,8 @@ const Navbar = ({user}) => {
 
     useEffect(()=>{
         if(user){
-            dispatch(getbag());
-            dispatch(getwishlist())
+            // dispatch(getbag());
+            // dispatch(getwishlist())
         }
     },[dispatch])
     
@@ -101,7 +101,7 @@ const Navbar = ({user}) => {
     useEffect(() => {
         if(user){
 			// dispatch(getwishlist())
-            dispatch(getbag());
+            // dispatch(getbag());
         }
     }, [state]);
 	useEffect(()=>{

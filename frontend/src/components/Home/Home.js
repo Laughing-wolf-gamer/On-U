@@ -1,19 +1,14 @@
-import React, { Fragment, CSSProperties, useEffect, useState, useRef, useMemo, useCallback } from 'react'
+import React, { Fragment, CSSProperties, useEffect, useState, useRef, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
-
-
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { Allproduct, getOptionsByType } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
-import { featchallbanners, fetchAllCategoryBanners } from '../../action/banner.action'
-import { getuser } from '../../action/useraction'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 
 import ProductPreviewFull from './ProductPreviewFull'
 import CarousalView from './CarousalView'
-import DraggingScrollView from '../Productpage/DraggableHorizontalScroll'
 import DraggableImageSlider from './DraggableImageSlider'
 import FullScreenOverLayCouponPopUp from './FullScreenOverLayCouponPopUp'
 import Footer from '../Footer/Footer'
@@ -21,15 +16,16 @@ import GridImageView from './GridImageView'
 import { fetchWebsiteDisclaimer } from '../../action/common.action';
 import BackToTopButton from './BackToTopButton';
 import WhatsAppButton from './WhatsAppButton';
-import PwaSetup from './PwaSetup';
+import { useServerBanners } from '../../Contaxt/ServerBannerContext';
 
 
 const Home = ({user}) => {
 	const [showComponent, setShowComponent] = useState(null);
+	const{banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions} = useServerBanners();
     const { product,loading:productLoading} = useSelector(state => state.Allproducts)
-    const [categoriesOptions,setCategoryOptions] = useState([]);
-    const { banners,loading:bannerLoading} = useSelector(state => state.banners)
-    const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
+    // const [categoriesOptions,setCategoryOptions] = useState([]);
+    // const { banners,loading:bannerLoading} = useSelector(state => state.banners)
+    // const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
     const dispatch = useDispatch();
 	const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const indicatorStyles: CSSProperties = {
@@ -73,17 +69,17 @@ const Home = ({user}) => {
         try {
             const catResponse = await dispatch(getOptionsByType({type: 'category'}))
             if(catResponse){
-                setCategoryOptions(catResponse.map(c => c.value));
+                // setCategoryOptions(catResponse.map(c => c.value));
             }
         } catch (error) {
             console.error("Error getting: ", error);
         }
     }
     useEffect(()=>{
-        dispatch(featchallbanners());
-		dispatch(fetchAllCategoryBanners());
+        // dispatch(featchallbanners());
+		// dispatch(fetchAllCategoryBanners());
         dispatch(Allproduct())
-        getSingleOptions();
+        // getSingleOptions();
     },[])
     
     useEffect(() => {

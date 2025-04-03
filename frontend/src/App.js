@@ -31,6 +31,7 @@ import NotFoundPage from "./NotFoundPage.js";
 import PaymentSuccess from "./components/Bag/PaymentSuccess.js";
 import PaymentFailed from "./components/Bag/PaymentFailed.js";
 import PaymentPending from "./components/Bag/PaymentPending.js";
+import { useServerAuth } from "./Contaxt/AuthContext.js";
 
 const useWindowSize = () => {
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -50,13 +51,13 @@ const useWindowSize = () => {
 function App() {
     const dispatch = useDispatch()
     const{width} = useWindowSize();
-    const {loading, user, isAuthentication} = useSelector(state => state.user)
+	const{userLoading,user, isAuthentication} = useServerAuth();
 
     const [state, setstate] = useState(false)
     
     useEffect(() => {
-        if (state ===  false) {
-            dispatch(getuser())
+        if (state === false) {
+            // dispatch(getuser())
             setstate(true)
         }
         let url = document.URL
@@ -125,15 +126,15 @@ function App() {
                     <Route path='/registeruser' element={<Registeruser />} />
                     
                     {/* Authenticated Routes */}
-                    {isAuthentication && !loading && (
+                    {isAuthentication && !userLoading && (
                         <>
-                            <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication={isAuthentication} />} />
+                            <Route path='/dashboard' element={<Overview user={user} loading={userLoading} isAuthentication={isAuthentication} />} />
                             <Route path='/order/details/:orderId' element={<OrderDetailsPage user={user} />} />
                         </>
                     )}
                     
                     {/* Non-Authenticated Routes */}
-                    {isAuthentication === false && !loading && (
+                    {isAuthentication === false && !userLoading && (
                         <Route path="/dashboard" element={<Navigate to="/" />} />
                     )}
 

@@ -2,7 +2,7 @@ import React, { Fragment, useState } from 'react';
 import EmptyBag from './Emptybag';
 import { BsShieldFillCheck } from 'react-icons/bs';
 import { useDispatch } from 'react-redux';
-import { applyCouponToBag, getbag, removeCouponFromBag } from '../../action/orderaction';
+import { applyCouponToBag, removeCouponFromBag } from '../../action/orderaction';
 import { getAddress } from '../../action/useraction';
 import { Link, useNavigate } from 'react-router-dom';
 import { Minus, Plus, Trash, X } from 'lucide-react';
@@ -13,6 +13,7 @@ import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import CouponsDisplay from './CouponDisplay';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 const BagContent = ({ 
 	bag, 
 	bagLoading, 
@@ -42,6 +43,7 @@ const BagContent = ({
 }) => {
 	
 	const dispatch = useDispatch();
+	const{fetchBag} = useServerWishList();
 	const [coupon, setCoupon] = useState(null);
 	const [discount, setDiscount] = useState(0);
 	const[applyingCoupon,setIsApplyingCoupon] = useState(false);
@@ -138,7 +140,8 @@ const BagContent = ({
 					totalAmount={totalProductSellingPrice}
 					originalsAmount={totalSellingPrice}
 					closePopup={() => {
-						dispatch(getbag());
+						// dispatch(getbag());
+						fetchBag();
 						dispatch(getAddress());
 						setShowPayment(false);
 						setSelectedAddress(null);
