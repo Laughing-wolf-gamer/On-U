@@ -51,12 +51,13 @@ const useWindowSize = () => {
 function App() {
     const dispatch = useDispatch()
     const{width} = useWindowSize();
-	const{userLoading,user, isAuthentication} = useServerAuth();
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
 
     const [state, setstate] = useState(false)
     
     useEffect(() => {
         if (state === false) {
+			checkAuthUser();
             setstate(true)
         }
         let url = document.URL

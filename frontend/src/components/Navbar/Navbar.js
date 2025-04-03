@@ -98,12 +98,6 @@ const Navbar = ({user}) => {
             dispatch(getwishlist())
         }, 900);
     }
-    useEffect(() => {
-        if(user){
-			// dispatch(getwishlist())
-            // dispatch(getbag());
-        }
-    }, [state]);
 	useEffect(()=>{
 		if(user){
 			if(wishlist && wishlist?.orderItems && wishlist?.orderItems.length > 0){
@@ -126,7 +120,7 @@ const Navbar = ({user}) => {
 			setWishListCount(sessionData.length);
 			setBagCount(sessionBagData.length);
 		}
-    }, [sessionData,sessionBagData,user]);
+    }, [sessionData,sessionBagData,user,wishlist,bag]);
     return (
         <Fragment>
             <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40 ">

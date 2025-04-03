@@ -18,7 +18,7 @@ export const SeverWishListProvider = ({ children }) => {
 		if(userLoading || !user){
 			return;
 		}
-		if(!loadingWishList){
+		if(!loadingWishList && !userLoading){
 			dispatch(getwishlist());
 		}
 	}
@@ -26,17 +26,21 @@ export const SeverWishListProvider = ({ children }) => {
 		if(userLoading || !user){
 			return;
 		}
-		if(!bagLoading){
+		if(!bagLoading && !userLoading){
 			dispatch(getbag());
 		}
 	}
 	useEffect(()=>{
 		fetchWishList();
 		fetchBag();
+		
+	},[user,userLoading])
+	useEffect(()=>{
 		if(!RandomProductLoading){
 			dispatch(getRandomArrayOfProducts());
 		}
 	},[])
+	console.log("Wishlist: ",wishlist);
 	return (
 		<ServerWishListContext.Provider value={{ wishlist,loadingWishList,fetchWishList,bag,bagLoading,fetchBag,randomProducts,RandomProductLoading }}>
 			{children}

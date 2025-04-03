@@ -10,13 +10,14 @@ export const SeverAuthProvider = ({ children }) => {
 	const {loading:userLoading, user, isAuthentication} = useSelector(state => state.user)
 	const dispatch = useDispatch();
 	const checkAuthUser = async ()=>{
-		if(!userLoading){
-			await dispatch(getuser())
+		if(!userLoading && !user){
+			dispatch(getuser())
 		}
 	}
 	useEffect(()=>{
 		checkAuthUser();
 	},[])
+	console.log("Auth Context User: ",user);
 	return (
 		<ServerAuthContext.Provider value={{userLoading,checkAuthUser, user, isAuthentication }}>
 			{children}
