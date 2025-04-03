@@ -74,7 +74,7 @@ export const getReverseSortingValueValues = (sortingUrlValue)=>{
     }else if (valueToSortingUrlMap[sortingUrlValue]) {
         return valueToSortingUrlMap[sortingUrlValue];
     }
-	return 'newest';
+	return 'What`s New';
 }
 export function getStatusDescription(statusNumber) {
 	const statusMap = {
