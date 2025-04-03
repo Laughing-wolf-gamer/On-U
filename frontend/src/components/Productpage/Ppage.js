@@ -7,14 +7,13 @@ import './Ppage.css'
 import { BiSpreadsheet } from 'react-icons/bi'
 import elementClass from 'element-class'
 import Single_product from '../Product/Single_product'
-import {getuser} from '../../action/useraction'
-import {createbag, createwishlist, clearErrors, getwishlist, getbag} from '../../action/orderaction'
+import {createbag, createwishlist, clearErrors} from '../../action/orderaction'
 import Footer from '../Footer/Footer'
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag} from '../../config'
 import ImageZoom from './ImageZoom'
 import PincodeChecker from './PincodeChecker'
 import ReactPlayer from 'react-player';
-import { Clock, Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Tags, Truck} from 'lucide-react'
+import { Headphones, Heart, Package, RotateCw, ShoppingBag, ShoppingCart, Tags} from 'lucide-react'
 import SizeChartModal from './SizeChartModal'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext'
 import { useSettingsContext } from '../../Contaxt/SettingsContext'
@@ -106,7 +105,7 @@ const Ppage = () => {
     const dispatch = useDispatch()
     
     const [isFocused, setIsFocused] = useState(false);
-    const {wishlist,loadingWishList,bag,bagLoading,fetchBag} = useServerWishList();
+    const {wishlist,loadingWishList,bag,bagLoading,fetchBag,fetchWishList} = useServerWishList();
     const { product, loading:productLoading, similar } = useSelector(state => state.Sproduct)
     // const {user} = useSelector(state => state.user)
 	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
@@ -171,8 +170,6 @@ const Ppage = () => {
             };
             const response = await dispatch(createbag(orderData));
             if(response){
-                // await dispatch(getwishlist());
-                // dispatch(getbag());
 				await fetchBag();
                 checkAndCreateToast("success", "Product successfully in Bag");
             }else{
@@ -252,9 +249,8 @@ const Ppage = () => {
     const addToWishList = async () => {
         if (user) {
             const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
-            await dispatch(getwishlist());
+			await fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            console.log("Wishlist Updated Successfully: ",response);
             if(response){
                 setIsInWishList(response);
             }
@@ -378,7 +374,6 @@ const Ppage = () => {
     },[dispatch])
     useEffect(() => {
         if (state === false) {
-            // dispatch(getuser())
             setstate(true)
         }
         if(warning){
@@ -423,10 +418,6 @@ const Ppage = () => {
         }
         if(product){
             checkFetchedIsPurchased();
-        }
-        if(user){
-            // dispatch(getbag());
-            // dispatch(getwishlist());
         }
     },[product,user,dispatch])
     useEffect(() => {

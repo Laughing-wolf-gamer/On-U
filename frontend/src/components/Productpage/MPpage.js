@@ -8,7 +8,7 @@ import { Carousel } from 'react-responsive-carousel';
 import "react-responsive-carousel/lib/styles/carousel.min.css";
 import { BsTag } from 'react-icons/bs';
 import Single_product from '../Product/Single_product';
-import { createbag, createwishlist, getbag, getwishlist} from '../../action/orderaction';
+import { createbag, createwishlist, getwishlist} from '../../action/orderaction';
 import Footer from '../Footer/Footer';
 import { calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, clothingSizeChartData, formattedSalePrice, getLocalStorageBag, getLocalStorageWishListItem } from '../../config';
 import PincodeChecker from './PincodeChecker';
@@ -40,7 +40,7 @@ const MPpage = () => {
     const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
     
     const {wishlist,loadingWishList,bag,bagLoading,fetchBag,fetchWishList} = useServerWishList();
-	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	const{user} = useServerAuth();
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
 
     const[isPostingReview,setIsPostingReview] = useState(false);
@@ -125,7 +125,6 @@ const MPpage = () => {
             };
             await dispatch(createbag(orderData));
 			fetchBag();
-            // dispatch(getbag());
         } else {
             // Add to localStorage logic
             const orderData = {
@@ -195,8 +194,6 @@ const MPpage = () => {
     const addToWishList = async () => {
         if (user) {
             const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
-            // await dispatch(getbag({ userId: user.id }));
-            // await dispatch(getwishlist());
 			await fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully",3000);
             if(response){
@@ -380,11 +377,6 @@ const MPpage = () => {
         const containerRect = scrollContainer.getBoundingClientRect();
 
         // Check if the target element is within the container
-        const isVisible =
-        rect.top < containerRect.bottom &&
-        rect.bottom > containerRect.top &&
-        rect.left < containerRect.right &&
-        rect.right > containerRect.left;
 
         // Update scroll position
         setScrollAmount(scrollContainer.scrollTop);  // Log the current scroll position
@@ -914,36 +906,6 @@ const ProductReviews = ({ reviews }) => {
         </div>
     </div>
   );
-};
-const AverageRatingView = ({ ratings }) => {
-    if (!ratings || ratings.length === 0) return null;
-
-    // Calculate the average rating
-    const totalStars = ratings.reduce((acc, review) => acc + review.rating, 0);
-    const avgStars = totalStars / ratings.length;
-    const roundedAvg = Math.round(avgStars * 10) / 10; // Rounded to 1 decimal place
-    const fullStars = Math.floor(roundedAvg);
-    const emptyStars = 5 - fullStars;
-
-    return (
-        <Fragment>
-            <div className='average-rating font-kumbsan mt-6'>
-                <div className='flex items-center'>
-                    <div className='stars'>
-                        {/* Render filled stars */}
-                        {[...Array(fullStars)].map((_, i) => (
-                            <span key={i} className='star text-[30px] text-black'>★</span>
-                        ))}
-                        {/* Render empty stars */}
-                        {[...Array(emptyStars)].map((_, i) => (
-                            <span key={i} className='star text-[30px] text-gray-300'>★</span>
-                        ))}
-                    </div>
-                    <span className='ml-2 text-sm text-gray-500'>{roundedAvg} Stars</span>
-                </div>
-            </div>
-        </Fragment>
-    );
 };
 
 export default MPpage;
