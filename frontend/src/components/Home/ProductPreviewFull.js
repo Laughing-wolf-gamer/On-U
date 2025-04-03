@@ -1,9 +1,9 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import HomeProductsPreview from './HomeProductsPreview';
-import { calculateDiscountPercentage, formattedSalePrice, generateArrayOfRandomItems } from '../../config';
+import { calculateDiscountPercentage, formattedSalePrice } from '../../config';
 import { useNavigate } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
-import { getwishlist } from '../../action/orderaction';
+import { useDispatch } from 'react-redux';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 
 const previewHeader = [
   { id: 'topPicks', title: 'Top Picks' },
@@ -13,7 +13,7 @@ const previewHeader = [
 
 const ProductPreviewFull = ({ product ,user}) => {
     const dispatch = useDispatch();
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+	const {wishlist} = useServerWishList();
     const navigation = useNavigate();
     const [previewProducts, setSelectedPreviewProducts] = useState([]);
     const [activePreview, setActivePreviews] = useState('topPicks');
@@ -39,7 +39,7 @@ const ProductPreviewFull = ({ product ,user}) => {
         }));
     };
     useEffect(()=>{
-    dispatch(getwishlist());
+    // dispatch(getwishlist());
     },[dispatch])
     const handleMoveToQuery = ()=>{
         const queryParams = new URLSearchParams();

@@ -16,6 +16,7 @@ import { fetchAllOptions } from '../../action/common.action.js'
 import { IoBagRemoveSharp, IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
 import bagCartIcon from '../images/shopping-cart.png'
+import { useServerWishList } from '../../Contaxt/ServerWishListContext.js'
 
 
 const Navbar = ({user}) => {
@@ -24,7 +25,7 @@ const Navbar = ({user}) => {
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const {wishlist,loadingWishList} = useServerWishList();
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { options } = useSelector((state) => state.AllOptions);
     const [showbagView, setBagShow] = useState(false);
@@ -98,10 +99,8 @@ const Navbar = ({user}) => {
         }, 900);
     }
     useEffect(() => {
-        
-        // fetchAllWishList();
         if(user){
-			dispatch(getwishlist())
+			// dispatch(getwishlist())
             dispatch(getbag());
         }
     }, [state]);

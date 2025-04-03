@@ -6,7 +6,7 @@ import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
-const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = true ,refreshTwice = false}) => {
+const SingleProduct = React.memo(({ pro, user, showWishList = true ,refreshTwice = false}) => {
 	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     const{updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
@@ -94,7 +94,7 @@ const SingleProduct = React.memo(({ pro, user, wishlist = [], showWishList = tru
         >
             {/* Product Image Carousel */}
             <div className="w-full bg-gray-300 flex min-h-[70%] justify-center items-center">
-                <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} wishlist={wishlist} />
+                <AutoSlidingCarousel pro={pro} user={user} showWishList={showWishList} />
             </div>
     
             {/* Product Details Section */}

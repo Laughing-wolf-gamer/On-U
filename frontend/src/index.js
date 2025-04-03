@@ -12,6 +12,7 @@ import { LocationContextProvider } from './Contaxt/LocationContext';
 import { SettingsProvider } from './Contaxt/SettingsContext';
 import { LocalStorageContextProvider } from './Contaxt/LocalStorageContext';
 import { EncryptionDecryptionProvider } from './Contaxt/EncryptionContext';
+import { SeverWishListProvider } from './Contaxt/ServerWishListContext';
 
 const option = {
   timeout: 2000,
@@ -30,7 +31,9 @@ ReactDOM.render(
                   <LocationContextProvider>
                     <SettingsProvider>
                       <EncryptionDecryptionProvider>
-                        <App />
+					  	<SeverWishListProvider>
+                        	<App />
+						</SeverWishListProvider>
                       </EncryptionDecryptionProvider>
                     </SettingsProvider>
                   </LocationContextProvider>

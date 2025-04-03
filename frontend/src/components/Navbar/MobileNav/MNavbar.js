@@ -18,12 +18,13 @@ import { IoMenu, IoSearch } from 'react-icons/io5'
 import MKeywoardSerach from './MKeywoardSerach'
 import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
 import bagCartIcon from '../../images/shopping-cart.png'
+import { useServerWishList } from '../../../Contaxt/ServerWishListContext'
 
 const MNavbar = ({ user }) => {
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const {wishlist,fetchWishList} = useServerWishList();
     const dispatch = useDispatch()
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const navigation = useNavigate()
@@ -61,7 +62,6 @@ const MNavbar = ({ user }) => {
             }
             
         }
-     
     }
 
     function searchenters(activeSearch) {
@@ -78,7 +78,6 @@ const MNavbar = ({ user }) => {
     useEffect(()=>{
         if(user){
 			dispatch(getbag());
-			dispatch(getwishlist())
         }
     },[user,dispatch])
     useEffect(() => {

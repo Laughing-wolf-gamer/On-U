@@ -24,6 +24,7 @@ import { IoIosCopy, IoLogoWhatsapp } from 'react-icons/io';
 import WhatsAppButton from '../Home/WhatsAppButton';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 /* const reviews = [
     {
         rating: 5,
@@ -99,7 +100,7 @@ const MPpage = () => {
 
     const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
     
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const {wishlist,loadingWishList} = useServerWishList();
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
     const { loading: userLoading, user, isAuthentication } = useSelector((state) => state.user);

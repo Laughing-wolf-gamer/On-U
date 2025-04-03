@@ -26,6 +26,7 @@ import WhatsAppButton from '../Home/WhatsAppButton'
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext'
 import { BsTag } from 'react-icons/bs'
 import { LazyLoadImage } from 'react-lazy-load-image-component'
+import { useServerWishList } from '../../Contaxt/ServerWishListContext'
 
 const reviews = [
     {
@@ -104,7 +105,7 @@ const Ppage = () => {
     const dispatch = useDispatch()
     
     const [isFocused, setIsFocused] = useState(false);
-    const { wishlist, loading:loadingWishList } = useSelector(state => state.wishlist_data)
+    const {wishlist,loadingWishList} = useServerWishList();
     const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { product, loading:productLoading, similar } = useSelector(state => state.Sproduct)
     const {user} = useSelector(state => state.user)

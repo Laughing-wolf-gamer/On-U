@@ -7,12 +7,13 @@ import { useDispatch } from "react-redux";
 import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
+import { useServerWishList } from "../../Contaxt/ServerWishListContext";
 
-const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) => {
+const AutoSlidingCarousel = ({ pro, user, showWishList = true }) => {
     const { sessionData,sessionBagData, setWishListProductInfo } = useSessionStorage();
     const [isInWishList, setIsInWishList] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
-
+	const{wishlist,fetchWishList} = useServerWishList();
 
     const [imageArray,setImageArray] = useState([]);
     const [slideIndex, setSlideIndex] = useState(1); // Default to the first slide
@@ -120,7 +121,8 @@ const AutoSlidingCarousel = ({ pro, user, wishlist = [], showWishList = true }) 
             checkAndCreateToast("success", "Wishlist Updated Successfully");
             console.log("Wishlist Updated Successfully: ",response);
 			setIsInWishList(response);
-            await dispatch(getwishlist());
+            // dispatch(getwishlist());
+			fetchWishList()
         } else {
             setWishListProductInfo(pro, pro._id);
             checkAndCreateToast("success", "Bag is Updated Successfully");

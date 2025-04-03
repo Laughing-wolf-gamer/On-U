@@ -10,6 +10,7 @@ import ShareView from '../Productpage/ShareView';
 import { calculateDiscountPercentage } from '../../config';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 
 const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
     const { sessionData, setWishListProductInfo } = useSessionStorage();
@@ -20,15 +21,15 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
 	const {checkAndCreateToast} = useSettingsContext();
+	const{fetchWishList} = useServerWishList();
     const addToWishList = async (e) => {
         e.stopPropagation();
         if (user) {
             const response = await dispatch(createwishlist({ productId: product._id }));
-            await dispatch(getwishlist());
+            // await dispatch(getwishlist());
+			fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            console.log("Wishlist Updated Successfully: ",response);
             if(response){
-                // updateButtonStates();
                 setIsInWishList(response);
             }
         } else {

@@ -128,7 +128,6 @@ function App() {
                     {isAuthentication && !loading && (
                         <>
                             <Route path='/dashboard' element={<Overview user={user} loading={loading} isAuthentication={isAuthentication} />} />
-                            <Route path='/my_wishlist' element={<Wishlist user={isAuthentication} />} />
                             <Route path='/order/details/:orderId' element={<OrderDetailsPage user={user} />} />
                         </>
                     )}
@@ -139,6 +138,7 @@ function App() {
                     )}
 
                     {/* Checkout Routes */}
+					<Route path='/my_wishlist' element={<Wishlist />} />
 					<Route path='/bag' element={<Bag user={user} />} />
                     <Route path='/bag/checkout' element={<CheckoutPage />} />
                     <Route path='/bag/checkout/success' element={<PaymentSuccess />} />
