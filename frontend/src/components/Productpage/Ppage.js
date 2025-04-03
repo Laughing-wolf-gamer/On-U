@@ -251,9 +251,7 @@ const Ppage = () => {
             const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
 			await fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            if(response){
-                setIsInWishList(response);
-            }
+			setIsInWishList(response);
         } else {
             setWishListProductInfo(product, decrypt(param.id));
             checkAndCreateToast("success", "Bag is Updated Successfully");

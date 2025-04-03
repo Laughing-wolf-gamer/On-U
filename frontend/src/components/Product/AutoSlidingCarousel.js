@@ -118,11 +118,9 @@ const AutoSlidingCarousel = ({ pro, user, showWishList = true }) => {
         e.preventDefault();
         if (user) {
             const response = await dispatch(createwishlist({ productId: pro._id }));
+			await fetchWishList()
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            console.log("Wishlist Updated Successfully: ",response);
 			setIsInWishList(response);
-            // dispatch(getwishlist());
-			fetchWishList()
         } else {
             setWishListProductInfo(pro, pro._id);
             checkAndCreateToast("success", "Bag is Updated Successfully");
@@ -131,7 +129,7 @@ const AutoSlidingCarousel = ({ pro, user, showWishList = true }) => {
     };
     useEffect(() => {
         updateButtonStates();
-    }, [sessionData,sessionBagData]);
+    }, [sessionData,sessionBagData,wishlist]);
 
     return (
         <div
