@@ -42,12 +42,10 @@ export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
 }
 
 export const singleProduct = (id) => async (dispatch) => {
-
     try {
         dispatch({ type: REQUEST_SINGLE_PRODUCTS })
         const res = await axios.get(`${BASE_API_URL}/api/shop/products/getById/${id}`)
         const data = res?.data;
-        console.log("Single Product: ", res);
         dispatch({ type: SUCCESS_SINGLE_PRODUCTS, payload: data?.product || [], similar: data?.similar_product || []})
     } catch (error) {
         dispatch({ type: FAIL_SINGLE_PRODUCTS, payload: error.response?.data?.message })

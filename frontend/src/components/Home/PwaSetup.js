@@ -42,15 +42,21 @@ const PwaSetup = () => {
 			});
 		}
 	};
-	return <Fragment>
+	return (
+		<Fragment>
 		{/* Show the install button only if the app is not already installed */}
 		{!isInstalled && deferredPrompt && (
-			<button className={`px-4 py-2 mb-2 whitespace-nowrap space-x-2 items-center w-full justify-center flex rounded-md bg-black text-white`} onClick={handleInstallClick}>
-				<BiDownload size={20} className='hover:animate-vibrateScale'/> <span>Add to Home Screen</span> 
+			<button
+				className="px-6 py-3 mb-4 w-full flex justify-center items-center space-x-3 rounded-lg bg-gradient-to-r from-gray-500 to-neutral-600 text-white font-semibold shadow-lg hover:bg-gradient-to-r hover:from-gray-500 hover:to-neutral-600 hover:scale-105 transition-all duration-300 ease-in-out focus:outline-none"
+				onClick={handleInstallClick}
+				aria-label="Install app to home screen"
+			>
+				<BiDownload size={24} className="transform hover:animate-pulse" />
+				<span className="text-sm md:text-base">Add to Home Screen</span>
 			</button>
 		)}
-	</Fragment>
-
-}
+		</Fragment>
+	);
+};
 
 export default PwaSetup

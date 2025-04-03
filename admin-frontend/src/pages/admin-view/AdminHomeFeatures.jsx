@@ -13,6 +13,7 @@ import { RxHamburgerMenu } from 'react-icons/rx';
 import ReactPlayer from 'react-player';
 import { Badge } from '@/components/ui/badge';
 import { useSettingsContext } from '@/Context/SettingsContext';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const allPositions = [
 	'Wide Screen Section- 1',
 	'Wide Screen Section- 2',
@@ -501,8 +502,16 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 
 												{/* Image */}
 												{isImage ? (
-													<img
+													<LazyLoadImage
 														src={url}
+														effect="black-and-white"
+														loading="lazy"
+														useIntersectionObserver = {true}
+														wrapperProps={{
+															// If you need to, you can tweak the effect transition using the wrapper style.
+															style: {transitionDelay: "1s"},
+														}}
+														placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}
 														alt={`Image ${index + 1}`}
 														className="w-full h-full object-contain rounded-lg shadow-sm"
 														onLoad={() => handleMediaLoad(index)} // Trigger loading state on image load

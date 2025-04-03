@@ -90,8 +90,6 @@ export const addHomeCarousalMultiple = async (req, res) => {
         // Fetch all banners (assuming you need all for response)
         const banners = await BannerModel.find({});
 
-        console.log("Banners: ", banners);
-
         // Send success response with all banners
         return res.status(201).json({
             Success: true,
@@ -143,7 +141,6 @@ export const addHomeCarousal = async (req, res) => {
 		// Fetch all banners to return
 		const banners = await BannerModel.find({});
 
-		console.log("Banners: ", banners);
 
 		// Respond with success message and the updated banners
 		return res.status(201).json({
@@ -366,7 +363,6 @@ export const removeCategoryBanners = async(req,res)=>{
 			if (!bannerWithRemovedUrl) {
 				return res.status(500).json({ Success: false, message: "Failed to remove image" });
 			}
-			console.log("Updated Category Banners: ", bannerWithRemovedUrl);
 			if(bannerWithRemovedUrl.Url.length <= 0){
 				// Remove the banner completely
                 await banner.remove();

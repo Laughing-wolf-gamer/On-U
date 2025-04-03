@@ -10,7 +10,6 @@ import Order from './routes/orderroutes.js';
 import paymentRoutes from './routes/payment.route.js';
 import razorPayRoute from './routes/razerPayPayment.route.js';
 import shipRocketHookRoute from './routes/logisticRoutes.js';
-import logger from './utilis/loggerUtils.js';
 
 const app = express();
 

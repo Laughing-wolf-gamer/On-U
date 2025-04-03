@@ -17,7 +17,7 @@ const SHIPROCKET_PASSWORD = process.env.SHIPROCKET_PASSWORD;
 export const getShipRocketToken = async()=>{
 	const alreadySetShipRocketToken = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });
 	if(alreadySetShipRocketToken){
-        return alreadySetShipRocketToken.ShiprocketToken;
+        return alreadySetShipRocketToken.ShiprocketToken.token;
     }
 	return null;
 }
@@ -27,7 +27,7 @@ export const getAuthToken = async (email,password) => {
             email: email || SHIPROCKET_EMAIL,
             password: password || SHIPROCKET_PASSWORD
         });
-
+		// console.log("ShipRocket auth token: ",response?.data);
 		return response?.data?.token;
     } catch (error) {
         console.error('Error fetching auth token:', error);
@@ -964,7 +964,6 @@ export const checkShipmentAvailability = async(delivary_pin,weight) =>{
     try {
 		const token = await getShipRocketToken();
 		const pickup_locations =  await getPickUpLocation();
-		// console.log("Response Picketup Location",pickup_locations);
         if(!token) await getAuthToken();
         const picketUp_pin = pickup_locations[0]?.pin_code; // Assuming the first pickup location is the closest one
         const shipmentData = {

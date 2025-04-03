@@ -193,27 +193,31 @@ export const loginLogistics = async (req,res)=>{
             return res.status(400).json({Success: false, message: 'Email and password are required'});
         }
         const response = await getAuthToken(email,password);
+		// console.log("ShipRocket auth token: ",response);
 		if(!response){
             console.error("Error getting ShipRocket auth token: ",response);
-            return res.status(500).json({Success: false, message: 'Error getting ShipRocket auth token'});
+            throw new Error("Error getting ShipRocket auth token");
         }
 		const alreadySetShipRocketToken = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });
+		const logInTime = new Date();  // Current date and time when the user logs in
+		const expiringTime = new Date(logInTime);
+		expiringTime.setDate(logInTime.getDate() + 10);  // Add 10 days
+		// No existing Shiprocket-token, create a new entry
+		console.log("ShipRocket Login Token Data: ", {token:response,expiringTime:expiringTime.toISOString()});
 		if (!alreadySetShipRocketToken) {
-			// No existing Shiprocket-token, create a new entry
             const newWebsiteData = new WebSiteModel({
-                ShiprocketToken: response,
+                ShiprocketToken: {token:response,expiringTime:expiringTime.toISOString()},
                 tag: 'Shiprocket-token',
             });
 			await newWebsiteData.save();
 		}else{
-			alreadySetShipRocketToken.ShiprocketToken = response;
+			alreadySetShipRocketToken.ShiprocketToken = {token:response,expiringTime:expiringTime.toISOString()};
             await alreadySetShipRocketToken.save();
 		}
-		console.log("ShipRocket auth token: ",response);
-		res.status(200).json({Success: true, message: 'Logged in successfully', result: response});
+		res.status(200).json({Success: true, message: 'Logged in successfully', result: {token:response,expiringTime:expiringTime.toISOString()}});
     } catch (error) {
         console.error("Error getting ShipRocket auth token: ",error);
-		logger.error(`Error occured during login ${error.message}`);
+		logger.error(`Error occurred during login ${error.message}`);
 		res.status(500).json({Success: false, message: 'Internal Server Error'});
     }
 }

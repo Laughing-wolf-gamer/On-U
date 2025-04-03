@@ -1,0 +1,82 @@
+2025-04-03T07:14:24.495Z error: Error occured during checking availability Cannot read properties of undefined (reading 'length')
+2025-04-03T07:14:24.495Z error: Error occured during checking availability Cannot read properties of undefined (reading 'length')
+2025-04-03T07:14:32.537Z error: Error occured during checking availability Cannot read properties of undefined (reading 'length')
+2025-04-03T07:14:32.537Z error: Error occured during checking availability Cannot read properties of undefined (reading 'length')
+2025-04-03T07:15:49.713Z error: Error occured during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:15:49.713Z error: Error occured during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:16:24.636Z error: Error occured during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:16:24.636Z error: Error occured during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:17:33.465Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:17:33.465Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:18:06.865Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:18:06.865Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:19:03.602Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:19:03.602Z error: Error occurred during login websiteData validation failed: CouponBannerData: Path `CouponBannerData` is required., ContactUsePageData: Path `ContactUsePageData` is required., privacyPolicy: Path `privacyPolicy` is required., termsAndCondition: Path `termsAndCondition` is required., AboutData: Path `AboutData` is required.
+2025-04-03T07:22:31.821Z error: Error occurred during login websiteData validation failed: termsAndCondition: Path `termsAndCondition` is required.
+2025-04-03T07:22:31.821Z error: Error occurred during login websiteData validation failed: termsAndCondition: Path `termsAndCondition` is required.
+2025-04-03T07:37:36.353Z error: Error occurred during login logInTime.getDate is not a function
+2025-04-03T07:37:36.353Z error: Error occurred during login logInTime.getDate is not a function
+2025-04-03T07:38:01.937Z error: Error occurred during login websiteData validation failed: ShiprocketToken: Cast to string failed for value "{
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU5MDgzNjYsInNvdXJjZSI6InNyLWF1dGgtaW50IiwiZXhwIjoxNzQ0NTI5ODU2LCJqdGkiOiJmbkZ6d3hDM3VzYmJvcmF2IiwiaWF0IjoxNzQzNjY1ODU2LCJpc3MiOiJodHRwczovL3NyLWF1dGguc2hpcHJvY2tldC5pbi9hdXRob3JpemUvdXNlciIsIm5iZiI6MTc0MzY2NTg1NiwiY2lkIjo1NjUyNjQ5LCJ0YyI6MzYwLCJ2ZXJib3NlIjpmYWxzZSwidmVuZG9yX2lkIjowLCJ2ZW5kb3JfY29kZSI6IiJ9.5Vk6fGgKmTh7CcyGABJmf0D1KXsplfX0Aq7ouIv7reg',
+  expiringTime: '2025-04-13T07:38:01.912Z'
+}" (type Object) at path "ShiprocketToken"
+2025-04-03T07:38:01.937Z error: Error occurred during login websiteData validation failed: ShiprocketToken: Cast to string failed for value "{
+  token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjU5MDgzNjYsInNvdXJjZSI6InNyLWF1dGgtaW50IiwiZXhwIjoxNzQ0NTI5ODU2LCJqdGkiOiJmbkZ6d3hDM3VzYmJvcmF2IiwiaWF0IjoxNzQzNjY1ODU2LCJpc3MiOiJodHRwczovL3NyLWF1dGguc2hpcHJvY2tldC5pbi9hdXRob3JpemUvdXNlciIsIm5iZiI6MTc0MzY2NTg1NiwiY2lkIjo1NjUyNjQ5LCJ0YyI6MzYwLCJ2ZXJib3NlIjpmYWxzZSwidmVuZG9yX2lkIjowLCJ2ZW5kb3JfY29kZSI6IiJ9.5Vk6fGgKmTh7CcyGABJmf0D1KXsplfX0Aq7ouIv7reg',
+  expiringTime: '2025-04-13T07:38:01.912Z'
+}" (type Object) at path "ShiprocketToken"
+2025-04-03T08:01:12.073Z info: Server running on http://localhost:8004
+2025-04-03T08:01:12.073Z info: Server running on http://localhost:8004
+2025-04-03T08:01:18.280Z info: Server running on http://localhost:8004
+2025-04-03T08:01:18.280Z info: Server running on http://localhost:8004
+2025-04-03T08:01:49.137Z info: Server running on http://localhost:8004
+2025-04-03T08:01:49.137Z info: Server running on http://localhost:8004
+2025-04-03T08:01:58.617Z info: Server running on http://localhost:8004
+2025-04-03T08:01:58.617Z info: Server running on http://localhost:8004
+2025-04-03T08:02:06.861Z info: Server running on http://localhost:8004
+2025-04-03T08:02:06.861Z info: Server running on http://localhost:8004
+2025-04-03T08:02:11.436Z info: Server running on http://localhost:8004
+2025-04-03T08:02:11.436Z info: Server running on http://localhost:8004
+2025-04-03T08:03:49.708Z info: Server running on http://localhost:8004
+2025-04-03T08:03:49.708Z info: Server running on http://localhost:8004
+2025-04-03T08:05:37.858Z info: Server running on http://localhost:8004
+2025-04-03T08:05:37.858Z info: Server running on http://localhost:8004
+2025-04-03T08:05:59.652Z info: Server running on http://localhost:8004
+2025-04-03T08:05:59.652Z info: Server running on http://localhost:8004
+2025-04-03T08:06:23.250Z info: Server running on http://localhost:8004
+2025-04-03T08:06:23.250Z info: Server running on http://localhost:8004
+2025-04-03T08:06:44.169Z info: Server running on http://localhost:8004
+2025-04-03T08:06:44.169Z info: Server running on http://localhost:8004
+2025-04-03T08:20:15.061Z info: Server running on http://localhost:8004
+2025-04-03T08:20:15.061Z info: Server running on http://localhost:8004
+2025-04-03T08:20:27.921Z info: Server running on http://localhost:8004
+2025-04-03T08:20:27.921Z info: Server running on http://localhost:8004
+2025-04-03T08:36:31.379Z info: Server running on http://localhost:8004
+2025-04-03T08:36:31.379Z info: Server running on http://localhost:8004
+2025-04-03T08:39:36.782Z info: Server running on http://localhost:8004
+2025-04-03T08:39:36.782Z info: Server running on http://localhost:8004
+2025-04-03T08:39:52.173Z info: Server running on http://localhost:8004
+2025-04-03T08:39:52.173Z info: Server running on http://localhost:8004
+2025-04-03T08:52:43.323Z info: Server running on http://localhost:8004
+2025-04-03T08:52:43.323Z info: Server running on http://localhost:8004
+2025-04-03T08:52:48.427Z info: Server running on http://localhost:8004
+2025-04-03T08:52:48.427Z info: Server running on http://localhost:8004
+2025-04-03T08:52:58.657Z info: Server running on http://localhost:8004
+2025-04-03T08:52:58.657Z info: Server running on http://localhost:8004
+2025-04-03T08:59:57.390Z info: Server running on http://localhost:8004
+2025-04-03T08:59:57.390Z info: Server running on http://localhost:8004
+2025-04-03T09:00:49.089Z info: Server running on http://localhost:8004
+2025-04-03T09:00:49.089Z info: Server running on http://localhost:8004
+2025-04-03T09:01:15.466Z info: Server running on http://localhost:8004
+2025-04-03T09:01:15.466Z info: Server running on http://localhost:8004
+2025-04-03T09:01:23.446Z info: Server running on http://localhost:8004
+2025-04-03T09:01:23.446Z info: Server running on http://localhost:8004
+2025-04-03T09:01:30.642Z info: Server running on http://localhost:8004
+2025-04-03T09:01:30.642Z info: Server running on http://localhost:8004
+2025-04-03T09:02:06.876Z info: Server running on http://localhost:8004
+2025-04-03T09:02:06.876Z info: Server running on http://localhost:8004
+2025-04-03T09:02:09.778Z info: Server running on http://localhost:8004
+2025-04-03T09:02:09.778Z info: Server running on http://localhost:8004
+2025-04-03T09:02:28.360Z info: Server running on http://localhost:8004
+2025-04-03T09:02:28.360Z info: Server running on http://localhost:8004
+2025-04-03T09:02:42.706Z info: Server running on http://localhost:8004
+2025-04-03T09:02:42.706Z info: Server running on http://localhost:8004

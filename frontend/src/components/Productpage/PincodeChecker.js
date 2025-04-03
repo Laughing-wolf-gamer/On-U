@@ -62,7 +62,7 @@ const PincodeChecker = ({productId}) => {
                 <input
                     type="number"
                     placeholder="Enter Pincode"
-                    value={customPincode}
+                    value={customPincode || ''}
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
                     maxLength={"6"}

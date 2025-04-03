@@ -60,7 +60,7 @@ const AdminOrderLayout = () => {
 	const [openDetailsDialogue, setOpenDetailsDialogue] = useState(false);
 	const [openReturnOrderDialogue, setOpenReturnOrdersDialogue] = useState(false);
 	const [openLoginDialogue, setOpenLoginDialogue] = useState(false);
-	const [logisticsToken, setLogisticsToken] = useState('');
+	const [logisticsToken, setLogisticsToken] = useState(null);
 	const [filters, setFilters] = useState({
 		sortOrder: 'latest', // 'latest' or 'oldest'
 		statusFilter: '',
@@ -68,8 +68,8 @@ const AdminOrderLayout = () => {
 		maxOrders: 10,
 	});
 
-	const { user } = useSelector((state) => state.auth);
 	const dispatch = useDispatch();
+	const { user } = useSelector((state) => state.auth);
 	const {isLoading,token, orderList, orderDetails,returnOrderList } = useSelector((state) => state.adminOrder);
 
 	useEffect(() => {
@@ -96,7 +96,7 @@ const AdminOrderLayout = () => {
 	useEffect(()=>{
 		if(token){
 			if(!logisticsToken){
-            	setLogisticsToken(token);
+            	setLogisticsToken(token.token);
 			}
         }
 	},[token,dispatch])
@@ -122,63 +122,38 @@ const AdminOrderLayout = () => {
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
 	const isNoOrders = displayedOrders.length === 0;
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	console.log("Shiprocket token: ",token);
 	return (
 		<Card className="w-full">
 			{isLoading  ? <LoadingView/> :(
 				<Fragment>
-					<CardHeader className="text-center flex flex-row items-center p-4 justify-between">
-						<CardTitle className="text-2xl font-semibold mb-4">All Orders</CardTitle>
-						<div className="flex flex-col lg:flex-row lg:space-x-4 space-x-0 space-y-2 lg:space-y-0">
-							{/* Toggle Button for smaller screens */}
-							<Button
-								onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-								className="lg:hidden flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
-							>
-								<MenuSquareIcon/>
-							</Button>
+					{/* Header Section */}
+						<div className="flex flex-col lg:flex-row items-center justify-between w-full space-y-4 lg:space-y-0">
 
-							{/* Dropdown Content (only visible on mobile if toggled) */}
-							{isDropdownOpen && (
-								<div className="flex flex-col space-y-2 lg:hidden">
-									<Button
-										onClick={() => setOpenLoginDialogue(true)}
-										className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
-									>
-										<TruckIcon />
-										<span className="hidden md:block">Get ShipRocket API Token</span>
-									</Button>
+						{/* Title Section */}
+						<CardTitle className="text-3xl font-semibold text-gray-800 mb-4 lg:mb-0">
+							All Orders
+						</CardTitle>
 
-									{logisticsToken && (
-										<Button
-											onClick={() => {
-												navigator.clipboard.writeText(logisticsToken);
-												checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
-											}}
-											className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
-										>
-										<Copy />
-											<span>{logisticsToken.slice(0, 10)}....</span>
-										</Button>
-									)}
-
-									<span className="text-xs font-thin text-gray-500">
-										The Token will expire after every 10 days of Login
-									</span>
-								</div>
-							)}
-
-							{/* Visible content on larger screens */}
-							<div className="hidden lg:flex flex-col space-y-1">
-								<Label className="text-sm font-thin text-gray-500">
-									The Token will expire after every 10 days of Login
+						{/* Content Section */}
+						<div className="flex flex-col lg:flex-row items-center lg:items-start lg:space-x-6 space-y-4 lg:space-y-0">
+							
+							{/* Information and Button Section */}
+							<div className="flex flex-col items-center lg:items-start space-y-4">
+							{
+								token?.expiringTime && <Label className="text-sm text-gray-500 text-center lg:text-left">
+									The Token will expire On {new Date(token?.expiringTime).toDateString()}.
 								</Label>
-								<Button
-									onClick={() => setOpenLoginDialogue(true)}
-									className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
-								>
+							}
+							
+
+							<Button
+								onClick={() => setOpenLoginDialogue(true)}
+								className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md transition-all w-full lg:w-auto"
+							>
 								<TruckIcon />
-									<span className="hidden md:block">Get ShipRocket API Token</span>
-								</Button>
+								<span>Get ShipRocket API Token</span>
+							</Button>
 
 								{logisticsToken && (
 									<Button
@@ -186,19 +161,65 @@ const AdminOrderLayout = () => {
 											navigator.clipboard.writeText(logisticsToken);
 											checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
 										}}
-										className="flex items-center justify-center space-x-2 py-4 px-4 border border-gray-300 rounded-md"
+										className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md transition-all w-full lg:w-auto"
 									>
-										<Copy />
-										<span>{logisticsToken.slice(0, 10)}....</span>
+									<Copy />
+										<span>{logisticsToken.slice(0, 23)}....</span>
 									</Button>
 								)}
 							</div>
-						</div>
-						<Button className = {"animate-pulse"} onClick = {()=> setOpenReturnOrdersDialogue(!openReturnOrderDialogue)}>
-							Retuning Orders <IoIosReturnLeft/>
-						</Button>
 
-					</CardHeader>
+							{/* Toggle Button for Mobile */}
+							{/* <Button
+								onClick={() => setIsDropdownOpen(!isDropdownOpen)}
+								className="lg:hidden flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition-all"
+							>
+							<MenuSquareIcon />
+							</Button> */}
+						</div>
+
+						{/* Mobile Dropdown Menu */}
+						{/* {isDropdownOpen && (
+							<div className="lg:hidden flex flex-col space-y-4 mt-4 p-4 bg-white shadow-md rounded-lg w-full">
+							<Button
+								onClick={() => setOpenLoginDialogue(true)}
+								className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md hover:bg-gray-100"
+							>
+								<TruckIcon />
+								<span>Get ShipRocket API Token</span>
+							</Button>
+
+							{logisticsToken && (
+								<Button
+								onClick={() => {
+									navigator.clipboard.writeText(logisticsToken);
+									checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
+								}}
+								className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md hover:bg-gray-100"
+								>
+								<Copy />
+								<span>{logisticsToken.slice(0, 10)}....</span>
+								</Button>
+							)}
+
+							<span className="text-xs font-thin text-gray-500 mt-2">
+								The Token will expire after every {token?.expiringTime} days of Login.
+							</span>
+							</div>
+						)} */}
+
+						{/* Returning Orders Button */}
+						<Button
+							onClick={() => setOpenReturnOrdersDialogue(!openReturnOrderDialogue)}
+							className="mt-6 lg:mt-0 bg-blue-500 text-white hover:bg-blue-600 p-4 rounded-md flex items-center justify-center space-x-2 transition ease-in-out duration-300 w-full lg:w-auto"
+						>
+							<IoIosReturnLeft className="text-lg" />
+							<span>Returning Orders</span>
+						</Button>
+					</div>
+
+
+
 
 
 					<CardContent className = {"mt-10"}>

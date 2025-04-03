@@ -33,35 +33,28 @@ const websiteSchema = new mongoose.Schema(
             type: String,
             required: true,
             unique: true, // Make tag unique if appropriate (e.g., a unique identifier for the website)
-            trim: true,   // Trim any leading/trailing spaces
         },
         AboutData: {
             type: mongoose.Schema.Types.Mixed, // Flexible object
-            required: true,
         },
         Address: [{
             type: String, // Ensure addresses are strings; if more structure is needed, create a sub-schema
-            required: true,
         }],
         faqArray: [{
             question: {
                 type: String,
-                required: true,
                 trim: true,
             },
             answer: {
                 type: String,
-                required: true,
                 trim: true,
             },
         }],
         termsAndCondition: {
             type: mongoose.Schema.Types.Mixed, // Flexible object (could be structured based on your data)
-            required: true,
         },
         privacyPolicy: {
             type: mongoose.Schema.Types.Mixed,
-            required: true,
         },
         ConvenienceFees: {
             type: Number,
@@ -69,37 +62,28 @@ const websiteSchema = new mongoose.Schema(
         },
         ContactUsePageData: {
             type: mongoose.Schema.Types.Mixed,
-            required: true,
         },
         CouponBannerData: {
             type: mongoose.Schema.Types.Mixed,
-            required: true,
         },
         ShiprocketToken: {
-            type: String,
-            required: true,
-            trim: true,
-            unique: true, // Ensure that ShiprocketToken is unique
+            type: Object,
         },
         WebsiteDisclaimers: [{
             header: {
                 type: String,
-                required: true,
                 trim: true,
             },
             body: {
                 type: String,
-                required: true,
                 trim: true,
             },
             hoverBody: {
                 type: String,
-                required: true,
                 trim: true,
             },
             iconImage: {
                 type: String,
-                required: true,
             },
         }],
     },

@@ -689,17 +689,16 @@ const MPpage = () => {
                             <Fragment>
                             
                                 <div className='mt-2 pt-4 bg-white px-4'>
-                                    <h1 className=' flex items-center mt-2 font-semibold'>BulletPoints<BsTag className='ml-2' /></h1>
+                                    <h1 className=' flex items-center mt-2 font-semibold'>BulletPoints <BsTag className='ml-2' /></h1>
                                 </div>
                                 <div className='mt-2 pb-4 pt-4 bg-white px-4'>
-                                    {
-                                        product.bulletPoints.map((e) =>
-                                            <Fragment>
-                                                <h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
-                                                <span className='mt-4'>
-                                                    <li className='list-disc mt-2'>{e.body}</li>
-                                                </span>
-                                            </Fragment>
+                                    {product.bulletPoints.map((e,index) =>
+										<Fragment key={index}>
+											<h1 className=' flex items-center mt-2 font-semibold'>{e.header}</h1>
+											<span className='mt-4'>
+												<li className='list-disc mt-2'>{e.body}</li>
+											</span>
+										</Fragment>
                                         )
                                     }
                                 </div>
@@ -712,8 +711,8 @@ const MPpage = () => {
                                 </div>
                                 <div className='mt-2 pb-4 pt-4 flex-row flex flex-wrap gap-2 bg-white px-4'>
                                     {
-                                        product.tags.map((tag) =>
-                                            <ul className='bg-gray-200 w-fit px-2 py-1 rounded-full'>
+                                        product.tags.map((tag,index) =>
+                                            <ul key={index} className='bg-gray-200 w-fit px-2 py-1 rounded-full'>
                                                 <h1 className='font-medium text-base text-gray-800'>{tag}</h1>
                                             </ul>
                                         )

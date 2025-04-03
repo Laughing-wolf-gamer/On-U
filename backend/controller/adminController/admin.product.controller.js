@@ -5,9 +5,10 @@ import ProductModel from "../../model/productmodel.js";
 import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
 import { sendOrderStatusUpdateMail, sendUpdateOrderStatus } from "../emailController.js";
 import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
-import { getShipmentOrderByOrderId, getShipmentTrackingStatus, getShipRocketToken ,getAllReturnOrdersShiprockets} from "../LogisticsControllers/shiprocketLogisticController.js";
+import { getShipmentOrderByOrderId,getAllReturnOrdersShiprockets} from "../LogisticsControllers/shiprocketLogisticController.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
+import WebSiteModel from "../../model/websiteData.model.js";
 
 export const uploadImage = async (req, res) =>{
     try {
@@ -1062,9 +1063,17 @@ export const getallOrders = async (req, res) => {
 
 export const getShipmtRocketTokenFromDb = async(req,res)=>{
 	try {
-		const token = await getShipRocketToken();
-		console.log("order Status Updated Token: ", token);
-		res.status(200).json({ Success: true, message: "ShipRocket Token Fetched", result: token});
+		const token = await WebSiteModel.findOne({ tag: 'Shiprocket-token' });
+		if(!token){
+			logger.warn(`No ShipRocket Token Found`);
+			return res.status(200).json({ Success: true, message: "No ShipRocket Token Found", result: null});
+		}
+		if(!token.ShiprocketToken){
+			logger.warn(`No ShipRocket Token Found`);
+			return res.status(200).json({ Success: true, message: "No ShipRocket Token Found", result: null});
+		}
+		// console.log("Shipwrecked Token Updated Token: ", token.ShiprocketToken);
+		res.status(200).json({ Success: true, message: "ShipRocket Token Fetched", result: token?.ShiprocketToken});
 	} catch (error) {
 		console.error("Error Getting ShipRocket Token from DB: ", error);
         logger.error("Error Getting ShipRocket Token from DB: " + error.message);

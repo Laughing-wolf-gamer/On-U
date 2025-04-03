@@ -36,7 +36,6 @@ export const createwishlist = ({productId}) => async () => {
 export const createAndSendProductsArrayWishList = (productIdArray) => async()=>{
     try {
         const res = await axios.post(`${BASE_API_URL}/api/shop/order_bag_wishList/create_wishlist_array`,{productIdArray}, headerConfig());
-        console.log("Wishlist created: ",res?.data);
         return res?.data;
     } catch (error) {
         return error?.response?.data;
@@ -92,7 +91,7 @@ export const getbag = () => async (dispatch) => {
         const res = await axios.get(`${BASE_API_URL}/api/shop/order_bag_wishList/bag/getBagByUserId`,headerConfig());
         dispatch({ type: SUCCESS_GET_BAG, payload: res.data.bag,})
     } catch (error) {
-        dispatch({ type: FAIL_GET_BAG, payload: error.message})
+        dispatch({ type: FAIL_GET_BAG, payload: error?.response?.data?.message})
     }
 }
 

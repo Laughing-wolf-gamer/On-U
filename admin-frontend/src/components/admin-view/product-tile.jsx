@@ -1,8 +1,9 @@
-import React, { useState, memo, useEffect, useRef, useMemo } from 'react';
+import React, { useState, memo, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
 import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '@/config';
 import { Badge } from '../ui/badge';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 const AdminProductTile = ({
     setOpenProductPreview,
@@ -28,7 +29,7 @@ const AdminProductTile = ({
     return (
         <Card className="w-full h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
             {/* Image Section */}
-            <div className="relative w-full h-[300px] sm:h-[350px] md:h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-100">
+            <div className="relative w-full h-[300px] sm:h-[450px] overflow-hidden rounded-lg mb-4 bg-gray-100">
 				
                 {selectedSizeColorImageArray[0] && <MemoizedMedia
                     mediaUrl={selectedSizeColorImageArray[0].url}
@@ -89,96 +90,106 @@ const AdminProductTile = ({
 };
 
 // Memoized Media Component
-const MemoizedMedia = memo(({ mediaUrl, altText,isStockLow,isStockLowCritical,totalStock }) => {
+const MemoizedMedia = memo(({ mediaUrl, altText, isStockLow, isStockLowCritical, totalStock }) => {
     const mediaRef = useRef(null);
-
-    // Check if the URL corresponds to a video
     const isVideo = typeof mediaUrl === 'string' && mediaUrl.match(/\.(mp4|webm|ogg)$/i);
 
+    // Lazy load image/video
     useLazyLoadImage(mediaRef, mediaUrl);
 
     if (isVideo) {
         return (
-			<div className=' relative'>
-				{isStockLow && !isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 absolute animate-pulse text-white top-0 right-2">
-							Stock Low ({totalStock} left)
-						</Badge>
-					</div>
-				)}
-				{isStockLow && isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white absolute top-0 animate-pulse right-2">
-							Stock Critical ({totalStock} left)
-						</Badge>
-					</div>
-				)}
-				<video
-					src={mediaUrl}
-
-					loop = {true}
-					muted={true}
-					autoPlay={false}
-					ref={mediaRef}
-					className="w-full h-full object-cover rounded-lg transition-transform duration-300"
-					loading="lazy"
-					style={{ opacity: 0 }}
-					onLoadedData={() => {
-						mediaRef.current.style.opacity = 1;
-					}}
-					controls
-					controlsList="nodownload nofullscreen nopictureinpicture"
-					onContextMenu={(e) => e.preventDefault()}  // Disable right-click
-				>
-					<source data-src={mediaUrl} />
-					Your browser does not support the video tag.
-				</video>
-			</div>
+            <div className="relative">
+                {isStockLow && !isStockLowCritical && (
+                    <div className="mb-4">
+                        <Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 absolute animate-pulse text-white top-0 right-2">
+                            Stock Low ({totalStock} left)
+                        </Badge>
+                    </div>
+                )}
+                {isStockLow && isStockLowCritical && (
+                    <div className="mb-4">
+                        <Badge className="text-sm bg-red-500 hover:bg-red-700 text-white absolute top-0 animate-pulse right-2">
+                            Stock Critical ({totalStock} left)
+                        </Badge>
+                    </div>
+                )}
+                <video
+                    src={mediaUrl}
+                    loop={true}
+                    muted={true}
+                    autoPlay={false}
+                    ref={mediaRef}
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-300"
+                    loading="lazy"
+                    style={{ opacity: 0 }}
+                    onLoadedData={() => {
+                        mediaRef.current.style.opacity = 1;
+                    }}
+                    controls
+                    controlsList="nodownload nofullscreen nopictureinpicture"
+                    onContextMenu={(e) => e.preventDefault()}  // Disable right-click
+                >
+                    <source data-src={mediaUrl} />
+                    Your browser does not support the video tag.
+                </video>
+            </div>
         );
     } else {
         return (
-			<div className='relative w-full h-full'>
-				{isStockLow && !isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white animate-pulse absolute top-0 right-2">
-							Stock Low ({totalStock} left)
-						</Badge>
-					</div>
-				)}
-				{isStockLow && isStockLowCritical && (
-					<div className="mb-4">
-						<Badge className="text-sm bg-red-500 hover:bg-red-700 text-white animate-pulse absolute top-0 right-2">
-							Stock Critical ({totalStock} left)
-						</Badge>
-					</div>
-				)}
-				<img
-					ref={mediaRef}
-					data-src={mediaUrl}
-					alt={altText}
-					className="w-full h-full object-cover rounded-lg transition-transform duration-300"
-					loading="lazy"
-					style={{ opacity: 0 }}
-					onLoad={() => {
-						mediaRef.current.style.opacity = 1;
+            <div className="relative w-full h-full">
+                {isStockLow && !isStockLowCritical && (
+                    <div className="mb-4">
+                        <Badge className="text-sm bg-yellow-500 hover:bg-yellow-500 text-white animate-pulse absolute top-0 right-2">
+                            Stock Low ({totalStock} left)
+                        </Badge>
+                    </div>
+                )}
+                {isStockLow && isStockLowCritical && (
+                    <div className="mb-4">
+                        <Badge className="text-sm bg-red-500 hover:bg-red-700 text-white animate-pulse absolute top-0 right-2">
+                            Stock Critical ({totalStock} left)
+                        </Badge>
+                    </div>
+                )}
+                <LazyLoadImage
+                    ref={mediaRef}
+					effect="black-and-white"
+                    src={mediaUrl}
+                    alt={altText}
+					useIntersectionObserver = {true}
+                    className="w-full h-full object-cover rounded-lg transition-transform duration-300"
+                    loading="lazy"
+					wrapperProps={{
+						// If you need to, you can tweak the effect transition using the wrapper style.
+						style: {transitionDelay: "1s"},
 					}}
-					
-					onContextMenu={(e) => e.preventDefault()}  // Disable right-click
-				/>
-			</div>
+                    onContextMenu={(e) => e.preventDefault()}  // Disable right-click
+                />
+            </div>
         );
     }
 });
 
+
 // Lazy load custom hook
 function useLazyLoadImage(ref, imageUrl) {
-    useEffect(() => {
+    useLayoutEffect(() => {
+        // Ensure that the ref is pointing to a valid DOM element
+        const element = ref.current;
+
+        // If ref is not attached to a DOM element, skip observing
+        if (!element || !(element instanceof HTMLElement)) {
+            console.warn('Ref is not attached to a valid DOM element');
+            return;
+        }
+
         const observer = new IntersectionObserver((entries) => {
             entries.forEach((entry) => {
                 if (entry.isIntersecting && entry.target) {
                     const mediaElement = entry.target;
                     const mediaUrl = mediaElement.dataset.src || mediaElement.querySelector('source')?.dataset.src;
+
                     if (mediaUrl) {
                         if (mediaElement.tagName === 'VIDEO') {
                             mediaElement.querySelector('source').src = mediaUrl;
@@ -186,23 +197,26 @@ function useLazyLoadImage(ref, imageUrl) {
                             mediaElement.src = mediaUrl;
                         }
                     }
-                    observer.unobserve(entry.target);
+                    observer.unobserve(entry.target); // Unobserve once the element is loaded
                 }
             });
         }, {
             threshold: 0.1,
         });
 
-        if (ref.current) {
-            observer.observe(ref.current);
-        }
+        // Start observing the element only if it's valid
+        observer.observe(element);
 
+        // Cleanup the observer on unmount or when ref changes
         return () => {
-            if (ref.current) {
-                observer.unobserve(ref.current);
+            if (element && element.isConnected) {
+                observer.unobserve(element);
+            } else {
+                console.warn('Element is no longer connected, unable to unobserve');
             }
         };
-    }, [imageUrl]);
+    }, [imageUrl, ref]); // Re-run the effect if ref or imageUrl changes
 }
+
 
 export default AdminProductTile;
