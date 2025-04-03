@@ -1,7 +1,5 @@
-import React, { createContext,  useContext, useEffect, useState } from 'react';
+import React, { createContext,  useContext, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { featchallbanners, fetchAllCategoryBanners } from '../action/banner.action';
-import { getOptionsByType } from '../action/productaction';
 import { getuser } from '../action/useraction';
 
 // Create the context

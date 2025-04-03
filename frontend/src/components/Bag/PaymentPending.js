@@ -2,11 +2,8 @@ import axios from 'axios';
 import { Loader } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { BASE_API_URL, headerConfig } from '../../config';
-import { useDispatch, useSelector } from 'react-redux';
-import { getuser } from '../../action/useraction';
 import { useNavigate } from 'react-router-dom';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
-import { getbag } from '../../action/orderaction';
 import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 import { useServerAuth } from '../../Contaxt/AuthContext';
 
@@ -15,7 +12,7 @@ const PaymentPending = () => {
 	const{fetchBag} = useServerWishList();
 	const[isPaymentChecking,setIsPaymentChecking] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
-	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	const{userLoading,user} = useServerAuth();
 	const verifyAnyOrdersPayment = async()=>{
 		setIsPaymentChecking(true);
         if(!sessionStorage.getItem("checkoutData")){
@@ -24,12 +21,10 @@ const PaymentPending = () => {
 		};
 		const data = JSON.parse(sessionStorage.getItem("checkoutData"))
         try {
-            console.log("Verifying Order Response: ",data);
             const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
-            sessionStorage.removeItem("checkoutData")
-            if(response?.data.success){
+            if(response?.data?.success){
+            	sessionStorage.removeItem("checkoutData")
                 checkAndCreateToast("success","Payment Successful");
-				// await dispatch(getbag());
 				await fetchBag();
 				navigate('/bag/checkout/success');
             }else{
@@ -46,10 +41,10 @@ const PaymentPending = () => {
 		}
     }
 	useEffect(()=>{
-		if(!user){
-			checkAuthUser();
+		if(!user && !userLoading){
+			navigate('/Login');
 		}
-	},[])
+	},[user])
 	useEffect(()=>{
 		if(user && !isPaymentChecking){
 			verifyAnyOrdersPayment();

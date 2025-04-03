@@ -1737,7 +1737,7 @@ export const deletebag = async (req, res) => {
         // Find the user's bag
         const bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon');
         if (!bag) return res.status(400).json({ success: false, message: "Bag not found" });
-		console.log("Deleting Bag!",bag.orderItems);
+		// console.log("Deleting Bag!",bag.orderItems);
         // Find the index of the item to remove
         const bagItemIndex = bag.orderItems.findIndex(
             p => p.productId._id.toString() === productId &&

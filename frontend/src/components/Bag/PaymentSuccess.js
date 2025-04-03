@@ -1,11 +1,12 @@
 import { CircleCheck } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const PaymentSuccess = () => {
 	const [seconds, setSeconds] = useState(10); // Set initial countdown time (10 seconds)
 	const navigate = useNavigate();
-
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
 	// Use useEffect to manage the timer countdown
 	useEffect(() => {
 		if (seconds === 0) {
@@ -22,7 +23,12 @@ const PaymentSuccess = () => {
 		// Cleanup the timer when the component unmounts or the countdown ends
 		return () => clearInterval(timerId);
 	}, [seconds, navigate]);
-
+	useEffect(()=>{
+		if(!user && !userLoading){
+			// checkAuthUser();
+			navigate('/products');
+		}
+	},[user])
 	return (
 		<div className="bg-gradient-to-tl min-h-screen flex items-center justify-center">
 			<div className="bg-gray-50 p-10 rounded-xl shadow-2xl max-w-lg text-center w-full sm:w-auto">

@@ -33,7 +33,6 @@ const Login = () => {
         }
         try {
             const response = await dispatch(loginmobile({logInEmail}));
-			console.log("Login Check Result: ",response);
             const{success,message,result} = response;
             if(success){
                 setOtpData(result); // Assuming result means OTP is sent
@@ -73,12 +72,14 @@ const Login = () => {
                 }finally{
 					setIsUpdating(false);
 				}
-				if(!user){
-					checkAuthUser();
-				}
+				await checkAuthUser();
                 checkAndCreateToast("success",'Login Successful');
                 setOtpData(null); // Clear OTP data after successful verification
                 setOtp('');
+				if(sessionStorage.getItem("checkoutData")){
+					navigation('/bag/checkout/pending');
+					return;
+				}
                 navigation('/');
             }else{
                 checkAndCreateToast("error",message || "Verification Failed");

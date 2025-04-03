@@ -13,8 +13,8 @@ import { ChevronRight, Dot } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
 import Loader from '../Loader/Loader';
 import WhatsAppButton from '../Home/WhatsAppButton';
-import { use } from 'react';
-import { getReverseSortingValueValues, getSortingKeyValuePairs, getSortingValues } from '../../config';
+import { getReverseSortingValueValues, getSortingKeyValuePairs } from '../../config';
+import { useServerBanners } from '../../Contaxt/ServerBannerContext';
 
 const maxAmountPerPage = 50;
 const Allproductpage = ({user}) => {
@@ -23,9 +23,9 @@ const Allproductpage = ({user}) => {
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
-    const { wishlist } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
-    const { noFilterProducts,loading:productAllProductsLoading,  } = useSelector(state => state.AllProductNoFilter);
+    // const { noFilterProducts,loading:productAllProductsLoading} = useSelector(state => state.AllProductNoFilter);
+	const{noFilterProducts,productAllProductsLoading,handleFetchFilter} = useServerBanners();
     const [sortvalue, setSortValue] = useState('What`s New');
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -33,9 +33,9 @@ const Allproductpage = ({user}) => {
         setCurrentPage(e);
         dispatch(getproduct(e));
     };
-	const handleResetFilter = ()=>{
+	/* const handleResetFilter = ()=>{
 		dispatch(allProductsFilter())
-	}
+	} */
     const dispatchFetchAllProduct = () => {
         dispatch(getproduct(currentPage));
     };
@@ -71,7 +71,7 @@ const Allproductpage = ({user}) => {
     useEffect(() => {
         if (state1 === false) {
             dispatch(getproduct());
-			handleResetFilter();
+			handleFetchFilter();
             setstate1(true);
         }
 
@@ -90,7 +90,6 @@ const Allproductpage = ({user}) => {
     }, [dispatch, error, state, productLoading, state1]);
 	useEffect(()=>{
 		setTheCurrentSortValues();
-        dispatch(getwishlist())
 	},[])
 
     useEffect(()=>{
@@ -123,7 +122,7 @@ const Allproductpage = ({user}) => {
                     {/* Filter */}
                     <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 border-opacity-25 h-max sticky top-0 bg-gray-50">
                         <div className='2xl:px-1 pb-4'>
-                            {noFilterProducts && noFilterProducts.length > 0 && <FilterView product={noFilterProducts} dispatchFetchAllProduct={dispatchFetchAllProduct} handleResetFilter = {handleResetFilter} />}
+                            {!productAllProductsLoading && noFilterProducts && noFilterProducts.length > 0 && <FilterView product={noFilterProducts} dispatchFetchAllProduct={dispatchFetchAllProduct} handleResetFilter = {handleFetchFilter} />}
                         </div>
                     </div>
 
@@ -197,7 +196,7 @@ const Allproductpage = ({user}) => {
                 }
 
             </div>
-            {(window.screen.width < 1024 && noFilterProducts) && <MFilter sortvalue={sortvalue} setSortValue = {setTheCurrentSortValues} scrollableDivRef = {scrollableDivRef} product={noFilterProducts} handleSortChange={handleSortChange} handleResetFilter = {handleResetFilter} />}
+            {(window.screen.width < 1024 && !productAllProductsLoading && noFilterProducts && noFilterProducts.length > 0) && <MFilter sortvalue={sortvalue} setSortValue = {setTheCurrentSortValues} scrollableDivRef = {scrollableDivRef} product={noFilterProducts} handleSortChange={handleSortChange} handleResetFilter = {handleFetchFilter} />}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
 			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>

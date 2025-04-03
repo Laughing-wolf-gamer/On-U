@@ -57,7 +57,6 @@ function App() {
     
     useEffect(() => {
         if (state === false) {
-            // dispatch(getuser())
             setstate(true)
         }
         let url = document.URL

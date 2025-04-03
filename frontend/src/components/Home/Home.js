@@ -21,11 +21,7 @@ import { useServerBanners } from '../../Contaxt/ServerBannerContext';
 
 const Home = ({user}) => {
 	const [showComponent, setShowComponent] = useState(null);
-	const{banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions} = useServerBanners();
-    const { product,loading:productLoading} = useSelector(state => state.Allproducts)
-    // const [categoriesOptions,setCategoryOptions] = useState([]);
-    // const { banners,loading:bannerLoading} = useSelector(state => state.banners)
-    // const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
+	const{banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions,noFilterProducts,productAllProductsLoading} = useServerBanners();
     const dispatch = useDispatch();
 	const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const indicatorStyles: CSSProperties = {
@@ -189,7 +185,7 @@ const Home = ({user}) => {
                         </div>
                         <OurMotoData/>
 						{
-							productLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14'>
+							productAllProductsLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14'>
 								<div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2 justify-center items-center justify-self-center max-w-screen-2xl">
 									{
 										Array(8).fill(0).map((_, index) => (
@@ -204,7 +200,7 @@ const Home = ({user}) => {
 								</div>
                             </div>:(
 								<Fragment>
-                        			{product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
+                        			{noFilterProducts && noFilterProducts.length > 0 && <ProductPreviewFull product={noFilterProducts} user={user}/>}
 								</Fragment>
 							)
 						}
@@ -350,7 +346,7 @@ const Home = ({user}) => {
 						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
 
                         {
-							!productLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14 '>
+							productAllProductsLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14 '>
 								<div className="grid grid-cols-2 gap-4 justify-center items-center px-4">
 									{
 										Array(5).fill(0).map((_, index) => (
@@ -365,7 +361,7 @@ const Home = ({user}) => {
 								</div>
                             </div>:(
 								<>
-                        			{product && product.length > 0 && <ProductPreviewFull product={product} user={user}/>}
+                        			{noFilterProducts && noFilterProducts.length > 0 && <ProductPreviewFull product={noFilterProducts} user={user}/>}
 								</>
 							)
 						}

@@ -1,7 +1,7 @@
 import React, { createContext,  useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { featchallbanners, fetchAllCategoryBanners } from '../action/banner.action';
-import { getOptionsByType } from '../action/productaction';
+import { allProductsFilter, getOptionsByType } from '../action/productaction';
 
 // Create the context
 const ServerBannersContext = createContext();
@@ -10,6 +10,7 @@ const ServerBannersContext = createContext();
 export const SeverBannersProvider = ({ children }) => {
 	const { banners,loading:bannerLoading} = useSelector(state => state.banners)
 	const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
+	const { noFilterProducts,loading:productAllProductsLoading} = useSelector(state => state.AllProductNoFilter);
 	const [categoriesOptions,setCategoryOptions] = useState([]);
 	const dispatch = useDispatch();
 	const getSingleOptions = async (type)=>{
@@ -22,6 +23,9 @@ export const SeverBannersProvider = ({ children }) => {
 			console.error("Error getting: ", error);
 		}
 	}
+	const handleFetchFilter = ()=>{
+		dispatch(allProductsFilter())
+	}
 	useEffect(()=>{
 		if(!bannerLoading){
 			dispatch(featchallbanners());
@@ -32,7 +36,7 @@ export const SeverBannersProvider = ({ children }) => {
 		getSingleOptions('category');
 	},[])
 	return (
-		<ServerBannersContext.Provider value={{ banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions,getSingleOptions }}>
+		<ServerBannersContext.Provider value={{ banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions,getSingleOptions,noFilterProducts,productAllProductsLoading,handleFetchFilter }}>
 			{children}
 		</ServerBannersContext.Provider>
 	);

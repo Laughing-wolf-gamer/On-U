@@ -2,16 +2,15 @@ import React, { Fragment, useEffect, useRef, useState } from 'react';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
-import { applyCouponToBag, deleteBag, getbag, getqtyupdate, itemCheckUpdate, removeCouponFromBag } from '../../action/orderaction';
-import { getAddress, getConvinceFees, getuser, removeAddress, updateAddress } from '../../action/useraction';
-import { getRandomArrayOfProducts } from '../../action/productaction';
+import { applyCouponToBag, deleteBag, getqtyupdate, itemCheckUpdate, removeCouponFromBag } from '../../action/orderaction';
+import { getAddress, getConvinceFees, removeAddress, updateAddress } from '../../action/useraction';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import axios from 'axios';
 import { BASE_API_URL, calculateDiscountPercentage, capitalizeFirstLetterOfEachWord, formattedSalePrice, headerConfig, removeSpaces } from '../../config';
 import { ChevronUp, Minus, Plus, Trash, X } from 'lucide-react';
 import HorizontalScrollingCouponDisplay from './HorizontalScrollingCouponDisplay';
 import Footer from '../Footer/Footer';
-import { FormControl, FormHelperText, Input, InputLabel } from '@mui/material';
+import { FormControl, Input, InputLabel } from '@mui/material';
 import { fetchAddressForm } from '../../action/common.action';
 import PaymentProcessingPage from '../Payments/PaymentProcessingPage';
 import BackToTopButton from '../Home/BackToTopButton';
@@ -31,6 +30,7 @@ const CheckoutPage = () => {
 	const {allAddresses} = useSelector(state => state.getAllAddress)
 	const {checkAndCreateToast} = useSettingsContext();
 	const dispatch = useDispatch();
+	const navigate = useNavigate();
 
 	const[convenienceFees,setConvenienceFees] = useState(-1);
 	const [isAddressPopupOpen, setIsAddressPopupOpen] = useState(false);
@@ -57,7 +57,6 @@ const CheckoutPage = () => {
 	};
 	const handleSaveAddress = async (newAddress) => {
 		await dispatch(updateAddress(newAddress));
-		// dispatch(getuser());
 		checkAuthUser();
 		checkAndCreateToast("success",'Address added successfully');
 	};
@@ -212,8 +211,6 @@ const CheckoutPage = () => {
 
 
 	const updateQty = async (e, itemId,size,color) => {
-		console.log("Item ID: ", itemId);
-		console.log("Qty Value: ", e.target.value);
 		if(isAuthentication){
 			await dispatch(getqtyupdate({ id: itemId,size,color, qty: Number(e.target.value) }));
 			// dispatch(getbag());
@@ -262,25 +259,23 @@ const CheckoutPage = () => {
 		if (user) {
 			dispatch(getAddress())
 			setAddress(user?.user?.addresses[0]);
-		}else{
-			// dispatch(getuser());
-			checkAuthUser();
 		}
-		
 	}, [dispatch,deleteBagResult, user]);
-	
+	useEffect(() => {
+		if(!user && !userLoading){
+			navigate("/Login");
+		}
+	},[user])	
 	const verifyAnyOrdersPayment = async()=>{
 		if(!sessionStorage.getItem("checkoutData")) return;
 		try {
 			const data = JSON.parse(sessionStorage.getItem("checkoutData"))
 			const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
-			console.log("Verifying Order Response: ",response.data);
 			sessionStorage.removeItem("checkoutData")
 			if(response?.data.success){
 				checkAndCreateToast("success","Payment Successful");
 				if(user){
 					setTimeout(() => {
-						// dispatch(getbag());
 						fetchBag();
 					}, 1000);
 				}
@@ -301,7 +296,7 @@ const CheckoutPage = () => {
 		}
 	};
 	useEffect(()=> {
-		verifyAnyOrdersPayment();
+		// verifyAnyOrdersPayment();
 		handleConvenienceFeesChange();
 	},[dispatch])
 	useEffect(()=>{
@@ -332,15 +327,12 @@ const CheckoutPage = () => {
 			await dispatch(applyCouponToBag({ bagId: bag._id, couponCode: coupon }));
 			checkAndCreateToast("success","Coupon Applied");
 			setCoupon(null);
-			// closePopup();
-			// dispatch(getbag({ userId: user.id }));
 			window.location.reload();
 		} else {
 			checkAndCreateToast("info","No Coupon Applied!");
 		}
 	};
 	const removeCoupon = async (e, code) => {
-		// e.preventDefault();
 		if (bag) {
 			await dispatch(removeCouponFromBag({ bagId: bag._id, couponCode: code }));
 			checkAndCreateToast("success","Coupon Removed");
