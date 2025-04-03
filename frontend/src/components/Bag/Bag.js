@@ -22,7 +22,7 @@ import { useServerAuth } from '../../Contaxt/AuthContext';
 const Bag = () => {
     const{deleteBagResult} = useSelector(state => state.deletebagReducer)
     const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
-	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+	const{user, isAuthentication,checkAuthUser} = useServerAuth();
 	const{bag,bagLoading,fetchBag,randomProducts,RandomProductLoading} = useServerWishList();
     const {allAddresses} = useSelector(state => state.getAllAddress)
     const {checkAndCreateToast} = useSettingsContext();
@@ -52,7 +52,6 @@ const Bag = () => {
         // const updatedAddresses = [...user.user.addresses, newAddress];
         // Assuming you have a function to update the user's address in the backend
         await dispatch(updateAddress(newAddress));
-        // dispatch(getuser());
 		checkAuthUser();
         checkAndCreateToast("success",'Address added successfully');
     };
@@ -186,7 +185,6 @@ const Bag = () => {
                     const { ProductData, quantity,isChecked } = item;
 					if(isChecked){
 						const { salePrice, price,gst} = ProductData;
-						const priceWithoutGst = getOriginalAmount(gst,price);
 						
 						// Use salePrice if available, else fallback to regular price
 						const productSellingPrice = salePrice || price;
@@ -408,107 +406,6 @@ const Bag = () => {
     );
 };
 
-const SkeletonLoader = () => {
-    return (
-        <Fragment>
-            <div className="relative max-w-screen-lg mx-auto">
-                {/* Step Indicator */}
-                <div className="flex justify-between md:flex-row flex-col gap-3 p-2 items-center mt-6">
-                    <div className="flex space-x-2 text-[#696B79]">
-                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
-                        <span>--------</span>
-                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
-                        <span>--------</span>
-                        <span className="font-semibold w-20 h-4 bg-gray-300 animate-pulse"></span>
-                    </div>
-                    <div className="flex items-center">
-                        <div className="w-8 h-8 bg-gray-300 animate-pulse rounded-full"></div>
-                        <span className="ml-2 w-24 h-3 bg-gray-300 animate-pulse"></span>
-                    </div>
-                </div>
-
-                {/* Bag and Price Details */}
-                <div className="flex flex-col lg:flex-row mt-4 gap-6">
-                    <div className="flex-1 space-y-4">
-                        {/* Loading Items */}
-                        {[...Array(3)].map((_, index) => (
-                            <div key={index} className="flex items-center border-b py-4 space-x-4">
-                                <div className="w-24 h-24 bg-gray-300 animate-pulse rounded-lg"></div>
-                                <div className="flex-1 space-y-3">
-                                    <div className="w-full h-6 bg-gray-300 animate-pulse"></div>
-                                    <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                                    <div className="flex space-x-4">
-                                        <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                                        <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                                    </div>
-                                    <div className="w-24 h-6 bg-gray-300 animate-pulse"></div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-
-                    <div className="w-full lg:w-1/3 bg-gray-100 p-4 rounded-lg space-y-4">
-                        {/* Price Details Skeleton */}
-                        <div className="w-32 h-4 bg-gray-300 animate-pulse"></div>
-                        <div className="flex justify-between mb-2">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex justify-between mb-2">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex justify-between mb-2">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex justify-between mb-4">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-4 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex justify-between font-semibold text-xl">
-                            <div className="w-24 h-6 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-6 bg-gray-300 animate-pulse"></div>
-                        </div>
-                    </div>
-                </div>
-
-                {/* Address List */}
-                <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                    <h3 className="font-semibold mb-2 w-24 h-4 bg-gray-300 animate-pulse"></h3>
-                    <div className="space-y-4">
-                        {[...Array(3)].map((_, index) => (
-                            <div key={index} className="p-4 border rounded-lg space-y-2">
-                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
-                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
-                                <div className="w-full h-4 bg-gray-300 animate-pulse"></div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Payment Checkout Section */}
-                <div className="mt-6 bg-gray-100 p-4 rounded-lg">
-                    <h3 className="font-semibold mb-4 text-center w-32 h-4 bg-gray-300 animate-pulse"></h3>
-                    <div className="space-y-4">
-                        <div className="flex justify-between items-center">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-16 h-6 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex justify-between items-center">
-                            <div className="w-24 h-4 bg-gray-300 animate-pulse"></div>
-                            <div className="w-32 h-4 bg-gray-300 animate-pulse"></div>
-                        </div>
-                        <div className="flex flex-col space-y-2">
-                            <div className="w-full h-10 bg-gray-300 animate-pulse rounded-lg"></div>
-                            <div className="w-full h-10 bg-gray-300 animate-pulse rounded-lg"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </Fragment>
-    )
-}
 
 
 export default Bag;

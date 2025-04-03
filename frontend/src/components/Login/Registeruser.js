@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { ImFacebook, ImGoogle, ImInstagram, ImTwitter } from 'react-icons/im';
 import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { FormControl, Input, InputLabel } from '@mui/material';
 
 const Registeruser = () => {
     const {checkAndCreateToast} = useSettingsContext();
@@ -66,42 +67,50 @@ const Registeruser = () => {
 					<h1 className="text-center text-3xl font-semibold text-gray-700 mb-8">Register User</h1>
 					<div className="space-y-6">
 						{/* Email Input */}
-						<input
-							type="email"
-							name="email"
-							required
-							className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-4"
-							placeholder="E-Mail"
-							onChange={(e) => setemail(e.target.value)}
-						/>
-
-						{/* Phone Number Input */}
-						<input
-							type="number"
-							name="PhoneNumber"
-							minLength={'10'}
-							maxLength={'10'}
-							required
-							className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-4"
-							placeholder="Phone Number"
-							value={phoneNumber}
-							onChange={(e) => setPhoneNumber(e.target.value)}
-						/>
-
-						{/* Name Input */}
-						<input
-							type="text"
-							name="name"
-							required
-							className="w-full p-4 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 mb-4"
-							placeholder="Full Name"
-							value={name}
-							onChange={(e) => setname(e.target.value)}
-						/>
+						<FormControl className='justify-start w-full items-start flex flex-col space-y-1'>
+							<InputLabel htmlFor='email' className="text-gray-700 font-semibold">Email</InputLabel>
+							<Input
+								type="email"
+								name="email"
+								required
+								className="w-full p-4  mb-4"
+								placeholder="E-Mail"
+								onChange={(e) => setemail(e.target.value)}
+							/>
+						</FormControl>
+						<FormControl className='justify-start w-full items-start flex flex-col space-y-1'>
+							<InputLabel htmlFor='PhoneNumber' className="text-gray-700 font-semibold">Phone Number</InputLabel>
+							{/* Phone Number Input */}
+							<Input
+								type="number"
+								name="PhoneNumber"
+								minLength={'10'}
+								maxLength={'10'}
+								required
+								className="w-full p-4 mb-4"
+								placeholder="Phone Number"
+								value={phoneNumber}
+								onChange={(e) => setPhoneNumber(e.target.value)}
+							/>
+						</FormControl>
+						<FormControl className='justify-start w-full items-start flex flex-col space-y-1'>
+							<InputLabel htmlFor='name' className="text-gray-700 font-semibold">Full Name</InputLabel>
+							{/* Name Input */}
+							<Input
+								type="text"
+								name="name"
+								required
+								className="w-full p-4 mb-4"
+								placeholder="Full Name"
+								value={name}
+								onChange={(e) => setname(e.target.value)}
+							/>
+						</FormControl>
 
 						{/* Gender Selection */}
+
 						<div className="flex items-center space-x-8 mb-6">
-							<label className="text-gray-700 font-semibold">Gender</label>
+							<label htmlFor='gender' className="text-gray-700 font-semibold">Gender</label>
 							<div>
 								<input
 									type="radio"
@@ -142,9 +151,10 @@ const Registeruser = () => {
 						{/* Login Link */}
 						<Link
 							to="/Login"
-							className="text-center block text-gray-600 font-semibold mt-4 "
+							rel="noopener noreferrer"
+							className="text-center block text-gray-400 font-semibold mt-4 "
 						>
-							Already have an account? <span className='font-bold hover:underline'>LogIn</span>
+							Already have an account? <span className='font-bold text-gray-700 hover:underline'>LogIn</span>
 						</Link>
 
 						{/* Social Media Links */}

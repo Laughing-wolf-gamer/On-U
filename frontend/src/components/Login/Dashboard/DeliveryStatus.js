@@ -11,7 +11,7 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 
 	let currentStepIndex = steps.findIndex((step) => step.label === status);
 	if (currentStepIndex < 0) {
-		currentStepIndex = 3; // Default to 'Out for Delivery' if the status is invalid
+		currentStepIndex = 2; // Default to 'Out for Delivery' if the status is invalid
 	}
 
 	// State to trigger the animation on status change

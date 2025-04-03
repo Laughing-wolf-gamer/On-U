@@ -249,7 +249,6 @@ const CheckoutPage = () => {
 
 	const placeOrder = () => {
 		if (selectedAddress) {
-			// navigate('/processPayment');
 			setShowPayment(true);
 		} else {
 			checkAndCreateToast("error",'Please select a delivery address');

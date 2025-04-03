@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from "react";
 import { getImagesArrayFromProducts, hexToRgba } from "../../config";
 import ReactPlayer from "react-player";
 import { Heart } from "lucide-react";
-import { createwishlist, getwishlist } from "../../action/orderaction";
+import { createwishlist } from "../../action/orderaction";
 import { useDispatch } from "react-redux";
 import { useSessionStorage } from "../../Contaxt/SessionStorageContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";

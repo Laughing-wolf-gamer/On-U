@@ -1,4 +1,4 @@
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useState } from 'react';
 import './Login.css';
 import { useDispatch } from 'react-redux';
 import { getuser, loginmobile, loginVerify } from '../../action/useraction';
@@ -115,6 +115,11 @@ const Login = () => {
         setOtpData(false);
         setOtp('');
     };
+	useEffect(()=>{
+		if(user){
+			navigation('/');
+		}
+	},[user])
     return (
 		<Fragment>
 			<div className="w-full h-screen font-kumbsan bg-gray-50 flex items-center justify-center py-16">
@@ -131,8 +136,8 @@ const Login = () => {
 						/>
 						<div className="text-sm text-center mb-6 text-gray-600">
 							<span>By Continuing, I agree to the{' '}</span>
-							<Link to="/tc"><span className="text-gray-500">Terms of Use</span> & </Link>
-							<Link to="/privacyPolicy"><span className="text-gray-500">Privacy Policy</span></Link>
+							<Link to="/tc" target='_blank'><span className="text-gray-500">Terms of Use</span> & </Link>
+							<Link to="/privacyPolicy" target='_blank'><span className="text-gray-500">Privacy Policy</span></Link>
 						</div>
 
 						<button
@@ -150,11 +155,10 @@ const Login = () => {
 
 						<Link
 							to="/registeruser"
-							className="text-center text-gray-500 font-bold hover:underline block"
+							rel="noopener noreferrer"
+							className="text-center block text-gray-400 font-semibold mt-4 "
 						>
-							<h1 className="text-sm">
-								No Account? <span className="text-gray-500">Register User</span>
-							</h1>
+							No Registered Yet? <span className='font-bold text-gray-700 hover:underline'>Register</span>
 						</Link>
 
 						{/* Social Media Links */}
