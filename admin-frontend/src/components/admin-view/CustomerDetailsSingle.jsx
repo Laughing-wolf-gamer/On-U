@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { DialogContent, DialogTitle } from '../ui/dialog';
 
 const CustomerDetailsSingle = ({ user }) => {
-    console.log("Selected Customer: ", user);
     const [activeTab, setActiveTab] = useState("cart");
 
     // Function to handle tab change
@@ -64,7 +63,7 @@ const CustomerDetailsSingle = ({ user }) => {
     };
 
     return (
-        <DialogContent className="w-full mx-auto h-fit p-6 bg-white shadow-lg max-h-[90%] overflow-y-auto rounded-lg">
+        <DialogContent className="bg-white w-[90%] max-h-[90%] overflow-y-auto rounded-lg">
             {/* User Info Section */}
             <DialogTitle className="text-2xl font-bold mb-6 text-center">User Details</DialogTitle>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">

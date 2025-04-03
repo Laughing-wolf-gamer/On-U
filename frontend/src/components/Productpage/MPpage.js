@@ -39,7 +39,7 @@ const MPpage = () => {
 
     const { sessionData,sessionBagData, setWishListProductInfo, setSessionStorageBagListItem} = useSessionStorage();
     
-    const {wishlist,loadingWishList,bag,bagLoading} = useServerWishList();
+    const {wishlist,loadingWishList,bag,bagLoading,fetchBag,fetchWishList} = useServerWishList();
 	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const { product, loading, similar } = useSelector((state) => state.Sproduct);
 
@@ -124,6 +124,7 @@ const MPpage = () => {
 				isChecked:true,
             };
             await dispatch(createbag(orderData));
+			fetchBag();
             // dispatch(getbag());
         } else {
             // Add to localStorage logic
@@ -195,7 +196,8 @@ const MPpage = () => {
         if (user) {
             const response = await dispatch(createwishlist({ productId: decrypt(param.id) }));
             // await dispatch(getbag({ userId: user.id }));
-            await dispatch(getwishlist());
+            // await dispatch(getwishlist());
+			await fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully",3000);
             if(response){
                 setIsInWishList(response);

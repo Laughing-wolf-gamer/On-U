@@ -8,11 +8,11 @@ const ServerBannersContext = createContext();
 
 // Provider component
 export const SeverBannersProvider = ({ children }) => {
+	const dispatch = useDispatch();
 	const { banners,loading:bannerLoading} = useSelector(state => state.banners)
 	const { categoryBanners,loading:CategoryBannerLoading} = useSelector(state => state.categoryBanners)
 	const { noFilterProducts,loading:productAllProductsLoading} = useSelector(state => state.AllProductNoFilter);
 	const [categoriesOptions,setCategoryOptions] = useState([]);
-	const dispatch = useDispatch();
 	const getSingleOptions = async (type)=>{
 		try {
 			const catResponse = await dispatch(getOptionsByType({type}))
@@ -27,16 +27,24 @@ export const SeverBannersProvider = ({ children }) => {
 		dispatch(allProductsFilter())
 	}
 	useEffect(()=>{
-		if(!bannerLoading){
-			dispatch(featchallbanners());
-		}
-		if(!CategoryBannerLoading){
-			dispatch(fetchAllCategoryBanners());
-		}
+		dispatch(featchallbanners());
+		dispatch(fetchAllCategoryBanners());
+		handleFetchFilter();
 		getSingleOptions('category');
 	},[])
+	
 	return (
-		<ServerBannersContext.Provider value={{ banners,categoryBanners,bannerLoading,CategoryBannerLoading,categoriesOptions,getSingleOptions,noFilterProducts,productAllProductsLoading,handleFetchFilter }}>
+		<ServerBannersContext.Provider value={{
+				banners,
+				categoryBanners,
+				bannerLoading,
+				CategoryBannerLoading,
+				categoriesOptions,
+				getSingleOptions,
+				noFilterProducts,
+				productAllProductsLoading,
+				handleFetchFilter 
+			}}>
 			{children}
 		</ServerBannersContext.Provider>
 	);
