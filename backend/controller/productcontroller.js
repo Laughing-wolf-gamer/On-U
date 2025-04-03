@@ -27,10 +27,27 @@ export const imagekits = A(async (req, res, next)=>{
     });
 })
 
+export const allProductsNoFilter = async(req,res)=>{
+	try {
+		const allProducts = await ProductModel.find({});
+		res.status(200).json({
+			success: true,
+			message: "All products fetched successfully!",
+			result: allProducts
+		})
+	} catch (error) {
+		console.error("Error in allProductsNoFillter: ", error);
+		logger.error(`Error in allProductsNoFillter: ${error.message}`);
+		res.status(500).json({
+			success: false,
+			message: "Internal Server Error"
+		})
+	}
+}
 
 export const getallproducts = async (req, res) => {
     try {
-        // console.log("Product Query", req.query);
+        console.log("Product Query", req.query);
         // Helper function to ensure filters are arrays
         const ensureArray = (value) => Array.isArray(value) ? value : [value];
 
@@ -158,8 +175,20 @@ export const getallproducts = async (req, res) => {
 
         // Selling price filter
         if (req.query.sellingPrice) {
-            filter.price = req.query.sellingPrice;
-        }
+			// Extract the 'gte' and 'lte' values from the query
+			const { '$gte': minPriceStr, '$lte': maxPriceStr } = req.query.sellingPrice;
+			// Ensure that minPrice and maxPrice are numbers (using parseInt or parseFloat)
+			const minPrice = Array.isArray(minPriceStr) ? parseInt(minPriceStr[0], 10) : parseInt(minPriceStr, 10);
+			const maxPrice = Array.isArray(maxPriceStr) ? parseInt(maxPriceStr[0], 10) : parseInt(maxPriceStr, 10);
+
+			// Add the numeric range filter to the price
+			filter.price = {
+				$gte: minPrice,  // Greater than or equal to minPrice
+				$lte: maxPrice   // Less than or equal to maxPrice
+			};
+		}
+
+
 
         // Date range filter
         if (req.query.dateRange) {
@@ -183,7 +212,6 @@ export const getallproducts = async (req, res) => {
 
         const totalProducts = await ProductModel.countDocuments(filter);
         const totalPages = Math.ceil(totalProducts / itemsPerPage);
-        // console.dir(filter,{ depth: null });
 		
 		const currentPageproducts = await ProductModel.find(filter).sort(sort).limit(itemsPerPage).skip(skip);
 		let productsPagination = currentPageproducts;

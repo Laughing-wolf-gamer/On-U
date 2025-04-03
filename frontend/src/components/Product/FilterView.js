@@ -1,12 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { capitalizeFirstLetterOfEachWord } from '../../config';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAllOptions } from '../../action/productaction';
 import { Slider } from '@mui/material';
 import styled from '@emotion/styled';
 import { ChevronUp } from 'lucide-react';
 
-const FilterView = ({ product, dispatchFetchAllProduct }) => {
+const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
     const [category, setCategory] = useState('');
     const [subcategory, setSubcategory] = useState('');
     const [color, setColor] = useState('');
@@ -147,7 +146,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         sparray();
         SetOnSale();
         setDiscountedPercentage();
-    },[product])
+    },[product,window.location.search])
     categoriesarray();
     subcategoryarray();
     genderarray();
@@ -354,21 +353,21 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         }
     };
 
-    const colorfun = (e) => {
+    const colorfun = (colorHex) => {
         let url = new URL(window.location.href);
 
         // Get the current 'subcategory' array from the URL (if any)
         let selectColor = url.searchParams.getAll('color'); // This will return an array
     
         // Check if the subcategory is already in the array
-        const isSelected = selectColor.includes(e);
+        const isSelected = selectColor.includes(colorHex);
     
         if (isSelected) {
             // If the subcategory is already selected, remove it from the array
-            selectColor = selectColor.filter(col => col !== e);
+            selectColor = selectColor.filter(col => col !== colorHex);
         } else {
             // If the subcategory is not selected, add it to the array
-            selectColor.push(e);
+            selectColor.push(colorHex);
         }
     
         // Clear the existing 'subcategory' parameters and append the updated array
@@ -420,12 +419,6 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 
     // Handle gender filter
     const genderfun = (e) => {
-        /* let url = new URL(window.location.href);
-        url.searchParams.set('gender', e);
-        window.history.replaceState(null, "", url.toString());
-        if (dispatchFetchAllProduct) {
-            dispatchFetchAllProduct();
-        } */
         let url = new URL(window.location.href);
 
         // Get the current 'subcategory' array from the URL (if any)
@@ -471,6 +464,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct(); // Fetch all products without filters
         }
+		handleResetFilter();
     };
 
     // Check if any filters are selected from URL and update UI accordingly
@@ -516,50 +510,7 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
     useEffect(()=>{
         dispatch(fetchAllOptions());
     },[dispatch])
-    /* useEffect(() => {
-        setAllOptions();
-    }, [options, dispatch]); */
     setPriceFilter();
-    /* const setAllOptions = () => {
-        if (options && options.length > 0) {
-            options.map(item => {
-                switch (item.type) {
-                case 'category':
-                    setCategory(options.filter(item => item.type === 'category'));
-                    break;
-                case 'subcategory':
-                    setSubcategory(options.filter(item => item.type === 'subcategory'));
-                    break;
-                case 'color':
-                    setColor(options.filter(item => item.type === 'color') || []);
-                    break;
-                case 'footWearSize':
-                    setFootWearSize(options.filter(item => item.type === 'footWearSize'));
-                    break;
-                case 'clothingSize':
-                    setClothingWearSize(options.filter(item => item.type === 'clothingSize'));
-                    break;
-                case 'gender':
-                    setGender(options.filter(item => item.type === 'gender'));
-                    break;
-                }
-            });
-        }
-    }; */
-    /* useEffect(()=>{
-        if(category && subcategory && color && footWearSize && clothingWearSize && gender){
-            setAllData();
-        }
-    },[category,subcategory,color,footWearSize,clothingWearSize,gender])
-    const setAllData = ()=>{
-        // AllProductsCategory = category.map(item => item.value)
-        // AllProductsSubcategory = subcategory.map(item => item.value)
-        // AllProductsColor = color.map(item => item.value)
-        // let NewProductsFootWearSize = footWearSize.map(item => item.value)
-        // size = clothingWearSize.map(item => item.value)
-        // AllProductsGender = gender.map(item => item.value)
-    } */
-    // console.log("All specialCategorynewarray: ",specialCategorynewarray);
     return (
         <div>
             <div className='space-y-4 uppercase font-kumbsan ml-6'>
@@ -575,18 +526,18 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
 
                         return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                genderfun(e); // This will update the URL with the selected gender
-                            }}>
+                            <div key={i}>
                                 <input
                                     type="checkbox"
                                     name="gender"
                                     value={e}
                                     id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    className='mb-2 accent-gray-500 cursor-pointer'
+									checked = {isChecked}
+                                    // defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {
+                                		genderfun(e); // This will update the URL with the selected gender
+									}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm uppercase space-x-1 ml-2 mr-4 mb-2'>
                                     <span>{e}</span> 
@@ -609,17 +560,17 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
 
                         return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                categoryfun(e); // This will update the URL with the selected category
-                            }}>
+                            <div key={i}>
                                 <input
                                     type="checkbox"
                                     name="categories"
                                     value={e}
                                     id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    className='mb-2 accent-gray-500 cursor-pointer'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+									onChange={() => {
+										categoryfun(e); // This will update the URL with the selected category
+									}}
                                 />
                                 <label className=' text-sm ml-2 space-x-1 mr-4 mb-2'>
                                     <span>{e}</span> 
@@ -642,20 +593,18 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedSubcategories.includes(e); // Check if current 'e' is selected in the URL
 
                         return (
-                            <li key={i} onClick={(event) => {
-                                event.preventDefault();
-                                subcategoryfun(e); // This will update the URL with the selected subcategory
-                            }}>
+                            <li key={i}>
                                 <input
                                     type="checkbox"
-                                    name="subcategories"
-                                    value={e}
+                                    name={`subcategories_${i}`}
                                     id={`id_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    className='mb-2 accent-gray-500 cursor-pointer'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {
+										subcategoryfun(e); // This will update the URL with the selected subcategory
+									}} // We can add the change handler if needed, or leave empty
                                 />
-                                <label className=' text-sm uppercase space-x-1 ml-2 mr-4 mb-2'>
+                                <label className='text-sm uppercase space-x-1 ml-2 mr-4 mb-2'>
                                     <span>{e}</span> <span className='text-xs font-serif font-normal text-slate-400'> ({AllProductsSubcategory.filter((f) => f === e).length})</span>
                                 </label>
                             </li>
@@ -673,18 +622,16 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
 
                         return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                sizefun(e); // This will update the URL with the selected category
-                            }}>
+                            <div key={i} >
                                 <input
                                     type="checkbox"
                                     name="categories"
-                                    value={e}
-                                    id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
-                                    // onChange={() => {}} // We can add the change handler if needed, or leave empty
+                                    id={`size_${i}`}
+                                    className='mb-2 accent-gray-500 cursor-pointer'
+                                    checked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    onChange={() => {
+										sizefun(e); // This will update the URL with the selected category
+									}} // We can add the change handler if needed, or leave empty
                                 />
                                 <label className=' text-sm ml-2 space-x-1 uppercase mr-4 mb-2'>
                                     <span>{e}</span> 
@@ -706,17 +653,16 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                         const isChecked = selectedCategories.includes(e); // Check if current 'e' is selected in the URL
 						// console.log("Filter Amount: ",specialCategorynewarray);
                         return (
-                            <div key={i} onClick={(event) => {
-                                event.preventDefault();
-                                specialCategoryFun(e); // This will update the URL with the selected gender
-                            }}>
+                            <div key={i} >
                                 <input
                                     type="checkbox"
                                     name="specialCategory"
-                                    value={e}
-                                    id={`cat_${e}`}
-                                    className='mb-2 accent-gray-500'
-                                    defaultChecked={isChecked} // Set checkbox checked if it's selected in the URL
+                                    id={`special_cat_${e}`}
+                                    className='mb-2 accent-gray-500 cursor-pointer'
+                                    checked={isChecked || false} // Set checkbox checked if it's selected in the URL
+									onChange={() => {
+										specialCategoryFun(e); // This will update the URL with the selected gender
+									}}
                                 />
                                 <label className=' text-sm ml-2 space-x-1 mr-4 mb-2'>
                                     <span>{e}</span> 
@@ -740,18 +686,16 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 							const isChecked = Number(currentAmount) === amount;
 
 							return (
-								<div key={i} onClick={(event) => {
-									event.preventDefault();
-									discountedAmountFun(amount); // This will update the URL with the selected amount
-								}}>
+								<div key={i}>
 									<input
 										type="radio" // Ensure it's a radio input
 										name="discountedAmountPercentage" // All radios must have the same name for exclusive selection
-										value={amount}
-										id={`cat_${amount}`}
-										className="mb-2 accent-gray-500"
-										defaultChecked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
-										// No need for onChange handler since radio buttons will handle state automatically
+										id={`discountedPercentageAmountnewarray_${amount}`}
+										className="mb-2 accent-gray-500 cursor-pointer"
+										checked={isChecked} // Radio button is checked if the URL's discountedAmount equals the current amount
+										onChange={() => {
+											discountedAmountFun(amount); // This will update the URL with the selected amount
+										}}
 									/>
 									<label className=" text-sm ml-2 space-x-1 uppercase mr-4 mb-2">
 										<span>UpTo {amount} %</span> 
@@ -785,12 +729,10 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
                                     <input
                                         type="checkbox"
                                         name="color"
-                                        value={e.label}
-                                        id={`id_${i}`}
-                                        className="accent-gray-500"
+                                        id={`color_${i}`}
+                                        className="accent-gray-500 cursor-pointer"
                                         checked={isChecked} // Set checkbox checked if color is selected in the URL
-                                        onChange={(event) => {
-                                            event.preventDefault();
+                                        onChange={() => {
                                             colorfun(e.label); // This will update the URL with the selected color
                                         }}
                                     />
@@ -846,17 +788,16 @@ const FilterView = ({ product, dispatchFetchAllProduct }) => {
 								const isChecked = selectedOnSale.includes('true');
 
 								return (
-									<div key={i} onClick={(event) => {
-										event.preventDefault();
-										onSaleFun(); // This will update the URL with the selected sale status
-									}}>
+									<div key={i}>
 										<input
 											type="checkbox"
 											name="OnSale"
-											value={'true'}
 											id={`On_sale`}
-											className='mb-2 accent-gray-500'
-											defaultChecked={isChecked} // Set checkbox checked based on URL parameter
+											className='mb-2 accent-gray-500 cursor-pointer'
+											checked={isChecked} // Set checkbox checked based on URL parameter
+											onChange={() => {
+												onSaleFun(); // This will update the URL with the selected sale status
+											}}
 										/>
 										<label className='text-sm ml-2 space-x-1 uppercase mr-4 mb-2'>
 											<span>On Sale</span>
@@ -930,11 +871,26 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
     const handlePriceChange = (e) => {
         // setMaxPrice(newMaxPrice);
     
-        const url = new URL(window.location.href);
-        url.searchParams.set('sellingPrice[$gte]', currentMinPrice);
-        url.searchParams.set('sellingPrice[$lte]',currentMaxPrice);
-        window.history.replaceState(null, "", url.toString());
-    
+        // Get the current URL
+		const url = new URL(window.location.href);
+		
+		// Check if 'sellingPrice[$gte]' and 'sellingPrice[$lte]' already exist in the URL
+		const existingMinPrice = url.searchParams.get('sellingPrice[$gte]');
+		const existingMaxPrice = url.searchParams.get('sellingPrice[$lte]');
+
+		// If both are already present, replace their values; otherwise, add them
+		if (existingMinPrice && existingMaxPrice) {
+			// If they exist, update the values
+			url.searchParams.set('sellingPrice[$gte]', currentMinPrice);
+			url.searchParams.set('sellingPrice[$lte]', currentMaxPrice);
+		} else {
+			// If they don't exist, create them
+			url.searchParams.set('sellingPrice[$gte]', currentMinPrice);
+			url.searchParams.set('sellingPrice[$lte]', currentMaxPrice);
+		}
+
+		// Replace the current URL in the browser with the updated one
+		window.history.replaceState(null, "", url.toString());
         if (dispatchFetchAllProduct) {
             dispatchFetchAllProduct();
         }

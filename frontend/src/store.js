@@ -2,7 +2,7 @@ import {createStore, combineReducers, applyMiddleware} from 'redux';
 import thunk from 'redux-thunk';
 import {composeWithDevTools} from 'redux-devtools-extension/developmentOnly';
 import { registeruser, getuser, resendotp, updateuser, otpverifie, updatedetailsuserreducer, loginuser, addressupdate, getAddress } from './Reducer/userreducer';
-import {allOptions, Allproducts, randomProducts, singleProduct} from './Reducer/productreducer'
+import {allOptions, allProductNoFilter, Allproducts, randomProducts, singleProduct} from './Reducer/productreducer'
 import { create_bag_reducer, create_order_reducer, create_wishlist_reducer, delete_bag_reducer, delete_wish_reducer, get_all_order_reducer, get_bag_reducer, get_order_by_id_reducer, get_wishlist_reducer, update_qty_bag_reducer } from './Reducer/orderreducer';
 import { fetch_banners_reducer, get_all_category_banners } from './Reducer/bannerreducer';
 import { fetch_All_Coupons, fetch_All_Options, fetch_form_banners, fetchAllFAQS, fetchPrivacyAndPolicy, fetchTermsAndCondition, fetchWebsiteDisclaimer } from './Reducer/common.reducer';
@@ -18,6 +18,7 @@ const reducer = combineReducers({
       updateuser: updateuser,
       userdetails: otpverifie,
       Allproducts:Allproducts,
+      AllProductNoFilter:allProductNoFilter,
       AllOptions:allOptions,
       AllCoupons:fetch_All_Coupons,
       

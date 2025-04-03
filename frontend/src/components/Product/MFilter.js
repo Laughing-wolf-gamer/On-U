@@ -5,12 +5,12 @@ import { useDispatch } from 'react-redux'
 import { Allproduct as getproduct } from '../../action/productaction'
 import elementClass from 'element-class'
 import './MFilter.css'
-import { capitalizeFirstLetterOfEachWord } from '../../config'
+import { capitalizeFirstLetterOfEachWord, getReverseSortingValueValues, getSortingKeyValuePairs } from '../../config'
 import Slider from '@mui/material/Slider';
 import styled from '@emotion/styled'
 import { BsSortDown, BsSortUp } from 'react-icons/bs'
-import { ArrowDown01, ArrowDown10, ArrowUpDown, BadgePercent, Filter } from 'lucide-react'
-import { FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa'
+import { ArrowDown01, ArrowDown10, ArrowUpDown, BadgePercent, Dot, Filter } from 'lucide-react'
+import { FaPercent, FaSortAlphaDown, FaSortAlphaDownAlt } from 'react-icons/fa'
 
 
 const CustomSlider = styled(Slider)({
@@ -33,9 +33,13 @@ const CustomSlider = styled(Slider)({
     },
 });
 
-const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
+const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDivRef,handleResetFilter}) => {
     const dispatch = useDispatch()
     const navigation = useNavigate()
+	const [scrollPosition, setScrollPosition] = useState(0);
+	const [isScrollingUp, setIsScrollingUp] = useState(true);
+  	const [isVisible, setIsVisible] = useState(true);
+	let lastScrollTop = 0;
 
     function classtoggle(e) {
         // let foo = document.getElementsByClassName('foo')
@@ -233,7 +237,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         subCategoriesarray();
         setDiscountedPercentage();
         SetOnSale()
-    },[product])
+    },[product,window.location.href])
     
     categoriesarray()
     sizearray();
@@ -258,10 +262,29 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     // const [price, setPrice] = useState([Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
     const [price, setPrice] = useState(GetPrice().length > 0 ? GetPrice() : [Math.floor(Math.min(...sp)), Math.floor(Math.max(...sp))])
-    const [MMainlink, setMMainlink] = useState(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
+    const [MMainlink, setMMainlink] = useState(``)
     const priceHandler = (event, newPrice)=>{
         setPrice(newPrice)
-        setMMainlink(`?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
+        const url = new URL(window.location.href);
+		const newMinPrice = newPrice[0];
+		const newMaxPrice = newPrice[1];
+		// Check if 'sellingPrice[$gte]' and 'sellingPrice[$lte]' already exist in the URL
+		const existingMinPrice = url.searchParams.get('sellingPrice[$gte]');
+		const existingMaxPrice = url.searchParams.get('sellingPrice[$lte]');
+
+		// If both are already present, replace their values; otherwise, add them
+		if (existingMinPrice && existingMaxPrice) {
+			// If they exist, update the values
+			url.searchParams.set('sellingPrice[$gte]', newMinPrice);
+			url.searchParams.set('sellingPrice[$lte]', newMaxPrice);
+		} else {
+			// If they don't exist, create them
+			url.searchParams.set('sellingPrice[$gte]', newMinPrice);
+			url.searchParams.set('sellingPrice[$lte]', newMaxPrice);
+		}
+
+		// Replace the current URL in the browser with the updated one
+		window.history.replaceState(null, "", url.toString());
     }
     function price2fun(e,f){
         if (MMainlink.includes('?')) {
@@ -279,162 +302,205 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         }
     }
     function onSaleFun() {
-        // Check if MMainlink already has query parameters
-        if (MMainlink.includes('?')) {
-            // If onSale=true exists in the URL
-            if (MMainlink.includes('&onSale=true')) {
-                // Replace onSale=true with onSale=false
-                let newurl = MMainlink.replace('&onSale=true', '&onSale=false');
-                setMMainlink(newurl);
-            }
-            // If onSale=false exists in the URL
-            else if (MMainlink.includes('&onSale=false')) {
-                // Replace onSale=false with onSale=true
-                let newurl = MMainlink.replace('&onSale=false', '&onSale=true');
-                setMMainlink(newurl);
-            } else {
-                // If onSale parameter is not found, set it to onSale=true
-                setMMainlink(`${MMainlink}&onSale=true`);
-            }
+        let url = new URL(window.location.href);
+        let onSaleData = url.searchParams.get('onSale');
+        // Check if 'onSale' parameter is present in the URL
+        if (onSaleData === null) {
+            // If 'onSale' doesn't exist, set it to 'true'
+            url.searchParams.append("onSale", 'true');
+        } else if (onSaleData === 'true') {
+            // If 'onSale' exists and is 'true', set it to 'false'
+            url.searchParams.set("onSale", 'false');
         } else {
-            // If no query parameters are present, start with onSale=true
-            setMMainlink(`${MMainlink}?onSale=true`);
+            // If 'onSale' exists and is not 'true', set it to 'true'
+            url.searchParams.set("onSale", 'true');
         }
+
+        // Update the URL without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
 
     function genderfun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.replace(' ', '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&gender=${newtext}`) ? MMainlink.replace(`&gender=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?gender=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                setMMainlink(`${MMainlink}&gender=${e}`)
-            }
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('gender'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            setMMainlink(`${MMainlink}?gender=${e}`)
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('gender');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('gender', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
     function discountedAmountfun(e) {
-        // Check if the main URL contains a '?'
-        if (MMainlink.includes('?')) {
-            // Check if the URL already contains 'discountedAmount'
-            if (MMainlink.includes(`discountedAmount=`)) {
-                // If 'discountedAmount' already exists, replace it with the new value
-                let newurl = MMainlink.replace(/([&?])discountedAmount=[^&]*/, `$1discountedAmount=${e}`);
-                setMMainlink(newurl);
-            } else {
-                // If 'discountedAmount' does not exist, append it
-                setMMainlink(`${MMainlink}&discountedAmount=${e}`);
-            }
+        let url = new URL(window.location.href);
+    
+        // Get the current 'discountedAmount' value from the URL (if any)
+        let selectedDiscountedAmount = url.searchParams.get('discountedAmount'); // This will return a single string, not an array
+        
+        // Set the new value for 'discountedAmount' query parameter
+        if (selectedDiscountedAmount === e) {
+            // If the selected value is already in the URL, remove it (deselect it)
+            url.searchParams.delete('discountedAmount');
         } else {
-            // If no '?' exists, simply add 'discountedAmount' as the first query parameter
-            setMMainlink(`${MMainlink}?discountedAmount=${e}`);
+            // Otherwise, set the selected value
+            url.searchParams.set('discountedAmount', e);
         }
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
     
     function sizefun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.replace(' ', '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&size=${newtext}`) ? MMainlink.replace(`&size=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?size=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                setMMainlink(`${MMainlink}&size=${e}`)
-            }
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('size'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            setMMainlink(`${MMainlink}?size=${e}`)
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('size');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('size', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
     function categoryfun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.replace(/ /g, '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&category=${newtext}`) ? MMainlink.replace(`&category=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?category=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                let newtext = e.replace(/ /g, '%20')
-                setMMainlink(`${MMainlink}&category=${newtext}`)
-            }
+		let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('category'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            let newtext = e.replace(/ /g, '%20')
-            setMMainlink(`${MMainlink}?category=${newtext}`)
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
-    }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('category');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('category', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
+	}
+
     function subCategoryfun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.replace(/ /g, '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&subcategory=${newtext}`) ? MMainlink.replace(`&subcategory=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?subcategory=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                let newtext = e.replace(/ /g, '%20')
-                setMMainlink(`${MMainlink}&subcategory=${newtext}`)
-            }
+        let url = new URL(window.location.href);
+    
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSubcategories = url.searchParams.getAll('subcategory'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSubcategories.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSubcategories = selectedSubcategories.filter(sub => sub !== e);
         } else {
-            let newtext = e.replace(/ /g, '%20')
-            setMMainlink(`${MMainlink}?subcategory=${newtext}`)
+            // If the subcategory is not selected, add it to the array
+            selectedSubcategories.push(e);
         }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('subcategory');
+        selectedSubcategories.forEach(sub => {
+            url.searchParams.append('subcategory', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
     function specialCategoryfun(e) {
-        if (MMainlink.includes('?')) {
-            let newtext = e.replace(/ /g, '%20')
-            if (MMainlink.includes(`${newtext}`)) {
-                let newurl = MMainlink.includes(`&specialCategory=${newtext}`) ? MMainlink.replace(`&specialCategory=${newtext}`, '') : null
-                let newurl2 = MMainlink.replace(`?specialCategory=${newtext}`, '')
-                let newurlsuccess = (newurl === null ? newurl2 : newurl)
-                setMMainlink(newurlsuccess)
-            } else {
-                let newtext = e.replace(/ /g, '%20')
-                setMMainlink(`${MMainlink}&specialCategory=${newtext}`)
-            }
+        let url = new URL(window.location.href);
+
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectedSpecialCategory = url.searchParams.getAll('specialCategory'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectedSpecialCategory.includes(e);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectedSpecialCategory = selectedSpecialCategory.filter(sub => sub !== e);
         } else {
-            let newtext = e.replace(/ /g, '%20')
-            setMMainlink(`${MMainlink}?specialCategory=${newtext}`)
+            // If the subcategory is not selected, add it to the array
+            selectedSpecialCategory.push(e);
         }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('specialCategory');
+        selectedSpecialCategory.forEach(sub => {
+            url.searchParams.append('specialCategory', sub);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
     }
 
-    function colorfun(e) {
-		let newtext = e.label.replace(/ /g, '%20'); // Replace spaces with '%20'
-		newtext = encodeURIComponent(newtext); // Ensure the color is properly encoded
+    function colorfun(colorHex) {
+		let url = new URL(window.location.href);
 
-		console.log("New Text: ", newtext);
-
-		if (MMainlink.includes('?')) {
-			// If the URL already contains query parameters, handle the color part
-			if (MMainlink.includes(`&color=${newtext}`)) {
-				// If the color is already in the URL, remove it
-				let newurl = MMainlink.replace(`&color=${newtext}`, '');
-				setMMainlink(newurl);
-			} else if (MMainlink.includes(`?color=${newtext}`)) {
-				// If the color is already in the URL but with '?color=...', remove it
-				let newurl = MMainlink.replace(`?color=${newtext}`, '');
-				setMMainlink(newurl);
-			} else {
-				// If the color is not present, add it to the URL
-				let separator = MMainlink.includes('&') ? '&' : '?';
-				let newurl = `${MMainlink}${separator}color=${newtext}`;
-				setMMainlink(newurl);
-			}
-		} else {
-			// If no query parameters exist, add the color as the first query parameter
-			let newurl = `${MMainlink}?color=${newtext}`;
-			setMMainlink(newurl);
-		}
+        // Get the current 'subcategory' array from the URL (if any)
+        let selectColor = url.searchParams.getAll('color'); // This will return an array
+    
+        // Check if the subcategory is already in the array
+        const isSelected = selectColor.includes(colorHex);
+    
+        if (isSelected) {
+            // If the subcategory is already selected, remove it from the array
+            selectColor = selectColor.filter(col => col !== colorHex);
+        } else {
+            // If the subcategory is not selected, add it to the array
+            selectColor.push(colorHex);
+        }
+    
+        // Clear the existing 'subcategory' parameters and append the updated array
+        url.searchParams.delete('color');
+        selectColor.forEach(col => {
+            url.searchParams.append('color', col);
+        });
+    
+        // Update the URL in the browser's address bar without reloading the page
+        window.history.replaceState(null, "", url.toString());
 	}
 
 
     function addclass1(e) {
-        let f = e.replace(/ /g, "")
-
+        let f = e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_");
         var font = document.querySelector(`.font${f}`)
 
         elementClass(font).toggle('fontbold')
@@ -442,8 +508,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     }
     function addclass1Discounted(e) {
-        let f = e;
-
+        let f = e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_");;
         var font = document.querySelector(`.font${f}`)
 
         elementClass(font).toggle('fontbold')
@@ -451,7 +516,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     }
     function addclassColor1(e) {
-        let f = e.replace(/ /g, ""); // Remove any spaces from the string
+        let f = e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_");
         // Escape '#' for use in querySelector
         f = f.replace('#', '\\#');
         var font = document.querySelector(`.font${f}`)
@@ -461,7 +526,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
     }
     function addclass2(e) {
-        let f = e.replace(/ /g, "")
+        let f = e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_");
         var tick = document.querySelector(`.tick${f}`)
         elementClass(tick).toggle('tickcolor')
     }
@@ -471,7 +536,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         elementClass(tick).toggle('tickcolor')
     }
     function addcolorclass(e) {
-        let f = e.replace(/ /g, ""); // Remove any spaces from the string
+        let f = e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_");
         // Escape '#' for use in querySelector
         f = f.replace('#', '\\#');
         var tick = document.querySelector(`.tick${f}`); // Query the element with the correct class name
@@ -483,8 +548,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
         var ul = document.querySelector(`.ul${e}`)
 
         for (let i = 0; i < ulco.length; i++) {
-        elementClass(ulco[i]).remove('Dvisibile')
-
+        	elementClass(ulco[i]).remove('Dvisibile')
         }
         elementClass(ul).add('Dvisibile')
 
@@ -500,18 +564,35 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
     function reloadproducts() {
         dispatch(getproduct())
     }
+	function updateMMainlinkWithPrice(price) {
+		// Parse the URL to get existing query parameters
+		const params = new URLSearchParams(window.location.search);
+
+		// Check if the 'sellingPrice' parameters already exist
+		const existingMinPrice = params.get('sellingPrice[$gte]');
+		const existingMaxPrice = params.get('sellingPrice[$lte]');
+
+		// Construct the new sellingPrice parameters
+		const newMinPrice = price[0];
+		const newMaxPrice = price[1];
+
+		if (existingMinPrice && existingMaxPrice) {
+			// If 'sellingPrice[$gte]' and 'sellingPrice[$lte]' already exist, update them
+			params.set('sellingPrice[$gte]', newMinPrice);
+			params.set('sellingPrice[$lte]', newMaxPrice);
+		} else {
+			// If they don't exist, add them to the URL
+			params.append('sellingPrice[$gte]', newMinPrice);
+			params.append('sellingPrice[$lte]', newMaxPrice);
+		}
+
+		// Update the MMainlink with the updated query parameters
+		const newMMainlink = MMainlink.includes('?') ? `${MMainlink}&${params.toString()}` : `${MMainlink}?${params.toString()}`;
+		
+		setMMainlink(newMMainlink);
+	}
 
 
-    function clearall() {
-        setMMainlink('')
-        setfilter(filter === 'hidden' ? 'block' : 'hidden')
-        navigation('/products')
-        reloadproducts()
-    }
-	const [scrollPosition, setScrollPosition] = useState(0);
-	const [isScrollingUp, setIsScrollingUp] = useState(true);
-  	const [isVisible, setIsVisible] = useState(true);
-	let lastScrollTop = 0;
     useEffect(() => {
 		const handleScroll = () => {
 			if (scrollableDivRef.current) {
@@ -543,7 +624,39 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 			divElement.removeEventListener('scroll', handleScroll); // Clean up the event listener
 		};
 	}, []);
-	// console.log('scrollPosition: ', scrollPosition);
+
+    function clearall() {
+        setMMainlink('')
+        setfilter(filter === 'hidden' ? 'block' : 'hidden')
+        navigation('/products')
+        reloadproducts()
+		handleResetFilter();
+    }
+	const getIconsBySortingName = (name)=>{
+		switch (name) {
+			case 'What`s New':
+				return <AiOutlineFire className='text-xl mr-2'/>
+			case 'Popularity':
+				return <AiOutlineStar className='text-xl mr-2'/>
+			case 'A-Z':
+				return <FaSortAlphaDown className='text-xl mr-2'/>
+			case 'Z-A':
+				return <FaSortAlphaDownAlt className='text-xl mr-2'/>
+			case 'Better Discount':
+				return <FaPercent className='text-xl mr-2'/>
+			case 'Price: Low To High':
+				return <BsSortUp className='text-xl mr-2'/>
+			case 'Price: High To Low':
+				return <BsSortDown className='text-xl mr-2'/>
+			case 'Rating: High To Low':
+				return <ArrowDown10 className='text-xl mr-2'/>
+			case 'Rating: Low To High':
+				return <ArrowDown01 className='text-xl mr-2'/>
+			default:
+				return null;
+		}
+	}
+	console.log("Set Open View: ",sortvalue);
     return (
         <Fragment>
 			<div
@@ -585,45 +698,15 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 			<div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
 				<div className='absolute bottom-0 h-fit w-full bg-white'>
 				<h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (handleSortChange("newItems"),setsortvi('hidden'))} >
-					<AiOutlineFire className='text-xl mr-2'/>
-					<span>What`s New</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("popularity"), setsortvi('hidden'))}>
-					<AiOutlineStar className='text-xl mr-2' />
-					<span>Popularity</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("a-z"), setsortvi('hidden'))}>
-					<FaSortAlphaDown strokeWidth={1.5} className='text-gray-800'/>
-					<span>A-Z</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* datefun(1) */handleSortChange("z-a"), setsortvi('hidden'))}>
-					<FaSortAlphaDownAlt strokeWidth={1.5} className='text-gray-800'/>
-					<span>Z-A</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("discount"), setsortvi('hidden'))}>
-					<BadgePercent size={20} strokeWidth={1.5} /> <span>Better Discount</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(-1) */handleSortChange("price-high-to-low"), setsortvi('hidden'))}>
-					<BsSortDown/>
-					<span>Price: High To Low</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("price-low-to-high"), setsortvi('hidden'))}>
-					<BsSortUp/>
-					<span>Price: Low To High</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-high-to-low"), setsortvi('hidden'))}>
-					<ArrowDown10 size={20} strokeWidth={1.5}  />
-					<span>Rating: High To Low</span>
-				</div>
-				<div className="text-base py-3 px-6 flex justify-start space-x-2 items-center" onClick={() => (/* pricefun(1) */handleSortChange("rating-low-to-high"), setsortvi('hidden'))}>
-					<ArrowDown01 size={20} strokeWidth={1.5}  />
-					<span>Rating: Low To High</span>
-				</div>
-				{/* <div className="text-base  py-3 px-6 flex justify-start items-center" onClick={() => setsortvi('hidden')}>
-					<svg width="24" height="24" viewBox="0 0 24 24" fill="none" className="text-xl mr-2"><path d="M13.7441 7.76569L15.5512 4.25163C15.7206 3.91273 16.2062 3.91728 16.3711 4.25845L18.2794 8.20012L22.6123 8.86767C22.9864 8.92567 23.132 9.38625 22.859 9.64896L19.6975 12.6808L20.406 17.0046C20.4674 17.3776 20.0728 17.6596 19.7385 17.48L16.3074 15.516" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path><path fill-rule="evenodd" clip-rule="evenodd" d="M9.98042 5.62951L12.0297 9.8623L16.681 10.5776C17.0518 10.6345 17.1973 11.0939 16.9244 11.3544L13.5331 14.6091L14.2917 19.2502C14.3531 19.6209 13.9619 19.9007 13.6298 19.7233L9.48344 17.5023L5.3041 19.6607C4.96975 19.8325 4.58195 19.547 4.64905 19.1763L5.47923 14.5489L2.13576 11.2429C1.86737 10.9779 2.01976 10.5219 2.39277 10.4696L7.05317 9.82477L9.16615 5.62382C9.3356 5.2872 9.81665 5.29061 9.98042 5.62951Z" stroke="#282C3F" stroke-width="1.13724" stroke-linecap="round" stroke-linejoin="round"></path>
-					</svg>Customer Rating
-				</div> */}
+				{getSortingKeyValuePairs() && getSortingKeyValuePairs().map((item, index) => (
+					<Fragment key={index}>
+						<div className={`text-base py-3 px-6 flex justify-start space-x-2 items-center ${item.key === sortvalue ? "bg-neutral-100" : ""} border-opacity-25 px-3`} onClick={() => (handleSortChange(item.value),setSortValue(),setsortvi('hidden'))} >
+							{getIconsBySortingName(item.key)}
+							<span>{item.key}</span>
+						</div>
+						<hr/>
+					</Fragment>
+				))}
 				</div>
 			</div>
 
@@ -662,8 +745,8 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 							{
 								gendernewarray && gendernewarray.map((e,i) =>
 
-									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-white font${e.replace(/ /g, "")} relative`}
-										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 text-gray-800 tick${e.replace(/ /g, "")}`}></span>
+									<li key={`gender_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-white font${e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_")} relative`}
+										onClick={() => (genderfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 text-gray-800 tick${e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_")}`}></span>
 									<span className={`text-sm text-gray-700`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs text-gray-700`}>{gender.filter((f) => f === e).length}</span></li>
 
 								)
@@ -674,8 +757,8 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 							{
 								Categorynewarray && Categorynewarray.map((e,i) =>
 
-									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
-									onClick={() => (categoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_")} relative`}
+									onClick={() => (categoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_")}`}></span>
 									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{category.filter((f) => f === e).length}</span></li>
 
 								)
@@ -685,7 +768,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 							{
 								subCategoryNewArray && subCategoryNewArray.length > 0 && subCategoryNewArray.map((e,i) =>
 
-									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "")} relative`}
+									<li key={`category_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_")} relative`}
 									onClick={() => (subCategoryfun(e), addclass1(e), addclass2(e))} ><span className={`rightdiv mr-4 tick${e.replace(/ /g, "")}`}></span>
 									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(e)}</span> <span className={`absolute right-6 text-xs`}>{subcategory.filter((f) => f === e).length}</span></li>
 
@@ -725,7 +808,7 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 								colornewarray && colornewarray.map((e,i) =>
 
 									<li key={`color_key_${i}`} className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] space-x-4 text-slate-700 font${e.label.replace(/ /g, "")} relative`}
-									onClick={() => (colorfun(e), addclassColor1(e.label), addcolorclass(e.label))} >
+									onClick={() => (colorfun(e.label), addclassColor1(e.label), addcolorclass(e.label))} >
 										<span className={`rightdiv mr-4 tick${e.label.replace(/ /g, "")}`}>
 										
 										</span>
@@ -775,15 +858,15 @@ const MFilter = ({ product ,handleSortChange,scrollableDivRef}) => {
 
 				<div className='grid grid-cols-12 w-full  bg-white py-3 border-t-[0.5px] border-slate-200 absolute bottom-0 h-[7%]'>
 					<div className="col-span-6 text-lg flex justify-center items-center " onClick={filterdiv}>
-					CLOSE</div>
-					<div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
-					onClick={() => (setMMainlink( MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
-					,filterdiv(), reloadproducts() )}>
-						<Link to={MMainlink}>
-							APPLY
-						</Link>
-
+						CLOSE
 					</div>
+					<div className="col-span-6 text-lg flex justify-center text-center text-gray-900 " 
+						onClick={() => (setMMainlink(MMainlink.includes('?') ?`${MMainlink}&sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}` : `${MMainlink}?sellingPrice[$gte]=${price[0]}&sellingPrice[$lte]=${price[1]}`)
+						,filterdiv(), reloadproducts() )}>
+							<span>
+								APPLY
+							</span>
+						</div>
 					<span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>
 				</div>
 				</div>

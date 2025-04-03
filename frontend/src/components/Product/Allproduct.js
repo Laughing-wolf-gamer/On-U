@@ -1,7 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
-import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
+import { Allproduct as getproduct, clearErrors, allProductsFilter } from '../../action/productaction';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
@@ -9,18 +9,23 @@ import MFilter from './MFilter';
 import Footer from '../Footer/Footer';
 import FilterView from './FilterView';
 import { getwishlist } from '../../action/orderaction';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, Dot } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
 import Loader from '../Loader/Loader';
 import WhatsAppButton from '../Home/WhatsAppButton';
+import { use } from 'react';
+import { getReverseSortingValueValues, getSortingKeyValuePairs, getSortingValues } from '../../config';
 
 const maxAmountPerPage = 50;
 const Allproductpage = ({user}) => {
+    const [state, setstate] = useState(false);
+    const [state1, setstate1] = useState(false);
     const scrollableDivRef = useRef(null); // Create a ref to access the div element
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
     const { wishlist } = useSelector(state => state.wishlist_data)
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
+    const { noFilterProducts,loading:productAllProductsLoading,  } = useSelector(state => state.AllProductNoFilter);
     const [sortvalue, setSortValue] = useState('What`s New');
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -28,7 +33,9 @@ const Allproductpage = ({user}) => {
         setCurrentPage(e);
         dispatch(getproduct(e));
     };
-
+	const handleResetFilter = ()=>{
+		dispatch(allProductsFilter())
+	}
     const dispatchFetchAllProduct = () => {
         dispatch(getproduct(currentPage));
     };
@@ -54,15 +61,17 @@ const Allproductpage = ({user}) => {
         window.history.pushState({}, '', newUrl);
         dispatchFetchAllProduct();
     };
-
-
-
-    const [state, setstate] = useState(false);
-    const [state1, setstate1] = useState(false);
+	const setTheCurrentSortValues = ()=>{
+		const currentUrl = new URL(window.location.href);
+		const urlParams = new URLSearchParams(currentUrl.search);
+		const sortBy = urlParams.get('sortBy');
+		setSortValue(getReverseSortingValueValues(sortBy));
+	}
 
     useEffect(() => {
         if (state1 === false) {
             dispatch(getproduct());
+			handleResetFilter();
             setstate1(true);
         }
 
@@ -77,9 +86,12 @@ const Allproductpage = ({user}) => {
                 setstate(true);
             }
         }
-        dispatch(getwishlist())
         scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
     }, [dispatch, error, state, productLoading, state1]);
+	useEffect(()=>{
+		setTheCurrentSortValues();
+        dispatch(getwishlist())
+	},[])
 
     useEffect(()=>{
         if(pro){
@@ -88,6 +100,7 @@ const Allproductpage = ({user}) => {
             }
         }
     },[pro])
+	
     return (
         <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 2xl:pr-10">
             <div className='w-full max-w-screen-2xl justify-self-center'>
@@ -110,7 +123,7 @@ const Allproductpage = ({user}) => {
                     {/* Filter */}
                     <div className="hidden 2xl:col-span-2 xl:col-span-2 lg:col-span-2 2xl:block xl:block lg:block border-r-[1px] border-gray-700 border-opacity-25 h-max sticky top-0 bg-gray-50">
                         <div className='2xl:px-1 pb-4'>
-                            {product && product.length > 0 && <FilterView product={product} dispatchFetchAllProduct={dispatchFetchAllProduct} />}
+                            {noFilterProducts && noFilterProducts.length > 0 && <FilterView product={noFilterProducts} dispatchFetchAllProduct={dispatchFetchAllProduct} handleResetFilter = {handleResetFilter} />}
                         </div>
                     </div>
 
@@ -184,7 +197,7 @@ const Allproductpage = ({user}) => {
                 }
 
             </div>
-            {(window.screen.width < 1024 && product) && <MFilter scrollableDivRef = {scrollableDivRef} product={product} handleSortChange={handleSortChange} />}
+            {(window.screen.width < 1024 && noFilterProducts) && <MFilter sortvalue={sortvalue} setSortValue = {setTheCurrentSortValues} scrollableDivRef = {scrollableDivRef} product={noFilterProducts} handleSortChange={handleSortChange} handleResetFilter = {handleResetFilter} />}
             <Footer />
             <BackToTopButton scrollableDivRef={scrollableDivRef} />
 			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
@@ -193,6 +206,7 @@ const Allproductpage = ({user}) => {
 };
 const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
     const [openView,setOpenView] = useState(false);
+	
     return (
         <div className="hidden font-kumbsan 2xl:ml-10 ml-7 2xl:grid xl:grid lg:grid grid-cols-12 font2 border-b-[1px] border-gray-700 border-opacity-25 py-4 items-center 2xl:px-10">
             {/* Filters Title */}
@@ -207,42 +221,15 @@ const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
                 </div>
     
                 {/* Dropdown Content */}
-                <div onMouseLeave={()=> setOpenView(false)}  className={`absolute left-0 top-8 w-[260px] bg-white px-1 border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0 pointer-events-none"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("newest"), setSortValue('What`s New'))}>
-                        <span className=" text-gray-800">What`s New</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("popularity"), setSortValue('Popularity'))}>
-                        <span className=" text-gray-800">Popularity</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("a-z"), setSortValue('A-Z'))}>
-                        <span className=" text-gray-800">A-Z</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("z-a"), setSortValue('Z-A'))}>
-                        <span className=" text-gray-800">Z-A</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("discount"), setSortValue('Better Discount'))}>
-                        <span className=" text-gray-800">Better Discount</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("price-high-to-low"), setSortValue('Price: High To Low'))}>
-                        <span className=" text-gray-800">Price: High To Low</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("price-low-to-high"), setSortValue('Price: Low To High'))}>
-                        <span className=" text-gray-800">Price: Low To High</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("rating-high-to-low"), setSortValue('Rating: High To Low'))}>
-                        <span className=" text-gray-800">Rating: High To Low</span>
-                    </div>
-					<hr/>
-                    <div className="text-sm w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange("rating-low-to-high"), setSortValue('Rating: Low To High'))}>
-                        <span className=" text-gray-800">Rating: Low To High</span>
-                    </div>
+                <div onMouseLeave={()=> setOpenView(false)} className={`absolute left-0 top-8 w-[260px] bg-white px-1 border-[1px] border-gray-600 rounded-md mt-2 ${openView ? "opacity-100":"opacity-0 pointer-events-none"} transform group-hover:translate-y-2 transition-all duration-300 z-10`}>
+					{getSortingKeyValuePairs() && getSortingKeyValuePairs().length > 0 && getSortingKeyValuePairs().map((value, index) => (
+						<Fragment key={index}>
+							<div className="text-sm justify-start items-center flex w-full px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={(e) => (e.stopPropagation(), handleSortChange(value.value), setSortValue(value.key))}>
+								{value.key === sortvalue && <Dot/>} <span className=" text-gray-800">{value.key}</span>
+							</div>
+							<hr/>
+						</Fragment>
+					))}
                 </div>
             </div>
         </div>

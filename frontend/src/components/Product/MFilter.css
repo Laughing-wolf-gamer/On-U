@@ -11,8 +11,7 @@
 
 .tickcolor{
     border-color: #000000!important;
-    border-width: 2px!important;
-
+    border-width: 3px!important;
 }
 
 .fontbold{
@@ -20,7 +19,6 @@
 }
 
 .rightdiv{
-    
 	content: "";
 	top: 4px;
 	left: 4px;
@@ -30,7 +28,6 @@
 	border-style: none none solid solid;
 	border-width: 1px;
 	transform: rotate(-45deg);
-    
 }
 
 .Dhidden{

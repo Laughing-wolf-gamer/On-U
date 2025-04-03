@@ -12,7 +12,10 @@ import {
     FAIL_OPTIONS,
     SUCCESS_RANDOM_PRODUCT,
     FAIL_RANDOM_PRODUCT,
-    REQUEST_RANDOM_PRODUCT
+    REQUEST_RANDOM_PRODUCT,
+	REQUEST_All_PRODUCTS,
+	SUCCESS_All_PRODUCTS,
+	FAIL_All_PRODUCTS
 } from '../const/productconst'
 import axios from 'axios'
 
@@ -29,6 +32,16 @@ export const Allproduct = (e=1) => async (dispatch) => {
         dispatch({ type: FAIL_PRODUCTS, payload: error.response?.data?.message })
     }
 }
+export const allProductsFilter = ()=>async(dispatch)=>{
+	try {
+		dispatch({ type: REQUEST_All_PRODUCTS })
+		const res = await axios.get(`${BASE_API_URL}/api/shop/products/allFilter`)
+		const data = res.data;
+		dispatch({type:SUCCESS_All_PRODUCTS,payload:data?.result})
+	} catch (error) {
+		dispatch({type:FAIL_All_PRODUCTS,payload:error.response?.data?.message})
+	}
+}
 
 export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
     try {
@@ -37,7 +50,7 @@ export const getRandomArrayOfProducts = ()=>async(dispatch)=>{
         const data = res.data;
         dispatch({ type: SUCCESS_RANDOM_PRODUCT, payload: data?.result})
     } catch (error) {
-        dispatch({ type: FAIL_RANDOM_PRODUCT, payload: error.response?.data?.message })
+        dispatch({ type: FAIL_RANDOM_PRODUCT, payload: error?.response?.data?.message })
     }
 }
 

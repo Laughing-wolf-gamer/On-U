@@ -20,6 +20,62 @@ function filterImageFiles(files) {
 		return imageExtensions.includes('.' + fileExtension); // Only allow image files
     });
 }
+export const getSortingValues = (OriginalName)=>{
+	switch(OriginalName){
+		case 'What`s New':
+			return 'newest'
+		case 'Popularity':
+			return 'popularity'
+		case 'A-Z':
+			return 'a-z'
+		case 'Z-A':
+			return 'z-a';
+		case 'Better Discount':
+			return 'discount'
+		case 'Price: High To Low':
+			return 'price-high-to-low'
+		case 'Price: Low To High':
+			return 'price-low-to-high'
+		case 'Rating: High To Low':
+			return 'rating-high-to-low'
+		case 'Rating: Low To High':
+			return 'rating-low-to-high'
+		default:
+			return 'newest'
+	}
+}
+const sortingUrlToValueMap = {
+	"What`s New": 'newest',
+	"Popularity": 'popularity',
+	"A-Z": 'a-z',
+	"Z-A": 'z-a',
+	"Better Discount": 'discount',
+	"Price: High To Low": 'price-high-to-low',
+	"Price: Low To High": 'price-low-to-high',
+	"Rating: High To Low": 'rating-high-to-low',
+	"Rating: Low To High": 'rating-low-to-high',
+};
+const valueToSortingUrlMap = Object.fromEntries(
+	Object.entries(sortingUrlToValueMap).map(([key, value]) => [value, key])
+);
+export const getSortingKeyValuePairs = (key = null) => {
+    if (key) {
+        // If a specific key is passed, return the value of that key
+        return sortingUrlToValueMap[key] || null; // Return null if key doesn't exist
+    } else {
+        // If no key is passed, return all key-value pairs as an array of objects
+        return Object.entries(sortingUrlToValueMap).map(([key, value]) => ({ key, value }));
+    }
+};
+export const getReverseSortingValueValues = (sortingUrlValue)=>{
+	// If the sortingUrlValue is from the sorting URL to value map
+    if (sortingUrlToValueMap[sortingUrlValue]) {
+        return sortingUrlToValueMap[sortingUrlValue];
+    }else if (valueToSortingUrlMap[sortingUrlValue]) {
+        return valueToSortingUrlMap[sortingUrlValue];
+    }
+	return 'newest';
+}
 export function getStatusDescription(statusNumber) {
 	const statusMap = {
 		1:"New",
