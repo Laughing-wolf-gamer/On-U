@@ -613,7 +613,7 @@ const MPpage = () => {
 							
 						</div>
                         {
-                            product && <PincodeChecker productId={decrypt(param.id)}/>
+                            product && <PincodeChecker productId={param.id}/>
                         }
 						
 						{product && product.bulletPoints && product.bulletPoints.length > 0 && (
@@ -629,8 +629,7 @@ const MPpage = () => {
 											<span className='mt-4'>
 												<li className='list-disc mt-2'>{e.body}</li>
 											</span>
-										</Fragment>
-                                        )
+										</Fragment>)
                                     }
                                 </div>
                             </Fragment>

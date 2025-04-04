@@ -3,8 +3,9 @@ import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
-
+import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 const PincodeChecker = ({productId}) => {
+    const {decrypt} = useEncryptionDecryptionContext();
     const { pincode, position, isPermissionGranted } = useLocationContext();
     const [message, setMessage] = useState("");
     const { checkAndCreateToast } = useSettingsContext();
@@ -17,8 +18,10 @@ const PincodeChecker = ({productId}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();  // Prevent form submission on Enter key press
+        if(!productId){
+            checkAndCreateToast("error", "No Product Id Found");
+        }
         setIsLoading(true);
-
         try {
             let currentPincode = pincode;
             if (customPincode) currentPincode = customPincode;
@@ -33,7 +36,7 @@ const PincodeChecker = ({productId}) => {
             }
 
             const response = await axios.get(
-                `${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${productId}`
+                `${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${decrypt(productId)}`
             );
             if (response.data.result) {
                 const result = response.data.result;
