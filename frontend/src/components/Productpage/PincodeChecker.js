@@ -35,9 +35,7 @@ const PincodeChecker = ({productId}) => {
                 return;
             }
 
-            const response = await axios.get(
-                `${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${decrypt(productId)}`
-            );
+            const response = await axios.get(`${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${decrypt(productId)}`);
             if (response.data.result) {
                 const result = response.data.result;
                 setMessage(`Delivery is available for this pincode within ${result?.edd} days`);
@@ -56,12 +54,9 @@ const PincodeChecker = ({productId}) => {
             setCustomPincode(pincode);
         }
     }, [pincode]);
-	console.log("isPermissionGranted : ",isPermissionGranted)
-
     return (
         <div className="max-w-sm w-full p-4 bg-white">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
-
             <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <input
                     type="number"
