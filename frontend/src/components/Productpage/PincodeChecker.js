@@ -59,7 +59,7 @@ const PincodeChecker = ({productId}) => {
         <div className="max-w-sm w-full p-4 bg-white">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
 
-            <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
                 <input
                     type="number"
                     placeholder="Enter Pincode"
@@ -68,11 +68,10 @@ const PincodeChecker = ({productId}) => {
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
                     maxLength={"6"}
-                    onFocus={(e) => e.preventDefault()} // Prevent form submission on focus
                 />
                 
                 <button
-                    type="submit"
+                    onClick = {handleSubmit}
                     className="w-full justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
                 >
                     {isLoading ? (
@@ -81,7 +80,7 @@ const PincodeChecker = ({productId}) => {
                         <span>Check</span>
                     )}
                 </button>
-            </form>
+            </div>
 
             {message && <p className="mt-4 text-center text-gray-600 text-sm">{message}</p>}
         </div>
