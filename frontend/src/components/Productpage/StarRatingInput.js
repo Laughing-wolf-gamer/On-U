@@ -4,7 +4,6 @@ const StarRatingInput = ({onChangeValue}) => {
     const [ratingData, setRatingData] = useState(0);
 
     const handleStarClick = (value) => {
-        // setRatingData({ ...ratingData, rating: value });
         onChangeValue(value);
         setRatingData(value);
     };
@@ -16,7 +15,6 @@ const StarRatingInput = ({onChangeValue}) => {
             <div className="flex mt-2">
                 {[1, 2, 3, 4, 5].map((star,i) => (
                     <div
-
                         key={i}
                         className={`stars cursor-pointer w-10 h-10 text-3xl flex justify-center items-center ${
                             ratingData >= star ? 'text-black' : 'text-gray-300'

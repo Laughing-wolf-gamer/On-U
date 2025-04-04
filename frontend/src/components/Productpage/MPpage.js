@@ -597,13 +597,6 @@ const MPpage = () => {
 													<button disabled={active.quantity <= 0} className={`w-[40px] h-[40px] relative rounded-full flex ${currentColor?._id === active?._id ? "p-1":""} items-center justify-center`}>
 														<div style={{ backgroundColor: active?.label || active._id}} className='w-full h-full rounded-full'></div>
 													</button>
-													{/* {active?.quantity <= 0 && (
-														<div className="absolute bottom-[-10px] w-[30%] z-[4px] h-6 flex justify-center items-center pb-1">
-															<div className="text-white w-20 justify-center flex text-[10px] bg-red-600 rounded-lg shadow-lg px-1 whitespace-nowrap">
-																<span>Out of Stock</span>
-															</div>
-														</div>
-													)} */}
 												</button>
 											</div>
 										)
