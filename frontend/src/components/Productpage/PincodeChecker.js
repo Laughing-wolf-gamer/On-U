@@ -83,7 +83,7 @@ const PincodeChecker = ({productId}) => {
                 </button>
             </form>
 
-            {message && <p className="mt-4 text-center text-gray-600 text-sm">{message}</p>}
+            {message && <p className="mt-4 text-left text-gray-600 text-sm">{message}</p>}
         </div>
     );
 };

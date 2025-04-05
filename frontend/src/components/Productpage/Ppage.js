@@ -445,7 +445,7 @@ const Ppage = () => {
 		if (scrollableDivRef.current) {
 			scrollableDivRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
-	}, [dispatch, param]);
+	}, []);
 
 
     useEffect(() => {
@@ -467,7 +467,7 @@ const Ppage = () => {
 
 	useEffect(()=>{
 		updateButtonStates();
-	},[currentSize,currentColor])
+	},[currentSize,currentColor,dispatch,param])
     useEffect(()=>{
         setCurrentMaxScrollAmount(hasPurchased ? maxScrollWithReviewInput:maxScrollAmount);
     },[hasPurchased])
