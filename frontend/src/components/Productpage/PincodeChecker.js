@@ -3,6 +3,7 @@ import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
+import { Input } from "@mui/material";
 
 const PincodeChecker = ({productId}) => {
     const { pincode, position, isPermissionGranted } = useLocationContext();
@@ -59,7 +60,7 @@ const PincodeChecker = ({productId}) => {
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
 
             <form onSubmit={handleSubmit} className="flex justify-center flex-row items-center gap-2">
-                <input
+                <Input
                     type="number"
                     placeholder="Enter Pincode"
 					required
