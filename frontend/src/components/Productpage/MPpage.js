@@ -360,7 +360,7 @@ const MPpage = () => {
         if (scrollContainerRef.current) {
 			scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
-    }, [dispatch, param]); // Depend on `param.id` instead of `param` to avoid unnecessary calls
+    }, []); // Depend on `param.id` instead of `param` to avoid unnecessary calls
     
 
 
