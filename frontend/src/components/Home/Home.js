@@ -586,7 +586,7 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                     });
                 }
             });
-        }, { threshold: 0.1 });
+        }, { threshold: 0.9 });
     
         // Observe all video containers
         videoRefs.current.forEach((ref) => {
@@ -599,57 +599,56 @@ const GridVideoBox = ({ bannerLoading, WideScreen_Video, categoriesOptions }) =>
                 if (ref) observer.unobserve(ref);
             });
         };
-    }, [WideScreen_Video?.urls.length]);
+    }, [WideScreen_Video]);
 	const isMobileView = window.innerWidth <= 1024;
 
 	return (
 		<div className="grid grid-cols-2 justify-center items-center gap-4 p-2">
-		{bannerLoading ? (
-			// Skeleton Loader View when no URLs
-			Array(4).fill(0).map((_, index) => (
-				<div
-					key={`skeleton_${index}`}
-					className="w-[30vw] h-[300px] px-5 sm:w-[36vw] sm:h-[370px]relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-1 animate-pulse"
-				>
-					<div className="w-full h-full relative">
-						<div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+			{bannerLoading ? (
+				// Skeleton Loader View when no URLs
+				Array(4).fill(0).map((_, index) => (
+					<div
+						key={`skeleton_${index}`}
+						className="w-[30vw] h-[300px] px-5 sm:w-[36vw] sm:h-[370px]relative flex flex-col justify-start items-center bg-gray-300 rounded-lg p-1 animate-pulse"
+					>
+						<div className="w-full h-full relative">
+							<div className="min-w-full bg-gray-400 h-10 bottom-5 left-0 justify-start absolute h-30 animate-pulse items-start px-2 flex flex-row">
+							</div>
 						</div>
 					</div>
-				</div>
-			))
-		) : (
-			// Actual content when URLs are available
-			WideScreen_Video && WideScreen_Video.urls.length > 0 && WideScreen_Video.urls.slice(0, !isMobileView ? 8 : 4).map((url, index) => {
-				console.log("Is In View: ",inView[index])
-				return (
-					<div
-						key={`Index_${index}`}
-						ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
-						className="h-auto w-[45vw] relative flex flex-col justify-center items-center"
-					>
-						{inView[index] ? (
+				))
+			) : (
+				// Actual content when URLs are available
+				WideScreen_Video && WideScreen_Video.urls.length > 0 && WideScreen_Video.urls.slice(0, !isMobileView ? 8 : 4).map((url, index) => {
+					return (
+						<div
+							key={`Index_${index}`}
+							ref={(el) => (videoRefs.current[index] = el)} // Set individual ref for each video container
+							className="h-auto w-[45vw] relative flex flex-col justify-center items-center"
+						>
 							<GridImageView
 								imageToShow={url.url}
-								startPlaying={true}
+								startPlaying={inView[index]}
 								categoriesOptions={categoriesOptions}
 								categoryName={url?.name}
 							/>
-						) : (
-							<div className="w-[120px] sm:w-[160px] md:w-[200px] lg:w-[250px] xl:w-[300px] 2xl:w-[350px] 
-								h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px] 
-								bg-gray-200 animate-pulse rounded-lg">
-								<div className="w-full h-full relative">
-									<div className="min-w-full bg-gray-300 
-										h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 2xl:h-18 
-										bottom-5 left-0 justify-start absolute animate-pulse items-start px-1 sm:px-2 md:px-3 flex flex-row">
+							{/* {inView[index] ? (
+							) : (
+								<div className="w-[120px] sm:w-[160px] md:w-[200px] lg:w-[250px] xl:w-[300px] 2xl:w-[350px] 
+									h-[250px] sm:h-[300px] md:h-[350px] lg:h-[400px] xl:h-[450px] 2xl:h-[500px] 
+									bg-gray-200 animate-pulse rounded-lg">
+									<div className="w-full h-full relative">
+										<div className="min-w-full bg-gray-300 
+											h-8 sm:h-10 md:h-12 lg:h-14 xl:h-16 2xl:h-18 
+											bottom-5 left-0 justify-start absolute animate-pulse items-start px-1 sm:px-2 md:px-3 flex flex-row">
+										</div>
 									</div>
 								</div>
-							</div>
-						)}
-					</div>
-				)
-			})
-		)}
+							)} */}
+						</div>
+					)
+				})
+			)}
 		</div>
 	);
 };

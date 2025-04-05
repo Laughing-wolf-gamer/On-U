@@ -12,9 +12,9 @@ import { toast } from 'react-toastify';
 import { DragDropContext, Draggable, Droppable } from 'react-beautiful-dnd';
 import { RxHamburgerMenu } from 'react-icons/rx';
 import ReactPlayer from 'react-player';
-import { use } from 'react';
 import { Badge } from '@/components/ui/badge';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const allPositions = [
 	'WideScreen_Video',
 	'MobileScreen_CategorySlider',
@@ -544,7 +544,7 @@ const GridImageView = memo(({ item,updateCategoryIndex, setIsConfirmDeleteWindow
                                                 {isImage ? (
                                                     <LazyLoadImage
                                                         src={url.url}
-														effect="black-and-white"
+														effect="blur"
 														loading="lazy"
 														useIntersectionObserver = {true}
 														wrapperProps={{

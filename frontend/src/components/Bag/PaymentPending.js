@@ -16,10 +16,19 @@ const PaymentPending = () => {
 	const verifyAnyOrdersPayment = async()=>{
 		setIsPaymentChecking(true);
         if(!sessionStorage.getItem("checkoutData")){
-			navigate('/bag');
+			navigate(-1);
 			return;
 		};
 		const data = JSON.parse(sessionStorage.getItem("checkoutData"))
+		if(!data){
+			navigate(-1);
+			return;
+		}
+		if(data.paymentMethod === "COD"){
+			sessionStorage.removeItem("checkoutData")
+			navigate('/bag/checkout/success');
+			return;
+		}
         try {
             const response = await axios.post(`${BASE_API_URL}/api/payment/razerypay/paymentVerification`,data,headerConfig())
             if(response?.data?.success){

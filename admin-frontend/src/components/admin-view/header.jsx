@@ -10,7 +10,6 @@ const AdminHeaderLayout = ({setOpen}) => {
     const navigate = useNavigate();
     const HandleLogOut = async (e)=>{
         e.preventDefault();
-        // dispatch(logoutUser())
         dispatch(resetTokenCredentials());
         sessionStorage.clear();
         navigate('/auth/login');

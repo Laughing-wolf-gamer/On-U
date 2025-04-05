@@ -1,31 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { Input } from '../ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../ui/select';
 
 const CustomSelect = ({ controlItems, setChangeData,defaultValue = ""}) => {
-    /* const value = formData[controlItems.name]; // Ensures value is correctly bound to the formData
-
-    const handleInputChange = (e) => {
-        setFormData({
-            ...formData,
-            [controlItems.name]: e.target.value, // Update formData state on input change
-        });
-    };
-
-    const handleSelectChange = (v) => {
-        setFormData({
-            ...formData,
-            [controlItems.name]: v, // Update formData state on select change
-        });
-    }; */
     const[inputValue,setInputValue] = useState('')
     const[value,setValue] = useState('')
-    const handelOnInputChange = (e)=>{
-        setInputValue(e.target.value);
-        setValue('');
-        // setChangeData(e.target.value);
-        // console.log("Value: ",e.target.value);
-    }
     const handelSetActiveValue = (e)=>{
         // setChangeData(e.target.value);
         setValue(e);

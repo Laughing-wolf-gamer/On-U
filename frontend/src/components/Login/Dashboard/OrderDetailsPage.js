@@ -108,7 +108,7 @@ const OrderDetailsPage = ({ user }) => {
         } else {
             navigate(-1);
         }
-    }, [dispatch, params]);
+    }, [dispatch]);
 
     useEffect(() => {
         if (orderbyid) {

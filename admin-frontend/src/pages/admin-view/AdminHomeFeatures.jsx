@@ -14,6 +14,8 @@ import ReactPlayer from 'react-player';
 import { Badge } from '@/components/ui/badge';
 import { useSettingsContext } from '@/Context/SettingsContext';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+
 const allPositions = [
 	'Wide Screen Section- 1',
 	'Wide Screen Section- 2',
@@ -504,7 +506,7 @@ const GridImageView = ({ item,updateCategoryIndex, setIsConfirmDeleteWindow, isC
 												{isImage ? (
 													<LazyLoadImage
 														src={url}
-														effect="black-and-white"
+														effect="blur"
 														loading="lazy"
 														useIntersectionObserver = {true}
 														wrapperProps={{

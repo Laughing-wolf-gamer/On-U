@@ -4,11 +4,11 @@ import { applyCouponToBag, create_order, fetchAllOrders, removeCouponFromBag } f
 import { BASE_API_URL, BASE_CLIENT_URL, formattedSalePrice, headerConfig, RAZERPAY_KEY } from "../../config";
 import axios from "axios";
 import { useRazorpay } from "react-razorpay";
-import { ChevronRight, ChevronsRight, Icon, X } from "lucide-react";
+import { ChevronsRight, X } from "lucide-react";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
 import { useNavigate } from "react-router-dom";
 
-const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
+const PaymentProcessingPage = ({ selectedAddress, bag, totalAmount,originalsAmount, closePopup, user }) => {
     const navigation = useNavigate();
     const { error, isLoading, Razorpay } = useRazorpay();
     const dispatch = useDispatch();
@@ -36,11 +36,6 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
             closePopup();
         }
     }
-
-    // Handle payment selection
-    const HandleSetPayment = (e, paymentMode) => {
-        setPaymentMethod(paymentMode);
-    };
 
     /* const handleCashFreePayment = async () => {
         if (!bag.orderItems || !bag.orderItems.length || bag.orderItems.length <= 0) {
@@ -151,6 +146,7 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 				order_id: data.order.id,
 				handler: function (response) {
 					const paymentData = {
+						paymentMethod:paymentMethod,
 						razorpay_payment_id: response.razorpay_payment_id,
 						razorpay_order_id: response.razorpay_order_id,
 						razorpay_signature: response.razorpay_signature,
@@ -211,8 +207,6 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 			// Filter order items that are checked
 			const filteredOrderDetails = bag?.orderItems?.filter(item => !item.productId.isChecked);
 
-			console.log("Filtered Order Details: ", filteredOrderDetails);
-
 			if (filteredOrderDetails.length === 0) {
 				checkAndCreateToast("error", "Please select products to proceed with COD");
 				setIsPaymentStart(false);
@@ -245,7 +239,10 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
 
 				// Check response success
 				if (response?.success) {
-					navigation('/bag/checkout/success');
+					sessionStorage.setItem("checkoutData", JSON.stringify({
+						paymentMethod,
+					}));
+					navigation('/bag/checkout/pending');
 					closePopup();
 				} else {
 					checkAndCreateToast("error", response?.message);
@@ -278,7 +275,6 @@ const PaymentProcessingPage = ({ isOpen,discountAmount, selectedAddress, bag, to
     useEffect(() => {
         dispatch(fetchAllOrders());
     }, [dispatch]);
-	console.log("Payment Started: ",isPaymentStart);
     return (
         <div className="fixed font-kumbsan inset-0 flex items-center justify-center bg-black bg-opacity-60 z-[80]">
             <div className="bg-white text-gray-900 p-6 rounded-lg relative shadow-xl w-full max-h-[90vh] overflow-y-auto max-w-md mx-4 sm:mx-0">

@@ -51,9 +51,6 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 			const alreadyPresent = allColors.find((s) => s.id === activeColorSelect?.id);
 			if(!alreadyPresent) {
 				if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
-
-				}
-				if(activeColorSelect.images !== null && activeColorSelect.images.length > 0) {
 					setAllColors([...allColors, activeColorSelect]);
 					setActiveColorSelect(null);
 				}
@@ -100,7 +97,6 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 										style={{ backgroundColor: active?.label }}
 									></div>
 								</div>
-
 								{/* Remove Button */}
 								<X
 									className="absolute top-0 right-0 p-1 text-white text-xs font-semibold bg-black hover:bg-red-600 px-1 cursor-pointer transition-all duration-200 hover:rounded-lg ease-ease-out-expo hover:scale-105"

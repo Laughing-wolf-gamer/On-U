@@ -7,7 +7,6 @@ import { findSlangsInComment } from '@/config';
 import { IoMdAlert } from "react-icons/io";
 const RatingDataView = ({ isOpen, onClose, ratings, onDeleteRating,addNewRating }) => {
     if (!isOpen) return null; // Don't render if the modal is not open
-    console.log("ratings Data: ",ratings);
     return (
         <DialogContent>
 			<DialogTitle>Total Ratings: <span>{ratings?.length}</span> </DialogTitle>

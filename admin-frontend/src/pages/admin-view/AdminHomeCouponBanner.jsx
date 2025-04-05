@@ -4,7 +4,9 @@ import { Input } from '@/components/ui/input';
 import { fetchCouponBannerData, setCouponBannerData } from '@/store/common-slice';
 import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { useDispatch, useSelector } from 'react-redux';
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const AdminHomeCouponBanner = () => {
 	const dispatch = useDispatch();
 	const{CouponBannerData} = useSelector(state => state.common);
@@ -33,7 +35,6 @@ const AdminHomeCouponBanner = () => {
 	useEffect(()=>{
 		window.scroll(0,0);
 	},[])
-	// console.log("CouponBannerData: ",CouponBannerData);
 	return (
 		<div className="p-6 bg-gray-100 min-h-screen">
 			<h1 className="text-3xl font-bold mb-6 text-center">Home screen Coupon Banner</h1>
@@ -60,7 +61,14 @@ const AdminHomeCouponBanner = () => {
                 />
             </div>
 			<div className='w-full justify-center flex mb-4 flex-col items-center'>
-				<img
+				<LazyLoadImage
+					effect="blur"
+					useIntersectionObserver
+					loading="lazy"
+					wrapperProps={{
+						// If you need to, you can tweak the effect transition using the wrapper style.
+						style: {transitionDelay: "1s"},
+					}}
 					src={bannerModelUrl}
 					alt="Model Image"
 					className="h-20 w-20 object-cover rounded-full"

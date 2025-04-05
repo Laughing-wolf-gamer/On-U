@@ -1,6 +1,6 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
 import React, {useEffect, useState} from 'react';
-import { useSelector, useDispatch} from 'react-redux'
+import { useDispatch} from 'react-redux'
 import './App.css';
 import Navbar from './components/Navbar/Navbar.js'
 import Home from "./components/Home/Home.js";
@@ -8,7 +8,6 @@ import MNavbar from "./components/Navbar/MobileNav/MNavbar.js";
 import Login from "./components/Login/Login";
 import Otpverify from "./components/Login/otpverify";
 import Registeruser  from "./components/Login/Registeruser";
-import { getuser } from "./action/useraction";
 import Overview from "./components/Login/Dashboard/overview";
 import Allproductpage from "./components/Product/Allproduct";
 import Ppage from "./components/Productpage/Ppage";

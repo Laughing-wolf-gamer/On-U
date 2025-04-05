@@ -495,13 +495,13 @@ const MPpage = () => {
 										// Render image using LazyLoadImage
 										<div className="relative">
 											<LazyLoadImage
-												effect="opacity"
+												effect="blur"
 												src={im.url}
-												alt={`product_${i}`}
 												wrapperProps={{
 													// If you need to, you can tweak the effect transition using the wrapper style.
 													style: {transitionDelay: "1s"},
 												}}
+												alt={`product_${i}`}
 												className="w-full h-full object-cover"
 												onContextMenu={(e) => e.preventDefault()}  // Disable right-click
 											/>

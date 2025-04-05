@@ -22,11 +22,11 @@ const ImageZoom = ({ imageSrc }) => {
 		const bgY = (y / height) * 100;
 
 		setZoomStyle({
-		top: `${y - zoomSize / 2}px`,
-		left: `${x - zoomSize / 2}px`,
-		backgroundPosition: `${bgX}% ${bgY}%`,
-		backgroundImage: `url(${imageSrc})`,
-		backgroundSize: `${width * 2}px ${height * 2}px`, // Adjust zoom level
+			top: `${y - zoomSize / 2}px`,
+			left: `${x - zoomSize / 2}px`,
+			backgroundPosition: `${bgX}% ${bgY}%`,
+			backgroundImage: `url(${imageSrc})`,
+			backgroundSize: `${width * 2}px ${height * 2}px`, // Adjust zoom level
 		});
 	};
 

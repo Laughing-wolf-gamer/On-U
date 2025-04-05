@@ -959,6 +959,7 @@ export const fetchAllCustomerUsers = async (req, res) => {
                 let userNew = {
                     _id: u._id,
                     name: u.name,
+					profilePic: u?.profilePic || '',
                     email: u.email,
                     phoneNumber: u.phoneNumber,
                     address: u.addresses,

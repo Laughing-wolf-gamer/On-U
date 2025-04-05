@@ -7,6 +7,8 @@ import Dropdown from './Dropdown'
 import { MdDashboard, MdFeaturedPlayList, MdQueryStats, MdWarehouse } from "react-icons/md";
 import { FaCartArrowDown, FaUsers } from "react-icons/fa";
 import { RiPagesFill } from "react-icons/ri";
+import { LazyLoadImage } from 'react-lazy-load-image-component'
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const GetAdminSideBarMenuIcon = ({ id }) => {
     switch (id) {
         case "dashboard":
@@ -77,7 +79,14 @@ const AdminHeader = ({user,setOpen}) => {
 			navigation('/admin/profile')
 			setOpen(); // Close the menu if `setOpen` exists
 		}} className="flex justify-between items-center space-x-6">
-			<img
+			<LazyLoadImage
+				effect="blur"
+				useIntersectionObserver
+				loading="lazy"
+				wrapperProps={{
+					// If you need to, you can tweak the effect transition using the wrapper style.
+					style: {transitionDelay: "1s"},
+				}}
 				src={user?.profilePic}
 				alt="User Profile"
 				className="w-12 h-12 rounded-full bg-gray-400 object-cover"

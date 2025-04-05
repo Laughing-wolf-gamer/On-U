@@ -581,7 +581,7 @@ const PaginatedProductList = ({
 			<h1 className="text-xl sm:text-2xl md:text-3xl font-semibold mb-4">
 				Total Products: {totalProducts}
 			</h1>
-			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-6 gap-2 sm:gap-4 px-2 py-3">
+			<ul className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5 2xl:grid-cols-5 gap-2">
 				{currentPageProducts.length > 0 ? (
 					currentPageProducts.map((product, i) => (
 						<AdminProductTile

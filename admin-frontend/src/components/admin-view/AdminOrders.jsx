@@ -1,17 +1,17 @@
 import React, { useEffect, useState, useMemo, Fragment } from 'react';
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardTitle } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogTitle } from '../ui/dialog';
 import AdminOrdersDetailsView from './AdminOrdersDetailsView';
 import { useDispatch, useSelector } from 'react-redux';
 import { adminFetchAllShiprocketCancleOrder, adminGetAllOrders, admingetShiprocketToken, adminGetUsersOrdersById, resetOrderDetails } from '@/store/admin/order-slice';
 import { Badge } from '../ui/badge';
-import { Copy, MenuSquareIcon, TruckIcon } from 'lucide-react';
+import { Copy, TruckIcon } from 'lucide-react';
 import newStyled from '@emotion/styled';
 import { Slider } from '@mui/material';
 import LogisticsLoginView from './LogisticsLoginView';
 import LoadingView from '@/pages/admin-view/LoadingView';
-import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config';
+import { capitalizeFirstLetterOfEachWord } from '@/config';
 import { useSettingsContext } from '@/Context/SettingsContext';
 import { Label } from '../ui/label';
 import { IoIosReturnLeft } from 'react-icons/io';
@@ -169,46 +169,8 @@ const AdminOrderLayout = () => {
 								)}
 							</div>
 
-							{/* Toggle Button for Mobile */}
-							{/* <Button
-								onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-								className="lg:hidden flex items-center justify-center space-x-2 p-3 border border-gray-300 rounded-md hover:bg-gray-100 transition-all"
-							>
-							<MenuSquareIcon />
-							</Button> */}
 						</div>
 
-						{/* Mobile Dropdown Menu */}
-						{/* {isDropdownOpen && (
-							<div className="lg:hidden flex flex-col space-y-4 mt-4 p-4 bg-white shadow-md rounded-lg w-full">
-							<Button
-								onClick={() => setOpenLoginDialogue(true)}
-								className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md hover:bg-gray-100"
-							>
-								<TruckIcon />
-								<span>Get ShipRocket API Token</span>
-							</Button>
-
-							{logisticsToken && (
-								<Button
-								onClick={() => {
-									navigator.clipboard.writeText(logisticsToken);
-									checkAndCreateToast('success', 'Logistics Token copied to clipboard!');
-								}}
-								className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md hover:bg-gray-100"
-								>
-								<Copy />
-								<span>{logisticsToken.slice(0, 10)}....</span>
-								</Button>
-							)}
-
-							<span className="text-xs font-thin text-gray-500 mt-2">
-								The Token will expire after every {token?.expiringTime} days of Login.
-							</span>
-							</div>
-						)} */}
-
-						{/* Returning Orders Button */}
 						<Button
 							onClick={() => setOpenReturnOrdersDialogue(!openReturnOrderDialogue)}
 							className="mt-6 lg:mt-0 bg-blue-500 text-white hover:bg-blue-600 p-4 rounded-md flex items-center justify-center space-x-2 transition ease-in-out duration-300 w-full lg:w-auto"
@@ -298,7 +260,7 @@ const AdminOrderLayout = () => {
 	);
 };
 const ReturningOrderDialogWindow = ({ orderData = [] }) => {
-	console.log("Returnign Orders: ",orderData)
+	console.log("Returning Orders: ",orderData)
 	return (
 		<DialogContent className="max-w-min max-h-[500px] overflow-y-auto">
 			<DialogTitle className="font-bold">Returning Orders Info</DialogTitle>

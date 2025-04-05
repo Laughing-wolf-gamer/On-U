@@ -14,9 +14,7 @@ const Home = ({show, CMenu, parentCallback}) => {
     leave: { opacity: 0 },
     delay: 300,
     
-  })
-  let H = window.innerHeight - 80
-    
+  })    
   return (
    <Fragment>
        <div className={`w-[100%] h-screen bg-[#64646435] sticky top-0 ${CMenu} z-10  `}>

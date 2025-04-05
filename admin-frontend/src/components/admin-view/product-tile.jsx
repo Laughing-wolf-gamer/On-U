@@ -1,10 +1,9 @@
 import React, { useState, memo, useEffect, useRef, useMemo, useLayoutEffect } from 'react';
-import { Card } from '../ui/card';
 import { Button } from '../ui/button';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice } from '@/config';
 import { Badge } from '../ui/badge';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const AdminProductTile = ({
     setOpenProductPreview,
     togglePopUp,
@@ -27,10 +26,9 @@ const AdminProductTile = ({
     }, [selectedSize]);
 
     return (
-        <Card className="w-full h-full justify-start items-center p-4 flex-col bg-gray-50 shadow-lg">
+        <li className="w-full h-full justify-center items-center p-2 flex-col border border-gray-600 rounded-md bg-gray-50">
             {/* Image Section */}
-            <div className="relative w-full h-[300px] sm:h-[450px] overflow-hidden rounded-lg mb-4 bg-gray-100">
-				
+            <div className="w-full h-[400px] overflow-hidden rounded-lg mb-4 bg-gray-300">
                 {selectedSizeColorImageArray[0] && <MemoizedMedia
                     mediaUrl={selectedSizeColorImageArray[0].url}
                     altText={product?.title}
@@ -66,6 +64,14 @@ const AdminProductTile = ({
 						<span className="text-sm text-gray-600 font-medium">SubCategory:</span>
 						<span className="text-sm text-gray-800">{capitalizeFirstLetterOfEachWord(product?.subCategory)}</span>
 					</div>
+					<div className="flex items-center justify-between">
+						<span className="text-sm text-gray-600 font-medium">Total Sold:</span>
+						<span className="text-sm text-gray-800">{product?.TotalSoldAmount}</span>
+					</div>
+					<div className="flex items-center justify-between">
+						<span className="text-sm text-gray-600 font-medium">Total Stock:</span>
+						<span className="text-sm text-gray-800">{product?.totalStock}</span>
+					</div>
 				</div>
 
 				{/* Stock Amount Low Indicator */}
@@ -85,7 +91,7 @@ const AdminProductTile = ({
 					</Button>
 				</div>
 			</div>
-        </Card>
+        </li>
     );
 };
 
@@ -154,12 +160,12 @@ const MemoizedMedia = memo(({ mediaUrl, altText, isStockLow, isStockLowCritical,
                 )}
                 <LazyLoadImage
                     ref={mediaRef}
-					effect="black-and-white"
+					effect="blur"
                     src={mediaUrl}
                     alt={altText}
-					useIntersectionObserver = {true}
                     className="w-full h-full object-cover rounded-lg transition-transform duration-300"
-                    loading="lazy"
+					useIntersectionObserver
+					loading="lazy"
 					wrapperProps={{
 						// If you need to, you can tweak the effect transition using the wrapper style.
 						style: {transitionDelay: "1s"},

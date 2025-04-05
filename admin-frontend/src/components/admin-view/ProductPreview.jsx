@@ -23,12 +23,13 @@ import { MdWarning } from 'react-icons/md';
 import { IoMdAlert, IoMdWarning } from 'react-icons/io';
 import { Badge } from '../ui/badge';
 import AdminTagInput from './AdminTagInput';
+import 'react-lazy-load-image-component/src/effects/blur.css';
+import { LazyLoadImage } from 'react-lazy-load-image-component';
 const ProductPreview = ({
 	categories,
 	genders,
 	subcategories,
 	productDataId,
-	showPopUp,
 	togglePopUp,
 	OnDelete,
 	UpdateEditedData,
@@ -100,7 +101,7 @@ const ProductPreview = ({
     const categoryOptions = {options:categories.map(category => ({id:category.value.toLowerCase(),label:category.value}))}
     const subcategoriesOptions = {options:subcategories.map(sub => ({id:sub.value.toLowerCase(),label:sub.value}))}
     
-    return <DialogContent className = "h-screen max-w-max max-h-[600px] overflow-y-auto">
+    return <DialogContent className = "h-screen max-w-screen-lg max-h-[600px] overflow-y-auto">
 		<DialogTitle>Product Details</DialogTitle>
 			<div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
 				<div className="relative flex flex-col gap-2 w-full sm:w-auto">
@@ -110,6 +111,7 @@ const ProductPreview = ({
 						{isEditing ? (
 							<Input
 								type="text"
+								placeholder = "Enter Product Title"
 								value={productData?.title}
 								onChange={(e) => handleInputChange(e, 'title')}
 								className="text-2xl font-bold w-full sm:w-auto"
@@ -123,6 +125,7 @@ const ProductPreview = ({
 						{isEditing ? (
 							<Input
 								type="text"
+								placeholder = "Enter Short Title"
 								value={productData?.shortTitle}
 								onChange={(e) => handleInputChange(e, 'shortTitle')}
 								className="text-xl font-normal w-full sm:w-auto"
@@ -152,7 +155,7 @@ const ProductPreview = ({
 						<div className="flex flex-col sm:flex-row justify-between items-center border-b pb-4">
 							<h3 className="font-extrabold text-gray-700 text-lg mr-3">Descriptions:</h3>
 							{isEditing ? (
-								<textarea
+								<Textarea
 									type="text"
 									rows={4}
 									value={productData?.description}
@@ -582,11 +585,6 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 		setIsLoading(true);
 		if (!productId) return;
 		try {
-			const response = await axios.patch(`${BASE_URL}/admin/product/update/updateSizeStock`, {
-				productId,
-				sizeId: id,
-				updatedAmount: change,
-			}, Header());
 			// console.log(`${type} Quantity Updated:`, response.data);
 			checkAndCreateToast("success","Quantity Updated Successfully");
 		} catch (error) {
@@ -953,7 +951,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 						<div className="flex items-center px-3 min-w-fit justify-between border border-gray-600 rounded-lg space-x-4">
 							<Button
 							disabled={isLoading || sizeQuantities[`${size._id}-${color._id}`] <= 0}
-							onClick={(e) => {
+							onClick={() => {
 								handleColorQuantityChange(size._id, color._id, -1);
 							}}
 							className="bg-black p-2 rounded-full"
@@ -965,7 +963,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 							</Label>
 							<Button
 							disabled={isLoading}
-							onClick={(e) => {
+							onClick={() => {
 								handleColorQuantityChange(size._id, color._id, 1);
 							}}
 							className="bg-black p-2 rounded-full"
@@ -975,7 +973,7 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 
 							{/* File Upload Button with Icon */}
 							<div className="p-2">
-							<Button onClick={(e) => {
+							<Button onClick={() => {
 								setActiveSelectedColor(color._id);
 								setActiveSelectedSize(size._id);
 								setIsFileUploadPopUpOpen(!isFileUploadPopUpOpen);
@@ -1142,12 +1140,18 @@ const ImagesPreview = ({ selectedColorImages }) => {
 					Your browser does not support the video tag.
 					</video>
 				) : (
-					<img
+					<LazyLoadImage
+						effect="blur"
+						useIntersectionObserver
+						loading="lazy"
+						wrapperProps={{
+							// If you need to, you can tweak the effect transition using the wrapper style.
+							style: {transitionDelay: "1s"},
+						}}
 						src={item?.url}
 						alt={`Color Image ${index + 1}`}
 						className="w-full h-full object-cover rounded-md border"
 						onLoad={() => handleLoad(index)} // Image on load event
-						loading="lazy" // Lazy load images
 					/>
 				)}
 			</div>
@@ -1189,7 +1193,7 @@ const FileUploadPopUpWindow = ({sizeId,colorId, isOpen, onConfirm }) => {
 				/>
 				<Button
 					disabled={isLoading || imageArray.length === 0}
-					onClick={(e)=>{
+					onClick={()=>{
 						onConfirm(imageArray);
 					}}
 					className="text-white px-4 py-2 rounded-lg hover:bg-gray-800 focus:outline-none"

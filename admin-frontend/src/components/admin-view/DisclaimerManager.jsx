@@ -3,7 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { editDisclaimerData, fetchWebsiteDisclaimer, removeDisclaimerData, setDisclaimerData } from "@/store/common-slice";
 import FileUploadComponent from "./FileUploadComponent";
 import { useSettingsContext } from "@/Context/SettingsContext";
-
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import 'react-lazy-load-image-component/src/effects/blur.css';
 const DisclaimerManager = () => {
 	const {checkAndCreateToast} = useSettingsContext();
     const [reset, setIsReset] = useState(false);
@@ -156,7 +157,14 @@ const DisclaimerManager = () => {
                                 className="flex items-center justify-between p-4 border rounded-md hover:bg-gray-100"
                             >
                                 <div className="flex items-center">
-                                    <img
+                                    <LazyLoadImage
+										effect="blur"
+										useIntersectionObserver
+										loading="lazy"
+										wrapperProps={{
+											// If you need to, you can tweak the effect transition using the wrapper style.
+											style: {transitionDelay: "1s"},
+										}}
                                         src={disclaimer.iconImage}
                                         alt="icon"
                                         className="w-8 h-8 mr-4 rounded-lg"

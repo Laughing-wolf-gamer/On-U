@@ -129,61 +129,78 @@ const UserTable = () => {
                     </form>
 
                     <div className="h-full w-full min-h-full space-x-1">
-                        <Label className={"uppercase justify-self-start mt-10"}> Page: {pagination?.currentPage} / {pagination?.totalPages} </Label>
-                        {deletingCustomer.length > 0 && (
-                            <Button className={"w-fit"} onClick={HandleDeleteCustomer} variant={"destructive"}>
-                                <Trash />
-                            </Button>
-                        )}
-                        {/* Header Section */}
-                        <div className="grid grid-cols-8 min-w-full gap-5 text-sm font-semibold text-gray-700 bg-gray-200">
-                            <div className="px-4 py-2 flex flex-row justify-center items-center space-x-1">
-                                <Label>Select</Label>
-                                <Checkbox id="selectAll" className="w-4 h-4" checked={deletingCustomer.length >= AllUser?.length} onCheckedChange={handleSelectAllCustomer} />
-                            </div>
-                            <div className="px-4 py-2 text-center">Sr.</div>
-                            <div className="px-4 py-2 text-center">Customer Name</div>
-                            <div className="px-4 py-2 text-center">Email ID</div>
-                            <div className="px-4 py-2 text-center">Phone Number</div>
-                            <div className="px-4 py-2 text-center">Total Purchases</div>
-                            <div className="px-4 py-2 text-center">Wishlist Count</div>
-                            <div className="px-4 py-2 text-center">Actions</div>
-                        </div>
+						<Label className={"uppercase justify-self-start mt-10"}> Page: {pagination?.currentPage} / {pagination?.totalPages} </Label>
+						
+						{deletingCustomer.length > 0 && (
+							<Button className={"w-fit"} onClick={HandleDeleteCustomer} variant={"destructive"}>
+								<Trash />
+							</Button>
+						)}
 
-                        {/* Data Rows */}
-                        {AllUser.length > 0 && AllUser.map((customer, index) => (
-                            <div key={customer._id} className="grid grid-cols-8 gap-5 w-full text-sm hover:bg-gray-100">
-                                {/* Select */}
-                                <div className="w-auto justify-center flex items-center text-center">
-                                    <Checkbox
-                                        id="delCheck"
-                                        checked={deletingCustomer.includes(customer._id)}
-                                        onCheckedChange={() => handleChangeCustomer(customer._id)}
-                                        className="w-4 h-4"
-                                    />
-                                </div>
-                                {/* Sr. */}
-                                <div className="px-4 py-2 text-center">{(page - 1) * pageSize + index + 1}</div>
-                                {/* Customer Name */}
-                                <div className="px-4 py-2 text-center">{customer?.name}</div>
-                                {/* Email */}
-                                <div className="px-4 py-2 text-center w-auto truncate">{customer?.email}</div>
-                                {/* Phone Number */}
-                                <div className="px-4 py-2 text-center">{customer?.phoneNumber}</div>
-                                {/* Total Purchases */}
-                                <div className="px-4 py-2 text-center">{customer?.totalPurchases}</div>
-                                {/* Wishlist Count */}
-                                <div className="px-4 py-2 text-center">{customer?.wishList?.length}</div>
-                                {/* Actions */}
-                                <Button
-                                    onClick={() => openModal(customer)}
-                                    className="bg-black text-white rounded-lg hover:bg-gray-800 my-2 w-full text-center p-4"
-                                >
-                                    <span className="text-xs">View Details</span>
-                                </Button>
-                            </div>
-                        ))}
-                    </div>
+						{/* Table Section */}
+						<table className="min-w-full table-auto text-sm text-gray-700">
+							{/* Table Header */}
+							<thead className="bg-gray-200">
+								<tr>
+									<th className="px-4 py-2 text-center">
+										<Label>Select</Label>
+										<Checkbox 
+											id="selectAll" 
+											className="w-4 h-4" 
+											checked={deletingCustomer.length >= AllUser?.length} 
+											onCheckedChange={handleSelectAllCustomer} 
+										/>
+									</th>
+									<th className="px-4 py-2 text-center">Sr.</th>
+									<th className="px-4 py-2 text-center">Customer Name</th>
+									<th className="px-4 py-2 text-center">Email ID</th>
+									<th className="px-4 py-2 text-center">Phone Number</th>
+									<th className="px-4 py-2 text-center">Total Purchases</th>
+									<th className="px-4 py-2 text-center">Wishlist Count</th>
+									<th className="px-4 py-2 text-center">Actions</th>
+								</tr>
+							</thead>
+							
+							{/* Table Body */}
+							<tbody>
+								{AllUser.length > 0 && AllUser.map((customer, index) => (
+									<tr key={customer._id} className="hover:bg-gray-100">
+										{/* Select */}
+										<td className="px-4 py-2 text-center">
+											<Checkbox 
+												id="delCheck" 
+												checked={deletingCustomer.includes(customer._id)} 
+												onCheckedChange={() => handleChangeCustomer(customer._id)} 
+												className="w-4 h-4"
+											/>
+										</td>
+										{/* Sr. */}
+										<td className="px-4 py-2 text-center">{(page - 1) * pageSize + index + 1}</td>
+										{/* Customer Name */}
+										<td className="px-4 py-2 text-center">{customer?.name}</td>
+										{/* Email */}
+										<td className="px-4 py-2 text-center w-auto truncate">{customer?.email}</td>
+										{/* Phone Number */}
+										<td className="px-4 py-2 text-center">{customer?.phoneNumber}</td>
+										{/* Total Purchases */}
+										<td className="px-4 py-2 text-center">{customer?.totalPurchases}</td>
+										{/* Wishlist Count */}
+										<td className="px-4 py-2 text-center">{customer?.wishList?.length}</td>
+										{/* Actions */}
+										<td className="px-4 py-2 text-center">
+											<Button 
+												onClick={() => openModal(customer)} 
+												className="bg-black text-white rounded-lg hover:bg-gray-800 my-2 w-full p-2"
+											>
+												<span className="text-xs">View Details</span>
+											</Button>
+										</td>
+									</tr>
+								))}
+							</tbody>
+						</table>
+					</div>
+
 
                     {/* Pagination Controls */}
                     <div className="flex justify-between w-full items-center mt-4">

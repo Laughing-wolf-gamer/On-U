@@ -138,17 +138,17 @@ const ImageUpload = ({currentIndex = -1,file,setFile,HeaderTitle,uploadedImageUr
 					) : (
 						<div className="flex items-center justify-between">
 							<div className="flex items-center">
-							<FileIcon className="w-10 h-10 text-muted" />
+								<FileIcon className="w-10 h-10 text-muted" />
 							</div>
 							<p className="text-sm font-medium">{file?.name}</p>
 							<Button
-							variant="ghost"
-							size="icon"
-							className="hover:text-foreground"
-							onClick={handleRemoveImage}
+								variant="ghost"
+								size="icon"
+								className="hover:text-foreground"
+								onClick={handleRemoveImage}
 							>
-							<XIcon className="w-4 h-4" />
-							<span className="sr-only">Remove File</span>
+								<XIcon className="w-4 h-4" />
+								<span className="sr-only">Remove File</span>
 							</Button>
 						</div>
 					)}
