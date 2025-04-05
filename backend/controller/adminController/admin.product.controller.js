@@ -957,6 +957,7 @@ export const getOrderById = async(req,res)=>{
 					order.current_status = getStatusDescription(trackingData.shipment_status);
 					order.etd = trackingData.etd;
 					order.trackingUrl = trackingData.track_url
+					order.tracking_Activity = trackingData.shipment_track_activities
 					await order.save();
 				}else{
 					const trackingData = shipmenetOrder[order.shipment_id].tracking_data;
@@ -964,8 +965,12 @@ export const getOrderById = async(req,res)=>{
 					order.status = getStatusDescription(trackingData.shipment_status)
 					order.shipment_status = trackingData.shipment_status;
 					order.current_status = getStatusDescription(trackingData.shipment_status);
-					order.etd = trackingData.etd;
-					order.trackingUrl = trackingData.track_url
+					order.etd = trackingData.etd || null;
+					order.trackingUrl = trackingData.track_url || ''
+					order.tracking_Activity = trackingData.shipment_track_activities || []
+					if(trackingData.error){
+						order.orderError = trackingData.error
+					}
 					await order.save();
 				}
 			}

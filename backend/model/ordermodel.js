@@ -38,7 +38,9 @@ const ordersSchema = new mongoose.Schema({
 	RefundData:{type:Object,default:null},
 	trackingUrl:{type:String,default:''},
     ReturningData:{type:Object},
-    RefundData:Object
+    RefundData:Object,
+	tracking_Activity:[{type:mongoose.Schema.Types.Mixed}],
+	orderError:{type:mongoose.Schema.Types.Mixed},
 },{timestamps:true})
 
 const OrderModel = mongoose.model('order', ordersSchema)

@@ -919,10 +919,11 @@ export const getShipmentOrderByOrderId = async(order)=>{
                 Authorization: `Bearer ${token}`,
             },
         });
-		console.log("Shipment order Tracking: ",res.data);
+		console.log("Shipment order Tracking: ",res.data?.tracking_data?.shipment_track_activities);
         return res.data;
     } catch (error) {
 		console.error("Error getting Shipment Order by ID: ",error?.response?.data);
+		console.error("Error getting Shipment Order by ID: ",error);
 		return null;
     }
 }

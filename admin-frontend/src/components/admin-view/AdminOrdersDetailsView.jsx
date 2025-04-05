@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { Fragment, useRef, useState } from 'react'
 import { DialogContent, DialogTitle } from '../ui/dialog'
 import { Label } from '../ui/label'
 import { Separator } from '../ui/separator'
@@ -8,7 +8,7 @@ import { adminCreateOrderReturns, adminCreateRefundRequest, adminGetAllOrders, a
 import { capitalizeFirstLetterOfEachWord, getStatusDescription } from '@/config'
 import { useSettingsContext } from '@/Context/SettingsContext'
 import { Button } from '../ui/button'
-import { Map } from 'lucide-react'
+import { ChevronLeft, ChevronRight, Map } from 'lucide-react'
 
 const initialFormData = {
   status: '',
@@ -89,6 +89,7 @@ const ReturningDataInfo = ({ ReturningData }) => (
 )
 
 const AdminOrdersDetailsView = ({ order }) => {
+	console.log("Details order: ",order);
 	const{checkAndCreateToast} = useSettingsContext();
 	const [formData, setFormData] = useState(initialFormData)
 	const dispatch = useDispatch()
@@ -277,6 +278,13 @@ const AdminOrdersDetailsView = ({ order }) => {
 						<ReturningDataInfo ReturningData={order?.ReturningData} />
 					</div>
 				}
+				{order?.tracking_Activity && order?.tracking_Activity.length > 0 && <Fragment>
+					<Separator />
+					<div className='w-full flex'>
+						<DeliveryTrackingActivity TrackingActivity={order?.tracking_Activity}/>
+					</div>
+				</Fragment>}
+				
 				
 				{/* Action Buttons */}
 				<div className="flex flex-wrap gap-3 h-fit justify-center items-center">
@@ -349,5 +357,153 @@ const PicketUpDataDisplay = ({ picketUpData }) => {
 		</div>
 	);
 };
+const DeliveryTrackingActivity = ({ TrackingActivity }) => {
+	const sliderRef = useRef(null);
+	
+	const [dragState, setDragState] = useState({
+		isDragging: false,
+		startX: 0,
+		startTouchX: 0,
+		scrollLeft: 0,
+	});
+	
+	
+	// Mouse Down, Mouse Move, Mouse Up Handlers
+	const handleMouseDown = (e) => {
+		setDragState((prev) => ({
+			...prev,
+			isDragging: true,
+			startX: e.clientX,
+			scrollLeft: sliderRef.current.scrollLeft,
+		}));
+		e.preventDefault();
+	};
+	
+	const handleMouseMove = (e) => {
+		if (!dragState.isDragging) return;
+		const moveX = e.clientX - dragState.startX;
+		sliderRef.current.scrollLeft = dragState.scrollLeft - moveX;
+	};
+	
+	const handleMouseUp = () => setDragState((prev) => ({ ...prev, isDragging: false }));
+	const handleMouseLeave = () => setDragState((prev) => ({ ...prev, isDragging: false }));
+	
+	// Touch Start, Touch Move, Touch End Handlers
+	const handleTouchStart = (e) => {
+		setDragState((prev) => ({
+			...prev,
+			isDragging: true,
+			startTouchX: e.touches[0].clientX,
+			scrollLeft: sliderRef.current.scrollLeft,
+		}));
+	};
+	
+	const handleTouchMove = (e) => {
+		if (!dragState.isDragging) return;
+		const moveX = e.touches[0].clientX - dragState.startTouchX;
+		sliderRef.current.scrollLeft = dragState.scrollLeft - moveX;
+	};
+	
+	const handleTouchEnd = () => setDragState((prev) => ({ ...prev, isDragging: false }));
+	
+	// Scroll functionality for left and right arrows
+	const scroll = (direction) => {
+		const slider = sliderRef.current;
+		const scrollAmount = 400; // Amount to scroll with each button click
+		slider.scrollTo({
+			left: slider.scrollLeft + direction * scrollAmount,
+			behavior: 'smooth', // This makes the scroll smooth
+		});
+	};
+
+	return (
+		<div className="mt-2 mb-7 w-full pb-6 pt-4 px-4">
+			<div className="w-full justify-center items-center flex px-1 py-2">
+				<h1 className="flex text-center mt-4 uppercase font-bold">Delivery Tracking</h1>
+			</div>
+
+			<div className="relative">
+				<button
+					onClick={() => scroll(-1)}
+					className="absolute left-3 top-1/2 transform bg-gray-900 -translate-y-1/2 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 p-2 rounded-full z-10 py-3"
+				>
+					<ChevronLeft/>
+				</button>
+
+				<div
+					ref={sliderRef}
+					className="justify-center items-start overflow-x-auto"
+					onMouseDown={handleMouseDown}
+					onMouseMove={handleMouseMove}
+					onMouseUp={handleMouseUp}
+					onMouseLeave={handleMouseLeave}
+					onTouchStart={handleTouchStart}
+					onTouchMove={handleTouchMove}
+					onTouchEnd={handleTouchEnd}
+					style={{ cursor: dragState.isDragging ? 'grabbing' : 'grab',userSelect: 'none'  }}
+				>
+					<ul className="flex gap-4 py-2 sm:gap-2 md:gap-8 lg:gap-6">
+						{TrackingActivity.map((detail, index) => (
+							<li key={index} className="flex-shrink-0 w-[200px] md:w-max lg:w-max">
+								<TrackingDetailsSingle details={detail}/>
+							</li>
+						))}
+					</ul>
+				</div>
+
+				<button
+					onClick={() => scroll(1)}
+					className="absolute right-3 top-1/2 transform -translate-y-1/2 bg-gray-900 text-white hover:text-purple-500 hover:scale-105 opacity-90 hover:opacity-100 p-2 rounded-full py-3 z-10"
+				>
+					<ChevronRight/>
+				</button>
+			</div>
+		</div>
+	);
+}
+const TrackingDetailsSingle = ({details})=>{
+	return(
+		<div className="flex h-full flex-col bg-gray-500 text-white shadow-lg rounded-lg p-2 border border-gray-900 mt-2 gap-3 items-center justify-center">
+			<div className='w-full flex justify-between items-center'>
+				<Label>Activity</Label>
+				<Badge className="text-xs font-semibold">{details?.activity}</Badge>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>Date</span>
+				<Badge className="text-xs font-semibold">{details?.date ? new Date(details?.date).toLocaleString() : "N/A"}</Badge>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>Location Checked At</span>
+				<div className='space-y-2'>
+					<Badge className="text-xs font-semibold">{details?.latitude}</Badge>
+					<Badge className="text-xs font-semibold">{details?.longitude}</Badge>
+				</div>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>Coords Checked At</span>
+				<div className='space-y-2'>
+					<Badge className="text-xs font-semibold">{details?.latitude}</Badge>
+					<Badge className="text-xs font-semibold">{details?.longitude}</Badge>
+				</div>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>Location Checked At</span>
+				<Badge className="text-xs font-semibold">{details?.location}</Badge>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>SR- Status</span>
+				<Badge className="text-xs font-semibold">{getStatusDescription(details['sr-status'])}</Badge>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>SR - Status Label</span>
+				<Badge className="text-xs font-semibold">{details['sr-sr-status-label']}</Badge>
+			</div>
+			<div className='w-full flex justify-between items-center'>
+				<span>Status</span>
+				<Badge className="text-xs font-semibold">{Number.isInteger(Number(details?.status)) ? getStatusDescription(details?.status) : (details?.status)}</Badge>
+			</div>
+		</div>
+	)
+}
 
 export default AdminOrdersDetailsView
