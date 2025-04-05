@@ -601,7 +601,7 @@ const Ppage = () => {
 
                                 </div>
                                 
-                                <PincodeChecker productId={param.id} />
+                                <PincodeChecker productId={decrypt(param.id)} />
 
                                 <div className='w-full h-fit pr-10 justify-center items-center flex flex-col'>
                                     <div className='grid grid-cols-2 justify-center items-center gap-2 w-full'>

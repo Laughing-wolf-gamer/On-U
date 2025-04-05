@@ -352,10 +352,11 @@ const MPpage = () => {
             updateButtonStates();
         }
     }, [currentSize, currentColor]);
-    
+	useEffect(()=>{
+		dispatch(singleProduct(decrypt(param.id)));
+	},[dispatch])
     useEffect(() => {
         // Fetch the product and reset scroll position on param.id change
-        dispatch(singleProduct(decrypt(param.id)));
         if (scrollContainerRef.current) {
 			scrollContainerRef.current.scrollTo({ top: 0, behavior: 'smooth' });
 		}
@@ -606,7 +607,7 @@ const MPpage = () => {
 							
 						</div>
                         {
-                            product && <PincodeChecker productId={param.id}/>
+                            product && <PincodeChecker productId={decrypt(param.id)}/>
                         }
 						
 						{product && product.bulletPoints && product.bulletPoints.length > 0 && (
