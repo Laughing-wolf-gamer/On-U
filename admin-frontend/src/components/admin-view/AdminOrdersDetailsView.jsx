@@ -463,43 +463,36 @@ const DeliveryTrackingActivity = ({ TrackingActivity }) => {
 }
 const TrackingDetailsSingle = ({details})=>{
 	return(
-		<div className="flex h-full flex-col bg-gray-500 text-white shadow-lg rounded-lg p-2 border border-gray-900 mt-2 gap-3 items-center justify-center">
+		<div className="flex h-full flex-col bg-gray-500 text-white shadow-lg rounded-lg p-2 border border-gray-900 gap-3 items-center justify-center">
 			<div className='w-full flex justify-between items-center'>
 				<Label>Activity</Label>
 				<Badge className="text-xs font-semibold">{details?.activity}</Badge>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>Date</span>
+				<Label>Date</Label>
 				<Badge className="text-xs font-semibold">{details?.date ? new Date(details?.date).toLocaleString() : "N/A"}</Badge>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>Location Checked At</span>
+				<Label>Coords Checked At</Label>
 				<div className='space-y-2'>
 					<Badge className="text-xs font-semibold">{details?.latitude}</Badge>
 					<Badge className="text-xs font-semibold">{details?.longitude}</Badge>
 				</div>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>Coords Checked At</span>
-				<div className='space-y-2'>
-					<Badge className="text-xs font-semibold">{details?.latitude}</Badge>
-					<Badge className="text-xs font-semibold">{details?.longitude}</Badge>
-				</div>
-			</div>
-			<div className='w-full flex justify-between items-center'>
-				<span>Location Checked At</span>
+				<Label>Location Checked At</Label>
 				<Badge className="text-xs font-semibold">{details?.location}</Badge>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>SR- Status</span>
+				<Label>SR- Status</Label>
 				<Badge className="text-xs font-semibold">{getStatusDescription(details['sr-status'])}</Badge>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>SR - Status Label</span>
+				<Label>SR - Status Label</Label>
 				<Badge className="text-xs font-semibold">{details['sr-sr-status-label']}</Badge>
 			</div>
 			<div className='w-full flex justify-between items-center'>
-				<span>Status</span>
+				<Label>Status</Label>
 				<Badge className="text-xs font-semibold">{Number.isInteger(Number(details?.status)) ? getStatusDescription(details?.status) : (details?.status)}</Badge>
 			</div>
 		</div>
