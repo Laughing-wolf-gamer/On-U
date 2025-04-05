@@ -86,7 +86,7 @@ const SideBarBagProductItem = memo(({pro , user,refreshTwice = false,OnPress}) =
             {/* Product Details Section */}
             <div className="flex-col flex justify-between items-start gap-2 mt-1 px-2">
 				<p className="text-[10px] sm:text-[12px] md:text-[14px] lg:text-[16px] text-gray-800 font-semibold truncate">
-					{productTitle.slice(0, 10)}
+					{capitalizeFirstLetterOfEachWord(pro?.title)}
 				</p>
 				<p className="text-[8px] sm:text-[10px] md:text-[12px] lg:text-[14px] overflow-hidden text-left text-ellipsis h-fit whitespace-nowrap text-slate-500">
 					{productSubCategory}
