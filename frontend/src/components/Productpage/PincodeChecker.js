@@ -3,9 +3,8 @@ import axios from "axios";
 import { BASE_API_URL } from "../../config";
 import { useLocationContext } from "../../Contaxt/LocationContext";
 import { useSettingsContext } from "../../Contaxt/SettingsContext";
-import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
+
 const PincodeChecker = ({productId}) => {
-    const {decrypt} = useEncryptionDecryptionContext();
     const { pincode, position, isPermissionGranted } = useLocationContext();
     const [message, setMessage] = useState("");
     const { checkAndCreateToast } = useSettingsContext();
@@ -18,10 +17,8 @@ const PincodeChecker = ({productId}) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();  // Prevent form submission on Enter key press
-        if(!productId){
-            checkAndCreateToast("error", "No Product Id Found");
-        }
         setIsLoading(true);
+
         try {
             let currentPincode = pincode;
             if (customPincode) currentPincode = customPincode;
@@ -35,7 +32,9 @@ const PincodeChecker = ({productId}) => {
                 return;
             }
 
-            const response = await axios.get(`${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${decrypt(productId)}`);
+            const response = await axios.get(
+                `${BASE_API_URL}/api/logistic/checkPincode/?pincode=${currentPincode}&productId=${productId}`
+            );
             if (response.data.result) {
                 const result = response.data.result;
                 setMessage(`Delivery is available for this pincode within ${result?.edd} days`);
@@ -54,10 +53,12 @@ const PincodeChecker = ({productId}) => {
             setCustomPincode(pincode);
         }
     }, [pincode]);
+
     return (
         <div className="max-w-sm w-full p-4 bg-white">
             <h3 className="text-xl font-semibold text-gray-800 mb-4">Pincode</h3>
-            <div className="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4">
+
+            <form onSubmit={handleSubmit} className="flex justify-center flex-row items-center gap-2">
                 <input
                     type="number"
                     placeholder="Enter Pincode"
@@ -66,11 +67,12 @@ const PincodeChecker = ({productId}) => {
                     onChange={handleInputChange}
                     className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-gray-500 transition-all"
                     maxLength={"6"}
+                    onFocus={(e) => e.preventDefault()} // Prevent form submission on focus
                 />
                 
                 <button
-                    onClick = {handleSubmit}
-                    className="w-full justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
+                    type="submit"
+                    className="w-20 justify-center items-center flex sm:w-1/3 h-12 bg-black text-white font-semibold rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-gray-400 transition-all"
                 >
                     {isLoading ? (
                         <div className="w-6 h-6 border-4 border-t-4 border-white border-t-gray-800 rounded-full animate-spin"></div>
@@ -78,7 +80,7 @@ const PincodeChecker = ({productId}) => {
                         <span>Check</span>
                     )}
                 </button>
-            </div>
+            </form>
 
             {message && <p className="mt-4 text-center text-gray-600 text-sm">{message}</p>}
         </div>
