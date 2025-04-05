@@ -225,7 +225,7 @@ const OrderDetailsPage = ({ user }) => {
 										href={orderbyid?.trackingUrl}
 										target="_blank"
 										rel="noopener noreferrer"
-										className="text-gray-600 hover:underline font-medium flex gap-2"
+										className="text-gray-600 animate-pulse hover:underline font-medium flex gap-2"
 									>
 										Click here to track your order <MapIcon className=' animate-pulse'/>
 									</a>

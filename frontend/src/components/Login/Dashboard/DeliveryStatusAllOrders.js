@@ -12,7 +12,7 @@ const DeliveryStatusAllOrders = ({ status, hiddenText }) => {
 	let currentStepIndex = steps.findIndex((step) => step.label === status);
 
 	if (currentStepIndex < 0) {
-		currentStepIndex = 2; // Default to 'Shipped' if the status is invalid
+		currentStepIndex = -1; // Set to -1 if status is invalid
 	}
 
 	// States for the animation
@@ -22,8 +22,12 @@ const DeliveryStatusAllOrders = ({ status, hiddenText }) => {
 	useEffect(() => {
 		// Delay the animation for smooth effect
 		const timer = setTimeout(() => {
-		setAnimatedStep(currentStepIndex); // Update the step index
-		setCurrentWidth((currentStepIndex / (steps.length - 1)) * 100); // Set the progress bar width
+			setAnimatedStep(currentStepIndex); // Update the step index
+			if (currentStepIndex !== -1) {
+				setCurrentWidth((currentStepIndex / (steps.length - 1)) * 100); // Set the progress bar width
+			} else {
+				setCurrentWidth(0); // Reset progress if status is invalid
+			}
 		}, 500); // Delay for 500ms
 
 		return () => clearTimeout(timer); // Cleanup timeout on unmount
@@ -50,16 +54,24 @@ const DeliveryStatusAllOrders = ({ status, hiddenText }) => {
 								className={`flex flex-col items-center justify-center text-white font-bold shadow-md transition-all duration-500 ease-in-out text-sm sm:text-lg`}
 							>
 								<div
-								className={`rounded-full flex items-center justify-center ${
-									index <= animatedStep ? "bg-red-400" : "bg-gray-300"
-								} w-5 h-5 sm:w-10 sm:h-10 transform transition-transform duration-500 ease-in-out`}
+									className={`rounded-full flex items-center justify-center ${
+										currentStepIndex === -1
+											? "bg-gray-200"
+											: index <= animatedStep
+											? "bg-red-400"
+											: "bg-gray-300"
+									} w-5 h-5 sm:w-10 sm:h-10 transform transition-transform duration-500 ease-in-out`}
 								>
 									{step.icon}
 								</div>
 								{!hiddenText && (
 									<p
 										className={`mt-2 text-xs font-semibold ${
-										index <= animatedStep ? "text-gray-700" : "text-gray-400"
+											currentStepIndex === -1
+												? "text-gray-500"
+												: index <= animatedStep
+												? "text-gray-700"
+												: "text-gray-400"
 										}`}
 									>
 										{step.title}

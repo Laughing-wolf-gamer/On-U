@@ -13,8 +13,7 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 
 	// Handle invalid status (i.e., not found in the steps array)
 	if (currentStepIndex < 0) {
-		// Fallback to a default step for unknown status
-		currentStepIndex = 2; // The new "Unknown" step will be at the end
+		currentStepIndex = -1; // Set to -1 if status is invalid
 	}
 
 	// State to trigger the animation on status change
@@ -24,8 +23,12 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 	useEffect(() => {
 		// Trigger animation when status changes with a delay
 		const timer = setTimeout(() => {
-		setAnimatedStep(currentStepIndex); // Update the animated step index
-		setCurrentWidth((currentStepIndex / (steps.length)) * 100); // Set the target width
+			setAnimatedStep(currentStepIndex); // Update the animated step index
+			if (currentStepIndex !== -1) {
+				setCurrentWidth((currentStepIndex / (steps.length - 1)) * 100); // Set the target width for valid status
+			} else {
+				setCurrentWidth(0); // Reset progress if status is invalid
+			}
 		}, 500); // Delay of 500ms before starting the animation
 
 		return () => clearTimeout(timer); // Cleanup timeout on unmount or change
@@ -38,12 +41,15 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 					{/* Progress Bar */}
 					<div className="absolute top-1/3 -translate-y-1/3 left-5 right-4 sm:left-4 sm:right-3 md:left-6 md:right-5 h-1 bg-gray-300 rounded-md">
 						<div
-						className="h-0.5 md:h-1 bg-red-400 transition-all duration-1000 ease-in-out"
-						style={{
-							width: `${currentWidth}%`, // Animate width from 0 to target value
-						}}
+							className={`h-0.5 md:h-1 ${
+								currentStepIndex === -1 ? "bg-gray-200" : "bg-red-400"
+							} transition-all duration-1000 ease-in-out`}
+							style={{
+								width: `${currentWidth}%`, // Animate width from 0 to target value
+							}}
 						></div>
 					</div>
+
 					{/* Steps */}
 					{steps.map((step, index) => (
 						<div key={index} className="flex flex-col items-center z-10 overflow-hidden">
@@ -52,15 +58,23 @@ const DeliveryStatus = ({ status, hiddenText }) => {
 							>
 								<div
 									className={`rounded-full flex items-center justify-center ${
-										index <= animatedStep ? "bg-red-400" : "bg-gray-300"
+										currentStepIndex === -1
+											? "bg-gray-200"
+											: index <= animatedStep
+											? "bg-red-400"
+											: "bg-gray-300"
 									} w-10 h-10 transform transition-transform duration-500 ease-in-out`}
 								>
-								{step.icon}
+									{step.icon}
 								</div>
 								{!hiddenText && (
 									<p
 										className={`mt-2 text-xs font-semibold ${
-										index <= animatedStep ? "text-gray-700" : "text-gray-400"
+											currentStepIndex === -1
+												? "text-gray-500"
+												: index <= animatedStep
+												? "text-gray-700"
+												: "text-gray-400"
 										}`}
 									>
 										{step.title}
