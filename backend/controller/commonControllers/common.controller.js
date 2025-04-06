@@ -1231,8 +1231,14 @@ export const getCouponBannerData = async (req,res)=>{
 export const trackVisit = async (req, res) => {
 	try {
 		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // Get IP address
+		if(!ip){
+			return res.status(400).send({success:false,message:'IP address not found'});
+		}
 		const geo = geoip.lookup(ip);
 		console.log("geo: ",geo)
+		if(!geo){
+			return res.status(400).send({success:false,message:'Geo Location not found'});
+		}
 		const newVisit = new Visit({
 			timestamp: new Date(),
 			lat:geo ? geo.ll[0] : '',
