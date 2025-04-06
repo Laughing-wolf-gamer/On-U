@@ -586,6 +586,12 @@ const SizeDisplay = ({ productId,SizesArray,OnRefresh}) => {
 		if (!productId) return;
 		try {
 			// console.log(`${type} Quantity Updated:`, response.data);
+			const response = await axios.patch(`${BASE_URL}/admin/product/update/updateSizeStock`, {
+				productId,
+				sizeId: id,
+				updatedAmount: change,
+			}, Header());
+			console.log(`${type} Quantity Updated:`, response.data);
 			checkAndCreateToast("success","Quantity Updated Successfully");
 		} catch (error) {
 			console.log(`Error Updating ${type} Quantity:`, error);
