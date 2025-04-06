@@ -4,7 +4,7 @@ import OrdersReturns from './OrdersReturns';
 import SavedAddresses from './SavedAddresses';
 import OverViewSideBar from './OverViewSideBar';
 import UserDetails from './UserDetails';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { LogOut } from 'lucide-react';
 import { FaUser, FaUserAltSlash } from 'react-icons/fa'; // Import the react-icon for logout
 import BackToTopButton from '../../Home/BackToTopButton';
@@ -12,6 +12,7 @@ import { useDispatch } from 'react-redux';
 import { logout } from '../../../action/useraction';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useServerAuth } from '../../../Contaxt/AuthContext';
+import Loader from '../../Loader/Loader';
 const NotLoggedInModal = () => {
 	const navigate = useNavigate();
 
@@ -87,12 +88,22 @@ const Overview = () => {
 		localStorage.removeItem('token')
 		navigate('/Login');
 	};
-	if(!userLoading && !isAuthentication && !user){
+	console.log("User: ",user,userLoading);
+	if(userLoading){
+		return <Loader/>
+	}
+	if(!user){
 		return <NotLoggedInModal/>;
 	}
 
 	return (
 		<div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto bg-gray-50 text-gray-800">
+			{/* <div className='text-black 2xl:ml-10 ml-7 font-semibold 2xl:px-10'>
+				<div className="hidden 2xl:block xl:block lg:block font2 text-sm py-2">
+					<Link to={'/'} className=''>Home</Link>
+					<span className='font-light capitalize'>{window.location.pathname}</span>
+				</div>
+			</div> */}
 			<div className="container mx-auto px-4">
 				{/* Account Header */}
 				<div className="py-6 border-b px-3 mx-auto w-full bg-white">

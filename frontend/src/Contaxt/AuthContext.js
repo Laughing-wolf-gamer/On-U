@@ -17,9 +17,8 @@ export const SeverAuthProvider = ({ children }) => {
 	useEffect(()=>{
 		checkAuthUser();
 	},[])
-	console.log("Auth Context User: ",user);
 	return (
-		<ServerAuthContext.Provider value={{userLoading,checkAuthUser, user, isAuthentication }}>
+		<ServerAuthContext.Provider value={{userLoading:userLoading === undefined ? true : userLoading,checkAuthUser, user, isAuthentication }}>
 			{children}
 		</ServerAuthContext.Provider>
 	);

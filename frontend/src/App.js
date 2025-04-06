@@ -94,18 +94,8 @@ function App() {
 				<Route path='/registeruser' element={<Registeruser />} />
 				
 				{/* Authenticated Routes */}
-				{isAuthentication && !userLoading && (
-					<>
-						<Route path='/dashboard' element={<Overview user={user} loading={userLoading} isAuthentication={isAuthentication} />} />
-						<Route path='/order/details/:orderId' element={<OrderDetailsPage user={user} />} />
-					</>
-				)}
-				
-				{/* Non-Authenticated Routes */}
-				{isAuthentication === false && !userLoading && (
-					<Route path="/dashboard" element={<Navigate to="/" />} />
-				)}
-
+				<Route path='/dashboard' element={<Overview user={user} loading={userLoading} isAuthentication={isAuthentication} />} />
+				<Route path='/order/details/:orderId' element={<OrderDetailsPage user={user} />} />				
 				{/* Checkout Routes */}
 				<Route path='/my_wishlist' element={<Wishlist />} />
 				<Route path='/bag' element={<Bag user={user} />} />

@@ -17,6 +17,7 @@ import { IoIosCall } from 'react-icons/io';
 import { FaWhatsapp } from 'react-icons/fa';
 import RandomProductsDisplay from './RandomProductsDisplay';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { useServerAuth } from '../../../Contaxt/AuthContext';
 
 // Helper function to format the date
 
@@ -81,7 +82,8 @@ const AddressSection = ({ address }) => (
     </div>
 );
 
-const OrderDetailsPage = ({ user }) => {
+const OrderDetailsPage = () => {
+	const{checkAuthUser,user,userLoading,isAuthentication} = useServerAuth();
     const [orderItems, setOrderItems] = useState([]);
     const scrollableDivRef = useRef(null);
     const params = useParams();
@@ -95,7 +97,11 @@ const OrderDetailsPage = ({ user }) => {
     const { orderbyid, loading } = useSelector(state => state.getOrderById);
 	
 	const[openReturnOptionWindow,setOpenReturnOptionWindow] = useState(false);
-
+	useEffect(()=>{
+		if(!user && !userLoading && !isAuthentication){
+			navigate('/');
+		}
+	},[user,userLoading,isAuthentication])
     useEffect(() => {
         if (params) {
             dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)))
