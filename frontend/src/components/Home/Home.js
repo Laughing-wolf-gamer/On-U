@@ -279,7 +279,7 @@ const Home = ({user}) => {
                         <Footer/>
                     </Fragment >
                 :
-                    <Fragment>
+                    <div className='flex flex-col justify-center items-center space-y-4'>
 						{
 							bannerLoading ? <div className="flex overflow-x-auto bg-slate-200 pt-6 items-start">
 								{/* Skeleton Loader for each item */}
@@ -442,7 +442,7 @@ const Home = ({user}) => {
                         </div>
 
                         <Footer />
-                    </Fragment>
+                    </div>
 
             }
             
