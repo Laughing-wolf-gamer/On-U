@@ -12,12 +12,11 @@ const previewHeader = [
 ];
 
 const ProductPreviewFull = ({ product ,user}) => {
-    const dispatch = useDispatch();
-	const {wishlist} = useServerWishList();
     const navigation = useNavigate();
+	
     const [previewProducts, setSelectedPreviewProducts] = useState([]);
     const [activePreview, setActivePreviews] = useState('topPicks');
-
+    const [selectedColors, setSelectedColors] = useState({});
     const getRandomArrayOfProducts = (previewProductsTitle) => {
         if (product) {
             const maxProductsAmount = window.screen.width > 1024 ? 5 : 4;
@@ -27,20 +26,12 @@ const ProductPreviewFull = ({ product ,user}) => {
         }
     };
 
-    useEffect(() => {
-        getRandomArrayOfProducts('topPicks');
-    }, [product]);
-    const [selectedColors, setSelectedColors] = useState({});
-
     const handleColorChange = (productId, colorImages) => {
         setSelectedColors(prevState => ({
             ...prevState,
             [productId]: colorImages
         }));
     };
-    useEffect(()=>{
-    // dispatch(getwishlist());
-    },[dispatch])
     const handleMoveToQuery = ()=>{
         const queryParams = new URLSearchParams();
         if (activePreview) queryParams.set('specialCategory', activePreview);
@@ -52,6 +43,163 @@ const ProductPreviewFull = ({ product ,user}) => {
         navigation(url);
         
     }
+    useEffect(() => {
+        getRandomArrayOfProducts('topPicks');
+    }, [product]);
+	/* const addToBag = async () => {
+		if (isInBagList) {
+			navigation("/bag");
+			return;
+		}
+		if (!currentColor) {
+			checkAndCreateToast("error", "No Color Selected");
+			return;
+		}
+		if (!currentSize) {
+			checkAndCreateToast("error", "No Size Selected");
+			return;
+		}
+		if(currentSize.quantity <= 0){
+			checkAndCreateToast("error", "Size Out of Stock");
+			return;
+		}
+		if(currentColor.quantity <= 0){
+			checkAndCreateToast("error", "Color Out of Stock");
+			return;
+		}
+		if (user) {
+			const orderData = {
+				productId: product._id,
+				quantity: 1,
+				color: currentColor,
+				size: currentSize,
+				isChecked:true,
+			};
+			await dispatch(createbag(orderData));
+			fetchBag();
+		} else {
+			// Add to localStorage logic
+			const orderData = {
+				productId: product._id,
+				quantity: 1,
+				color: currentColor,
+				size: currentSize,
+				ProductData: product,
+				isChecked:true,
+			};
+			setSessionStorageBagListItem(orderData, product._id);
+		}
+		checkAndCreateToast("success", "Product successfully in Bag");
+		updateButtonStates();
+	};
+	const updateButtonStates = () => {
+		if (user) {
+			// console.log("Updateing wishList: ",wishlist);
+			setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
+			const similarProductsInBag = bag?.orderItems?.filter(item => item.productId?._id === product?._id);
+			let isBag = false;
+
+			// If there are similar products in the bag
+			if (similarProductsInBag?.length > 0) {
+				// If current size and color are provided, find the matching product
+				if (currentSize && currentColor) {
+					const matchingItem = similarProductsInBag.find(item => 
+						item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
+					);
+					// If matching item found, check its isChecked property
+					if (matchingItem) {
+						isBag = matchingItem.isChecked;
+					}
+				} else {
+					// If no size or color is selected, check if any similar product is checked
+					isBag = similarProductsInBag.some(item => item.isChecked);
+				}
+			}
+
+			// Set the result in state
+			setIsInBagList(isBag);
+		} else {
+			setIsInWishList(getLocalStorageWishListItem().some(b => b.productId?._id === product?._id));
+			const similarProductsInBag = getLocalStorageBag().filter(item => item.productId === product?._id);
+			let isBag = false;
+
+			// Check if there are matching items in the bag
+			if (similarProductsInBag?.length > 0) {
+				// If current size and color are provided, check for matching items with the size and color
+				if (currentSize && currentColor) {
+					const matchingItem = similarProductsInBag.find(item => 
+						item.color?._id === currentColor?._id && item.size?._id === currentSize?._id
+					);
+					// If matching item is found, set isBag based on its 'isChecked' status
+					if (matchingItem) {
+						isBag = matchingItem.isChecked;
+					}
+				} else {
+					// If no size/color is specified, check if any product is checked
+					isBag = similarProductsInBag.some(item => item.isChecked);
+				}
+			}
+			// Set the result in the state (i.e., update whether the product is in the bag)
+			setIsInBagList(isBag);
+		}
+	};
+	const addToWishList = async () => {
+		if (user) {
+			const response = await dispatch(createwishlist({ productId: product._id }));
+			await fetchWishList();
+			checkAndCreateToast("success", "Wishlist Updated Successfully",3000);
+			if(response){
+				setIsInWishList(response);
+			}
+		} else {
+			setWishListProductInfo(product, product._id);
+			checkAndCreateToast("success", "Bag is Updated Successfully",3000);
+			updateButtonStates();
+		}
+	
+	};
+	const handleSetColorImages = (color) => {
+		setSelectedSizeColorImageArray(color.images);
+	};
+	const handleSetNewImageArray = (newSize) => {
+		setCurrentSize(newSize);
+		setSelectedColor(newSize.colors);
+		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
+		if(!isAlreadyPresent){
+			setCurrentColor(null);
+		}else{
+			setCurrentColor(isAlreadyPresent);
+		}
+	};
+		
+	useEffect(() => {
+		// Check if the user is logged in and other conditions
+		if (!loadingWishList && !bagLoading) {
+			updateButtonStates();
+		}
+	}, [user, wishlist, bag, product, loadingWishList, sessionData, sessionBagData]);
+	
+	useEffect(() => {
+		// Check if the product exists before processing size/color
+		if (product) {
+			const availableSize = product.size.find(item => item.quantity > 0);
+			
+			if (availableSize) {
+				setSelectedColor(availableSize.colors);
+				const color = availableSize.colors[0];
+				setSelectedSizeColorImageArray(color.images);
+			}			
+			fetchWishList();
+			// dispatch(getwishlist()); // Always fetch wishlist data when the product changes
+		}
+	}, [product, user, dispatch]); // Added user as a dependency for fetching the bag
+	
+	useEffect(() => {
+		// Only call `updateButtonStates` when `currentSize` or `currentColor` change
+		if (currentSize && currentColor) {
+			updateButtonStates();
+		}
+	}, [currentSize, currentColor]); */
 
     return (
         <div className='max-w-screen-2xl font-kumbsan w-full flex flex-col justify-self-center justify-center items-center bg-slate-200'>
@@ -85,7 +233,7 @@ const ProductPreviewFull = ({ product ,user}) => {
                         const selectedColor = selectedColors[p._id] || p.AllColors[0]?.images;
                         return (
                             <div key={`product_${p._id}_${index}`} className={`w-full h-full rounded-md bg-gray-200 relative flex flex-col justify-start items-center hover:shadow-md transition-all duration-300 ease-in-out ${window.screen.width > 1024 ? "hover:scale-105":""}`}>
-                                <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user} wishlist={wishlist} dispatch = {dispatch}/>
+                                <HomeProductsPreview product={p} selectedColorImages={selectedColor} user={user}/>
                                 <div className="w-full h-fit p-2 px-3 bg-white flex flex-col justify-center items-start hover:shadow-md space-y-2">
                                     <h2 className="font1 text-[12px] md:text-base md:font-semibold sm:font-semibold font-normal 2xl:font-semibold xl:font-semibold font-kumbsan text-gray-800 text-left truncate">
                                         {p?.title}
@@ -160,34 +308,6 @@ const ProductPreviewFull = ({ product ,user}) => {
             </div>
         </div>
     );
-};
-const renderStars = (p) => {
-  let rating = Math.floor(Math.random() * 5) + 1;
-  if (p && p.Rating && p.Rating.length) {
-    const totalStars = p.Rating.reduce((acc, review) => acc + review.rating, 0);
-    const avgStars = totalStars / p.Rating.length;
-    const roundedAvg = Math.round(avgStars * 10) / 10;
-    rating = roundedAvg;
-  }
-  const stars = [];
-  for (let i = 1; i <= 5; i++) {
-    stars.push(
-      <svg
-        key={i}
-        xmlns="http://www.w3.org/2000/svg"
-        className={`h-5 w-5 ${i <= rating ? 'text-gray-900' : 'text-slate-400'} hover:animate-vibrateScale`}
-        viewBox="0 0 24 24"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      >
-        <path d="M12 17.75l-5.47 3.06 1.43-6.12L2.5 9.75l6.26-.52L12 2l2.74 6.23 6.26.52-4.42 4.94 1.43 6.12z" />
-      </svg>
-    );
-  }
-  return stars;
 };
 
 export default ProductPreviewFull;

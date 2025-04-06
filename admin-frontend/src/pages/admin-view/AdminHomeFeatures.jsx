@@ -43,8 +43,6 @@ const AdminHomeFeatures = () => {
     const[resetImageUpload,setResetImageUpload] = useState(false);
     const[toggleBulkUpload,setToggleBulkUpload] = useState(true);
     const [imageLoading, setImageLoading] = useState(false);
-	// const[allProductsCategory,setAllProductsCategory] = useState([]);
-
     // String State.............................................................
     const [imageFile, setImageFile] = useState('');
     const [imageUrls, setImageUrls] = useState('');
@@ -269,8 +267,6 @@ const PopupModal = ({
 	setMultipleImages,
 	imageUrls, 
 	setImageUrls,
-	currentImageCategoryName,
-	setCurrentImageCategoryName,
 	imageHeader,
 	setImageHeader,
 	handleImageUpload,
@@ -296,7 +292,7 @@ const PopupModal = ({
 			<div className="bg-white rounded-lg w-11/12 max-h-[50vw] overflow-y-auto sm:w-3/4 lg:w-2/3 p-6">
 			<div className="flex justify-end">
 				<button
-					onClick={(e)=> setIsModelOpen(false)}
+					onClick={()=> setIsModelOpen(false)}
 					className="text-gray-600 hover:text-gray-800 font-semibold text-xl"
 				>
 				&times;

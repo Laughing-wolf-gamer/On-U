@@ -49,9 +49,9 @@ const MPpage = () => {
     const [currentColor, setCurrentColor] = useState(null);
     const [currentSize, setCurrentSize] = useState(null);
     const [selectedColor, setSelectedColor] = useState([]);
-    const[hasPurchased, setHasPurchased] = useState(false);
     const [selectedSizeColorImageArray, setSelectedSizeColorImageArray] = useState([]);
     const[ratingData,setRatingData] = useState(null);
+    const[hasPurchased, setHasPurchased] = useState(false);
     const [scrollAmount, setScrollAmount] = useState(0);  // To hold the scroll amount
 
     // useRefs...
@@ -226,9 +226,11 @@ const MPpage = () => {
 					isChecked:true,
 				};
 				const response = await dispatch(createbag(orderData));
+				console.log("Add To Bag Response: ",response);
 				if(response){
 					setIsInBagList(response);
-					navigation('/bag')
+					await fetchBag();
+					navigation('/bag/checkout')
 				}
 			}else{
 				// Add to localStorage logic
@@ -241,7 +243,7 @@ const MPpage = () => {
 					isChecked:true,
 				};
 				setSessionStorageBagListItem(orderData, decrypt(param.id));
-				navigation('/bag')
+				navigation('/bag/checkout')
 			}
         } catch (error) {
             console.error("Error Adding to Bag: ",error);
@@ -250,20 +252,9 @@ const MPpage = () => {
     }
 
 
-    const handleSetNewImageArray = (newSize) => {
-        setCurrentSize(newSize);
-        setSelectedColor(newSize.colors);
-		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
-		if(!isAlreadyPresent){
-        	setCurrentColor(null);
-		}else{
-			setCurrentColor(isAlreadyPresent);
-		}
-    };
+    
 
-    const handleSetColorImages = (color) => {
-        setSelectedSizeColorImageArray(color.images);
-    };
+    
 	// Method to generate the WhatsApp share link
 	const generateWhatsAppLink = (url) => {
 		const encodedUrl = encodeURIComponent(url); // Encode the URL to make it URL-safe
@@ -291,7 +282,61 @@ const MPpage = () => {
 			break;
 		}
 	};
-    const PostRating = async (e) => {
+	const handleSetColorImages = (color) => {
+        setSelectedSizeColorImageArray(color.images);
+    };
+    const handleSetNewImageArray = (newSize) => {
+        setCurrentSize(newSize);
+        setSelectedColor(newSize.colors);
+		const isAlreadyPresent = newSize.colors.find(item => item?.label === currentColor?.label);
+		if(!isAlreadyPresent){
+        	setCurrentColor(null);
+		}else{
+			setCurrentColor(isAlreadyPresent);
+		}
+    };
+        
+    useEffect(() => {
+        // Check if the user is logged in and other conditions
+        if (!loadingWishList && !bagLoading) {
+            updateButtonStates();
+        }
+    }, [user, wishlist, bag, product, loadingWishList, sessionData, sessionBagData]);
+    
+    useEffect(() => {
+        // Check if the product exists before processing size/color
+        if (product) {
+            const availableSize = product.size.find(item => item.quantity > 0);
+            
+            if (availableSize) {
+                setSelectedColor(availableSize.colors);
+                const color = availableSize.colors[0];
+                setSelectedSizeColorImageArray(color.images);
+            }
+            
+            checkFetchedIsPurchased(); // Checking purchase status when product is loaded
+            fetchWishList();
+            // dispatch(getwishlist()); // Always fetch wishlist data when the product changes
+        }
+    }, [product, user, dispatch]); // Added user as a dependency for fetching the bag
+    
+    useEffect(() => {
+        // Only call `updateButtonStates` when `currentSize` or `currentColor` change
+        if (currentSize && currentColor) {
+            updateButtonStates();
+        }
+    }, [currentSize, currentColor]);
+
+    const checkFetchedIsPurchased = async ()=>{
+        const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
+        setHasPurchased(didPurchased?.success || false);
+    }
+
+
+	useEffect(()=>{
+		dispatch(singleProduct(decrypt(param.id)));
+	},[dispatch])
+	const PostRating = async (e) => {
         e.preventDefault();
     
         if (!ratingData || !user || !product) {
@@ -313,48 +358,6 @@ const MPpage = () => {
             setIsPostingReview(false);
         }
     };
-        
-    const checkFetchedIsPurchased = async ()=>{
-        const didPurchased = await dispatch(checkPurchasesProductToRate({productId:product?._id}))
-        setHasPurchased(didPurchased?.success || false);
-    }
-    useEffect(() => {
-        // Check if the user is logged in and other conditions
-        if (!loadingWishList && !bagLoading) {
-            updateButtonStates();
-        }
-    }, [user, wishlist, bag, product, loadingWishList, sessionData, sessionBagData]);
-    
-    useEffect(() => {
-        // Check if the product exists before processing size/color
-        if (product) {
-            const availableSize = product.size.find(item => item.quantity > 0);
-            
-            if (availableSize) {
-                setSelectedColor(availableSize.colors);
-                const color = availableSize.colors[0];
-                setSelectedSizeColorImageArray(color.images);
-            }
-            
-            checkFetchedIsPurchased(); // Checking purchase status when product is loaded
-    
-            if (user) {
-                // dispatch(getbag());
-            }
-            
-            dispatch(getwishlist()); // Always fetch wishlist data when the product changes
-        }
-    }, [product, user, dispatch]); // Added user as a dependency for fetching the bag
-    
-    useEffect(() => {
-        // Only call `updateButtonStates` when `currentSize` or `currentColor` change
-        if (currentSize && currentColor) {
-            updateButtonStates();
-        }
-    }, [currentSize, currentColor]);
-	useEffect(()=>{
-		dispatch(singleProduct(decrypt(param.id)));
-	},[dispatch])
     useEffect(() => {
         // Fetch the product and reset scroll position on param.id change
         if (scrollContainerRef.current) {
@@ -567,9 +570,9 @@ const MPpage = () => {
 															</div>
 														</div>
 													}
-													<button disabled={active.quantity <= 0} className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
-														<span className=''>{active.label}</span>
-													</button>
+													<div className={`w-10 h-10 p-1 rounded-full flex relative items-center justify-center`}>
+														<span>{active.label}</span>
+													</div>
 												</button>
 											</div>
 										)
@@ -656,7 +659,7 @@ const MPpage = () => {
 							</button>
 						</div>
 
-						<div ref={divRef} className={`flex-row justify-center items-center flex w-full`}>
+						<div  className={`flex-row justify-center items-center flex w-full`}>
 							<div className={`grid grid-cols-12 w-full  relative z-10 ${scrollAmount > maxScrollAmount? "block":"hidden"}`}>
 								<div className="col-span-2 flex justify-center items-center p-1">
 									<button className="bg-gray-50 text-center w-full h-full border-[1px] border-opacity-50 flex justify-center items-center border-gray-400 text-black" onClick={addToWishList}>
@@ -675,7 +678,7 @@ const MPpage = () => {
 										}
 									</button>
 								</div>
-								<div className="col-span-10 text-lg flex justify-center text-center p-1" >
+								<div ref={divRef} className="col-span-10 text-lg flex justify-center text-center p-1" >
 									<button className=" font-semibold w-full text-sm p-4 inline-flex items-center justify-center border-slate-300 bg-black text-white" onClick={addToBag}>
 										{
 											bagLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<Fragment>

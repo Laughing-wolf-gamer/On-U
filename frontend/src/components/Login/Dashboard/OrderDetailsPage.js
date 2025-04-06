@@ -1,19 +1,17 @@
-import React, { Fragment, useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link, useNavigate, useLocation, useParams } from 'react-router-dom';
-import { fetchOrderById, sendExchangeRequest, sendOrderCancel, sendOrderReturn } from '../../../action/orderaction';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { fetchOrderById, sendOrderCancel, sendOrderReturn } from '../../../action/orderaction';
 import DeliveryStatus from './DeliveryStatus';
 import Loader from '../../Loader/Loader';
 import { capitalizeFirstLetterOfEachWord, formattedSalePrice, ORDER_ENCRYPTION_SECREAT_KEY } from '../../../config';
 import Footer from '../../Footer/Footer';
 import BackToTopButton from '../../Home/BackToTopButton';
-import { ChevronLeft, ChevronRight, MapIcon } from 'lucide-react';
+import { ChevronLeft, MapIcon } from 'lucide-react';
 import WhatsAppButton from '../../Home/WhatsAppButton';
 import { useSettingsContext } from '../../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../../Contaxt/EncryptionContext';
 import ReturnsOptionsWindow from './ReturnsOptionsWindow';
-import { getRandomArrayOfProducts } from '../../../action/productaction';
-import SingleProduct from '../../Product/Single_product';
 import { fetchTermsAndCondition } from '../../../action/common.action';
 import { IoIosCall } from 'react-icons/io';
 import { FaWhatsapp } from 'react-icons/fa';
@@ -21,13 +19,9 @@ import RandomProductsDisplay from './RandomProductsDisplay';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
 // Helper function to format the date
-const formatDate = (date) => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' };
-    return new Date(date).toLocaleDateString(undefined, options);
-};
 
 const OrderItem = ({ item }) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
 	const productEncryption = encrypt(item?.productId?._id);
 	return (
 		<div key={item._id} className="border-b pb-6">
@@ -73,7 +67,7 @@ const OrderItem = ({ item }) => {
 	);
 }
 
-const AddressSection = ({ address, userName }) => (
+const AddressSection = ({ address }) => (
     <div className="mb-6 border p-2 rounded-md">
         <h2 className="text-xl font-semibold text-gray-800">Shipping Address</h2>
         <div className="py-2 w-full space-y-2">
@@ -135,7 +129,7 @@ const OrderDetailsPage = ({ user }) => {
         }
 		setOpenReturnOptionWindow(false);
     }
-	const createCancelOrder = async(e)=>{
+	const createCancelOrder = async()=>{
 		if(!orderbyid?.IsCancelled){
 			const response = await dispatch(sendOrderCancel({ orderId: orderbyid._id }));
             await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
@@ -151,19 +145,6 @@ const OrderDetailsPage = ({ user }) => {
 		}
 	}
 
-    const createOrderExchange = async (e) => {
-        if (!orderbyid?.IsInExcnage) {
-            await dispatch(sendExchangeRequest({ orderId: orderbyid._id }));
-            await dispatch(fetchOrderById(decryptWithKey(params.orderId,ORDER_ENCRYPTION_SECREAT_KEY)));
-            if (orderbyid?.IsInExcnage) {
-                checkAndCreateToast("success", 'Order Exchanged Successfully');
-            } else {
-                checkAndCreateToast("success", 'Order Returned Successfully');
-            }
-        } else {
-            checkAndCreateToast('error', 'Order is already in exchange process');
-        }
-    }
 
     const handleBackButtonClick = () => {
         navigate(-1); 

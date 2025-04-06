@@ -15,6 +15,7 @@ import { EncryptionDecryptionProvider } from './Contaxt/EncryptionContext';
 import { SeverWishListProvider } from './Contaxt/ServerWishListContext';
 import { SeverBannersProvider } from './Contaxt/ServerBannerContext';
 import { SeverAuthProvider } from './Contaxt/AuthContext';
+import { Toaster } from 'react-hot-toast';
 
 const option = {
   timeout: 2000,
@@ -37,6 +38,10 @@ ReactDOM.render(
 							<SeverBannersProvider>
 								<SeverWishListProvider>
 									<App />
+									<Toaster 
+										position="top-center"
+										reverseOrder={false}
+									/>
 								</SeverWishListProvider>
 							</SeverBannersProvider>
 						</EncryptionDecryptionProvider>
@@ -49,5 +54,5 @@ ReactDOM.render(
         </React.StrictMode>
       </Alertprovider>
     </Provider>,
-  document.getElementById('root')
+  	document.getElementById('root')
 );

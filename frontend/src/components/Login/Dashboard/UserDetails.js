@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { updateuser } from "../../../action/useraction";
-import { Calendar, Edit, Mail, MapPin, Phone, User } from "lucide-react";
+import { Calendar, Edit, Mail, MapPin, Phone, Trash, Trash2Icon, User } from "lucide-react";
 import { FaMars, FaVenus } from "react-icons/fa";
 import { BASE_API_URL, headerConfig } from "../../../config";
 import axios from "axios";
@@ -9,30 +9,32 @@ import { useSettingsContext } from "../../../Contaxt/SettingsContext";
 import { LazyLoadImage } from "react-lazy-load-image-component";
 import { useServerAuth } from "../../../Contaxt/AuthContext";
 import { useNavigate } from "react-router-dom";
+import { Input } from "@mui/material";
+import { MdRestartAlt, MdRestore } from "react-icons/md";
 
 const EditableField = ({
-  label,
-  name,
-  value,
-  onChange,
-  isEditing,
-  Icon,
-  maxLength = 100,
+	label,
+	name,
+	value,
+	onChange,
+	isEditing,
+	Icon,
+	maxLength = 500,
 }) => {
-	console.log("tempValue:",name, value);
+	console.log("value:",name, value);
 	return (
 		<div className="bg-gray-50 border-2 p-4 w-full rounded-lg">
 			<div className="flex justify-start space-x-4 items-center relative overflow-x-auto">
 				<Icon className="text-gray-500" size={20} />
 				<label className="font-semibold text-lg sm:text-base text-gray-700">{label}:</label>
 				{isEditing && name !== 'email' && name !== 'gender' ? (
-					<input
+					<Input
 						type={name === "DOB" ? "date" : name === 'phoneNumber' ? "number":"text"} // Automatically adjusts input type for dob
 						name={name}
 						maxLength={maxLength}
-						className="border px-3 py-2 rounded-md w-full sm:w-80"
 						value={value}
 						onChange={onChange}
+						className="border px-3 py-2 rounded-md w-full sm:w-80"
 					/>
 				) : (
 					<span className="text-lg sm:text-base text-gray-800">
@@ -46,9 +48,10 @@ const EditableField = ({
 };
 
 const UserDetails = () => {
-	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
 	const navigate = useNavigate();
+	const[originalUser,setOriginalUser] = useState(null);
 	const dispatch = useDispatch();
+	const{user, checkAuthUser} = useServerAuth();
 	const[isLoadingImage,setImageLoading] = useState(false);
 	const {checkAndCreateToast} = useSettingsContext();
 	const [editedUser, setEditedUser] = useState(null);
@@ -71,9 +74,9 @@ const UserDetails = () => {
             // Check if the error is a response error (status codes outside 2xx range)
             if (error.response) {
                 // The server responded with a status other than 2xx
-                console.log('Error Status Code:', error.response.status);
-                console.log('Error Data:', error.response.data); // The JSON error message from the server
-                console.log('Error Headers:', error.response.headers);
+                // console.log('Error Status Code:', error.response.status);
+                // console.log('Error Data:', error.response.data); // The JSON error message from the server
+                // console.log('Error Headers:', error.response.headers);
                 checkAndCreateToast("error","Error uploading files: " + error.response.data.message);
             } else if (error.request) {
                 // The request was made but no response was received
@@ -101,9 +104,9 @@ const UserDetails = () => {
 		if (file) {
 			const newProfileImage = await handleUploadImage(file);
 			if(newProfileImage){
+				handleInputChange({target:{name:'profilePic',value:newProfileImage}});
+				// await dispatch(updateuser({...editedUser,profilePic:newProfileImage}));
 				// setProfilePic(newProfileImage);
-				await dispatch(updateuser({...editedUser,profilePic:newProfileImage}));
-				setProfilePic(newProfileImage);
 				setImageLoading(false);
 			}else{
 				setImageLoading(false);
@@ -128,20 +131,26 @@ const UserDetails = () => {
 		checkAndCreateToast('success','Profile Updated Successfully!');
 	};
 
-	const handleCancel = () => {
+	const handleCancel =async () => {
 		setIsEditingAll(false);
-		setEditedUser(user.user); // Revert to original user data
+		await checkAuthUser();
+		setEditedUser(originalUser); // Revert to original user data
+		setOriginalUser(null);
+		navigate('/dashboard');
 	};
 
 	const handleEditAll = () => {
+		setOriginalUser(editedUser);
 		setIsEditingAll(!isEditingAll);
 	};
+
 
 	useEffect(() => {
 		if(user){
 			setEditedUser(user.user);
 		}else{
 			setEditedUser(null);
+			setOriginalUser(null);
 			navigate('/Login')
 		}
 	}, [user]);
@@ -161,22 +170,32 @@ const UserDetails = () => {
 									// If you need to, you can tweak the effect transition using the wrapper style.
 									style: {transitionDelay: "1s"},
 								}}
-								placeholder = {<div className="w-full h-full bg-gray-200 animate-pulse"></div>}	
-								loading='lazy'
-								src={profilePic || editedUser?.profilePic} // Fallback to default image if no profile picture
+								placeholder = {<div className="w-full h-full bg-gray-800 animate-pulse"></div>}	
+								src={profilePic || editedUser?.profilePic || `https://avatar.iran.liara.run/username?username=${editedUser?.name.replace(/ /g, '-')}`} // Fallback to default image if no profile picture
 								alt="Profile"
-								className="w-32 h-32 rounded-full object-cover border-2 border-gray-300"
+								className="w-32 h-32 rounded-full object-cover border-2 border-gray-800"
 							/>
 						)
 					}
+					{
+						isEditingAll && <button
+							disabled = {isLoadingImage}
+							onClick={() => document.getElementById("profile-pic-input").click()}
+							className="absolute bottom-0 right-0 z-20 bg-gray-500 text-white rounded-full p-2 hover:bg-gray-600 transition"
+						>
+							<Edit size={16} />
+						</button>
+					}
 					
-					<button
-						disabled = {isLoadingImage}
-						onClick={() => document.getElementById("profile-pic-input").click()}
-						className="absolute bottom-0 right-0 bg-gray-500 text-white rounded-full p-2 hover:bg-gray-600 transition"
-					>
-						<Edit size={16} />
-					</button>
+					{
+						isEditingAll && editedUser?.profilePic !== '' && <button
+							onClick={() => (handleInputChange({ target: { name: 'profilePic', value: ''} }), setProfilePic(null))}
+							// className="w-32 h-32 rounded-full absolute bottom-0 right-0 justify-center items-center flex object-cover border-2 z-10 bg-gray-900 bg-opacity-80"
+							className="absolute top-0 left-0 z-20 bg-gray-500 text-white rounded-full p-2 hover:bg-gray-600 transition"
+						>
+							<Trash2Icon size={16} color="white" fill="red"/>
+						</button>
+					}
 					<input
 						disabled = {isLoadingImage}
 						type="file"
@@ -197,12 +216,12 @@ const UserDetails = () => {
 			{/* "Edit All" Button */}
 			{!isEditingAll && (
 				<div className="flex justify-end mb-4">
-				<button
-					className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
-					onClick={handleEditAll}
-				>
-					<Edit />
-				</button>
+					<button
+						className="bg-gray-500 text-white px-6 py-2 rounded-lg hover:bg-gray-600 transition-colors"
+						onClick={handleEditAll}
+					>
+						<Edit />
+					</button>
 				</div>
 			)}
 

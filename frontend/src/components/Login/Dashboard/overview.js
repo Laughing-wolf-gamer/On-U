@@ -127,7 +127,7 @@ const Overview = () => {
 				<div className="w-full lg:w-[75%] py-4">
 					<div className="bg-white rounded-lg">
 						{/* Render active section */}
-						{activeSection === 'User-Details' && <UserDetails user={user?.user} />}
+						{activeSection === 'User-Details' && <UserDetails />}
 						{activeSection === 'Orders-Returns' && <OrdersReturns />}
 						{activeSection === 'Saved-Addresses' && <SavedAddresses />}
 					</div>

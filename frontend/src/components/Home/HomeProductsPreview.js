@@ -3,48 +3,45 @@ import React, { useState, useEffect, useMemo, useCallback, Fragment } from 'reac
 import { useNavigate } from 'react-router-dom';
 import ReactPlayer from 'react-player';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
-import { createwishlist, getwishlist } from '../../action/orderaction';
-import { useToast } from '../../Contaxt/ToastProvider';
-import toast from 'react-hot-toast';
-import ShareView from '../Productpage/ShareView';
+import { createwishlist } from '../../action/orderaction';
 import { calculateDiscountPercentage } from '../../config';
-import { useSettingsContext } from '../../Contaxt/SettingsContext';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { useServerWishList } from '../../Contaxt/ServerWishListContext';
+import { useSettingsContext } from '../../Contaxt/SettingsContext';
+import { useDispatch } from 'react-redux';
 
-const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages = [] ,dispatch}) => {
-    const { sessionData, setWishListProductInfo } = useSessionStorage();
+const HomeProductsPreview = ({ product,user, selectedColorImages = []}) => {
+	const dispatch = useDispatch();
+	
 	const {encrypt} = useEncryptionDecryptionContext();
-    const [isInWishList, setIsInWishList] = useState(false);
     const navigation = useNavigate();
     const [isHovered, setIsHovered] = useState(false);
     const [hoveredImageIndex, setHoveredImageIndex] = useState(0);
     const [timer, setTimer] = useState(null);
 	const {checkAndCreateToast} = useSettingsContext();
-	const{fetchWishList} = useServerWishList();
+	const { sessionData,setWishListProductInfo} = useSessionStorage();
+	const {wishlist,fetchWishList} = useServerWishList();
+	const [isInWishList, setIsInWishList] = useState(false);
     const addToWishList = async (e) => {
         e.stopPropagation();
         if (user) {
             const response = await dispatch(createwishlist({ productId: product._id }));
-            // await dispatch(getwishlist());
-			fetchWishList();
             checkAndCreateToast("success", "Wishlist Updated Successfully");
-            if(response){
-                setIsInWishList(response);
-            }
+			setIsInWishList(response);
+			fetchWishList();
         } else {
             setWishListProductInfo(product, product._id);
             checkAndCreateToast("success", "Bag is Updated Successfully");
             updateButtonStates();
         }
-      };
+	};
     // Handle mouse enter event
     const handleMouseEnter = (index) => {
         setIsHovered(true);
         setHoveredImageIndex(index);
         const newTimer = setInterval(() => {
             setHoveredImageIndex((prevIndex) => (prevIndex + 1) % selectedColorImages.length);
-        }, 1000); // Change image every 1000ms
+        }, 1000);
         setTimer(newTimer);
         clearInterval(newTimer);
     };
@@ -56,7 +53,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     }, [user, wishlist, product,sessionData]);
     const updateButtonStates = () => {
         if (user) {
-            // console.log("Updateing wishList: ",wishlist);
+            // console.log("Updating wishList: ",wishlist);
             setIsInWishList(wishlist?.orderItems?.some(w => w.productId?._id === product?._id));
         } else {
             setIsInWishList(sessionData.some(b => b.productId?._id === product?._id));
@@ -90,12 +87,6 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
     const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
     // Check if product exists
-    const amount = useMemo(() => {
-        if (product && product.salePrice < product.price) {
-            return Math.round((product.price - product.salePrice) / product.price * 100);
-        }
-        return 0;
-    }, [product]);
 
     // Handle hover state
     const handleMediaLoad = () => {
@@ -147,7 +138,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
                             </button>
                         </div>
                         <div className="w-full h-8 md:h-10 flex items-center justify-center">
-                            <button onClick={(e) => { navigation(`/products/${productEncryption}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
+                            <button onClick={() => { navigation(`/products/${productEncryption}`); }} className="w-full h-full flex items-center text-white bg-gray-900 text-center justify-center font-kumbsan hover:shadow-md space-x-2">
                                 <ShoppingCart strokeWidth={.8} className='text-[10px] md:text-sm hover:animate-vibrateScale' />
                                 <span className="font-kumbsan text-[10px] md:text-sm">Add to Cart</span>
                             </button>
@@ -171,7 +162,7 @@ const HomeProductsPreview = ({ product,user,wishlist = [], selectedColorImages =
 };
 
 const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigation ,onLoad}) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
     // State to track whether the media is loaded
     const [isMediaLoaded, setIsMediaLoaded] = useState(false);
 
@@ -192,7 +183,7 @@ const ProductImageVideoView = ({ imageArray, hoveredImageIndex, product, navigat
     const mediaIsVideo = useMemo(() => selectedMedia && selectedMedia.url && isVideo(selectedMedia.url), [selectedMedia, isVideo]);
 
     // Handle the navigation on click, memoized to avoid unnecessary re-renders
-    const handleClick = useCallback((e) => {
+    const handleClick = useCallback(() => {
 		const productEncryption = encrypt(product?._id);
 		// const decrypted = decrypt(productEncryption);
 		// console.log("Encrypted Product Id: ",productEncryption,"Decrypted: ",decrypted);

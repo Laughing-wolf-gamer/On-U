@@ -1,19 +1,15 @@
 import React, { Fragment, useState, useCallback, useEffect } from 'react'
 import './Navbar.css'
-import { FaHeart, FaUser, FaUserAlt } from 'react-icons/fa'
-import { BsHandbag, BsHeart } from 'react-icons/bs'
+import { FaHeart, FaUser } from 'react-icons/fa'
 import Search from './Search.js'
 import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductCatView from './Submenu/ProductCatView.js'
 import { useDispatch, useSelector } from 'react-redux'
 import { getwishlist } from '../../action/orderaction.js'
-import { SearchIcon } from 'lucide-react'
-import { useFunctionContext } from '../../Contaxt/FunctionContext.js'
-import { getLocalStorageBag, getLocalStorageWishListItem } from '../../config/index.js'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
-import { IoBagRemoveSharp, IoSearch } from 'react-icons/io5'
+import { IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
 import bagCartIcon from '../images/shopping-cart.png'
 import { useServerWishList } from '../../Contaxt/ServerWishListContext.js'
@@ -21,42 +17,31 @@ import { useServerWishList } from '../../Contaxt/ServerWishListContext.js'
 
 const Navbar = ({user}) => {
     const dispatch = useDispatch();
-    const { state } = useFunctionContext();
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const {wishlist,bag,bagLoading} = useServerWishList();
+    const {wishlist,bag} = useServerWishList();
     // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { options } = useSelector((state) => state.AllOptions);
     const [showbagView, setBagShow] = useState(false);
-    const [Menu1, setMenu1] = useState('hidden')
     const [Menu2, setMenu2] = useState('hidden')
-    const [Menu3, setMenu3] = useState('hidden')
-    const [Menu4, setMenu4] = useState('hidden')
-    const [Menu5, setMenu5] = useState('hidden')
-    const [Menu6, setMenu6] = useState('hidden')
     const [Menu7, setMenu7] = useState('hidden')
-    const [show1, setShow1] = useState(false)
     const [show2, setShow2] = useState(false)
-    const [show3, setShow3] = useState(false)
-    const [show4, setShow4] = useState(false)
-    const [show5, setShow5] = useState(false)
-    const [show6, setShow6] = useState(false)
     const [show7, setShow7] = useState(false)
     
     
 
-    const callback = useCallback((Menu, v) => {
+    /* const callback = useCallback((Menu, v) => {
         setMenu1(Menu);
         setShow1(v)
-    }, []);
+    }, []); */
 
     const Callbackmenu2 = useCallback((Menu2, v) => {
         setMenu2(Menu2);
         setShow2(v)
     }, []);
 
-    const Callbackmenu3 = useCallback((Menu3, v) => {
+    /* const Callbackmenu3 = useCallback((Menu3, v) => {
         setMenu3(Menu3);
         setShow3(v)
     }, []);
@@ -74,7 +59,7 @@ const Navbar = ({user}) => {
     const Callbackmenu6 = useCallback((Menu6, v) => {
         setMenu6(Menu6);
         setShow6(v)
-    }, []);
+    }, []); */
 
     const Callbackmenu7 = useCallback((Menu7, v) => {
         setMenu7(Menu7);
@@ -139,7 +124,7 @@ const Navbar = ({user}) => {
                     <div className='h-full font-bold mt-3 w-fit flex flex-row px-5 items-center justify-end'>
                         <Link onClick={()=> setIsSearchVisible(false)} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5' to="/">
 							<li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
-								onMouseEnter={() => (setMenu1('block'), setShow1(true))} onMouseLeave={() => (setMenu1('hidden'), setShow1(false))}
+								// onMouseEnter={() => (setMenu1('block'))} onMouseLeave={() => (setMenu1('hidden'))}
 							>
 								<h1 className='px-3 text-center  text-slate-800'>HOME</h1>
 							</li>

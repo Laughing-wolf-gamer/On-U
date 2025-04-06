@@ -287,7 +287,7 @@ export const updateuser = async(req,res)=>{
 	try {
 		const{ name, gender,DOB,profilePic} = req.body
 		const dobParsed = new Date(DOB);
-		console.log("DOB, ",dobParsed)
+		console.log("DOB, ",profilePic);
 		const user = await User.findByIdAndUpdate(req.user.id,{$set:{name:name,DOB:dobParsed,gender:gender,profilePic:profilePic}},{new:true})
 		if(!user){
 			return res.status(303).json({success:false,message: 'User not found'});

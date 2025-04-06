@@ -280,6 +280,7 @@ const Ppage = () => {
                 const response = await dispatch(createbag(orderData));
                 setIsInBagList(response);
                 if(response){
+					await fetchBag();
                     navigation("/bag");
                 }
             } else {
@@ -625,7 +626,7 @@ const Ppage = () => {
                                             {loadingWishList ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> : (
                                                 <Fragment>
                                                     {isInWishList ? <Heart fill='red' strokeWidth={0} size={30} className='m-4' />:<Heart strokeWidth={2} size={30} className='m-4' />}
-                                                    <span>{isInWishList ? "GO TO WISHLIST" : "ADD TO WISHLIST"}</span>
+                                                    <span>{isInWishList ? "REMOVE FROM WISHLIST" : "ADD TO WISHLIST"}</span>
                                                 </Fragment>
                                             )}
                                         </button>

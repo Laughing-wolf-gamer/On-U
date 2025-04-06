@@ -135,8 +135,6 @@ const OrdersReturns = () => {
                         return orderDate.toDateString() === yesterday.toDateString();
                     });
                     break;
-                default:
-                    break;
             }
         }
 

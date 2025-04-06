@@ -1,9 +1,9 @@
-import React, { Fragment, CSSProperties, useEffect, useState, useRef, useCallback } from 'react'
+import React, { Fragment, CSSProperties, useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { Carousel } from 'react-responsive-carousel'
 import './home.css'
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { Allproduct, getOptionsByType } from '../../action/productaction'
+import { Allproduct } from '../../action/productaction'
 import { useDispatch, useSelector } from 'react-redux'
 import { BadgeIndianRupee, CircleDollarSign, Clock, Truck } from 'lucide-react'
 
@@ -61,21 +61,8 @@ const Home = ({user}) => {
             />
         );
     }
-    const getSingleOptions = async ()=>{
-        /* try {
-            const catResponse = await dispatch(getOptionsByType({type: 'category'}))
-            if(catResponse){
-                // setCategoryOptions(catResponse.map(c => c.value));
-            }
-        } catch (error) {
-            console.error("Error getting: ", error);
-        } */
-    }
     useEffect(()=>{
-        // dispatch(featchallbanners());
-		// dispatch(fetchAllCategoryBanners());
         dispatch(Allproduct())
-        // getSingleOptions();
     },[])
     
     useEffect(() => {
@@ -466,26 +453,7 @@ const Home = ({user}) => {
         </div>
     )
 }
-const TextWithOutline = ({ text }) => {
-	const [isVisible, setIsVisible] = useState(true);
 
-	// Trigger the opening animation when the component mounts
-	useEffect(() => {
-		setIsVisible(true);
-	}, []);
-
-	return (
-		<div className="overflow-hidden">
-		<div
-			className={`transition-all duration-700 ease-out transform ${
-			isVisible ? 'w-full' : 'w-0'
-			} bg-blue-500 text-white text-3xl font-bold text-center py-4 px-6 rounded-md`}
-		>
-			{text}
-		</div>
-		</div>
-	);
-};
 
 const CategorySlider = ({ MobileScreen_CategorySlider, CategoryBannerLoading }) => {
 	const navigation = useNavigate();
