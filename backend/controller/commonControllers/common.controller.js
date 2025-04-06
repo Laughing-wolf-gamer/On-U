@@ -1,3 +1,4 @@
+import axios from "axios";
 import BannerModel from "../../model/banner.model.js";
 import CategoryBannerModel from "../../model/category.banner.model.js";
 import ContactQuery from "../../model/ContactQuery.model.js";
@@ -1231,20 +1232,22 @@ export const getCouponBannerData = async (req,res)=>{
 export const trackVisit = async (req, res) => {
 	try {
 		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // Get IP address
+		console.log("ip: ",ip)
 		if(!ip){
 			return res.status(400).send({success:false,message:'IP address not found'});
 		}
-		const geo = geoip.lookup(ip);
-		console.log("geo: ",geo)
+		const currentLoc = await axios.get(`https://ipapi.co/${ip}/json/`);
+		console.log("currentLoc: ",currentLoc.data)
+		const geo = currentLoc.data
 		if(!geo){
 			return res.status(400).send({success:false,message:'Geo Location not found'});
 		}
 		const newVisit = new Visit({
 			timestamp: new Date(),
-			lat:geo ? geo.ll[0] : '',
-			long:geo ? geo.ll[1] : '',
-			country: geo ? geo.country : 'Unknown',
-			state: geo ? geo.region : 'Unknown',
+			lat:geo.latitude,
+			long:geo.longitude,
+			country: geo.country,
+			state: geo.region,
 		});
 		console.log("newVisit: ",newVisit)
 		await newVisit.save();
