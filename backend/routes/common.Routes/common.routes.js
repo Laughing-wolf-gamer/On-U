@@ -28,12 +28,13 @@ import {addCategoryBanners,
     removeHomeCarousal,
     removeOptionsByType,
     removeWebsiteDisclaimers,
-    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateCategoryBannerIndex, updateColorName, updateFeaturesIndex, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateCategoryBannerIndex, updateColorName, updateFeaturesIndex, updateHeaderCarousal, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
 const route = express.Router();
 
+route.put('/update/home/carousal/header',isAuthenticateuser,ProtectAdminRoute,updateHeaderCarousal)
 route.post('/create/home/carousal',isAuthenticateuser,ProtectAdminRoute,addHomeCarousal)
 route.post('/create/home/carousal/multiple',isAuthenticateuser,ProtectAdminRoute,addHomeCarousalMultiple)
 route.get('/fetch/all/:CategoryType',getHomeBanners)

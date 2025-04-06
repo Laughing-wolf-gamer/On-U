@@ -109,9 +109,31 @@ export const addHomeCarousalMultiple = async (req, res) => {
     }
 };
 
+export const updateHeaderCarousal = async(req,res)=>{
+	try {
+		const { CategoryType, Header } = req.body;
+		console.log("Update Header Carousal req.body", req.body);
+		if (!CategoryType) {
+			return res.status(400).json({ Success: false, message: "CategoryType is required" });
+		}
+		const banner = await BannerModel.findOne({ CategoryType });
+		if (!banner) {
+			return res.status(404).json({ Success: false, message: "Banner not found" });
+		}
+		banner.Header = Header;
+		await banner.save();
+
+		res.status(200).json({Success: true, message:"Successfully Updated Header Carousal"});
+	} catch (error) {
+		console.error("Error updating header carousal",error);
+		logger.error(`Error updating header carousal: ${error.message}`);
+		res.status(500).json({Success: false, message: 'Internal Server Error', result:[]});
+	}
+}
+
 export const addHomeCarousal = async (req, res) => {
 	try {
-		const { url, CategoryType, Header,name } = req.body;
+		const { url, CategoryType, Header } = req.body;
 
 		// Early validation check
 		if (!url && !Header) {

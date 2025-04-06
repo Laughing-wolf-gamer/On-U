@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ImageUpload from '@/components/admin-view/image-upload';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { addFeaturesImage, addMultipleImages, delFeatureImage, getFeatureImage, updateFeatureImageIndex } from '@/store/common-slice';
+import { addFeaturesImage, addMultipleImages, delFeatureImage, getFeatureImage, updateFeatureHeader, updateFeatureImageIndex } from '@/store/common-slice';
 import { capitalizeFirstLetterOfEachWord } from '@/config';
 import { X } from 'lucide-react';
 import FileUploadComponent from '@/components/admin-view/FileUploadComponent';
@@ -56,7 +56,31 @@ const AdminHomeFeatures = () => {
     const[deletingImageCategory, setDeletingImageCategory] = useState(null)
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const{checkAndCreateToast} = useSettingsContext();
-    
+	const[updatingFeature,setUpdatingFeature] = useState(null);
+    const updateHeader = async ()=>{
+		try {
+            if (!imageUrlsCategory) {
+                checkAndCreateToast('error','Please select a category to upload or Update.');
+                return;
+            }
+			console.log("Image Header: ",imageHeader,imageUrlsCategory);
+            const response = await dispatch(
+                updateFeatureHeader({CategoryType: imageUrlsCategory,Header: imageHeader })
+            );
+			console.log("Header Update REsponse: ",response);
+            if(!response){
+                throw new Error('Failed to add image');
+            }
+            checkAndCreateToast('success','headerUpdated Successful');
+            setImageHeader('');
+        } catch (error) {
+            console.error('Error during file upload:', error);
+            checkAndCreateToast('error','Header Update Failed');
+        }finally{
+			dispatch(getFeatureImage());
+			setIsModalOpen(false);
+		}
+	}
     const handleImageUpload = async (url) => {
         try {
             if (!imageUrlsCategory) {
@@ -64,7 +88,7 @@ const AdminHomeFeatures = () => {
                 return;
             }
             const response = await dispatch(
-                addFeaturesImage({ url, CategoryType: imageUrlsCategory, Header: imageHeader || '' })
+                addFeaturesImage({url, CategoryType: imageUrlsCategory, Header: imageHeader || '' })
             );
             if(!response){
                 throw new Error('Failed to add image');
@@ -115,10 +139,7 @@ const AdminHomeFeatures = () => {
                 checkAndCreateToast('error','Please select an image to delete.');
                 return;
             }
-            console.log("Images Deleting: ", deletingImageCategory)
-            // return;
             const response = await dispatch(delFeatureImage({ id:deletingImageCategory.itemId, imageIndex:deletingImageCategory.idx }));
-            console.log("Images Deleting Response: ", response)
             if(!response){
                 throw new Error('Failed to delete image');
             }
@@ -150,17 +171,22 @@ const AdminHomeFeatures = () => {
 			}
 		}
 	},[featuresList])
+	const HandleOpenIsModelOpen = () => {
+		setUpdatingFeature(featuresList.find(item => selectedCategory === '' || item.CategoryType === selectedCategory));
+		setImageHeader(featuresList.find(item => selectedCategory === '' || item.CategoryType === selectedCategory)?.Header);
+		setIsModalOpen(true);
+	}
 	useEffect(() => {
         dispatch(getFeatureImage());
     }, [dispatch,resetImageUpload,multipleImages,imageUrlsCategory]);
-	console.log("Filtered items: " , filteredList)
+	console.log("Selected Category: ",selectedCategory);
     return (
         <div className="flex flex-col items-center w-full space-y-8 px-4">
 			<div className='space-y-1 justify-center flex flex-col items-center'>
 				{
 					selectedCategory === '' && <span className='text-xs text-red-600 font-bold'>Please Select a category to Add New Home Page Image/Video</span>
 				}
-				<Button disabled = {selectedCategory === ''} className='px-4 py-3 bg-black text-white' onClick={() => setIsModalOpen(true)}>
+				<Button disabled = {selectedCategory === ''} className='px-4 py-3 bg-black text-white' onClick={HandleOpenIsModelOpen}>
 					Add New Home Page Image/Video
 				</Button>
 			</div>
@@ -182,8 +208,10 @@ const AdminHomeFeatures = () => {
 				imageHeader = {imageHeader}
 				setImageHeader = {setImageHeader}
 				handleImageUpload={handleImageUpload}
+				updatingFeature = {updatingFeature}
 				HandleMultipleImagesUpload={HandleMultipleImagesUpload}
 				imageUrlsCategory = {imageUrlsCategory}
+				updateHeader = {updateHeader}
 
 			/>
     
@@ -270,120 +298,127 @@ const PopupModal = ({
 	imageHeader,
 	setImageHeader,
 	handleImageUpload,
+	updatingFeature,
 	HandleMultipleImagesUpload,
-	imageUrlsCategory
+	imageUrlsCategory,
+	updateHeader
 }) => {
 	const resetImageUpload = () => {
 		setImageFile(null);
 		setImageUrls([]);
 	};
 
-	/* const handleImageUpload = (imageUrls) => {
-		// Handle single image upload logic here
-	};
-
-	const HandleMultipleImagesUpload = () => {
-		// Handle multiple images upload logic here
-	}; */
+	console.log('updatingFeature: ', updatingFeature);
 
 	return (
 		isOpen && (
-		<div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
-			<div className="bg-white rounded-lg w-11/12 max-h-[50vw] overflow-y-auto sm:w-3/4 lg:w-2/3 p-6">
-			<div className="flex justify-end">
-				<button
-					onClick={()=> setIsModelOpen(false)}
-					className="text-gray-600 hover:text-gray-800 font-semibold text-xl"
-				>
-				&times;
-				</button>
-			</div>
-			<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-				Upload / Edit Home Page Banners
-			</h1>
+			<div className="fixed inset-0 bg-gray-500 bg-opacity-50 flex items-center justify-center z-50">
+				<div className="bg-white rounded-lg w-11/12 space-y-8 max-h-[50vw] overflow-y-auto sm:w-3/4 lg:w-2/3 p-6">
+					<div className="flex justify-end">
+						<button
+							onClick={()=> setIsModelOpen(false)}
+							className="text-gray-600 hover:text-gray-800 font-semibold text-xl"
+						>
+						&times;
+						</button>
+					</div>
+					
+					<h1 className="text-xl sm:text-2xl flex flex-col justify-center items-center space-y-2 font-bold text-center text-gray-900 mb-4">
+						<span>Upload / Edit Home Page Banners</span> <span className='text-gray-600'>* {(updatingFeature?.CategoryType)}</span>
+					</h1>
+					
+					<div>
+						<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
+							Header
+						</h1>
+						<Input
+							type="text"
+							value={imageHeader}
+							onChange={(e) => setImageHeader(e.target.value)}
+							placeholder="Enter Header"
+							className="w-full h-12 mt-4 p- border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+						/>
+						<Button onClick = {updateHeader} className='w-full h-12 mt-4 p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500'>
+							Update
+						</Button>
+					</div>
+					
+					<div className='space-y-4 border-gray-800 border py-3'>
+						<div className="w-full h-fit justify-center mx-auto px-4 flex flex-row items-center space-x-5 mb-">
+							<h1 className="font-bold text-center text-gray-700">Bulk Upload</h1>
+							<Input
+								type="checkbox"
+								checked={toggleBulkUpload}
+								onChange={() => setToggleBulkUpload(!toggleBulkUpload)}
+								label="Upload Multiple Images"
+								className="w-4 h-4"
+							/>
+						</div>
+						{toggleBulkUpload ? (
+							<div className="w-full justify-center space-y-3 items-center flex flex-col">
+								<Badge>Total Images to Upload: {multipleImages?.length}</Badge>
+								<FileUploadComponent
+									maxFiles={10}
+									tag={`home-carousal-upload`}
+									sizeTag={`carousal-upload-${imageUrlsCategory}`}
+									onSetImageUrls={(urlArray) => {
+										console.log('Image Urls: ', urlArray);
+										setMultipleImages(urlArray);
+									}}
+									isLoading={imageLoading}
+									onReset={resetImageUpload}
+									setIsLoading={setImageLoading}
+								/>
+								<Button
+									disabled={imageLoading}
+									onClick={HandleMultipleImagesUpload}
+									className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
+								>
+									{imageLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> :<span>Update All</span>}
+								</Button>
+							</div>
+						) : (
+							<div className="w-full justify-center items-center flex flex-col">
+								<ImageUpload
+									file={imageFile}
+									setFile={setImageFile}
+									imageLoading={imageLoading}
+									setImageLoading={setImageLoading}
+									uploadedImageUrl={imageUrls}
+									setUploadedImageUrl={setImageUrls}
+									newStyling="w-full h-auto bg-slate-200 rounded-lg"
+								/>
+								<Button
+									disabled={imageLoading}
+									onClick={() => handleImageUpload(imageUrls)}
+									className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
+								>
+									Update All
+								</Button>
+							</div>
+						)}
+					</div>
 
-			<div className="w-full h-fit justify-center mx-auto px-4 flex flex-row items-center space-x-5 mb-7">
-				<h1 className="font-bold text-center text-gray-700">Bulk Upload</h1>
-				<Input
-				type="checkbox"
-				checked={toggleBulkUpload}
-				onChange={() => setToggleBulkUpload(!toggleBulkUpload)}
-				label="Upload Multiple Images"
-				className="w-4 h-4"
-				/>
-			</div>
-
-			{toggleBulkUpload ? (
-				<div className="w-full justify-center space-y-3 items-center flex flex-col">
-					<Badge>Total Images to Upload: {multipleImages?.length}</Badge>
-					<FileUploadComponent
-						maxFiles={10}
-						tag={`home-carousal-upload`}
-						sizeTag={`carousal-upload ${imageUrlsCategory}`}
-						onSetImageUrls={(urlArray) => {
-							console.log('Image Urls: ', urlArray);
-							setMultipleImages(urlArray);
-						}}
-						isLoading={imageLoading}
-						onReset={resetImageUpload}
-						setIsLoading={setImageLoading}
-					/>
-					<Button
-						disabled={imageLoading}
-						onClick={HandleMultipleImagesUpload}
-						className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
-					>
-						{imageLoading ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div> :<span>Upload All Images</span>}
-					</Button>
+					{/* <div className="w-full p-6 bg-white rounded-lg shadow-md">
+						<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
+						Select a Category Name
+						</h1>
+						<select
+						value={currentImageCategoryName}
+						onChange={(e) => setCurrentImageCategoryName(e.target.value)}
+						className="w-full h-12 p-3 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
+						>
+						<option value="none">All Category Names</option>
+						{allProductsCategory.map((category, index) => (
+							<option key={index} value={category.label}>
+							{capitalizeFirstLetterOfEachWord(category.label)}
+							</option>
+						))}
+						</select>
+					</div> */}
+					
 				</div>
-			) : (
-				<div className="w-full justify-center items-center flex flex-col">
-				<ImageUpload
-					file={imageFile}
-					setFile={setImageFile}
-					imageLoading={imageLoading}
-					setImageLoading={setImageLoading}
-					uploadedImageUrl={imageUrls}
-					setUploadedImageUrl={setImageUrls}
-					newStyling="w-full h-auto bg-slate-200 rounded-lg"
-				/>
-				<Button
-					disabled={imageLoading}
-					onClick={() => handleImageUpload(imageUrls)}
-					className="w-full h-12 mt-4 bg-gray-600 text-white font-semibold rounded-lg hover:bg-gray-700 transition duration-200"
-				>
-					Upload
-				</Button>
-				</div>
-			)}
-
-			{/* <div className="w-full p-6 bg-white rounded-lg shadow-md">
-				<h1 className="text-xl sm:text-2xl font-bold text-center text-gray-900 mb-4">
-				Select a Category Name
-				</h1>
-				<select
-				value={currentImageCategoryName}
-				onChange={(e) => setCurrentImageCategoryName(e.target.value)}
-				className="w-full h-12 p-3 border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-				>
-				<option value="none">All Category Names</option>
-				{allProductsCategory.map((category, index) => (
-					<option key={index} value={category.label}>
-					{capitalizeFirstLetterOfEachWord(category.label)}
-					</option>
-				))}
-				</select>
-			</div> */}
-
-			<Input
-				type="text"
-				value={imageHeader}
-				onChange={(e) => setImageHeader(e.target.value)}
-				placeholder="Enter Header"
-				className="w-full h-12 mt-4 p- border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500"
-			/>
 			</div>
-		</div>
 		)
 	);
 };

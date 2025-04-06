@@ -153,7 +153,15 @@ const commonSlice = createSlice({
 		})
     }
 })
-
+export const updateFeatureHeader = createAsyncThunk('/common/updateFeatureHeader',async(data)=>{
+	try {
+		const response = await axios.put(`${BASE_URL}/api/common/update/home/carousal/header`,data,Header());
+		return response.data;
+	} catch (error) {
+		console.error(`Error Review product: `,error);
+		return null;
+	}
+})
 
 export const addFeaturesImage = createAsyncThunk('/common/addFeaturesImage',async(data)=>{
 	try {
