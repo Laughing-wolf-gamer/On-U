@@ -667,7 +667,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 				<div className="flex-row flex px-3 bg-white shadow-sm justify-between font-kumbsan font-bold border-b items-center mt-2">
 					{/* Sort Section */}
 					<div
-						className="text-[12px] flex justify-center space-x-2 cursor-pointer bg-white p-3"
+						className="text-[12px] flex justify-start w-full space-x-2 cursor-pointer bg-white text-center items-center p-3"
 						onClick={() => setsortvi('block')}
 						role="button"
 						aria-label="Sort items"
@@ -680,7 +680,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 					<span className="absolute h-[24px] border-r-[1px] border-slate-300 top-[33.33%] left-1/2 transform -translate-x-1/2"></span>
 					{/* Filter Section */}
 					<div
-						className="text-[12px] flex justify-center items-center space-x-2 cursor-pointer bg-white p-3"
+						className="text-[12px] flex justify-end w-full items-right space-x-2 cursor-pointer bg-white text-center p-3"
 						onClick={filterdiv}
 						role="button"
 						aria-label="Filter items"
@@ -697,16 +697,16 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 
 			<div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
 				<div className='absolute bottom-0 h-fit w-full bg-white'>
-				<h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
-				{getSortingKeyValuePairs() && getSortingKeyValuePairs().map((item, index) => (
-					<Fragment key={index}>
-						<div className={`text-base py-3 px-6 flex justify-start space-x-2 items-center ${item.key === sortvalue ? "bg-neutral-100" : ""} border-opacity-25 px-3`} onClick={() => (handleSortChange(item.value),setSortValue(),setsortvi('hidden'))} >
-							{getIconsBySortingName(item.key)}
-							<span>{item.key}</span>
-						</div>
-						<hr/>
-					</Fragment>
-				))}
+					<h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
+					{getSortingKeyValuePairs() && getSortingKeyValuePairs().map((item, index) => (
+						<Fragment key={index}>
+							<div className={`text-base py-3 px-6 flex justify-start space-x-2 items-center ${item.key === sortvalue ? "bg-neutral-100" : ""} border-opacity-25 px-3`} onClick={() => (handleSortChange(item.value),setSortValue(),setsortvi('hidden'))} >
+								{getIconsBySortingName(item.key)}
+								<span>{item.key}</span>
+							</div>
+							<hr/>
+						</Fragment>
+					))}
 				</div>
 			</div>
 
