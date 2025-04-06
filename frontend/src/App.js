@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom"
+import { BrowserRouter as Router, Route, Routes, Navigate, useLocation } from "react-router-dom"
 import React, {useEffect, useState} from 'react';
 import { useDispatch} from 'react-redux'
 import './App.css';
@@ -30,6 +30,7 @@ import PaymentSuccess from "./components/Bag/PaymentSuccess.js";
 import PaymentFailed from "./components/Bag/PaymentFailed.js";
 import PaymentPending from "./components/Bag/PaymentPending.js";
 import { useServerAuth } from "./Contaxt/AuthContext.js";
+import axios from "axios";
 
 const useWindowSize = () => {
     const [windowSize, setWindowSize] = useState({ width: window.innerWidth, height: window.innerHeight });
@@ -79,6 +80,7 @@ function App() {
         
     }, [dispatch, isAuthentication]);
     console.log("Base Server API: ",BASE_API_URL);
+	
     const isMobile = width < 1024;
     return (
 		<Router>

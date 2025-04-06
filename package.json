@@ -13,6 +13,7 @@
     "express": "^4.17.3",
     "express-rate-limit": "^7.5.0",
     "fast-two-sms": "^3.0.0",
+    "geoip-lite": "^1.4.10",
     "imagekit": "^3.2.5",
     "jsonwebtoken": "^8.5.1",
     "lucide-react": "^0.469.0",

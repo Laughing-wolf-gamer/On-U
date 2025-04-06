@@ -28,7 +28,7 @@ import {addCategoryBanners,
     removeHomeCarousal,
     removeOptionsByType,
     removeWebsiteDisclaimers,
-    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, updateAddressFormFiledIndex, updateCategoryBannerIndex, updateColorName, updateFeaturesIndex, updateHeaderCarousal, updateIsActive } from '../../controller/commonControllers/common.controller.js';
+    sendContactQueryMail, sendMailToGetCoupon, setAboutData, setAddressField, setContactUsePageData, setCouponBannerData, setFAQWebsite, setPrivacyPolicyWebsite, setTermsAndConditionWebsite, setWebsiteDisclaimers, trackVisit, updateAddressFormFiledIndex, updateCategoryBannerIndex, updateColorName, updateFeaturesIndex, updateHeaderCarousal, updateIsActive } from '../../controller/commonControllers/common.controller.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
 
@@ -101,8 +101,8 @@ route.post('/options/updateActiveState',isAuthenticateuser,ProtectAdminRoute,upd
 route.post('/options/updateColorName',isAuthenticateuser,ProtectAdminRoute,updateColorName);
 
 route.post('/coupons/sendCoupon',sendMailToGetCoupon)
-
-
-
 route.get('/coupons/all',fetchCouponsByQuery);
+
+route.post('/stats/track-visit',trackVisit);
+
 export default route

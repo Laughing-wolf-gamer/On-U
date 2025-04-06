@@ -19,7 +19,7 @@ const Coupon = () => {
   }
   return (
 
-    <div  >
+    <div>
         {
             window.screen.width > 1024 &&
 

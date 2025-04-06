@@ -4,9 +4,12 @@ import ContactQuery from "../../model/ContactQuery.model.js";
 import Coupon from "../../model/Coupon.model.js";
 import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
+import Visit from "../../model/Visit.model.js";
 import WebSiteModel from "../../model/websiteData.model.js";
 import logger from "../../utilis/loggerUtils.js";
 import { sendCouponMail, sendCustomMail } from "../emailController.js";
+import geoip from 'geoip-lite'
+
 
 export const getHomeBanners = async (req,res)=>{
 	try {
@@ -1221,6 +1224,30 @@ export const getCouponBannerData = async (req,res)=>{
 		console.error("Error getting coupon banner data: ", error);
 		logger.error(`Error getting coupon banner data: ${error.message}`);
 		res.status(500).json({ success: false, message: 'Failed to get coupon banner data' });
+	}
+}
+
+
+export const trackVisit = async (req, res) => {
+	try {
+		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // Get IP address
+		const geo = geoip.lookup(ip);
+		console.log("geo: ",geo)
+		const newVisit = new Visit({
+			timestamp: new Date(),
+			lat:geo ? geo.ll[0] : '',
+			long:geo ? geo.ll[1] : '',
+			country: geo ? geo.country : 'Unknown',
+			state: geo ? geo.region : 'Unknown',
+		});
+		console.log("newVisit: ",newVisit)
+		await newVisit.save();
+
+		res.status(200).send({success:true,message:'Visit tracked'});
+	} catch (err) {
+		console.error('Error tracking visit:', err);
+		logger.error(`Error tracking visit: ${err.message}`);
+		res.status(500).send('Error tracking visit');
 	}
 }
   

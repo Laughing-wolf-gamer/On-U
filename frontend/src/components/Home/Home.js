@@ -17,6 +17,7 @@ import { fetchWebsiteDisclaimer } from '../../action/common.action';
 import BackToTopButton from './BackToTopButton';
 import WhatsAppButton from './WhatsAppButton';
 import { useServerBanners } from '../../Contaxt/ServerBannerContext';
+import TrackVisite from '../TrackVisite';
 
 
 const Home = ({user}) => {
@@ -452,6 +453,7 @@ const Home = ({user}) => {
             {showComponent === 'coupon' && <FullScreenOverLayCouponPopUp />}
 			<BackToTopButton scrollableDivRef={scrollableDivRef} />
 			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
+			<TrackVisite/>
         </div>
     )
 }

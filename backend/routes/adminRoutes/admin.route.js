@@ -37,6 +37,9 @@ route.patch('/orders/tryCreateManifest/:orderId',isAuthenticateuser,ProtectAdmin
 route.post('/orders/cancelOrder/:orderId',isAuthenticateuser,ProtectAdminRoute,createOrderCancel);
 route.get('/orders/shiprocket/AllCancelOrder',isAuthenticateuser,ProtectAdminRoute,fetchAllReturnOrders)
 
+
+
+
 route.get('/stats/getRecentOrders',isAuthenticateuser,ProtectAdminRoute,getRecentOrders);
 route.get('/stats/getTopSellingProducts',isAuthenticateuser,ProtectAdminRoute,getTopSellingProducts);
 

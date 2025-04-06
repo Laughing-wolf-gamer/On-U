@@ -39,7 +39,7 @@ app.use(
             }
         },
         methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
-        allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma'],
+        allowedHeaders: ['Content-Type', 'Authorization', 'Cache-Control', 'Expires', 'Pragma','x-forwarded-for'],
         credentials: true, // Allow credentials like cookies
     })
 );
