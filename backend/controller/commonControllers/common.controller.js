@@ -1231,33 +1231,45 @@ export const getCouponBannerData = async (req,res)=>{
 
 export const trackVisit = async (req, res) => {
 	try {
-		const ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress; // Get IP address
-		console.log("ip: ",ip)
-		if(!ip){
-			return res.status(400).send({success:false,message:'IP address not found'});
+		// Extract the client's IP address
+		const forwardedFor = req.headers['x-forwarded-for'];
+		const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
+
+		console.log("ip: ", ip);
+
+		if (!ip) {
+			return res.status(400).send({ success: false, message: 'IP address not found' });
 		}
+
+		// Get geo-location data using the IP address
 		const currentLoc = await axios.get(`https://ipapi.co/${ip}/json/`);
-		console.log("currentLoc: ",currentLoc.data)
-		const geo = currentLoc.data
-		if(!geo){
-			return res.status(400).send({success:false,message:'Geo Location not found'});
+		console.log("currentLoc: ", currentLoc.data);
+
+		const geo = currentLoc.data;
+		if (!geo) {
+			return res.status(400).send({ success: false, message: 'Geo Location not found' });
 		}
+		if (geo.error) {
+			return res.status(400).send({ success: false, message: 'Geo Location not found' });
+		}
+
+		// Create a new visit entry
 		const newVisit = new Visit({
 			timestamp: new Date(),
-			city:geo.city,
-			lat:geo.latitude,
-			long:geo.longitude,
+			city: geo.city,
+			lat: geo.latitude,
+			long: geo.longitude,
 			country: geo.country,
 			state: geo.region,
 		});
-		console.log("newVisit: ",newVisit)
+		console.log("newVisit: ", newVisit);
 		await newVisit.save();
 
-		res.status(200).send({success:true,message:'Visit tracked'});
+		res.status(200).send({ success: true, message: 'Visit tracked' });
 	} catch (err) {
 		console.error('Error tracking visit:', err);
 		logger.error(`Error tracking visit: ${err.message}`);
 		res.status(500).send('Error tracking visit');
 	}
-}
+};
   
