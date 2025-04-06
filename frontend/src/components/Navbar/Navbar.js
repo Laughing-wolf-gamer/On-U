@@ -190,6 +190,7 @@ const Navbar = ({user}) => {
 										setIsSearchVisible(false);
 										setBagShow(true)
 									}}>
+										
 										<img
 											src={bagCartIcon}
 											alt='bag-icon'

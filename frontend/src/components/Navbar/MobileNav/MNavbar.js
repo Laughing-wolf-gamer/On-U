@@ -75,11 +75,6 @@ const MNavbar = ({ user }) => {
 		dispatch(Allproduct())
 		setserdiv('hidden')
     }
-    /* useEffect(()=>{
-        if(user){
-			dispatch(getbag());
-        }
-    },[user,dispatch]) */
     useEffect(() => {
         // Optionally you can trigger updates based on other session storage events here
         // console.log("Nav Bar sessionBagData: ",sessionBagData);
@@ -94,7 +89,15 @@ const MNavbar = ({ user }) => {
                 <div className=' border-b-2 h-14 px-3 py-3 '>
                     <div className='flex flex-row justify-between items-center'>
                         <div className='flex flex-row justify-center items-center'>
-                            <IoMenu color='black' className='text-4xl ' onClick={() => (handleShow(), classchange())} />
+							<button
+								onClick={() => (handleShow(), classchange())}
+							>
+								<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8">
+									<path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+								</svg>
+							</button>
+							
+                            {/* <IoMenu color='black' className='text-4xl ' onClick={() => (handleShow(), classchange())} /> */}
                             <Link to='/'> <h1 className='text-black px-3 text-3xl text-center font-extrabold'>ON U</h1></Link>
                         </div>
 
@@ -114,6 +117,33 @@ const MNavbar = ({ user }) => {
 									setBagShow(!showbagView)
 								}}>
 									{/* <IoBagRemoveSharp size={26} color='black'/> */}
+									{/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-8 h-8">
+										<path
+											d="M8 6V4a4 4 0 1 1 8 0v2"
+											fill={'none'}
+											stroke="black"
+											strokeWidth={1.5}
+										/>
+										
+										<rect
+											x="5"
+											y="6"
+											width="14"
+											height="14"
+											rx="2"
+											ry="2"
+											fill={'none'}
+											stroke="black"
+											strokeWidth={1.5}
+										/>
+										
+										<path
+											d="M5 20h14"
+											fill={'none'}
+											stroke="black"
+											strokeWidth={1.5}
+										/>
+									</svg> */}
 									<img
 										src={bagCartIcon}
 										alt='bag-icon'
@@ -132,7 +162,12 @@ const MNavbar = ({ user }) => {
                                         <span>{currentWishListCount}</span>
                                     </div>
                                 )}
-                                <Link to='/my_wishlist'><FaHeart size={26} color='black'/></Link>
+                                <Link to='/my_wishlist'>
+									<FaHeart size={26} color='black'/>
+									{/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="black">
+										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
+									</svg> */}
+								</Link>
                             </div>
                             <IoSearch size={25} strokeWidth={.9} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
                         </div>
@@ -140,14 +175,6 @@ const MNavbar = ({ user }) => {
                     
                 </div>
                 <div className={`${serdiv} z-20 absolute w-full h-full  top-0 bg-white`}>
-                    {/* <div className='grid grid-cols-12 py-3 px-[6px]'>
-                        <div className="col-span-1 align-middle text-center flex items-center text-2xl"onClick={()=> setserdiv('hidden')}><MdArrowBack color='black'/></div>
-                        <div className="col-span-10">
-                        <input type="text" placeholder='Search for products' 
-                            className='msearch caret-[#ff2459] w-full h-full bg-white' onChange={(e)=> setstate(e.target.value)} onKeyUp={(e)=>searchenter(e)}/>
-                        </div>
-                        <div className="col-span-1 flex items-center text-center align-middle" onClick={()=>(searchenters())}><FiSearch color='black' strokeWidth={.9} className='text-2xl text-black' /></div>
-                    </div> */}
 					<MKeywoardSerach
 						setserdiv = {setserdiv}
 						state={state}
