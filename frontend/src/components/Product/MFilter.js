@@ -656,7 +656,6 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 				return null;
 		}
 	}
-	console.log("Set Open View: ",sortvalue);
     return (
         <Fragment>
 			<div
