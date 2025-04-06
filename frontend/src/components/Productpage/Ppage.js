@@ -281,7 +281,7 @@ const Ppage = () => {
                 setIsInBagList(response);
                 if(response){
 					await fetchBag();
-                    navigation("/bag");
+                    navigation("/bag/checkout");
                 }
             } else {
                 // Add to localStorage logic
@@ -293,7 +293,7 @@ const Ppage = () => {
                     ProductData: product,
                 };
                 setSessionStorageBagListItem(orderData, decrypt(param.id));
-                navigation("/bag");
+                navigation("/bag/checkout");
                 checkAndCreateToast("success", "Product successfully in Bag");
             }
             updateButtonStates();

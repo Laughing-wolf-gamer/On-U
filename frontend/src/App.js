@@ -17,12 +17,12 @@ import Bag from './components/Bag/Bag'
 import Address from "./components/Bag/Address";
 import 'react-lazy-load-image-component/src/effects/blur.css';
 import { BASE_API_URL } from "./config/index.js";
-import About from "./components/About-Screen/About.js";
-import Contact from "./components/About-Screen/Contact.js";
+import About from "./components/Website_HelpSupport/About.js";
+import Contact from "./components/Website_HelpSupport/Contact.js";
 import OrderDetailsPage from "./components/Login/Dashboard/OrderDetailsPage.js";
-import FAQ from "./components/About-Screen/FAQ.js";
-import TermsAndConditions from "./components/About-Screen/TermsAndConditions.js";
-import PrivacyPolicy from "./components/About-Screen/PrivacyPolicy.js";
+import FAQ from "./components/Website_HelpSupport/FAQ.js";
+import TermsAndConditions from "./components/Website_HelpSupport/TermsAndConditions.js";
+import PrivacyPolicy from "./components/Website_HelpSupport/PrivacyPolicy.js";
 import { Toaster } from 'react-hot-toast';
 import CheckoutPage from "./components/Bag/NewCheckoutPage.js";
 import NotFoundPage from "./NotFoundPage.js";

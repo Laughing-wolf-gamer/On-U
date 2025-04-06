@@ -9,65 +9,54 @@ const SettingContext = createContext();
 // Provider component
 export const SettingsProvider = ({ children }) => {
     const { activeToast, showToast } = useToast();
-    const checkAndCreateToast = (type,message,appearDuration = 1000) => {
-        const style = {
-            border: '1px solid #fff',
-            padding: '16px',
-            color: '#713200',
-        }
-        const iconTheme = {
-            primary: '#000',
-            secondary: '#fff',
-        };
-        const ariaProps = {
-            role: 'status',
-            'aria-live': 'polite',
-        };
-        const removeDelay = 500;
-        // const appearDuration = 1000;
-        const position = 'top-center'
-        // console.log("check Toast: ",type, message,activeToast);
-        if(!activeToast){
-            switch(type){
-                case "success":
-                    toast.success(message,{
-                        duration: appearDuration,
-                        position: position,
-                      
-                        // Styling
-                        style: style,
-                                            
-                        // Change colors of success/error/loading icon
-                        iconTheme: iconTheme,
-                      
-                        // Aria
-                        ariaProps: ariaProps,
-                      
-                        // Additional Configuration
-                        removeDelay: removeDelay,
-                    })
-                    break;
-                default:
-                    toast.error(message,{
-                        duration: appearDuration,
-                        position: position,
-                      
-                        // Styling
-                        style: style,
-                        // Change colors of success/error/loading icon
-                        iconTheme: iconTheme,
-                      
-                        // Aria
-                        ariaProps: ariaProps,
-                      
-                        // Additional Configuration
-                        removeDelay: removeDelay,
-                    })
-                break;
-            }
-            showToast(message);
-        }
-    }
+    const checkAndCreateToast = (type, message, appearDuration = 1000) => {
+		const style = {
+			border: '1px solid #fff',
+			padding: '16px',
+			color: '#ffffff',  // Make text white for better contrast
+			backgroundColor: '#333',  // Darker background color
+		}
+		
+		const iconTheme = {
+			primary: '#fff',  // White icon color
+			secondary: '#000',  // Dark secondary icon color
+		};
+		
+		const ariaProps = {
+			role: 'status',
+			'aria-live': 'polite',
+		};
+		
+		const removeDelay = 500;
+		const position = 'top-center';
+
+		if (!activeToast) {
+			switch (type) {
+				case "success":
+					toast.success(message, {
+						duration: appearDuration,
+						position: position,
+						style: style,
+						iconTheme: iconTheme,
+						ariaProps: ariaProps,
+						removeDelay: removeDelay,
+					});
+					break;
+				default:
+					toast.error(message, {
+						duration: appearDuration,
+						position: position,
+						style: style,
+						iconTheme: iconTheme,
+						ariaProps: ariaProps,
+						removeDelay: removeDelay,
+					});
+					break;
+			}
+			showToast(message);
+		}
+	}
+
     
     useEffect(() => {
         if(inProduction){

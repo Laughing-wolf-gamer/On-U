@@ -51,7 +51,7 @@ export const fetchTermsAndCondition = ()=> async(dispatch)=>{
         const { data } = await axios.get(`${BASE_API_URL}/api/common/website/terms-and-condition`);
         dispatch({ type: FETCH_TERMS_AND_CONDITIONS_SUCCESS, payload: data.result})
     } catch (error) {
-        dispatch({ type: FETCH_TERMS_AND_CONDITIONS_FAIL, payload: error.response.data.message })
+        dispatch({ type: FETCH_TERMS_AND_CONDITIONS_FAIL, payload: error?.response?.data?.message })
     }
 }
 
