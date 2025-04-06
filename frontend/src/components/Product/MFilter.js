@@ -695,7 +695,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 
 			{/* SORT Div ********************************************************************************************************** */}
 
-			<div className={`${sortvi} z-20 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
+			<div className={`${sortvi} z-50 bg-[#18181846] w-full h-full fixed top-0`} onClick={() => setsortvi('hidden')}>
 				<div className='absolute bottom-0 h-fit w-full bg-white'>
 					<h1 className="font-semibold text-base py-3 px-6 border-b-[0.5px] border-slate-200" >SORT BY</h1>
 					{getSortingKeyValuePairs() && getSortingKeyValuePairs().map((item, index) => (
@@ -712,7 +712,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 
 			{/* FILTER Div ********************************************************************************************************** */}
 
-			<div className={`${filter} z-20 bg-white w-full h-full fixed top-0 `}>
+			<div className={`${filter} z-50 bg-white w-full h-full fixed top-0 `}>
 				<div className=''>
 
 				<h1 className='w-full px-8  font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
