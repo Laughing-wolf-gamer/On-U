@@ -279,7 +279,7 @@ const Home = ({user}) => {
                         <Footer/>
                     </Fragment >
                 :
-                    <div className='flex flex-col justify-center items-center space-y-4'>
+                    <div className='space-y-4'>
 						{
 							bannerLoading ? <div className="flex overflow-x-auto bg-slate-200 pt-6 items-start">
 								{/* Skeleton Loader for each item */}
@@ -316,27 +316,29 @@ const Home = ({user}) => {
 								</div>
 							)
 						}
-						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
 
-                        {productAllProductsLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14 '>
-								<div className="grid grid-cols-2 gap-4 justify-center items-center px-4">
-									{
-										Array(5).fill(0).map((_, index) => (
-											<div 
-												key={`skeleton_${index}`} 
-												className="bg-gray-400 w-[100%] h-[400px] px-2 rounded-md justify-end items-center py-2 flex flex-col animate-pulse"
-											>
-												<div className='w-full h-16 bg-gray-600'></div>
-											</div>
-										))
-									}
-								</div>
-                            </div>:(
-								<>
-                        			{noFilterProducts && noFilterProducts.length > 0 && <ProductPreviewFull product={noFilterProducts} user={user}/>}
-								</>
-							)
-						}
+						<CategorySlider MobileScreen_CategorySlider={MobileScreen_CategorySlider} CategoryBannerLoading={CategoryBannerLoading} />
+						<div>
+							{productAllProductsLoading ? <div className='w-full justify-self-center max-w-screen-2xl justify-center items-center flex px-14 '>
+									<div className="grid grid-cols-2 gap-4 justify-center items-center px-4">
+										{
+											Array(5).fill(0).map((_, index) => (
+												<div 
+													key={`skeleton_${index}`} 
+													className="bg-gray-400 w-[100%] h-[400px] px-2 rounded-md justify-end items-center py-2 flex flex-col animate-pulse"
+												>
+													<div className='w-full h-16 bg-gray-600'></div>
+												</div>
+											))
+										}
+									</div>
+								</div>:(
+									<>
+										{noFilterProducts && noFilterProducts.length > 0 && <ProductPreviewFull product={noFilterProducts} user={user}/>}
+									</>
+								)
+							}
+						</div>
                         <div className="flex flex-col justify-center items-center pb-2 space-y-3 overflow-hidden w-full">
 							<div className='px-4 py-2 justify-center items-center flex border border-gray-700 rounded-md mb-3'>
 								{
