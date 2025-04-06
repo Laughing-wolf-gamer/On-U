@@ -1245,6 +1245,7 @@ export const trackVisit = async (req, res) => {
 		const newVisit = new Visit({
 			timestamp: new Date(),
 			lat:geo.latitude,
+			city:geo.city,
 			long:geo.longitude,
 			country: geo.country,
 			state: geo.region,
