@@ -616,8 +616,8 @@ export const generateRefundOrder = async (order) => {
 	}
 };
 
+
 export const generateOrderCancel = async(orderId)=>{
-	// if (!token) await getAuthToken();
 	try {
 		const token = await getShipRocketToken();
         const response = await axios.post(`${SHIPROCKET_API_URL}/orders/cancel`, {ids: [orderId]}, {
@@ -670,6 +670,7 @@ export const generateOrderReturnShipment = async (shipmentData, userId) => {
             selling_price: item.productId.salePrice || item.productId.price,
             units: item.quantity,
             discount: item?.productId?.DiscountedPercentage || 0,
+			qc_enable:true,
             sku: item?.color?.sku,
             tax: item?.productId?.gst || 0,
             hsn: item?.productId?.hsn || generateRandomId().toString()
@@ -890,7 +891,6 @@ export const generateExchangeShipment = async (shipmentData, userId) => {
 };
 
 export const getAllShipRocketOrder = async()=>{
-    // if(!token) await getAuthToken();
     try {
 		const token = await getShipRocketToken();
         
@@ -901,7 +901,6 @@ export const getAllShipRocketOrder = async()=>{
                 },
             }
         );
-        // console.dir(response.data,{depth:null});
         return response.data.data;
     } catch (error) {
         console.dir(error, { depth: null});

@@ -1488,77 +1488,71 @@ function calculateTotalAmount(products) {
 }; */
 export const getbag = async (req, res) => {
     try {
-        const userId = mongoose.Types.ObjectId(req.user.id); // Ensure it's an ObjectId
-		if(!userId){
-			return res.status(400).json({ success: false, message: "Invalid user ID" });
-		}
-		const isUserExist = await User.findById(userId);
-		if(!isUserExist){
-			console.log("User not found!");
-			return res.status(400).json({ success: false, message: "User not found" });
-		}
+        const userId = req.user.id;
+
+        if (!mongoose.Types.ObjectId.isValid(userId)) {
+            return res.status(400).json({ success: false, message: "Invalid user ID" });
+        }
+
+        const isUserExist = await User.findById(userId);
+        if (!isUserExist) {
+            console.log("User not found!");
+            return res.status(400).json({ success: false, message: "User not found" });
+        }
+
         // Fetch the bag with populated orderItems.productId and Coupon
-        const bag = await Bag.findOne({userId}).populate('orderItems.productId Coupon').exec();
+        const bag = await Bag.findOne({ userId }).populate('orderItems.productId Coupon').exec();
 
         if (!bag) {
-			// console.log("No Bag Found!");
             return res.status(400).json({ success: false, message: "Bag not found" });
         }
-		if(bag.orderItems.length < 0){
-			return res.status(400).json({ success: true, message: "Bag is empty" ,bag});
-		}
 
-        // Log the bag object to see if it was found
+        if (bag.orderItems.length === 0) {
+            return res.status(400).json({ success: true, message: "Bag is empty", bag });
+        }
 
-        // Fetch all products from the bag's orderItems at once
+        // Extract product IDs from order items
         const productIds = bag.orderItems.map(o => {
-			// Check if productId is an ObjectId, and ensure it's correctly converted
-			if (o.productId && o.productId._id) {
-				return o.productId._id.toString();
-			} else if (o.productId) {
-				// If productId is not an object but a string, use it directly
-				return o.productId.toString();
-			} else {
-				// If productId is invalid or missing, log an error and skip
-				console.error("Invalid productId:", o.productId);
-				return null; // Return null for invalid productId, will filter it out later
-			}
-		}).filter(id => id !== null); // Filter out any null values
+            if (o.productId && o.productId._id) {
+                return o.productId._id.toString();
+            } else if (o.productId) {
+                return o.productId.toString();
+            } else {
+                console.error("Invalid productId:", o.productId);
+                return null;
+            }
+        }).filter(id => id !== null);
 
-		console.log("Product IDs:", productIds);
-		let products = []
-		try {
-			products = await ProductModel.find({ _id: { $in: productIds } });
-			
-		} catch (error) {
-			console.error("Error Getting All Products")
-			logger.warn(`Error Getting All Products: ${error.message}`)
-		}
-		products = products.filter(product => product !== null);
+        let products = [];
+        try {
+            products = await ProductModel.find({ _id: { $in: productIds } });
+        } catch (error) {
+            console.error("Error Getting All Products", error);
+            logger.warn(`Error while fetching products for bag: ${error.message}`, { productIds });
+        }
 
-        // Create a map for fast lookup of product sizes
+        // Filter out null values and create a lookup map
+        products = products.filter(product => product);
         const productMap = products.reduce((acc, product) => {
             acc[product._id.toString()] = product;
             return acc;
         }, {});
 
-        // Update size quantities based on original product data
+        // Update size quantities
         for (let o of bag.orderItems) {
             const originalProductData = productMap[o.productId?._id.toString()];
-
             if (!originalProductData) {
                 console.error(`Product with ID ${o.productId?._id} not found`);
                 continue;
             }
 
             const originalProductSize = originalProductData.size.find(s => s._id.toString() === o.size?._id);
-
-            if (!originalProductSize) {
-                console.error(`Size with ID ${o.size?._id} not found for product ${o.productId?._id}`);
+            if (!o.size || !originalProductSize) {
+                console.error(`Missing size data for order item ${o._id}`);
                 continue;
             }
 
-            if (o?.size?.quantity !== originalProductSize?.quantity) {
+            if (o.size.quantity !== originalProductSize.quantity) {
                 console.log("Updating size quantity");
                 o.size.quantity = originalProductSize.quantity;
             }
@@ -1566,15 +1560,16 @@ export const getbag = async (req, res) => {
 
         // Save the updated bag
         await bag.save();
-
-        res.status(200).json({success: true,message:"Bag Found!",bag});
-
+        console.log("Bag successfully updated");
+        
+        res.status(200).json({ success: true, message: "Bag Found!", bag });
     } catch (error) {
         console.error("Error occurred during getting bag: ", error);
         logger.error(`Error while getting bag: ${error.message}`);
         res.status(500).json({ success: false, message: "Internal Server Error" });
     }
 };
+
 
 
 
@@ -1874,10 +1869,11 @@ export const returnOrder = async (req, res) => {
 export const createOrderCancel = async(req,res)=>{
 	try {
 		const { orderId } = req.params;
-        console.log("Returning Order: ", orderId);
+        console.log("Canceling Order: ", orderId);
 		const order = await OrderModel.findById(orderId);
 		if(!order) return res.status(404).json({ success: false, message: "Order not found", result: null });
 		const cancelRequest = await generateOrderCancel(order.order_id);
+		console.log("Cancel Request: ", cancelRequest);
 		if(!cancelRequest) return res.status(404).json({ success: false, message: "Failed to cancel order"});
 		if(cancelRequest?.status_code === 200 || cancelRequest?.status === 200){
 			order.IsCancelled = true;
