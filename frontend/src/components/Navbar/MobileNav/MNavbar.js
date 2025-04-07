@@ -19,14 +19,15 @@ import MKeywoardSerach from './MKeywoardSerach'
 import { useLocalStorage } from '../../../Contaxt/LocalStorageContext'
 import bagCartIcon from '../../images/shopping-cart.png'
 import { useServerWishList } from '../../../Contaxt/ServerWishListContext'
+import { useServerAuth } from '../../../Contaxt/AuthContext'
 
-const MNavbar = ({ user }) => {
+const MNavbar = () => {
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
-    const {wishlist,fetchWishList,bag,bagLoading,fetchBag} = useServerWishList();
+    const {wishlist,bag} = useServerWishList();
     const dispatch = useDispatch()
-    // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const navigation = useNavigate()
     const [showMenuView, setMenuShow] = useState(false);
     const [showbagView, setBagShow] = useState(false);
@@ -41,9 +42,6 @@ const MNavbar = ({ user }) => {
     const handleMenuClose = () => (setMenuShow(false));
     const handleShow = () => setMenuShow(true);    
 
-    const logoutBTN = () =>{
-        dispatch(logout())
-    }
 
     const [serdiv, setserdiv] = useState('hidden')
     const [state, setstate] = useState("")
@@ -75,13 +73,28 @@ const MNavbar = ({ user }) => {
 		dispatch(Allproduct())
 		setserdiv('hidden')
     }
+	useEffect(()=>{
+		if(user){
+			if(wishlist && wishlist?.orderItems && wishlist?.orderItems.length > 0){
+				setWishListCount(wishlist?.orderItems.length);
+			}else{
+				setWishListCount(0);
+			}
+			if(bag && bag?.orderItems && bag?.orderItems.length > 0){
+				setBagCount(bag?.orderItems.length);
+			}else{
+				setBagCount(0);
+			}
+		}
+	},[wishlist,bag,user])
     useEffect(() => {
         // Optionally you can trigger updates based on other session storage events here
-        // console.log("Nav Bar sessionBagData: ",sessionBagData);
-        setWishListCount(sessionData.length);
-        setBagCount(sessionBagData.length);
+		if(!user){
+			setWishListCount(sessionData.length);
+			setBagCount(sessionBagData.length);
+		}
     }, [sessionData,sessionBagData]);
-    
+    console.log("Wishlist count",currentWishListCount,"Bag Count: ",currentBagCount);
     return (
         <Fragment>
             <div className='MNavbar hidden font-kumbsan sticky top-0 bg-white underline-offset-1 overflow-x-hidden h-max z-40' >
@@ -103,47 +116,16 @@ const MNavbar = ({ user }) => {
 
                         <div className='right-2 absolute flex-row justify-center items-center'>
                             <div className='float-right relative m-2 pb-0.5'>
-                                {user && bag && bag.orderItems && bag.orderItems.length > 0 && (
-                                    <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{bag.orderItems.length}</span>
-                                    </div>
-                                )}
-                                {!user && currentBagCount > 0 && (
-                                    <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{currentBagCount}</span>
-                                    </div>
-                                )}
+                                {
+									currentBagCount > 0 && (
+										<div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+											<span>{currentBagCount}</span>
+										</div>
+									)
+								}
                                 <button onClick={()=> {
 									setBagShow(!showbagView)
 								}}>
-									{/* <IoBagRemoveSharp size={26} color='black'/> */}
-									{/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="w-8 h-8">
-										<path
-											d="M8 6V4a4 4 0 1 1 8 0v2"
-											fill={'none'}
-											stroke="black"
-											strokeWidth={1.5}
-										/>
-										
-										<rect
-											x="5"
-											y="6"
-											width="14"
-											height="14"
-											rx="2"
-											ry="2"
-											fill={'none'}
-											stroke="black"
-											strokeWidth={1.5}
-										/>
-										
-										<path
-											d="M5 20h14"
-											fill={'none'}
-											stroke="black"
-											strokeWidth={1.5}
-										/>
-									</svg> */}
 									<img
 										src={bagCartIcon}
 										alt='bag-icon'
@@ -152,21 +134,14 @@ const MNavbar = ({ user }) => {
 								</button>
                             </div>
                             <div className='float-right relative m-2 pb-0.5'>
-                                {user && wishlist && wishlist.orderItems && wishlist.orderItems.length > 0 && (
-                                    <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{wishlist.orderItems.length}</span>
-                                    </div>
-                                )}
-                                {!user && currentWishListCount > 0 && (
-                                    <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
-                                        <span>{currentWishListCount}</span>
-                                    </div>
-                                )}
+								{
+									currentWishListCount > 0 && <div className="absolute top-[-5px] right-[-5px] bg-gray-600 text-white rounded-full w-4 h-4 flex items-center justify-center text-[10px] font-bold">
+										<span>{currentWishListCount}</span>
+									</div>
+								}
+								
                                 <Link to='/my_wishlist'>
 									<FaHeart size={26} color='black'/>
-									{/* <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24" fill="black">
-										<path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
-									</svg> */}
 								</Link>
                             </div>
                             <IoSearch size={25} strokeWidth={.9} color='black' className='float-right m-2' onClick={()=> setserdiv('block')}/>
@@ -324,7 +299,7 @@ const MNavbar = ({ user }) => {
                             <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
+                                    onClick={() => {
                                         setMenuShow(false);
                                         setClass("hidden");
                                         // Create the URL with query parameters
@@ -346,7 +321,7 @@ const MNavbar = ({ user }) => {
                             <Ripples color="#2C3930" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
+                                    onClick={() => {
                                         setMenuShow(false);
                                         setClass("hidden");
                                         /* // Create the URL with query parameters
@@ -404,7 +379,7 @@ const MNavbar = ({ user }) => {
                             <Ripples color="re" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black  px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
+                                    onClick={() => {
                                         setMenuShow(false);
                                         setClass("hidden");
                                         navigation("/about");
@@ -417,7 +392,7 @@ const MNavbar = ({ user }) => {
                             <Ripples color="black" className="w-full border-b border-black border-opacity-20 rounded-lg">
                                 <li
                                     className="text-black px-5 py-4 relative w-full flex"
-                                    onClick={(e) => {
+                                    onClick={() => {
                                         setMenuShow(false);
                                         setClass("hidden");
                                         navigation("/contact");

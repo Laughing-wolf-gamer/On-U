@@ -213,9 +213,6 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
             product.forEach(p => {
                 p.AllColors.forEach(c => {
 					color.push(c);
-                    /* const alreadyExists = color.some(item => item.label === c.label);
-                    if (!alreadyExists){
-                    } */
                 });
             });
         }

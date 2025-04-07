@@ -84,8 +84,8 @@ function App() {
     const isMobile = width < 1024;
     return (
 		<Router>
-			<Navbar user={user} />
-			<MNavbar user={user} />
+			<Navbar />
+			<MNavbar />
 			<Routes>
 				{/* Public Routes */}
 				<Route path="/" element={<Home user={user} />} />

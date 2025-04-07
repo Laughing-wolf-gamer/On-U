@@ -1492,7 +1492,6 @@ export const getbag = async (req, res) => {
 		if(!userId){
 			return res.status(400).json({ success: false, message: "Invalid user ID" });
 		}
-		// console.log("User Id: ",req.user.id);
 		const isUserExist = await User.findById(userId);
 		if(!isUserExist){
 			console.log("User not found!");
@@ -1500,7 +1499,6 @@ export const getbag = async (req, res) => {
 		}
         // Fetch the bag with populated orderItems.productId and Coupon
         const bag = await Bag.findOne({userId}).populate('orderItems.productId Coupon').exec();
-        // console.log("Bag found:", bag);
 
         if (!bag) {
 			// console.log("No Bag Found!");
@@ -1533,8 +1531,10 @@ export const getbag = async (req, res) => {
 			products = await ProductModel.find({ _id: { $in: productIds } });
 			
 		} catch (error) {
-			console.error("Error Gettng All Prdouctst")
+			console.error("Error Getting All Products")
+			logger.warn(`Error Getting All Products: ${error.message}`)
 		}
+		products = products.filter(product => product !== null);
 
         // Create a map for fast lookup of product sizes
         const productMap = products.reduce((acc, product) => {

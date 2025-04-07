@@ -6,24 +6,25 @@ import Profile from './Submenu/Profile'
 import {Link} from 'react-router-dom'
 import ProductCatView from './Submenu/ProductCatView.js'
 import { useDispatch, useSelector } from 'react-redux'
-import { getwishlist } from '../../action/orderaction.js'
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext.js'
 import { fetchAllOptions } from '../../action/common.action.js'
 import { IoSearch } from 'react-icons/io5'
 import SideBarBag from './SideBarBag.js'
 import bagCartIcon from '../images/shopping-cart.png'
 import { useServerWishList } from '../../Contaxt/ServerWishListContext.js'
+import { useServerAuth } from '../../Contaxt/AuthContext.js'
 
 
-const Navbar = ({user}) => {
+const Navbar = () => {
+	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
     const dispatch = useDispatch();
     const[currentWishListCount,setWishListCount] = useState(0);
     const[currentBagCount,setBagCount] = useState(0);
     const { sessionData,sessionBagData } = useSessionStorage();
     const {wishlist,bag} = useServerWishList();
-    // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
     const { options } = useSelector((state) => state.AllOptions);
     const [showbagView, setBagShow] = useState(false);
+
     const [Menu2, setMenu2] = useState('hidden')
     const [Menu7, setMenu7] = useState('hidden')
     const [show2, setShow2] = useState(false)
@@ -31,58 +32,23 @@ const Navbar = ({user}) => {
     
     
 
-    /* const callback = useCallback((Menu, v) => {
-        setMenu1(Menu);
-        setShow1(v)
-    }, []); */
 
     const Callbackmenu2 = useCallback((Menu2, v) => {
         setMenu2(Menu2);
         setShow2(v)
     }, []);
 
-    /* const Callbackmenu3 = useCallback((Menu3, v) => {
-        setMenu3(Menu3);
-        setShow3(v)
-    }, []);
-
-    const Callbackmenu4 = useCallback((Menu4, v) => {
-        setMenu4(Menu4);
-        setShow4(v)
-    }, []);
-
-    const Callbackmenu5 = useCallback((Menu5, v) => {
-        setMenu5(Menu5);
-        setShow5(v)
-    }, []);
-
-    const Callbackmenu6 = useCallback((Menu6, v) => {
-        setMenu6(Menu6);
-        setShow6(v)
-    }, []); */
-
     const Callbackmenu7 = useCallback((Menu7, v) => {
         setMenu7(Menu7);
         setShow7(v)
     }, []);
 
-    useEffect(()=>{
-        if(user){
-            // dispatch(getbag());
-            // dispatch(getwishlist())
-        }
-    },[dispatch])
     
     const [isSearchVisible, setIsSearchVisible] = useState(false);
 
     const toggleSearchBar = () => {
         setIsSearchVisible(!isSearchVisible);
     };
-    const fetchAllWishList = ()=>{
-        setTimeout(() => {
-            dispatch(getwishlist())
-        }, 900);
-    }
 	useEffect(()=>{
 		if(user){
 			if(wishlist && wishlist?.orderItems && wishlist?.orderItems.length > 0){
@@ -97,15 +63,18 @@ const Navbar = ({user}) => {
 			}
 		}
 	},[wishlist,bag,user])
-	useEffect(() => {
-	  dispatch(fetchAllOptions());
-	}, [dispatch]);
+	
     useEffect(() => {
 		if(!user){
 			setWishListCount(sessionData.length);
 			setBagCount(sessionBagData.length);
 		}
     }, [sessionData,sessionBagData,user,wishlist,bag]);
+
+	useEffect(() => {
+	  dispatch(fetchAllOptions());
+	}, [dispatch]);
+	console.log("Wishlist count",currentWishListCount,"Bag Count: ",currentBagCount);
     return (
         <Fragment>
             <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40">
@@ -124,7 +93,6 @@ const Navbar = ({user}) => {
                     <div className='h-full font-bold mt-3 w-fit flex flex-row px-5 items-center justify-end'>
                         <Link onClick={()=> setIsSearchVisible(false)} className='w-max px-3 flex items-stretch hover:animate-vibrateScale mb-5' to="/">
 							<li className='w-max flex justify-center items-center border-4 border-transparent cursor-pointer'
-								// onMouseEnter={() => (setMenu1('block'))} onMouseLeave={() => (setMenu1('hidden'))}
 							>
 								<h1 className='px-3 text-center  text-slate-800'>HOME</h1>
 							</li>

@@ -15,8 +15,6 @@ export const registermobile = async (req, res) => {
     
         const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
 		const otp = Math.floor((1 + Math.random()) * 90000)
-        console.log("Authenticating with: ",req.body);
-		console.log("Existing User: ",existingUser);
         if(existingUser){
             if(existingUser.verify === 'verified'){
                 return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})

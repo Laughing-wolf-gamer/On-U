@@ -15,12 +15,11 @@ import { useServerAuth } from '../../Contaxt/AuthContext';
 
 const SideBarBag = ({OnChangeing}) => {
 	const{deleteBagResult} = useSelector(state => state.deletebagReducer)
-    const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage,sessionRecentlyViewProducts } = useSessionStorage();
-	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
+    const { sessionBagData,updateBagQuantity,toggleBagItemCheck,removeBagSessionStorage } = useSessionStorage();
+	const{user, isAuthentication,checkAuthUser} = useServerAuth();
     // const { randomProducts,loading:RandomProductLoading, error } = useSelector(state => state.RandomProducts);
     // const { bag, loading: bagLoading } = useSelector(state => state.bag_data);
 	const{bag,fetchBag,randomProducts,RandomProductLoading} = useServerWishList();
-    const {allAddresses} = useSelector(state => state.getAllAddress)
     const {checkAndCreateToast} = useSettingsContext();
     const navigation = useNavigate()
     const dispatch = useDispatch();
@@ -76,7 +75,6 @@ const SideBarBag = ({OnChangeing}) => {
                     const { productId, quantity,isChecked } = item;
 					if(isChecked){
 						const { salePrice, price,gst } = productId;
-						const priceWithoutGst = getOriginalAmount(gst,price);
 						// Use salePrice if available, else fallback to regular price
 						const productSellingPrice = salePrice || price;
 			
@@ -149,7 +147,6 @@ const SideBarBag = ({OnChangeing}) => {
                     const { ProductData, quantity, isChecked} = item;
 					if(isChecked){
 						const { salePrice, price,gst} = ProductData;
-						const priceWithoutGst = getOriginalAmount(gst,price);
 						
 						// Use salePrice if available, else fallback to regular price
 						const productSellingPrice = salePrice || price;
@@ -202,7 +199,6 @@ const SideBarBag = ({OnChangeing}) => {
         // console.log("Is Checked Value: ", e.target.checked);
         if(isAuthentication){
 			await dispatch(itemCheckUpdate({ id: itemId ,size,color}));
-			// dispatch(getbag());
 			fetchBag();
 		}else{
 			// updateBagQuantity(itemId, e.target.value)
@@ -306,13 +302,13 @@ const SideBarBag = ({OnChangeing}) => {
         // verifyAnyOrdersPayment();
         handleConvenienceFeesChange();
     },[dispatch])
-    useEffect(()=>{
+    /* useEffect(()=>{
         if(allAddresses){
             if(allAddresses.length > 0){
                 // setSelectedAddress(allAddresses[0]);
             }
         }
-    },[allAddresses,dispatch])
+    },[allAddresses,dispatch]) */
 	// console.log("Bag: ",bag);
 	
 	return (
@@ -469,7 +465,7 @@ const SideBarBag = ({OnChangeing}) => {
 	);
 
 }
-const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, updateQty,updateChecked, handleDeleteBag, user, setCoupon, applyCoupon, coupon,bagLoading }) => {
+const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, updateChecked, handleDeleteBag, bagLoading }) => {
 	const navigate = useNavigate();
 	const {encrypt} = useEncryptionDecryptionContext();
 	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
@@ -596,7 +592,7 @@ const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, up
 							<Trash
 								size={20}
 								className="text-black cursor-pointer sm:block hidden hover:scale-105 mr-3"
-								onClick={(e) => handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)}
+								onClick={() => handleDeleteBag(active?.productId._id, active?._id,active?.size, active?.color)}
 							/>
 						</div>
 					</div>
@@ -629,7 +625,7 @@ const ProductListingComponent = ({ bag,allSizes,UpdateSizeQtn,onClickedImage, up
 	);
 }
 const OfflineBagContent = ({ sessionBagData,onClickedImage,updateChecked, updateQty, handleDeleteBag }) => {
-	const {encrypt,decrypt} = useEncryptionDecryptionContext();
+	const {encrypt} = useEncryptionDecryptionContext();
 	const navigate = useNavigate();
 	const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.webp', '.bmp', '.svg'];
 
