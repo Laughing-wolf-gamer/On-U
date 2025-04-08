@@ -1,14 +1,13 @@
 import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Single_product from './Single_product';
 import { useDispatch, useSelector } from 'react-redux';
-import { Allproduct as getproduct, clearErrors, allProductsFilter } from '../../action/productaction';
+import { Allproduct as getproduct, clearErrors } from '../../action/productaction';
 import Pagination from 'react-js-pagination';
 import './allproduct.css';
 import { IoIosArrowBack, IoIosArrowForward } from 'react-icons/io';
 import MFilter from './MFilter';
 import Footer from '../Footer/Footer';
 import FilterView from './FilterView';
-import { getwishlist } from '../../action/orderaction';
 import { ChevronRight, Dot } from 'lucide-react';
 import BackToTopButton from '../Home/BackToTopButton';
 import Loader from '../Loader/Loader';
@@ -24,7 +23,6 @@ const Allproductpage = ({user}) => {
     const dispatch = useDispatch();
     const[isNoProductsFound,setIsNoProductsFound] = useState(false);
     const { product, pro, loading:productLoading, error, length } = useSelector(state => state.Allproducts);
-    // const { noFilterProducts,loading:productAllProductsLoading} = useSelector(state => state.AllProductNoFilter);
 	const{noFilterProducts,productAllProductsLoading,handleFetchFilter} = useServerBanners();
     const [sortvalue, setSortValue] = useState('What`s New');
     const [currentPage, setCurrentPage] = useState(1);
@@ -33,15 +31,11 @@ const Allproductpage = ({user}) => {
         setCurrentPage(e);
         dispatch(getproduct(e));
     };
-	/* const handleResetFilter = ()=>{
-		dispatch(allProductsFilter())
-	} */
     const dispatchFetchAllProduct = () => {
         dispatch(getproduct(currentPage));
     };
     const handleSortChange = (newSortBy) => {
         // Set the new sortBy value in your component state
-        // setSortBy(newSortBy);
       
         // Get the current URL
         const currentUrl = new URL(window.location.href);

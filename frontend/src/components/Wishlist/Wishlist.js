@@ -1,18 +1,18 @@
-import React, { Fragment, useEffect, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 import Single_product from '../Product/Single_product';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { deletewish } from '../../action/orderaction';
 import { MdClear } from 'react-icons/md';
 import wish from '../images/wishlist-bag.png';
-import { Link, useNavigate } from 'react-router-dom';
-import { clearErrors } from '../../action/useraction';
+import { useNavigate } from 'react-router-dom';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import ProductCardSkeleton from '../Product/ProductCardSkeleton';
-import { getRandomArrayOfProducts } from '../../action/productaction';
 import Footer from '../Footer/Footer';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 import { useServerWishList } from '../../Contaxt/ServerWishListContext';
 import { useServerAuth } from '../../Contaxt/AuthContext';
+import BackToTopButton from '../Home/BackToTopButton';
+import WhatsAppButton from '../Home/WhatsAppButton';
 
 const Wishlist = () => {
 	const {encrypt} = useEncryptionDecryptionContext();
@@ -20,7 +20,7 @@ const Wishlist = () => {
 	const [currentWishListItem, setCurrentWishListItem] = useState([]);
 	const{wishlist,loadingWishList,fetchWishList,randomProducts,RandomProductLoading} = useServerWishList();
 	const{userLoading,user, isAuthentication,checkAuthUser} = useServerAuth();
-
+	const scrollableDivRef = useRef(null); // Create a ref to access the div element
 	const navigation = useNavigate();
 	const dispatch = useDispatch();
 	const [state, setState] = useState(false);
@@ -61,7 +61,7 @@ const Wishlist = () => {
 		}
 	}, [dispatch, sessionData, user, wishlist, isAuthentication]);
     return (
-        <div className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
+        <div ref={scrollableDivRef} className="w-screen font-kumbsan h-screen overflow-y-auto scrollbar overflow-x-hidden scrollbar-track-gray-200 scrollbar-thumb-gray-600 pb-3 2xl:pr-10">
             <div className="w-full justify-self-center max-w-screen-2xl justify-center items-center px-4">
                 {loadingWishList ? (
                     <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-6 md:gap-8 lg:gap-10 mt-6 md:px-5 lg:px-6 2xl:px-6">
@@ -169,6 +169,8 @@ const Wishlist = () => {
                 )}
             </div>
 			<Footer/>
+			<BackToTopButton scrollableDivRef={scrollableDivRef} />
+			<WhatsAppButton scrollableDivRef={scrollableDivRef}/>
         </div>
     );
 };
