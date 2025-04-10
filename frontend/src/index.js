@@ -30,25 +30,25 @@ ReactDOM.render(
         <React.StrictMode >
 			<SeverAuthProvider>
 				<ToastProvider>
-				<SessionStorageProvider>
-					<LocalStorageContextProvider>
-					<LocationContextProvider>
-						<SettingsProvider>
-						<EncryptionDecryptionProvider>
-							<SeverBannersProvider>
-								<SeverWishListProvider>
-									<App />
-									<Toaster 
-										position="top-center"
-										reverseOrder={false}
-									/>
-								</SeverWishListProvider>
-							</SeverBannersProvider>
-						</EncryptionDecryptionProvider>
-						</SettingsProvider>
-					</LocationContextProvider>
-					</LocalStorageContextProvider>
-				</SessionStorageProvider>
+					<SessionStorageProvider>
+						<LocalStorageContextProvider>
+							<LocationContextProvider>
+								<SettingsProvider>
+								<EncryptionDecryptionProvider>
+									<SeverBannersProvider>
+										<SeverWishListProvider>
+											<App />
+											<Toaster 
+												position="top-center"
+												reverseOrder={false}
+											/>
+										</SeverWishListProvider>
+									</SeverBannersProvider>
+								</EncryptionDecryptionProvider>
+								</SettingsProvider>
+							</LocationContextProvider>
+						</LocalStorageContextProvider>
+					</SessionStorageProvider>
 				</ToastProvider>
 			</SeverAuthProvider>
         </React.StrictMode>

@@ -175,27 +175,27 @@ const Navbar = () => {
                 }
                 
                 <Profile user={user} show={show7} CMenu={Menu7} parentCallback={Callbackmenu7} /> 
-        </div>
-		<div>
+        	</div>
+			<div>
 
-			{/* Overlay */}
-			{showbagView && (
+				{/* Overlay */}
+				{showbagView && (
+					<div
+						className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
+						onClick={()=> setBagShow(false)}
+					></div>
+				)}
+
+				{/* Offcanvas */}
 				<div
-					className="fixed inset-0 bg-gray-800 bg-opacity-50 z-40 transition-opacity duration-300"
-					onClick={()=> setBagShow(false)}
-				></div>
-			)}
-
-			{/* Offcanvas */}
-			<div
-				className={`fixed top-0 right-0 w-[52vw] h-full bg-white shadow-lg z-[60] transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
-			>
-				<div className="p-1">                    
-					<SideBarBag OnChangeing={()=> setBagShow(false)}/>
+					className={`fixed top-0 right-0 w-[52vw] h-full bg-white shadow-lg z-[60] transform transition-all duration-500 ease-in-out ${showbagView ? 'translate-x-0' : 'translate-x-full'}`}
+				>
+					<div className="p-1">                    
+						<SideBarBag OnChangeing={()=> setBagShow(false)}/>
+					</div>
+					
 				</div>
-				
 			</div>
-		</div>
         </Fragment>
     )
 }
