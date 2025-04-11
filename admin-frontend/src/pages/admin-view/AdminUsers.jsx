@@ -21,7 +21,7 @@ const UserTable = () => {
     const [inputKeyWoards, setInputKeyWords] = useState(""); // State to manage the search keywords
     const [page, setPage] = useState(1);  // Current page
 
-    const { AllUser, pagination, isLoading, totalUsers } = useSelector(state => state.Customer);
+    const { AllUser, pagination, isLoading } = useSelector(state => state.Customer);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCustomer, setSelectedCustomer] = useState(null);
 
