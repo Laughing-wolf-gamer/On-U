@@ -1235,7 +1235,7 @@ export const trackVisit = async (req, res) => {
 		const forwardedFor = req.headers['x-forwarded-for'];
 		const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
 
-		console.log("ip: ", ip);
+		// console.log("ip: ", ip);
 
 		if (!ip) {
 			return res.status(400).send({ success: false, message: 'IP address not found' });
@@ -1243,7 +1243,7 @@ export const trackVisit = async (req, res) => {
 
 		// Get geo-location data using the IP address
 		const currentLoc = await axios.get(`https://ipapi.co/${ip}/json/`);
-		console.log("currentLoc: ", currentLoc.data);
+		// console.log("currentLoc: ", currentLoc.data);
 
 		const geo = currentLoc.data;
 		if (!geo) {
@@ -1262,7 +1262,7 @@ export const trackVisit = async (req, res) => {
 			country: geo.country,
 			state: geo.region,
 		});
-		console.log("newVisit: ", newVisit);
+		// console.log("newVisit: ", newVisit);
 		await newVisit.save();
 
 		res.status(200).send({ success: true, message: 'Visit tracked' });

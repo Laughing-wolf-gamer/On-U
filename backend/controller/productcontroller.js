@@ -35,8 +35,8 @@ export const allProductsNoFilter = async(req,res)=>{
 			result: allProducts
 		})
 	} catch (error) {
-		console.error("Error in allProductsNoFillter: ", error);
-		logger.error(`Error in allProductsNoFillter: ${error.message}`);
+		console.error("Error in allProducts No Fillter: ", error);
+		logger.error(`Error in allProducts No Fillter: ${error.message}`);
 		res.status(500).json({
 			success: false,
 			message: "Internal Server Error"
@@ -46,7 +46,6 @@ export const allProductsNoFilter = async(req,res)=>{
 
 export const getallproducts = async (req, res) => {
     try {
-        console.log("Product Query", req.query);
         // Helper function to ensure filters are arrays
         const ensureArray = (value) => Array.isArray(value) ? value : [value];
 
@@ -79,7 +78,7 @@ export const getallproducts = async (req, res) => {
 				};
 			} else {
 				console.error('Invalid color parameter');
-				logger.error('Invalid color parameter');
+				logger.warn('Invalid color parameter');
 			}
 		}
 
@@ -143,9 +142,6 @@ export const getallproducts = async (req, res) => {
 			})
             Object.assign(filter, keywordFilter);
         }
-		if(req.query.keyword && getHexValue(req.query.keyword.toLowerCase())){
-			console.log("Is Hex code for colors: ",req.query.keyword);
-		}
         // Category filter
         if (req.query.category) {
             filter.category = { $in: ensureArray(req.query.category) };
