@@ -2,7 +2,7 @@ import OrderModel from "../../model/ordermodel.js";
 import ProductModel from "../../model/productmodel.js";
 import WareHouseModel from "../../model/WareHosue.mode.js";
 import WebSiteModel from "../../model/websiteData.model.js";
-import logger from "../../utilis/loggerUtils.js";
+import logger from "../../utility/loggerUtils.js";
 import { sendOrderStatusUpdateMail } from "../emailController.js";
 import { addNewPicketUpLocation, checkShipmentAvailability, fetchAllPickupLocation, getAuthToken } from "./shiprocketLogisticController.js";
 

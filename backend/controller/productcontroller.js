@@ -3,9 +3,8 @@ import Product from '../model/productmodel.js';
 import ImageKit from "imagekit";
 import ProductModel from '../model/productmodel.js';
 import OrderModel from '../model/ordermodel.js';
-import logger from '../utilis/loggerUtils.js';
-import { getHexValue, handleSort } from '../utilis/basicUtils.js';
-import perfomancenow from 'performance-now'
+import logger from '../utility/loggerUtils.js';
+import { getHexValue, handleSort } from '../utility/basicUtils.js';
 export const createProduct = A( async(req, res, next)=>{
     const product = await Product.create(req.body)
 

@@ -1,5 +1,5 @@
 import express from 'express';
-import { createOrder, OnPaymentCallBack, paymentVerification } from '../utilis/razerPayGatewayHelper.js';
+import { createOrder, OnPaymentCallBack, paymentVerification } from '../utility/razerPayGatewayHelper.js';
 import { isAuthenticateuser } from '../Middelwares/authuser.js';
 const route = express.Router();
 

@@ -1,9 +1,8 @@
 import axios from 'axios';
 import dotenv from 'dotenv'
 import User from '../../model/usermodel.js';
-import { getBestCourierPartners, getStringFromObject } from '../../utilis/basicUtils.js';
-import logger from '../../utilis/loggerUtils.js';
-import OrderModel from '../../model/ordermodel.js';
+import { getBestCourierPartners, getStringFromObject } from '../../utility/basicUtils.js';
+import logger from '../../utility/loggerUtils.js';
 import WebSiteModel from '../../model/websiteData.model.js';
 
 dotenv.config();

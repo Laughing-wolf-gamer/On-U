@@ -1,14 +1,13 @@
-import A from '../Middelwares/resolveandcatch.js'
 import WhishList from '../model/wishlist.js'
 import Bag from '../model/bag.js'
 import OrderModel from '../model/ordermodel.js'
 import ProductModel from '../model/productmodel.js'
-import { fetchPayments, generateOrderRequest } from '../utilis/paymentGatwayHelper.js'
+import { fetchPayments, generateOrderRequest } from '../utility/paymentGatwayHelper.js'
 import Coupon from '../model/Coupon.model.js'
 import WebSiteModel from '../model/websiteData.model.js'
 import { sendMainifestMail, sendOrderPlacedMail, sendOrderStatusUpdateMail } from './emailController.js'
 import mongoose from 'mongoose'
-import logger from '../utilis/loggerUtils.js'
+import logger from '../utility/loggerUtils.js'
 import { 
 	generateManifest, 
 	generateOrderCancel, 
@@ -18,7 +17,7 @@ import {
 	generateRefundOrder, 
 	getShipmentOrderByOrderId 
 } from './LogisticsControllers/shiprocketLogisticController.js'
-import { getStatusDescription } from '../utilis/basicUtils.js'
+import { getStatusDescription } from '../utility/basicUtils.js'
 import User from '../model/usermodel.js'
 
 export const createPaymentOrder = async (req, res) => {
@@ -28,7 +27,7 @@ export const createPaymentOrder = async (req, res) => {
             return res.status(400).json({ success: false, message: "No User Found" });
         }
         
-        const { bagId, orderItems, totalAmount,address, paymentMode, orderStatus } = req.body;
+        const { orderItems, totalAmount } = req.body;
         const orderData = await generateOrderRequest(totalAmount,req.user.id,orderItems,req.user.user.phoneNumber)
         
         console.log("orderRecept Data: ", orderData);
@@ -607,7 +606,7 @@ const removeProduct = async(productId,color,size,quantity) => {
         logger.error(`Error Removing and Product Quantity: ${error.message}`);
     }
 }
-export const getallOrders = A(async (req, res) => {
+export const getallOrders = async (req, res) => {
     try {
         // console.log("Order User",req.user);
         if(!req.user){
@@ -620,7 +619,7 @@ export const getallOrders = A(async (req, res) => {
 		logger.error(`Error fetching orders: ${error.message}`);
         res.status(500).json({success:false,message:"Internal server Error"});
     }
-})
+}
 
 
 export const getOrderById = async (req, res) => {
@@ -1386,7 +1385,7 @@ const getItemsData = async (bag) => {
 
     // Apply coupon discount only if applicable
     if (bag.Coupon) {
-        const { CouponType, Discount, MinOrderAmount, FreeShipping } = bag.Coupon;
+        const { MinOrderAmount, FreeShipping } = bag.Coupon;
 
         // Check if order meets the minimum requirement for the coupon
         if (MinOrderAmount > 0 && totalProductSellingPrice >= MinOrderAmount) {
@@ -1573,7 +1572,7 @@ export const getbag = async (req, res) => {
 
 
 
-export const updateItemCheckedInBag = async (req, res, next) => {
+export const updateItemCheckedInBag = async (req, res) => {
 	try {
 		// Destructure the request body to get the product ID and checkedIn status
         const { id,size,color } = req.body;
@@ -1622,7 +1621,7 @@ export const updateItemCheckedInBag = async (req, res, next) => {
 		res.status(500).json({ success:false, message: "Internal Server Error" });
 	}
 }
-export const updateqtybag = async (req, res, next) => {
+export const updateqtybag = async (req, res) => {
     try {
         // Destructure the request body to get the product ID and quantity
         const { id,size,color, qty } = req.body;
@@ -1840,7 +1839,6 @@ export const returnOrder = async (req, res) => {
 		const order = await OrderModel.findById(orderId);
 		const returnSuccess = await generateOrderReturnShipment(order,userId);
 		console.log("Return Order Success: ", returnSuccess);
-		let lastStatus = order.status;
 		if(!returnSuccess) {
 			return res.status(400).json({ success: false, message: "Failed to create returned order", result:null});
 		}
@@ -1902,7 +1900,7 @@ export const createOrderCancel = async(req,res)=>{
 }
 export const exchangeOrder = async(req, res) => {
 	try {
-		const { orderId,reasonToExchange } = req.body;
+		const { orderId } = req.body;
 		console.log("Exchanging Order: ", orderId);
 		res.status(200).json({ success: true, message: "Successfully received order exchange request"});
 	} catch (error) {

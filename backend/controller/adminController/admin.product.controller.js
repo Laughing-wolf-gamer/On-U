@@ -1,10 +1,10 @@
 import Coupon from "../../model/Coupon.model.js";
 import OrderModel from "../../model/ordermodel.js";
-import logger from "../../utilis/loggerUtils.js";
+import logger from "../../utility/loggerUtils.js";
 import ProductModel from "../../model/productmodel.js";
-import { handleImageUpload, handleMultipleImageUpload } from "../../utilis/cloudinaryUtils.js";
+import { handleImageUpload, handleMultipleImageUpload } from "../../utility/cloudinaryUtils.js";
 import { sendOrderStatusUpdateMail, sendUpdateOrderStatus } from "../emailController.js";
-import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utilis/basicUtils.js";
+import { calculateDiscountPercentage, calculateGst, getStatusDescription, getStringFromObject } from "../../utility/basicUtils.js";
 import { getShipmentOrderByOrderId,getAllReturnOrdersShiprockets} from "../LogisticsControllers/shiprocketLogisticController.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";

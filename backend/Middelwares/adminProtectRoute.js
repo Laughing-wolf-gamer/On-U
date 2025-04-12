@@ -1,13 +1,10 @@
 import jwt from 'jsonwebtoken'
-// import ErrorHandler from '../utilis/errorhandel.js';
 import User from '../model/usermodel.js'
-import A from './resolveandcatch.js'
 
-const ProtectAdminRoute = A(async(req, res, next)=>{
+const ProtectAdminRoute = async(req, res, next)=>{
     const header = req.headers['authorization'];
     // if(!header) return res.status(401).json({Success:false,message: 'No Headers Found!'});
     if(!header) {
-        //next(new Error('No Headers Found',401))
         // return next( new ErrorHandler('User token has been expired or not been generated', 401))
         return res.status(401).json({success:false,message: 'User token has been expired or not been generated'})
     }
@@ -34,6 +31,6 @@ const ProtectAdminRoute = A(async(req, res, next)=>{
     // console.log("Admin User: ",user);
 	req.user = user;
     next()
-})
+}
 
 export default ProtectAdminRoute;

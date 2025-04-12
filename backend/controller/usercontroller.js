@@ -1,13 +1,13 @@
 import A from '../Middelwares/resolveandcatch.js';
 import User from '../model/usermodel.js';
 import { sendMessage } from 'fast-two-sms';
-import Errorhandler from '../utilis/errorhandel.js';
-import sendtoken from '../utilis/sendtoken.js';
+import Errorhandler from '../utility/errorhandel.js';
+import sendtoken from '../utility/sendtoken.js';
 import bcrypt from 'bcryptjs';
 import { sendVerificationEmail } from './emailController.js';
-import { sendOTP } from '../utilis/smsAuthentication.js';
-import logger from '../utilis/loggerUtils.js';
-import { CheckIsPhoneNumber, removeSpaces } from '../utilis/basicUtils.js';
+import { sendOTP } from '../utility/smsAuthentication.js';
+import logger from '../utility/loggerUtils.js';
+import { CheckIsPhoneNumber, removeSpaces } from '../utility/basicUtils.js';
 
 export const registermobile = async (req, res) => {
     try {

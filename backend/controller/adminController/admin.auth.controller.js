@@ -1,12 +1,12 @@
 import User from "../../model/usermodel.js";
 import bcrypt from 'bcryptjs';
-import sendtoken from "../../utilis/sendtoken.js";
+import sendtoken from "../../utility/sendtoken.js";
 import ProductModel from "../../model/productmodel.js";
 import OrderModel from "../../model/ordermodel.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
-import logger from "../../utilis/loggerUtils.js";
-import { removeSpaces } from "../../utilis/basicUtils.js";
+import logger from "../../utility/loggerUtils.js";
+import { removeSpaces } from "../../utility/basicUtils.js";
 import { sendVerificationEmail } from "../emailController.js";
 
 

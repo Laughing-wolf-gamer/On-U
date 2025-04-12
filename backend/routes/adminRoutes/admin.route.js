@@ -2,7 +2,7 @@ import express from 'express';
 import { addCustomProductsRating, addNewProduct, createNewCoupon, deleteProduct, editCoupon, editProduct, fetchAllCoupons, fetchAllProducts, fetchAllReturnOrders, getallOrders, getOrderById, getProductById, getShipmtRocketTokenFromDb, removeCoupon, removeCustomProductsRating, updateOrderStatus, uploadImage, uploadMultipleImages } from '../../controller/adminController/admin.product.controller.js';
 import { addNewColorToSize, addNewSizeToProduct, adminRegisterOtpCheck, fetchAllCustomerUsers, getAllProducts, getCustomerGraphData, getMaxDeliveredOrders, getOrderDeliveredGraphData, getOrdersGraphData, getProductTotalStocks, getRecentOrders, getTopSellingProducts, getTotalOrders, getTotalUsers, getuser, logInUser, registerNewAdmin, removeColorFromSize, removeSizeFromProduct, removingCustomer, updateAdminData, updateColorSku, UpdateColorStock, updateImages, UpdateSizeStock } from '../../controller/adminController/admin.auth.controller.js';
 import ProtectAdminRoute from '../../Middelwares/adminProtectRoute.js';
-import { upload } from '../../utilis/cloudinaryUtils.js';
+import { upload } from '../../utility/cloudinaryUtils.js';
 import { isAuthenticateuser } from '../../Middelwares/authuser.js';
 import { GetWalletBalance } from '../../controller/LogisticsControllers/shiprocketLogisticController.js';
 import { createAndSendOrderManifest, createOrderCancel, retryRefundData, tryCreatePickupResponse } from '../../controller/ordercontroller.js';

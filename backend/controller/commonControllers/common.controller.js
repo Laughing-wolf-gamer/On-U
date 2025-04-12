@@ -7,7 +7,7 @@ import Option from "../../model/options.model.js";
 import ProductModel from "../../model/productmodel.js";
 import Visit from "../../model/Visit.model.js";
 import WebSiteModel from "../../model/websiteData.model.js";
-import logger from "../../utilis/loggerUtils.js";
+import logger from "../../utility/loggerUtils.js";
 import { sendCouponMail, sendCustomMail } from "../emailController.js";
 import geoip from 'geoip-lite'
 

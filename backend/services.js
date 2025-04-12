@@ -1,7 +1,7 @@
 import App from './app.js';
 import connectdatabse from './database/Database.js';
 import { config } from 'dotenv';
-import logger from './utilis/loggerUtils.js';
+import logger from './utility/loggerUtils.js';
 config();
 
 process.on('uncaughtException', (err)=>{
