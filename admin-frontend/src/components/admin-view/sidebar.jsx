@@ -93,7 +93,6 @@ const AdminHeader = ({user,setOpen}) => {
 				style={{ filter: `drop-shadow(0 0 5px ${hexToRgba('#000', 0.2)})`,objectFit: "cover" }}
 			/>
 			<span
-				
 				className="text-lg font-medium text-gray-700 hover:text-gray-900 transition-all duration-200"
 			>
 				Profile
