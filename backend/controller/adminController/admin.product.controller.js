@@ -192,15 +192,10 @@ export const editCoupon = async (req, res) => {
         addFieldIfValid('MinOrderAmount', minOrderAmount);
         addFieldIfValid('CustomerLogin', customerLogin);
         addFieldIfValid('FreeShipping', freeShipping);
-        // updateFields.FreeShipping = freeShipping ? freeShipping : false; // Special case for freeShipping (numeric)
-        // updateFields.FreeShipping = freeShipping ? freeShipping : false; // Special case for freeShipping (numeric)
         if (productId) updateFields.ProductId = productId; // ProductId is required, no need for length check
         if (category && category !== 'none') updateFields.Category = category; // Ensure 'none' is handled
         if (status && ["Active", "Inactive"].includes(status)) updateFields.Status = status;
         if (validDate) updateFields.ValidDate = validDate;
-
-        // Log the fields being updated
-        console.log("Updating Coupon Fields: ", updateFields);
 
         // Check if any fields were provided for update
         if (Object.keys(updateFields).length === 0) {
