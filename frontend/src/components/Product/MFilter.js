@@ -708,12 +708,9 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 
 			{/* FILTER Div ********************************************************************************************************** */}
 
-			<div className={`${filter} z-50 bg-white w-full h-full fixed top-0 `}>
-				<div className=''>
-
-				<h1 className='w-full px-8  font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS
-					{document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
-				<div className='grid grid-cols-12 h-[93%] '>
+			<div className={`${filter} z-50 bg-white w-full h-full fixed top-0`}>
+				<h1 className='w-full px-8 font-semibold text-base pt-3 pb-6 border-b-[1px] relative'>FILTERS {document.URL.includes('?') && <span className='absolute right-8 text-gray-700' onClick={clearall}>CLEAR ALL</span>} </h1>
+				<div className='grid grid-cols-12 h-[93%]'>
 					<div className='col-span-4 h-full text-[8px] font-normal md:text-sm'>
 						<h1 className={`filter1 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] black`} onClick={() => (classtoggle(1), addclass3(1))}>Gender</h1>
 						<h1 className={`filter2 foo w-full text-left border-b-[1px] text-sm py-3 pl-3 md:px-8 bg-[#f8f6f6] grey`} onClick={() => (classtoggle(2), addclass3(2))}>Categories</h1>
@@ -735,9 +732,9 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 						)}
 					</div>
 
-					<div className='col-span-8 '>
+					<div className='col-span-8'>
 
-						<ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
+						{/* <ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul1`}>
 							{
 								gendernewarray && gendernewarray.map((e,i) =>
 
@@ -847,7 +844,82 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 							<li className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] fontonSale text-slate-700 relative`}
 								onClick={() => (onSaleFun(), addclass1('onSale'), addclass2('onSale'))} ><span className={`rightdiv mr-4 tickonSale`}></span>
 							<span className={`text-sm`}>On Sale</span> <span className={`absolute right-6 text-xl`}>{onSale.length}</span></li>
-						</ul>
+						</ul> */}
+						{/* Gender Filter */}
+						<FilterList
+							items={gendernewarray}
+							selectedItems={gender}
+							onClick={genderfun}
+							addClass1={addclass1}
+							addClass2={addclass2}
+							keyPrefix="1"
+						/>
+
+						{/* Categories Filter */}
+						<FilterList
+							items={Categorynewarray}
+							selectedItems={category}
+							onClick={categoryfun}
+							addClass1={addclass1}
+							addClass2={addclass2}
+							keyPrefix="2"
+						/>
+
+						{/* Sub Categories */}
+						<FilterList
+							items={subCategoryNewArray}
+							selectedItems={subcategory}
+							onClick={subCategoryfun}
+							addClass1={addclass1}
+							addClass2={addclass2}
+							keyPrefix="3"
+						/>
+
+						{/* Size Filter */}
+						<FilterList
+							items={sizenewArray}
+							selectedItems={size}
+							onClick={sizefun}
+							addClass1={addclass1}
+							addClass2={addclass2}
+							keyPrefix="4"
+						/>
+
+						{/* Color Filter */}
+						<FilterList
+							items={colornewarray}
+							selectedItems={color}
+							onClick={(label) => colorfun(label.label)}
+							addClass1={addclassColor1}
+							addClass2={addcolorclass}
+							keyPrefix="6"
+							type="color"
+						/>
+
+						{/* Special Category */}
+						{specialCategoryNewArray?.length > 0 && (
+							<FilterList
+								items={specialCategoryNewArray}
+								selectedItems={specialCategory}
+								onClick={specialCategoryfun}
+								addClass1={addclass1}
+								addClass2={addclass2}
+								keyPrefix="7"
+							/>
+						)}
+
+						{/* Discounted Amount Filter */}
+						{discountedPercentageAmountNewArray?.length > 0 && (
+							<FilterList
+								items={discountedPercentageAmountNewArray.sort((a,b)=> a - b)}
+								selectedItems={discountedPercentageAmount}
+								onClick={discountedAmountfun}
+								addClass1={addclass1Discounted}
+								addClass2={addclass2Discounted}
+								keyPrefix="8"
+								getLabel={(e) => `Up to ${e} % OFF`}
+							/>
+						)}
 					</div>
 
 				</div>
@@ -865,9 +937,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 						</div>
 					<span className='absolute h-[24px] border-r-[1px] border-slate-300 justify-self-center top-[33.33%]'></span>
 				</div>
-				</div>
 			</div>
-
         </Fragment>
     )
 }
@@ -882,5 +952,53 @@ const GetPrice = ()=>{
     }
     return [];
 }
+const FilterList = ({ 
+	items = [], 
+	selectedItems = [], 
+	onClick, 
+	addClass1, 
+	addClass2, 
+	keyPrefix, 
+	type = 'text', 
+	getLabel = (e) => e, 
+	getCount = (e) => selectedItems.filter(f => f === e).length 
+}) => {
+	return (
+		<ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul${keyPrefix}`}>
+		{
+			items.map((e, i) => {
+			const key = `${keyPrefix}_${i}`;
+			const classSuffix = typeof e === 'string' ? 
+				e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_") :
+				e.label.replace(/ /g, "");
+			return (
+				<li key={key}
+					className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${classSuffix} relative`}
+					onClick={() => {
+						onClick(e);
+						addClass1(e);
+						addClass2(e);
+					}}
+				>
+					<span className={`rightdiv mr-4 tick${classSuffix}`}></span>
+
+					{type === 'color' ? (
+						<>
+							<div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }} />
+							<span className={`text-sm`}>{e.name}</span>
+						</>
+					) : (
+						<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(getLabel(e))}</span>
+					)}
+					
+					<span className={`absolute right-6 text-xs`}>{getCount(e)}</span>
+				</li>
+			);
+			})
+		}
+		</ul>
+	);
+};
+
 
 export default MFilter

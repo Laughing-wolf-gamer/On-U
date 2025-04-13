@@ -74,7 +74,6 @@ const Navbar = () => {
 	useEffect(() => {
 	  dispatch(fetchAllOptions());
 	}, [dispatch]);
-	console.log("Wishlist count",currentWishListCount,"Bag Count: ",currentBagCount);
     return (
         <Fragment>
             <div className="container font-kumbsan sticky top-0 2xl:w-[100%] xl:w-[100%] lg:w-[100%] mx-auto w-screen max-w-[100%] h-[80px] bg-neutral-100 contenthide z-40">

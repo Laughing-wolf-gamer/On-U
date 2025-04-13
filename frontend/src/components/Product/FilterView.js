@@ -6,14 +6,6 @@ import styled from '@emotion/styled';
 import { ChevronUp } from 'lucide-react';
 
 const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
-    const [category, setCategory] = useState('');
-    const [subcategory, setSubcategory] = useState('');
-    const [color, setColor] = useState('');
-    const [footWearSize, setFootWearSize] = useState('');
-    const [clothingWearSize, setClothingWearSize] = useState('');
-    const [gender, setGender] = useState('');
-
-    const{options} = useSelector(state => state.AllOptions);
 
     const dispatch = useDispatch();
     const [colorul, setcolorul] = useState('max-h-80');
@@ -35,8 +27,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
 				AllProductsCategory.push(p.category)
-				if(!AllProductsCategory.includes(p.category)){
-				}
 			});
         }
     };
@@ -45,8 +35,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
             product.forEach(p => {
                 if(p.salePrice && p.salePrice > 0){
 					onSale.push(p.salePrice)
-                    if(!onSale.includes(p.salePrice)){
-                    }
                 }
             });
         }
@@ -55,18 +43,8 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
                 if(p.salePrice && p.salePrice > 0){
-                    // let discount = ((p.price - p.salePrice)/p.price) * 100
-                    /* const priceOriginal = p.price;
-                    const salePriceProduct = p.salePrice;
-                    const discountAmount = priceOriginal - salePriceProduct;
-                    const discountPercentage = Math.floor(((discountAmount / priceOriginal) * 100).toFixed(0));
-                    if(!discountedPercentageAmount.includes(discountPercentage)){
-                        discountedPercentageAmount.push(discountPercentage)
-                    } */
                     const amount = Math.floor(p.DiscountedPercentage);
 					discountedPercentageAmount.push(amount)
-                    if(!discountedPercentageAmount.includes(amount)){
-                    }
                 }
             });
         }
@@ -84,8 +62,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
 				AllProductsSubcategory.push(p.subCategory)
-				if(!AllProductsSubcategory.includes(p.subCategory)){
-				}
 			});
         }
     };
@@ -95,8 +71,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
         if (product && product.length > 0) {
             product.forEach(p => {
 				AllProductsGender.push(p.gender)
-				if(!AllProductsGender.includes(p.gender)){
-				}
 			});
         }
     };
@@ -106,8 +80,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                 if(p){
                     p.size.forEach(s => {
 						size.push(s.label);
-                        /* if(!size.includes(s.label)){
-                        } */
                     })
                 }
             });
@@ -119,9 +91,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
             product.forEach(p => {
                 p.AllColors.forEach(c =>{
 					AllProductsColor.push(c);
-                    /* const alreadyExists = AllProductsColor.some(item => item.label === c.label);
-                    if (!alreadyExists){
-                    } */
                 })
             });
         }
@@ -516,7 +485,7 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
             <div className='space-y-4 uppercase font-kumbsan ml-6'>
 				
                 {/* Gender Filter */}
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
+                {/* <ul className='pl-1 border-b-[1px] border-slate-200 py-1'>
                     <h1 className=' text-base font-semibold mb-2'>GENDER</h1>
                     {gendernewarray && gendernewarray.length > 0 && gendernewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -548,9 +517,9 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </div>
                         );
                     })}
-                </ul>
+                </ul> */}
                 {/* Categories Filter */}
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+                {/* <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>CATEGORIES</h1>
                     {Categorynewarray && Categorynewarray.length > 0 && Categorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -581,9 +550,9 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </div>
                         );
                     })}
-                </ul>
+                </ul> */}
                 {/* Subcategories Filter */}
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+                {/* <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>SUBCATEGORIES</h1>
                     {subcategorynewarray && subcategorynewarray.length > 0 && subcategorynewarray.map((e, i) => {
                         // Check if the current subcategory 'e' exists in the URL parameters
@@ -610,9 +579,9 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </li>
                         );
                     })}
-                </ul>
+                </ul> */}
                 {/* Size Filter */}
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+                {/* <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>SIZE</h1>
                     {sizenewarray && sizenewarray.length > 0 && sizenewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -642,8 +611,8 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </div>
                         );
                     })}
-                </ul>
-                <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+                </ul> */}
+               {/*  <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
                     <h1 className=' text-base font-semibold mb-2'>SPECIAL CATEGORY</h1>
                     {specialCategorynewarray.map((e, i) => {
                         // Check if the current category 'e' exists in the URL parameters
@@ -673,8 +642,8 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </div>
                         );
                     })}
-                </ul>
-				{discountedPercentageAmountnewarray && discountedPercentageAmountnewarray.length > 0 && (
+                </ul> */}
+				{/* {discountedPercentageAmountnewarray && discountedPercentageAmountnewarray.length > 0 && (
 					<ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
 						<h1 className=' text-base font-semibold mb-2'>DISCOUNT</h1>
 						{discountedPercentageAmountnewarray.sort((a,b)=> a - b).map((amount, i) => {
@@ -709,12 +678,12 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
 						})}
 
 					</ul>
-				)}
+				)} */}
                 
 
-                <PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
+                
                 {/* Color Filter */}
-                <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative scrollbar-thin scrollbar-track-gray-400 scrollbar-thumb-gray-700`}>
+                {/* <ul className={`pl-1 border-b-[1px] border-slate-200 py-4 ${colorul} overflow-y-auto relative scrollbar-thin scrollbar-track-gray-400 scrollbar-thumb-gray-700`}>
                     <h1 className=" text-base font-semibold mb-2">COLOR</h1>
                     {colornewarray && colornewarray.length > 0 && 
                         colornewarray.slice(0, colorul === 'max-h-max' ? colornewarray.length : 5).map((e, i) => {
@@ -757,7 +726,6 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                         })
                     }
 
-                    {/* Show "+ More" button if the number of colors exceeds 5 */}
                     {colornewarray.length > 5 && (
                         <div className="flex justify-center mt-5">
                             <button 
@@ -774,8 +742,8 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
                             </button>
                         </div>
                     )}
-                </ul>
-				{
+                </ul> */}
+				{/* {
 					onSale && onSale.length > 0 && (
 						<ul className='pl-8 border-b-[1px] border-slate-200 py-4'>
 							<h1 className=' text-base font-semibold mb-2'>On Sale</h1>
@@ -811,7 +779,91 @@ const FilterView = ({ product, dispatchFetchAllProduct,handleResetFilter }) => {
 						</ul>
 
 					)
-				}
+				} */}
+				<FilterGroup
+					title="Gender"
+					name="gender"
+					items={gendernewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("gender")}
+					onChange={genderfun}
+					getCount={(e) => AllProductsGender.filter((f) => f === e).length}
+				/>
+
+				<FilterGroup
+					title="Categories"
+					name="category"
+					items={Categorynewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("category")}
+					onChange={categoryfun}
+					getCount={(e) => AllProductsCategory.filter((f) => f === e).length}
+				/>
+
+				<FilterGroup
+					title="Subcategories"
+					name="subcategory"
+					items={subcategorynewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("subcategory")}
+					onChange={subcategoryfun}
+					getCount={(e) => AllProductsSubcategory.filter((f) => f === e).length}
+				/>
+
+				<FilterGroup
+					title="Size"
+					name="size"
+					items={sizenewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("size")}
+					onChange={sizefun}
+					getCount={(e) => size.filter((f) => f === e).length}
+				/>
+
+				<FilterGroup
+					title="Special Category"
+					name="specialCategory"
+					items={specialCategorynewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("specialCategory")}
+					onChange={specialCategoryFun}
+					getCount={(e) => specialCategory.filter((f) => f === e).length}
+				/>
+
+				<FilterGroup
+					title="Discount"
+					name="discountedAmount"
+					type="radio"
+					items={discountedPercentageAmountnewarray.sort((a,b) => a - b)}
+					selectedValues={[parseInt(new URLSearchParams(window.location.search).get("discountedAmount"))]}
+					onChange={discountedAmountFun}
+					getLabel={(e) => `UpTo ${e} %`}
+					getCount={(e) => discountedPercentageAmount.filter((f) => f === e).length}
+				/>
+				<PriceFilter result={result} sp={sp} spARRAY={spARRAY} sparraynew={sparraynew} dispatchFetchAllProduct={dispatchFetchAllProduct}/>
+				<FilterGroup
+					title="Color"
+					name="color"
+					type="checkbox"
+					specialType = "color"
+					items={colornewarray}
+					selectedValues={new URLSearchParams(window.location.search).getAll("color")}
+					onChange={(color) => colorfun(color)}
+					getValue={(e) => e.label}
+					getLabel={(e) => e.name}
+					getCount={(e) => AllProductsColor.filter((f) => f.label === e.label).length}
+					maxDisplay={5}
+					showToggle={true}
+					expanded={colorul === 'max-h-max'}
+					onToggleExpand={() => setcolorul(colorul === 'max-h-max' ? 'max-h-80' : 'max-h-max')}
+				/>
+
+				{onSale.length > 0 && (
+					<FilterGroup
+						title="On Sale"
+						name="onSale"
+						items={["true"]}
+						selectedValues={new URLSearchParams(window.location.search).getAll("onSale")}
+						onChange={onSaleFun}
+						getLabel={() => "On Sale"}
+						getCount={() => onSale.length}
+				/>
+				)}
 				<button
 					className='bg-black hover:rounded-md ease-ease-out-expo duration-200 hover:scale-105 transition-all hover:bg-gray-800 text-white text-sm my-auto py-2 font-bold mx-auto text-center flex justify-center items-end min-w-[80%]'
 					onClick={clearAllFilters}
@@ -930,6 +982,77 @@ const PriceFilter = ({ result, spARRAY, sparraynew, dispatchFetchAllProduct ,sp}
             <span>({sparraynew()})</span>
         </div>
       </div>
+    );
+};
+
+
+
+const FilterGroup = ({
+    title,
+    items,
+    type = "checkbox", // 'checkbox' | 'radio' | 'color'
+	specialType,
+    name,
+    selectedValues = [],
+    onChange,
+    getValue = (item) => item,
+    getLabel = (item) => item,
+    getCount = (item) => 0,
+    maxDisplay = Infinity,
+    showToggle = false,
+    expanded = true,
+    onToggleExpand
+}) => {
+    const displayItems = expanded ? items : items.slice(0, maxDisplay);
+
+    return (
+        <ul className='pl-1 border-b-[1px] border-slate-200 py-4'>
+            <h1 className='text-base font-semibold mb-2'>{title}</h1>
+            {displayItems.map((item, i) => {
+                const value = getValue(item);
+                const label = getLabel(item);
+                const isChecked = selectedValues.includes(value);
+
+                return (
+                    <div key={i} className="flex items-center mb-2">
+                        <input
+                            type={type}
+                            name={name}
+                            id={`${name}_${value}`}
+                            className='accent-gray-500 cursor-pointer w-4 h-4 rounded-md'
+                            value={value}
+                            checked={isChecked}
+                            onChange={() => onChange(value)}
+                        />
+                        {specialType === "color" ? (
+                            <>
+                                <div className='w-7 h-7 border border-slate-400 rounded-lg mx-2' style={{ backgroundColor: value }} />
+                                <label htmlFor={`${name}_${value}`} className="text-sm uppercase space-x-1">
+                                    <span>{label}</span>
+                                    <span className='text-xs font-normal text-slate-400'>({getCount(item)})</span>
+                                </label>
+                            </>
+                        ) : (
+                            <label htmlFor={`${name}_${value}`} className='text-sm ml-2 space-x-1 uppercase'>
+                                <span>{label}</span>
+                                <span className='text-xs font-normal text-slate-400'>({getCount(item)})</span>
+                            </label>
+                        )}
+                    </div>
+                );
+            })}
+
+            {showToggle && items.length > maxDisplay && (
+                <div className='flex justify-center mt-3'>
+                    <button
+                        onClick={onToggleExpand}
+                        className="text-gray-800 text-sm font-medium hover:underline flex items-center space-x-1"
+                    >
+                        <span>{expanded ? 'Less' : 'More'} {title}</span>
+                    </button>
+                </div>
+            )}
+        </ul>
     );
 };
 

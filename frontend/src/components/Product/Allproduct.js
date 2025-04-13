@@ -110,7 +110,7 @@ const Allproductpage = ({user}) => {
                         <span className="text-gray-700 font-light">- {productLoading === false ? `${pro?.length} / ${product?.length}` : '...'} Products</span>
                     </div>
                 </div>
-                <FilterTitle sortvalue={sortvalue} handleSortChange={handleSortChange} setSortValue = {setSortValue} />
+                <SortingOptions sortvalue={sortvalue} handleSortChange={handleSortChange} setSortValue = {setSortValue} />
 
                 <div className="w-full 2xl:grid xl:grid lg:grid 2xl:grid-cols-12 xl:grid-cols-12 lg:grid-cols-12 bg-white 2xl:px-10">
                     {/* Filter */}
@@ -197,7 +197,7 @@ const Allproductpage = ({user}) => {
         </div>
     );
 };
-const FilterTitle = ({ sortvalue, handleSortChange, setSortValue }) => {
+const SortingOptions = ({ sortvalue, handleSortChange, setSortValue }) => {
     const [openView,setOpenView] = useState(false);
 	
     return (
