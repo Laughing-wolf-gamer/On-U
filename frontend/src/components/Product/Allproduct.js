@@ -135,7 +135,7 @@ const Allproductpage = ({user}) => {
 
 
 
-                                <div className="paginationBox border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center  justify-center sm:justify-between">
+                                <div className="paginationBox w-full border-t-[0.5px] border-gray-700 border-opacity-25 py-4 relative flex flex-col sm:flex-row items-center  justify-center sm:justify-between">
                                     {/* Pagination Info */}
                                     <span className="text-sm text-gray-500 mb-2 sm:mb-0 sm:absolute sm:left-0 sm:text-base">
                                         Page {currentPage} of {Math.ceil(length / maxAmountPerPage)}

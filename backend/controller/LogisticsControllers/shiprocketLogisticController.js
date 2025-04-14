@@ -1018,7 +1018,7 @@ export const GetWalletBalance = async(req,res)=>{
 		const balance = walletResponse.data?.data?.balance_amount;
 		res.status(200).json({success: true,message:"Successfully Get Wallet Balance", result: balance || 0});
 	} catch (error) {
-		console.error("Error getting Wallet Balance.: ",error)
+		console.error("Error getting Wallet Balance.: ",error.message)
 		res.status(500).json({success: false,message:"Error Getting Wallet Balance"});
 	}
 }

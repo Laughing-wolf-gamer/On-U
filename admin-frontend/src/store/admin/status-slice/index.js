@@ -13,7 +13,9 @@ const adminStatusSlice = createSlice({
         TotalOrders:0,
 		walletBalance:-1,
         MaxDeliveredOrders:0,
+		AverageCountPerDay:0,
         CustomerGraphData:[],
+		CustomerVisitersGraphData:[],
         OrdersGraphData:[],
         OrderDeliverData:[],
         TopSellingProducts:[],
@@ -106,6 +108,16 @@ const adminStatusSlice = createSlice({
             state.walletBalance = action?.payload?.result;
 		}).addCase(getWalletBalance.rejected,(state,action)=>{
 			state.isLoading = false;
+		}).addCase(getWebsiteVisitCount.pending,(state)=>{
+			state.isLoading = true;
+		}).addCase(getWebsiteVisitCount.fulfilled,(state,action)=>{
+			state.isLoading = false;
+			state.CustomerVisitersGraphData = action?.payload?.result;
+			state.AverageCountPerDay = action?.payload?.averageCountPerDay
+		}).addCase(getWebsiteVisitCount.rejected,(state)=>{
+			state.isLoading = false;
+			state.CustomerVisitersGraphData = [];
+			state.AverageCountPerDay = 0
 		})
     }
 })
@@ -126,6 +138,14 @@ export const getCustomerGraphData = createAsyncThunk('/admin/stats/getCustomerGr
         console.error("Error Fetching Customer Graph Data",error);
     }
 })
+export const getWebsiteVisitCount = createAsyncThunk('/admin/stats/getWebsiteVisitCount',async ({startDate,endDate,period})=>{
+	try {
+		const response = await axios.get(`${BASE_URL}/admin/stats/getWebstiesVisitCount?startDate=${startDate}&endDate=${endDate}&${period}`,Header());
+		return response.data;
+	} catch (error) {
+		console.error("Error Fetching Customer Graph Data",error);
+	}
+})
 export const getOrderDeliveredGraphData = createAsyncThunk('/admin/stats/getOrderDeliveredGraphData',async ({startDate,endDate,period})=>{
     try {
         const response = await axios.get(`${BASE_URL}/admin/stats/getOrderDeliveredGraphData`,Header());
@@ -145,6 +165,7 @@ export const fetchAllCustomers = createAsyncThunk('/admin/stats/totalUserCount',
         console.error(error);
     }
 })
+
 export const fetchTopSellingProducts = createAsyncThunk('/admin/stats/topsellingproducts',async ()=>{
     try {
         // const token = sessionStorage.getItem('token');

@@ -1,5 +1,5 @@
-import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData, getWalletBalance } from "@/store/admin/status-slice";
-import { BoxIcon, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
+import { fetchAllCustomers, fetchAllOrdersCount, fetchAllProductsCount, fetchMaxDeliveredOrders, fetchRecentOrders, fetchTopSellingProducts, getCustomerGraphData, getOrderDeliveredGraphData, getOrderGraphData, getWalletBalance, getWebsiteVisitCount } from "@/store/admin/status-slice";
+import { BoxIcon, Eye, IndianRupee, PackageCheck, ShoppingBasket, User } from "lucide-react";
 import { Fragment, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
@@ -239,7 +239,7 @@ const getDateRange = (preset) => {
 };
 const AdminDashboard = ({ user }) => {
     const{startDate:defaulStart, endDate:defaultEnd} = getDateRange("THIS MONTH");
-    const {isLoading,walletBalance, TotalCustomers, TotalProducts,RecentOrders,TopSellingProducts, MaxDeliveredOrders, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
+    const {isLoading,walletBalance, TotalCustomers, TotalProducts,RecentOrders,AverageCountPerDay,TopSellingProducts, MaxDeliveredOrders,CustomerVisitersGraphData, CustomerGraphData, OrderDeliverData, OrdersGraphData, TotalOrders } = useSelector(state => state.stats);
     const dispatch = useDispatch();
     const [stats, setStats] = useState({ title: "Total Customers", value: TotalCustomers });
     const [currentGraphData, setGraphData] = useState({ title: "Total Orders", value: [] });
@@ -294,6 +294,7 @@ const AdminDashboard = ({ user }) => {
         const e = new Date(defaultEnd).toISOString().split("T")[0]
         console.log("Fetching all customers: ",s,e);
         dispatch(getCustomerGraphData({ s, e, period: 'monthly' }));
+        dispatch(getWebsiteVisitCount({ s, e, period: 'monthly' }));
         dispatch(getOrderDeliveredGraphData({ defaulStart, defaultEnd, period: 'monthly' }));
         dispatch(getOrderGraphData({ defaulStart, defaultEnd, period: 'monthly' }));
     },[])
@@ -311,6 +312,7 @@ const AdminDashboard = ({ user }) => {
         dispatch(fetchTopSellingProducts());
         // console.log("Fetching all customers: ",startDate,endDate);
         dispatch(getCustomerGraphData({ startDate, endDate, period: 'monthly' }));
+		dispatch(getWebsiteVisitCount({ startDate, endDate, period: 'monthly' }));
         dispatch(getOrderDeliveredGraphData({ startDate, endDate, period: 'monthly' }));
         dispatch(getOrderGraphData({ startDate, endDate, period: 'monthly' }));
         if(!startingGraphData){
@@ -325,7 +327,7 @@ const AdminDashboard = ({ user }) => {
             }
         }
     },[CustomerGraphData,startingGraphData])
-    console.log("Top Selling Products Data: ", TopSellingProducts);
+	console.log("CustomerVisitersGraphData: ",CustomerVisitersGraphData);
     return (
         <Fragment>
         {isLoading ? <LoadingView/>:<Fragment>
@@ -336,9 +338,9 @@ const AdminDashboard = ({ user }) => {
 							<StatsCard
 								isActive={currentGraphData.title === "Total Orders"}
 								onChange={(title, value) => {
-								setStats({ title, value });
-								setGraphData({ title, value: OrdersGraphData });
-								handleFilterChange("THIS MONTH", OrdersGraphData);
+									setStats({ title, value });
+									setGraphData({ title, value: OrdersGraphData });
+									handleFilterChange("THIS MONTH", OrdersGraphData);
 								}}
 								title="Total Orders"
 								value={TotalOrders}
@@ -348,13 +350,25 @@ const AdminDashboard = ({ user }) => {
 							<StatsCard
 								isActive={currentGraphData.title === "Total Customers"}
 								onChange={(title, value) => {
-								setStats({ title, value });
-								setGraphData({ title, value: CustomerGraphData });
-								handleFilterChange("THIS MONTH", CustomerGraphData);
+									setStats({ title, value });
+									setGraphData({ title, value: CustomerGraphData });
+									handleFilterChange("THIS MONTH", CustomerGraphData);
 								}}
 								title="Total Customers"
 								value={TotalCustomers}
 								icon={<User className="text-3xl text-yellow-600" />}
+								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
+							/>
+							<StatsCard
+								isActive={currentGraphData.title === "Total Visitors"}
+								onChange={(title, value) => {
+									setStats({ title, value });
+									setGraphData({ title, value: CustomerVisitersGraphData });
+									handleFilterChange("THIS MONTH", CustomerVisitersGraphData);
+								}}
+								title="Total Visitors"
+								value={`${AverageCountPerDay|| 0}/day`}
+								icon={<Eye className="text-3xl text-purple-600" />}
 								className="w-full sm:w-1/2 md:w-1/3 lg:w-1/5"
 							/>
 							<StatsCard
@@ -372,7 +386,7 @@ const AdminDashboard = ({ user }) => {
 							<StatsCard
 								isActive={currentGraphData.title === "Total Products"}
 								onChange={(title, value) => {
-								setStats({ title, value });
+									setStats({ title, value });
 								}}
 								title="Total Products"
 								value={TotalProducts}

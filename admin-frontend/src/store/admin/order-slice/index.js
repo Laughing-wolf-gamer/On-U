@@ -83,8 +83,6 @@ export const loginLogistics = createAsyncThunk('/logistic/warehouse/getAllWareHo
 
 export const adminGetAllOrders = createAsyncThunk('/orders/adminGetAllOrders',async()=>{
     try {
-        // const token = sessionStorage.getItem('token');
-        // console.log(token);
         const response = await axios.get(`${BASE_URL}/admin/orders/getAllOrders`,Header());
         console.log("Admin Get All Orders",response.data);
         return response.data;

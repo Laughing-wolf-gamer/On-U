@@ -8,6 +8,7 @@ import WhishList from "../../model/wishlist.js";
 import logger from "../../utility/loggerUtils.js";
 import { removeSpaces } from "../../utility/basicUtils.js";
 import { sendVerificationEmail } from "../emailController.js";
+import Visit from "../../model/Visit.model.js";
 
 
 export const updateAdminData = async(req,res)=>{
@@ -716,6 +717,72 @@ export const getOrderDeliveredGraphData = async (req, res) => {
 };
 
 
+export const getWebsiteVisitCount = async (req, res) => {
+	try {
+		const { startDate, endDate, period } = req.query;
+		const start = startDate ? new Date(startDate) : new Date('2000-01-01');
+		const end = endDate ? new Date(endDate) : new Date();
+
+		const matchStage = {
+			$match: {
+				createdAt: { $gte: start, $lte: end },
+			},
+		};
+
+		const projectStage = {
+			$project: {
+				day: { $dayOfMonth: "$createdAt" },
+				month: { $month: "$createdAt" },
+				year: { $year: "$createdAt" },
+				createdAt: 1
+			},
+		};
+
+		const result = await Visit.aggregate([
+			matchStage,
+			projectStage,
+			{
+				$group: {
+					_id: { day: "$day", month: "$month", year: "$year" },
+					count: { $sum: 1 }
+				}
+			},
+			{
+				$sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 }
+			}
+		]);
+
+		if (!result || result.length === 0) {
+			return res.status(200).json({
+				Success: true,
+				message: 'No customer growth data available',
+				result: [],
+				averageCountPerDay: 0
+			});
+		}
+
+		const formattedResult = result.map((item) => ({
+			date: `${item._id.year}-${item._id.month < 10 ? `0${item._id.month}` : item._id.month}-${item._id.day < 10 ? `0${item._id.day}` : item._id.day}`,
+			count: item.count
+		}));
+
+		// ✅ Calculate average visits per day
+		const totalDays = Math.ceil((end - start) / (1000 * 60 * 60 * 24));
+		const totalCount = formattedResult.reduce((sum, item) => sum + item.count, 0);
+		const averageCountPerDay = totalDays > 0 ? totalCount / totalDays : 0;
+
+		res.status(200).json({
+			Success: true,
+			message: 'Visit Growth Data',
+			result: formattedResult,
+			averageCountPerDay: parseFloat(averageCountPerDay.toFixed(2)) // optional: round to 2 decimal places
+		});
+	} catch (error) {
+		console.error("Error getting website visit count: ", error);
+		logger.error("Error getting website visit count: " + error.message);
+		res.status(500).json({ Success: false, message: 'Internal Server Error' });
+	}
+}
 
 export const getCustomerGraphData = async (req, res) => {
     try {
