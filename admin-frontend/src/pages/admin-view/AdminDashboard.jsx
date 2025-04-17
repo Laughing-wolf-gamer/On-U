@@ -292,7 +292,6 @@ const AdminDashboard = ({ user }) => {
     useEffect(()=>{
         const s = new Date(defaulStart).toISOString().split("T")[0]
         const e = new Date(defaultEnd).toISOString().split("T")[0]
-        console.log("Fetching all customers: ",s,e);
         dispatch(getCustomerGraphData({ s, e, period: 'monthly' }));
         dispatch(getWebsiteVisitCount({ s, e, period: 'monthly' }));
         dispatch(getOrderDeliveredGraphData({ defaulStart, defaultEnd, period: 'monthly' }));
@@ -310,7 +309,6 @@ const AdminDashboard = ({ user }) => {
 		}
         dispatch(fetchRecentOrders());
         dispatch(fetchTopSellingProducts());
-        // console.log("Fetching all customers: ",startDate,endDate);
         dispatch(getCustomerGraphData({ startDate, endDate, period: 'monthly' }));
 		dispatch(getWebsiteVisitCount({ startDate, endDate, period: 'monthly' }));
         dispatch(getOrderDeliveredGraphData({ startDate, endDate, period: 'monthly' }));
@@ -466,7 +464,7 @@ const AdminDashboard = ({ user }) => {
 						</div>
 						</div>
 					</div>
-					</div>
+				</div>
 
                 <TopSellingProductsTable products={TopSellingProducts} />
                 <AllRecentOrders allOrders={RecentOrders}/>
