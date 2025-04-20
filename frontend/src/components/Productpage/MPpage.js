@@ -767,9 +767,7 @@ const MPpage = () => {
 														onClick={PostRating}
 														className='bg-gray-500 text-white px-6 py-2 rounded-md hover:bg-gray-600 transition-colors'
 													>
-														{
-															isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>Submit Review</span>
-														}
+														{isPostingReview ? <div className="w-6 h-6 border-4 border-t-4 border-gray-300 border-t-red-500 rounded-full animate-spin"></div>:<span>Submit Review</span>}
 													</button>
 												</div>
 											</form>
@@ -787,7 +785,7 @@ const MPpage = () => {
 										<ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
 											{similar.map((pro,index) => (
 												<li key={pro?._id || index} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-													<Single_product pro={pro} onChangeItems = {()=> dispatch(singleProduct(decrypt(param.id)))}/>
+													<Single_product pro={pro} onChangeItems = {()=> dispatch(singleProduct(pro?._id))}/>
 												</li>
 											))}
 										</ul>
@@ -807,72 +805,71 @@ const MPpage = () => {
 };
 
 const ProductReviews = ({ reviews }) => {
-  const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
+	const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews
 
-  const handleToggleReviews = () => {
-    setShowMore(!showMore); // Toggle the state between true/false
-  };
+	const handleToggleReviews = () => {
+		setShowMore(!showMore); // Toggle the state between true/false
+	};
 
-  return (
-    <div>
-      <h2 className="text-xl font-kumbsan font-bold mb-4">Product Reviews</h2>
-        <div
-            className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
-        >
-            {/* Display only the first 3 reviews or more based on showMore */}
-            {reviews.slice(0, 3).map((review, index) => {
-                const randomStars = review.rating; // Random stars between 1 and 5
-                return (
-                    <div key={index} className="review-item mb-4">
-                        <div className="flex items-center">
-                            <div className="stars">
-                                {[...Array(randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-black hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
-                                ))}
-                                {[...Array(5 - randomStars)].map((_, i) => (
-                                    <span key={i} className="star text-gray-300 hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
-                                ))}
-                            </div>
-                            <span className="ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 ease-in-out transition-all">{randomStars} Stars</span>
-                        </div>
-                        <p className="text-gray-700 mt-2">{review.comment}</p>
-                    </div>
-                );
-            })}
+	return (
+		<div>
+		<h2 className="text-xl font-kumbsan font-bold mb-4">Product Reviews</h2>
+			<div
+				className={`overflow-y-auto max-h-[400px]`} // Making the review container scrollable
+			>
+				{/* Display only the first 3 reviews or more based on showMore */}
+				{reviews.slice(0, 3).map((review, index) => {
+					const randomStars = review.rating; // Random stars between 1 and 5
+					return (
+						<div key={index} className="review-item mb-4">
+							<div className="flex items-center">
+								<div className="stars">
+									{[...Array(randomStars)].map((_, i) => (
+										<span key={i} className="star text-black hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+									))}
+									{[...Array(5 - randomStars)].map((_, i) => (
+										<span key={i} className="star text-gray-300 hover:-translate-y-2 duration-300 ease-in-out transition-all">★</span>
+									))}
+								</div>
+								<span className="ml-2 text-sm text-gray-500 hover:-translate-y-2 duration-300 ease-in-out transition-all">{randomStars} Stars</span>
+							</div>
+							<p className="text-gray-700 mt-2">{review.comment}</p>
+						</div>
+					);
+				})}
 
-            {/* If showMore is true, display all reviews */}
-            {showMore &&
-            reviews.slice(3).map((review, index) => {
-                const randomStars = review.rating;
-                return (
-                    <div key={index} className="review-item mb-4">
-                            <div className="flex items-center">
-                                <div className="stars">
-                                    {[...Array(randomStars)].map((_, i) => (
-                                        <span key={i} className="star text-black">★</span>
-                                    ))}
-                                    {[...Array(5 - randomStars)].map((_, i) => (
-                                        <span key={i} className="star text-gray-300">★</span>
-                                    ))}
-                                </div>
-                                <span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
-                            </div>
-                        <p className="text-gray-700 mt-2">{review.comment}</p>
-                    </div>
-                );
-            })
-            }
+				{/* If showMore is true, display all reviews */}
+				{showMore && reviews.slice(3).map((review, index) => {
+						const randomStars = review.rating;
+						return (
+							<div key={index} className="review-item mb-4">
+									<div className="flex items-center">
+										<div className="stars">
+											{[...Array(randomStars)].map((_, i) => (
+												<span key={i} className="star text-black">★</span>
+											))}
+											{[...Array(5 - randomStars)].map((_, i) => (
+												<span key={i} className="star text-gray-300">★</span>
+											))}
+										</div>
+										<span className="ml-2 text-sm text-gray-500">{randomStars} Stars</span>
+									</div>
+								<p className="text-gray-700 mt-2">{review.comment}</p>
+							</div>
+						);
+					})
+				}
 
-            {/* "View More" / "Show Less" Toggle Button */}
-            <button
-                onClick={handleToggleReviews}
-                className="mt-4 text-blue-500 hover:underline"
-            >
-                {showMore ? 'Show Less' : 'View More'}
-            </button>
-        </div>
-    </div>
-  );
+				{/* "View More" / "Show Less" Toggle Button */}
+				<button
+					onClick={handleToggleReviews}
+					className="mt-4 text-blue-500 hover:underline"
+				>
+					{showMore ? 'Show Less' : 'View More'}
+				</button>
+			</div>
+		</div>
+	);
 };
 
 export default MPpage;
