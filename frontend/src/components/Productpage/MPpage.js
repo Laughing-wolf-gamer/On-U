@@ -785,7 +785,7 @@ const MPpage = () => {
 									</div>
 									<div className="overflow-x-auto">
 										<ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
-										{similar.map((pro,index) => (
+											{similar.map((pro,index) => (
 												<li key={pro?._id || index} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
 													<Single_product pro={pro} onChangeItems = {()=> dispatch(singleProduct(decrypt(param.id)))}/>
 												</li>
