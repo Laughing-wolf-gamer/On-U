@@ -96,7 +96,7 @@ const AdminOrderLayout = () => {
 	useEffect(()=>{
 		if(token){
 			if(!logisticsToken){
-            	setLogisticsToken(token.token);
+            	setLogisticsToken(token?.token);
 			}
         }
 	},[token,dispatch])
@@ -121,8 +121,6 @@ const AdminOrderLayout = () => {
 		return filteredOrderList.slice(filters.minOrders, filters.maxOrders);
 	}, [filteredOrderList, filters.minOrders, filters.maxOrders]);
 	const isNoOrders = displayedOrders.length === 0;
-	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	console.log("Shiprocket token: ",token);
 	return (
 		<Card className="w-full">
 			{isLoading  ? <LoadingView/> :(
@@ -164,7 +162,7 @@ const AdminOrderLayout = () => {
 										className="flex items-center justify-between space-x-3 py-3 px-4 border border-gray-300 rounded-md transition-all w-full lg:w-auto"
 									>
 									<Copy />
-										<span>{logisticsToken.slice(0, 23)}....</span>
+										<span>Token</span>
 									</Button>
 								)}
 							</div>
@@ -179,11 +177,6 @@ const AdminOrderLayout = () => {
 							<span>Returning Orders</span>
 						</Button>
 					</div>
-
-
-
-
-
 					<CardContent className = {"mt-10"}>
 						<OrderFilter filters={filters} setFilters={setFilters} orderStatus={orderStatus} filteredOrderList={filteredOrderList} />
 
