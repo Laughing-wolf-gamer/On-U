@@ -787,7 +787,7 @@ const MPpage = () => {
 										<ul className="flex space-x-4 py-2 sm:space-x-6 md:space-x-8 lg:space-x-10">
 										{similar.map((pro,index) => (
 												<li key={pro?._id || index} className="flex-shrink-0 w-[200px] sm:w-[200px] md:w-[250px] lg:w-[300px]">
-													<Single_product pro={pro}/>
+													<Single_product pro={pro} onChangeItems = {()=> dispatch(singleProduct(decrypt(param.id)))}/>
 												</li>
 											))}
 										</ul>
@@ -805,34 +805,6 @@ const MPpage = () => {
 		</div>
     );
 };
-/* const CustomSlider = styled(Slider)({
-    '& .MuiSlider-thumb': {
-        backgroundColor: '#4CAF50', // Green thumb color
-        border: '3px solid #388E3C', // Darker green border for the thumb
-        '&:hover': {
-            backgroundColor: '#81C784', // Lighter green on hover
-            border: '3px solid #66BB6A', // Lighter green border on hover
-        },
-        '&:focus': {
-            boxShadow: '0 0 0 0.3rem rgba(0, 128, 0, 0.25)', // Green shadow on focus
-        },
-    },
-    '& .MuiSlider-rail': {
-        backgroundColor: '#D1C4E9', // Light purple rail color
-    },
-    '& .MuiSlider-track': {
-        backgroundColor: '#3F51B5', // Blue track color
-    },
-    '& .MuiSlider-valueLabel': {
-        backgroundColor: '#3F51B5', // Blue background for the value label
-        color: '#FFF', // White text for the value label
-        fontWeight: 'bold', // Make the value label text bold
-    },
-    // Optional: Add a gradient effect to the slider's track and rail
-    '& .MuiSlider-rail, & .MuiSlider-track': {
-        background: 'linear-gradient(90deg, #2196F3 0%, #4CAF50 100%)', // Gradient from blue to green
-    },
-}); */
 
 const ProductReviews = ({ reviews }) => {
   const [showMore, setShowMore] = useState(false); // State to toggle the visibility of more reviews

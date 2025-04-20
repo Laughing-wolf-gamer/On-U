@@ -6,7 +6,7 @@ import AutoSlidingCarousel from './AutoSlidingCarousel';
 import { useSessionStorage } from '../../Contaxt/SessionStorageContext';
 import { useEncryptionDecryptionContext } from '../../Contaxt/EncryptionContext';
 
-const SingleProduct = React.memo(({ pro, user, showWishList = true ,refreshTwice = false}) => {
+const SingleProduct = React.memo(({ pro, user, showWishList = true ,onChangeItems}) => {
 	const {encrypt,decrypt} = useEncryptionDecryptionContext();
     const{updateRecentlyViewProducts} = useSessionStorage();
     const navigation = useNavigate();
@@ -42,8 +42,8 @@ const SingleProduct = React.memo(({ pro, user, showWishList = true ,refreshTwice
 		console.log("Encrypted Product Id: ",productEncryption,"Decrypted: ",decrypted);
         navigation(`/products/${productEncryption}`);
         updateRecentlyViewProducts(pro);
-		if(refreshTwice){
-        	window.location.reload();
+		if(onChangeItems){
+			onChangeItems();
 		}
     };
 
@@ -106,8 +106,6 @@ const SingleProduct = React.memo(({ pro, user, showWishList = true ,refreshTwice
     
         </div>
     );
-    
-    
 });
 
 export default SingleProduct;
