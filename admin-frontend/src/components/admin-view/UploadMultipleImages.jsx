@@ -23,43 +23,43 @@ const UploadMultipleImagesArray = ({
   const dropzoneRefs = useRef([]);
 
   const handleImageFileChange = async (index, e) => {
-    e.preventDefault();
-    try {
-      
-      const selectedFile = e.target.files?.[0];
-      if (!selectedFile) return;
-
-      updateFile(index, selectedFile);
-
-      const url = await handleUploadImage(selectedFile, index);
-      if (url) updateUploadedImageUrl(index, url);
-    } catch (error) {
-      console.error("Error during file upload:", error);
-    }
-  };
-
-  const handleUploadImage = async (file, index) => {
-		setLoadingState(index, true);
+		e.preventDefault();
 		try {
-		const formData = new FormData();
-		formData.append("my_file", file);
+		
+		const selectedFile = e.target.files?.[0];
+		if (!selectedFile) return;
 
-		const token = sessionStorage.getItem("token");
-		const res = await axios.post(`${BASE_URL}/admin/upload-image`, formData, {
-			withCredentials: true,
-			headers: {
-			Authorization: `Bearer ${token}`,
-			"Cache-Control": "no-cache, must-revalidate, proxy-revalidate",
-			},
-		});
+		updateFile(index, selectedFile);
 
-		return res.data?.result || "";
+		const url = await handleUploadImage(selectedFile, index);
+		if (url) updateUploadedImageUrl(index, url);
 		} catch (error) {
-		console.error("Error while uploading image:", error);
-		} finally {
-		setLoadingState(index, false);
+		console.error("Error during file upload:", error);
 		}
   };
+
+	const handleUploadImage = async (file, index) => {
+		setLoadingState(index, true);
+		try {
+			const formData = new FormData();
+			formData.append("my_file", file);
+
+			const token = sessionStorage.getItem("token");
+			const res = await axios.post(`${BASE_URL}/admin/upload-image`, formData, {
+				withCredentials: true,
+				headers: {
+				Authorization: `Bearer ${token}`,
+				"Cache-Control": "no-cache, must-revalidate, proxy-revalidate",
+				},
+			});
+
+			return res.data?.result || "";
+		} catch (error) {
+			console.error("Error while uploading image:", error);
+		} finally {
+			setLoadingState(index, false);
+		}
+	};
 
   const updateFile = (index, file) => {
     const newFiles = [...files];
