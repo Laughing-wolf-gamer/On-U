@@ -740,6 +740,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 							onClick={genderfun}
 							addClass1={addclass1}
 							addClass2={addclass2}
+							getCount={(item) => gender.filter((e) => e === item).length}
 							keyPrefix="1"
 						/>
 
@@ -750,6 +751,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 							onClick={categoryfun}
 							addClass1={addclass1}
 							addClass2={addclass2}
+							getCount={(item) => category.filter((e) => e === item).length}
 							keyPrefix="2"
 						/>
 
@@ -760,6 +762,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 							onClick={subCategoryfun}
 							addClass1={addclass1}
 							addClass2={addclass2}
+							getCount={(item) => subcategory.filter((e) => e === item).length}
 							keyPrefix="3"
 						/>
 
@@ -770,20 +773,39 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 							onClick={sizefun}
 							addClass1={addclass1}
 							addClass2={addclass2}
+							getCount={(item) => size.filter((e) => e === item).length}
 							keyPrefix="4"
 						/>
+						{/* Price filter */}
+						<ul className={`hidden overflow-scroll h-[86%] ulco ul5`}>
+							{
+								sp &&
+									<div className='mt-10 ml-8 mr-8'>
+										<h1 className='text-base text-slate-900 font1'>&#x20B9; {price[0]} - &#x20B9;{price[1]}</h1>
+										<CustomSlider
+											value={price}
+											onChange={priceHandler}
+											valueLabelDisplay="auto"
+											color='secondary'
+											aria-labelledby="range-slider"
+											min={Math.floor(Math.min(...sp))}
+											max={Math.floor(Math.max(...sp))}
+										/>
+									</div>
+							}
+						</ul>
 
 						{/* Color Filter */}
 						<FilterList
 							items={colornewarray}
 							selectedItems={color}
 							onClick={(label) => colorfun(label.label)}
-							addClass1={addclassColor1}
-							addClass2={addcolorclass}
+							addClass1={(val)=> addclassColor1(val.label)}
+							addClass2={(val)=> addcolorclass(val.label)}
+							getCount={(item) => color.filter((e) => e.label === item.label).length}
 							keyPrefix="6"
 							type="color"
 						/>
-
 						{/* Special Category */}
 						{specialCategoryNewArray?.length > 0 && (
 							<FilterList
@@ -792,6 +814,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 								onClick={specialCategoryfun}
 								addClass1={addclass1}
 								addClass2={addclass2}
+								getCount={(item) => specialCategory.filter((e) => e === item).length}
 								keyPrefix="7"
 							/>
 						)}
@@ -806,6 +829,7 @@ const MFilter = ({ product,sortvalue ,handleSortChange,setSortValue,scrollableDi
 								addClass2={addclass2Discounted}
 								keyPrefix="8"
 								getLabel={(e) => `Up to ${e} % OFF`}
+								getCount={(item) => discountedPercentageAmount.filter((e) => e === item).length}
 							/>
 						)}
 					</div>
@@ -840,6 +864,7 @@ const GetPrice = ()=>{
     }
     return [];
 }
+
 const FilterList = ({ 
 	items = [], 
 	selectedItems = [], 
@@ -849,41 +874,42 @@ const FilterList = ({
 	keyPrefix, 
 	type = 'text', 
 	getLabel = (e) => e, 
-	getCount = (e) => selectedItems.filter(f => f === e).length 
+	getCount = (item) => 0,
 }) => {
 	return (
 		<ul className={`hidden Dvisibile overflow-scroll h-[86%] ulco ul${keyPrefix}`}>
-		{
-			items.map((e, i) => {
-			const key = `${keyPrefix}_${i}`;
-			const classSuffix = typeof e === 'string' ? 
-				e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_") :
-				e.label.replace(/ /g, "");
-			return (
-				<li key={key}
-					className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${classSuffix} relative`}
-					onClick={() => {
-						onClick(e);
-						addClass1(e);
-						addClass2(e);
-					}}
-				>
-					<span className={`rightdiv mr-4 tick${classSuffix}`}></span>
+			{
+				items.map((e, i) => {
+				const key = `${keyPrefix}_${i}`;
 
-					{type === 'color' ? (
-						<>
-							<div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }} />
-							<span className={`text-sm`}>{e.name}</span>
-						</>
-					) : (
-						<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(getLabel(e))}</span>
-					)}
-					
-					<span className={`absolute right-6 text-xs`}>{getCount(e)}</span>
-				</li>
-			);
-			})
-		}
+				const classSuffix = typeof e === 'string' ? 
+					e.replace(/ /g, "").replace(/&/g, "_and_").replace(/=/g, "_equals_") :
+					e.label.replace(/ /g, "");
+					return (
+						<li key={key}
+							className={`flex items-center ml-4 mr-4 py-[16px] border-b-[1px] text-slate-700 font${classSuffix} relative`}
+							onClick={() => {
+								onClick(e);
+								addClass1(e);
+								addClass2(e);
+							}}
+						>
+							<span className={`rightdiv mr-4 tick${classSuffix}`}></span>
+
+								{type === 'color' ? (
+									<div className='gap-2 flex'>
+										<div className='w-6 h-6 rounded-full' style={{ backgroundColor: e.label }} />
+										<span className={`text-[13px]`}>{e.name}</span>
+									</div>
+								) : (
+									<span className={`text-sm`}>{capitalizeFirstLetterOfEachWord(getLabel(e))}</span>
+								)}
+							
+							<span className={`absolute right-6 text-xs`}>{getCount(e)}</span>
+						</li>
+					);
+				})
+			}
 		</ul>
 	);
 };

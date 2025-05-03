@@ -1,0 +1,12 @@
+2025-05-03T17:17:50.728Z error: Error getting coupon banner data: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:50.728Z error: Error getting coupon banner data: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:50.738Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:50.738Z error: Error getting convenience fees: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:50.742Z error: Error Fetching Options Operation `options.find()` buffering timed out after 10000ms
+2025-05-03T17:17:50.742Z error: Error Fetching Options Operation `options.find()` buffering timed out after 10000ms
+2025-05-03T17:17:50.889Z error: Error While Fetching Terms and Conditions: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:50.889Z error: Error While Fetching Terms and Conditions: Operation `websitedatas.findOne()` buffering timed out after 10000ms
+2025-05-03T17:17:51.257Z error: Error tracking visit: Operation `visits.insertOne()` buffering timed out after 10000ms
+2025-05-03T17:17:51.257Z error: Error tracking visit: Operation `visits.insertOne()` buffering timed out after 10000ms
+2025-05-03T17:18:00.762Z error: Error Fetching Options Operation `options.find()` buffering timed out after 10000ms
+2025-05-03T17:18:00.762Z error: Error Fetching Options Operation `options.find()` buffering timed out after 10000ms
