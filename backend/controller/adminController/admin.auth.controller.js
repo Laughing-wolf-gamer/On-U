@@ -6,8 +6,8 @@ import OrderModel from "../../model/ordermodel.js";
 import Bag from "../../model/bag.js";
 import WhishList from "../../model/wishlist.js";
 import logger from "../../utility/loggerUtils.js";
-import { removeSpaces } from "../../utility/basicUtils.js";
-import { sendVerificationEmail } from "../emailController.js";
+import { generateOTP, removeSpaces } from "../../utility/basicUtils.js";
+import { sendFast2Sms, sendVerificationEmail } from "../emailController.js";
 import Visit from "../../model/Visit.model.js";
 
 
@@ -63,8 +63,11 @@ export const registerNewAdmin = async(req,res)=>{
         if(user){
 			return res.status(409).json({Success: false, message: 'Email already exists'});
         }
-		const otp = Math.floor((1 + Math.random()) * 90000)
-		await sendVerificationEmail("onuclothing2@gmail.com", otp)
+		const otp = generateOTP(6,{numericOnly:true});
+		await Promise.all([
+			sendVerificationEmail("onuclothing2@gmail.com", otp),
+			sendFast2Sms(phoneNumber,otp)
+		])
         const hashedPassword = await bcrypt.hash(password,10);
 		const profilePic = `https://avatar.iran.liara.run/public/boy?username=${removeSpaces(userName)}`
         user = new User({name:userName,phoneNumber,email,password:hashedPassword,profilePic:profilePic,otp:otp,role:role});

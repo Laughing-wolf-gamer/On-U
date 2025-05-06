@@ -247,3 +247,14 @@ export function generateOrderId() {
 	// Logic to generate a unique order ID
 	return 'ORD' + Math.floor(Math.random() * 1000000000);
 }
+export const generateOTP = (length = 6, options = { numericOnly: true }) => {
+	const digits = '0123456789';
+	const alphanum = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	const chars = options.numericOnly ? digits : alphanum;
+
+	let otp = '';
+	for (let i = 0; i < length; i++) {
+		otp += chars[Math.floor(Math.random() * chars.length)];
+	}
+	return otp;
+};

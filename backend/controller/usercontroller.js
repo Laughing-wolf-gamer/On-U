@@ -1,31 +1,31 @@
 import A from '../Middelwares/resolveandcatch.js';
 import User from '../model/usermodel.js';
-import { sendMessage } from 'fast-two-sms';
 import Errorhandler from '../utility/errorhandel.js';
 import sendtoken from '../utility/sendtoken.js';
 import bcrypt from 'bcryptjs';
-import { sendVerificationEmail } from './emailController.js';
-import { sendOTP } from '../utility/smsAuthentication.js';
+import { sendFast2Sms, sendVerificationEmail } from './emailController.js';
 import logger from '../utility/loggerUtils.js';
-import { CheckIsPhoneNumber, removeSpaces } from '../utility/basicUtils.js';
+import { CheckIsPhoneNumber, generateOTP, removeSpaces } from '../utility/basicUtils.js';
+import axios from 'axios';
 
 export const registermobile = async (req, res) => {
     try {
         const {email,name,gender, phonenumber } = req.body
-    
         const existingUser = await User.findOne({phoneNumber:phonenumber,email:email})
-		const otp = Math.floor((1 + Math.random()) * 90000)
+		const otp = generateOTP(6,{numericOnly:true});
         if(existingUser){
             if(existingUser.verify === 'verified'){
                 return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
             }
 			existingUser.otp = otp;
-			await existingUser.save();
-			await sendVerificationEmail(existingUser.email, otp)
+			await Promise.all([existingUser.save(),sendVerificationEmail(existingUser.email, otp),sendFast2Sms(existingUser.phoneNumber,otp)])
             return res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})
         }
-        
-        await sendVerificationEmail(email, otp)
+        await Promise.all([sendVerificationEmail(email, otp),sendFast2Sms(phonenumber,otp)])
+        /* await sendVerificationEmail(email, otp)
+		const optSendingResponse = await sendFast2Sms(phonenumber,otp)
+		console.log("Opt Sending Response: ",optSendingResponse) */
+
 		// https://avatar-placeholder.iran.liara.run/
 		const profilePic = `https://avatar.iran.liara.run/public/${gender === 'men' ? "boy":'girl'}?username=${removeSpaces(name)}`
         const user = await User.create({
@@ -52,20 +52,17 @@ export const registermobile = async (req, res) => {
 
 export const loginMobileNumber = async(req, res) => {
     try {
-		const { logInEmail} = req.body;
-		const isPhoneNumber = CheckIsPhoneNumber(logInEmail);
-		let phoneNumber = null;
-		let email = null;
+		const {LoginData} = req.body;
+		const isPhoneNumber = CheckIsPhoneNumber(LoginData);
+		console.log("isPhoneNumber: ",isPhoneNumber);
 		let user = null;
 		if(isPhoneNumber === 'invalid'){
-			return res.status(400).json({ success: false, message: 'Invalid LogIn Data' });
+			return res.status(400).json({success: false, message: 'Invalid LogIn Data' });
 		}
 		if(isPhoneNumber === 'phone'){
-			phoneNumber = logInEmail;
-			user = await User.findOne({phoneNumber:logInEmail});
+			user = await User.findOne({phoneNumber:LoginData});
 		}else{
-			email = logInEmail;
-			user = await User.findOne({email:logInEmail});
+			user = await User.findOne({email:LoginData});
 		}
 		if(!user){
 			return res.status(200).json({success:false,message: 'No User Found',result:null})
@@ -73,21 +70,20 @@ export const loginMobileNumber = async(req, res) => {
 		if(user.verify !== 'verified'){
 			return res.status(200).json({success:false,message: 'User Not Verified',result:null})
 		}
-		function generateOTP() {
-			return Math.floor((1 + Math.random()) * 90000) // 6-digit OTP
-		}
-		let otp = generateOTP();
+		const otp = generateOTP(6,{numericOnly:true});
+		let sendingOptSuccess = false;
 		try {
-			if(phoneNumber){
-				await sendOTP(user.phoneNumber,otp);
+			if(isPhoneNumber === 'phone'){
+				sendingOptSuccess = await sendFast2Sms(user.phoneNumber,otp)
+				console.log("Opt Sending Response: ",sendingOptSuccess)
+			}else{
+				sendingOptSuccess = await sendVerificationEmail(user.email, otp);
 			}
 		} catch (error) {
 			console.error("Error Sending otp");
-		}
-		const isEmailSentSuccess = await sendVerificationEmail(user.email, otp);
-		if(!isEmailSentSuccess){
-            return res.status(200).json({success:false,message: 'Failed to Send Verification Email! Try Again',result:null})
-        }
+			logger.error(`Error Sending otp ${error.message}`);
+			return res.status(200).json({success:false,message: 'Failed to Send Verification Otp! Try Again',result:null})
+		}		
 		if(user.profilePic === ''){
 			const profilePic = `https://avatar.iran.liara.run/public/${user.gender === 'men' ? "boy":'girl'}?${user.name}`
 			user.profilePic = profilePic;
@@ -158,10 +154,30 @@ export const registerUser = A(async (req, res) => {
     const user = await User.findOne({phonenumber})
 
     let otp = Math.floor((1 + Math.random()) * 90000)
-
-    let options = { authorization: process.env.YOUR_API_KEY, message: `This Website is made by Abhishek Thank You to use my Website Your OTP: is ${otp}`, numbers: [phonenumber] }
+	const data = {
+        route: "dlt",
+        requests: [
+            {
+                sender_id: "ONUIND",
+                message: `${185257}`,
+                variables_values: `${otp}`,
+                flash: 0,
+                numbers: `${phonenumber}`
+            }
+        ]
+    };
     
-    sendMessage(options).then(response => {
+    axios.post('https://www.fast2sms.com/dev/custom', data, {
+        headers: {
+            'Authorization': process.env.FAST2SMS,
+            'Content-Type': 'application/json'
+        }
+    })
+    /* let options = { authorization: process.env.FAST2SMS, message: `Hello, your OTP for On U is ${otp}
+
+	- ON U `, numbers: [phonenumber] } */
+    
+    /* sendMessage(options).then(response => {
     
         if (response.return === true) {
         
@@ -184,7 +200,7 @@ export const registerUser = A(async (req, res) => {
             })
         
         }
-    })
+    }) */
 })
 
 export const getuser = async(req, res)=>{
@@ -207,6 +223,7 @@ export const optverify = async (req, res)=>{
     try {
 		// const {otp} = req.body
 		const{phoneNumber,email,otp} = req.body;
+		console.log("OTP: ",phoneNumber,email,otp);
 		const user = await User.findOne({phoneNumber: phoneNumber,email:email})
 		console.log("OTP: ",user);
 		if (!user.otp) {
@@ -233,10 +250,10 @@ export const optverify = async (req, res)=>{
 
 export const resendotp = async (req, res)=>{
 	try {
-		const{email} = req.body;
+		const{email,phoneNumber} = req.body;
 		console.log("Resend Otp Email: ",req.body)
 		if(!email) return res.status(401).json({success:false,message: 'Email is Required!',result:null});
-		const existingUser = await User.findOne({email:email})
+		const existingUser = await User.findOne({email:email,phoneNumber:phoneNumber})
 		if(!existingUser){
 			return res.status(401).json({success:true,message:"OTP Sent Successfully",result:null})
 		}
@@ -244,8 +261,25 @@ export const resendotp = async (req, res)=>{
 		if(existingUser.verify === 'verified'){
 			return res.status(200).json({success:true,message:"User Already Exists",result:{user:existingUser,token:sendtoken(existingUser)}})
 		}
-		const otp = Math.floor((1 + Math.random()) * 90000)
-		await sendVerificationEmail(email, otp)
+		const otp = generateOTP(6,{numericOnly:true});
+		// let sendingOptSuccess = false;
+		try {
+			await Promise.all([
+				sendVerificationEmail(email, otp),
+				sendFast2Sms(phoneNumber,otp)
+			])
+			/* if(isPhoneNumber === 'phone'){
+				sendingOptSuccess = await sendFast2Sms(phoneNumber,otp)
+				console.log("Opt Sending Response: ",sendingOptSuccess)
+			}else{
+				sendingOptSuccess = await sendVerificationEmail(email, otp);
+			} */
+		} catch (error) {
+			console.error("Error Sending otp");
+			logger.error(`Error Sending otp ${error.message}`);
+			return res.status(200).json({success:false,message: 'Failed to Resend Verification Otp! Try Again',result:null})
+		}	
+		// await sendVerificationEmail(email, otp)
 		existingUser.otp = otp;
 		await existingUser.save();
 		res.status(200).json({success:true,message:"OTP Sent Successfully",result:{otp:otp,user:existingUser}})

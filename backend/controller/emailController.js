@@ -1,7 +1,32 @@
 import nodemailer from 'nodemailer';
 import User from '../model/usermodel.js';
 import { promisify } from 'util';
+import axios from 'axios';
+import dotenv from 'dotenv';
 
+dotenv.config();
+export const sendFast2Sms = async(phonNumber,otp)=>{
+	const data = {
+		route: `${process.env.FAST2ROUTE}`,
+		requests: [
+			{
+				sender_id: `${process.env.FAST2_SENDER_ID}`,
+				message: `${process.env.FAST2_MESSAGE}`,
+				variables_values: `${otp}`,
+				flash: 0,
+				numbers: `${phonNumber}`
+			}
+		]
+	};
+	
+	const response = await axios.post(`${process.env.FAST2_URL}`, data, {
+		headers: {
+			'Authorization': process.env.FAST2SMS,
+			'Content-Type': 'application/json'
+		}
+	})
+	return response.data;
+}
 // Setup nodemailer transport
 const transporter = nodemailer.createTransport({
     service: 'gmail', // Replace with your email provider (Gmail, SendGrid, etc.)
