@@ -61,133 +61,131 @@ const UploadMultipleImagesArray = ({
 		}
 	};
 
-  const updateFile = (index, file) => {
-    const newFiles = [...files];
-    newFiles[index] = file;
-    setFiles(newFiles);
-  };
+	const updateFile = (index, file) => {
+		const newFiles = [...files];
+		newFiles[index] = file;
+		setFiles(newFiles);
+	};
 
-  const updateUploadedImageUrl = (index, url) => {
-    const newUrls = [...uploadedImageUrls];
-    newUrls[index] = url;
-    setUploadedImageUrls(newUrls);
-    onSetImageUrls(newUrls);
-  };
+	const updateUploadedImageUrl = (index, url) => {
+		const newUrls = [...uploadedImageUrls];
+		newUrls[index] = url;
+		setUploadedImageUrls(newUrls);
+		onSetImageUrls(newUrls);
+	};
 
-  const setLoadingState = (index, state) => {
-    const newLoadingStates = [...loadingStates];
-    newLoadingStates[index] = state;
-    setLoadingStates(newLoadingStates);
-    setIsLoading(state);
-  };
+	const setLoadingState = (index, state) => {
+		const newLoadingStates = [...loadingStates];
+		newLoadingStates[index] = state;
+		setLoadingStates(newLoadingStates);
+		setIsLoading(state);
+	};
 
-  const handleRemoveImage = (index) => {
-    updateFile(index, null);
-    updateUploadedImageUrl(index, "");
-    if (inputRefs.current[index]) {
-      inputRefs.current[index].value = "";
-    }
-  };
+	const handleRemoveImage = (index) => {
+		updateFile(index, null);
+		updateUploadedImageUrl(index, "");
+		if (inputRefs.current[index]) {
+		inputRefs.current[index].value = "";
+		}
+	};
 
-  // Drag and drop handlers
-  const handleDragOver = (e, index) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dropzoneRefs.current[index]) {
-      dropzoneRefs.current[index].classList.add('bg-gray-200');
-    }
-  };
+	// Drag and drop handlers
+	const handleDragOver = (e, index) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (dropzoneRefs.current[index]) {
+		dropzoneRefs.current[index].classList.add('bg-gray-200');
+		}
+	};
 
-  const handleDragLeave = (e, index) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dropzoneRefs.current[index]) {
-      dropzoneRefs.current[index].classList.remove('bg-gray-200');
-    }
-  };
+	const handleDragLeave = (e, index) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (dropzoneRefs.current[index]) {
+		dropzoneRefs.current[index].classList.remove('bg-gray-200');
+		}
+	};
 
-  const handleDrop = (e, index) => {
-    e.preventDefault();
-    e.stopPropagation();
-    if (dropzoneRefs.current[index]) {
-      dropzoneRefs.current[index].classList.remove('bg-gray-200');
-    }
+	const handleDrop = (e, index) => {
+		e.preventDefault();
+		e.stopPropagation();
+		if (dropzoneRefs.current[index]) {
+		dropzoneRefs.current[index].classList.remove('bg-gray-200');
+		}
 
-    const file = e.dataTransfer.files[0];
-    if (file) {
-      updateFile(index, file);
-      handleUploadImage(file, index).then((url) => {
-        if (url) updateUploadedImageUrl(index, url);
-      });
-    }
-  };
+		const file = e.dataTransfer.files[0];
+		if (file) {
+		updateFile(index, file);
+		handleUploadImage(file, index).then((url) => {
+			if (url) updateUploadedImageUrl(index, url);
+		});
+		}
+	};
 
-  return (
-        <div className={customeStyling}>
-            <div className="flex items-center justify-center">
-              <span> Images: {uploadedImageUrls.filter(i => i !== '').length}/ {uploadedImageUrls.length} </span>
-              
-            </div>
-            <div className="flex items-center justify-center">
-              {
-                isLoading && <span>Please Wait While the Image is Loading...</span>
-              }
-            </div>
-            {files.map((file, index) => (
-                <div
-                  disabled = {isLoading}
-                  key={index}
-                  className="w-full border-2 border-dashed rounded-md p-4"
-                  ref={(el) => (dropzoneRefs.current[index] = el)}
-                  onDragOver={(e) => handleDragOver(e, index)}
-                  onDragLeave={(e) => handleDragLeave(e, index)}
-                  onDrop={(e) => handleDrop(e, index)}
-                >
-                    <input
-                        disabled={isLoading}
-                        id={`image-upload-${index}-${tag}-${sizeTag}`}
-                        type="file"
-                        className="hidden"
-                        ref={(el) => (inputRefs.current[index] = el)}
-                        onChange={(e) => handleImageFileChange(index, e)}
-                    />
-                    {!file ? (
-                        <Label
-                          disabled = {isLoading}
-                          htmlFor={`image-upload-${index}-${tag}-${sizeTag}`}
-                          className="flex flex-col justify-center items-center h-32 cursor-pointer"
-                        >
-                          <UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
-                          <span className="text-sm text-muted-foreground">
-                              Drag & drop or Click an Image to Upload
-                          </span>
-                        </Label>
-                    ) : loadingStates[index] ? (
-                        <Skeleton className="bg-gray-100 h-10" />
-                    ) : (
-                        <div className="flex items-center justify-between">
-                        <div className="flex items-center">
-                            <FileIcon className="w-10 h-10 text-muted" />
-                            <p className="ml-2 text-sm font-medium">{file?.name}</p>
-                        </div>
-                            <Button
-                                disabled = {isLoading}
-                                variant="ghost"
-                                size="icon"
-                                className="hover:text-foreground"
-                                onClick={() => handleRemoveImage(index)}
-                            >
-                                <XIcon className="w-4 h-4" />
-                                <span className="sr-only">Remove File</span>
-                            </Button>
-                        </div>
-                    )}
-                    
-                </div>
-            ))}
-            
-        </div>
-  );
+	return (
+		<div className={customeStyling}>
+			<div className="flex items-center justify-center">
+				<span> Images: {uploadedImageUrls.filter(i => i !== '').length}/ {uploadedImageUrls.length} </span>
+			</div>
+			<div className="flex items-center justify-center">
+				{
+					isLoading && <span>Please Wait While the Image is Loading...</span>
+				}
+			</div>
+			{files.map((file, index) => (
+				<div
+					disabled = {isLoading}
+					key={index}
+					className="w-full border-2 border-dashed rounded-md p-4"
+					ref={(el) => (dropzoneRefs.current[index] = el)}
+					onDragOver={(e) => handleDragOver(e, index)}
+					onDragLeave={(e) => handleDragLeave(e, index)}
+					onDrop={(e) => handleDrop(e, index)}
+				>
+					<input
+						disabled={isLoading}
+						id={`image-upload-${index}-${tag}-${sizeTag}`}
+						type="file"
+						className="hidden"
+						ref={(el) => (inputRefs.current[index] = el)}
+						onChange={(e) => handleImageFileChange(index, e)}
+					/>
+					{!file ? (
+						<Label
+						disabled = {isLoading}
+						htmlFor={`image-upload-${index}-${tag}-${sizeTag}`}
+						className="flex flex-col justify-center items-center h-32 cursor-pointer"
+						>
+						<UploadCloudIcon className="w-10 h-10 text-muted-foreground mb-2" />
+						<span className="text-sm text-muted-foreground">
+							Drag & drop or Click an Image to Upload
+						</span>
+						</Label>
+					) : loadingStates[index] ? (
+						<Skeleton className="bg-gray-100 h-10" />
+					) : (
+						<div className="flex items-center justify-between">
+						<div className="flex items-center">
+							<FileIcon className="w-10 h-10 text-muted" />
+							<p className="ml-2 text-sm font-medium">{file?.name}</p>
+						</div>
+							<Button
+								disabled = {isLoading}
+								variant="ghost"
+								size="icon"
+								className="hover:text-foreground"
+								onClick={() => handleRemoveImage(index)}
+							>
+								<XIcon className="w-4 h-4" />
+								<span className="sr-only">Remove File</span>
+							</Button>
+						</div>
+					)}
+				</div>
+			))}
+			
+		</div>
+	);
 };
 
 export default UploadMultipleImagesArray;

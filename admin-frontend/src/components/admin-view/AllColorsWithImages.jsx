@@ -43,8 +43,10 @@ const AllColorsWithImages = ({OnChangeColorsActive}) => {
 	// Add the selected color to the array
 	const updateSelectedColorArray = (e) => {
 		e.preventDefault();
+		console.log("activeColorSelect",e);
 		if(isLoading || !activeColorSelect || activeColorSelect?.images?.length === 0){
-			checkAndCreateToast("error","Please select an image for the color.");
+			// checkAndCreateToast("error","Please select an image for the color.");
+			console.log("Please select an image for the color.");
 			return;
 		}
 		if(activeColorSelect){
