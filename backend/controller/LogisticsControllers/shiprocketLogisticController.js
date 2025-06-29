@@ -1000,14 +1000,12 @@ export const getShipmentTrackingStatus = async(order)=>{
 		const returningTrackingData = res.data;
         return returningTrackingData;
     } catch (error) {
-        // console.dir(error, { depth: null});
         console.error("Error Checking Shipment Status.: ",error.response?.date || error)
     }
 }
 
 export const GetWalletBalance = async(req,res)=>{
 	try {
-		// if(!token) await getAuthToken();
 		const token = await getShipRocketToken();
         const walletResponse = await axios.get(`${SHIPROCKET_API_URL}/account/details/wallet-balance`, {
             headers: {

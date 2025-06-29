@@ -34,17 +34,17 @@ ReactDOM.render(
 						<LocalStorageContextProvider>
 							<LocationContextProvider>
 								<SettingsProvider>
-								<EncryptionDecryptionProvider>
-									<SeverBannersProvider>
-										<SeverWishListProvider>
-											<App />
-											<Toaster 
-												position="top-center"
-												reverseOrder={false}
-											/>
-										</SeverWishListProvider>
-									</SeverBannersProvider>
-								</EncryptionDecryptionProvider>
+									<EncryptionDecryptionProvider>
+										<SeverBannersProvider>
+											<SeverWishListProvider>
+												<App />
+												<Toaster 
+													position="top-center"
+													reverseOrder={false}
+												/>
+											</SeverWishListProvider>
+										</SeverBannersProvider>
+									</EncryptionDecryptionProvider>
 								</SettingsProvider>
 							</LocationContextProvider>
 						</LocalStorageContextProvider>
